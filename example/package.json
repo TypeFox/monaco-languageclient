@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "@monaco-languageclient/example",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.15.2",
+    "monaco-languageclient": "^0.0.1",
+    "reconnecting-websocket": "^3.0.3",
+    "vscode-languageserver": "^3.2.0",
+    "ws": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.35",
+    "@types/node": "^7.0.12",
+    "@types/ws": "0.0.39",
+    "copy-webpack-plugin": "^4.0.1",
+    "rimraf": "^2.6.1",
+    "typescript": "^2.2.2",
+    "webpack": "^2.3.3"
+  },
+  "scripts": {
+    "compile": "./node_modules/.bin/tsc",
+    "watch": "./node_modules/.bin/tsc -w",
+    "clean": "./node_modules/.bin/rimraf lib",
+    "copy": "cp src/index.html lib/index.html",
+    "build": "npm run compile && ./node_modules/.bin/webpack && npm run copy",
+    "start": "npm run build && node lib/server.js"
+  }
+}

@@ -30,6 +30,7 @@
     "watch": "./node_modules/.bin/tsc -w",
     "clean": "./node_modules/.bin/rimraf lib",
     "clean:languageclient": "./node_modules/.bin/rimraf node_modules/vscode-languageclient",
-    "update:languageclient": "npm run clean:languageclient && npm install"
+    "update:languageclient": "npm run clean:languageclient && npm install",
+    "link:example": "npm link && cd example && npm link monaco-languageclient"
   }
 }

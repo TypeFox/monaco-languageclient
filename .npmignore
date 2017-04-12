@@ -1,5 +1,6 @@
 vscode/
 src/
 typings/
+example/
 .gitignore
 tsconfig.json

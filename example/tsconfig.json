@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "inlineSources": false,
+        "declaration": true,
+        "stripInternal": true,
+        "lib": ["es2016", "dom"],
+        "outDir": "lib",
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true
+    },
+    "include": [
+        "src"
+    ],
+    "files": [
+        "../node_modules/monaco-editor-core/monaco.d.ts"
+    ]
+}
