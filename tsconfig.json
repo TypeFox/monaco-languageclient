@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": false,
@@ -8,7 +8,7 @@
         "declaration": true,
         "stripInternal": true,
         "lib": [
-            "es2016"
+            "es2016", "dom"
         ],
         "outDir": "lib",
         "strictNullChecks": true,
@@ -20,6 +20,7 @@
         "src"
     ],
     "files": [
+        "node_modules/monaco-editor-core/monaco.d.ts",
         "typings/glob-to-regexp/index.d.ts"
     ]
 }

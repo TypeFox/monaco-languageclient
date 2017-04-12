@@ -1,36 +1,35 @@
 {
-    "name": "monaco-languageclient",
-    "version": "0.0.1",
-    "description": "Monaco Language client implementation",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/TypeFox/monaco-languageclient.git"
-    },
-    "bugs": {
-        "url": "https://github.com/TypeFox/monaco-languageclient/issues"
-    },
-    "main": "./lib/index.js",
-    "typings": "./lib/index",
-    "directories": {
-        "lib": "lib/"
-    },
-    "devDependencies": {
-        "typescript": "^2.2.2"
-    },
-    "dependencies": {
-        "glob-to-regexp": "^0.3.0",
-        "monaco-editor": "^0.8.3",
-        "monaco-editor-core": "^0.8.2",
-        "reconnecting-websocket": "^3.0.3",
-        "vscode-jsonrpc": "^3.1.0",
-        "vscode-languageclient": "file:../vscode-languageserver-node/client"
-    },
-    "scripts": {
-        "prepublish": "npm run compile",
-        "compile": "./node_modules/.bin/tsc",
-        "watch": "./node_modules/.bin/tsc -w",
-        "clean": "./node_modules/.bin/rimraf lib",
-        "clean:languageclient": "./node_modules/.bin/rimraf node_modules/vscode-languageclient",
-        "update:languageclient": "npm run clean:languageclient && npm install"
-    }
+  "name": "monaco-languageclient",
+  "version": "0.0.1",
+  "description": "Monaco Language client implementation",
+  "author": "TypeFox",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypeFox/monaco-languageclient.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "main": "./lib/index.js",
+  "typings": "./lib/index",
+  "devDependencies": {
+    "@types/node": "^7.0.12",
+    "rimraf": "^2.6.1",
+    "typescript": "^2.2.2"
+  },
+  "dependencies": {
+    "glob-to-regexp": "^0.3.0",
+    "monaco-editor": "^0.8.3",
+    "monaco-editor-core": "^0.8.2",
+    "vscode-jsonrpc": "^3.2.0",
+    "vscode-languageclient": "file:../vscode-languageserver-node/client"
+  },
+  "scripts": {
+    "prepublish": "npm run compile",
+    "compile": "./node_modules/.bin/tsc",
+    "watch": "./node_modules/.bin/tsc -w",
+    "clean": "./node_modules/.bin/rimraf lib",
+    "clean:languageclient": "./node_modules/.bin/rimraf node_modules/vscode-languageclient",
+    "update:languageclient": "npm run clean:languageclient && npm install"
+  }
 }
