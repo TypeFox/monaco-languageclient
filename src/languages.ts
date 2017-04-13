@@ -1,7 +1,7 @@
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider
+    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider
 } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
@@ -314,6 +314,27 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asDocumentOnTypeFormattingParams(model, position, ch, options);
                 return provider.provideOnTypeFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+            }
+        }
+    }
+
+    registerRenameProvider(selector: DocumentSelector, provider: RenameProvider): Disposable {
+        const renameProvider = this.createRenameProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerRenameProvider(language.id, renameProvider));
+        }
+        return providers;
+    }
+
+    protected createRenameProvider(selector: DocumentSelector, provider: RenameProvider): monaco.languages.RenameProvider {
+        return {
+            provideRenameEdits: (model, position, newName, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined!;
+                }
+                const params = this.m2p.asRenameParams(model, position, newName);
+                return provider.provideRenameEdits(params, token).then(result => this.p2m.asWorkspaceEdit(result))
             }
         }
     }

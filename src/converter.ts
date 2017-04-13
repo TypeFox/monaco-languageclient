@@ -3,10 +3,11 @@ import {
     CodeActionParams,
     CodeLensParams,
     DocumentFormattingParams,
+    DocumentOnTypeFormattingParams,
     DocumentRangeFormattingParams,
     ReferenceParams,
-    TextDocumentPositionParams,
-    DocumentOnTypeFormattingParams
+    RenameParams,
+    TextDocumentPositionParams
 } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
@@ -14,7 +15,7 @@ import {
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens, FormattingOptions, TextEdit
+    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -230,9 +231,52 @@ export class MonacoToProtocolConverter {
             options: this.asFormattingOptions(options)
         }
     }
+
+    asRenameParams(model: IReadOnlyModel, position: monaco.IPosition, newName: string): RenameParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            position: this.asPosition(position.lineNumber, position.column),
+            newName
+        }
+    }
 }
 
 export class ProtocolToMonacoConverter {
+
+    asResourceEdits(resource: monaco.Uri, edits: TextEdit[]): languages.IResourceEdit[] {
+        return edits.map(edit => {
+            const range = this.asRange(edit.range)!;
+            return {
+                resource,
+                range,
+                newText: edit.newText
+            }
+        })
+    }
+
+	asWorkspaceEdit(item: WorkspaceEdit): languages.WorkspaceEdit;
+	asWorkspaceEdit(item: undefined | null): undefined;
+	asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined;
+	asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined {
+		if (!item) {
+			return undefined;
+		}
+        const edits: languages.IResourceEdit[] = [];
+		if (item.documentChanges) {
+            for (const change of item.documentChanges) {
+                const resource = monaco.Uri.parse(change.textDocument.uri);
+                edits.push(...this.asResourceEdits(resource, change.edits));
+			}
+		} else if (item.changes) {
+            for (const key of Object.keys(item.changes)) {
+                const resource = monaco.Uri.parse(key);
+                edits.push(...this.asResourceEdits(resource, item.changes[key]));
+            }
+		}
+        return {
+            edits
+        };
+	}
 
 	asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation {
         const range = this.asRange(edit.range)!;
