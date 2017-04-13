@@ -3,7 +3,7 @@ import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
-    Hover
+    Hover, SignatureHelp, SignatureInformation, ParameterInformation
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -63,7 +63,7 @@ export class MonacoToProtocolConverter {
         this.fillPrimaryInsertText(result, item as ProtocolCompletionItem);
         // Protocol item kind is 1 based, codes item kind is zero based.
         if (is.number(item.kind)) {
-            if (monaco.languages.CompletionItemKind.Text <= item.kind && item.kind <= monaco.languages.CompletionItemKind.Reference) {
+            if (languages.CompletionItemKind.Text <= item.kind && item.kind <= languages.CompletionItemKind.Reference) {
                 result.kind = (item.kind + 1) as CompletionItemKind;
             } else {
                 result.kind = CompletionItemKind.Text;
@@ -105,6 +105,51 @@ export class MonacoToProtocolConverter {
 }
 
 export class ProtocolToMonacoConverter {
+
+	asSignatureHelp(item: undefined | null): undefined;
+	asSignatureHelp(item: SignatureHelp): languages.SignatureHelp;
+	asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined;
+	asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined {
+		if (!item) {
+			return undefined;
+		}
+		let result = <languages.SignatureHelp>{};
+		if (is.number(item.activeSignature)) {
+			result.activeSignature = item.activeSignature;
+		} else {
+			// activeSignature was optional in the past
+			result.activeSignature = 0;
+		}
+		if (is.number(item.activeParameter)) {
+			result.activeParameter = item.activeParameter;
+		} else {
+			// activeParameter was optional in the past
+			result.activeParameter = 0;
+		}
+		if (item.signatures) { result.signatures = this.asSignatureInformations(item.signatures); }
+		return result;
+	}
+
+	asSignatureInformations(items: SignatureInformation[]): languages.SignatureInformation[] {
+		return items.map(item => this.asSignatureInformation(item));
+	}
+
+	asSignatureInformation(item: SignatureInformation): languages.SignatureInformation {
+		let result = <languages.SignatureInformation>{ label: item.label };
+		if (item.documentation) { result.documentation = item.documentation; }
+		if (item.parameters) { result.parameters = this.asParameterInformations(item.parameters); }
+		return result;
+	}
+
+	asParameterInformations(item: ParameterInformation[]): languages.ParameterInformation[] {
+		return item.map(item => this.asParameterInformation(item));
+	}
+
+	asParameterInformation(item: ParameterInformation): languages.ParameterInformation {
+		let result = <languages.ParameterInformation>{ label: item.label };
+		if (item.documentation) { result.documentation = item.documentation };
+		return result;
+	}
 
     asHover(hover: Hover): languages.Hover;
     asHover(hover: undefined | null): undefined;

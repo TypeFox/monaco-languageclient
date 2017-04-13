@@ -1,5 +1,8 @@
 import globToRegExp from "glob-to-regexp";
-import { Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider } from "vscode-languageclient/lib/services";
+import {
+    Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
+    SignatureHelpProvider
+} from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './converter';
@@ -90,6 +93,29 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position)
                 return provider.provideHover(params, token).then(hover => this.p2m.asHover(hover))
+            }
+        }
+    }
+
+    registerSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): Disposable {
+        const signatureHelpProvider = this.createSignatureHelpProvider(selector, provider, ...triggerCharacters);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerSignatureHelpProvider(language.id, signatureHelpProvider));
+        }
+        return providers;
+    }
+
+    protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
+        const signatureHelpTriggerCharacters = triggerCharacters;
+        return {
+            signatureHelpTriggerCharacters,
+            provideSignatureHelp: (model, position, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined!;
+                }
+                const params = this.m2p.asTextDocumentPositionParams(model, position)
+                return provider.provideSignatureHelp(params, token).then(signatureHelp => this.p2m.asSignatureHelp(signatureHelp))
             }
         }
     }
