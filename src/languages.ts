@@ -1,7 +1,7 @@
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider
+    SignatureHelpProvider, DefinitionProvider
 } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
@@ -116,6 +116,27 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position)
                 return provider.provideSignatureHelp(params, token).then(signatureHelp => this.p2m.asSignatureHelp(signatureHelp))
+            }
+        }
+    }
+
+    registerDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): Disposable {
+        const definitionProvider = this.createDefinitionProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerDefinitionProvider(language.id, definitionProvider));
+        }
+        return providers;
+    }
+
+    protected createDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): monaco.languages.DefinitionProvider {
+        return {
+            provideDefinition: (model, position, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined!;
+                }
+                const params = this.m2p.asTextDocumentPositionParams(model, position)
+                return provider.provideDefinition(params, token).then(result => this.p2m.asDefinitionResult(result))
             }
         }
     }

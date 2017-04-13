@@ -3,7 +3,8 @@ import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
-    Hover, SignatureHelp, SignatureInformation, ParameterInformation
+    Hover, SignatureHelp, SignatureInformation, ParameterInformation,
+    Definition, Location
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -105,6 +106,34 @@ export class MonacoToProtocolConverter {
 }
 
 export class ProtocolToMonacoConverter {
+
+	asDefinitionResult(item: Definition): languages.Definition;
+	asDefinitionResult(item: undefined | null): undefined;
+	asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined;
+	asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined {
+		if (!item) {
+			return undefined;
+		}
+		if (is.array(item)) {
+			return item.map((location) => this.asLocation(location));
+		} else {
+			return this.asLocation(item);
+		}
+	}
+
+	asLocation(item: Location): languages.Location;
+	asLocation(item: undefined | null): undefined;
+	asLocation(item: Location | undefined | null): languages.Location | undefined;
+	asLocation(item: Location | undefined | null): languages.Location | undefined {
+		if (!item) {
+			return undefined;
+		}
+        const uri = monaco.Uri.parse(item.uri);
+        const range = this.asRange(item.range)!;
+        return {
+            uri, range
+        }
+	}
 
 	asSignatureHelp(item: undefined | null): undefined;
 	asSignatureHelp(item: SignatureHelp): languages.SignatureHelp;
