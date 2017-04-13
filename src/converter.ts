@@ -1,15 +1,30 @@
 import * as is from 'vscode-languageclient/lib/utils/is';
-import { CodeActionParams, ReferenceParams, TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
+import {
+    CodeActionParams,
+    CodeLensParams,
+    ReferenceParams,
+    TextDocumentPositionParams
+} from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command
+    Command, CodeLens
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
+
+export interface ProtocolCodeLens extends languages.ICodeLensSymbol {
+    data?: any;
+}
+
+export namespace ProtocolCodeLens {
+    export function is(item: any): item is ProtocolCodeLens {
+        return !!item && 'data' in item;
+    }
+}
 
 export interface ProtocolCompletionItem extends languages.CompletionItem {
     data?: any;
@@ -120,6 +135,12 @@ export class MonacoToProtocolConverter {
         }
     }
 
+    asCodeLensParams(model: IReadOnlyModel): CodeLensParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model)
+        }
+    }
+
     asDiagnosticSeverity(value: monaco.Severity): DiagnosticSeverity | undefined {
         switch (value) {
             case monaco.Severity.Error:
@@ -162,9 +183,50 @@ export class MonacoToProtocolConverter {
             context: this.asCodeActionContext(context)
         }
     }
+
+    asCommand(item: languages.Command | undefined | null): Command | undefined {
+        if (item) {
+            return Command.create(item.title, item.id, item.arguments);
+        }
+        return undefined;
+    }
+
+    asCodeLens(item: languages.ICodeLensSymbol): CodeLens {
+        const range = this.asRange(item.range);
+        const data = ProtocolCodeLens.is(item) ? item.data : undefined;
+        const command = this.asCommand(item.command);
+        return {
+            range, data, command
+        }
+    }
 }
 
 export class ProtocolToMonacoConverter {
+
+    asCodeLens(item: CodeLens): languages.ICodeLensSymbol;
+    asCodeLens(item: undefined | null): undefined;
+    asCodeLens(item: CodeLens | undefined | null): languages.ICodeLensSymbol | undefined;
+    asCodeLens(item: CodeLens | undefined | null): languages.ICodeLensSymbol | undefined {
+        if (!item) {
+            return undefined;
+        }
+        const range = this.asRange(item.range);
+        let result = <ProtocolCodeLens>{ range };
+        if (item.command) { result.command = this.asCommand(item.command); }
+        if (item.data !== void 0 && item.data !== null) { result.data = item.data; }
+        return result;
+    }
+
+    asCodeLenses(items: CodeLens[]): languages.ICodeLensSymbol[];
+    asCodeLenses(items: undefined | null): undefined;
+    asCodeLenses(items: CodeLens[] | undefined | null): languages.ICodeLensSymbol[] | undefined;
+    asCodeLenses(items: CodeLens[] | undefined | null): languages.ICodeLensSymbol[] | undefined {
+        if (!items) {
+            return undefined;
+        }
+        return items.map((codeLens) => this.asCodeLens(codeLens));
+    }
+
 
     asCodeActions(commands: Command[]): languages.CodeAction[] {
         return this.asCommands(commands).map((command, score) => {
@@ -172,14 +234,16 @@ export class ProtocolToMonacoConverter {
         });
     }
 
-    asCommands(commands: Command[]): languages.Command[] {
-        return commands.map(command => {
-            return <languages.Command>{
-                id: command.command,
-                title: command.title,
-                arguments: command.arguments
-            }
-        });
+    asCommand(command: Command): languages.Command {
+        return {
+            id: command.command,
+            title: command.title,
+            arguments: command.arguments
+        };
+    }
+
+    asCommands(commands: Command[]): languages.Command[] {
+        return commands.map(command => this.asCommand(command));
     }
 
     asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): languages.SymbolInformation[];

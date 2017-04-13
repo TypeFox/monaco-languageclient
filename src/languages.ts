@@ -1,7 +1,7 @@
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider
+    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider
 } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
@@ -222,6 +222,34 @@ export class MonacoLanguages implements Languages {
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 return provider.provideCodeActions(params, token).then(result => this.p2m.asCodeActions(result))
             }
+        }
+    }
+
+    registerCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): Disposable {
+        const codeLensProvider = this.createCodeLensProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerCodeLensProvider(language.id, codeLensProvider));
+        }
+        return providers;
+    }
+
+    protected createCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): monaco.languages.CodeLensProvider {
+        return {
+            provideCodeLenses: (model, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asCodeLensParams(model);
+                return provider.provideCodeLenses(params, token).then(result => this.p2m.asCodeLenses(result))
+            },
+            resolveCodeLens: provider.resolveCodeLens ? (model, codeLens, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return codeLens;
+                }
+                const protocolCodeLens = this.m2p.asCodeLens(codeLens);
+                return provider.resolveCodeLens!(protocolCodeLens, token).then(result => this.p2m.asCodeLens(result))
+            } : undefined
         }
     }
 
