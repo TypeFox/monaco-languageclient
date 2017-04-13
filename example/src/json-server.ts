@@ -2,8 +2,11 @@ import * as fs from "fs";
 import { xhr, XHRResponse, getErrorStatusDescription } from 'request-light';
 import Uri from 'vscode-uri';
 import { IConnection, TextDocuments } from 'vscode-languageserver';
-import { TextDocument, Diagnostic, CompletionList, CompletionItem } from "vscode-languageserver-types";
-import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
+import {
+    TextDocument, Diagnostic, CompletionList, CompletionItem, Hover,
+    SymbolInformation, DocumentSymbolParams, TextEdit
+} from "vscode-languageserver-types";
+import { TextDocumentPositionParams, DocumentRangeFormattingParams } from 'vscode-languageclient/lib/protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
 export class JsonServer {
@@ -42,7 +45,10 @@ export class JsonServer {
                     completionProvider: {
                         resolveProvider: true,
                         triggerCharacters: ['"', ':']
-                    }
+                    },
+                    hoverProvider: true,
+                    documentSymbolProvider: true,
+                    documentRangeFormattingProvider: true
                 }
             }
         });
@@ -52,10 +58,36 @@ export class JsonServer {
         this.connection.onCompletionResolve(item =>
             this.resolveCompletion(item)
         );
+        this.connection.onHover(params =>
+            this.hover(params)
+        )
+        this.connection.onDocumentSymbol(params =>
+            this.findDocumentSymbols(params)
+        );
+        this.connection.onDocumentRangeFormatting(params =>
+            this.format(params)
+        );
     }
 
     start() {
         this.connection.listen();
+    }
+
+    protected format(params: DocumentRangeFormattingParams): TextEdit[] {
+        const document = this.documents.get(params.textDocument.uri);
+        return this.jsonService.format(document, params.range, params.options)
+    }
+
+    protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
+        const document = this.documents.get(params.textDocument.uri);
+        const jsonDocument = this.getJSONDocument(document);
+        return this.jsonService.findDocumentSymbols(document, jsonDocument);
+    }
+
+    protected hover(params: TextDocumentPositionParams): Thenable<Hover> {
+        const document = this.documents.get(params.textDocument.uri);
+        const jsonDocument = this.getJSONDocument(document);
+        return this.jsonService.doHover(document, params.position, jsonDocument);
     }
 
     protected resovleSchema(url: string): Promise<string> {

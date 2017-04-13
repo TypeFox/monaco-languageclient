@@ -24,4 +24,18 @@ npm run compile
 ```
 
 ## Example
-FIXME: TBD
+
+Run from `monaco-languageclient` directory:
+- to link `example` package against local `monaco-languageclient` package:
+
+```bash
+npm run link:example
+```
+
+Run from `monaco-languageclient/example` directory:
+- to build and start:
+
+```bash
+npm install
+npm run start
+```
