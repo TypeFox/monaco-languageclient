@@ -4,7 +4,7 @@ import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
-    Definition, Location
+    Definition, Location, DocumentHighlight, DocumentHighlightKind
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -104,99 +104,127 @@ export class MonacoToProtocolConverter {
         }
     }
 
-	asReferenceParams(model: IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
-		return {
+    asReferenceParams(model: IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
+        return {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
-			context: { includeDeclaration: options.includeDeclaration }
-		};
-	}
+            context: { includeDeclaration: options.includeDeclaration }
+        };
+    }
 }
 
 export class ProtocolToMonacoConverter {
 
-	asReferences(values: Location[]): languages.Location[];
-	asReferences(values: undefined | null): languages.Location[] | undefined;
-	asReferences(values: Location[] | undefined | null): languages.Location[] | undefined;
-	asReferences(values: Location[] | undefined | null): languages.Location[] | undefined {
-		if (!values) {
-			return undefined;
-		}
-		return values.map(location => this.asLocation(location));
-	}
+    asDocumentHighlights(values: DocumentHighlight[]): languages.DocumentHighlight[];
+    asDocumentHighlights(values: undefined | null): undefined;
+    asDocumentHighlights(values: DocumentHighlight[] | undefined | null): languages.DocumentHighlight[] | undefined;
+    asDocumentHighlights(values: DocumentHighlight[] | undefined | null): languages.DocumentHighlight[] | undefined {
+        if (!values) {
+            return undefined;
+        }
+        return values.map(item => this.asDocumentHighlight(item));
+    }
 
-	asDefinitionResult(item: Definition): languages.Definition;
-	asDefinitionResult(item: undefined | null): undefined;
-	asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined;
-	asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined {
-		if (!item) {
-			return undefined;
-		}
-		if (is.array(item)) {
-			return item.map((location) => this.asLocation(location));
-		} else {
-			return this.asLocation(item);
-		}
-	}
+    asDocumentHighlight(item: DocumentHighlight): languages.DocumentHighlight {
+        const range = this.asRange(item.range)!;
+        const kind = is.number(item.kind) ? this.asDocumentHighlightKind(item.kind) : undefined!;
+        return { range, kind };
+    }
 
-	asLocation(item: Location): languages.Location;
-	asLocation(item: undefined | null): undefined;
-	asLocation(item: Location | undefined | null): languages.Location | undefined;
-	asLocation(item: Location | undefined | null): languages.Location | undefined {
-		if (!item) {
-			return undefined;
-		}
+    asDocumentHighlightKind(item: number): languages.DocumentHighlightKind {
+        switch (item) {
+            case DocumentHighlightKind.Text:
+                return languages.DocumentHighlightKind.Text;
+            case DocumentHighlightKind.Read:
+                return languages.DocumentHighlightKind.Read;
+            case DocumentHighlightKind.Write:
+                return languages.DocumentHighlightKind.Write;
+        }
+        return languages.DocumentHighlightKind.Text;
+    }
+
+    asReferences(values: Location[]): languages.Location[];
+    asReferences(values: undefined | null): languages.Location[] | undefined;
+    asReferences(values: Location[] | undefined | null): languages.Location[] | undefined;
+    asReferences(values: Location[] | undefined | null): languages.Location[] | undefined {
+        if (!values) {
+            return undefined;
+        }
+        return values.map(location => this.asLocation(location));
+    }
+
+    asDefinitionResult(item: Definition): languages.Definition;
+    asDefinitionResult(item: undefined | null): undefined;
+    asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined;
+    asDefinitionResult(item: Definition | undefined | null): languages.Definition | undefined {
+        if (!item) {
+            return undefined;
+        }
+        if (is.array(item)) {
+            return item.map((location) => this.asLocation(location));
+        } else {
+            return this.asLocation(item);
+        }
+    }
+
+    asLocation(item: Location): languages.Location;
+    asLocation(item: undefined | null): undefined;
+    asLocation(item: Location | undefined | null): languages.Location | undefined;
+    asLocation(item: Location | undefined | null): languages.Location | undefined {
+        if (!item) {
+            return undefined;
+        }
         const uri = monaco.Uri.parse(item.uri);
         const range = this.asRange(item.range)!;
         return {
             uri, range
         }
-	}
+    }
 
-	asSignatureHelp(item: undefined | null): undefined;
-	asSignatureHelp(item: SignatureHelp): languages.SignatureHelp;
-	asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined;
-	asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined {
-		if (!item) {
-			return undefined;
-		}
-		let result = <languages.SignatureHelp>{};
-		if (is.number(item.activeSignature)) {
-			result.activeSignature = item.activeSignature;
-		} else {
-			// activeSignature was optional in the past
-			result.activeSignature = 0;
-		}
-		if (is.number(item.activeParameter)) {
-			result.activeParameter = item.activeParameter;
-		} else {
-			// activeParameter was optional in the past
-			result.activeParameter = 0;
-		}
-		if (item.signatures) { result.signatures = this.asSignatureInformations(item.signatures); }
-		return result;
-	}
+    asSignatureHelp(item: undefined | null): undefined;
+    asSignatureHelp(item: SignatureHelp): languages.SignatureHelp;
+    asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined;
+    asSignatureHelp(item: SignatureHelp | undefined | null): languages.SignatureHelp | undefined {
+        if (!item) {
+            return undefined;
+        }
+        let result = <languages.SignatureHelp>{};
+        if (is.number(item.activeSignature)) {
+            result.activeSignature = item.activeSignature;
+        } else {
+            // activeSignature was optional in the past
+            result.activeSignature = 0;
+        }
+        if (is.number(item.activeParameter)) {
+            result.activeParameter = item.activeParameter;
+        } else {
+            // activeParameter was optional in the past
+            result.activeParameter = 0;
+        }
+        if (item.signatures) { result.signatures = this.asSignatureInformations(item.signatures); }
+        return result;
+    }
 
-	asSignatureInformations(items: SignatureInformation[]): languages.SignatureInformation[] {
-		return items.map(item => this.asSignatureInformation(item));
-	}
+    asSignatureInformations(items: SignatureInformation[]): languages.SignatureInformation[] {
+        return items.map(item => this.asSignatureInformation(item));
+    }
 
-	asSignatureInformation(item: SignatureInformation): languages.SignatureInformation {
-		let result = <languages.SignatureInformation>{ label: item.label };
-		if (item.documentation) { result.documentation = item.documentation; }
-		if (item.parameters) { result.parameters = this.asParameterInformations(item.parameters); }
-		return result;
-	}
+    asSignatureInformation(item: SignatureInformation): languages.SignatureInformation {
+        let result = <languages.SignatureInformation>{ label: item.label };
+        if (item.documentation) { result.documentation = item.documentation; }
+        if (item.parameters) { result.parameters = this.asParameterInformations(item.parameters); }
+        return result;
+    }
 
-	asParameterInformations(item: ParameterInformation[]): languages.ParameterInformation[] {
-		return item.map(item => this.asParameterInformation(item));
-	}
+    asParameterInformations(item: ParameterInformation[]): languages.ParameterInformation[] {
+        return item.map(item => this.asParameterInformation(item));
+    }
 
-	asParameterInformation(item: ParameterInformation): languages.ParameterInformation {
-		let result = <languages.ParameterInformation>{ label: item.label };
-		if (item.documentation) { result.documentation = item.documentation };
-		return result;
-	}
+    asParameterInformation(item: ParameterInformation): languages.ParameterInformation {
+        let result = <languages.ParameterInformation>{ label: item.label };
+        if (item.documentation) { result.documentation = item.documentation };
+        return result;
+    }
 
     asHover(hover: Hover): languages.Hover;
     asHover(hover: undefined | null): undefined;
