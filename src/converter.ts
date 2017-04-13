@@ -4,7 +4,8 @@ import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
-    Definition, Location, DocumentHighlight, DocumentHighlightKind
+    Definition, Location, DocumentHighlight, DocumentHighlightKind,
+    SymbolInformation, DocumentSymbolParams
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -111,9 +112,35 @@ export class MonacoToProtocolConverter {
             context: { includeDeclaration: options.includeDeclaration }
         };
     }
+
+	asDocumentSymbolParams(model: IReadOnlyModel): DocumentSymbolParams {
+		return {
+			textDocument: this.asTextDocumentIdentifier(model)
+		}
+	}
 }
 
 export class ProtocolToMonacoConverter {
+
+	asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): languages.SymbolInformation[];
+	asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
+	asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined;
+	asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined {
+		if (!values) {
+			return undefined;
+		}
+		return values.map(information => this.asSymbolInformation(information, uri));
+	}
+
+	asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): languages.SymbolInformation {
+		// Symbol kind is one based in the protocol and zero based in code.
+        return {
+            name: item.name,
+            containerName: item.containerName,
+            kind: item.kind - 1,
+            location: this.asLocation(uri ? {...item.location, uri: uri.toString()} : item.location)
+        };
+	}
 
     asDocumentHighlights(values: DocumentHighlight[]): languages.DocumentHighlight[];
     asDocumentHighlights(values: undefined | null): undefined;
