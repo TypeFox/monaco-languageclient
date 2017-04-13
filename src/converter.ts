@@ -1,11 +1,12 @@
 import * as is from 'vscode-languageclient/lib/utils/is';
-import { TextDocumentPositionParams, ReferenceParams } from 'vscode-languageclient/lib/protocol';
+import { CodeActionParams, ReferenceParams, TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
-    SymbolInformation, DocumentSymbolParams
+    SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
+    Command
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -113,34 +114,93 @@ export class MonacoToProtocolConverter {
         };
     }
 
-	asDocumentSymbolParams(model: IReadOnlyModel): DocumentSymbolParams {
-		return {
-			textDocument: this.asTextDocumentIdentifier(model)
-		}
-	}
+    asDocumentSymbolParams(model: IReadOnlyModel): DocumentSymbolParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model)
+        }
+    }
+
+    asDiagnosticSeverity(value: monaco.Severity): DiagnosticSeverity | undefined {
+        switch (value) {
+            case monaco.Severity.Error:
+                return DiagnosticSeverity.Error;
+            case monaco.Severity.Warning:
+                return DiagnosticSeverity.Warning;
+            case monaco.Severity.Info:
+                return DiagnosticSeverity.Information;
+        }
+        return undefined;
+    }
+
+    asDiagnostic(marker: monaco.editor.IMarkerData): Diagnostic {
+        const range = this.asRange(new monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
+        const severity = this.asDiagnosticSeverity(marker.severity);
+        return Diagnostic.create(range, marker.message, severity, marker.code, marker.source);
+    }
+
+    asDiagnostics(markers: monaco.editor.IMarkerData[]): Diagnostic[] {
+        if (markers === void 0 || markers === null) {
+            return markers;
+        }
+        return markers.map(marker => this.asDiagnostic(marker));
+    }
+
+    asCodeActionContext(context: languages.CodeActionContext): CodeActionContext {
+        if (context === void 0 || context === null) {
+            return context;
+        }
+        const diagnostics = this.asDiagnostics(context.markers);
+        return {
+            diagnostics
+        }
+    }
+
+    asCodeActionParams(model: IReadOnlyModel, range: monaco.Range, context: languages.CodeActionContext): CodeActionParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            range: this.asRange(range),
+            context: this.asCodeActionContext(context)
+        }
+    }
 }
 
 export class ProtocolToMonacoConverter {
 
-	asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): languages.SymbolInformation[];
-	asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
-	asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined;
-	asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined {
-		if (!values) {
-			return undefined;
-		}
-		return values.map(information => this.asSymbolInformation(information, uri));
-	}
+    asCodeActions(commands: Command[]): languages.CodeAction[] {
+        return this.asCommands(commands).map((command, score) => {
+            return <languages.CodeAction>{ command, score }
+        });
+    }
 
-	asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): languages.SymbolInformation {
-		// Symbol kind is one based in the protocol and zero based in code.
+    asCommands(commands: Command[]): languages.Command[] {
+        return commands.map(command => {
+            return <languages.Command>{
+                id: command.command,
+                title: command.title,
+                arguments: command.arguments
+            }
+        });
+    }
+
+    asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): languages.SymbolInformation[];
+    asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined;
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): languages.SymbolInformation[] | undefined {
+        if (!values) {
+            return undefined;
+        }
+        return values.map(information => this.asSymbolInformation(information, uri));
+    }
+
+    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): languages.SymbolInformation {
+        // Symbol kind is one based in the protocol and zero based in code.
         return {
             name: item.name,
             containerName: item.containerName,
             kind: item.kind - 1,
-            location: this.asLocation(uri ? {...item.location, uri: uri.toString()} : item.location)
+            location: this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location)
         };
-	}
+    }
 
     asDocumentHighlights(values: DocumentHighlight[]): languages.DocumentHighlight[];
     asDocumentHighlights(values: undefined | null): undefined;

@@ -1,7 +1,7 @@
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider
+    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider
 } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
@@ -200,6 +200,27 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asDocumentSymbolParams(model);
                 return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asSymbolInformations(result))
+            }
+        }
+    }
+
+    registerCodeActionsProvider(selector: DocumentSelector, provider: CodeActionProvider): Disposable {
+        const codeActionProvider = this.createCodeActionProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerCodeActionProvider(language.id, codeActionProvider));
+        }
+        return providers;
+    }
+
+    protected createCodeActionProvider(selector: DocumentSelector, provider: CodeActionProvider): monaco.languages.CodeActionProvider {
+        return {
+            provideCodeActions: (model, range, context, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asCodeActionParams(model, range, context);
+                return provider.provideCodeActions(params, token).then(result => this.p2m.asCodeActions(result))
             }
         }
     }
