@@ -1,5 +1,5 @@
 import * as is from 'vscode-languageclient/lib/utils/is';
-import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
+import { TextDocumentPositionParams, ReferenceParams } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
@@ -103,9 +103,27 @@ export class MonacoToProtocolConverter {
             target.insertText = text;
         }
     }
+
+	asReferenceParams(model: IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
+		return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            position: this.asPosition(position.lineNumber, position.column),
+			context: { includeDeclaration: options.includeDeclaration }
+		};
+	}
 }
 
 export class ProtocolToMonacoConverter {
+
+	asReferences(values: Location[]): languages.Location[];
+	asReferences(values: undefined | null): languages.Location[] | undefined;
+	asReferences(values: Location[] | undefined | null): languages.Location[] | undefined;
+	asReferences(values: Location[] | undefined | null): languages.Location[] | undefined {
+		if (!values) {
+			return undefined;
+		}
+		return values.map(location => this.asLocation(location));
+	}
 
 	asDefinitionResult(item: Definition): languages.Definition;
 	asDefinitionResult(item: undefined | null): undefined;
