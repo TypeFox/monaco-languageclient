@@ -1,4 +1,4 @@
-import {MessageConnection, createMessageConnection, Trace, Logger} from "vscode-jsonrpc";
+import {MessageConnection, createMessageConnection, Logger} from "vscode-jsonrpc";
 import {Socket} from "./socket";
 import {SocketMessageReader} from "./reader";
 import {SocketMessageWriter} from "./writer";

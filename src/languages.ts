@@ -37,7 +37,7 @@ export class MonacoLanguages implements Languages {
     constructor(
         protected readonly p2m: ProtocolToMonacoConverter,
         protected readonly m2p: MonacoToProtocolConverter
-    ) { }
+    ) {}
 
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean {
         return this.matchModel(selector, MonacoModelIdentifier.fromDocument(document));

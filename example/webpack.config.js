@@ -19,6 +19,8 @@ module.exports = {
             'vs': path.resolve(buildRoot, monacoEditorPath)
         }
     },
+    devtool: 'source-map',
+    target: 'web',
     node: {
         fs: 'empty',
         child_process: 'empty',

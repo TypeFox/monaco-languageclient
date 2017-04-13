@@ -1,26 +1,39 @@
-import { POINT_CONVERSION_COMPRESSED } from 'constants';
-import { BaseLanguageClient, CloseAction, ErrorAction, ErrorHandler } from 'vscode-languageclient/lib/base';
+import { BaseLanguageClient as LanguageClient, CloseAction, ErrorAction } from 'vscode-languageclient/lib/base';
 import { createConnection } from "vscode-languageclient/lib/connection";
 import {
-    MonacoToProtocolConverter,  ProtocolToMonacoConverter,
+    MonacoToProtocolConverter, ProtocolToMonacoConverter,
     MonacoLanguages, MonacoWorkspace,
     listen, MessageConnection
- } from 'monaco-languageclient';
-
+} from 'monaco-languageclient';
 const ReconnectingWebSocket = require('reconnecting-websocket');
+
+monaco.languages.register({
+    id: 'json',
+    extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
+    aliases: ['JSON', 'json'],
+    mimetypes: ['application/json'],
+});
+
+const value = `{
+    "hello": "World"
+}`;
+
+monaco.editor.create(document.getElementById("container")!, {
+    model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json'))
+});
 
 const m2p = new MonacoToProtocolConverter();
 const p2m = new ProtocolToMonacoConverter();
-const services: BaseLanguageClient.IServices = {
+const services: LanguageClient.IServices = {
     languages: new MonacoLanguages(p2m, m2p),
     workspace: new MonacoWorkspace(m2p)
 }
 
-export function createLanguageClient(connection: MessageConnection): BaseLanguageClient {
-    return new BaseLanguageClient({
+export function createLanguageClient(connection: MessageConnection): LanguageClient {
+    return new LanguageClient({
         name: "Sample Language Client",
         clientOptions: {
-            documentSelector: ["*.txt"],
+            documentSelector: ['json'],
             errorHandler: {
                 error: () => ErrorAction.Continue,
                 closed: () => CloseAction.DoNotRestart
@@ -61,8 +74,4 @@ listen({
         const disposable = languageClient.start();
         connection.onClose(() => disposable.dispose());
     }
-});
-
-monaco.editor.create(document.getElementById("container")!, {
-    model: monaco.editor.createModel("", undefined, monaco.Uri.parse("dummy://sample.txt"))
 });

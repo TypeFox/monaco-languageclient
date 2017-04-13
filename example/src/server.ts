@@ -1,12 +1,11 @@
 import * as ws from "ws";
 import * as http from "http";
 import * as url from "url";
-import * as path from "path";
 import * as net from "net";
 import * as express from "express";
 import { Socket, SocketMessageReader, SocketMessageWriter } from "monaco-languageclient/lib/socket";
-import { ConsoleLogger } from "monaco-languageclient/lib/logger";
-import { createConnection, IConnection, TextDocuments } from "vscode-languageserver";
+import { createConnection } from "vscode-languageserver";
+import { JsonServer } from "./json-server";
 
 process.on('uncaughtException', function (err: any) {
     console.error('Uncaught Exception: ', err.toString());
@@ -19,20 +18,10 @@ function onOpen(socket: Socket): void {
     const reader = new SocketMessageReader(socket);
     const writer = new SocketMessageWriter(socket);
     const connection = createConnection(reader, writer);
-
-    const documents: TextDocuments = new TextDocuments();
-    documents.listen(connection);
-
-    connection.onInitialize(params => {
-        return {
-            capabilities: {
-                textDocumentSync: documents.syncKind
-            }
-        }
-    });
-
-    connection.listen();
+    const server = new JsonServer(connection);
+    server.start();
 }
+
 const app = express();
 app.use(express.static(__dirname));
 const server = app.listen(3000);
@@ -40,7 +29,6 @@ const wss = new ws.Server({
     noServer: true,
     perMessageDeflate: false
 });
-const logger = new ConsoleLogger();
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
     const pathname = request.url ? url.parse(request.url).pathname : undefined;
     if (pathname === '/sampleServer') {
