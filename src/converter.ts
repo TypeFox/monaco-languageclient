@@ -1,12 +1,18 @@
 import * as is from 'vscode-languageclient/lib/utils/is';
 import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
-import { Position, TextDocumentIdentifier, CompletionItem, CompletionList, InsertTextFormat, Range, Diagnostic } from 'vscode-languageserver-types';
+import { Position, TextDocumentIdentifier, CompletionItem, CompletionList, InsertTextFormat, Range, Diagnostic, CompletionItemKind } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
 
 export interface ProtocolCompletionItem extends languages.CompletionItem {
     data?: any;
     fromEdit?: boolean;
+}
+
+export namespace ProtocolCompletionItem {
+    export function is(item: any): item is ProtocolCompletionItem {
+        return !!item && 'data' in item;
+    }
 }
 
 export class MonacoToProtocolConverter {
@@ -17,7 +23,7 @@ export class MonacoToProtocolConverter {
     asRange(range: undefined): undefined;
     asRange(range: null): null;
     asRange(range: monaco.IRange): Range;
-    asRange(range: monaco.IRange | undefined  | null): Range | undefined | null {
+    asRange(range: monaco.IRange | undefined | null): Range | undefined | null {
         if (range === undefined) {
             return undefined
         }
@@ -43,6 +49,54 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column)
         };
+    }
+
+    asCompletionItem(item: languages.CompletionItem): CompletionItem {
+        const result: CompletionItem = { label: item.label };
+        if (item.detail) { result.detail = item.detail; }
+        if (item.documentation) { result.documentation = item.documentation; }
+        if (item.filterText) { result.filterText = item.filterText; }
+        this.fillPrimaryInsertText(result, item as ProtocolCompletionItem);
+        // Protocol item kind is 1 based, codes item kind is zero based.
+        if (is.number(item.kind)) {
+            if (monaco.languages.CompletionItemKind.Text <= item.kind && item.kind <= monaco.languages.CompletionItemKind.Reference) {
+                result.kind = (item.kind + 1) as CompletionItemKind;
+            } else {
+                result.kind = CompletionItemKind.Text;
+            }
+        }
+        if (item.sortText) { result.sortText = item.sortText; }
+        // TODO: if (item.additionalTextEdits) { result.additionalTextEdits = asTextEdits(item.additionalTextEdits); }
+        // TODO: if (item.command) { result.command = asCommand(item.command); }
+        if (ProtocolCompletionItem.is(item)) {
+            result.data = item.data;
+        }
+        return result;
+    }
+
+    protected fillPrimaryInsertText(target: CompletionItem, source: ProtocolCompletionItem): void {
+        let format: InsertTextFormat = InsertTextFormat.PlainText;
+        let text: string | undefined;
+        let range: Range | undefined;
+        if (source.textEdit) {
+            text = source.textEdit.text;
+            range = this.asRange(source.textEdit.range);
+        }  else if (typeof source.insertText === 'string') {
+            text = source.insertText;
+        } else if (source.insertText) {
+            format = InsertTextFormat.Snippet;
+            text = source.insertText.value;
+        }
+        if (source.range) {
+            range = this.asRange(source.range);
+        }
+
+        target.insertTextFormat = format;
+        if (source.fromEdit && text && range) {
+            target.textEdit = { newText: text, range: range };
+        } else {
+            target.insertText = text;
+        }
     }
 }
 

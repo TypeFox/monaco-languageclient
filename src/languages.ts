@@ -58,7 +58,11 @@ export class MonacoLanguages implements Languages {
                     }
                     const params = this.m2p.asTextDocumentPositionParams(model, position)
                     return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result));
-                }
+                },
+                resolveCompletionItem: provider.resolveCompletionItem ? (item, token) => {
+                    const protocolItem = this.m2p.asCompletionItem(item);
+                    return provider.resolveCompletionItem!(protocolItem, token).then(item => this.p2m.asCompletionItem(item));
+                } : undefined
             }));
         }
         return providers;
