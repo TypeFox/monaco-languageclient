@@ -1,7 +1,7 @@
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider
+    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider
 } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
@@ -46,7 +46,7 @@ export class MonacoLanguages implements Languages {
         return this.matchModel(selector, MonacoModelIdentifier.fromDocument(document));
     }
 
-    createDiagnosticCollection?(name?: string): DiagnosticCollection {
+    createDiagnosticCollection(name?: string): DiagnosticCollection {
         return new MonacoDiagnosticCollection(name || 'default', this.p2m);
     }
 
@@ -250,6 +250,71 @@ export class MonacoLanguages implements Languages {
                 const protocolCodeLens = this.m2p.asCodeLens(codeLens);
                 return provider.resolveCodeLens!(protocolCodeLens, token).then(result => this.p2m.asCodeLens(result))
             } : undefined
+        }
+    }
+
+    registerDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): Disposable {
+        const documentFormattingEditProvider = this.createDocumentFormattingEditProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerDocumentFormattingEditProvider(language.id, documentFormattingEditProvider));
+        }
+        return providers;
+    }
+
+    protected createDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): monaco.languages.DocumentFormattingEditProvider {
+        return {
+            provideDocumentFormattingEdits: (model, options, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asDocumentFormattingParams(model, options);
+                return provider.provideDocumentFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+            }
+        }
+    }
+
+    registerDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): Disposable {
+        const documentRangeFormattingEditProvider = this.createDocumentRangeFormattingEditProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerDocumentRangeFormattingEditProvider(language.id, documentRangeFormattingEditProvider));
+        }
+        return providers;
+    }
+
+    createDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): monaco.languages.DocumentRangeFormattingEditProvider {
+        return {
+            provideDocumentRangeFormattingEdits: (model, range, options, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asDocumentRangeFormattingParams(model, range, options);
+                return provider.provideDocumentRangeFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+            }
+        }
+    }
+
+    registerOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): Disposable {
+        const onTypeFormattingEditProvider = this.createOnTypeFormattingEditProvider(selector, provider, firstTriggerCharacter, ...moreTriggerCharacter);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerOnTypeFormattingEditProvider(language.id, onTypeFormattingEditProvider));
+        }
+        return providers;
+    }
+
+    protected createOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): monaco.languages.OnTypeFormattingEditProvider {
+        const autoFormatTriggerCharacters = [firstTriggerCharacter].concat(moreTriggerCharacter)
+        return {
+            autoFormatTriggerCharacters,
+            provideOnTypeFormattingEdits: (model, position, ch, options, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asDocumentOnTypeFormattingParams(model, position, ch, options);
+                return provider.provideOnTypeFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+            }
         }
     }
 

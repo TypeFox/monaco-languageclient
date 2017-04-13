@@ -2,8 +2,11 @@ import * as is from 'vscode-languageclient/lib/utils/is';
 import {
     CodeActionParams,
     CodeLensParams,
+    DocumentFormattingParams,
+    DocumentRangeFormattingParams,
     ReferenceParams,
-    TextDocumentPositionParams
+    TextDocumentPositionParams,
+    DocumentOnTypeFormattingParams
 } from 'vscode-languageclient/lib/protocol';
 import {
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
@@ -11,7 +14,7 @@ import {
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens
+    Command, CodeLens, FormattingOptions, TextEdit
 } from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
@@ -184,7 +187,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asCommand(item: languages.Command | undefined | null): Command | undefined {
+    asCommand(item: languages.Command | undefined |  null): Command | undefined {
         if (item) {
             return Command.create(item.title, item.id, item.arguments);
         }
@@ -199,9 +202,55 @@ export class MonacoToProtocolConverter {
             range, data, command
         }
     }
+
+    asFormattingOptions(options: languages.FormattingOptions): FormattingOptions {
+        return { tabSize: options.tabSize, insertSpaces: options.insertSpaces };
+    }
+    
+    asDocumentFormattingParams(model: IReadOnlyModel, options: languages.FormattingOptions): DocumentFormattingParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            options: this.asFormattingOptions(options)
+        }
+    }
+
+    asDocumentRangeFormattingParams(model: IReadOnlyModel, range: monaco.Range, options: languages.FormattingOptions): DocumentRangeFormattingParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            range: this.asRange(range),
+            options: this.asFormattingOptions(options)
+        }
+    }
+
+    asDocumentOnTypeFormattingParams(model: IReadOnlyModel, position: monaco.IPosition, ch: string, options: languages.FormattingOptions): DocumentOnTypeFormattingParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model),
+            position: this.asPosition(position.lineNumber, position.column),
+            ch,
+            options: this.asFormattingOptions(options)
+        }
+    }
 }
 
 export class ProtocolToMonacoConverter {
+
+	asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation {
+        const range = this.asRange(edit.range)!;
+        return {
+            range,
+            text: edit.newText
+        }
+	}
+
+	asTextEdits(items: TextEdit[]): monaco.editor.ISingleEditOperation[];
+	asTextEdits(items: undefined | null): undefined;
+	asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined;
+	asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined {
+		if (!items) {
+			return undefined;
+		}
+		return items.map(item => this.asTextEdit(item));
+	}
 
     asCodeLens(item: CodeLens): languages.ICodeLensSymbol;
     asCodeLens(item: undefined | null): undefined;
