@@ -15,7 +15,8 @@ monaco.languages.register({
 });
 
 const value = `{
-    "hello": "World"
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
 }`;
 
 monaco.editor.create(document.getElementById("container")!, {
