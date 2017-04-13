@@ -1,6 +1,10 @@
 import * as is from 'vscode-languageclient/lib/utils/is';
 import { TextDocumentPositionParams } from 'vscode-languageclient/lib/protocol';
-import { Position, TextDocumentIdentifier, CompletionItem, CompletionList, InsertTextFormat, Range, Diagnostic, CompletionItemKind } from 'vscode-languageserver-types';
+import {
+    Position, TextDocumentIdentifier, CompletionItem, CompletionList,
+    InsertTextFormat, Range, Diagnostic, CompletionItemKind,
+    Hover
+} from 'vscode-languageserver-types';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
 
@@ -81,7 +85,7 @@ export class MonacoToProtocolConverter {
         if (source.textEdit) {
             text = source.textEdit.text;
             range = this.asRange(source.textEdit.range);
-        }  else if (typeof source.insertText === 'string') {
+        } else if (typeof source.insertText === 'string') {
             text = source.insertText;
         } else if (source.insertText) {
             format = InsertTextFormat.Snippet;
@@ -101,6 +105,20 @@ export class MonacoToProtocolConverter {
 }
 
 export class ProtocolToMonacoConverter {
+
+    asHover(hover: Hover): languages.Hover;
+    asHover(hover: undefined | null): undefined;
+    asHover(hover: Hover | undefined | null): languages.Hover | undefined;
+    asHover(hover: Hover | undefined | null): languages.Hover | undefined {
+        if (!hover) {
+            return undefined;
+        }
+        const contents = Array.isArray(hover.contents) ? hover.contents : [hover.contents];
+        return {
+            contents,
+            range: this.asRange(hover.range)!
+        }
+    }
 
     asSeverity(severity?: number): monaco.Severity {
         if (severity === 1) {

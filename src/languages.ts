@@ -1,5 +1,5 @@
 import globToRegExp from "glob-to-regexp";
-import { Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier } from "vscode-languageclient/lib/services";
+import { Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider } from "vscode-languageclient/lib/services";
 import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './converter';
@@ -37,7 +37,7 @@ export class MonacoLanguages implements Languages {
     constructor(
         protected readonly p2m: ProtocolToMonacoConverter,
         protected readonly m2p: MonacoToProtocolConverter
-    ) {}
+    ) { }
 
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean {
         return this.matchModel(selector, MonacoModelIdentifier.fromDocument(document));
@@ -48,24 +48,50 @@ export class MonacoLanguages implements Languages {
     }
 
     registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
+        const completionProvider = this.createCompletionProvider(selector, provider, ...triggerCharacters);
         const providers = new DisposableCollection();
         for (const language of monaco.languages.getLanguages()) {
-            providers.push(monaco.languages.registerCompletionItemProvider(language.id, {
-                triggerCharacters,
-                provideCompletionItems: (model, position, token) => {
-                    if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                        return [];
-                    }
-                    const params = this.m2p.asTextDocumentPositionParams(model, position)
-                    return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result));
-                },
-                resolveCompletionItem: provider.resolveCompletionItem ? (item, token) => {
-                    const protocolItem = this.m2p.asCompletionItem(item);
-                    return provider.resolveCompletionItem!(protocolItem, token).then(item => this.p2m.asCompletionItem(item));
-                } : undefined
-            }));
+            providers.push(monaco.languages.registerCompletionItemProvider(language.id, completionProvider));
         }
         return providers;
+    }
+
+    protected createCompletionProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): monaco.languages.CompletionItemProvider {
+        return {
+            triggerCharacters,
+            provideCompletionItems: (model, position, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const params = this.m2p.asTextDocumentPositionParams(model, position)
+                return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result));
+            },
+            resolveCompletionItem: provider.resolveCompletionItem ? (item, token) => {
+                const protocolItem = this.m2p.asCompletionItem(item);
+                return provider.resolveCompletionItem!(protocolItem, token).then(item => this.p2m.asCompletionItem(item));
+            } : undefined
+        };
+    }
+
+    registerHoverProvider(selector: DocumentSelector, provider: HoverProvider): Disposable {
+        const hoverProvider = this.createHoverProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of monaco.languages.getLanguages()) {
+            providers.push(monaco.languages.registerHoverProvider(language.id, hoverProvider));
+        }
+        return providers;
+    }
+
+    protected createHoverProvider(selector: DocumentSelector, provider: HoverProvider): monaco.languages.HoverProvider {
+        return {
+            provideHover: (model, position, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined!;
+                }
+                const params = this.m2p.asTextDocumentPositionParams(model, position)
+                return provider.provideHover(params, token).then(hover => this.p2m.asHover(hover))
+            }
+        }
     }
 
     protected matchModel(selector: string | DocumentFilter | DocumentSelector, model: MonacoModelIdentifier): boolean {
