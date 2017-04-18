@@ -1,4 +1,4 @@
-Copyright (c) 2017 TypeFox GmbH
+Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io)
 
 All rights reserved.
 

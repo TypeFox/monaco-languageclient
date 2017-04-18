@@ -17,7 +17,6 @@ npm install
 ```bash
 git clone https://github.com/TypeFox/vscode-languageserver-node.git
 cd vscode-languageserver-node
-git checkout ak/vscode_independent_client
 npm install
 ```
 
