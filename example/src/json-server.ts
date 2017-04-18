@@ -1,3 +1,7 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 import * as fs from "fs";
 import { xhr, XHRResponse, getErrorStatusDescription } from 'request-light';
 import Uri from 'vscode-uri';
@@ -6,7 +10,7 @@ import {
     TextDocument, Diagnostic, CompletionList, CompletionItem, Hover,
     SymbolInformation, DocumentSymbolParams, TextEdit
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams } from 'vscode-languageclient/lib/protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams } from 'vscode-base-languageclient/lib/protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
 export class JsonServer {

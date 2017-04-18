@@ -1,9 +1,13 @@
-import { BaseLanguageClient as LanguageClient, CloseAction, ErrorAction } from 'vscode-languageclient/lib/base';
-import { createConnection } from "vscode-languageclient/lib/connection";
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
+import { BaseLanguageClient as LanguageClient, CloseAction, ErrorAction } from 'vscode-base-languageclient/lib/base';
+import { createConnection } from "vscode-base-languageclient/lib/connection";
+import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import {
     MonacoToProtocolConverter, ProtocolToMonacoConverter,
     MonacoLanguages, MonacoWorkspace,
-    listen, MessageConnection
 } from 'monaco-languageclient';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 

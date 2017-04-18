@@ -1,9 +1,13 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 import * as ws from "ws";
 import * as http from "http";
 import * as url from "url";
 import * as net from "net";
 import * as express from "express";
-import { Socket, SocketMessageReader, SocketMessageWriter } from "monaco-languageclient/lib/socket";
+import { Socket, SocketMessageReader, SocketMessageWriter } from "vscode-ws-jsonrpc";
 import { createConnection } from "vscode-languageserver";
 import { JsonServer } from "./json-server";
 

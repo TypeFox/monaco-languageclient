@@ -2,7 +2,8 @@
   "name": "monaco-languageclient",
   "version": "0.0.1",
   "description": "Monaco Language client implementation",
-  "author": "TypeFox",
+  "author": "TypeFox GmbH",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TypeFox/monaco-languageclient.git"
@@ -21,16 +22,14 @@
     "glob-to-regexp": "^0.3.0",
     "monaco-editor": "^0.8.3",
     "monaco-editor-core": "^0.8.2",
-    "vscode-jsonrpc": "^3.2.0",
-    "vscode-languageclient": "file:../vscode-languageserver-node/client"
+    "vscode-base-languageclient": "file:../vscode-languageserver-node/client"
   },
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "./node_modules/.bin/tsc",
     "watch": "./node_modules/.bin/tsc -w",
     "clean": "./node_modules/.bin/rimraf lib",
-    "clean:languageclient": "./node_modules/.bin/rimraf node_modules/vscode-languageclient",
-    "update:languageclient": "npm run clean:languageclient && npm install",
-    "link:example": "npm link && cd example && npm link monaco-languageclient"
+    "update:file-deps": "npm run clean:file-deps && npm install",
+    "clean:file-deps": "./node_modules/.bin/rimraf node_modules/vscode-base-languageclient"
   }
 }

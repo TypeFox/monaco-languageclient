@@ -1,9 +1,17 @@
-# monaco-languageclient
+# Monaco language client
 NPM module to connect Monaco editor with language servers
 
 ## Getting started
 
 Clone and build the following repositories from the same directory:
+- jsonrpc over web socket:
+
+```
+git clone https://github.com/TypeFox/vscode-ws-jsonrpc
+cd vscode-ws-jsonrpc
+npm install
+```
+
 - an abstract (editor agnostic) language client:
 
 ```bash
@@ -11,7 +19,6 @@ git clone https://github.com/TypeFox/vscode-languageserver-node.git
 cd vscode-languageserver-node
 git checkout ak/vscode_independent_client
 npm install
-npm run compile
 ```
 
 - Monaco language client:
@@ -20,17 +27,9 @@ npm run compile
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
 npm install
-npm run compile
 ```
 
 ## Example
-
-Run from `monaco-languageclient` directory:
-- to link `example` package against local `monaco-languageclient` package:
-
-```bash
-npm run link:example
-```
 
 Run from `monaco-languageclient/example` directory:
 - to build and start:
@@ -39,3 +38,6 @@ Run from `monaco-languageclient/example` directory:
 npm install
 npm run start
 ```
+
+## License
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/master/License.txt)

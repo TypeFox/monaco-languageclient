@@ -1,22 +1,20 @@
-import * as is from 'vscode-languageclient/lib/utils/is';
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
+import * as is from 'vscode-base-languageclient/lib/utils/is';
 import {
-    CodeActionParams,
-    CodeLensParams,
-    DocumentFormattingParams,
-    DocumentOnTypeFormattingParams,
-    DocumentRangeFormattingParams,
-    ReferenceParams,
-    RenameParams,
-    TextDocumentPositionParams
-} from 'vscode-languageclient/lib/protocol';
-import {
+    CodeActionParams, CodeLensParams,
+    DocumentFormattingParams, DocumentOnTypeFormattingParams,
+    DocumentRangeFormattingParams, ReferenceParams,
+    RenameParams, TextDocumentPositionParams,
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit
-} from 'vscode-languageserver-types';
+} from 'vscode-base-languageclient/lib/base';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
 

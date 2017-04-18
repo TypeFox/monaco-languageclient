@@ -1,12 +1,17 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 import globToRegExp from "glob-to-regexp";
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
-    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider, DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider
-} from "vscode-languageclient/lib/services";
-import { CompletionClientCapabilities, DocumentFilter, DocumentSelector } from 'vscode-languageclient/lib/protocol';
+    SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider,
+    DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider,
+    CompletionClientCapabilities, DocumentFilter, DocumentSelector
+} from "vscode-base-languageclient/lib/services";
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './converter';
-import { DisposableCollection, Disposable } from "./disposable";
+import { DisposableCollection, Disposable } from './disposable';
 import Uri = monaco.Uri;
 
 export interface MonacoModelIdentifier {

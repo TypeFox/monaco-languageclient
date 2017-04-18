@@ -1,7 +1,9 @@
-import { Event, Emitter } from "vscode-jsonrpc/lib/events";
-import { TextDocument } from 'vscode-languageserver-types';
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 import { MonacoToProtocolConverter } from './converter';
-import { Workspace, TextDocumentDidChangeEvent } from "vscode-languageclient/lib/services";
+import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter } from "vscode-base-languageclient/lib/services";
 import IModel = monaco.editor.IModel;
 
 export class MonacoWorkspace implements Workspace {
