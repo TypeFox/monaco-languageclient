@@ -5,13 +5,21 @@
 import * as fs from "fs";
 import { xhr, XHRResponse, getErrorStatusDescription } from 'request-light';
 import Uri from 'vscode-uri';
-import { IConnection, TextDocuments } from 'vscode-languageserver';
+import { MessageReader, MessageWriter } from "vscode-jsonrpc";
+import { IConnection, TextDocuments, createConnection } from 'vscode-languageserver';
 import {
     TextDocument, Diagnostic, CompletionList, CompletionItem, Hover,
     SymbolInformation, DocumentSymbolParams, TextEdit
 } from "vscode-languageserver-types";
 import { TextDocumentPositionParams, DocumentRangeFormattingParams } from 'vscode-base-languageclient/lib/protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
+
+export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
+    const connection = createConnection(reader, writer);
+    const server = new JsonServer(connection);
+    server.start();
+    return server;
+}
 
 export class JsonServer {
 

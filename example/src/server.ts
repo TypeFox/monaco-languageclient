@@ -7,9 +7,8 @@ import * as http from "http";
 import * as url from "url";
 import * as net from "net";
 import * as express from "express";
-import { Socket, SocketMessageReader, SocketMessageWriter } from "vscode-ws-jsonrpc";
-import { createConnection } from "vscode-languageserver";
-import { JsonServer } from "./json-server";
+import { Socket } from "vscode-ws-jsonrpc";
+import { launch } from "./json-server-launcher";
 
 process.on('uncaughtException', function (err: any) {
     console.error('Uncaught Exception: ', err.toString());
@@ -17,14 +16,6 @@ process.on('uncaughtException', function (err: any) {
         console.error(err.stack);
     }
 });
-
-function onOpen(socket: Socket): void {
-    const reader = new SocketMessageReader(socket);
-    const writer = new SocketMessageWriter(socket);
-    const connection = createConnection(reader, writer);
-    const server = new JsonServer(connection);
-    server.start();
-}
 
 const app = express();
 app.use(express.static(__dirname));
@@ -49,9 +40,9 @@ server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: B
                 dispose: () => webSocket.close()
             };
             if (webSocket.readyState === webSocket.OPEN) {
-                onOpen(socket);
+                launch(socket);
             } else {
-                webSocket.on('open', () => onOpen(socket));
+                webSocket.on('open', () => launch(socket));
             }
         });
     }

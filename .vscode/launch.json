@@ -13,6 +13,19 @@
             "outFiles": [
                 "${workspaceRoot}/example/lib/**/*.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Sample Server (external)",
+            "program": "${workspaceRoot}/example/lib/server.js",
+            "args": [
+                "--external"
+            ],
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceRoot}/example/lib/**/*.js"
+            ]
         }
     ]
 }
