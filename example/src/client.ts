@@ -11,6 +11,7 @@ import {
 } from 'monaco-languageclient';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
+// register Monaco languages
 monaco.languages.register({
     id: 'json',
     extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
@@ -18,13 +19,27 @@ monaco.languages.register({
     mimetypes: ['application/json'],
 });
 
+// create Monaco editor
 const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-
 monaco.editor.create(document.getElementById("container")!, {
     model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json'))
+});
+
+// create the web socket
+const url = createUrl('/sampleServer')
+const webSocket = createWebSocket(url);
+// listen when the web socket is opened
+listen({
+    webSocket,
+    onConnection: connection => {
+        // create and start the language client
+        const languageClient = createLanguageClient(connection);
+        const disposable = languageClient.start();
+        connection.onClose(() => disposable.dispose());
+    }
 });
 
 const m2p = new MonacoToProtocolConverter();
@@ -69,14 +84,3 @@ export function createWebSocket(url: string): WebSocket {
     };
     return new ReconnectingWebSocket(url, undefined, socketOptions);
 }
-
-const url = createUrl('/sampleServer')
-const webSocket = createWebSocket(url);
-listen({
-    webSocket,
-    onConnection: connection => {
-        const languageClient = createLanguageClient(connection);
-        const disposable = languageClient.start();
-        connection.onClose(() => disposable.dispose());
-    }
-});

@@ -3,30 +3,31 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as path from 'path';
-import { SocketMessageReader, SocketMessageWriter, Socket } from "vscode-ws-jsonrpc";
-import { isRequestMessage } from "vscode-jsonrpc/lib/messages";
-import { createServerProcess, forward, createConnection as createSocketConnection } from "vscode-ws-jsonrpc/lib/server";
-import { InitializeRequest, InitializeParams } from "vscode-languageserver";
+import * as rpc from "vscode-ws-jsonrpc";
+import * as server from "vscode-ws-jsonrpc/lib/server";
+import * as lsp from "vscode-languageserver";
 import { start } from "./json-server";
 
-export function launch(socket: Socket) {
-    const reader = new SocketMessageReader(socket);
-    const writer = new SocketMessageWriter(socket);
+export function launch(socket: rpc.IWebSocket) {
+    const reader = new rpc.WebSocketMessageReader(socket);
+    const writer = new rpc.WebSocketMessageWriter(socket);
     const asExternalProccess = process.argv.findIndex(value => value === '--external');
     if (asExternalProccess)  {
+        // start the language server as an external process
         const extJsonServerPath = path.resolve(__dirname, 'ext-json-server.js');
-        const socketConnection = createSocketConnection(reader, writer, () => socket.dispose());
-        const serverConnection = createServerProcess('JSON', 'node', [extJsonServerPath]);
-        forward(socketConnection, serverConnection, message => {
-            if (isRequestMessage(message)) {
-                if (message.method === InitializeRequest.type.method) {
-                    const initializeParams = message.params as InitializeParams;
+        const socketConnection = server.createConnection(reader, writer, () => socket.dispose());
+        const serverConnection = server.createServerProcess('JSON', 'node', [extJsonServerPath]);
+        server.forward(socketConnection, serverConnection, message => {
+            if (rpc.isRequestMessage(message)) {
+                if (message.method === lsp.InitializeRequest.type.method) {
+                    const initializeParams = message.params as lsp.InitializeParams;
                     initializeParams.processId = process.pid;
                 }
             }
             return message;
         });
     } else {
+        // start the language server inside the current process
         start(reader, writer);
     }
 }
