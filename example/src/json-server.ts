@@ -51,6 +51,7 @@ export class JsonServer {
             } else if (params.rootUri) {
                 this.workspaceRoot = Uri.parse(params.rootUri);
             }
+            this.connection.console.log("The server is initialized.");
             return {
                 capabilities: {
                     textDocumentSync: this.documents.syncKind,

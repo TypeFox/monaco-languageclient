@@ -34,6 +34,14 @@ export namespace MonacoModelIdentifier {
     }
 }
 
+export function testGlob(pattern: string, value: string): boolean {
+    const regExp = globToRegExp(pattern, {
+        extended: true,
+        globstar: true
+    });
+    return regExp.test(value);
+}
+
 export class MonacoLanguages implements Languages {
 
     readonly completion: CompletionClientCapabilities = {
@@ -355,14 +363,8 @@ export class MonacoLanguages implements Languages {
             if (!!selector.scheme && selector.scheme !== model.uri.scheme) {
                 return false;
             }
-            if (!!selector.pattern) {
-                const regExp = globToRegExp(selector.pattern, {
-                    extended: true,
-                    globstar: true
-                });
-                if (!regExp.test(model.uri.path)) {
-                    return false;
-                }
+            if (!!selector.pattern && !testGlob(selector.pattern, model.uri.path)) {
+                return false;
             }
             return true;
         }

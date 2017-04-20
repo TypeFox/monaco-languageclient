@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "Monaco Language client implementation",
   "author": "TypeFox GmbH (http://www.typefox.io)",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "glob-to-regexp": "^0.3.0",
     "monaco-editor": "^0.8.3",
     "monaco-editor-core": "^0.8.2",
-    "vscode-base-languageclient": "^0.0.1-alpha.0"
+    "vscode-base-languageclient": "^0.0.1-alpha.2"
   },
   "scripts": {
     "prepublish": "npm run compile",

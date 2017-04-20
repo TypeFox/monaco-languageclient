@@ -1,6 +1,4 @@
-vscode/
-src/
-typings/
-example/
+.vscode
+example
 .gitignore
 tsconfig.json

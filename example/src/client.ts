@@ -2,12 +2,10 @@
  * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { BaseLanguageClient as LanguageClient, CloseAction, ErrorAction } from 'vscode-base-languageclient/lib/base';
-import { createConnection } from "vscode-base-languageclient/lib/connection";
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import {
-    MonacoToProtocolConverter, ProtocolToMonacoConverter,
-    MonacoLanguages, MonacoWorkspace,
+    BaseLanguageClient, CloseAction, ErrorAction,
+    createMonacoServices, createConnection
 } from 'monaco-languageclient';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
@@ -42,15 +40,9 @@ listen({
     }
 });
 
-const m2p = new MonacoToProtocolConverter();
-const p2m = new ProtocolToMonacoConverter();
-const services: LanguageClient.IServices = {
-    languages: new MonacoLanguages(p2m, m2p),
-    workspace: new MonacoWorkspace(m2p)
-}
-
-export function createLanguageClient(connection: MessageConnection): LanguageClient {
-    return new LanguageClient({
+const services = createMonacoServices();
+function createLanguageClient(connection: MessageConnection): BaseLanguageClient {
+    return new BaseLanguageClient({
         name: "Sample Language Client",
         clientOptions: {
             documentSelector: ['json'],
@@ -68,12 +60,12 @@ export function createLanguageClient(connection: MessageConnection): LanguageCli
     })
 }
 
-export function createUrl(path: string): string {
+function createUrl(path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
     return `${protocol}://${location.host || "127.0.0.1:3000"}${path}`;
 }
 
-export function createWebSocket(url: string): WebSocket {
+function createWebSocket(url: string): WebSocket {
     const socketOptions = {
         maxReconnectionDelay: 10000,
         minReconnectionDelay: 1000,
