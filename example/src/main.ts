@@ -4,7 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 window.onload = () => {
     const w = <any>window;
+    // load Monaco code
     w.require(['vs/editor/editor.main'], () => {
+        // load client code
         require('./client');
     });
 };

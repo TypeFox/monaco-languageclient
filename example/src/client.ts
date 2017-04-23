@@ -45,13 +45,16 @@ function createLanguageClient(connection: MessageConnection): BaseLanguageClient
     return new BaseLanguageClient({
         name: "Sample Language Client",
         clientOptions: {
+            // use a language id as a document selector
             documentSelector: ['json'],
+            // disable the default error handler
             errorHandler: {
                 error: () => ErrorAction.Continue,
                 closed: () => CloseAction.DoNotRestart
             }
         },
         services,
+        // create a language client connection from the JSON RPC connection on demand
         connectionProvider: {
             get: (errorHandler, closeHandler) => {
                 return Promise.resolve(createConnection(connection, errorHandler, closeHandler))
