@@ -62,7 +62,7 @@ function createLanguageClient(connection: MessageConnection): BaseLanguageClient
 
 function createUrl(path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return `${protocol}://${location.host || "127.0.0.1:3000"}${path}`;
+    return `${protocol}://${location.host}${path}`;
 }
 
 function createWebSocket(url: string): WebSocket {
