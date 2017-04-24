@@ -83,8 +83,7 @@ export class MonacoModelDiagnostics implements Disposable {
     }
 
     protected doUpdateModelMarkers(model: IModel  |  undefined): void {
-        // FIXME compare uris after removing relative URIs
-        if (model && this.uri.path.endsWith(model.uri.path)) {
+        if (model && this.uri.toString() === model.uri.toString()) {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
         }
     }
