@@ -18,6 +18,10 @@ import {
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import languages = monaco.languages;
 
+export type RecursivePartial<T> = {
+    [P in keyof T]?: RecursivePartial<T[P]>;
+};
+
 export interface ProtocolCodeLens extends languages.ICodeLensSymbol {
     data?: any;
 }
@@ -40,26 +44,39 @@ export namespace ProtocolCompletionItem {
 }
 
 export class MonacoToProtocolConverter {
-    asPosition(lineNumber: number, column: number): Position {
-        return Position.create(lineNumber - 1, column - 1)
+    asPosition(lineNumber: undefined | null, column: undefined | null): {};
+    asPosition(lineNumber: number, column: undefined | null): Pick<Position, 'line'>;
+    asPosition(lineNumber: undefined | null, column: number): Pick<Position, 'character'>;
+    asPosition(lineNumber: number, column: number): Position;
+    asPosition(lineNumber: number | undefined | null, column: number | undefined | null): Partial<Position>;
+    asPosition(lineNumber: number | undefined | null, column: number | undefined | null): Partial<Position> {
+        const line = lineNumber === undefined || lineNumber === null ? undefined : lineNumber - 1;
+        const character = column === undefined || column === null ? undefined : column - 1;
+        return {
+            line, character
+        };
     }
 
-    asRange(range: undefined): undefined;
     asRange(range: null): null;
+    asRange(range: undefined): undefined;
     asRange(range: monaco.IRange): Range;
-    asRange(range: monaco.IRange | undefined | null): Range | undefined | null {
+    asRange(range: monaco.IRange | undefined): Range | undefined;
+    asRange(range: monaco.IRange | null): Range | null;
+    asRange(range: Partial<monaco.IRange>): RecursivePartial<Range>;
+    asRange(range: Partial<monaco.IRange> | undefined): RecursivePartial<Range> | undefined;
+    asRange(range: Partial<monaco.IRange> | null): RecursivePartial<Range> | null;
+    asRange(range: Partial<monaco.IRange> | undefined | null): RecursivePartial<Range> | undefined | null {
         if (range === undefined) {
-            return undefined
+            return undefined;
         }
-
-        if (!range) {
-            return null
+        if (range === null) {
+            return null;
         }
-
-        return Range.create(
-            this.asPosition(range.startLineNumber, range.startColumn),
-            this.asPosition(range.endLineNumber, range.endColumn)
-        )
+        const start = this.asPosition(range.startLineNumber, range.startColumn);
+        const end = this.asPosition(range.endLineNumber, range.endColumn);
+        return {
+            start, end
+        };
     }
 
     asTextDocumentIdentifier(model: IReadOnlyModel): TextDocumentIdentifier {
@@ -186,7 +203,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asCommand(item: languages.Command | undefined |  null): Command | undefined {
+    asCommand(item: languages.Command | undefined | null): Command | undefined {
         if (item) {
             return Command.create(item.title, item.id, item.arguments);
         }
@@ -205,7 +222,7 @@ export class MonacoToProtocolConverter {
     asFormattingOptions(options: languages.FormattingOptions): FormattingOptions {
         return { tabSize: options.tabSize, insertSpaces: options.insertSpaces };
     }
-    
+
     asDocumentFormattingParams(model: IReadOnlyModel, options: languages.FormattingOptions): DocumentFormattingParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
@@ -252,47 +269,47 @@ export class ProtocolToMonacoConverter {
         })
     }
 
-	asWorkspaceEdit(item: WorkspaceEdit): languages.WorkspaceEdit;
-	asWorkspaceEdit(item: undefined | null): undefined;
-	asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined;
-	asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined {
-		if (!item) {
-			return undefined;
-		}
+    asWorkspaceEdit(item: WorkspaceEdit): languages.WorkspaceEdit;
+    asWorkspaceEdit(item: undefined | null): undefined;
+    asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined;
+    asWorkspaceEdit(item: WorkspaceEdit | undefined | null): languages.WorkspaceEdit | undefined {
+        if (!item) {
+            return undefined;
+        }
         const edits: languages.IResourceEdit[] = [];
-		if (item.documentChanges) {
+        if (item.documentChanges) {
             for (const change of item.documentChanges) {
                 const resource = monaco.Uri.parse(change.textDocument.uri);
                 edits.push(...this.asResourceEdits(resource, change.edits));
-			}
-		} else if (item.changes) {
+            }
+        } else if (item.changes) {
             for (const key of Object.keys(item.changes)) {
                 const resource = monaco.Uri.parse(key);
                 edits.push(...this.asResourceEdits(resource, item.changes[key]));
             }
-		}
+        }
         return {
             edits
         };
-	}
+    }
 
-	asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation {
+    asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation {
         const range = this.asRange(edit.range)!;
         return {
             range,
             text: edit.newText
         }
-	}
+    }
 
-	asTextEdits(items: TextEdit[]): monaco.editor.ISingleEditOperation[];
-	asTextEdits(items: undefined | null): undefined;
-	asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined;
-	asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined {
-		if (!items) {
-			return undefined;
-		}
-		return items.map(item => this.asTextEdit(item));
-	}
+    asTextEdits(items: TextEdit[]): monaco.editor.ISingleEditOperation[];
+    asTextEdits(items: undefined | null): undefined;
+    asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined;
+    asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined {
+        if (!items) {
+            return undefined;
+        }
+        return items.map(item => this.asTextEdit(item));
+    }
 
     asCodeLens(item: CodeLens): languages.ICodeLensSymbol;
     asCodeLens(item: undefined | null): undefined;
@@ -476,9 +493,9 @@ export class ProtocolToMonacoConverter {
             return undefined;
         }
         const contents = Array.isArray(hover.contents) ? hover.contents : [hover.contents];
+        const range = this.asRange(hover.range)!;
         return {
-            contents,
-            range: this.asRange(hover.range)!
+            contents, range
         }
     }
 
@@ -558,19 +575,55 @@ export class ProtocolToMonacoConverter {
         return undefined;
     }
 
-    asRange(range: Range | undefined | null): monaco.Range | undefined | null {
+    asRange(range: null): null;
+    asRange(range: undefined): undefined;
+    asRange(range: Range): monaco.Range;
+    asRange(range: Range | undefined): monaco.Range | undefined;
+    asRange(range: Range | null): monaco.Range | null;
+    asRange(range: RecursivePartial<Range>): Partial<monaco.IRange>;
+    asRange(range: RecursivePartial<Range> | undefined): monaco.Range | Partial<monaco.IRange> | undefined;
+    asRange(range: RecursivePartial<Range> | null): monaco.Range | Partial<monaco.IRange> | null;
+    asRange(range: RecursivePartial<Range> | undefined | null): monaco.Range | Partial<monaco.IRange> | undefined | null {
         if (range === undefined) {
             return undefined;
         }
-        if (!range) {
+        if (range === null) {
             return null;
         }
-        return new monaco.Range(
-            range.start.line + 1,
-            range.start.character + 1,
-            range.end.line + 1,
-            range.end.character + 1
-        );
+        const start = this.asPosition(range.start);
+        const end = this.asPosition(range.end);
+        if (start instanceof monaco.Position && end instanceof monaco.Position) {
+            return new monaco.Range(start.lineNumber, start.column, end.lineNumber, end.column);
+        }
+        const startLineNumber = !start || start.lineNumber === undefined ? undefined : start.lineNumber;
+        const startColumn = !start || start.column === undefined ? undefined : start.column;
+        const endLineNumber = !end || end.lineNumber === undefined ? undefined : end.lineNumber;
+        const endColumn = !end || end.column === undefined ? undefined : end.column;
+        return { startLineNumber, startColumn, endLineNumber, endColumn };
+    }
+
+    asPosition(position: null): null;
+    asPosition(position: undefined): undefined;
+    asPosition(position: Position): monaco.Position;
+    asPosition(position: Position | undefined): monaco.Position | undefined;
+    asPosition(position: Position | null): monaco.Position | null;
+    asPosition(position: Partial<Position>): Partial<monaco.IPosition>;
+    asPosition(position: Partial<Position> | undefined): monaco.Position | Partial<monaco.IPosition> | undefined;
+    asPosition(position: Partial<Position> | null): monaco.Position | Partial<monaco.IPosition> | null;
+    asPosition(position: Partial<Position> | undefined | null): monaco.Position | Partial<monaco.IPosition> | undefined | null {
+        if (position === undefined) {
+            return undefined;
+        }
+        if (position === null) {
+            return null;
+        }
+        const { line, character } = position;
+        const lineNumber = line === undefined ? undefined : line + 1;
+        const column = character === undefined ? undefined : character + 1;
+        if (lineNumber !== undefined && column !== undefined) {
+            return new monaco.Position(lineNumber, column);
+        }
+        return { lineNumber, column };
     }
 
 }
