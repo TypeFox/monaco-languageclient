@@ -22,7 +22,7 @@
     "glob-to-regexp": "^0.3.0",
     "monaco-editor": "^0.8.3",
     "monaco-editor-core": "^0.8.2",
-    "vscode-base-languageclient": "^0.0.1-alpha.2"
+    "vscode-languageclient": "^3.1.0"
   },
   "scripts": {
     "prepublish": "npm run compile",
