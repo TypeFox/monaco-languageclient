@@ -46,14 +46,18 @@ export class MonacoWorkspace implements Workspace {
         );
     }
 
-    protected onDidChangeContent(uri: string, model: IModel, event: monaco.editor.IModelContentChangedEvent2) {
+    protected onDidChangeContent(uri: string, model: IModel, event: monaco.editor.IModelContentChangedEvent) {
         const textDocument = this.setModel(uri, model);
-        const range = this.m2p.asRange(event.range);
-        const rangeLength = event.rangeLength;
-        const text = event.text;
+        const contentChanges = [];
+        for (const change of event.changes) {
+            const range = this.m2p.asRange(change.range);
+            const rangeLength = change.rangeLength;
+            const text = change.text;
+            contentChanges.push({ range, rangeLength, text });
+        }
         this.onDidChangeTextDocumentEmitter.fire({
             textDocument,
-            contentChanges: [{ range, rangeLength, text }]
+            contentChanges
         });
     }
 
