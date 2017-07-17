@@ -205,7 +205,8 @@ export class MonacoToProtocolConverter {
 
     asCommand(item: languages.Command | undefined | null): Command | undefined {
         if (item) {
-            return Command.create(item.title, item.id, item.arguments);
+            let args = item.arguments || [];
+            return Command.create(item.title, item.id, ...args);
         }
         return undefined;
     }
