@@ -515,7 +515,7 @@ export class ProtocolToMonacoConverter {
 
     asMarker(diagnostic: Diagnostic): monaco.editor.IMarkerData {
         return {
-            code: diagnostic.code as string,
+            code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code as string,
             severity: this.asSeverity(diagnostic.severity),
             message: diagnostic.message,
             source: diagnostic.source,
