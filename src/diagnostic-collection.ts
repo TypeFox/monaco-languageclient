@@ -5,7 +5,6 @@
 import { DiagnosticCollection, Diagnostic } from 'vscode-base-languageclient/lib/services';
 import { DisposableCollection, Disposable } from './disposable';
 import { ProtocolToMonacoConverter } from './converter';
-import Uri = monaco.Uri;
 import IModel = monaco.editor.IModel;
 import IMarkerData = monaco.editor.IMarkerData;
 
@@ -45,7 +44,7 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
 }
 
 export class MonacoModelDiagnostics implements Disposable {
-    readonly uri: Uri;
+    readonly uri: monaco.Uri;
     protected _markers: IMarkerData[];
     protected _diagnostics: Diagnostic[];
     constructor(
@@ -53,7 +52,7 @@ export class MonacoModelDiagnostics implements Disposable {
         diagnostics: Diagnostic[], 
         readonly owner: string,
         protected readonly p2m: ProtocolToMonacoConverter)  {
-        this.uri = Uri.parse(uri);
+        this.uri = monaco.Uri.parse(uri);
         this.diagnostics = diagnostics;
         monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
     }
