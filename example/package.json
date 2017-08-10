@@ -23,18 +23,18 @@
     "webpack": "^2.3.3"
   },
   "scripts": {
-    "compile": "./node_modules/.bin/tsc",
-    "watch": "./node_modules/.bin/tsc -w",
-    "clean": "./node_modules/.bin/rimraf lib",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf lib",
     "copy": "cp src/index.html lib/index.html",
-    "build": "npm run compile && ./node_modules/.bin/webpack && npm run copy",
+    "build": "npm run compile && webpack && npm run copy",
     "start": "npm run build && node lib/server.js",
     "start:ext": "npm run build && node lib/server.js --external",
     "update:file-deps": "npm run clean:file-deps && npm install",
     "clean:file-deps": "npm run clean:monaco-languageclient && npm run clean:vscode-ws-jsonrpc",
     "update:monaco-languageclient": "npm run clean:monaco-languageclient && npm install",
-    "clean:monaco-languageclient": "./node_modules/.bin/rimraf node_modules/monaco-languageclient",
+    "clean:monaco-languageclient": "rimraf node_modules/monaco-languageclient",
     "update:vscode-ws-jsonrpc": "npm run clean:vscode-ws-jsonrpc && npm install",
-    "clean:vscode-ws-jsonrpc": "./node_modules/.bin/rimraf node_modules/vscode-ws-jsonrpc"
+    "clean:vscode-ws-jsonrpc": "rimraf node_modules/vscode-ws-jsonrpc"
   }
 }
