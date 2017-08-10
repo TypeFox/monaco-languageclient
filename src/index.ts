@@ -10,3 +10,4 @@ export * from './converter';
 export * from './services';
 export * from 'vscode-base-languageclient/lib/base';
 export * from 'vscode-base-languageclient/lib/connection';
+export * from 'vscode-base-languageclient/lib/services';
