@@ -8,15 +8,14 @@ import IModel = monaco.editor.IModel;
 
 export class MonacoWorkspace implements Workspace {
 
-    protected _rootUri: string | null = null;
-
     protected readonly documents = new Map<string, TextDocument>();
     protected readonly onDidOpenTextDocumentEmitter = new Emitter<TextDocument>();
     protected readonly onDidCloseTextDocumentEmitter = new Emitter<TextDocument>();
     protected readonly onDidChangeTextDocumentEmitter = new Emitter<TextDocumentDidChangeEvent>();
 
     constructor(
-        protected readonly m2p: MonacoToProtocolConverter) {
+        protected readonly m2p: MonacoToProtocolConverter,
+        protected _rootUri: string | null = null) {
         for (const model of monaco.editor.getModels()) {
             this.addModel(model);
         }
