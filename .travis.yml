@@ -7,3 +7,8 @@ before_install:
 cache:
   directories:
     - node_modules
+    - example/node_modules
+install:
+  - npm install
+  - cd example
+  - npm install
