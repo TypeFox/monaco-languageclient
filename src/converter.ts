@@ -337,9 +337,7 @@ export class ProtocolToMonacoConverter {
 
 
     asCodeActions(commands: Command[]): monaco.languages.CodeAction[] {
-        return this.asCommands(commands).map((command, score) => {
-            return <monaco.languages.CodeAction>{ command, score }
-        });
+        return this.asCommands(commands).map((command, score) => ({ command, score }));
     }
 
     asCommand(command: Command): monaco.languages.Command {

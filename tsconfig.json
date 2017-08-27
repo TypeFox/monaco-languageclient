@@ -22,6 +22,7 @@
     ],
     "files": [
         "node_modules/monaco-editor-core/monaco.d.ts",
+        "typings/monaco/index.d.ts",
         "typings/glob-to-regexp/index.d.ts"
     ]
 }
