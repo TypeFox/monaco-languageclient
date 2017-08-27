@@ -1,4 +1,5 @@
 # Monaco language client
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
 [![Build Status](https://travis-ci.org/TypeFox/monaco-languageclient.svg?branch=master)](https://travis-ci.org/TypeFox/monaco-languageclient)
 
 NPM module to connect Monaco editor with language servers
