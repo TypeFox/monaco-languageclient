@@ -11,7 +11,7 @@ import { start } from "./json-server";
 export function launch(socket: rpc.IWebSocket) {
     const reader = new rpc.WebSocketMessageReader(socket);
     const writer = new rpc.WebSocketMessageWriter(socket);
-    const asExternalProccess = process.argv.findIndex(value => value === '--external');
+    const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;
     if (asExternalProccess)  {
         // start the language server as an external process
         const extJsonServerPath = path.resolve(__dirname, 'ext-json-server.js');

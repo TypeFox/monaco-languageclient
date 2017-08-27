@@ -2,9 +2,11 @@
  * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { MonacoToProtocolConverter } from './converter';
-import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter } from "vscode-base-languageclient/lib/services";
+import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './converter';
+import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter } from 'vscode-base-languageclient/lib/services';
+import { WorkspaceEdit } from 'vscode-base-languageclient/lib/base';
 import IModel = monaco.editor.IModel;
+import IResourceEdit = monaco.languages.IResourceEdit;
 
 export class MonacoWorkspace implements Workspace {
 
@@ -14,6 +16,7 @@ export class MonacoWorkspace implements Workspace {
     protected readonly onDidChangeTextDocumentEmitter = new Emitter<TextDocumentDidChangeEvent>();
 
     constructor(
+        protected readonly p2m: ProtocolToMonacoConverter,
         protected readonly m2p: MonacoToProtocolConverter,
         protected _rootUri: string | null = null) {
         for (const model of monaco.editor.getModels()) {
@@ -80,6 +83,52 @@ export class MonacoWorkspace implements Workspace {
 
     get onDidChangeTextDocument(): Event<TextDocumentDidChangeEvent> {
         return this.onDidChangeTextDocumentEmitter.event;
+    }
+
+    public applyEdit(workspaceEdit: WorkspaceEdit): Promise<boolean> {
+        const edit: monaco.languages.WorkspaceEdit = this.p2m.asWorkspaceEdit(workspaceEdit);
+
+        // Collect all referenced models
+        const models: {[uri: string]: monaco.editor.IModel} = edit.edits.reduce(
+            (acc: {[uri: string]: monaco.editor.IModel}, currentEdit) => {
+                acc[currentEdit.resource.toString()] = monaco.editor.getModel(currentEdit.resource);
+                return acc;
+            }, {}
+        );
+
+        // If any of the models do not exist, refuse to apply the edit.
+        if (!Object.keys(models).map(uri => models[uri]).every(model => !!model)) {
+            return Promise.resolve(false);
+        }
+
+        // Group edits by resource so we can batch them when applying
+        const editsByResource: {[uri: string]: IResourceEdit[]} = edit.edits.reduce(
+            (acc: {[uri: string]: IResourceEdit[]}, currentEdit) => {
+                const uri = currentEdit.resource.toString();
+                if (!(uri in acc)) {
+                    acc[uri] = [];
+                }
+                acc[uri].push(currentEdit);
+                return acc;
+            }, {}
+        );
+
+        // Apply edits for each resource
+        Object.keys(editsByResource).forEach(uri => {
+            models[uri].pushEditOperations(
+                [],  // Do not try and preserve editor selections.
+                editsByResource[uri].map(resourceEdit => {
+                    return {
+                        identifier: {major: 1, minor: 0},
+                        range: monaco.Range.lift(resourceEdit.range),
+                        text: resourceEdit.newText,
+                        forceMoveMarkers: true,
+                    };
+                }),
+                () => [],  // Do not try and preserve editor selections.
+            );
+        });
+        return Promise.resolve(true);
     }
 
 }

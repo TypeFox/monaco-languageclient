@@ -22,8 +22,9 @@ const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-monaco.editor.create(document.getElementById("container")!, {
-    model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json'))
+const editor = monaco.editor.create(document.getElementById("container")!, {
+    model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
+    glyphMargin: true
 });
 
 // create the web socket
@@ -40,7 +41,7 @@ listen({
     }
 });
 
-const services = createMonacoServices();
+const services = createMonacoServices(editor);
 function createLanguageClient(connection: MessageConnection): BaseLanguageClient {
     return new BaseLanguageClient({
         name: "Sample Language Client",

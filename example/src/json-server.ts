@@ -8,10 +8,10 @@ import Uri from 'vscode-uri';
 import { MessageReader, MessageWriter } from "vscode-jsonrpc";
 import { IConnection, TextDocuments, createConnection } from 'vscode-languageserver';
 import {
-    TextDocument, Diagnostic, CompletionList, CompletionItem, Hover,
+    TextDocument, Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, DocumentSymbolParams, TextEdit
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams } from 'vscode-base-languageclient/lib/protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams } from 'vscode-base-languageclient/lib/protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
 export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
@@ -55,21 +55,31 @@ export class JsonServer {
             return {
                 capabilities: {
                     textDocumentSync: this.documents.syncKind,
+                    codeActionProvider: true,
                     completionProvider: {
                         resolveProvider: true,
                         triggerCharacters: ['"', ':']
                     },
                     hoverProvider: true,
                     documentSymbolProvider: true,
-                    documentRangeFormattingProvider: true
+                    documentRangeFormattingProvider: true,
+                    executeCommandProvider: {
+                        commands: ['json.documentUpper']
+                    }
                 }
             }
         });
+        this.connection.onCodeAction(params => 
+            this.codeAction(params)
+        );
         this.connection.onCompletion(params =>
             this.completion(params)
         );
         this.connection.onCompletionResolve(item =>
             this.resolveCompletion(item)
+        );
+        this.connection.onExecuteCommand(params =>
+            this.executeCommand(params)
         );
         this.connection.onHover(params =>
             this.hover(params)
@@ -86,6 +96,18 @@ export class JsonServer {
         this.connection.listen();
     }
 
+    protected codeAction(params: CodeActionParams): Command[] {
+        return [{
+            title: "Upper Case Document",
+            command: "json.documentUpper",
+            // Send a VersionedTextDocumentIdentifier
+            arguments: [{
+                ...params.textDocument,
+                version: this.documents.get(params.textDocument.uri).version
+            }]
+        }];
+    }
+
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
         const document = this.documents.get(params.textDocument.uri);
         return this.jsonService.format(document, params.range, params.options)
@@ -95,6 +117,24 @@ export class JsonServer {
         const document = this.documents.get(params.textDocument.uri);
         const jsonDocument = this.getJSONDocument(document);
         return this.jsonService.findDocumentSymbols(document, jsonDocument);
+    }
+
+    protected executeCommand(params: ExecuteCommandParams): any {
+        if (params.command === "json.documentUpper" && params.arguments) {
+            const versionedTextDocumentIdentifier = params.arguments[0];
+            this.connection.workspace.applyEdit({
+                documentChanges: [{
+                    textDocument: versionedTextDocumentIdentifier,
+                    edits: [{
+                        range: {
+                            start: {line: 0, character: 0},
+                            end: {line: Number.MAX_SAFE_INTEGER, character: Number.MAX_SAFE_INTEGER}
+                        },
+                        newText: this.documents.get(versionedTextDocumentIdentifier.uri).getText().toUpperCase()
+                    }]
+                }]
+            });
+        }
     }
 
     protected hover(params: TextDocumentPositionParams): Thenable<Hover> {

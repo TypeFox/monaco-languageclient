@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 export * from './disposable';
+export * from './commands';
 export * from './console-window';
 export * from './languages';
 export * from './workspace';
