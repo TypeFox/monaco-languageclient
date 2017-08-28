@@ -12,17 +12,16 @@ import {
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './converter';
 import { DisposableCollection, Disposable } from './disposable';
-import Uri = monaco.Uri;
 
 export interface MonacoModelIdentifier {
-    uri: Uri;
+    uri: monaco.Uri;
     languageId: string;
 }
 
 export namespace MonacoModelIdentifier {
     export function fromDocument(document: DocumentIdentifier): MonacoModelIdentifier {
         return {
-            uri: Uri.parse(document.uri),
+            uri: monaco.Uri.parse(document.uri),
             languageId: document.languageId
         }
     }
