@@ -335,11 +335,6 @@ export class ProtocolToMonacoConverter {
         return items.map((codeLens) => this.asCodeLens(codeLens));
     }
 
-
-    asCodeActions(commands: Command[]): monaco.languages.CodeAction[] {
-        return this.asCommands(commands).map((command, score) => ({ command, score }));
-    }
-
     asCommand(command: Command): monaco.languages.Command {
         return {
             id: command.command,

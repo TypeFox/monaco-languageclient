@@ -242,7 +242,7 @@ export class MonacoLanguages implements Languages {
                     return [];
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
-                return provider.provideCodeActions(params, token).then(result => this.p2m.asCodeActions(result))
+                return provider.provideCodeActions(params, token).then(result => this.p2m.asCommands(result));
             }
         }
     }
