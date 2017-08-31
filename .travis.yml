@@ -4,10 +4,6 @@ node_js:
   - "7"
 before_install:
   - npm i -g npm@latest
-cache:
-  directories:
-    - node_modules
-    - example/node_modules
 install:
   - npm install
   - cd example
