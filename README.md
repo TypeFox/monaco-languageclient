@@ -28,7 +28,7 @@ From CLI:
 - Run `npm run start` to start the express server with the language server running in the same process.
 - Run `npm run start:ext` to start the express server with language server running in the external process.
 
-After staring the express server go to `http://localhost:3000` to open the sample page.
+After staring the express server go to http://localhost:3000 to open the sample page.
 
 You can as well run vscode tasks to start and debug the server in different modes.
 
