@@ -271,7 +271,7 @@ export class MonacoLanguages implements Languages {
                 }
                 const protocolCodeLens = this.m2p.asCodeLens(codeLens);
                 return provider.resolveCodeLens!(protocolCodeLens, token).then(result => this.p2m.asCodeLens(result))
-            } : undefined
+            } : ((m, codeLens, t) => codeLens)
         }
     }
 
