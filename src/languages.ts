@@ -1,8 +1,8 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import globToRegExp from "glob-to-regexp";
+import globToRegExp = require('glob-to-regexp');
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
     SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider,
