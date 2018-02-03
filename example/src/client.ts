@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
@@ -7,6 +7,7 @@ import {
     BaseLanguageClient, CloseAction, ErrorAction,
     createMonacoServices, createConnection
 } from 'monaco-languageclient';
+import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 // register Monaco languages
@@ -66,7 +67,7 @@ function createLanguageClient(connection: MessageConnection): BaseLanguageClient
 
 function createUrl(path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return `${protocol}://${location.host}${path}`;
+    return normalizeUrl(`${protocol}://${location.host}${location.pathname}${path}`);
 }
 
 function createWebSocket(url: string): WebSocket {
