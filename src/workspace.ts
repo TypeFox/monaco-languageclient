@@ -3,13 +3,16 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './converter';
-import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter } from 'vscode-base-languageclient/lib/services';
+import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter, WorkspaceClientCapabilites } from 'vscode-base-languageclient/lib/services';
 import { WorkspaceEdit } from 'vscode-base-languageclient/lib/base';
 import IModel = monaco.editor.IModel;
 import IResourceEdit = monaco.languages.IResourceEdit;
 
 export class MonacoWorkspace implements Workspace {
 
+    public readonly capabilities: WorkspaceClientCapabilites = {
+        applyEdit: true
+    };
     protected readonly documents = new Map<string, TextDocument>();
     protected readonly onDidOpenTextDocumentEmitter = new Emitter<TextDocument>();
     protected readonly onDidCloseTextDocumentEmitter = new Emitter<TextDocument>();
