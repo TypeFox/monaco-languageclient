@@ -7,7 +7,7 @@ import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
     SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider,
     DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider,
-    CompletionClientCapabilities, DocumentFilter, DocumentSelector
+    CompletionClientCapabilities, DocumentFilter, DocumentSelector, DocumentLinkProvider
 } from "vscode-base-languageclient/lib/services";
 import { MonacoDiagnosticCollection } from './diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './converter';
@@ -357,6 +357,37 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asRenameParams(model, position, newName);
                 return provider.provideRenameEdits(params, token).then(result => this.p2m.asWorkspaceEdit(result))
+            }
+        }
+    }
+
+    registerDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): Disposable {
+        const linkProvider = this.createDocumentLinkProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of getLanguages()) {
+            providers.push(monaco.languages.registerLinkProvider(language, linkProvider));
+        }
+        return providers;
+    }
+
+    protected createDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): monaco.languages.LinkProvider {
+        return {
+            provideLinks: (model, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined!;
+                }
+                const params = this.m2p.asDocumentLinkParams(model);
+                return provider.provideDocumentLinks(params, token).then(result => this.p2m.asILinks(result));
+            },
+
+            resolveLink: (link: monaco.languages.ILink, token) => {
+                // resolve the link if the provider supports it
+                // and the link doesn't have a url set
+                if (provider.resolveDocumentLink && (link.url === null || link.url === undefined)) {
+                    const documentLink = this.m2p.asDocumentLink(link);
+                    return provider.resolveDocumentLink(documentLink, token).then(result => this.p2m.asILink(result));
+                }
+                return link;
             }
         }
     }

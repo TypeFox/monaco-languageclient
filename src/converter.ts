@@ -13,7 +13,7 @@ import {
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit
+    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink
 } from 'vscode-base-languageclient/lib/base';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
@@ -252,6 +252,19 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
             newName
+        }
+    }
+
+    asDocumentLinkParams(model: IReadOnlyModel): DocumentLinkParams {
+        return {
+            textDocument: this.asTextDocumentIdentifier(model)
+        }
+    }
+
+    asDocumentLink(link: monaco.languages.ILink): DocumentLink {
+        return {
+            range: this.asRange(link.range),
+            target: link.url
         }
     }
 }
@@ -566,6 +579,23 @@ export class ProtocolToMonacoConverter {
             return { text, fromEdit: false };
         }
         return undefined;
+    }
+
+    asILinks(documentLinks: DocumentLink[]): monaco.languages.ILink[] {
+        let links = [];
+        for (let documentLink of documentLinks) {
+            links.push(this.asILink(documentLink));
+        }
+        return links;
+    }
+
+    asILink(documentLink: DocumentLink): monaco.languages.ILink {
+        // a DocumentLink's target is optional but ILink's url is not
+        // so we cast to any to get around the compiler's error
+        return {
+            range: this.asRange(documentLink.range),
+            url: documentLink.target
+        } as any;
     }
 
     asRange(range: null): null;
