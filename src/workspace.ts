@@ -11,7 +11,10 @@ import IResourceEdit = monaco.languages.IResourceEdit;
 export class MonacoWorkspace implements Workspace {
 
     public readonly capabilities: WorkspaceClientCapabilites = {
-        applyEdit: true
+        applyEdit: true,
+        workspaceEdit: {
+            documentChanges: true
+        }
     };
     protected readonly documents = new Map<string, TextDocument>();
     protected readonly onDidOpenTextDocumentEmitter = new Emitter<TextDocument>();
