@@ -1,4 +1,4 @@
-/// <reference path='../../node_modules/monaco-editor/monaco.d.ts'/>
+/// <reference types='monaco-editor-core/monaco'/>
 
 declare module monaco.editor {
     export interface IStandaloneCodeEditor {
