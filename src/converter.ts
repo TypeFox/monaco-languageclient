@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2017, 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as is from 'vscode-base-languageclient/lib/utils/is';
@@ -13,7 +13,7 @@ import {
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink
+    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink, MarkedString
 } from 'vscode-base-languageclient/lib/base';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
@@ -94,7 +94,7 @@ export class MonacoToProtocolConverter {
     asCompletionItem(item: monaco.languages.CompletionItem): CompletionItem {
         const result: CompletionItem = { label: item.label };
         if (item.detail) { result.detail = item.detail; }
-        if (item.documentation) { result.documentation = item.documentation; }
+        if (item.documentation) { result.documentation = item.documentation as string; }
         if (item.filterText) { result.filterText = item.filterText; }
         this.fillPrimaryInsertText(result, item as ProtocolCompletionItem);
         // Protocol item kind is 1 based, codes item kind is zero based.
@@ -271,15 +271,12 @@ export class MonacoToProtocolConverter {
 
 export class ProtocolToMonacoConverter {
 
-    asResourceEdits(resource: monaco.Uri, edits: TextEdit[]): monaco.languages.IResourceEdit[] {
-        return edits.map(edit => {
-            const range = this.asRange(edit.range)!;
-            return {
-                resource,
-                range,
-                newText: edit.newText
-            }
-        })
+    asResourceEdits(resource: monaco.Uri, edits: TextEdit[], modelVersionId?: number,): monaco.languages.ResourceTextEdit {
+        return {
+            resource: resource,
+            edits: this.asTextEdits(edits),
+            modelVersionId: modelVersionId
+        }
     }
 
     asWorkspaceEdit(item: WorkspaceEdit): monaco.languages.WorkspaceEdit;
@@ -289,16 +286,16 @@ export class ProtocolToMonacoConverter {
         if (!item) {
             return undefined;
         }
-        const edits: monaco.languages.IResourceEdit[] = [];
+        const edits: monaco.languages.ResourceTextEdit[] = [];
         if (item.documentChanges) {
             for (const change of item.documentChanges) {
                 const resource = monaco.Uri.parse(change.textDocument.uri);
-                edits.push(...this.asResourceEdits(resource, change.edits));
+                edits.push(this.asResourceEdits(resource, change.edits, change.textDocument.version));
             }
         } else if (item.changes) {
             for (const key of Object.keys(item.changes)) {
                 const resource = monaco.Uri.parse(key);
-                edits.push(...this.asResourceEdits(resource, item.changes[key]));
+                edits.push(this.asResourceEdits(resource, item.changes[key]));
             }
         }
         return {
@@ -306,7 +303,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation {
+    asTextEdit(edit: TextEdit): monaco.languages.TextEdit {
         const range = this.asRange(edit.range)!;
         return {
             range,
@@ -348,16 +345,27 @@ export class ProtocolToMonacoConverter {
         return items.map((codeLens) => this.asCodeLens(codeLens));
     }
 
+    asCodeAction(command: Command): monaco.languages.CodeAction {
+        return {
+            command: {
+                id: command.command,
+                title: command.title,
+                arguments: command.arguments
+            },
+            title: command.title
+        };
+    }
+
+    asCodeActions(commands: Command[]): monaco.languages.CodeAction[] {
+        return commands.map(command => this.asCodeAction(command));
+    }
+
     asCommand(command: Command): monaco.languages.Command {
         return {
             id: command.command,
             title: command.title,
             arguments: command.arguments
         };
-    }
-
-    asCommands(commands: Command[]): monaco.languages.Command[] {
-        return commands.map(command => this.asCommand(command));
     }
 
     asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.SymbolInformation[];
@@ -501,8 +509,28 @@ export class ProtocolToMonacoConverter {
         const contents = Array.isArray(hover.contents) ? hover.contents : [hover.contents];
         const range = this.asRange(hover.range)!;
         return {
-            contents, range
+            contents: this.asIMarkdownStrings(contents),
+            range: range
+        };
+    }
+
+    asIMarkdownString(string: MarkedString): monaco.IMarkdownString {
+        let value = (string as any).value;
+        if (value === "") {
+            return { value: "" };
+        } else if (value) {
+            let language = (string as any).language;
+            return {
+                value: '```' + language + `\n` + value + `\n` + '```'
+            }
         }
+        return {
+            value: string as string
+        }
+    }
+
+    asIMarkdownStrings(strings: MarkedString[]): monaco.IMarkdownString[] {
+        return strings.map(string => this.asIMarkdownString(string));
     }
 
     asSeverity(severity?: number): monaco.Severity {
@@ -531,12 +559,19 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionResult(result: CompletionItem[] | CompletionList | undefined): monaco.languages.CompletionItem[] | monaco.languages.CompletionList | undefined {
+    asCompletionResult(result: CompletionItem[] | CompletionList | undefined): monaco.languages.CompletionList {
         if (!result) {
-            return undefined;
+            return {
+                isIncomplete: false,
+                items: []
+            }
         }
         if (Array.isArray(result)) {
-            return result.map(item => this.asCompletionItem(item));
+            const items = result.map(item => this.asCompletionItem(item));
+            return {
+                isIncomplete: false,
+                items: items
+            }
         }
         return <monaco.languages.CompletionList>{
             isIncomplete: result.isIncomplete,
