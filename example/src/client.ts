@@ -25,7 +25,10 @@ const value = `{
 }`;
 const editor = monaco.editor.create(document.getElementById("container")!, {
     model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
-    glyphMargin: true
+    glyphMargin: true,
+    lightbulb: {
+        enabled: true
+    }
 });
 
 // create the web socket

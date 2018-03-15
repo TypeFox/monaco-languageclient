@@ -1,12 +1,12 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2017, 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './converter';
 import { Workspace, TextDocumentDidChangeEvent, TextDocument, Event, Emitter, WorkspaceClientCapabilites } from 'vscode-base-languageclient/lib/services';
 import { WorkspaceEdit } from 'vscode-base-languageclient/lib/base';
 import IModel = monaco.editor.IModel;
-import IResourceEdit = monaco.languages.IResourceEdit;
+import IIdentifiedSingleEditOperation = monaco.editor.IIdentifiedSingleEditOperation;
 
 export class MonacoWorkspace implements Workspace {
 
@@ -97,7 +97,8 @@ export class MonacoWorkspace implements Workspace {
         // Collect all referenced models
         const models: {[uri: string]: monaco.editor.IModel} = edit.edits.reduce(
             (acc: {[uri: string]: monaco.editor.IModel}, currentEdit) => {
-                acc[currentEdit.resource.toString()] = monaco.editor.getModel(currentEdit.resource);
+                const textEdit = currentEdit as monaco.languages.ResourceTextEdit;
+                acc[textEdit.resource.toString()] = monaco.editor.getModel(textEdit.resource);
                 return acc;
             }, {}
         );
@@ -108,13 +109,20 @@ export class MonacoWorkspace implements Workspace {
         }
 
         // Group edits by resource so we can batch them when applying
-        const editsByResource: {[uri: string]: IResourceEdit[]} = edit.edits.reduce(
-            (acc: {[uri: string]: IResourceEdit[]}, currentEdit) => {
-                const uri = currentEdit.resource.toString();
+        const editsByResource: {[uri: string]: IIdentifiedSingleEditOperation[]} = edit.edits.reduce(
+            (acc: {[uri: string]: IIdentifiedSingleEditOperation[]}, currentEdit) => {
+                const textEdit = currentEdit as monaco.languages.ResourceTextEdit;
+                const uri = textEdit.resource.toString();
                 if (!(uri in acc)) {
                     acc[uri] = [];
                 }
-                acc[uri].push(currentEdit);
+                const operations = textEdit.edits.map(edit => {
+                    return {
+                        range: monaco.Range.lift(edit.range),
+                        text: edit.text
+                    }
+                });
+                acc[uri].push(...operations);
                 return acc;
             }, {}
         );
@@ -126,8 +134,8 @@ export class MonacoWorkspace implements Workspace {
                 editsByResource[uri].map(resourceEdit => {
                     return {
                         identifier: {major: 1, minor: 0},
-                        range: monaco.Range.lift(resourceEdit.range),
-                        text: resourceEdit.newText,
+                        range: resourceEdit.range,
+                        text: resourceEdit.text,
                         forceMoveMarkers: true,
                     };
                 }),
