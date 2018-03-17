@@ -271,11 +271,11 @@ export class MonacoToProtocolConverter {
 
 export class ProtocolToMonacoConverter {
 
-    asResourceEdits(resource: monaco.Uri, edits: TextEdit[], modelVersionId?: number,): monaco.languages.ResourceTextEdit {
+    asResourceEdits(resource: monaco.Uri, edits: TextEdit[], modelVersionId?: number): monaco.languages.ResourceTextEdit {
         return {
             resource: resource,
             edits: this.asTextEdits(edits),
-            modelVersionId: modelVersionId
+            modelVersionId
         }
     }
 
@@ -515,18 +515,15 @@ export class ProtocolToMonacoConverter {
     }
 
     asIMarkdownString(string: MarkedString): monaco.IMarkdownString {
-        let value = (string as any).value;
-        if (value === "") {
-            return { value: "" };
-        } else if (value) {
-            let language = (string as any).language;
+        if (typeof string === 'string') {
             return {
-                value: '```' + language + `\n` + value + `\n` + '```'
+                value: string
             }
         }
+        const { language, value } = string;
         return {
-            value: string as string
-        }
+            value: '```' + language + '\n' + value + '\n```'
+        };
     }
 
     asIMarkdownStrings(strings: MarkedString[]): monaco.IMarkdownString[] {
@@ -570,10 +567,10 @@ export class ProtocolToMonacoConverter {
             const items = result.map(item => this.asCompletionItem(item));
             return {
                 isIncomplete: false,
-                items: items
+                items
             }
         }
-        return <monaco.languages.CompletionList>{
+        return {
             isIncomplete: result.isIncomplete,
             items: result.items.map(this.asCompletionItem.bind(this))
         }
