@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017, 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as is from 'vscode-base-languageclient/lib/utils/is';
@@ -13,7 +13,7 @@ import {
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink, MarkedString
+    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink, MarkedString, MarkupContent
 } from 'vscode-base-languageclient/lib/base';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
@@ -514,20 +514,24 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asIMarkdownString(string: MarkedString): monaco.IMarkdownString {
-        if (typeof string === 'string') {
+    asIMarkdownString(content: MarkedString | MarkupContent): monaco.IMarkdownString {
+        if (typeof content === 'string') {
             return {
-                value: string
+                value: content
             }
         }
-        const { language, value } = string;
+        if ('kind' in content) {
+            const { value } = content;
+            return { value };
+        }
+        const { language, value } = content;
         return {
             value: '```' + language + '\n' + value + '\n```'
         };
     }
 
-    asIMarkdownStrings(strings: MarkedString[]): monaco.IMarkdownString[] {
-        return strings.map(string => this.asIMarkdownString(string));
+    asIMarkdownStrings(contents: (MarkedString | MarkupContent)[]): monaco.IMarkdownString[] {
+        return contents.map(string => this.asIMarkdownString(string));
     }
 
     asSeverity(severity?: number): monaco.Severity {
