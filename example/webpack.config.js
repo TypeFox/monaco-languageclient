@@ -1,38 +1,56 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const lib = path.resolve(__dirname, "lib");
 
-const buildRoot = path.resolve(__dirname, "lib");
-const monacoEditorPath = '../node_modules/monaco-editor-core/dev/vs';
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
-    entry: path.resolve(buildRoot, "main.js"),
+const common = {
+    entry: {
+        "main": path.resolve(lib, "main.js"),
+        "editor.worker": 'monaco-editor-core/esm/vs/editor/editor.worker.js'
+    },
     output: {
-        filename: 'bundle.js',
-        path: buildRoot
+        filename: '[name].bundle.js',
+        path: lib
     },
     module: {
-        noParse: /vscode-languageserver-types/
+        rules: [{
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+        }]
     },
-    resolve: {
-        extensions: ['.js'],
-        alias: {
-            'vs': path.resolve(buildRoot, monacoEditorPath)
-        }
-    },
-    devtool: 'source-map',
     target: 'web',
     node: {
         fs: 'empty',
         child_process: 'empty',
         net: 'empty',
         crypto: 'empty'
-    },
-    plugins: [
-        new CopyWebpackPlugin([
-            {
-                from: monacoEditorPath,
-                to: 'vs'
-            }
-        ])
-    ]
-}
+    }
+};
+
+if (process.env['NODE_ENV'] === 'production') {
+    module.exports = merge(common, {
+        plugins: [
+            new UglifyJSPlugin(),
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify('production')
+            })
+        ]
+    });
+} else {
+    module.exports = merge(common, {
+        devtool: 'source-map',
+        module: {
+            rules: [{
+                test: /\.js$/,
+                enforce: 'pre',
+                loader: 'source-map-loader'
+            }]
+        }
+    })
+} 

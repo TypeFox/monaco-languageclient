@@ -6,23 +6,27 @@
     "express": "^4.15.2",
     "monaco-languageclient": "file:..",
     "normalize-url": "^2.0.1",
-    "reconnecting-websocket": "^3.0.3",
-    "request-light": "^0.2.0",
-    "vscode-json-languageservice": "^2.0.7",
-    "vscode-languageserver": "^3.2.0",
-    "vscode-uri": "^1.0.0",
-    "vscode-ws-jsonrpc": "^0.0.1-alpha.3",
-    "ws": "^2.2.3"
+    "reconnecting-websocket": "^3.2.2",
+    "request-light": "^0.2.2",
+    "vscode-json-languageservice": "^3.0.12",
+    "vscode-languageserver": "^4.0.0",
+    "vscode-uri": "^1.0.3",
+    "vscode-ws-jsonrpc": "^0.0.2-1",
+    "ws": "^5.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.0.35",
     "@types/node": "^7.0.12",
     "@types/normalize-url": "^1.9.1",
     "@types/ws": "0.0.39",
-    "copy-webpack-plugin": "^4.0.1",
-    "rimraf": "^2.6.1",
-    "typescript": "^2.5.1",
-    "webpack": "^2.3.3"
+    "css-loader": "^0.28.11",
+    "rimraf": "^2.6.2",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.20.3",
+    "typescript": "^2.7.2",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "^3.11.0",
+    "webpack-merge": "^4.1.2"
   },
   "scripts": {
     "prepare": "npm run clean && npm run build",
@@ -31,13 +35,7 @@
     "clean": "rimraf lib",
     "copy": "cp src/index.html lib/index.html",
     "build": "npm run compile && webpack && npm run copy",
-    "start": "npm run build && node lib/server.js",
-    "start:ext": "npm run build && node lib/server.js --external",
-    "update:file-deps": "npm run clean:file-deps && npm install",
-    "clean:file-deps": "npm run clean:monaco-languageclient && npm run clean:vscode-ws-jsonrpc",
-    "update:monaco-languageclient": "npm run clean:monaco-languageclient && npm install",
-    "clean:monaco-languageclient": "rimraf node_modules/monaco-languageclient",
-    "update:vscode-ws-jsonrpc": "npm run clean:vscode-ws-jsonrpc && npm install",
-    "clean:vscode-ws-jsonrpc": "rimraf node_modules/vscode-ws-jsonrpc"
+    "start": "node lib/server.js",
+    "start:ext": "node lib/server.js --external"
   }
 }

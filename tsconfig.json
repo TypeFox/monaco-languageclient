@@ -11,10 +11,8 @@
             "es2016", "dom"
         ],
         "outDir": "lib",
-        "strictNullChecks": true,
-        "noImplicitAny": true,
+        "strict": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true,
         "noUnusedLocals": true
     },
     "include": [

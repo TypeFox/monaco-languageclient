@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { DiagnosticCollection, Diagnostic } from 'vscode-base-languageclient/lib/services';
@@ -45,13 +45,14 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
 
 export class MonacoModelDiagnostics implements Disposable {
     readonly uri: monaco.Uri;
-    protected _markers: IMarkerData[];
-    protected _diagnostics: Diagnostic[];
+    protected _markers: IMarkerData[] = [];
+    protected _diagnostics: Diagnostic[] = [];
     constructor(
-        uri: string, 
-        diagnostics: Diagnostic[], 
+        uri: string,
+        diagnostics: Diagnostic[],
         readonly owner: string,
-        protected readonly p2m: ProtocolToMonacoConverter)  {
+        protected readonly p2m: ProtocolToMonacoConverter
+    ) {
         this.uri = monaco.Uri.parse(uri);
         this.diagnostics = diagnostics;
         monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
@@ -81,7 +82,7 @@ export class MonacoModelDiagnostics implements Disposable {
         this.doUpdateModelMarkers(model);
     }
 
-    protected doUpdateModelMarkers(model: IModel  |  undefined): void {
+    protected doUpdateModelMarkers(model: IModel | undefined): void {
         if (model && this.uri.toString() === model.uri.toString()) {
             monaco.editor.setModelMarkers(model, this.owner, this._markers);
         }
