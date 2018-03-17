@@ -106,8 +106,9 @@ export class MonacoToProtocolConverter {
             }
         }
         if (item.sortText) { result.sortText = item.sortText; }
-        // TODO: if (item.additionalTextEdits) { result.additionalTextEdits = asTextEdits(item.additionalTextEdits); }
-        // TODO: if (item.command) { result.command = asCommand(item.command); }
+        if (item.additionalTextEdits) { result.additionalTextEdits = this.asTextEdits(item.additionalTextEdits); }
+        if (item.command) { result.command = this.asCommand(item.command); }
+        result.commitCharacters = item.commitCharacters;
         if (ProtocolCompletionItem.is(item)) {
             result.data = item.data;
         }
@@ -137,6 +138,24 @@ export class MonacoToProtocolConverter {
         } else {
             target.insertText = text;
         }
+    }
+
+    asTextEdit(edit: monaco.editor.ISingleEditOperation): TextEdit {
+        const range = this.asRange(edit.range)!;
+        return {
+            range,
+            newText: edit.text
+        }
+    }
+
+    asTextEdits(items: monaco.editor.ISingleEditOperation[]): TextEdit[];
+    asTextEdits(items: undefined | null): undefined;
+    asTextEdits(items: monaco.editor.ISingleEditOperation[] | undefined | null): TextEdit[] | undefined;
+    asTextEdits(items: monaco.editor.ISingleEditOperation[] | undefined | null): TextEdit[] | undefined {
+        if (!items) {
+            return undefined;
+        }
+        return items.map(item => this.asTextEdit(item));
     }
 
     asReferenceParams(model: IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
@@ -594,8 +613,9 @@ export class ProtocolToMonacoConverter {
         // Protocol item kind is 1 based, codes item kind is zero based.
         if (is.number(item.kind) && item.kind > 0) { result.kind = item.kind - 1; }
         if (item.sortText) { result.sortText = item.sortText; }
-        // TODO: if (item.additionalTextEdits) { result.additionalTextEdits = asTextEdits(item.additionalTextEdits); }
-        // TODO: if (item.command) { result.command = asCommand(item.command); }
+        if (item.additionalTextEdits) { result.additionalTextEdits = this.asTextEdits(item.additionalTextEdits); }
+        if (item.command) { result.command = this.asCommand(item.command); }
+        result.commitCharacters = item.commitCharacters;
         if (item.data !== void 0 && item.data !== null) { result.data = item.data; }
         return result;
     }
