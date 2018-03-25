@@ -9,3 +9,5 @@ install:
   - npm install
   - cd example
   - npm install
+  - cd ../examples/browser
+  - npm install

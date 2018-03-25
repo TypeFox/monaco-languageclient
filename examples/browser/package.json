@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "@monaco-languageclient/browser",
+  "version": "0.0.1",
+  "dependencies": {
+    "monaco-languageclient": "file:../../",
+    "vscode-json-languageservice": "^3.0.11",
+    "vscode-languageserver-types": "^3.6.1"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "rimraf": "^2.6.2",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.20.3",
+    "typescript": "^2.7.2",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "^3.11.0",
+    "webpack-merge": "^4.1.2"
+  },
+  "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf lib",
+    "copy": "cp src/index.html lib/index.html",
+    "build": "npm run compile && webpack && npm run copy",
+    "update:file-deps": "npm run clean:file-deps && npm install",
+    "clean:file-deps": "npm run clean:monaco-languageclient",
+    "update:monaco-languageclient": "npm run clean:monaco-languageclient && npm install",
+    "clean:monaco-languageclient": "rimraf node_modules/monaco-languageclient"
+  }
+}
