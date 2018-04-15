@@ -579,7 +579,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionResult(result: CompletionItem[] | CompletionList | undefined): monaco.languages.CompletionList {
+    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined): monaco.languages.CompletionList {
         if (!result) {
             return {
                 isIncomplete: false,
