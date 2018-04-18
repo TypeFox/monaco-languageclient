@@ -186,6 +186,8 @@ export class MonacoToProtocolConverter {
                 return DiagnosticSeverity.Warning;
             case monaco.MarkerSeverity.Info:
                 return DiagnosticSeverity.Information;
+            case monaco.MarkerSeverity.Hint:
+                return DiagnosticSeverity.Hint;
         }
         return undefined;
     }
