@@ -178,13 +178,13 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asDiagnosticSeverity(value: monaco.Severity): DiagnosticSeverity | undefined {
+    asDiagnosticSeverity(value: monaco.MarkerSeverity): DiagnosticSeverity | undefined {
         switch (value) {
-            case monaco.Severity.Error:
+            case monaco.MarkerSeverity.Error:
                 return DiagnosticSeverity.Error;
-            case monaco.Severity.Warning:
+            case monaco.MarkerSeverity.Warning:
                 return DiagnosticSeverity.Warning;
-            case monaco.Severity.Info:
+            case monaco.MarkerSeverity.Info:
                 return DiagnosticSeverity.Information;
         }
         return undefined;
@@ -553,17 +553,17 @@ export class ProtocolToMonacoConverter {
         return contents.map(string => this.asIMarkdownString(string));
     }
 
-    asSeverity(severity?: number): monaco.Severity {
+    asSeverity(severity?: number): monaco.MarkerSeverity {
         if (severity === 1) {
-            return monaco.Severity.Error;
+            return monaco.MarkerSeverity.Error;
         }
         if (severity === 2) {
-            return monaco.Severity.Warning;
+            return monaco.MarkerSeverity.Warning;
         }
         if (severity === 3) {
-            return monaco.Severity.Info;
+            return monaco.MarkerSeverity.Info;
         }
-        return monaco.Severity.Ignore;
+        return monaco.MarkerSeverity.Hint;
     }
 
     asMarker(diagnostic: Diagnostic): monaco.editor.IMarkerData {

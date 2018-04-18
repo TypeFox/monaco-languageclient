@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "glob-to-regexp": "^0.3.0",
-    "monaco-editor-core": "^0.11.6",
+    "monaco-editor-core": "^0.12.0",
     "vscode-base-languageclient": "^0.0.1-alpha.4"
   },
   "scripts": {
