@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-- updated dependency to Monaco 0.11 ([#61](https://github.com/TypeFox/monaco-languageclient/issues/61))
+## [0.6.0] - 2018-04-18
+- updated dependency to Monaco 0.12 ([#70](https://github.com/TypeFox/monaco-languageclient/pull/70))
 - support `CompletionItem`'s `additionalTextEdits` property ([#39](https://github.com/TypeFox/monaco-languageclient/issues/39))
 - convert `monaco.MarkerSeverity.Hint` values to `DiagnosticSeverity.Hint` ([#71](https://github.com/TypeFox/monaco-languageclient/pull/71))
 
@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
-[Unreleased]: https://github.com/TypeFox/monaco-languageclient/compare/v0.4.0...HEAD
+[0.6.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.4.0...v0.6.0
 [0.4.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/TypeFox/monaco-languageclient/compare/v0.2.0...v0.2.1
