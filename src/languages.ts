@@ -93,7 +93,11 @@ export class MonacoLanguages implements Languages {
             },
             resolveCompletionItem: provider.resolveCompletionItem ? (item, token) => {
                 const protocolItem = this.m2p.asCompletionItem(item);
-                return provider.resolveCompletionItem!(protocolItem, token).then(item => this.p2m.asCompletionItem(item));
+                return provider.resolveCompletionItem!(protocolItem, token).then(resolvedItem => {
+                    const resolvedCompletionItem = this.p2m.asCompletionItem(resolvedItem);
+                    Object.assign(item, resolvedCompletionItem);
+                    return item;
+                });
             } : undefined
         };
     }
@@ -270,7 +274,11 @@ export class MonacoLanguages implements Languages {
                     return codeLens;
                 }
                 const protocolCodeLens = this.m2p.asCodeLens(codeLens);
-                return provider.resolveCodeLens!(protocolCodeLens, token).then(result => this.p2m.asCodeLens(result))
+                return provider.resolveCodeLens!(protocolCodeLens, token).then(result => {
+                    const resolvedCodeLens = this.p2m.asCodeLens(result);
+                    Object.assign(codeLens, resolvedCodeLens);
+                    return codeLens;
+                });
             } : ((m, codeLens, t) => codeLens)
         }
     }
@@ -385,7 +393,11 @@ export class MonacoLanguages implements Languages {
                 // and the link doesn't have a url set
                 if (provider.resolveDocumentLink && (link.url === null || link.url === undefined)) {
                     const documentLink = this.m2p.asDocumentLink(link);
-                    return provider.resolveDocumentLink(documentLink, token).then(result => this.p2m.asILink(result));
+                    return provider.resolveDocumentLink(documentLink, token).then(result => {
+                        const resolvedLink = this.p2m.asILink(result);
+                        Object.assign(link, resolvedLink);
+                        return link;
+                    });
                 }
                 return link;
             }
