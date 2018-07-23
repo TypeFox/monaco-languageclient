@@ -1,0 +1,5 @@
+ports:
+  - port: 3000
+    protocol: "http"
+tasks:
+  - command: "npm config set unsafe-perm true && npm i && cd example && npm i && npm run start"
