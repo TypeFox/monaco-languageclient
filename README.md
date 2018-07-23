@@ -1,5 +1,6 @@
 # Monaco language client
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
+[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
 [![Build Status](https://travis-ci.org/TypeFox/monaco-languageclient.svg?branch=master)](https://travis-ci.org/TypeFox/monaco-languageclient)
 [![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 [![NPM Download](https://img.shields.io/npm/dt/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
@@ -14,11 +15,20 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ## Getting started
 
+### Local dev env
+
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
 npm install
 ```
+
+### Gitpod
+
+In order to develop and run the master branch: https://gitpod.io#https://github.com/TypeFox/monaco-languageclient. 
+Gitpod will create a dev workspace for you with a properly configured env and checked out code, run the build and start a Node.js example.
+
+[Gitpod](https://www.gitpod.io) is a one-click online IDE for GitHub. It is based on [Theia IDE framework](http://www.theia-ide.org) and make use of Monaco and the language server protocol by means of monaco-languageclient.
 
 ## Examples
 
