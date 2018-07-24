@@ -1,5 +1,6 @@
 .vscode
 example
+examples
 node_modules
 .gitignore
 .npmignore

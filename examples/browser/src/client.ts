@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
-import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient';
+import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'
@@ -93,7 +93,7 @@ monaco.languages.registerHoverProvider(LANGUAGE_ID, {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return jsonService.doHover(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((hover) => {
-            return p2m.asHover(hover);
+            return p2m.asHover(hover)!;
         });
     }
 });
