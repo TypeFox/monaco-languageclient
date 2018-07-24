@@ -2,19 +2,21 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import * as is from 'vscode-base-languageclient/lib/utils/is';
+import * as is from 'vscode-languageserver-protocol/lib/utils/is';
 import {
     CodeActionParams, CodeLensParams,
     DocumentFormattingParams, DocumentOnTypeFormattingParams,
     DocumentRangeFormattingParams, ReferenceParams,
     RenameParams, TextDocumentPositionParams,
     Position, TextDocumentIdentifier, CompletionItem, CompletionList,
+    CompletionParams, CompletionContext, CompletionTriggerKind,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
     Definition, Location, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
-    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink, MarkedString, MarkupContent
-} from 'vscode-base-languageclient/lib/base';
+    Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
+    MarkedString, MarkupContent, ColorInformation, ColorPresentation
+} from './services';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
 export type RecursivePartial<T> = {
@@ -89,6 +91,30 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column)
         };
+    }
+
+    asCompletionParams(model: IReadOnlyModel, position: monaco.Position, context: monaco.languages.CompletionContext): CompletionParams {
+        return Object.assign(this.asTextDocumentPositionParams(model, position), {
+            context: this.asCompletionContext(context)
+        });
+    }
+
+    asCompletionContext(context: monaco.languages.CompletionContext): CompletionContext {
+        return {
+            triggerKind: this.asTriggerKind(context.triggerKind),
+            triggerCharacter: context.triggerCharacter
+        }
+    }
+
+    asTriggerKind(triggerKind: monaco.languages.SuggestTriggerKind): CompletionTriggerKind {
+        switch (triggerKind) {
+            case monaco.languages.SuggestTriggerKind.TriggerCharacter:
+                return CompletionTriggerKind.TriggerCharacter;
+            case monaco.languages.SuggestTriggerKind.TriggerForIncompleteCompletions:
+                return CompletionTriggerKind.TriggerForIncompleteCompletions;
+            default:
+                return CompletionTriggerKind.Invoked;
+        }
     }
 
     asCompletionItem(item: monaco.languages.CompletionItem): CompletionItem {
@@ -311,7 +337,8 @@ export class ProtocolToMonacoConverter {
         if (item.documentChanges) {
             for (const change of item.documentChanges) {
                 const resource = monaco.Uri.parse(change.textDocument.uri);
-                edits.push(this.asResourceEdits(resource, change.edits, change.textDocument.version));
+                const version = typeof change.textDocument.version === 'number' ? change.textDocument.version : undefined;
+                edits.push(this.asResourceEdits(resource, change.edits, version));
             }
         } else if (item.changes) {
             for (const key of Object.keys(item.changes)) {
@@ -324,7 +351,13 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asTextEdit(edit: TextEdit): monaco.languages.TextEdit {
+    asTextEdit(edit: TextEdit): monaco.languages.TextEdit;
+    asTextEdit(edit: undefined | null): undefined;
+    asTextEdit(edit: TextEdit | undefined | null): undefined;
+    asTextEdit(edit: TextEdit | undefined | null): monaco.languages.TextEdit | undefined {
+        if (!edit) {
+            return undefined;
+        }
         const range = this.asRange(edit.range)!;
         return {
             range,
@@ -705,6 +738,29 @@ export class ProtocolToMonacoConverter {
             return new monaco.Position(lineNumber, column);
         }
         return { lineNumber, column };
+    }
+
+    asColorInformations(items: ColorInformation[]): monaco.languages.IColorInformation[] {
+        return items.map(item => this.asColorInformation(item));
+    }
+
+    asColorInformation(item: ColorInformation): monaco.languages.IColorInformation {
+        return {
+            range: this.asRange(item.range),
+            color: item.color
+        }
+    }
+
+    asColorPresentations(items: ColorPresentation[]): monaco.languages.IColorPresentation[] {
+        return items.map(item => this.asColorPresentation(item));
+    }
+
+    asColorPresentation(item: ColorPresentation): monaco.languages.IColorPresentation {
+        return {
+            label: item.label,
+            textEdit: this.asTextEdit(item.textEdit),
+            additionalTextEdits: this.asTextEdits(item.additionalTextEdits)
+        }
     }
 
 }

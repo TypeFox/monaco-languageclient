@@ -30,6 +30,11 @@ const common = {
         child_process: 'empty',
         net: 'empty',
         crypto: 'empty'
+    },
+    resolve: {
+        alias: {
+            'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
+        }
     }
 };
 

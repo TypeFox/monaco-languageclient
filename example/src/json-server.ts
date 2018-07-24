@@ -11,7 +11,7 @@ import {
     TextDocument, Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, DocumentSymbolParams, TextEdit
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams } from 'vscode-base-languageclient/lib/protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
 export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
@@ -69,7 +69,7 @@ export class JsonServer {
                 }
             }
         });
-        this.connection.onCodeAction(params => 
+        this.connection.onCodeAction(params =>
             this.codeAction(params)
         );
         this.connection.onCompletion(params =>
@@ -97,24 +97,31 @@ export class JsonServer {
     }
 
     protected codeAction(params: CodeActionParams): Command[] {
+        const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
         return [{
             title: "Upper Case Document",
             command: "json.documentUpper",
             // Send a VersionedTextDocumentIdentifier
             arguments: [{
                 ...params.textDocument,
-                version: this.documents.get(params.textDocument.uri).version
+                version: document.version
             }]
         }];
     }
 
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
         const document = this.documents.get(params.textDocument.uri);
-        return this.jsonService.format(document, params.range, params.options)
+        return document ? this.jsonService.format(document, params.range, params.options) : [];
     }
 
     protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
         const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
         const jsonDocument = this.getJSONDocument(document);
         return this.jsonService.findDocumentSymbols(document, jsonDocument);
     }
@@ -122,23 +129,29 @@ export class JsonServer {
     protected executeCommand(params: ExecuteCommandParams): any {
         if (params.command === "json.documentUpper" && params.arguments) {
             const versionedTextDocumentIdentifier = params.arguments[0];
-            this.connection.workspace.applyEdit({
-                documentChanges: [{
-                    textDocument: versionedTextDocumentIdentifier,
-                    edits: [{
-                        range: {
-                            start: {line: 0, character: 0},
-                            end: {line: Number.MAX_SAFE_INTEGER, character: Number.MAX_SAFE_INTEGER}
-                        },
-                        newText: this.documents.get(versionedTextDocumentIdentifier.uri).getText().toUpperCase()
+            const document = this.documents.get(versionedTextDocumentIdentifier.uri);
+            if (document) {
+                this.connection.workspace.applyEdit({
+                    documentChanges: [{
+                        textDocument: versionedTextDocumentIdentifier,
+                        edits: [{
+                            range: {
+                                start: { line: 0, character: 0 },
+                                end: { line: Number.MAX_SAFE_INTEGER, character: Number.MAX_SAFE_INTEGER }
+                            },
+                            newText: document.getText().toUpperCase()
+                        }]
                     }]
-                }]
-            });
+                });
+            }
         }
     }
 
-    protected hover(params: TextDocumentPositionParams): Thenable<Hover> {
+    protected hover(params: TextDocumentPositionParams): Thenable<Hover | null> {
         const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return Promise.resolve(null);
+        }
         const jsonDocument = this.getJSONDocument(document);
         return this.jsonService.doHover(document, params.position, jsonDocument);
     }
@@ -163,8 +176,11 @@ export class JsonServer {
         return this.jsonService.doResolve(item);
     }
 
-    protected completion(params: TextDocumentPositionParams): Thenable<CompletionList> {
+    protected completion(params: TextDocumentPositionParams): Thenable<CompletionList | null> {
         const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return Promise.resolve(null);
+        }
         const jsonDocument = this.getJSONDocument(document);
         return this.jsonService.doComplete(document, params.position, jsonDocument);
     }
