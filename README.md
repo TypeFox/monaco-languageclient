@@ -13,6 +13,15 @@ NPM module to connect Monaco editor with language servers
 
 Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsofts-monaco-editor) for a detail explanation how to connect the Monaco editor to your language server.
 
+- [**Getting started**](#getting-started)
+   - [Local dev env](#local-dev-env)
+  - [Gitpod](#gitpod)
+- [**Examples**](#examples)
+  - [Node.js](#node-js)
+  - [Browser](#browser)
+- [**History**](CHANGELOG.md)
+- [**License**](#license)
+
 ## Getting started
 
 ### Local dev env
