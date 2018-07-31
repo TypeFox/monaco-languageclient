@@ -1,6 +1,44 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2018-07-31
+Updated to `vscode-languageclient` 4.4.0 to support LSP 3.10.0 features like hierarchical document symbols, go to type defition/implementation, workspace folders and document color provider ([#89](https://github.com/TypeFox/monaco-languageclient/pull/89)).
+
+### Breaking changes
+
+In order to use `vscode-languageclient` directly the compatibility layer was implemented for subset of `vscode` APIs used by the client:
+
+- `vscode-compatibility` should be used as an implementation of `vscode` module at the runtime
+  - to adjust module resolution with `webpack`:
+  ```js
+      resolve: {
+          alias: {
+              'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
+          }
+      }
+  ```
+  - `register-vscode` should be required once to adjust module resolution with `Node.js`, for example to stub `vscode` APIs for Mocha tests:
+  ```
+  --require monaco-languageclient/lib/register-vscode
+  ```
+- `MonacoLanguageClient` should be used instead of `BaseLanguageClient`
+- `MonacoServices` should be installed globally to be accessible for `vscode-compatibility` module, not per a language client
+  - for the use case with a single standalone editor:
+  ```ts
+  import { MonacoServices } from 'monaco-languageclient';
+  
+  MonacoServices.install(editor);
+  ```
+  - to support sophisticated use cases one can install custom Monaco services:
+  ```ts
+  import { MonacoServices, Services } from 'monaco-languageclient';
+  
+  const services: MonacoServices = {
+      worspace, languages, commands, window
+  };
+  Services.install(services);
+  ```
+
 ## [0.6.0] - 2018-04-18
 - updated dependency to Monaco 0.12 ([#70](https://github.com/TypeFox/monaco-languageclient/pull/70))
 - support `CompletionItem`'s `additionalTextEdits` property ([#39](https://github.com/TypeFox/monaco-languageclient/issues/39))
@@ -29,7 +67,8 @@ All notable changes to this project will be documented in this file.
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
-[0.6.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.4.0...v0.6.0
+[0.7.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.6.3...v0.7.0
+[0.6.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.4.0...v0.6.1
 [0.4.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/TypeFox/monaco-languageclient/compare/v0.2.0...v0.2.1
