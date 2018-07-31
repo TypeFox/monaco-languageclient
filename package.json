@@ -31,7 +31,7 @@
   },
   "scripts": {
     "prepare": "npm run update-vscode && npm run clean && npm run compile",
-    "compile": "tsc",
+    "compile": "tsc && tsc --outDir dist/amd --module amd",
     "watch": "tsc -w",
     "clean": "rimraf lib",
     "update-vscode": "node ./node_modules/vscode/bin/install"
