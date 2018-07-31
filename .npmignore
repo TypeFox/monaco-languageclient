@@ -6,3 +6,4 @@ node_modules
 .npmignore
 tsconfig.json
 .log
+.github
