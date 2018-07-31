@@ -17,7 +17,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
    - [Local dev env](#local-dev-env)
   - [Gitpod](#gitpod)
 - [**Examples**](#examples)
-  - [Node.js](#node-js)
+  - [Node.js](#nodejs)
   - [Browser](#browser)
 - [**History**](CHANGELOG.md)
 - [**License**](#license)
