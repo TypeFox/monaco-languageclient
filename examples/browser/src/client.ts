@@ -66,9 +66,7 @@ monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
     },
 
     resolveCompletionItem(item, token): monaco.languages.CompletionItem | Thenable<monaco.languages.CompletionItem> {
-        return jsonService.doResolve(m2p.asCompletionItem(item)).then((result) => {
-            return p2m.asCompletionItem(result);
-        });
+        return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result));
     }
 });
 
@@ -126,7 +124,7 @@ function doValidate(document: TextDocument): void {
     }
     const jsonDocument = jsonService.parseJSONDocument(document);
     jsonService.doValidation(document, jsonDocument).then((diagnostics) => {
-        const markers = diagnostics.map(diagnostic => p2m.asMarker(diagnostic));
+        const markers = p2m.asDiagnostics(diagnostics);
         monaco.editor.setModelMarkers(getModel(), 'default', markers);
     });
 }

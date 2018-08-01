@@ -18,6 +18,8 @@ export * from 'vscode-base-languageclient/lib/client';
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
+    static bypassConversion = (result: any) => result || undefined;
+
     protected readonly connectionProvider: IConnectionProvider;
 
     constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClient.Options) {
@@ -26,7 +28,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         (this as any).createConnection = this.doCreateConnection.bind(this);
 
         // bypass LSP <=> VS Code conversion
-        const bypassConversion = (result: any) => result || undefined;
         const self: {
             _p2c: p2c.Converter,
             _c2p: c2p.Converter
@@ -36,7 +37,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
                 if (prop === 'asUri') {
                     return target[prop];
                 }
-                return bypassConversion;
+                return MonacoLanguageClient.bypassConversion;
             }
         });
         self._c2p = new Proxy(self._c2p, {
@@ -64,7 +65,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
                 if (prop.endsWith('Params')) {
                     return (target as any)[prop];
                 }
-                return bypassConversion;
+                return MonacoLanguageClient.bypassConversion;
             }
         });
     }
@@ -79,14 +80,17 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         throw new Error('Unsupported');
     }
 
-	protected registerBuiltinFeatures(): void {
-		super.registerBuiltinFeatures();
-		this.registerFeature(new TypeDefinitionFeature(this));
-		this.registerFeature(new ImplementationFeature(this));
-		this.registerFeature(new ColorProviderFeature(this));
-		this.registerFeature(new WorkspaceFoldersFeature(this));
-		this.registerFeature(new FoldingRangeFeature(this));
-	}
+    protected registerBuiltinFeatures(): void {
+        super.registerBuiltinFeatures();
+        this.registerFeature(new TypeDefinitionFeature(this));
+        this.registerFeature(new ImplementationFeature(this));
+        this.registerFeature(new ColorProviderFeature(this));
+        this.registerFeature(new WorkspaceFoldersFeature(this));
+
+        const foldingRangeFeature = new FoldingRangeFeature(this);
+        foldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
+        this.registerFeature(foldingRangeFeature);
+    }
 
 }
 export namespace MonacoLanguageClient {

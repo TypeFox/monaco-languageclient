@@ -60,7 +60,7 @@ export class MonacoModelDiagnostics implements Disposable {
 
     set diagnostics(diagnostics: Diagnostic[]) {
         this._diagnostics = diagnostics;
-        this._markers = diagnostics.map(diagnostic => this.p2m.asMarker(diagnostic));
+        this._markers = this.p2m.asDiagnostics(diagnostics);
         this.updateModelMarkers();
     }
 
