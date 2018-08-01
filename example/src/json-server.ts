@@ -9,9 +9,9 @@ import { MessageReader, MessageWriter } from "vscode-jsonrpc";
 import { IConnection, TextDocuments, createConnection } from 'vscode-languageserver';
 import {
     TextDocument, Diagnostic, Command, CompletionList, CompletionItem, Hover,
-    SymbolInformation, DocumentSymbolParams, TextEdit
+    SymbolInformation, DocumentSymbolParams, TextEdit, FoldingRange, ColorInformation, ColorPresentation
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams } from 'vscode-languageserver-protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeRequestParam, DocumentColorParams, ColorPresentationParams } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 
 export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
@@ -65,7 +65,9 @@ export class JsonServer {
                     documentRangeFormattingProvider: true,
                     executeCommandProvider: {
                         commands: ['json.documentUpper']
-                    }
+                    },
+                    colorProvider: true,
+                    foldingRangeProvider: true
                 }
             }
         });
@@ -90,10 +92,45 @@ export class JsonServer {
         this.connection.onDocumentRangeFormatting(params =>
             this.format(params)
         );
+        this.connection.onDocumentColor(params =>
+            this.findDocumentColors(params)
+        );
+        this.connection.onColorPresentation(params =>
+            this.getColorPresentations(params)
+        );
+        this.connection.onFoldingRanges(params =>
+            this.getFoldingRanges(params)
+        );
     }
 
     start() {
         this.connection.listen();
+    }
+
+    protected getFoldingRanges(params: FoldingRangeRequestParam): FoldingRange[] {
+        const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
+        return this.jsonService.getFoldingRanges(document);
+    }
+
+    protected findDocumentColors(params: DocumentColorParams): Thenable<ColorInformation[]> {
+        const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return Promise.resolve([]);
+        }
+        const jsonDocument = this.getJSONDocument(document);
+        return this.jsonService.findDocumentColors(document, jsonDocument);
+    }
+
+    protected getColorPresentations(params: ColorPresentationParams): ColorPresentation[] {
+        const document = this.documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
+        const jsonDocument = this.getJSONDocument(document);
+        return this.jsonService.getColorPresentations(document, jsonDocument, params.color, params.range);
     }
 
     protected codeAction(params: CodeActionParams): Command[] {

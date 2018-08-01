@@ -14,7 +14,7 @@ import {
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
-    FoldingRange, FoldingRangeRequestParam, DocumentFilter
+    FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction
 } from 'vscode-languageserver-protocol/lib/main';
 
 import {
@@ -90,7 +90,7 @@ export interface DocumentHighlightProvider {
 }
 
 export interface DocumentSymbolProvider {
-    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): Thenable<SymbolInformation[]>;
+    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): Thenable<SymbolInformation[] | DocumentSymbol[]>;
 }
 
 export interface WorkspaceSymbolProvider {
@@ -98,7 +98,7 @@ export interface WorkspaceSymbolProvider {
 }
 
 export interface CodeActionProvider {
-    provideCodeActions(params: CodeActionParams, token: CancellationToken): Thenable<Command[]>;
+    provideCodeActions(params: CodeActionParams, token: CancellationToken): Thenable<(Command| CodeAction)[]>;
 }
 
 export interface CodeLensProvider {

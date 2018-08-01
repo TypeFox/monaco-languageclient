@@ -7,7 +7,8 @@ import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
     SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider,
     DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider,
-    DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider
+    DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
+    FoldingRangeProvider
 } from "./services";
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './monaco-converter';
@@ -233,7 +234,7 @@ export class MonacoLanguages implements Languages {
                     return [];
                 }
                 const params = this.m2p.asDocumentSymbolParams(model);
-                return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asSymbolInformations(result))
+                return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asDocumentSymbolResult(result))
             }
         }
     }
@@ -407,7 +408,7 @@ export class MonacoLanguages implements Languages {
                     return undefined!;
                 }
                 const params = this.m2p.asDocumentLinkParams(model);
-                return provider.provideDocumentLinks(params, token).then(result => this.p2m.asILinks(result));
+                return provider.provideDocumentLinks(params, token).then(result => this.p2m.asDocumentLinks(result));
             },
 
             resolveLink: (link: monaco.languages.ILink, token) => {
@@ -416,7 +417,7 @@ export class MonacoLanguages implements Languages {
                 if (provider.resolveDocumentLink && (link.url === null || link.url === undefined)) {
                     const documentLink = this.m2p.asDocumentLink(link);
                     return provider.resolveDocumentLink(documentLink, token).then(result => {
-                        const resolvedLink = this.p2m.asILink(result);
+                        const resolvedLink = this.p2m.asDocumentLink(result);
                         Object.assign(link, resolvedLink);
                         return link;
                     });
@@ -507,9 +508,34 @@ export class MonacoLanguages implements Languages {
         }
     }
 
+    registerFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable {
+        const foldingRangeProvider = this.createFoldingRangeProvider(selector, provider);
+        const providers = new DisposableCollection();
+        for (const language of getLanguages()) {
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerFoldingRangeProvider(language, foldingRangeProvider));
+            }
+        }
+        return providers;
+    }
+
+    protected createFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): monaco.languages.FoldingRangeProvider {
+        return {
+            provideFoldingRanges: (model, context, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return [];
+                }
+                const textDocument = this.m2p.asTextDocumentIdentifier(model);
+                return provider.provideFoldingRanges({
+                    textDocument
+                }, token).then(result => this.p2m.asFoldingRanges(result));
+            }
+        }
+    }
+
     protected matchModel(selector: string | DocumentFilter | DocumentSelector, model: MonacoModelIdentifier): boolean {
         if (Array.isArray(selector)) {
-            return selector.findIndex(filter => this.matchModel(filter, model)) !== -1;
+            return selector.some(filter => this.matchModel(filter, model));
         }
         if (DocumentFilter.is(selector)) {
             if (!!selector.language && selector.language !== model.languageId) {
@@ -528,7 +554,7 @@ export class MonacoLanguages implements Languages {
 
     protected matchLanguage(selector: string | DocumentFilter | DocumentSelector, languageId: string): boolean {
         if (Array.isArray(selector)) {
-            return selector.findIndex(filter => this.matchLanguage(filter, languageId)) !== -1;
+            return selector.some(filter => this.matchLanguage(filter, languageId));
         }
 
         if (DocumentFilter.is(selector)) {
