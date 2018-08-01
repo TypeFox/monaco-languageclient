@@ -70,7 +70,9 @@ export class MonacoLanguages implements Languages {
         const completionProvider = this.createCompletionProvider(selector, provider, ...triggerCharacters);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerCompletionItemProvider(language, completionProvider))
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerCompletionItemProvider(language, completionProvider))
+            }
         };
         return providers;
     }
@@ -100,7 +102,9 @@ export class MonacoLanguages implements Languages {
         const hoverProvider = this.createHoverProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerHoverProvider(language, hoverProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerHoverProvider(language, hoverProvider));
+            }
         }
         return providers;
     }
@@ -121,7 +125,9 @@ export class MonacoLanguages implements Languages {
         const signatureHelpProvider = this.createSignatureHelpProvider(selector, provider, ...triggerCharacters);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerSignatureHelpProvider(language, signatureHelpProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerSignatureHelpProvider(language, signatureHelpProvider));
+            }
         }
         return providers;
     }
@@ -144,7 +150,9 @@ export class MonacoLanguages implements Languages {
         const definitionProvider = this.createDefinitionProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerDefinitionProvider(language, definitionProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerDefinitionProvider(language, definitionProvider));
+            }
         }
         return providers;
     }
@@ -165,7 +173,9 @@ export class MonacoLanguages implements Languages {
         const referenceProvider = this.createReferenceProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerReferenceProvider(language, referenceProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerReferenceProvider(language, referenceProvider));
+            }
         }
         return providers;
     }
@@ -186,7 +196,9 @@ export class MonacoLanguages implements Languages {
         const documentHighlightProvider = this.createDocumentHighlightProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerDocumentHighlightProvider(language, documentHighlightProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerDocumentHighlightProvider(language, documentHighlightProvider));
+            }
         }
         return providers;
     }
@@ -207,7 +219,9 @@ export class MonacoLanguages implements Languages {
         const documentSymbolProvider = this.createDocumentSymbolProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerDocumentSymbolProvider(language, documentSymbolProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerDocumentSymbolProvider(language, documentSymbolProvider));
+            }
         }
         return providers;
     }
@@ -228,7 +242,9 @@ export class MonacoLanguages implements Languages {
         const codeActionProvider = this.createCodeActionProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerCodeActionProvider(language, codeActionProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerCodeActionProvider(language, codeActionProvider));
+            }
         }
         return providers;
     }
@@ -249,7 +265,9 @@ export class MonacoLanguages implements Languages {
         const codeLensProvider = this.createCodeLensProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerCodeLensProvider(language, codeLensProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerCodeLensProvider(language, codeLensProvider));
+            }
         }
         return providers;
     }
@@ -281,7 +299,9 @@ export class MonacoLanguages implements Languages {
         const documentFormattingEditProvider = this.createDocumentFormattingEditProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider));
+            }
         }
         return providers;
     }
@@ -302,7 +322,9 @@ export class MonacoLanguages implements Languages {
         const documentRangeFormattingEditProvider = this.createDocumentRangeFormattingEditProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerDocumentRangeFormattingEditProvider(language, documentRangeFormattingEditProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerDocumentRangeFormattingEditProvider(language, documentRangeFormattingEditProvider));
+            }
         }
         return providers;
     }
@@ -323,7 +345,9 @@ export class MonacoLanguages implements Languages {
         const onTypeFormattingEditProvider = this.createOnTypeFormattingEditProvider(selector, provider, firstTriggerCharacter, ...moreTriggerCharacter);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerOnTypeFormattingEditProvider(language, onTypeFormattingEditProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerOnTypeFormattingEditProvider(language, onTypeFormattingEditProvider));
+            }
         }
         return providers;
     }
@@ -346,7 +370,9 @@ export class MonacoLanguages implements Languages {
         const renameProvider = this.createRenameProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerRenameProvider(language, renameProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerRenameProvider(language, renameProvider));
+            }
         }
         return providers;
     }
@@ -367,7 +393,9 @@ export class MonacoLanguages implements Languages {
         const linkProvider = this.createDocumentLinkProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerLinkProvider(language, linkProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerLinkProvider(language, linkProvider));
+            }
         }
         return providers;
     }
@@ -402,7 +430,9 @@ export class MonacoLanguages implements Languages {
         const implementationProvider = this.createImplementationProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerImplementationProvider(language, implementationProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerImplementationProvider(language, implementationProvider));
+            }
         }
         return providers;
     }
@@ -423,7 +453,9 @@ export class MonacoLanguages implements Languages {
         const typeDefinitionProvider = this.createTypeDefinitionProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerTypeDefinitionProvider(language, typeDefinitionProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerTypeDefinitionProvider(language, typeDefinitionProvider));
+            }
         }
         return providers;
     }
@@ -444,7 +476,9 @@ export class MonacoLanguages implements Languages {
         const documentColorProvider = this.createDocumentColorProvider(selector, provider);
         const providers = new DisposableCollection();
         for (const language of getLanguages()) {
-            providers.push(monaco.languages.registerColorProvider(language, documentColorProvider));
+            if (this.matchLanguage(selector, language)) {
+                providers.push(monaco.languages.registerColorProvider(language, documentColorProvider));
+            }
         }
         return providers;
     }
@@ -490,6 +524,18 @@ export class MonacoLanguages implements Languages {
             return true;
         }
         return selector === model.languageId;
+    }
+
+    protected matchLanguage(selector: string | DocumentFilter | DocumentSelector, languageId: string): boolean {
+        if (Array.isArray(selector)) {
+            return selector.findIndex(filter => this.matchLanguage(filter, languageId)) !== -1;
+        }
+
+        if (DocumentFilter.is(selector)) {
+            return !selector.language || selector.language === languageId;
+        }
+
+        return selector === languageId;
     }
 
 }
