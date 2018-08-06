@@ -153,35 +153,33 @@ export class MonacoToProtocolConverter {
         if (item.command) { result.command = this.asCommand(item.command); }
         // TODO if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
         if (protocolItem) {
-			if (protocolItem.data !== undefined) {
-				result.data = protocolItem.data;
-			}
-			if (protocolItem.deprecated === true || protocolItem.deprecated === false) {
-				result.deprecated = protocolItem.deprecated;
-			}
-		}
-		return result;
+            if (protocolItem.data !== undefined) {
+                result.data = protocolItem.data;
+            }
+            if (protocolItem.deprecated === true || protocolItem.deprecated === false) {
+                result.deprecated = protocolItem.deprecated;
+            }
+        }
+        return result;
     }
 
-	protected asCompletionItemKind(value: monaco.languages.CompletionItemKind, original: CompletionItemKind | undefined): CompletionItemKind {
-		if (original !== undefined) {
-			return original;
-		}
-		return value + 1 as CompletionItemKind;
-	}
+    protected asCompletionItemKind(value: monaco.languages.CompletionItemKind, original: CompletionItemKind | undefined): CompletionItemKind {
+        if (original !== undefined) {
+            return original;
+        }
+        return value + 1 as CompletionItemKind;
+    }
 
     protected asDocumentation(format: string, documentation: string | monaco.IMarkdownString): string | MarkupContent {
-		switch (format) {
-			case '$string':
-				return documentation as string;
-			case MarkupKind.PlainText:
-				return { kind: format, value: documentation as string };
-			case MarkupKind.Markdown:
-				return { kind: format, value: (documentation as monaco.IMarkdownString).value };
-			default:
-				return `Unsupported Markup content received. Kind is: ${format}`;
-		}
-	}
+        switch (format) {
+            case MarkupKind.PlainText:
+                return { kind: format, value: documentation as string };
+            case MarkupKind.Markdown:
+                return { kind: format, value: (documentation as monaco.IMarkdownString).value };
+            default:
+                return `Unsupported Markup content received. Kind is: ${format}`;
+        }
+    }
 
     protected fillPrimaryInsertText(target: CompletionItem, source: ProtocolCompletionItem): void {
         let format: InsertTextFormat = InsertTextFormat.PlainText;
@@ -299,11 +297,11 @@ export class MonacoToProtocolConverter {
 
     asCodeLens(item: monaco.languages.ICodeLensSymbol): CodeLens {
         let result = CodeLens.create(this.asRange(item.range));
-		if (item.command) { result.command = this.asCommand(item.command); }
-		if (ProtocolCodeLens.is(item)) {
-			if (item.data) { result.data = item.data };
-		}
-		return result;
+        if (item.command) { result.command = this.asCommand(item.command); }
+        if (ProtocolCodeLens.is(item)) {
+            if (item.data) { result.data = item.data };
+        }
+        return result;
     }
 
     asFormattingOptions(options: monaco.languages.FormattingOptions): FormattingOptions {
@@ -349,12 +347,12 @@ export class MonacoToProtocolConverter {
     }
 
     asDocumentLink(item: monaco.languages.ILink): DocumentLink {
-		let result = DocumentLink.create(this.asRange(item.range));
-		if (item.url) { result.target = item.url; }
-		if (ProtocolDocumentLink.is(item) && item.data) {
-			result.data = item.data;
-		}
-		return result;
+        let result = DocumentLink.create(this.asRange(item.range));
+        if (item.url) { result.target = item.url; }
+        if (ProtocolDocumentLink.is(item) && item.data) {
+            result.data = item.data;
+        }
+        return result;
     }
 }
 
@@ -468,7 +466,7 @@ export class ProtocolToMonacoConverter {
     asCommand(command: Command): monaco.languages.Command;
     asCommand(command: undefined): undefined;
     asCommand(command: Command | undefined): monaco.languages.Command | undefined;
-    asCommand(command: Command |  undefined): monaco.languages.Command | undefined {
+    asCommand(command: Command | undefined): monaco.languages.Command | undefined {
         if (!command) {
             return undefined;
         }
@@ -638,22 +636,6 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asIMarkdownString(content: MarkedString | MarkupContent): monaco.IMarkdownString {
-        if (typeof content === 'string') {
-            return {
-                value: content
-            }
-        }
-        if ('kind' in content) {
-            const { value } = content;
-            return { value };
-        }
-        const { language, value } = content;
-        return {
-            value: '```' + language + '\n' + value + '\n```'
-        };
-    }
-
     asHoverContent(contents: MarkedString | MarkedString[] | MarkupContent): monaco.IMarkdownString[] {
         if (Array.isArray(contents)) {
             return contents.map(content => this.asMarkdownString(content));
@@ -665,18 +647,17 @@ export class ProtocolToMonacoConverter {
         if (Is.string(value)) {
             return value;
         }
+        if (value.kind === MarkupKind.PlainText) {
+            return value.value;
+        }
         return this.asMarkdownString(value);
     }
 
     asMarkdownString(content: MarkedString | MarkupContent): monaco.IMarkdownString {
         if (MarkupContent.is(content)) {
-            const value = content.value;
-            if (content.kind === MarkupKind.Markdown) {
-                return {
-                    value: '```\n' + value + '\n```'
-                };
-            }
-            return { value };
+            return {
+                value: content.value
+            };
         }
         if (Is.string(content)) {
             return { value: content };
@@ -702,8 +683,8 @@ export class ProtocolToMonacoConverter {
 
     asDiagnostics(diagnostics: undefined): undefined;
     asDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[];
-    asDiagnostics(diagnostics: Diagnostic[] |  undefined): monaco.editor.IMarkerData[] |  undefined;
-    asDiagnostics(diagnostics: Diagnostic[] |  undefined): monaco.editor.IMarkerData[] |  undefined {
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined;
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
         if (!diagnostics) {
             return undefined;
         }
