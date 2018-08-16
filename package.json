@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "glob-to-regexp": "^0.3.0",
-    "monaco-editor-core": "^0.13.2",
+    "monaco-editor-core": "^0.14.6",
     "vscode-jsonrpc": "^3.6.2",
     "vscode-base-languageclient": "4.4.0",
     "vscode-uri": "^1.0.5"

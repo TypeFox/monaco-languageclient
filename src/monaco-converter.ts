@@ -477,7 +477,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asDocumentSymbolResult(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.SymbolInformation[] {
+    asDocumentSymbolResult(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
         if (DocumentSymbol.is(values[0])) {
             // FIXME when Monaco supports DocumentSymbol
             return [];
@@ -485,22 +485,25 @@ export class ProtocolToMonacoConverter {
         return this.asSymbolInformations(values as SymbolInformation[]);
     }
 
-    asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.SymbolInformation[];
+    asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.DocumentSymbol[];
     asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
-    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.SymbolInformation[] | undefined;
-    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.SymbolInformation[] | undefined {
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined;
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined {
         if (!values) {
             return undefined;
         }
         return values.map(information => this.asSymbolInformation(information, uri));
     }
 
-    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): monaco.languages.SymbolInformation {
+    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): monaco.languages.DocumentSymbol {
+        const location = this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location);
         return {
             name: item.name,
+            detail: '',
             containerName: item.containerName,
             kind: this.asSymbolKind(item.kind),
-            location: this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location)
+            range: location.range,
+            selectionRange: location.range
         };
     }
 

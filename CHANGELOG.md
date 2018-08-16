@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.3] - 2018-08-??
+- updated dependency to Monaco 0.14.2, with adaptation for breaking changes from monaco.
+
 ## [0.7.2] - 2018-08-02
 - amd distribution ([#97](https://github.com/TypeFox/monaco-languageclient/pull/97)) - thanks to @zewa666
 - updated dependency to Monaco 0.13.2 ([#100](https://github.com/TypeFox/monaco-languageclient/pull/100))
