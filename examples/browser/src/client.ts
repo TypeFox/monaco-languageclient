@@ -79,7 +79,7 @@ monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
 });
 
 monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
-    provideDocumentSymbols(model, token): monaco.languages.SymbolInformation[] | Thenable<monaco.languages.SymbolInformation[]> {
+    provideDocumentSymbols(model, token): monaco.languages.DocumentSymbol[] | Thenable<monaco.languages.DocumentSymbol[]> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return p2m.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
