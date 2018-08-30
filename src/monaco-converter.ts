@@ -885,7 +885,12 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asFoldingRanges(items: FoldingRange[]): monaco.languages.FoldingRange[] {
+    asFoldingRanges(items: undefined | null): undefined | null;
+    asFoldingRanges(items: FoldingRange[]): monaco.languages.FoldingRange[];
+    asFoldingRanges(items: FoldingRange[] | undefined | null): monaco.languages.FoldingRange[] | undefined | null {
+        if (!items) {
+            return items;
+        }
         return items.map(item => this.asFoldingRange(item));
     }
 
