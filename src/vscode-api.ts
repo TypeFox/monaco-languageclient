@@ -79,7 +79,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             const configuration = workspace.configurations ?
                 workspace.configurations.getConfiguration(section, resource ? resource.toString() : undefined) :
                 undefined;
-            return {
+            const result: vscode.WorkspaceConfiguration = {
                 get: (section: string, defaultValue?: any) => {
                     return configuration ? configuration.get(section, defaultValue) : defaultValue;
                 },
@@ -88,7 +88,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 },
                 inspect: unsupported,
                 update: unsupported
-            }
+            };
+            return Object.assign(result, {
+                toJSON: () => configuration ? configuration.toJSON() : undefined
+            });
         },
         get onDidChangeConfiguration(): typeof vscode.workspace.onDidChangeConfiguration {
             const services = servicesProvider();
