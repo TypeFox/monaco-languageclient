@@ -613,7 +613,11 @@ export class ProtocolToMonacoConverter {
     asSignatureInformation(item: SignatureInformation): monaco.languages.SignatureInformation {
         let result = <monaco.languages.SignatureInformation>{ label: item.label };
         if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
-        if (item.parameters) { result.parameters = this.asParameterInformations(item.parameters); }
+        if (item.parameters) {
+            result.parameters = this.asParameterInformations(item.parameters);
+        } else {
+            result.parameters = [];
+        }
         return result;
     }
 
