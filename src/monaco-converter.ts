@@ -598,7 +598,11 @@ export class ProtocolToMonacoConverter {
             // activeParameter was optional in the past
             result.activeParameter = 0;
         }
-        if (item.signatures) { result.signatures = this.asSignatureInformations(item.signatures); }
+        if (item.signatures) {
+            result.signatures = this.asSignatureInformations(item.signatures);
+        } else {
+            result.signatures = [];
+        }
         return result;
     }
 
