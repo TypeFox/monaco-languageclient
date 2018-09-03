@@ -477,23 +477,21 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asDocumentSymbolInformation(value: DocumentSymbol) : monaco.languages.DocumentSymbol {
+    asDocumentSymbol(value: DocumentSymbol): monaco.languages.DocumentSymbol {
+        const children = value.children && value.children.map(c => this.asDocumentSymbol(c));
         return {
             name: value.name,
             detail: value.detail || "",
             kind: this.asSymbolKind(value.kind),
-            containerName: "",
             range: this.asRange(value.range),
             selectionRange: this.asRange(value.selectionRange),
-            children: value.children
-                ? value.children.map(c => this.asDocumentSymbolInformation(c))
-                : []
+            children
         };
     }
 
-    asDocumentSymbol(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
+    asDocumentSymbols(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
         if (DocumentSymbol.is(values[0])) {
-            return (values as DocumentSymbol[]).map(s => this.asDocumentSymbolInformation(s));
+            return (values as DocumentSymbol[]).map(s => this.asDocumentSymbol(s));
         }
         return this.asSymbolInformations(values as SymbolInformation[]);
     }

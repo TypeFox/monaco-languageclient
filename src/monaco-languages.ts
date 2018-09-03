@@ -234,7 +234,7 @@ export class MonacoLanguages implements Languages {
                     return [];
                 }
                 const params = this.m2p.asDocumentSymbolParams(model);
-                return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asDocumentSymbol(result))
+                return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asDocumentSymbols(result))
             }
         }
     }
