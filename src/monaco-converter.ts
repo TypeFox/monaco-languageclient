@@ -477,30 +477,44 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asDocumentSymbolResult(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.SymbolInformation[] {
+    asDocumentSymbol(value: DocumentSymbol): monaco.languages.DocumentSymbol {
+        const children = value.children && value.children.map(c => this.asDocumentSymbol(c));
+        return {
+            name: value.name,
+            detail: value.detail || "",
+            kind: this.asSymbolKind(value.kind),
+            range: this.asRange(value.range),
+            selectionRange: this.asRange(value.selectionRange),
+            children
+        };
+    }
+
+    asDocumentSymbols(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
         if (DocumentSymbol.is(values[0])) {
-            // FIXME when Monaco supports DocumentSymbol
-            return [];
+            return (values as DocumentSymbol[]).map(s => this.asDocumentSymbol(s));
         }
         return this.asSymbolInformations(values as SymbolInformation[]);
     }
 
-    asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.SymbolInformation[];
+    asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.DocumentSymbol[];
     asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
-    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.SymbolInformation[] | undefined;
-    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.SymbolInformation[] | undefined {
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined;
+    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined {
         if (!values) {
             return undefined;
         }
         return values.map(information => this.asSymbolInformation(information, uri));
     }
 
-    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): monaco.languages.SymbolInformation {
+    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): monaco.languages.DocumentSymbol {
+        const location = this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location);
         return {
             name: item.name,
+            detail: '',
             containerName: item.containerName,
             kind: this.asSymbolKind(item.kind),
-            location: this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location)
+            range: location.range,
+            selectionRange: location.range
         };
     }
 
@@ -598,7 +612,11 @@ export class ProtocolToMonacoConverter {
             // activeParameter was optional in the past
             result.activeParameter = 0;
         }
-        if (item.signatures) { result.signatures = this.asSignatureInformations(item.signatures); }
+        if (item.signatures) {
+            result.signatures = this.asSignatureInformations(item.signatures);
+        } else {
+            result.signatures = [];
+        }
         return result;
     }
 
@@ -609,7 +627,11 @@ export class ProtocolToMonacoConverter {
     asSignatureInformation(item: SignatureInformation): monaco.languages.SignatureInformation {
         let result = <monaco.languages.SignatureInformation>{ label: item.label };
         if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
-        if (item.parameters) { result.parameters = this.asParameterInformations(item.parameters); }
+        if (item.parameters) {
+            result.parameters = this.asParameterInformations(item.parameters);
+        } else {
+            result.parameters = [];
+        }
         return result;
     }
 
