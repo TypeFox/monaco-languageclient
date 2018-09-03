@@ -8,6 +8,7 @@
     "vscode-languageserver-types": "^3.10.0"
   },
   "devDependencies": {
+    "copyfiles": "^2.0.0",
     "css-loader": "^0.28.11",
     "rimraf": "^2.6.2",
     "source-map-loader": "^0.2.3",
@@ -22,7 +23,8 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf lib",
-    "copy": "cp src/index.html lib/index.html",
+    "copy": "copyfiles src/index.html lib/index.html",
+    "copyfiles": "npm run copyfiles --",
     "build": "npm run compile && webpack && npm run copy",
     "update:file-deps": "npm run clean:file-deps && npm install",
     "clean:file-deps": "npm run clean:monaco-languageclient",
