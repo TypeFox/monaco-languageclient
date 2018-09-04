@@ -1,13 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.7.3] - 2018-08-??
-- updated dependency to Monaco 0.14.2, with adaptation for breaking changes from monaco.
+## [0.8.0] - 2018-09-04
+- updated dependency to Monaco 0.14.x, with adaptation for breaking changes from monaco [#107](https://github.com/TypeFox/monaco-languageclient/pull/107) - thanks to [@Twinside](https://github.com/Twinside)
+- ensure that SignatureHelp and SignatureHelp has non-null arrays [#112](https://github.com/TypeFox/monaco-languageclient/pull/112) - thanks to [@rcjsuen](https://github.com/rcjsuen)
+
+## [0.7.3] - 2018-08-30
+- fixed folding ranges conversion - [12d8c91](https://github.com/TypeFox/monaco-languageclient/commit/12d8c91cf1676061c44d43e745b7500c77ea4a14)
+- implement `toJSON` for workspace configurations - [9e50a48](https://github.com/TypeFox/monaco-languageclient/commit/9e50a48addb474be66fa317684461976eda45192)
+- fixed markdown conversion [#103](https://github.com/TypeFox/monaco-languageclient/pull/103)
 
 ## [0.7.2] - 2018-08-02
-- amd distribution ([#97](https://github.com/TypeFox/monaco-languageclient/pull/97)) - thanks to @zewa666
+- amd distribution ([#97](https://github.com/TypeFox/monaco-languageclient/pull/97)) - thanks to [@zewa666](https://github.com/zewa666)
 - updated dependency to Monaco 0.13.2 ([#100](https://github.com/TypeFox/monaco-languageclient/pull/100))
-- register providers only for languages matching the documentSelector ([#101](https://github.com/TypeFox/monaco-languageclient/pull/101)) - thanks to @gins3000
+- register providers only for languages matching the documentSelector ([#101](https://github.com/TypeFox/monaco-languageclient/pull/101)) - thanks to [@gins3000](https://github.com/gins3000)
 
 ## [0.7.0] - 2018-07-31
 Updated to `vscode-languageclient` 4.4.0 to support LSP 3.10.0 features like hierarchical document symbols, go to type defition/implementation, workspace folders and document color provider ([#89](https://github.com/TypeFox/monaco-languageclient/pull/89)).
@@ -75,6 +81,8 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
+[0.8.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.3...v0.8.0
+[0.7.3]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.0...v0.7.2
 [0.7.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.6.3...v0.7.0
 [0.6.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.4.0...v0.6.1
