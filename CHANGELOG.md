@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2018-09.06
+
+- use monaco-editor-core as a dev dependency to allow alternative implementations [#119](https://github.com/TypeFox/monaco-languageclient/pull/119)
+
+### Breaking changes
+
+Clients have to explicitly declare a dependency to `monaco-editor-core` or another package providing Monaco:
+- `monaco-editor-core` is tree shaked to get rid of unused VS Code's code. 
+- [@typefox/monaco-editor-core](https://www.npmjs.com/package/@typefox/monaco-editor-core) is a not tree-shaked alternative.
+
 ## [0.8.0] - 2018-09-04
 - updated dependency to Monaco 0.14.x, with adaptation for breaking changes from monaco [#107](https://github.com/TypeFox/monaco-languageclient/pull/107) - thanks to [@Twinside](https://github.com/Twinside)
 - ensure that SignatureHelp and SignatureHelp has non-null arrays [#112](https://github.com/TypeFox/monaco-languageclient/pull/112) - thanks to [@rcjsuen](https://github.com/rcjsuen)
@@ -81,6 +91,7 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
+[0.9.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.3...v0.8.0
 [0.7.3]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.0...v0.7.2
