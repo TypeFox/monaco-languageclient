@@ -18,13 +18,13 @@
   "typings": "./lib/index",
   "devDependencies": {
     "@types/node": "^7.0.12",
+    "monaco-editor-core": "^0.14.6",
     "rimraf": "^2.6.2",
     "typescript": "^3.0.1",
     "vscode": "^1.1.18"
   },
   "dependencies": {
     "glob-to-regexp": "^0.3.0",
-    "monaco-editor-core": "^0.14.6",
     "vscode-jsonrpc": "^3.6.2",
     "vscode-base-languageclient": "4.4.0",
     "vscode-uri": "^1.0.5"

@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "^4.15.2",
+    "monaco-editor-core": "^0.14.6",
     "monaco-languageclient": "file:..",
     "normalize-url": "^2.0.1",
     "reconnecting-websocket": "^3.2.2",
