@@ -5,19 +5,22 @@
 import { MessageActionItem, MessageType, Window, OutputChannel } from './services';
 
 export class ConsoleWindow implements Window {
+    constructor(private logEnabled: boolean = true) {}
     protected readonly channels = new Map<string, OutputChannel>();
     showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): Thenable<T | undefined> {
-        if (type === MessageType.Error) {
-            console.error(message);
-        }
-        if (type === MessageType.Warning) {
-            console.warn(message);
-        }
-        if (type === MessageType.Info) {
-            console.info(message);
-        }
-        if (type === MessageType.Log) {
-            console.log(message);
+        if (this.logEnabled) {
+            if (type === MessageType.Error) {
+                console.error(message);
+            }
+            if (type === MessageType.Warning) {
+                console.warn(message);
+            }
+            if (type === MessageType.Info) {
+                console.info(message);
+            }
+            if (type === MessageType.Log) {
+                console.log(message);
+            }
         }
         return Promise.resolve(undefined);
     }
@@ -26,12 +29,17 @@ export class ConsoleWindow implements Window {
         if (existing) {
             return existing;
         }
+        const _logEnabled = this.logEnabled;
         const channel: OutputChannel = {
             append(value: string): void {
-                console.log(name + ': ' + value);
+                if (_logEnabled) {
+                    console.log(name + ': ' + value);
+                }
             },
             appendLine(line: string): void {
-                console.log(name + ': ' + line);
+                if (_logEnabled) {
+                    console.log(name + ': ' + line);
+                }
             },
             show(): void {
                 // no-op

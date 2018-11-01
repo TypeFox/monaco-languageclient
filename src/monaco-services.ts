@@ -17,7 +17,8 @@ export interface MonacoServices extends Services {
 }
 export namespace MonacoServices {
     export interface Options {
-        rootUri?: string
+        rootUri?: string;
+        logEnabled?: boolean;
     }
     export type Provider = () => MonacoServices;
     export function create(editor: monaco.editor.IStandaloneCodeEditor, options: Options = {}): MonacoServices {
@@ -27,7 +28,7 @@ export namespace MonacoServices {
             commands: new MonacoCommands(editor),
             languages: new MonacoLanguages(p2m, m2p),
             workspace: new MonacoWorkspace(p2m, m2p, options.rootUri),
-            window: new ConsoleWindow()
+            window: new ConsoleWindow(options.logEnabled)
         }
     }
     export function install(editor: monaco.editor.IStandaloneCodeEditor, options: Options = {}): MonacoServices {
