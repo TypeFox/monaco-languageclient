@@ -34,8 +34,9 @@ npm install
 
 ### Gitpod
 
-In order to develop and run the master branch: https://gitpod.io#https://github.com/TypeFox/monaco-languageclient. 
-Gitpod will create a dev workspace for you with a properly configured env and checked out code, run the build and start a Node.js example.
+Just start a fresh dev environment in Gitpod.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 
 [Gitpod](https://www.gitpod.io) is a one-click online IDE for GitHub. It is based on [Theia IDE framework](http://www.theia-ide.org) and make use of Monaco and the language server protocol by means of monaco-languageclient.
 
