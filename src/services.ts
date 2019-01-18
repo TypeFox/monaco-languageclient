@@ -47,7 +47,7 @@ export namespace Services {
     }
     export function install(services: Services): void {
         if (global[symbol]) {
-            console.error(new Error('Language Client services has been overriden'));
+            console.error(new Error('Language Client services has been overridden'));
         }
         global[symbol] = services;
     }
