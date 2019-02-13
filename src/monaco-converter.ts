@@ -117,11 +117,11 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asTriggerKind(triggerKind: monaco.languages.SuggestTriggerKind): CompletionTriggerKind {
+    asTriggerKind(triggerKind: monaco.languages.CompletionTriggerKind): CompletionTriggerKind {
         switch (triggerKind) {
-            case monaco.languages.SuggestTriggerKind.TriggerCharacter:
+            case monaco.languages.CompletionTriggerKind.TriggerCharacter:
                 return CompletionTriggerKind.TriggerCharacter;
-            case monaco.languages.SuggestTriggerKind.TriggerForIncompleteCompletions:
+            case monaco.languages.CompletionTriggerKind.TriggerForIncompleteCompletions:
                 return CompletionTriggerKind.TriggerForIncompleteCompletions;
             default:
                 return CompletionTriggerKind.Invoked;
@@ -185,15 +185,13 @@ export class MonacoToProtocolConverter {
         let format: InsertTextFormat = InsertTextFormat.PlainText;
         let text: string | undefined;
         let range: Range | undefined;
-        if (source.textEdit) {
-            text = source.textEdit.text;
-            range = this.asRange(source.textEdit.range);
-        } else if (typeof source.insertText === 'string') {
-            text = source.insertText;
-        } else if (source.insertText) {
+        if (source.insertTextRules !== undefined && (source.insertTextRules & monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet) === 0) {
             format = InsertTextFormat.Snippet;
-            text = source.insertText.value;
+            text = source.insertText;
         }
+        target.insertTextFormat = format;
+
+        text = source.insertText;
         if (source.range) {
             range = this.asRange(source.range);
         }
@@ -391,10 +389,10 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asTextEdit(edit: TextEdit): monaco.languages.TextEdit;
+    asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation;
     asTextEdit(edit: undefined | null): undefined;
     asTextEdit(edit: TextEdit | undefined | null): undefined;
-    asTextEdit(edit: TextEdit | undefined | null): monaco.languages.TextEdit | undefined {
+    asTextEdit(edit: TextEdit | undefined | null): monaco.editor.ISingleEditOperation | undefined {
         if (!edit) {
             return undefined;
         }
@@ -748,20 +746,20 @@ export class ProtocolToMonacoConverter {
     asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined): monaco.languages.CompletionList {
         if (!result) {
             return {
-                isIncomplete: false,
-                items: []
+                incomplete: false,
+                suggestions: []
             }
         }
         if (Array.isArray(result)) {
-            const items = result.map(item => this.asCompletionItem(item));
+            const suggestions = result.map(item => this.asCompletionItem(item));
             return {
-                isIncomplete: false,
-                items
+                incomplete: false,
+                suggestions
             }
         }
         return {
-            isIncomplete: result.isIncomplete,
-            items: result.items.map(this.asCompletionItem.bind(this))
+            incomplete: result.isIncomplete,
+            suggestions: result.items.map(this.asCompletionItem.bind(this))
         }
     }
 
@@ -804,19 +802,17 @@ export class ProtocolToMonacoConverter {
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem): { text: string | monaco.languages.SnippetString, range?: monaco.Range, fromEdit: boolean } | undefined {
+    asCompletionInsertText(item: CompletionItem): { text: string, range?: monaco.Range, fromEdit: boolean, isSnippet: boolean } | undefined {
+        const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
         if (item.textEdit) {
             const range = this.asRange(item.textEdit.range)!;
             const value = item.textEdit.newText;
-            const text = item.insertTextFormat === InsertTextFormat.Snippet ? { value } : value;
             return {
-                text, range, fromEdit: true
+                isSnippet, text: value, range, fromEdit: true,
             };
         }
         if (item.insertText) {
-            const value = item.insertText;
-            const text = item.insertTextFormat === InsertTextFormat.Snippet ? { value } : value;
-            return { text, fromEdit: false };
+            return { isSnippet, text: item.insertText, fromEdit: false };
         }
         return undefined;
     }
