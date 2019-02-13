@@ -149,7 +149,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                     l({
                         document: <any>textDocument,
                         reason: reason,
-                        waitUntil: (edits: Thenable<vscode.TextEdit[]>) => {
+                        waitUntil: (edits: PromiseLike<vscode.TextEdit[]>) => {
                             if (waitUntil) {
                                 waitUntil(edits);
                             }
