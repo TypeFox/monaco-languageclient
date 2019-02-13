@@ -15,7 +15,7 @@ import {
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
     FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction
-} from 'vscode-languageserver-protocol/lib/main';
+} from 'vscode-languageserver-protocol';
 
 import {
     Disposable, CancellationToken, Event, Emitter
@@ -65,66 +65,66 @@ export interface DiagnosticCollection extends Disposable {
 }
 
 export interface CompletionItemProvider {
-    provideCompletionItems(params: CompletionParams, token: CancellationToken): Thenable<CompletionItem[] | CompletionList>;
-    resolveCompletionItem?(item: CompletionItem, token: CancellationToken): Thenable<CompletionItem>;
+    provideCompletionItems(params: CompletionParams, token: CancellationToken): PromiseLike<CompletionItem[] | CompletionList>;
+    resolveCompletionItem?(item: CompletionItem, token: CancellationToken): PromiseLike<CompletionItem>;
 }
 
 export interface HoverProvider {
-    provideHover(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Hover>;
+    provideHover(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Hover>;
 }
 
 export interface SignatureHelpProvider {
-    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken): Thenable<SignatureHelp>;
+    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<SignatureHelp>;
 }
 
 export interface DefinitionProvider {
-    provideDefinition(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Definition>;
+    provideDefinition(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
 }
 
 export interface ReferenceProvider {
-    provideReferences(params: ReferenceParams, token: CancellationToken): Thenable<Location[]>;
+    provideReferences(params: ReferenceParams, token: CancellationToken): PromiseLike<Location[]>;
 }
 
 export interface DocumentHighlightProvider {
-    provideDocumentHighlights(params: TextDocumentPositionParams, token: CancellationToken): Thenable<DocumentHighlight[]>;
+    provideDocumentHighlights(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<DocumentHighlight[]>;
 }
 
 export interface DocumentSymbolProvider {
-    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): Thenable<SymbolInformation[] | DocumentSymbol[]>;
+    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): PromiseLike<SymbolInformation[] | DocumentSymbol[]>;
 }
 
 export interface WorkspaceSymbolProvider {
-    provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): Thenable<SymbolInformation[]>;
+    provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): PromiseLike<SymbolInformation[]>;
 }
 
 export interface CodeActionProvider {
-    provideCodeActions(params: CodeActionParams, token: CancellationToken): Thenable<(Command| CodeAction)[]>;
+    provideCodeActions(params: CodeActionParams, token: CancellationToken): PromiseLike<(Command | CodeAction)[]>;
 }
 
 export interface CodeLensProvider {
-    provideCodeLenses(params: CodeLensParams, token: CancellationToken): Thenable<CodeLens[]>;
-    resolveCodeLens?(codeLens: CodeLens, token: CancellationToken): Thenable<CodeLens>;
+    provideCodeLenses(params: CodeLensParams, token: CancellationToken): PromiseLike<CodeLens[]>;
+    resolveCodeLens?(codeLens: CodeLens, token: CancellationToken): PromiseLike<CodeLens>;
 }
 
 export interface DocumentFormattingEditProvider {
-    provideDocumentFormattingEdits(params: DocumentFormattingParams, token: CancellationToken): Thenable<TextEdit[]>;
+    provideDocumentFormattingEdits(params: DocumentFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
 }
 
 export interface DocumentRangeFormattingEditProvider {
-    provideDocumentRangeFormattingEdits(params: DocumentRangeFormattingParams, token: CancellationToken): Thenable<TextEdit[]>;
+    provideDocumentRangeFormattingEdits(params: DocumentRangeFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
 }
 
 export interface OnTypeFormattingEditProvider {
-    provideOnTypeFormattingEdits(params: DocumentOnTypeFormattingParams, token: CancellationToken): Thenable<TextEdit[]>;
+    provideOnTypeFormattingEdits(params: DocumentOnTypeFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
 }
 
 export interface RenameProvider {
-    provideRenameEdits(params: RenameParams, token: CancellationToken): Thenable<WorkspaceEdit>;
+    provideRenameEdits(params: RenameParams, token: CancellationToken): PromiseLike<WorkspaceEdit>;
 }
 
 export interface DocumentLinkProvider {
-    provideDocumentLinks(params: DocumentLinkParams, token: CancellationToken): Thenable<DocumentLink[]>;
-    resolveDocumentLink?(link: DocumentLink, token: CancellationToken): Thenable<DocumentLink>;
+    provideDocumentLinks(params: DocumentLinkParams, token: CancellationToken): PromiseLike<DocumentLink[]>;
+    resolveDocumentLink?(link: DocumentLink, token: CancellationToken): PromiseLike<DocumentLink>;
 }
 
 export interface DocumentIdentifier {
@@ -138,20 +138,20 @@ export namespace DocumentIdentifier {
 }
 
 export interface ImplementationProvider {
-    provideImplementation(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Definition>;
+    provideImplementation(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
 }
 
 export interface TypeDefinitionProvider {
-    provideTypeDefinition(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Definition>;
+    provideTypeDefinition(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
 }
 
 export interface DocumentColorProvider {
-    provideDocumentColors(params: DocumentColorParams, token: CancellationToken): Thenable<ColorInformation[]>;
-    provideColorPresentations(params: ColorPresentationParams, token: CancellationToken): Thenable<ColorPresentation[]>;
+    provideDocumentColors(params: DocumentColorParams, token: CancellationToken): PromiseLike<ColorInformation[]>;
+    provideColorPresentations(params: ColorPresentationParams, token: CancellationToken): PromiseLike<ColorPresentation[]>;
 }
 
 export interface FoldingRangeProvider {
-    provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): Thenable<FoldingRange[]>;
+    provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): PromiseLike<FoldingRange[]>;
 }
 
 export interface Languages {
@@ -186,7 +186,7 @@ export interface TextDocumentDidChangeEvent {
 export interface TextDocumentWillSaveEvent {
     readonly textDocument: TextDocument;
     readonly reason: TextDocumentSaveReason;
-    waitUntil?(thenable: Thenable<TextEdit[]>): void;
+    waitUntil?(PromiseLike: PromiseLike<TextEdit[]>): void;
 }
 
 export enum ConfigurationTarget {
@@ -228,7 +228,7 @@ export interface Workspace {
     readonly configurations?: Configurations;
     readonly onWillSaveTextDocument?: Event<TextDocumentWillSaveEvent>;
     readonly onDidSaveTextDocument?: Event<TextDocument>;
-    applyEdit(changes: WorkspaceEdit): Thenable<boolean>;
+    applyEdit(changes: WorkspaceEdit): PromiseLike<boolean>;
     createFileSystemWatcher?(globPattern: string, ignoreCreateEvents?: boolean, ignoreChangeEvents?: boolean, ignoreDeleteEvents?: boolean): FileSystemWatcher;
 }
 
@@ -243,6 +243,6 @@ export interface OutputChannel extends Disposable {
 }
 
 export interface Window {
-    showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): Thenable<T | undefined>;
+    showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): PromiseLike<T | undefined>;
     createOutputChannel?(name: string): OutputChannel;
 }
