@@ -88,13 +88,13 @@ export class MonacoWorkspace implements Workspace {
         const edit: monaco.languages.WorkspaceEdit = this.p2m.asWorkspaceEdit(workspaceEdit);
 
         // Collect all referenced models
-        const models: {[uri: string]: monaco.editor.IModel} = edit.edits.reduce(
-            (acc: {[uri: string]: monaco.editor.IModel}, currentEdit) => {
+        const models: { [uri: string]: monaco.editor.IModel } = edit.edits ? edit.edits.reduce(
+            (acc: { [uri: string]: monaco.editor.IModel }, currentEdit) => {
                 const textEdit = currentEdit as monaco.languages.ResourceTextEdit;
-                acc[textEdit.resource.toString()] = monaco.editor.getModel(textEdit.resource);
+                acc[textEdit.resource.toString()] = monaco.editor.getModel(textEdit.resource) as monaco.editor.ITextModel;
                 return acc;
             }, {}
-        );
+        ) : {};
 
         // If any of the models do not exist, refuse to apply the edit.
         if (!Object.keys(models).map(uri => models[uri]).every(model => !!model)) {
@@ -102,8 +102,8 @@ export class MonacoWorkspace implements Workspace {
         }
 
         // Group edits by resource so we can batch them when applying
-        const editsByResource: {[uri: string]: IIdentifiedSingleEditOperation[]} = edit.edits.reduce(
-            (acc: {[uri: string]: IIdentifiedSingleEditOperation[]}, currentEdit) => {
+        const editsByResource: { [uri: string]: IIdentifiedSingleEditOperation[] } = edit.edits ? edit.edits.reduce(
+            (acc: { [uri: string]: IIdentifiedSingleEditOperation[] }, currentEdit) => {
                 const textEdit = currentEdit as monaco.languages.ResourceTextEdit;
                 const uri = textEdit.resource.toString();
                 if (!(uri in acc)) {
@@ -111,14 +111,14 @@ export class MonacoWorkspace implements Workspace {
                 }
                 const operations = textEdit.edits.map(edit => {
                     return {
-                        range: monaco.Range.lift(edit.range),
-                        text: edit.text
+                        range: monaco.Range.lift(edit.range as monaco.IRange),
+                        text: edit.text as string,
                     }
                 });
                 acc[uri].push(...operations);
                 return acc;
             }, {}
-        );
+        ) : {};
 
         // Apply edits for each resource
         Object.keys(editsByResource).forEach(uri => {
@@ -126,7 +126,7 @@ export class MonacoWorkspace implements Workspace {
                 [],  // Do not try and preserve editor selections.
                 editsByResource[uri].map(resourceEdit => {
                     return {
-                        identifier: {major: 1, minor: 0},
+                        identifier: { major: 1, minor: 0 },
                         range: resourceEdit.range,
                         text: resourceEdit.text,
                         forceMoveMarkers: true,

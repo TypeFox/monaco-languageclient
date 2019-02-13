@@ -79,7 +79,7 @@ export class MonacoModelDiagnostics implements Disposable {
 
     updateModelMarkers(): void {
         const model = monaco.editor.getModel(this.uri);
-        this.doUpdateModelMarkers(model);
+        this.doUpdateModelMarkers(model ? model : undefined);
     }
 
     protected doUpdateModelMarkers(model: IModel | undefined): void {
