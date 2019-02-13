@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
+import { CompletionList } from 'vscode-languageserver-types';
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'
@@ -31,7 +32,7 @@ monaco.editor.create(document.getElementById("container")!, {
 });
 
 function getModel(): monaco.editor.IModel {
-    return monaco.editor.getModel(MONACO_URI);
+    return monaco.editor.getModel(MONACO_URI) as monaco.editor.IModel;
 }
 
 function createDocument(model: monaco.editor.IReadOnlyModel) {
@@ -57,16 +58,16 @@ const jsonService = getLanguageService({
 const pendingValidationRequests = new Map<string, number>();
 
 monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    provideCompletionItems(model, position, token): monaco.languages.CompletionItem[] | Thenable<monaco.languages.CompletionItem[]> | monaco.languages.CompletionList | Thenable<monaco.languages.CompletionList> {
+    provideCompletionItems(model, position, context, token): Thenable<monaco.languages.CompletionList> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
-        return jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((list) => {
+        return (jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument) as Thenable<CompletionList>).then((list) => {
             return p2m.asCompletionResult(list);
         });
     },
 
-    resolveCompletionItem(item, token): monaco.languages.CompletionItem | Thenable<monaco.languages.CompletionItem> {
-        return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result));
+    resolveCompletionItem(item, position, context, token): monaco.languages.CompletionItem | Thenable<monaco.languages.CompletionItem> {
+        return jsonService.doResolve(m2p.asCompletionItem(context)).then(result => p2m.asCompletionItem(result));
     }
 });
 
@@ -130,5 +131,5 @@ function doValidate(document: TextDocument): void {
 }
 
 function cleanDiagnostics(): void {
-    monaco.editor.setModelMarkers(monaco.editor.getModel(MONACO_URI), 'default', []);
+    monaco.editor.setModelMarkers(getModel(), 'default', []);
 }
