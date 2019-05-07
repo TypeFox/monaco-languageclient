@@ -502,7 +502,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         setLanguageConfiguration: unsupported,
         onDidChangeDiagnostics: unsupported
     };
-    function showMessage(type: MessageType, arg0: any, arg1: any): Thenable<undefined | MessageActionItem> {
+    function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<undefined | MessageActionItem> {
         if (typeof arg0 !== "string") {
             throw new Error('unexpected message: ' + JSON.stringify(arg0));
         }
