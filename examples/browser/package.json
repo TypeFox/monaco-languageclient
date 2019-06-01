@@ -2,8 +2,14 @@
   "private": true,
   "name": "@monaco-languageclient/browser",
   "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.25"
+  },
   "dependencies": {
-    "monaco-languageclient": "file:../../",
+    "@types/node": "^12.0.4",
+    "monaco-editor-core": "^0.14.6",
+    "monaco-languageclient": "^0.9.0",
+    "vscode": "^1.1.34",
     "vscode-json-languageservice": "^3.1.4",
     "vscode-languageserver-types": "^3.10.0"
   },
@@ -18,7 +24,7 @@
     "webpack-merge": "^4.1.2"
   },
   "scripts": {
-    "prepare": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run update-vscode && npm run build",
     "compile": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf lib",
@@ -27,6 +33,7 @@
     "update:file-deps": "npm run clean:file-deps && npm install",
     "clean:file-deps": "npm run clean:monaco-languageclient",
     "update:monaco-languageclient": "npm run clean:monaco-languageclient && npm install",
-    "clean:monaco-languageclient": "rimraf node_modules/monaco-languageclient"
+    "clean:monaco-languageclient": "rimraf node_modules/monaco-languageclient",
+    "update-vscode": "node ./node_modules/vscode/bin/install"
   }
 }
