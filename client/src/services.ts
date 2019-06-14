@@ -46,11 +46,13 @@ export namespace Services {
         }
         return services;
     }
-    export function install(services: Services): void {
+    export function install(services: Services): Disposable {
         if (global[symbol]) {
             console.error(new Error('Language Client services has been overridden'));
         }
         global[symbol] = services;
+
+        return Disposable.create(() => global[symbol] = undefined)
     }
 }
 
