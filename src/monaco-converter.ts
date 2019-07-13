@@ -440,6 +440,9 @@ export class ProtocolToMonacoConverter {
     }
 
     asCodeActions(actions: (Command | CodeAction)[]): monaco.languages.CodeAction[] {
+        if (actions === null || actions === undefined) {
+            return [];
+        }
         return actions.map(action => this.asCodeAction(action));
     }
 
