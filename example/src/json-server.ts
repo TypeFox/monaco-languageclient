@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as fs from "fs";
-import { xhr, XHRResponse, getErrorStatusDescription } from 'request-light';
-import Uri from 'vscode-uri';
+import { xhr, getErrorStatusDescription } from 'request-light';
+import { URI } from 'vscode-uri';
 import { MessageReader, MessageWriter } from "vscode-jsonrpc";
 import { IConnection, TextDocuments, createConnection } from 'vscode-languageserver';
 import {
@@ -23,7 +23,7 @@ export function start(reader: MessageReader, writer: MessageWriter): JsonServer 
 
 export class JsonServer {
 
-    protected workspaceRoot: Uri | undefined;
+    protected workspaceRoot: URI | undefined;
 
     protected readonly documents = new TextDocuments();
 
@@ -47,9 +47,9 @@ export class JsonServer {
 
         this.connection.onInitialize(params => {
             if (params.rootPath) {
-                this.workspaceRoot = Uri.file(params.rootPath);
+                this.workspaceRoot = URI.file(params.rootPath);
             } else if (params.rootUri) {
-                this.workspaceRoot = Uri.parse(params.rootUri);
+                this.workspaceRoot = URI.parse(params.rootUri);
             }
             this.connection.console.log("The server is initialized.");
             return {
@@ -193,8 +193,8 @@ export class JsonServer {
         return this.jsonService.doHover(document, params.position, jsonDocument);
     }
 
-    protected resovleSchema(url: string): Promise<string> {
-        const uri = Uri.parse(url);
+    protected async resovleSchema(url: string): Promise<string> {
+        const uri = URI.parse(url);
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
                 fs.readFile(uri.fsPath, 'UTF-8', (err, result) => {
@@ -202,11 +202,13 @@ export class JsonServer {
                 });
             });
         }
-        return xhr({ url, followRedirects: 5 }).then(response => {
+        try {
+            const response = await xhr({ url, followRedirects: 5 });
             return response.responseText;
-        }, (error: XHRResponse) => {
+        }
+        catch (error) {
             return Promise.reject(error.responseText || getErrorStatusDescription(error.status) || error.toString());
-        });
+        }
     }
 
     protected resolveCompletion(item: CompletionItem): Thenable<CompletionItem> {

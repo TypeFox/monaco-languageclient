@@ -2,6 +2,7 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+import * as ls from 'vscode-languageserver-protocol';
 import * as Is from 'vscode-languageserver-protocol/lib/utils/is';
 import {
     CodeActionParams, CodeLensParams,
@@ -371,13 +372,33 @@ export class ProtocolToMonacoConverter {
         if (!item) {
             return undefined;
         }
-        const edits: monaco.languages.ResourceTextEdit[] = [];
+        const edits: (monaco.languages.ResourceTextEdit | monaco.languages.ResourceFileEdit)[] = [];
         if (item.documentChanges) {
-            for (const change of item.documentChanges) {
-                const resource = monaco.Uri.parse(change.textDocument.uri);
-                const version = typeof change.textDocument.version === 'number' ? change.textDocument.version : undefined;
-                edits.push(this.asResourceEdits(resource, change.edits, version));
-            }
+            item.documentChanges.forEach(change => {
+                if (ls.CreateFile.is(change)) {
+                    edits.push(<monaco.languages.ResourceFileEdit>{
+                        newUri: monaco.Uri.parse(change.uri),
+                        options: change.options
+                    });
+                } else if (ls.RenameFile.is(change)) {
+                    edits.push(<monaco.languages.ResourceFileEdit>{
+                        oldUri: monaco.Uri.parse(change.oldUri),
+                        newUri: monaco.Uri.parse(change.newUri),
+                        options: change.options
+                    });
+                } else if (ls.DeleteFile.is(change)) {
+                    edits.push(<monaco.languages.ResourceFileEdit>{
+                        oldUri: monaco.Uri.parse(change.uri),
+                        options: change.options
+                    });
+                } else if (ls.TextDocumentEdit.is(change)) {
+                    const resource = monaco.Uri.parse(change.textDocument.uri);
+                    const version = typeof change.textDocument.version === 'number' ? change.textDocument.version : undefined;
+                    edits.push(this.asResourceEdits(resource, change.edits, version));
+                } else {
+                    console.error(`Unknown workspace edit change received:\n${JSON.stringify(change, undefined, 4)}`);
+                }
+            });
         } else if (item.changes) {
             for (const key of Object.keys(item.changes)) {
                 const resource = monaco.Uri.parse(key);

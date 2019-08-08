@@ -3,18 +3,21 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import {
-    BaseLanguageClient, MessageTransports, LanguageClientOptions, CompletionParams, WillSaveTextDocumentParams,
-} from "vscode-base-languageclient/lib/client";
-import { TypeDefinitionFeature } from "vscode-base-languageclient/lib/typeDefinition";
-import { ImplementationFeature } from "vscode-base-languageclient/lib/implementation";
-import { ColorProviderFeature } from "vscode-base-languageclient/lib/colorProvider";
-import { WorkspaceFoldersFeature } from "vscode-base-languageclient/lib/workspaceFolders";
-import { FoldingRangeFeature } from "vscode-base-languageclient/lib/foldingRange";
-import * as p2c from 'vscode-base-languageclient/lib/protocolConverter';
-import * as c2p from 'vscode-base-languageclient/lib/codeConverter';
+    BaseLanguageClient, MessageTransports, LanguageClientOptions,
+    CompletionParams, WillSaveTextDocumentParams
+} from "vscode-languageclient/lib/client";
+import { TypeDefinitionFeature } from "vscode-languageclient/lib/typeDefinition";
+import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/configuration";
+import { ImplementationFeature } from "vscode-languageclient/lib/implementation";
+import { ColorProviderFeature } from "vscode-languageclient/lib/colorProvider";
+import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/workspaceFolders";
+import { FoldingRangeFeature } from "vscode-languageclient/lib/foldingRange";
+import * as p2c from 'vscode-languageclient/lib/protocolConverter';
+import * as c2p from 'vscode-languageclient/lib/codeConverter';
 import { IConnectionProvider, IConnection } from './connection';
+import { DeclarationFeature } from "vscode-languageclient/lib/declaration";
 
-export * from 'vscode-base-languageclient/lib/client';
+export * from 'vscode-languageclient/lib/client';
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
@@ -82,14 +85,15 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
     protected registerBuiltinFeatures(): void {
         super.registerBuiltinFeatures();
+        this.registerFeature(new PullConfigurationFeature(this));
         this.registerFeature(new TypeDefinitionFeature(this));
         this.registerFeature(new ImplementationFeature(this));
         this.registerFeature(new ColorProviderFeature(this));
         this.registerFeature(new WorkspaceFoldersFeature(this));
-
         const foldingRangeFeature = new FoldingRangeFeature(this);
         foldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
         this.registerFeature(foldingRangeFeature);
+        this.registerFeature(new DeclarationFeature(this));
     }
 
 }

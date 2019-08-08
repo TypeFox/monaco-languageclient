@@ -6,7 +6,8 @@ import globToRegExp = require('glob-to-regexp');
 import {
     Languages, DiagnosticCollection, CompletionItemProvider, DocumentIdentifier, HoverProvider,
     SignatureHelpProvider, DefinitionProvider, ReferenceProvider, DocumentHighlightProvider,
-    DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider, OnTypeFormattingEditProvider, RenameProvider,
+    DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider,
+    OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider
 } from "./services";
@@ -137,7 +138,8 @@ export class MonacoLanguages implements Languages {
     }
 
     protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
-        const signatureHelpTriggerCharacters = triggerCharacters;
+        const signatureHelpTriggerCharacters = [...(provider.triggerCharacters || triggerCharacters || [])];
+        // TODO support regrigger characters after Monaco udpate
         return {
             signatureHelpTriggerCharacters,
             provideSignatureHelp: (model, position, token) => {
@@ -145,7 +147,11 @@ export class MonacoLanguages implements Languages {
                     return undefined!;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideSignatureHelp(params, token).then(signatureHelp => this.p2m.asSignatureHelp(signatureHelp));
+                return provider.provideSignatureHelp(params, token, {
+                    // TODO pass context from monaco after Monaco udpate
+                    triggerKind: 1,
+                    isRetrigger: false
+                }).then(signatureHelp => this.p2m.asSignatureHelp(signatureHelp));
             }
         }
     }

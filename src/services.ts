@@ -14,7 +14,8 @@ import {
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
-    FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction
+    FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction,
+    Declaration, SelectionRangeParams, SelectionRange
 } from 'vscode-languageserver-protocol';
 
 import {
@@ -73,8 +74,23 @@ export interface HoverProvider {
     provideHover(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Hover>;
 }
 
+export enum SignatureHelpTriggerKind {
+    Invoke = 1,
+    TriggerCharacter = 2,
+    ContentChange = 3
+}
+
+export interface SignatureHelpContext {
+    readonly triggerKind: SignatureHelpTriggerKind;
+    readonly triggerCharacter?: string;
+    readonly isRetrigger: boolean;
+    readonly activeSignatureHelp?: SignatureHelp;
+}
+
 export interface SignatureHelpProvider {
-    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<SignatureHelp>;
+    readonly triggerCharacters?: ReadonlyArray<string>;
+    readonly retriggerCharacters?: ReadonlyArray<string>;
+    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken, context: SignatureHelpContext): PromiseLike<SignatureHelp>;
 }
 
 export interface DefinitionProvider {
@@ -145,6 +161,10 @@ export interface TypeDefinitionProvider {
     provideTypeDefinition(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
 }
 
+export interface DeclarationProvider {
+    provideDeclaration(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Declaration>;
+}
+
 export interface DocumentColorProvider {
     provideDocumentColors(params: DocumentColorParams, token: CancellationToken): PromiseLike<ColorInformation[]>;
     provideColorPresentations(params: ColorPresentationParams, token: CancellationToken): PromiseLike<ColorPresentation[]>;
@@ -154,12 +174,16 @@ export interface FoldingRangeProvider {
     provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): PromiseLike<FoldingRange[]>;
 }
 
+export interface SelectionRangeProvider {
+    provideSelectionRanges(params: SelectionRangeParams, token: CancellationToken): Thenable<SelectionRange[]>;
+}
+
 export interface Languages {
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean;
     createDiagnosticCollection?(name?: string): DiagnosticCollection;
     registerCompletionItemProvider?(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable;
     registerHoverProvider?(selector: DocumentSelector, provider: HoverProvider): Disposable;
-    registerSignatureHelpProvider?(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): Disposable;
+    registerSignatureHelpProvider?(selector: DocumentSelector, provider: SignatureHelpProvider): Disposable;
     registerDefinitionProvider?(selector: DocumentSelector, provider: DefinitionProvider): Disposable;
     registerReferenceProvider?(selector: DocumentSelector, provider: ReferenceProvider): Disposable;
     registerDocumentHighlightProvider?(selector: DocumentSelector, provider: DocumentHighlightProvider): Disposable;
@@ -174,8 +198,10 @@ export interface Languages {
     registerDocumentLinkProvider?(selector: DocumentSelector, provider: DocumentLinkProvider): Disposable;
     registerImplementationProvider?(selector: DocumentSelector, provider: ImplementationProvider): Disposable;
     registerTypeDefinitionProvider?(selector: DocumentSelector, provider: TypeDefinitionProvider): Disposable;
+    registerDeclarationProvider?(selector: DocumentSelector, provider: DeclarationProvider): Disposable;
     registerColorProvider?(selector: DocumentSelector, provider: DocumentColorProvider): Disposable;
     registerFoldingRangeProvider?(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable;
+    registerSelectionRangeProvider?(selector: DocumentSelector, provider: SelectionRangeProvider): Disposable;
 }
 
 export interface TextDocumentDidChangeEvent {
@@ -221,6 +247,8 @@ export interface Workspace {
     readonly capabilities?: WorkspaceClientCapabilities;
     readonly rootPath?: string | null;
     readonly rootUri: string | null;
+    readonly workspaceFolders?: typeof import('vscode').workspace.workspaceFolders;
+    readonly onDidChangeWorkspaceFolders?: typeof import('vscode').workspace.onDidChangeWorkspaceFolders
     readonly textDocuments: TextDocument[];
     readonly onDidOpenTextDocument: Event<TextDocument>;
     readonly onDidCloseTextDocument: Event<TextDocument>;
@@ -245,4 +273,5 @@ export interface OutputChannel extends Disposable {
 export interface Window {
     showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): PromiseLike<T | undefined>;
     createOutputChannel?(name: string): OutputChannel;
+    withProgress?: typeof import('vscode').window.withProgress
 }
