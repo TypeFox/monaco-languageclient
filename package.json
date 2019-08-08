@@ -5,7 +5,7 @@
   "author": "TypeFox GmbH (http://www.typefox.io)",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.25"
+    "vscode": "^1.33.0"
   },
   "repository": {
     "type": "git",
@@ -21,12 +21,12 @@
     "monaco-editor-core": "^0.15.5",
     "rimraf": "^2.6.2",
     "typescript": "^3.0.1",
-    "vscode": "^1.1.18"
+    "vscode": "^1.1.35"
   },
   "dependencies": {
     "glob-to-regexp": "^0.3.0",
-    "vscode-jsonrpc": "^3.6.2",
-    "vscode-base-languageclient": "4.4.0",
+    "vscode-jsonrpc": "^4.1.0-next",
+    "vscode-languageclient": "^5.3.0-next",
     "vscode-uri": "^1.0.5"
   },
   "scripts": {
