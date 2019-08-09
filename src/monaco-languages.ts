@@ -261,12 +261,13 @@ export class MonacoLanguages implements Languages {
 
     protected createCodeActionProvider(selector: DocumentSelector, provider: CodeActionProvider): monaco.languages.CodeActionProvider {
         return {
-            provideCodeActions: (model, range, context, token) => {
+            provideCodeActions: async (model, range, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
                     return [];
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
-                return provider.provideCodeActions(params, token).then(result => this.p2m.asCodeActions(result));
+                const result = await provider.provideCodeActions(params, token);
+                return this.p2m.asCodeActions(result);
             }
         }
     }

@@ -209,7 +209,7 @@ export class MonacoToProtocolConverter {
         const range = this.asRange(edit.range)!;
         return {
             range,
-            newText: edit.text
+            newText: edit.text || ''
         }
     }
 
@@ -347,7 +347,7 @@ export class MonacoToProtocolConverter {
 
     asDocumentLink(item: monaco.languages.ILink): DocumentLink {
         let result = DocumentLink.create(this.asRange(item.range));
-        if (item.url) { result.target = item.url; }
+        if (item.url) { result.target = typeof item.url === 'string' ? item.url : item.url.toString(); }
         if (ProtocolDocumentLink.is(item) && item.data) {
             result.data = item.data;
         }
@@ -410,10 +410,10 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asTextEdit(edit: TextEdit): monaco.editor.ISingleEditOperation;
+    asTextEdit(edit: TextEdit): monaco.languages.TextEdit;
     asTextEdit(edit: undefined | null): undefined;
     asTextEdit(edit: TextEdit | undefined | null): undefined;
-    asTextEdit(edit: TextEdit | undefined | null): monaco.editor.ISingleEditOperation | undefined {
+    asTextEdit(edit: TextEdit | undefined | null): monaco.languages.TextEdit | undefined {
         if (!edit) {
             return undefined;
         }
@@ -424,10 +424,10 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asTextEdits(items: TextEdit[]): monaco.editor.ISingleEditOperation[];
+    asTextEdits(items: TextEdit[]): monaco.languages.TextEdit[];
     asTextEdits(items: undefined | null): undefined;
-    asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined;
-    asTextEdits(items: TextEdit[] | undefined | null): monaco.editor.ISingleEditOperation[] | undefined {
+    asTextEdits(items: TextEdit[] | undefined | null): monaco.languages.TextEdit[] | undefined;
+    asTextEdits(items: TextEdit[] | undefined | null): monaco.languages.TextEdit[] | undefined {
         if (!items) {
             return undefined;
         }
@@ -458,11 +458,11 @@ export class ProtocolToMonacoConverter {
         return items.map((codeLens) => this.asCodeLens(codeLens));
     }
 
-    asCodeActions(actions: (Command | CodeAction)[]): monaco.languages.CodeAction[] {
+    asCodeActions(actions: (Command | CodeAction)[]): (monaco.languages.Command | monaco.languages.CodeAction)[] {
         return actions.map(action => this.asCodeAction(action));
     }
 
-    asCodeAction(item: Command | CodeAction): monaco.languages.CodeAction {
+    asCodeAction(item: Command | CodeAction): monaco.languages.Command | monaco.languages.CodeAction {
         if (CodeAction.is(item)) {
             return {
                 title: item.title,
@@ -795,7 +795,9 @@ export class ProtocolToMonacoConverter {
         let insertText = this.asCompletionInsertText(item);
         if (insertText) {
             result.insertText = insertText.text;
-            result.range = insertText.range;
+            if (insertText.range) {
+                result.range = insertText.range;
+            }
             result.fromEdit = insertText.fromEdit;
         }
         if (Is.number(item.kind)) {
@@ -810,8 +812,11 @@ export class ProtocolToMonacoConverter {
         if (Is.stringArray(item.commitCharacters)) { result.commitCharacters = item.commitCharacters.slice(); }
         if (item.command) { result.command = this.asCommand(item.command); }
         if (item.deprecated === true || item.deprecated === false) { result.deprecated = item.deprecated; }
-        // TODO if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
+        if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
         if (item.data !== undefined) { result.data = item.data; }
+        if (item.deprecated === true || item.deprecated === false) {
+            result.deprecated = item.deprecated;
+        }
         return result;
     }
 
@@ -838,8 +843,9 @@ export class ProtocolToMonacoConverter {
         return undefined;
     }
 
-    asDocumentLinks(documentLinks: DocumentLink[]): ProtocolDocumentLink[] {
-        return documentLinks.map(link => this.asDocumentLink(link));
+    asDocumentLinks(documentLinks: DocumentLink[]): monaco.languages.ILinksList {
+        const links = documentLinks.map(link => this.asDocumentLink(link));
+        return { links };
     }
 
     asDocumentLink(documentLink: DocumentLink): ProtocolDocumentLink {

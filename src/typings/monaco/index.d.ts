@@ -18,8 +18,8 @@ declare module monaco.commands {
 
     export interface ICommandService {
         onWillExecuteCommand: monaco.IEvent<ICommandEvent>;
-        executeCommand<T>(commandId: string, ...args: any[]): monaco.Promise<T>;
-        executeCommand(commandId: string, ...args: any[]): monaco.Promise<any>;
+        executeCommand<T>(commandId: string, ...args: any[]): Promise<T>;
+        executeCommand(commandId: string, ...args: any[]): Promise<any>;
     }
 
     export interface ICommandHandler {
@@ -50,7 +50,7 @@ declare module monaco.services {
         constructor(instantiationService: monaco.instantiation.IInstantiationService);
         addCommand(command: monaco.commands.ICommand): IDisposable;
         onWillExecuteCommand: monaco.IEvent<monaco.commands.ICommandEvent>;
-        executeCommand<T>(commandId: string, ...args: any[]): monaco.Promise<T>;
-        executeCommand(commandId: string, ...args: any[]): monaco.Promise<any>;
+        executeCommand<T>(commandId: string, ...args: any[]): Promise<T>;
+        executeCommand(commandId: string, ...args: any[]): Promise<any>;
     }
 }
