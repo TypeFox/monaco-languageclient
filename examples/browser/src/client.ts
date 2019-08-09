@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
-import { CompletionList } from 'vscode-languageserver-types';
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'
@@ -58,21 +57,21 @@ const jsonService = getLanguageService({
 const pendingValidationRequests = new Map<string, number>();
 
 monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    provideCompletionItems(model, position, context, token): Thenable<monaco.languages.CompletionList> {
+    provideCompletionItems(model, position, context, token): monaco.Thenable<monaco.languages.CompletionList> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
-        return (jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument) as Thenable<CompletionList>).then((list) => {
+        return jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((list) => {
             return p2m.asCompletionResult(list);
         });
     },
 
-    resolveCompletionItem(item, position, context, token): monaco.languages.CompletionItem | Thenable<monaco.languages.CompletionItem> {
+    resolveCompletionItem(item, position, context, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
         return jsonService.doResolve(m2p.asCompletionItem(context)).then(result => p2m.asCompletionItem(result));
     }
 });
 
 monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
-    provideDocumentRangeFormattingEdits(model, range, options, token): monaco.languages.TextEdit[] | Thenable<monaco.languages.TextEdit[]> {
+    provideDocumentRangeFormattingEdits(model, range, options, token): monaco.languages.TextEdit[] | monaco.Thenable<monaco.languages.TextEdit[]> {
         const document = createDocument(model);
         const edits = jsonService.format(document, m2p.asRange(range), m2p.asFormattingOptions(options));
         return p2m.asTextEdits(edits);
@@ -80,7 +79,7 @@ monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
 });
 
 monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
-    provideDocumentSymbols(model, token): monaco.languages.DocumentSymbol[] | Thenable<monaco.languages.DocumentSymbol[]> {
+    provideDocumentSymbols(model, token): monaco.languages.DocumentSymbol[] | monaco.Thenable<monaco.languages.DocumentSymbol[]> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return p2m.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
@@ -88,7 +87,7 @@ monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
 });
 
 monaco.languages.registerHoverProvider(LANGUAGE_ID, {
-    provideHover(model, position, token): monaco.languages.Hover | Thenable<monaco.languages.Hover> {
+    provideHover(model, position, token): monaco.languages.Hover | monaco.Thenable<monaco.languages.Hover> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return jsonService.doHover(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((hover) => {
