@@ -457,7 +457,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 }
             }, firstTriggerCharacter, ...moreTriggerCharacter);
         },
-        registerSignatureHelpProvider(selector: vscode.DocumentSelector, provider: vscode.SignatureHelpProvider, arg: any) {
+        registerSignatureHelpProvider(selector: vscode.DocumentSelector, provider: vscode.SignatureHelpProvider, firstItem?: string | vscode.SignatureHelpProviderMetadata, ...remaining: string[]) {
             if (!isDocumentSelector(selector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
@@ -465,9 +465,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             if (!languages.registerSignatureHelpProvider) {
                 return Disposable.create(() => { });
             }
-            const metadata: string[] | vscode.SignatureHelpProviderMetadata = arg || {};
-            const triggerCharacters = Array.isArray(metadata) ? metadata : metadata.triggerCharacters;
-            const retriggerCharacters = Array.isArray(metadata) ? undefined : metadata.retriggerCharacters
+            let triggerCharacters;
+            let retriggerCharacters;
+            if (typeof firstItem === 'string') {
+                triggerCharacters = [firstItem, ...remaining];
+            } else if (firstItem) {
+                triggerCharacters = firstItem.triggerCharacters;
+                retriggerCharacters = firstItem.retriggerCharacters;
+            }
             return languages.registerSignatureHelpProvider(selector, {
                 triggerCharacters,
                 retriggerCharacters,
