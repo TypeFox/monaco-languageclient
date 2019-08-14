@@ -89,15 +89,17 @@ export class MonacoLanguages implements Languages {
                         suggestions: [],
                     }
                 }
+                const wordUntil = model.getWordUntilPosition(position);
+                const defaultRange = new monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
                 const params = this.m2p.asCompletionParams(model, position, context);
-                return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result));
+                return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result, defaultRange));
             },
-            resolveCompletionItem: provider.resolveCompletionItem ? (item, position, context, token) => {
-                const protocolItem = this.m2p.asCompletionItem(context);
+            resolveCompletionItem: provider.resolveCompletionItem ? (model, position, item, token) => {
+                const protocolItem = this.m2p.asCompletionItem(item);
                 return provider.resolveCompletionItem!(protocolItem, token).then(resolvedItem => {
-                    const resolvedCompletionItem = this.p2m.asCompletionItem(resolvedItem);
-                    Object.assign(context, resolvedCompletionItem);
-                    return context;
+                    const resolvedCompletionItem = this.p2m.asCompletionItem(resolvedItem, item.range);
+                    Object.assign(item, resolvedCompletionItem);
+                    return item;
                 });
             } : undefined
         };

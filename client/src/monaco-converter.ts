@@ -764,7 +764,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined): monaco.languages.CompletionList {
+    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined, defaultRange: monaco.IRange): monaco.languages.CompletionList {
         if (!result) {
             return {
                 incomplete: false,
@@ -772,7 +772,7 @@ export class ProtocolToMonacoConverter {
             }
         }
         if (Array.isArray(result)) {
-            const suggestions = result.map(item => this.asCompletionItem(item));
+            const suggestions = result.map(item => this.asCompletionItem(item, defaultRange));
             return {
                 incomplete: false,
                 suggestions
@@ -780,11 +780,11 @@ export class ProtocolToMonacoConverter {
         }
         return {
             incomplete: result.isIncomplete,
-            suggestions: result.items.map(this.asCompletionItem.bind(this))
+            suggestions: result.items.map(item => this.asCompletionItem(item, defaultRange))
         }
     }
 
-    asCompletionItem(item: CompletionItem): ProtocolCompletionItem {
+    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange): ProtocolCompletionItem {
         const result = <ProtocolCompletionItem>{ label: item.label };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
@@ -792,13 +792,12 @@ export class ProtocolToMonacoConverter {
             result.documentationFormat = Is.string(item.documentation) ? undefined : item.documentation.kind;
         };
         if (item.filterText) { result.filterText = item.filterText; }
-        let insertText = this.asCompletionInsertText(item);
-        if (insertText) {
-            result.insertText = insertText.text;
-            if (insertText.range) {
-                result.range = insertText.range;
-            }
-            result.fromEdit = insertText.fromEdit;
+        const insertText = this.asCompletionInsertText(item, defaultRange);
+        result.insertText = insertText.insertText;
+        result.range = insertText.range;
+        result.fromEdit = insertText.fromEdit;
+        if (insertText.isSnippet) {
+            result.insertTextRules = monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
         }
         if (Is.number(item.kind)) {
             let [itemKind, original] = this.asCompletionItemKind(item.kind);
@@ -828,19 +827,17 @@ export class ProtocolToMonacoConverter {
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem): { text: string, range?: monaco.Range, fromEdit: boolean, isSnippet: boolean } | undefined {
+    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange): { insertText: string, range: monaco.IRange, fromEdit: boolean, isSnippet: boolean } {
         const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
         if (item.textEdit) {
-            const range = this.asRange(item.textEdit.range)!;
+            const range = this.asRange(item.textEdit.range);
             const value = item.textEdit.newText;
-            return {
-                isSnippet, text: value, range, fromEdit: true,
-            };
+            return { isSnippet, insertText: value, range, fromEdit: true, };
         }
         if (item.insertText) {
-            return { isSnippet, text: item.insertText, fromEdit: false };
+            return { isSnippet, insertText: item.insertText, fromEdit: false, range: defaultRange };
         }
-        return undefined;
+        return { insertText: item.label, range: defaultRange, fromEdit: false, isSnippet: false };
     }
 
     asDocumentLinks(documentLinks: DocumentLink[]): monaco.languages.ILinksList {
