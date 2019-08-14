@@ -20,6 +20,7 @@
   "scripts": {
     "prepare": "lerna run prepare",
     "start": "lerna run start node-example",
+    "publish:latest": "lerna publish minor",
     "publish:next": "lerna publish --canary --preid next --dist-tag next --yes"
   },
   "workspaces": [

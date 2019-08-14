@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions,
-    CompletionParams, WillSaveTextDocumentParams
+    CompletionParams, WillSaveTextDocumentParams, StaticFeature, DynamicFeature
 } from "vscode-languageclient/lib/client";
 import { TypeDefinitionFeature } from "vscode-languageclient/lib/typeDefinition";
 import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/configuration";
@@ -94,6 +94,15 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         foldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
         this.registerFeature(foldingRangeFeature);
         this.registerFeature(new DeclarationFeature(this));
+
+        const features = this['_features'] as ((StaticFeature | DynamicFeature<any>)[]);
+        for (const feature of features) {
+            if (feature instanceof ColorProviderFeature) {
+                feature['asColor'] = MonacoLanguageClient.bypassConversion;
+                feature['asColorInformations'] = MonacoLanguageClient.bypassConversion;
+                feature['asColorPresentations'] = MonacoLanguageClient.bypassConversion;
+            }
+        }
     }
 
 }
