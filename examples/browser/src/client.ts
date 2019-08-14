@@ -59,14 +59,16 @@ const pendingValidationRequests = new Map<string, number>();
 monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
     provideCompletionItems(model, position, context, token): monaco.Thenable<monaco.languages.CompletionList> {
         const document = createDocument(model);
+        const wordUntil = model.getWordUntilPosition(position);
+        const defaultRange = new monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((list) => {
-            return p2m.asCompletionResult(list);
+            return p2m.asCompletionResult(list, defaultRange);
         });
     },
 
-    resolveCompletionItem(item, position, context, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
-        return jsonService.doResolve(m2p.asCompletionItem(context)).then(result => p2m.asCompletionItem(result));
+    resolveCompletionItem(model, position, item, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
+        return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result, item.range));
     }
 });
 
