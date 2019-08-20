@@ -83,5 +83,5 @@ function createWebSocket(url: string): WebSocket {
         maxRetries: Infinity,
         debug: false
     };
-    return new ReconnectingWebSocket(url, undefined, socketOptions);
+    return new ReconnectingWebSocket(url, [], socketOptions);
 }
