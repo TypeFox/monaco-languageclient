@@ -7,7 +7,7 @@ and help with upgrading and testing it with latest versions of LSP and Monaco.
 ### Maintaining
 
 The project is maintained by individuals using for its own purposes and being ready to help as it suites them.
-There is no guruantee on time of response to issues and pull requests.
+There is no guarantee on time of response to issues and pull requests.
 
 #### Current Maintainers
 
