@@ -82,25 +82,24 @@ export class MonacoLanguages implements Languages {
     protected createCompletionProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): monaco.languages.CompletionItemProvider {
         return {
             triggerCharacters,
-            provideCompletionItems: (model, position, context, token) => {
+            provideCompletionItems: async (model, position, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return {
-                        incomplete: false,
-                        suggestions: [],
-                    }
+                    return undefined;
                 }
                 const wordUntil = model.getWordUntilPosition(position);
                 const defaultRange = new monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
                 const params = this.m2p.asCompletionParams(model, position, context);
-                return provider.provideCompletionItems(params, token).then(result => this.p2m.asCompletionResult(result, defaultRange));
+                const result = await provider.provideCompletionItems(params, token);
+                return result && this.p2m.asCompletionResult(result, defaultRange);
             },
-            resolveCompletionItem: provider.resolveCompletionItem ? (model, position, item, token) => {
+            resolveCompletionItem: provider.resolveCompletionItem ? async (model, position, item, token) => {
                 const protocolItem = this.m2p.asCompletionItem(item);
-                return provider.resolveCompletionItem!(protocolItem, token).then(resolvedItem => {
+                const resolvedItem = await provider.resolveCompletionItem!(protocolItem, token);
+                if (resolvedItem) {
                     const resolvedCompletionItem = this.p2m.asCompletionItem(resolvedItem, item.range);
                     Object.assign(item, resolvedCompletionItem);
-                    return item;
-                });
+                }
+                return item;
             } : undefined
         };
     }
@@ -118,12 +117,13 @@ export class MonacoLanguages implements Languages {
 
     protected createHoverProvider(selector: DocumentSelector, provider: HoverProvider): monaco.languages.HoverProvider {
         return {
-            provideHover: (model, position, token) => {
+            provideHover: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideHover(params, token).then(hover => this.p2m.asHover(hover));
+                const hover = await provider.provideHover(params, token);
+                return hover && this.p2m.asHover(hover);
             }
         }
     }
@@ -144,16 +144,17 @@ export class MonacoLanguages implements Languages {
         // TODO support regrigger characters after Monaco udpate
         return {
             signatureHelpTriggerCharacters,
-            provideSignatureHelp: (model, position, token) => {
+            provideSignatureHelp: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideSignatureHelp(params, token, {
+                const signatureHelp = await provider.provideSignatureHelp(params, token, {
                     // TODO pass context from monaco after Monaco udpate
                     triggerKind: 1,
                     isRetrigger: false
-                }).then(signatureHelp => this.p2m.asSignatureHelp(signatureHelp));
+                });
+                return signatureHelp && this.p2m.asSignatureHelp(signatureHelp);
             }
         }
     }
@@ -171,12 +172,13 @@ export class MonacoLanguages implements Languages {
 
     protected createDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): monaco.languages.DefinitionProvider {
         return {
-            provideDefinition: (model, position, token) => {
+            provideDefinition: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideDefinition(params, token).then(result => this.p2m.asDefinitionResult(result));
+                const result = await provider.provideDefinition(params, token);
+                return result && this.p2m.asDefinitionResult(result);
             }
         }
     }
@@ -194,12 +196,13 @@ export class MonacoLanguages implements Languages {
 
     protected createReferenceProvider(selector: DocumentSelector, provider: ReferenceProvider): monaco.languages.ReferenceProvider {
         return {
-            provideReferences: (model, position, context, token) => {
+            provideReferences: async (model, position, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asReferenceParams(model, position, context);
-                return provider.provideReferences(params, token).then(result => this.p2m.asReferences(result));
+                const result = await provider.provideReferences(params, token);
+                return result && this.p2m.asReferences(result);
             }
         }
     }
@@ -217,12 +220,13 @@ export class MonacoLanguages implements Languages {
 
     protected createDocumentHighlightProvider(selector: DocumentSelector, provider: DocumentHighlightProvider): monaco.languages.DocumentHighlightProvider {
         return {
-            provideDocumentHighlights: (model, position, token) => {
+            provideDocumentHighlights: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideDocumentHighlights(params, token).then(result => this.p2m.asDocumentHighlights(result));
+                const result = await provider.provideDocumentHighlights(params, token);
+                return result && this.p2m.asDocumentHighlights(result);
             }
         }
     }
@@ -240,12 +244,13 @@ export class MonacoLanguages implements Languages {
 
     protected createDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): monaco.languages.DocumentSymbolProvider {
         return {
-            provideDocumentSymbols: (model, token) => {
+            provideDocumentSymbols: async (model, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asDocumentSymbolParams(model);
-                return provider.provideDocumentSymbols(params, token).then(result => this.p2m.asDocumentSymbols(result))
+                const result = await provider.provideDocumentSymbols(params, token);
+                return result && this.p2m.asDocumentSymbols(result);
             }
         }
     }
@@ -265,11 +270,13 @@ export class MonacoLanguages implements Languages {
         return {
             provideCodeActions: async (model, range, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    // FIXME: get rid of `!` when https://github.com/microsoft/monaco-editor/issues/1560 is resolved
+                    return undefined!;
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 const result = await provider.provideCodeActions(params, token);
-                return this.p2m.asCodeActions(result);
+                // FIXME: get rid of `|| undefined!` when https://github.com/microsoft/monaco-editor/issues/1560 is resolved
+                return result && this.p2m.asCodeActions(result) || undefined!;
             }
         }
     }
@@ -287,24 +294,26 @@ export class MonacoLanguages implements Languages {
 
     protected createCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): monaco.languages.CodeLensProvider {
         return {
-            provideCodeLenses: (model, token) => {
+            provideCodeLenses: async (model, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asCodeLensParams(model);
-                return provider.provideCodeLenses(params, token).then(result => this.p2m.asCodeLenses(result))
+                const result = await provider.provideCodeLenses(params, token);
+                return result && this.p2m.asCodeLenses(result);
             },
-            resolveCodeLens: provider.resolveCodeLens ? (model, codeLens, token) => {
+            resolveCodeLens: provider.resolveCodeLens ? async (model, codeLens, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
                     return codeLens;
                 }
                 const protocolCodeLens = this.m2p.asCodeLens(codeLens);
-                return provider.resolveCodeLens!(protocolCodeLens, token).then(result => {
+                const result = await provider.resolveCodeLens!(protocolCodeLens, token);
+                if (result) {
                     const resolvedCodeLens = this.p2m.asCodeLens(result);
                     Object.assign(codeLens, resolvedCodeLens);
-                    return codeLens;
-                });
-            } : ((m, codeLens, t) => codeLens)
+                }
+                return codeLens;
+            } : ((_, codeLens) => codeLens)
         }
     }
 
@@ -321,12 +330,13 @@ export class MonacoLanguages implements Languages {
 
     protected createDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): monaco.languages.DocumentFormattingEditProvider {
         return {
-            provideDocumentFormattingEdits: (model, options, token) => {
+            provideDocumentFormattingEdits: async (model, options, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asDocumentFormattingParams(model, options);
-                return provider.provideDocumentFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+                const result = await provider.provideDocumentFormattingEdits(params, token);
+                return result && this.p2m.asTextEdits(result);
             }
         }
     }
@@ -344,12 +354,13 @@ export class MonacoLanguages implements Languages {
 
     createDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): monaco.languages.DocumentRangeFormattingEditProvider {
         return {
-            provideDocumentRangeFormattingEdits: (model, range, options, token) => {
+            provideDocumentRangeFormattingEdits: async (model, range, options, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asDocumentRangeFormattingParams(model, range, options);
-                return provider.provideDocumentRangeFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+                const result = await provider.provideDocumentRangeFormattingEdits(params, token);
+                return result && this.p2m.asTextEdits(result);
             }
         }
     }
@@ -369,12 +380,13 @@ export class MonacoLanguages implements Languages {
         const autoFormatTriggerCharacters = [firstTriggerCharacter].concat(moreTriggerCharacter)
         return {
             autoFormatTriggerCharacters,
-            provideOnTypeFormattingEdits: (model, position, ch, options, token) => {
+            provideOnTypeFormattingEdits: async (model, position, ch, options, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const params = this.m2p.asDocumentOnTypeFormattingParams(model, position, ch, options);
-                return provider.provideOnTypeFormattingEdits(params, token).then(result => this.p2m.asTextEdits(result))
+                const result = await provider.provideOnTypeFormattingEdits(params, token);
+                return result && this.p2m.asTextEdits(result);
             }
         }
     }
@@ -392,12 +404,13 @@ export class MonacoLanguages implements Languages {
 
     protected createRenameProvider(selector: DocumentSelector, provider: RenameProvider): monaco.languages.RenameProvider {
         return {
-            provideRenameEdits: (model, position, newName, token) => {
+            provideRenameEdits: async (model, position, newName, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asRenameParams(model, position, newName);
-                return provider.provideRenameEdits(params, token).then(result => this.p2m.asWorkspaceEdit(result))
+                const result = await provider.provideRenameEdits(params, token);
+                return result && this.p2m.asWorkspaceEdit(result);
             }
         }
     }
@@ -415,24 +428,24 @@ export class MonacoLanguages implements Languages {
 
     protected createDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): monaco.languages.LinkProvider {
         return {
-            provideLinks: (model, token) => {
+            provideLinks: async (model, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asDocumentLinkParams(model);
-                return provider.provideDocumentLinks(params, token).then(result => this.p2m.asDocumentLinks(result));
+                const result = await provider.provideDocumentLinks(params, token);
+                return result && this.p2m.asDocumentLinks(result);
             },
-
-            resolveLink: (link: monaco.languages.ILink, token) => {
+            resolveLink: async (link: monaco.languages.ILink, token) => {
                 // resolve the link if the provider supports it
                 // and the link doesn't have a url set
                 if (provider.resolveDocumentLink && (link.url === null || link.url === undefined)) {
                     const documentLink = this.m2p.asDocumentLink(link);
-                    return provider.resolveDocumentLink(documentLink, token).then(result => {
+                    const result = await provider.resolveDocumentLink(documentLink, token);
+                    if (result) {
                         const resolvedLink = this.p2m.asDocumentLink(result);
                         Object.assign(link, resolvedLink);
-                        return link;
-                    });
+                    }
                 }
                 return link;
             }
@@ -452,12 +465,13 @@ export class MonacoLanguages implements Languages {
 
     protected createImplementationProvider(selector: DocumentSelector, provider: ImplementationProvider): monaco.languages.ImplementationProvider {
         return {
-            provideImplementation: (model, position, token) => {
+            provideImplementation: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideImplementation(params, token).then(result => this.p2m.asDefinitionResult(result));
+                const result = await provider.provideImplementation(params, token);
+                return result && this.p2m.asDefinitionResult(result);
             }
         }
     }
@@ -475,12 +489,13 @@ export class MonacoLanguages implements Languages {
 
     protected createTypeDefinitionProvider(selector: DocumentSelector, provider: TypeDefinitionProvider): monaco.languages.TypeDefinitionProvider {
         return {
-            provideTypeDefinition: (model, position, token) => {
+            provideTypeDefinition: async (model, position, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                return provider.provideTypeDefinition(params, token).then(result => this.p2m.asDefinitionResult(result));
+                const result = await provider.provideTypeDefinition(params, token);
+                return result && this.p2m.asDefinitionResult(result);
             }
         }
     }
@@ -498,24 +513,26 @@ export class MonacoLanguages implements Languages {
 
     protected createDocumentColorProvider(selector: DocumentSelector, provider: DocumentColorProvider): monaco.languages.DocumentColorProvider {
         return {
-            provideDocumentColors: (model, token) => {
+            provideDocumentColors: async (model, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
-                return provider.provideDocumentColors({ textDocument }, token).then(result => this.p2m.asColorInformations(result));
+                const result = await provider.provideDocumentColors({ textDocument }, token);
+                return result && this.p2m.asColorInformations(result);
             },
-            provideColorPresentations: (model, info, token) => {
+            provideColorPresentations: async (model, info, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const range = this.m2p.asRange(info.range);
-                return provider.provideColorPresentations({
+                const result = await provider.provideColorPresentations({
                     textDocument,
                     color: info.color,
                     range
-                }, token).then(result => this.p2m.asColorPresentations(result))
+                }, token);
+                return result && this.p2m.asColorPresentations(result);
             }
         }
     }
@@ -533,14 +550,15 @@ export class MonacoLanguages implements Languages {
 
     protected createFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): monaco.languages.FoldingRangeProvider {
         return {
-            provideFoldingRanges: (model, context, token) => {
+            provideFoldingRanges: async (model, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return [];
+                    return undefined;
                 }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
-                return provider.provideFoldingRanges({
+                const result = await provider.provideFoldingRanges({
                     textDocument
-                }, token).then(result => this.p2m.asFoldingRanges(result));
+                }, token);
+                return result && this.p2m.asFoldingRanges(result);
             }
         }
     }

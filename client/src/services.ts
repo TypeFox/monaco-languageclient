@@ -65,13 +65,15 @@ export interface DiagnosticCollection extends Disposable {
     set(uri: string, diagnostics: Diagnostic[]): void;
 }
 
+export type ProviderResult<T> = T | undefined | null | PromiseLike<T | undefined | null>;
+
 export interface CompletionItemProvider {
-    provideCompletionItems(params: CompletionParams, token: CancellationToken): PromiseLike<CompletionItem[] | CompletionList>;
-    resolveCompletionItem?(item: CompletionItem, token: CancellationToken): PromiseLike<CompletionItem>;
+    provideCompletionItems(params: CompletionParams, token: CancellationToken): ProviderResult<CompletionItem[] | CompletionList>;
+    resolveCompletionItem?(item: CompletionItem, token: CancellationToken): ProviderResult<CompletionItem>;
 }
 
 export interface HoverProvider {
-    provideHover(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Hover>;
+    provideHover(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<Hover>;
 }
 
 export enum SignatureHelpTriggerKind {
@@ -90,57 +92,57 @@ export interface SignatureHelpContext {
 export interface SignatureHelpProvider {
     readonly triggerCharacters?: ReadonlyArray<string>;
     readonly retriggerCharacters?: ReadonlyArray<string>;
-    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken, context: SignatureHelpContext): PromiseLike<SignatureHelp>;
+    provideSignatureHelp(params: TextDocumentPositionParams, token: CancellationToken, context: SignatureHelpContext): ProviderResult<SignatureHelp>;
 }
 
 export interface DefinitionProvider {
-    provideDefinition(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
+    provideDefinition(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<Definition>;
 }
 
 export interface ReferenceProvider {
-    provideReferences(params: ReferenceParams, token: CancellationToken): PromiseLike<Location[]>;
+    provideReferences(params: ReferenceParams, token: CancellationToken): ProviderResult<Location[]>;
 }
 
 export interface DocumentHighlightProvider {
-    provideDocumentHighlights(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<DocumentHighlight[]>;
+    provideDocumentHighlights(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<DocumentHighlight[]>;
 }
 
 export interface DocumentSymbolProvider {
-    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): PromiseLike<SymbolInformation[] | DocumentSymbol[]>;
+    provideDocumentSymbols(params: DocumentSymbolParams, token: CancellationToken): ProviderResult<SymbolInformation[] | DocumentSymbol[]>;
 }
 
 export interface WorkspaceSymbolProvider {
-    provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): PromiseLike<SymbolInformation[]>;
+    provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): ProviderResult<SymbolInformation[]>;
 }
 
 export interface CodeActionProvider {
-    provideCodeActions(params: CodeActionParams, token: CancellationToken): PromiseLike<(Command | CodeAction)[]>;
+    provideCodeActions(params: CodeActionParams, token: CancellationToken): ProviderResult<(Command | CodeAction)[]>;
 }
 
 export interface CodeLensProvider {
-    provideCodeLenses(params: CodeLensParams, token: CancellationToken): PromiseLike<CodeLens[]>;
-    resolveCodeLens?(codeLens: CodeLens, token: CancellationToken): PromiseLike<CodeLens>;
+    provideCodeLenses(params: CodeLensParams, token: CancellationToken): ProviderResult<CodeLens[]>;
+    resolveCodeLens?(codeLens: CodeLens, token: CancellationToken): ProviderResult<CodeLens>;
 }
 
 export interface DocumentFormattingEditProvider {
-    provideDocumentFormattingEdits(params: DocumentFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
+    provideDocumentFormattingEdits(params: DocumentFormattingParams, token: CancellationToken): ProviderResult<TextEdit[]>;
 }
 
 export interface DocumentRangeFormattingEditProvider {
-    provideDocumentRangeFormattingEdits(params: DocumentRangeFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
+    provideDocumentRangeFormattingEdits(params: DocumentRangeFormattingParams, token: CancellationToken): ProviderResult<TextEdit[]>;
 }
 
 export interface OnTypeFormattingEditProvider {
-    provideOnTypeFormattingEdits(params: DocumentOnTypeFormattingParams, token: CancellationToken): PromiseLike<TextEdit[]>;
+    provideOnTypeFormattingEdits(params: DocumentOnTypeFormattingParams, token: CancellationToken): ProviderResult<TextEdit[]>;
 }
 
 export interface RenameProvider {
-    provideRenameEdits(params: RenameParams, token: CancellationToken): PromiseLike<WorkspaceEdit>;
+    provideRenameEdits(params: RenameParams, token: CancellationToken): ProviderResult<WorkspaceEdit>;
 }
 
 export interface DocumentLinkProvider {
-    provideDocumentLinks(params: DocumentLinkParams, token: CancellationToken): PromiseLike<DocumentLink[]>;
-    resolveDocumentLink?(link: DocumentLink, token: CancellationToken): PromiseLike<DocumentLink>;
+    provideDocumentLinks(params: DocumentLinkParams, token: CancellationToken): ProviderResult<DocumentLink[]>;
+    resolveDocumentLink?(link: DocumentLink, token: CancellationToken): ProviderResult<DocumentLink>;
 }
 
 export interface DocumentIdentifier {
@@ -154,28 +156,28 @@ export namespace DocumentIdentifier {
 }
 
 export interface ImplementationProvider {
-    provideImplementation(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
+    provideImplementation(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<Definition>;
 }
 
 export interface TypeDefinitionProvider {
-    provideTypeDefinition(params: TextDocumentPositionParams, token: CancellationToken): PromiseLike<Definition>;
+    provideTypeDefinition(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<Definition>;
 }
 
 export interface DeclarationProvider {
-    provideDeclaration(params: TextDocumentPositionParams, token: CancellationToken): Thenable<Declaration>;
+    provideDeclaration(params: TextDocumentPositionParams, token: CancellationToken): ProviderResult<Declaration>;
 }
 
 export interface DocumentColorProvider {
-    provideDocumentColors(params: DocumentColorParams, token: CancellationToken): PromiseLike<ColorInformation[]>;
-    provideColorPresentations(params: ColorPresentationParams, token: CancellationToken): PromiseLike<ColorPresentation[]>;
+    provideDocumentColors(params: DocumentColorParams, token: CancellationToken): ProviderResult<ColorInformation[]>;
+    provideColorPresentations(params: ColorPresentationParams, token: CancellationToken): ProviderResult<ColorPresentation[]>;
 }
 
 export interface FoldingRangeProvider {
-    provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): PromiseLike<FoldingRange[]>;
+    provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): ProviderResult<FoldingRange[]>;
 }
 
 export interface SelectionRangeProvider {
-    provideSelectionRanges(params: SelectionRangeParams, token: CancellationToken): Thenable<SelectionRange[]>;
+    provideSelectionRanges(params: SelectionRangeParams, token: CancellationToken): ProviderResult<SelectionRange[]>;
 }
 
 export interface Languages {

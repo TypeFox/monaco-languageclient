@@ -1,5 +1,5 @@
 ports:
   - port: 3000
 tasks:
-  - init: yarn
+  - init: scripts/init.sh
     command: yarn start

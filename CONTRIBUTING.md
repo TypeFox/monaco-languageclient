@@ -15,6 +15,7 @@ There is no guarantee on time of response to issues and pull requests.
 - @gatesn - Nicholas Gates
 - @mofux - Thomas Zilz
 - @akosyakov - Anton Kosyakov
+- @BroKun - Yukun Wang
 - @rcjsuen - Remy Suen
 - @asual - Rostislav Hristov
 - @zewa666 - Vildan Softic
@@ -24,6 +25,7 @@ There is no guarantee on time of response to issues and pull requests.
 
 If you are using the project and would like to push it forward, please comment on [this issue](https://github.com/TypeFox/monaco-languageclient/issues/164).
 Other maintainers can add you as a collaborator with `Admin` access.
+A new maintainer should be listed as [a current maintainer](#current-maintainers) above and as [a code owner](.github/CODEOWNERS).
 
 ### Releasing
 
@@ -33,3 +35,11 @@ For simplicity, each release should bump the minor version.
   - `npm login`
   - `yarn publish:latest`
 - Update [Changelog](./CHANGELOG.md)
+
+#### Next Releases
+
+Travis auto publishes next version on each commmit to the master branch. One can install it as `monaco-languageclient@next`.
+
+#### Dev Releases
+
+For testing purporses from a pull request, one can publish `dev` version with `yarn publish:dev`. One can install it as `monaco-languageclient@dev`.
