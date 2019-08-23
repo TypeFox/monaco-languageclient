@@ -21,7 +21,8 @@
     "prepare": "lerna run prepare",
     "start": "lerna run start node-example",
     "publish:latest": "lerna publish minor",
-    "publish:next": "lerna publish --canary --preid next --dist-tag next --yes"
+    "publish:next": "lerna publish --canary --preid next --dist-tag next --yes",
+    "publish:dev": "lerna publish --canary --preid dev --dist-tag dev --yes"
   },
   "workspaces": [
     "client",
