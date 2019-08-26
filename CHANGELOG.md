@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.10.0]
+## [0.10.0] - 2019-08-26
 
 - upgraded to LSP 5.3.0 and Monaco 0.17.0
 
@@ -32,7 +32,7 @@ Switch to es6 from es5. For clients who cannot migrate to es6 please use babel t
     }
 ```
 
-## [0.9.0] - 2018-09.06
+## [0.9.0] - 2018-09-06
 
 - use monaco-editor-core as a dev dependency to allow alternative implementations [#119](https://github.com/TypeFox/monaco-languageclient/pull/119)
 
@@ -122,7 +122,7 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
-[0.9.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.9.0...v0.10.0
+[0.10.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.3...v0.8.0
 [0.7.3]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.2...v0.7.3
