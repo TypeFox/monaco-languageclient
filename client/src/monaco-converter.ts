@@ -168,7 +168,35 @@ export class MonacoToProtocolConverter {
         if (original !== undefined) {
             return original;
         }
-        return value + 1 as CompletionItemKind;
+        switch (value) {
+            case monaco.languages.CompletionItemKind.Method: return CompletionItemKind.Method;
+            case monaco.languages.CompletionItemKind.Function: return CompletionItemKind.Function;
+            case monaco.languages.CompletionItemKind.Constructor: return CompletionItemKind.Constructor;
+            case monaco.languages.CompletionItemKind.Field: return CompletionItemKind.Field;
+            case monaco.languages.CompletionItemKind.Variable: return CompletionItemKind.Variable;
+            case monaco.languages.CompletionItemKind.Class: return CompletionItemKind.Class;
+            case monaco.languages.CompletionItemKind.Struct: return CompletionItemKind.Struct;
+            case monaco.languages.CompletionItemKind.Interface: return CompletionItemKind.Interface;
+            case monaco.languages.CompletionItemKind.Module: return CompletionItemKind.Module;
+            case monaco.languages.CompletionItemKind.Property: return CompletionItemKind.Property;
+            case monaco.languages.CompletionItemKind.Event: return CompletionItemKind.Event;
+            case monaco.languages.CompletionItemKind.Operator: return CompletionItemKind.Operator;
+            case monaco.languages.CompletionItemKind.Unit: return CompletionItemKind.Unit;
+            case monaco.languages.CompletionItemKind.Value: return CompletionItemKind.Value;
+            case monaco.languages.CompletionItemKind.Constant: return CompletionItemKind.Constant;
+            case monaco.languages.CompletionItemKind.Enum: return CompletionItemKind.Enum;
+            case monaco.languages.CompletionItemKind.EnumMember: return CompletionItemKind.EnumMember;
+            case monaco.languages.CompletionItemKind.Keyword: return CompletionItemKind.Keyword;
+            case monaco.languages.CompletionItemKind.Text: return CompletionItemKind.Text;
+            case monaco.languages.CompletionItemKind.Color: return CompletionItemKind.Color;
+            case monaco.languages.CompletionItemKind.File: return CompletionItemKind.File;
+            case monaco.languages.CompletionItemKind.Reference: return CompletionItemKind.Reference;
+            case monaco.languages.CompletionItemKind.Customcolor: return CompletionItemKind.Color;
+            case monaco.languages.CompletionItemKind.Folder: return CompletionItemKind.Folder;
+            case monaco.languages.CompletionItemKind.TypeParameter: return CompletionItemKind.TypeParameter;
+            case monaco.languages.CompletionItemKind.Snippet: return CompletionItemKind.Snippet;
+            default: return value + 1 as CompletionItemKind;
+        }
     }
 
     protected asDocumentation(format: string, documentation: string | monaco.IMarkdownString): string | MarkupContent {
@@ -820,9 +848,36 @@ export class ProtocolToMonacoConverter {
     }
 
     asCompletionItemKind(value: CompletionItemKind): [monaco.languages.CompletionItemKind, CompletionItemKind | undefined] {
-        // Protocol item kind is 1 based, codes item kind is zero based.
         if (CompletionItemKind.Text <= value && value <= CompletionItemKind.TypeParameter) {
-            return [value - 1, undefined];
+            switch (value) {
+                case CompletionItemKind.Text: return [monaco.languages.CompletionItemKind.Text, undefined];
+                case CompletionItemKind.Method: return [monaco.languages.CompletionItemKind.Method, undefined];
+                case CompletionItemKind.Function: return [monaco.languages.CompletionItemKind.Function, undefined];
+                case CompletionItemKind.Constructor: return [monaco.languages.CompletionItemKind.Constructor, undefined];
+                case CompletionItemKind.Field: return [monaco.languages.CompletionItemKind.Field, undefined];
+                case CompletionItemKind.Variable: return [monaco.languages.CompletionItemKind.Variable, undefined];
+                case CompletionItemKind.Class: return [monaco.languages.CompletionItemKind.Class, undefined];
+                case CompletionItemKind.Interface: return [monaco.languages.CompletionItemKind.Interface, undefined];
+                case CompletionItemKind.Module: return [monaco.languages.CompletionItemKind.Module, undefined];
+                case CompletionItemKind.Property: return [monaco.languages.CompletionItemKind.Property, undefined];
+                case CompletionItemKind.Unit: return [monaco.languages.CompletionItemKind.Unit, undefined];
+                case CompletionItemKind.Value: return [monaco.languages.CompletionItemKind.Value, undefined];
+                case CompletionItemKind.Enum: return [monaco.languages.CompletionItemKind.Enum, undefined];
+                case CompletionItemKind.Keyword: return [monaco.languages.CompletionItemKind.Keyword, undefined];
+                case CompletionItemKind.Snippet: return [monaco.languages.CompletionItemKind.Snippet, undefined];
+                case CompletionItemKind.Color: return [monaco.languages.CompletionItemKind.Color, undefined];
+                case CompletionItemKind.File: return [monaco.languages.CompletionItemKind.File, undefined];
+                case CompletionItemKind.Reference: return [monaco.languages.CompletionItemKind.Reference, undefined];
+                case CompletionItemKind.Folder: return [monaco.languages.CompletionItemKind.Folder, undefined];
+                case CompletionItemKind.EnumMember: return [monaco.languages.CompletionItemKind.EnumMember, undefined];
+                case CompletionItemKind.Constant: return [monaco.languages.CompletionItemKind.Constant, undefined];
+                case CompletionItemKind.Struct: return [monaco.languages.CompletionItemKind.Struct, undefined];
+                case CompletionItemKind.Event: return [monaco.languages.CompletionItemKind.Event, undefined];
+                case CompletionItemKind.Operator: return [monaco.languages.CompletionItemKind.Operator, undefined];
+                case CompletionItemKind.TypeParameter: return [monaco.languages.CompletionItemKind.TypeParameter, undefined];
+                default: return [value - 1, undefined];
+            }
+
         };
         return [CompletionItemKind.Text, value];
     }
