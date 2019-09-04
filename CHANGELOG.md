@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.1] - 2019-09-04
+
+- aligned CompletionItemKind with Monaco 0.17.0 [#174](https://github.com/TypeFox/monaco-languageclient/pull/174)
+
 ## [0.10.0] - 2019-08-26
 
 - upgraded to LSP 5.3.0 and Monaco 0.17.0
@@ -122,6 +126,7 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
+[0.10.1]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.7.3...v0.8.0
