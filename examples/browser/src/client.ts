@@ -38,7 +38,7 @@ function createDocument(model: monaco.editor.IReadOnlyModel) {
     return TextDocument.create(MODEL_URI, model.getModeId(), model.getVersionId(), model.getValue());
 }
 
-function resovleSchema(url: string): Promise<string> {
+function resolveSchema(url: string): Promise<string> {
     const promise = new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = () => resolve(xhr.responseText);
@@ -52,7 +52,7 @@ function resovleSchema(url: string): Promise<string> {
 const m2p = new MonacoToProtocolConverter();
 const p2m = new ProtocolToMonacoConverter();
 const jsonService = getLanguageService({
-    schemaRequestService: resovleSchema
+    schemaRequestService: resolveSchema
 });
 const pendingValidationRequests = new Map<string, number>();
 
