@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.2] - 2019-09-10
+
+- register language features regardless whether a language is registered (https://github.com/TypeFox/monaco-languageclient/commit/0559be6c20744182ede699f594fdbe6d9f3d7145)
+
 ## [0.10.1] - 2019-09-04
 
 - aligned CompletionItemKind with Monaco 0.17.0 [#174](https://github.com/TypeFox/monaco-languageclient/pull/174)
@@ -126,6 +130,7 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
+[0.10.2]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.8.0...v0.9.0
