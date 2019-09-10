@@ -21,6 +21,7 @@
     "prepare": "lerna run prepare",
     "start": "lerna run start node-example",
     "publish:latest": "lerna publish minor",
+    "publish:patch": "lerna publish patch",
     "publish:next": "lerna publish --canary --preid next --dist-tag next --yes",
     "publish:dev": "lerna publish --canary --preid dev --dist-tag dev --yes"
   },
