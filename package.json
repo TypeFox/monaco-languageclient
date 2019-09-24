@@ -14,7 +14,8 @@
     "typescript": "^3.0.1",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^3.11.0",
-    "webpack-merge": "^4.1.2"
+    "webpack-merge": "^4.1.2",
+    "@types/vscode": "1.33.0"
   },
   "scripts": {
     "prepare": "lerna run prepare",
@@ -28,8 +29,5 @@
     "client",
     "example",
     "examples/browser"
-  ],
-  "dependencies": {
-    "@types/vscode": "1.33.0"
-  }
+  ]
 }
