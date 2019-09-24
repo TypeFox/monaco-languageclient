@@ -5,6 +5,7 @@
     "@types/node": "^7.0.12",
     "@types/normalize-url": "^1.9.1",
     "@types/ws": "0.0.39",
+    "@types/vscode": "1.33.0",
     "css-loader": "^0.28.11",
     "lerna": "^3.16.4",
     "monaco-editor-core": "^0.17.0",
@@ -14,8 +15,7 @@
     "typescript": "^3.0.1",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^3.11.0",
-    "webpack-merge": "^4.1.2",
-    "@types/vscode": "1.33.0"
+    "webpack-merge": "^4.1.2"
   },
   "scripts": {
     "prepare": "lerna run prepare",
