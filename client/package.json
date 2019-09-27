@@ -23,11 +23,10 @@
         "vscode-uri": "^1.0.5"
     },
     "scripts": {
-        "prepare": "yarn run update-vscode && yarn run clean && yarn run compile",
+        "prepare": "yarn run clean && yarn run compile",
         "compile": "tsc",
         "watch": "tsc -w",
         "clean": "rimraf lib",
-        "update-vscode": "node ../node_modules/vscode/bin/install",
         "prepublishOnly": "yarn run dist:amd",
         "dist:amd": "tsc --outDir dist/amd --module amd"
     },
