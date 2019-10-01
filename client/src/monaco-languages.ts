@@ -125,9 +125,9 @@ export class MonacoLanguages implements Languages {
 
     protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
         const signatureHelpTriggerCharacters = [...(provider.triggerCharacters || triggerCharacters || [])];
-        // TODO support regrigger characters after Monaco udpate
         return {
             signatureHelpTriggerCharacters,
+            signatureHelpRetriggerCharacters: provider.retriggerCharacters,
             provideSignatureHelp: async (model, position, token, context) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
                     return undefined;
