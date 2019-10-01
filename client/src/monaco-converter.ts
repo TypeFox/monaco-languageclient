@@ -34,7 +34,7 @@ export namespace ProtocolDocumentLink {
     }
 }
 
-export interface ProtocolCodeLens extends monaco.languages.ICodeLensSymbol {
+export interface ProtocolCodeLens extends monaco.languages.CodeLens {
     data?: any;
 }
 export namespace ProtocolCodeLens {
@@ -322,7 +322,7 @@ export class MonacoToProtocolConverter {
         return undefined;
     }
 
-    asCodeLens(item: monaco.languages.ICodeLensSymbol): CodeLens {
+    asCodeLens(item: monaco.languages.CodeLens): CodeLens {
         let result = CodeLens.create(this.asRange(item.range));
         if (item.command) { result.command = this.asCommand(item.command); }
         if (ProtocolCodeLens.is(item)) {
@@ -462,10 +462,10 @@ export class ProtocolToMonacoConverter {
         return items.map(item => this.asTextEdit(item));
     }
 
-    asCodeLens(item: CodeLens): monaco.languages.ICodeLensSymbol;
+    asCodeLens(item: CodeLens): monaco.languages.CodeLens;
     asCodeLens(item: undefined | null): undefined;
-    asCodeLens(item: CodeLens | undefined | null): monaco.languages.ICodeLensSymbol | undefined;
-    asCodeLens(item: CodeLens | undefined | null): monaco.languages.ICodeLensSymbol | undefined {
+    asCodeLens(item: CodeLens | undefined | null): monaco.languages.CodeLens | undefined;
+    asCodeLens(item: CodeLens | undefined | null): monaco.languages.CodeLens | undefined {
         if (!item) {
             return undefined;
         }
@@ -476,21 +476,27 @@ export class ProtocolToMonacoConverter {
         return result;
     }
 
-    asCodeLenses(items: CodeLens[]): monaco.languages.ICodeLensSymbol[];
-    asCodeLenses(items: undefined | null): undefined;
-    asCodeLenses(items: CodeLens[] | undefined | null): monaco.languages.ICodeLensSymbol[] | undefined;
-    asCodeLenses(items: CodeLens[] | undefined | null): monaco.languages.ICodeLensSymbol[] | undefined {
+    asCodeLensList(items: CodeLens[]): monaco.languages.CodeLensList;
+    asCodeLensList(items: undefined | null): undefined;
+    asCodeLensList(items: CodeLens[] | undefined | null): monaco.languages.CodeLensList | undefined;
+    asCodeLensList(items: CodeLens[] | undefined | null): monaco.languages.CodeLensList | undefined {
         if (!items) {
             return undefined;
         }
-        return items.map((codeLens) => this.asCodeLens(codeLens));
+        return {
+            lenses: items.map((codeLens) => this.asCodeLens(codeLens)),
+            dispose: () => {}
+        };
     }
 
-    asCodeActions(actions: (Command | CodeAction)[]): (monaco.languages.Command | monaco.languages.CodeAction)[] {
-        return actions.map(action => this.asCodeAction(action));
+    asCodeActionList(actions: (Command | CodeAction)[]): monaco.languages.CodeActionList {
+        return {
+            actions: actions.map(action => this.asCodeAction(action)),
+            dispose: () => {}
+        };
     }
 
-    asCodeAction(item: Command | CodeAction): monaco.languages.Command | monaco.languages.CodeAction {
+    asCodeAction(item: Command | CodeAction): monaco.languages.CodeAction {
         if (CodeAction.is(item)) {
             return {
                 title: item.title,
@@ -530,6 +536,7 @@ export class ProtocolToMonacoConverter {
             name: value.name,
             detail: value.detail || "",
             kind: this.asSymbolKind(value.kind),
+            tags: [],
             range: this.asRange(value.range),
             selectionRange: this.asRange(value.selectionRange),
             children
@@ -560,6 +567,7 @@ export class ProtocolToMonacoConverter {
             detail: '',
             containerName: item.containerName,
             kind: this.asSymbolKind(item.kind),
+            tags: [],
             range: location.range,
             selectionRange: location.range
         };
@@ -639,10 +647,10 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asSignatureHelp(item: undefined | null): undefined;
-    asSignatureHelp(item: SignatureHelp): monaco.languages.SignatureHelp;
-    asSignatureHelp(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelp | undefined;
-    asSignatureHelp(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelp | undefined {
+    asSignatureHelpResult(item: undefined | null): undefined;
+    asSignatureHelpResult(item: SignatureHelp): monaco.languages.SignatureHelpResult;
+    asSignatureHelpResult(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelpResult | undefined;
+    asSignatureHelpResult(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelpResult | undefined {
         if (!item) {
             return undefined;
         }
@@ -664,7 +672,10 @@ export class ProtocolToMonacoConverter {
         } else {
             result.signatures = [];
         }
-        return result;
+        return {
+            value: result,
+            dispose: () => {}
+        };
     }
 
     asSignatureInformations(items: SignatureInformation[]): monaco.languages.SignatureInformation[] {
