@@ -17,7 +17,7 @@ import {
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
-    DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction
+    DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind
 } from './services';
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
@@ -113,12 +113,71 @@ export class MonacoToProtocolConverter {
 
     asCompletionContext(context: monaco.languages.CompletionContext): CompletionContext {
         return {
-            triggerKind: this.asTriggerKind(context.triggerKind),
+            triggerKind: this.asCompletionTriggerKind(context.triggerKind),
             triggerCharacter: context.triggerCharacter
         }
     }
 
-    asTriggerKind(triggerKind: monaco.languages.CompletionTriggerKind): CompletionTriggerKind {
+    asSignatureHelpContext(context: monaco.languages.SignatureHelpContext) : SignatureHelpContext {
+        return {
+            triggerKind: this.asSignatureHelpTriggerKind(context.triggerKind),
+            triggerCharacter: context.triggerCharacter,
+            isRetrigger: context.isRetrigger,
+            activeSignatureHelp: this.asSignatureHelp(context.activeSignatureHelp)
+        };
+    }
+
+    asSignatureHelp(signatureHelp: monaco.languages.SignatureHelp | undefined) : SignatureHelp | undefined {
+        if(signatureHelp === undefined) {
+            return undefined;
+        }
+        return {
+            signatures: signatureHelp.signatures.map(signatureInfo => this.asSignatureInformation(signatureInfo)),
+            activeParameter: signatureHelp.activeParameter,
+            activeSignature: signatureHelp.activeSignature
+        };
+    }
+
+    asSignatureInformation(signatureInformation: monaco.languages.SignatureInformation) : SignatureInformation {
+        return {
+            documentation: this.asMarkupContent(signatureInformation.documentation),
+            label: signatureInformation.label,
+            parameters: signatureInformation.parameters.map(paramInfo => this.asParameterInformation(paramInfo))
+        };
+    }
+
+    asParameterInformation(parameterInformation: monaco.languages.ParameterInformation) : ParameterInformation {
+        return {
+            documentation: this.asMarkupContent(parameterInformation.documentation),
+            label: parameterInformation.label
+        };
+    }
+
+    asMarkupContent(markupContent: (string | monaco.IMarkdownString | undefined)): string | MarkupContent | undefined {
+        if(markupContent === undefined) {
+            return undefined;
+        }
+        if(typeof markupContent === "string") {
+            return markupContent;
+        }
+        return {
+            kind: MarkupKind.Markdown,
+            value: markupContent.value
+        };
+    }
+
+    asSignatureHelpTriggerKind(triggerKind: monaco.languages.SignatureHelpTriggerKind) : SignatureHelpTriggerKind {
+        switch  (triggerKind) {
+            case monaco.languages.SignatureHelpTriggerKind.ContentChange:
+                return SignatureHelpTriggerKind.ContentChange;
+            case monaco.languages.SignatureHelpTriggerKind.TriggerCharacter:
+                return SignatureHelpTriggerKind.TriggerCharacter;
+            default:
+                return SignatureHelpTriggerKind.Invoke;
+        }
+    }
+
+    asCompletionTriggerKind(triggerKind: monaco.languages.CompletionTriggerKind): CompletionTriggerKind {
         switch (triggerKind) {
             case monaco.languages.CompletionTriggerKind.TriggerCharacter:
                 return CompletionTriggerKind.TriggerCharacter;

@@ -133,11 +133,7 @@ export class MonacoLanguages implements Languages {
                     return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                const signatureHelp = await provider.provideSignatureHelp(params, token, {
-                    // TODO pass context from monaco after Monaco udpate
-                    triggerKind: 1,
-                    isRetrigger: false
-                });
+                const signatureHelp = await provider.provideSignatureHelp(params, token, this.m2p.asSignatureHelpContext(context))
                 return signatureHelp && this.p2m.asSignatureHelpResult(signatureHelp);
             }
         }
