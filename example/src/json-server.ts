@@ -28,7 +28,7 @@ export class JsonServer {
     protected readonly documents = new TextDocuments();
 
     protected readonly jsonService: LanguageService = getLanguageService({
-        schemaRequestService: this.resovleSchema.bind(this)
+        schemaRequestService: this.resolveSchema.bind(this)
     });
 
     protected readonly pendingValidationRequests = new Map<string, number>();
@@ -193,7 +193,7 @@ export class JsonServer {
         return this.jsonService.doHover(document, params.position, jsonDocument);
     }
 
-    protected async resovleSchema(url: string): Promise<string> {
+    protected async resolveSchema(url: string): Promise<string> {
         const uri = URI.parse(url);
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
