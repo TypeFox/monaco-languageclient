@@ -614,7 +614,7 @@ export class ProtocolToMonacoConverter {
     asDefinitionResult(item: Definition): monaco.languages.Definition;
     asDefinitionResult(item: DefinitionLink[]): monaco.languages.Definition;
     asDefinitionResult(item: undefined | null): undefined;
-    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition;
+    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined;
     asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined {
         if (!item) {
             return undefined;
