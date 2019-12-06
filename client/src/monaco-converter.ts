@@ -656,7 +656,7 @@ export class ProtocolToMonacoConverter {
 		}
 		let result: monaco.languages.LocationLink = {
 			uri: monaco.Uri.parse(item.targetUri),
-			range: this.asRange(item.targetRange)!,
+			range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
 			originSelectionRange: this.asRange(item.originSelectionRange),
 			targetSelectionRange: this.asRange(item.targetSelectionRange)
 		};
