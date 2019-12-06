@@ -13,7 +13,7 @@ import {
     CompletionParams, CompletionContext, CompletionTriggerKind,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
-    Definition, Location, DocumentHighlight, DocumentHighlightKind,
+    Definition, DefinitionLink, Location, LocationLink, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
@@ -612,14 +612,23 @@ export class ProtocolToMonacoConverter {
     }
 
     asDefinitionResult(item: Definition): monaco.languages.Definition;
+    asDefinitionResult(item: DefinitionLink[]): monaco.languages.Definition;
     asDefinitionResult(item: undefined | null): undefined;
-    asDefinitionResult(item: Definition | undefined | null): monaco.languages.Definition | undefined;
-    asDefinitionResult(item: Definition | undefined | null): monaco.languages.Definition | undefined {
+    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition;
+    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined {
         if (!item) {
             return undefined;
         }
         if (Is.array(item)) {
-            return item.map((location) => this.asLocation(location));
+            if (item.length == 0) {
+                return undefined;
+            } else if (LocationLink.is(item[0])) {
+                let links: LocationLink[] = item as LocationLink[];
+                return links.map((location) => this.asLocationLink(location));
+            } else {
+                let locations: Location[] = item as Location[];
+                return locations.map((location) => this.asLocation(location));
+            }
         } else {
             return this.asLocation(item);
         }
@@ -638,6 +647,24 @@ export class ProtocolToMonacoConverter {
             uri, range
         }
     }
+
+    asLocationLink(item: undefined | null): undefined;
+	asLocationLink(item: ls.LocationLink): monaco.languages.LocationLink;
+	asLocationLink(item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
+		if (!item) {
+			return undefined;
+		}
+		let result: monaco.languages.LocationLink = {
+			uri: monaco.Uri.parse(item.targetUri),
+			range: this.asRange(item.targetRange)!,
+			originSelectionRange: this.asRange(item.originSelectionRange),
+			targetSelectionRange: this.asRange(item.targetSelectionRange)
+		};
+		if (!result.targetSelectionRange) {
+			throw new Error(`targetSelectionRange must not be undefined or null`);
+		}
+		return result;
+	}
 
     asSignatureHelp(item: undefined | null): undefined;
     asSignatureHelp(item: SignatureHelp): monaco.languages.SignatureHelp;
