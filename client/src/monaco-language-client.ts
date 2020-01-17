@@ -79,7 +79,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         return this.connectionProvider.get(errorHandler, closeHandler, this.outputChannel);
     }
 
-    protected createMessageTransports(encoding: string): Thenable<MessageTransports> {
+    protected createMessageTransports(encoding: string): Promise<MessageTransports> {
         throw new Error('Unsupported');
     }
 

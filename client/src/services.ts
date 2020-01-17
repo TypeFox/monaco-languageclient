@@ -84,6 +84,14 @@ export enum SignatureHelpTriggerKind {
     ContentChange = 3
 }
 
+// runtime support
+export enum VsCodeDiagnosticSeverity {
+    Error = 0,
+    Warning = 1,
+    Information = 2,
+    Hint = 3
+}
+
 export interface SignatureHelpContext {
     readonly triggerKind: SignatureHelpTriggerKind;
     readonly triggerCharacter?: string;
