@@ -7,9 +7,12 @@ import * as vscode from "vscode";
 import URI from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
-    Services, Event, Diagnostic, WorkspaceEdit, isDocumentSelector,
-    MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier
+    Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
+    MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
+    SignatureHelpTriggerKind
 } from "./services";
+import * as ServicesModule from "./services"
+import { DiagnosticSeverity } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
     const unsupported = () => { throw new Error('unsupported') };
@@ -49,7 +52,43 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         contains = unsupported
         intersects = unsupported
     }
+
+    class EmptyFileSystem implements vscode.FileSystem {
+        stat(uri: vscode.Uri): Thenable<vscode.FileStat> {
+            throw new Error("Method not implemented.");
+        }
+        readDirectory(uri: vscode.Uri): Thenable<[string, vscode.FileType][]> {
+            return Promise.resolve([]);
+        }
+        createDirectory(uri: vscode.Uri): Thenable<void> {
+            return Promise.resolve();
+        }
+        readFile(uri: vscode.Uri): Thenable<Uint8Array> {
+            return Promise.resolve(new Uint8Array(0));
+        }
+        writeFile(uri: vscode.Uri, content: Uint8Array): Thenable<void> {
+            return Promise.resolve();
+        }
+        delete(uri: vscode.Uri,
+               options?: { recursive?: boolean | undefined; useTrash?: boolean | undefined; } | undefined): Thenable<void> {
+            return Promise.resolve();
+        }
+        rename(source: vscode.Uri,
+               target: vscode.Uri,
+               options?: { overwrite?: boolean | undefined; } | undefined): Thenable<void> {
+            return Promise.resolve();
+        }
+
+        copy(source: vscode.Uri,
+            target: vscode.Uri,
+            options?: { overwrite?: boolean | undefined; } | undefined): Thenable<void> {
+            return Promise.resolve();
+        }
+    }
+
     const workspace: typeof vscode.workspace = {
+        fs: new EmptyFileSystem(),
+        workspaceFile: undefined,
         createFileSystemWatcher(globPattern, ignoreCreateEvents, ignoreChangeEvents, ignoreDeleteEvents): vscode.FileSystemWatcher {
             const services = servicesProvider();
             if (typeof globPattern !== 'string') {
@@ -175,6 +214,31 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             const services = servicesProvider();
             return (services.workspace.onDidSaveTextDocument as any) || Event.None;
         },
+
+        get onWillCreateFiles() : vscode.Event<vscode.FileWillCreateEvent> {
+            return Event.None;
+        },
+
+        get onDidCreateFiles() : vscode.Event<vscode.FileCreateEvent> {
+            return Event.None;
+        },
+
+        get onWillDeleteFiles() : vscode.Event<vscode.FileWillDeleteEvent> {
+            return Event.None;
+        },
+
+        get onDidDeleteFiles() : vscode.Event<vscode.FileDeleteEvent> {
+            return Event.None;
+        },
+
+        get onWillRenameFiles() : vscode.Event<vscode.FileWillRenameEvent> {
+            return Event.None;
+        },
+
+        get onDidRenameFiles() : vscode.Event<vscode.FileRenameEvent> {
+            return Event.None
+        },
+
         getWorkspaceFolder: unsupported,
         asRelativePath: unsupported,
         updateWorkspaceFolders: unsupported,
@@ -187,6 +251,94 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         rootPath: undefined,
         name: undefined
     };
+
+    function isVsCodeUri(v: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>) : v is vscode.Uri {
+        return (v instanceof URI) !== undefined;
+    }
+
+    class ApiDiagnosticCollection implements vscode.DiagnosticCollection {
+        readonly name: string;
+        private readonly services : Services;
+        private readonly collection : DiagnosticCollection | undefined;
+
+        constructor(name?: string) {
+            this.name = name || 'default',
+            this.services = servicesProvider();
+            this.collection = this.services.languages.createDiagnosticCollection
+                ? this.services.languages.createDiagnosticCollection(name)
+                : undefined;
+        }
+
+        entries() {
+        }
+
+		set(entries: ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): void;
+        set(uri: vscode.Uri, arg1: ReadonlyArray<vscode.Diagnostic> | undefined): void;
+        set(arg0: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>,
+            arg1?: ReadonlyArray<vscode.Diagnostic>): void {
+
+            function toInternalSeverity(severity: vscode.DiagnosticSeverity) : DiagnosticSeverity {
+                // there is a typing mismatch, trying to use the proper switch
+                // mixes error with warnings etc...
+                // just cast for now, this as the correct behaviour
+                return severity as DiagnosticSeverity;
+                // we don't want to rely on the runtime vscode module here, so we use our version
+                // of the enum
+                /*
+                switch ((severity as unknown) as VsCodeDiagnosticSeverity)
+                {
+                    case VsCodeDiagnosticSeverity.Warning:
+                        return DiagnosticSeverity.Warning;
+                    case VsCodeDiagnosticSeverity.Information:
+                        return DiagnosticSeverity.Information;
+                    case VsCodeDiagnosticSeverity.Hint:
+                        return DiagnosticSeverity.Hint;
+                    case VsCodeDiagnosticSeverity.Error:
+                        return DiagnosticSeverity.Error;
+                }
+                return DiagnosticSeverity.Error;
+                // */
+            }
+
+            if (isVsCodeUri(arg0)) {
+                if (this.collection) {
+                    if (arg1) {
+                        this.collection.set(arg0.toString(), arg1.map(diag =>
+                        {
+                            return {
+                                range: diag.range,
+                                code: diag.code,
+                                source: diag.source,
+                                message: diag.message,
+                                tags: diag.tags,
+                                relatedInformation: undefined,
+                                severity: toInternalSeverity(diag.severity)
+                            }; 
+                        }));
+                    } else {
+                        this.collection.set(arg0.toString(), []);
+                    }
+                }
+            } else {
+                arg0.forEach(element => {
+                    this.set(element[0], element[1]);
+                });
+            }
+        }
+
+        dispose(): void {
+            if (this.collection) {
+                this.collection.dispose();
+            }
+        }
+
+        delete(uri : vscode.Uri) {}
+        clear() {}
+        forEach(callback: any, thisArg?: any) {}
+        get(uri : vscode.Uri) { return undefined; }
+        has(uri : vscode.Uri) { return false; }
+    }
+
     const languages: typeof vscode.languages = {
         match(selector, document): number {
             if (!isDocumentSelector(selector)) {
@@ -199,32 +351,18 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             const result = services.languages.match(selector, document);
             return result ? 1 : 0;
         },
-        createDiagnosticCollection(name?: string): vscode.DiagnosticCollection {
-            const services = servicesProvider();
-            const collection = services.languages.createDiagnosticCollection ?
-                services.languages.createDiagnosticCollection(name) : undefined;
+		registerCallHierarchyProvider(
+            selector: vscode.DocumentSelector,
+            provider: vscode.CallHierarchyProvider): vscode.Disposable {
+
+            /* empty stub for now */
             return {
-                name: name || 'default',
-                set(arg0: vscode.Uri | [vscode.Uri, vscode.Diagnostic[] | undefined][], arg1?: vscode.Diagnostic[] | undefined): void {
-                    if (collection) {
-                        if (arg1) {
-                            collection.set(arg0.toString(), arg1 as Diagnostic[]);
-                        } else {
-                            collection.set(arg0.toString(), []);
-                        }
-                    }
-                },
                 dispose(): void {
-                    if (collection) {
-                        collection.dispose();
-                    }
-                },
-                delete: unsupported,
-                clear: unsupported,
-                forEach: unsupported,
-                get: unsupported,
-                has: unsupported
+                }
             }
+        },
+        createDiagnosticCollection(name?: string): vscode.DiagnosticCollection {
+            return new ApiDiagnosticCollection(name);
         },
         registerCompletionItemProvider(selector, provider, ...triggerCharacters) {
             if (!isDocumentSelector(selector)) {
@@ -670,6 +808,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeLens,
         DocumentLink,
         CodeActionKind,
-        Disposable: CodeDisposable
+        Disposable: CodeDisposable,
+        SignatureHelpTriggerKind: SignatureHelpTriggerKind,
+        DiagnosticSeverity: ServicesModule.DiagnosticSeverity 
     } as any;
 }

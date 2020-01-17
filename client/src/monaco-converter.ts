@@ -56,6 +56,12 @@ export namespace ProtocolCompletionItem {
     }
 }
 
+type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange}
+
+function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace) : v is RangeReplace {
+    return (v as RangeReplace).insert !== undefined;
+}
+
 export class MonacoToProtocolConverter {
     asPosition(lineNumber: undefined | null, column: undefined | null): {};
     asPosition(lineNumber: number, column: undefined | null): Pick<Position, 'line'>;
@@ -75,21 +81,28 @@ export class MonacoToProtocolConverter {
     asRange(range: monaco.IRange): Range;
     asRange(range: monaco.IRange | undefined): Range | undefined;
     asRange(range: monaco.IRange | null): Range | null;
+    asRange(range: monaco.IRange | { insert: monaco.IRange; replace: monaco.IRange}) : Range;
     asRange(range: Partial<monaco.IRange>): RecursivePartial<Range>;
     asRange(range: Partial<monaco.IRange> | undefined): RecursivePartial<Range> | undefined;
     asRange(range: Partial<monaco.IRange> | null): RecursivePartial<Range> | null;
-    asRange(range: Partial<monaco.IRange> | undefined | null): RecursivePartial<Range> | undefined | null {
+    asRange(range: Partial<monaco.IRange> | undefined | null | RangeReplace): RecursivePartial<Range> | undefined | null {
         if (range === undefined) {
             return undefined;
         }
         if (range === null) {
             return null;
         }
-        const start = this.asPosition(range.startLineNumber, range.startColumn);
-        const end = this.asPosition(range.endLineNumber, range.endColumn);
-        return {
-            start, end
-        };
+
+        if (isRangeReplace(range)) {
+            return this.asRange(range.insert);
+
+        } else {
+            const start = this.asPosition(range.startLineNumber, range.startColumn);
+            const end = this.asPosition(range.endLineNumber, range.endColumn);
+            return {
+                start, end
+            };
+        }
     }
 
     asTextDocumentIdentifier(model: IReadOnlyModel): TextDocumentIdentifier {
@@ -882,7 +895,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange): ProtocolCompletionItem {
+    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace): ProtocolCompletionItem {
         const result = <ProtocolCompletionItem>{ label: item.label };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
@@ -952,7 +965,8 @@ export class ProtocolToMonacoConverter {
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange): { insertText: string, range: monaco.IRange, fromEdit: boolean, isSnippet: boolean } {
+    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace)
+        : { insertText: string, range: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
         const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
         if (item.textEdit) {
             const range = this.asRange(item.textEdit.range);
