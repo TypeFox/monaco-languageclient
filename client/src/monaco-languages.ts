@@ -125,20 +125,16 @@ export class MonacoLanguages implements Languages {
 
     protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
         const signatureHelpTriggerCharacters = [...(provider.triggerCharacters || triggerCharacters || [])];
-        // TODO support regrigger characters after Monaco udpate
         return {
             signatureHelpTriggerCharacters,
-            provideSignatureHelp: async (model, position, token) => {
+            signatureHelpRetriggerCharacters: provider.retriggerCharacters,
+            provideSignatureHelp: async (model, position, token, context) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
                     return undefined;
                 }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
-                const signatureHelp = await provider.provideSignatureHelp(params, token, {
-                    // TODO pass context from monaco after Monaco udpate
-                    triggerKind: 1,
-                    isRetrigger: false
-                });
-                return signatureHelp && this.p2m.asSignatureHelp(signatureHelp);
+                const signatureHelp = await provider.provideSignatureHelp(params, token, this.m2p.asSignatureHelpContext(context))
+                return signatureHelp && this.p2m.asSignatureHelpResult(signatureHelp);
             }
         }
     }
@@ -250,7 +246,7 @@ export class MonacoLanguages implements Languages {
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 const result = await provider.provideCodeActions(params, token);
                 // FIXME: get rid of `|| undefined!` when https://github.com/microsoft/monaco-editor/issues/1560 is resolved
-                return result && this.p2m.asCodeActions(result) || undefined!;
+                return result && this.p2m.asCodeActionList(result) || undefined!;
             }
         }
     }
@@ -272,7 +268,7 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asCodeLensParams(model);
                 const result = await provider.provideCodeLenses(params, token);
-                return result && this.p2m.asCodeLenses(result);
+                return result && this.p2m.asCodeLensList(result);
             },
             resolveCodeLens: provider.resolveCodeLens ? async (model, codeLens, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
