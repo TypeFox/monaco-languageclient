@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from "vscode";
-import URI from "vscode-uri"
+import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
     Services, Event, Diagnostic, WorkspaceEdit, isDocumentSelector,
@@ -185,7 +185,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         registerTaskProvider: unsupported,
         registerFileSystemProvider: unsupported,
         rootPath: undefined,
-        name: undefined
+        name: undefined,
+
     };
     const languages: typeof vscode.languages = {
         match(selector, document): number {
@@ -205,10 +206,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 services.languages.createDiagnosticCollection(name) : undefined;
             return {
                 name: name || 'default',
-                set(arg0: vscode.Uri | [vscode.Uri, vscode.Diagnostic[] | undefined][], arg1?: vscode.Diagnostic[] | undefined): void {
+                set(arg0: vscode.Uri, arg1: readonly vscode.Diagnostic[] | undefined): void {
                     if (collection) {
                         if (arg1) {
-                            collection.set(arg0.toString(), arg1 as Diagnostic[]);
+                            collection.set(arg0.toString(), arg1 as readonly Diagnostic[]);
                         } else {
                             collection.set(arg0.toString(), []);
                         }
@@ -551,7 +552,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
         setLanguageConfiguration: unsupported,
-        onDidChangeDiagnostics: unsupported
+        onDidChangeDiagnostics: unsupported,
+        registerCallHierarchyProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
         if (typeof arg0 !== "string") {

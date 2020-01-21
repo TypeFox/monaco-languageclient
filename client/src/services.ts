@@ -22,7 +22,7 @@ import {
     Disposable, CancellationToken, Event, Emitter
 } from 'vscode-jsonrpc';
 
-import Uri from 'vscode-uri';
+import { URI } from 'vscode-uri';
 
 export {
     Disposable, CancellationToken, Event, Emitter
@@ -64,7 +64,7 @@ export function isDocumentSelector(selector: any): selector is DocumentSelector 
 }
 
 export interface DiagnosticCollection extends Disposable {
-    set(uri: string, diagnostics: Diagnostic[]): void;
+    set(uri: string, diagnostics: readonly Diagnostic[]): void;
 }
 
 export type ProviderResult<T> = T | undefined | null | PromiseLike<T | undefined | null>;
@@ -234,9 +234,9 @@ export interface WorkspaceConfiguration {
 }
 
 export interface FileSystemWatcher extends Disposable {
-    readonly onDidCreate: Event<Uri>;
-    readonly onDidChange: Event<Uri>;
-    readonly onDidDelete: Event<Uri>;
+    readonly onDidCreate: Event<URI>;
+    readonly onDidChange: Event<URI>;
+    readonly onDidDelete: Event<URI>;
 }
 
 export interface ConfigurationChangeEvent {
