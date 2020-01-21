@@ -9,6 +9,7 @@
     "normalize-url": "^2.0.1",
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
+    "vscode-languageserver-textdocument": "^1.0.0",
     "vscode-json-languageservice": "^3.3.1",
     "vscode-languageserver": "^6.0.0",
     "vscode-ws-jsonrpc": "^0.1.1",

@@ -7064,13 +7064,18 @@ vscode-jsonrpc@^5.0.0:
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-5.0.0.tgz#445be9fb404e2793a91b9c0cef3c52dec3e02b89"
   integrity sha512-QeAniC/xTWauVQgyNgEqNJ0Qm/Jw8QySGRQhRFPwb8c4FPp9k6QNgJp0ayXWws5qhdaHkiXkGPlzjOPZFQQKLw==
 
-vscode-languageclient@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-6.0.0.tgz#777a90ca399c4a4d942b3012c0ad2ec47409c4e5"
-  integrity sha512-6MDksAP79GRbcHFsXS6ndo12s0m/h7eNdS/IanRgWxaezqB4a4KzHIHrE0bE+nSFB+snaSToGs1bxnPeKdO5fQ==
+vscode-jsonrpc@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-5.0.1.tgz#9bab9c330d89f43fc8c1e8702b5c36e058a01794"
+  integrity sha512-JvONPptw3GAQGXlVV2utDcHx0BiY34FupW/kI6mZ5x06ER5DdPG/tXWMVHjTNULF5uKPOUUD0SaXg5QaubJL0A==
+
+vscode-languageclient@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-6.0.1.tgz#acd138e0a19a40c5788365e882ae11c164d9a460"
+  integrity sha512-7yZaSHichTJEyOJykI2RLQEECf9MqNLoklzC/1OVi/M8ioIsWQ1+lkN1nTsUhd6+F7p9ar9dNmPiEhL0i5uUBA==
   dependencies:
     semver "^6.3.0"
-    vscode-languageserver-protocol "^3.15.0"
+    vscode-languageserver-protocol "^3.15.1"
 
 vscode-languageserver-protocol@^3.15.0:
   version "3.15.0"
@@ -7079,6 +7084,19 @@ vscode-languageserver-protocol@^3.15.0:
   dependencies:
     vscode-jsonrpc "^5.0.0"
     vscode-languageserver-types "3.15.0"
+
+vscode-languageserver-protocol@^3.15.1:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.15.1.tgz#7555e595f0058b9a166f14605ad039e97fab320a"
+  integrity sha512-wJAo06VM9ZBnRqslplDjfz6Tdive0O7z44yNxBFA3x0/YZkXBIL6I+9rwQ/9Y//0X0eCh12FQrj+KmEXf2L5eA==
+  dependencies:
+    vscode-jsonrpc "^5.0.1"
+    vscode-languageserver-types "3.15.0"
+
+vscode-languageserver-textdocument@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.0.tgz#957381672eb3f507aa320e9f6d7efdfcb767d9fe"
+  integrity sha512-9E3hfoknSe9wX5Bed4rFbjkWdT9Oazw+suyCQ6ZbS68r3SAwue5M7xHd9WX9jBHguAai+qmwr5dMIf7gmzQryw==
 
 vscode-languageserver-types@3.15.0:
   version "3.15.0"
