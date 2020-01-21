@@ -186,6 +186,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         registerFileSystemProvider: unsupported,
         rootPath: undefined,
         name: undefined,
+        fs: vscode.workspace.fs,
+        workspaceFile: undefined,
+        onWillCreateFiles: unsupported,
+        onWillDeleteFiles: unsupported,
+        onDidCreateFiles: unsupported,
+        onDidDeleteFiles: unsupported,
+        onDidRenameFiles: unsupported,
+        onWillRenameFiles: unsupported
 
     };
     const languages: typeof vscode.languages = {
