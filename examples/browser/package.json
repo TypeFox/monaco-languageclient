@@ -5,7 +5,8 @@
   "dependencies": {
     "monaco-languageclient": "^0.11.0",
     "vscode-json-languageservice": "^3.3.1",
-    "vscode-languageserver-types": "^3.15.0-next"
+    "vscode-languageserver-types": "^3.15.0-next",
+    "file-loader": "5.0.2"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",

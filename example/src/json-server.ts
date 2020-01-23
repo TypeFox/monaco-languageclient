@@ -6,13 +6,14 @@ import * as fs from "fs";
 import { xhr, getErrorStatusDescription } from 'request-light';
 import URI from 'vscode-uri';
 import { MessageReader, MessageWriter } from "vscode-jsonrpc";
-import { IConnection, TextDocuments, createConnection } from 'vscode-languageserver';
+import { IConnection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver';
 import {
     TextDocument, Diagnostic, Command, CompletionList, CompletionItem, Hover,
-    SymbolInformation, DocumentSymbolParams, TextEdit, FoldingRange, ColorInformation, ColorPresentation
+    SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeRequestParam, DocumentColorParams, ColorPresentationParams } from 'vscode-languageserver-protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeRequestParam, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
+import * as TextDocumentImpl from "vscode-languageserver-textdocument";
 
 export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
     const connection = createConnection(reader, writer);
@@ -25,7 +26,7 @@ export class JsonServer {
 
     protected workspaceRoot: URI | undefined;
 
-    protected readonly documents = new TextDocuments();
+    protected readonly documents = new TextDocuments(TextDocumentImpl.TextDocument);
 
     protected readonly jsonService: LanguageService = getLanguageService({
         schemaRequestService: this.resolveSchema.bind(this)
@@ -54,7 +55,7 @@ export class JsonServer {
             this.connection.console.log("The server is initialized.");
             return {
                 capabilities: {
-                    textDocumentSync: this.documents.syncKind,
+                    textDocumentSync: TextDocumentSyncKind.Incremental,
                     codeActionProvider: true,
                     completionProvider: {
                         resolveProvider: true,

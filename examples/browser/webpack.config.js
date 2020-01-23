@@ -22,6 +22,10 @@ const common = {
         rules: [{
             test: /\.css$/,
             use: ['style-loader', 'css-loader']
+        },
+        {
+            test: /\.ttf$/,
+            use: ['file-loader']
         }]
     },
     target: 'web',
@@ -30,6 +34,9 @@ const common = {
         child_process: 'empty',
         net: 'empty',
         crypto: 'empty'
+    },
+    resolve: {
+        extensions: ['.js', '.json', '.ttf']
     }
 };
 

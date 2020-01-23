@@ -11,8 +11,11 @@
     "request-light": "^0.2.2",
     "vscode-json-languageservice": "^3.4.11",
     "vscode-languageserver": "^6.0.0",
+    "ws": "^5.0.0",
+    "vscode-uri": "^1.0.8",
+    "vscode-jsonrpc": "^5.0.0",
     "vscode-ws-jsonrpc": "^0.1.1",
-    "ws": "^5.0.0"
+    "file-loader": "5.0.2"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
