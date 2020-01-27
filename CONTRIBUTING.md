@@ -20,6 +20,8 @@ There is no guarantee on time of response to issues and pull requests.
 - @asual - Rostislav Hristov
 - @zewa666 - Vildan Softic
 - @johnwiseheart - John Wiseheart
+- @RomanNikitenko - Roman Nikitenko
+- @azatsarynnyy - Artem Zatsarynnyi
 
 #### How to become a maintainer?
 
