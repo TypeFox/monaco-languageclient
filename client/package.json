@@ -5,7 +5,7 @@
     "author": "TypeFox GmbH (http://www.typefox.io)",
     "license": "MIT",
     "engines": {
-        "vscode": "^1.33.0"
+        "vscode": "^1.41.0"
     },
     "repository": {
         "type": "git",

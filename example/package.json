@@ -14,7 +14,7 @@
     "ws": "^5.0.0",
     "vscode-uri": "^1.0.8",
     "vscode-jsonrpc": "^5.0.0",
-    "vscode-ws-jsonrpc": "^0.1.1",
+    "vscode-ws-jsonrpc": "^0.2.0",
     "file-loader": "^4.3.0"
   },
   "scripts": {
