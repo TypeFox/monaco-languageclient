@@ -1,6 +1,6 @@
 {
     "name": "monaco-languageclient",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "description": "Monaco Language client implementation",
     "author": "TypeFox GmbH (http://www.typefox.io)",
     "license": "MIT",

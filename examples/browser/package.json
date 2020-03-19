@@ -1,12 +1,12 @@
 {
   "private": true,
   "name": "browser-example",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "dependencies": {
-    "monaco-languageclient": "^0.11.0",
+    "file-loader": "^4.3.0",
+    "monaco-languageclient": "^0.12.0",
     "vscode-json-languageservice": "^3.3.1",
-    "vscode-languageserver-types": "^3.15.0-next",
-    "file-loader": "^4.3.0"
+    "vscode-languageserver-types": "^3.15.0-next"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
