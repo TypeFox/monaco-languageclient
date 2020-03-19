@@ -5,7 +5,7 @@
     "author": "TypeFox GmbH (http://www.typefox.io)",
     "license": "MIT",
     "engines": {
-        "vscode": "^1.33.0"
+        "vscode": "^1.41.0"
     },
     "repository": {
         "type": "git",
@@ -18,9 +18,9 @@
     "typings": "./lib/index",
     "dependencies": {
         "glob-to-regexp": "^0.3.0",
-        "vscode-jsonrpc": "^4.1.0-next",
-        "vscode-languageclient": "^5.3.0-next",
-        "vscode-uri": "^1.0.5"
+        "vscode-jsonrpc": "^5.0.0",
+        "vscode-languageclient": "^6.0.0",
+        "vscode-uri": "^1.0.8"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run compile",

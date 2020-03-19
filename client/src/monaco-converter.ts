@@ -13,7 +13,7 @@ import {
     CompletionParams, CompletionContext, CompletionTriggerKind,
     InsertTextFormat, Range, Diagnostic, CompletionItemKind,
     Hover, SignatureHelp, SignatureInformation, ParameterInformation,
-    Definition, Location, DocumentHighlight, DocumentHighlightKind,
+    Definition, DefinitionLink, Location, LocationLink, DocumentHighlight, DocumentHighlightKind,
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
@@ -56,6 +56,12 @@ export namespace ProtocolCompletionItem {
     }
 }
 
+type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange}
+
+function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace) : v is RangeReplace {
+    return (v as RangeReplace).insert !== undefined;
+}
+
 export class MonacoToProtocolConverter {
     asPosition(lineNumber: undefined | null, column: undefined | null): {};
     asPosition(lineNumber: number, column: undefined | null): Pick<Position, 'line'>;
@@ -75,21 +81,28 @@ export class MonacoToProtocolConverter {
     asRange(range: monaco.IRange): Range;
     asRange(range: monaco.IRange | undefined): Range | undefined;
     asRange(range: monaco.IRange | null): Range | null;
+    asRange(range: monaco.IRange | { insert: monaco.IRange; replace: monaco.IRange}) : Range;
     asRange(range: Partial<monaco.IRange>): RecursivePartial<Range>;
     asRange(range: Partial<monaco.IRange> | undefined): RecursivePartial<Range> | undefined;
     asRange(range: Partial<monaco.IRange> | null): RecursivePartial<Range> | null;
-    asRange(range: Partial<monaco.IRange> | undefined | null): RecursivePartial<Range> | undefined | null {
+    asRange(range: Partial<monaco.IRange> | undefined | null | RangeReplace): RecursivePartial<Range> | undefined | null {
         if (range === undefined) {
             return undefined;
         }
         if (range === null) {
             return null;
         }
-        const start = this.asPosition(range.startLineNumber, range.startColumn);
-        const end = this.asPosition(range.endLineNumber, range.endColumn);
-        return {
-            start, end
-        };
+
+        if (isRangeReplace(range)) {
+            return this.asRange(range.insert);
+
+        } else {
+            const start = this.asPosition(range.startLineNumber, range.startColumn);
+            const end = this.asPosition(range.endLineNumber, range.endColumn);
+            return {
+                start, end
+            };
+        }
     }
 
     asTextDocumentIdentifier(model: IReadOnlyModel): TextDocumentIdentifier {
@@ -679,14 +692,23 @@ export class ProtocolToMonacoConverter {
     }
 
     asDefinitionResult(item: Definition): monaco.languages.Definition;
+    asDefinitionResult(item: DefinitionLink[]): monaco.languages.Definition;
     asDefinitionResult(item: undefined | null): undefined;
-    asDefinitionResult(item: Definition | undefined | null): monaco.languages.Definition | undefined;
-    asDefinitionResult(item: Definition | undefined | null): monaco.languages.Definition | undefined {
+    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined;
+    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined {
         if (!item) {
             return undefined;
         }
         if (Is.array(item)) {
-            return item.map((location) => this.asLocation(location));
+            if (item.length == 0) {
+                return undefined;
+            } else if (LocationLink.is(item[0])) {
+                let links: LocationLink[] = item as LocationLink[];
+                return links.map((location) => this.asLocationLink(location));
+            } else {
+                let locations: Location[] = item as Location[];
+                return locations.map((location) => this.asLocation(location));
+            }
         } else {
             return this.asLocation(item);
         }
@@ -705,6 +727,24 @@ export class ProtocolToMonacoConverter {
             uri, range
         }
     }
+
+    asLocationLink(item: undefined | null): undefined;
+	asLocationLink(item: ls.LocationLink): monaco.languages.LocationLink;
+	asLocationLink(item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
+		if (!item) {
+			return undefined;
+		}
+		let result: monaco.languages.LocationLink = {
+			uri: monaco.Uri.parse(item.targetUri),
+			range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
+			originSelectionRange: this.asRange(item.originSelectionRange),
+			targetSelectionRange: this.asRange(item.targetSelectionRange)
+		};
+		if (!result.targetSelectionRange) {
+			throw new Error(`targetSelectionRange must not be undefined or null`);
+		}
+		return result;
+	}
 
     asSignatureHelpResult(item: undefined | null): undefined;
     asSignatureHelpResult(item: SignatureHelp): monaco.languages.SignatureHelpResult;
@@ -882,7 +922,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange): ProtocolCompletionItem {
+    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace): ProtocolCompletionItem {
         const result = <ProtocolCompletionItem>{ label: item.label };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
@@ -952,7 +992,8 @@ export class ProtocolToMonacoConverter {
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange): { insertText: string, range: monaco.IRange, fromEdit: boolean, isSnippet: boolean } {
+    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace)
+        : { insertText: string, range: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
         const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
         if (item.textEdit) {
             const range = this.asRange(item.textEdit.range);

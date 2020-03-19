@@ -4,15 +4,18 @@
   "version": "0.11.0",
   "dependencies": {
     "express": "^4.15.2",
-    "monaco-editor-core": "^0.18.1",
+    "monaco-editor-core": "^0.19.3",
     "monaco-languageclient": "^0.11.0",
     "normalize-url": "^2.0.1",
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
-    "vscode-json-languageservice": "^3.3.1",
-    "vscode-languageserver": "^5.3.0-next",
-    "vscode-ws-jsonrpc": "^0.1.1",
-    "ws": "^5.0.0"
+    "vscode-json-languageservice": "^3.4.11",
+    "vscode-languageserver": "^6.0.0",
+    "ws": "^5.0.0",
+    "vscode-uri": "^1.0.8",
+    "vscode-jsonrpc": "^5.0.0",
+    "vscode-ws-jsonrpc": "^0.2.0",
+    "file-loader": "^4.3.0"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
