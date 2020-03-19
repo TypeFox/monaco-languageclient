@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2020-03-19
+
+- Upgraded to Monaco 0.19.1 [#199](https://github.com/TypeFox/monaco-languageclient/pull/199)
+
 ## [0.11.0] - 2020-01-23
 
 - Upgraded to Monaco 0.18.1 [#178](https://github.com/TypeFox/monaco-languageclient/pull/178)
@@ -134,6 +138,7 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
 ## 0.1.0 - 2017-0
 - initial 0.1.0 release, depends on Monaco 0.9.0
 
+[0.12.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/TypeFox/monaco-languageclient/compare/v0.10.0...v0.10.1
