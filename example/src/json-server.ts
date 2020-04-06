@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import * as fs from "fs";
 import { xhr, getErrorStatusDescription } from 'request-light';
-import URI from 'vscode-uri';
+import { URI } from 'vscode-uri';
 import { MessageReader, MessageWriter } from "vscode-jsonrpc";
 import { IConnection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver';
 import {

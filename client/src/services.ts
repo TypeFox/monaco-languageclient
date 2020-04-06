@@ -22,7 +22,7 @@ import {
     Disposable, CancellationToken, Event, Emitter
 } from 'vscode-jsonrpc';
 
-import Uri from 'vscode-uri';
+import { URI as Uri } from 'vscode-uri';
 
 export {
     Disposable, CancellationToken, Event, Emitter

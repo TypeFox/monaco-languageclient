@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from "vscode";
-import URI from "vscode-uri"
+import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
     Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
@@ -70,12 +70,12 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return Promise.resolve();
         }
         delete(uri: vscode.Uri,
-               options?: { recursive?: boolean | undefined; useTrash?: boolean | undefined; } | undefined): Thenable<void> {
+            options?: { recursive?: boolean | undefined; useTrash?: boolean | undefined; } | undefined): Thenable<void> {
             return Promise.resolve();
         }
         rename(source: vscode.Uri,
-               target: vscode.Uri,
-               options?: { overwrite?: boolean | undefined; } | undefined): Thenable<void> {
+            target: vscode.Uri,
+            options?: { overwrite?: boolean | undefined; } | undefined): Thenable<void> {
             return Promise.resolve();
         }
 
@@ -215,27 +215,27 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return (services.workspace.onDidSaveTextDocument as any) || Event.None;
         },
 
-        get onWillCreateFiles() : vscode.Event<vscode.FileWillCreateEvent> {
+        get onWillCreateFiles(): vscode.Event<vscode.FileWillCreateEvent> {
             return Event.None;
         },
 
-        get onDidCreateFiles() : vscode.Event<vscode.FileCreateEvent> {
+        get onDidCreateFiles(): vscode.Event<vscode.FileCreateEvent> {
             return Event.None;
         },
 
-        get onWillDeleteFiles() : vscode.Event<vscode.FileWillDeleteEvent> {
+        get onWillDeleteFiles(): vscode.Event<vscode.FileWillDeleteEvent> {
             return Event.None;
         },
 
-        get onDidDeleteFiles() : vscode.Event<vscode.FileDeleteEvent> {
+        get onDidDeleteFiles(): vscode.Event<vscode.FileDeleteEvent> {
             return Event.None;
         },
 
-        get onWillRenameFiles() : vscode.Event<vscode.FileWillRenameEvent> {
+        get onWillRenameFiles(): vscode.Event<vscode.FileWillRenameEvent> {
             return Event.None;
         },
 
-        get onDidRenameFiles() : vscode.Event<vscode.FileRenameEvent> {
+        get onDidRenameFiles(): vscode.Event<vscode.FileRenameEvent> {
             return Event.None
         },
 
@@ -252,18 +252,18 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         name: undefined
     };
 
-    function isVsCodeUri(v: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>) : v is vscode.Uri {
+    function isVsCodeUri(v: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): v is vscode.Uri {
         return (v instanceof URI) !== undefined;
     }
 
     class ApiDiagnosticCollection implements vscode.DiagnosticCollection {
         readonly name: string;
-        private readonly services : Services;
-        private readonly collection : DiagnosticCollection | undefined;
+        private readonly services: Services;
+        private readonly collection: DiagnosticCollection | undefined;
 
         constructor(name?: string) {
             this.name = name || 'default',
-            this.services = servicesProvider();
+                this.services = servicesProvider();
             this.collection = this.services.languages.createDiagnosticCollection
                 ? this.services.languages.createDiagnosticCollection(name)
                 : undefined;
@@ -272,12 +272,12 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         entries() {
         }
 
-		set(entries: ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): void;
+        set(entries: ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): void;
         set(uri: vscode.Uri, arg1: ReadonlyArray<vscode.Diagnostic> | undefined): void;
         set(arg0: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>,
             arg1?: ReadonlyArray<vscode.Diagnostic>): void {
 
-            function toInternalSeverity(severity: vscode.DiagnosticSeverity) : DiagnosticSeverity {
+            function toInternalSeverity(severity: vscode.DiagnosticSeverity): DiagnosticSeverity {
                 // there is a typing mismatch, trying to use the proper switch
                 // mixes error with warnings etc...
                 // just cast for now, this as the correct behaviour
@@ -303,8 +303,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             if (isVsCodeUri(arg0)) {
                 if (this.collection) {
                     if (arg1) {
-                        this.collection.set(arg0.toString(), arg1.map(diag =>
-                        {
+                        this.collection.set(arg0.toString(), arg1.map(diag => {
                             return {
                                 range: diag.range,
                                 code: diag.code,
@@ -313,7 +312,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                                 tags: diag.tags,
                                 relatedInformation: undefined,
                                 severity: toInternalSeverity(diag.severity)
-                            }; 
+                            };
                         }));
                     } else {
                         this.collection.set(arg0.toString(), []);
@@ -332,11 +331,11 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }
         }
 
-        delete(uri : vscode.Uri) {}
-        clear() {}
-        forEach(callback: any, thisArg?: any) {}
-        get(uri : vscode.Uri) { return undefined; }
-        has(uri : vscode.Uri) { return false; }
+        delete(uri: vscode.Uri) { }
+        clear() { }
+        forEach(callback: any, thisArg?: any) { }
+        get(uri: vscode.Uri) { return undefined; }
+        has(uri: vscode.Uri) { return false; }
     }
 
     const languages: typeof vscode.languages = {
@@ -351,7 +350,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             const result = services.languages.match(selector, document);
             return result ? 1 : 0;
         },
-		registerCallHierarchyProvider(
+        registerCallHierarchyProvider(
             selector: vscode.DocumentSelector,
             provider: vscode.CallHierarchyProvider): vscode.Disposable {
 
@@ -810,6 +809,6 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeActionKind,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
-        DiagnosticSeverity: ServicesModule.DiagnosticSeverity 
+        DiagnosticSeverity: ServicesModule.DiagnosticSeverity
     } as any;
 }
