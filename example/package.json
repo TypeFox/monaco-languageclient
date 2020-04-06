@@ -1,12 +1,12 @@
 {
   "private": true,
   "name": "node-example",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "dependencies": {
     "express": "^4.15.2",
     "file-loader": "^4.3.0",
     "monaco-editor-core": "^0.19.3",
-    "monaco-languageclient": "^0.12.0",
+    "monaco-languageclient": "^0.13.0",
     "normalize-url": "^2.0.1",
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
