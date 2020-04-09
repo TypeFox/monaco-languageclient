@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
-    Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
+    Services, Event, DiagnosticCollection, Diagnostic, WorkspaceEdit, isDocumentSelector,
     MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
     SignatureHelpTriggerKind
 } from "./services";
@@ -300,13 +300,20 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 // */
             }
 
+            function toInternalCode(code: vscode.Diagnostic['code']): Diagnostic['code']  {
+                if (code != null && typeof code === 'object') {
+                    return code.value as Diagnostic['code']
+                }
+                return code as Diagnostic['code'];
+            }
+
             if (isVsCodeUri(arg0)) {
                 if (this.collection) {
                     if (arg1) {
                         this.collection.set(arg0.toString(), arg1.map(diag => {
                             return {
                                 range: diag.range,
-                                code: diag.code,
+                                code: toInternalCode(diag.code),
                                 source: diag.source,
                                 message: diag.message,
                                 tags: diag.tags,
@@ -688,7 +695,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
         setLanguageConfiguration: unsupported,
-        onDidChangeDiagnostics: unsupported
+        onDidChangeDiagnostics: unsupported,
+        registerEvaluatableExpressionProvider: unsupported,
+        registerDocumentSemanticTokensProvider: unsupported,
+        registerDocumentRangeSemanticTokensProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
         if (typeof arg0 !== "string") {
@@ -777,7 +787,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeWindowState: unsupported,
         createQuickPick: unsupported,
         createInputBox: unsupported,
-        registerUriHandler: unsupported
+        registerUriHandler: unsupported,
+        registerCustomEditorProvider: unsupported
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
