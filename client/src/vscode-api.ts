@@ -821,8 +821,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeWindowState: unsupported,
         createQuickPick: unsupported,
         createInputBox: unsupported,
-        registerUriHandler: unsupported,
-        registerCustomEditorProvider: unsupported
+        registerUriHandler: unsupported
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
