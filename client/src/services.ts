@@ -17,6 +17,10 @@ import {
     FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction,
     Declaration, SelectionRangeParams, SelectionRange
 } from 'vscode-languageserver-protocol';
+import {
+    SemanticTokens, SemanticTokensEdits, SemanticTokensLegend, SemanticTokensParams, SemanticTokensRangeParams,
+    SemanticTokensEditsParams
+} from 'vscode-languageserver-protocol/lib/protocol.sematicTokens.proposed'
 
 import {
     Disposable, CancellationToken, Event, Emitter
@@ -190,6 +194,15 @@ export interface SelectionRangeProvider {
     provideSelectionRanges(params: SelectionRangeParams, token: CancellationToken): ProviderResult<SelectionRange[]>;
 }
 
+export interface DocumentSemanticTokensProvider {
+    provideDocumentSemanticTokens(params: SemanticTokensParams, token: CancellationToken): ProviderResult<SemanticTokens>;
+    provideDocumentSemanticTokensEdits?(params: SemanticTokensEditsParams, token: CancellationToken): ProviderResult<SemanticTokens | SemanticTokensEdits>;
+}
+
+export interface DocumentRangeSemanticTokensProvider {
+    provideDocumentRangeSemanticTokens(params: SemanticTokensRangeParams, token: CancellationToken): ProviderResult<SemanticTokens>;
+}
+
 export interface Languages {
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean;
     createDiagnosticCollection?(name?: string): DiagnosticCollection;
@@ -214,6 +227,8 @@ export interface Languages {
     registerColorProvider?(selector: DocumentSelector, provider: DocumentColorProvider): Disposable;
     registerFoldingRangeProvider?(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable;
     registerSelectionRangeProvider?(selector: DocumentSelector, provider: SelectionRangeProvider): Disposable;
+    registerDocumentSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
+    registerDocumentRangeSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
 }
 
 export interface TextDocumentDidChangeEvent {

@@ -52,6 +52,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         contains = unsupported
         intersects = unsupported
     }
+    class SemanticTokens implements vscode.SemanticTokens {
+        constructor(public data: Uint32Array, public resultId?: string) { }
+    }
 
     class EmptyFileSystem implements vscode.FileSystem {
         stat(uri: vscode.Uri): Thenable<vscode.FileStat> {
@@ -691,14 +694,45 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 }
             });
         },
+        registerEvaluatableExpressionProvider: unsupported,
+        registerDocumentSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+            if (!isDocumentSelector(selector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerDocumentSemanticTokensProvider) {
+                return Disposable.create(() => { });
+            }
+
+            return languages.registerDocumentSemanticTokensProvider(selector, {
+                provideDocumentSemanticTokens({ textDocument }, token) {
+                    return provider.provideDocumentSemanticTokens(<any>textDocument, token) as any;
+                },
+                provideDocumentSemanticTokensEdits: provider.provideDocumentSemanticTokensEdits && (({ textDocument, previousResultId }, token) => {
+                    return provider.provideDocumentSemanticTokensEdits!(<any>textDocument, <any>previousResultId, token) as any;
+                })
+            }, legend)
+        },
+        registerDocumentRangeSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentRangeSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+            if (!isDocumentSelector(selector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerDocumentRangeSemanticTokensProvider) {
+                return Disposable.create(() => { });
+            }
+
+            return languages.registerDocumentRangeSemanticTokensProvider(selector, {
+                provideDocumentRangeSemanticTokens({ textDocument, range }, token) {
+                    return provider.provideDocumentRangeSemanticTokens(<any>textDocument, <any>range, token) as any;
+                }
+            }, legend)
+        },
         getLanguages: unsupported,
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
         setLanguageConfiguration: unsupported,
-        onDidChangeDiagnostics: unsupported,
-        registerEvaluatableExpressionProvider: unsupported,
-        registerDocumentSemanticTokensProvider: unsupported,
-        registerDocumentRangeSemanticTokensProvider: unsupported
+        onDidChangeDiagnostics: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
         if (typeof arg0 !== "string") {
@@ -818,6 +852,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeLens,
         DocumentLink,
         CodeActionKind,
+        SemanticTokens,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity

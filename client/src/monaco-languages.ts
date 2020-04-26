@@ -9,8 +9,11 @@ import {
     DocumentSymbolProvider, CodeActionProvider, CodeLensProvider, DocumentFormattingEditProvider, DocumentRangeFormattingEditProvider,
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
-    FoldingRangeProvider
+    FoldingRangeProvider,
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider
 } from "./services";
+import { SemanticTokensLegend } from 'vscode-languageserver-protocol/lib/protocol.sematicTokens.proposed'
+
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './monaco-converter';
 import { DisposableCollection, Disposable } from './disposable';
@@ -509,6 +512,63 @@ export class MonacoLanguages implements Languages {
                     textDocument
                 }, token);
                 return result && this.p2m.asFoldingRanges(result);
+            }
+        }
+    }
+
+    registerDocumentSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
+        const semanticTokensProvider = this.createSemanticTokensProvider(selector, provider, legend);
+        const providers = new DisposableCollection();
+        for (const language of this.matchLanguage(selector)) {
+            providers.push(monaco.languages.registerDocumentSemanticTokensProvider(language, semanticTokensProvider));
+        }
+        return providers;
+    }
+
+    protected createSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentSemanticTokensProvider {
+        return {
+            getLegend() {
+                return legend;
+            },
+            provideDocumentSemanticTokens: async (model, lastResultId, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined;
+                }
+                const textDocument = this.m2p.asTextDocumentIdentifier(model);
+                const result = await provider.provideDocumentSemanticTokens({
+                    textDocument
+                }, token);
+                return result && this.p2m.asSemanticTokens(result);
+            },
+            releaseDocumentSemanticTokens: (resultId) => {
+            }
+        }
+    }
+
+    registerDocumentRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
+        const rangeSemanticTokensProvider = this.createRangeSemanticTokensProvider(selector, provider, legend);
+        const providers = new DisposableCollection();
+        for (const language of this.matchLanguage(selector)) {
+            providers.push(monaco.languages.registerDocumentRangeSemanticTokensProvider(language, rangeSemanticTokensProvider));
+        }
+        return providers;
+    }
+
+    protected createRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentRangeSemanticTokensProvider {
+        return {
+            getLegend() {
+                return legend;
+            },
+            provideDocumentRangeSemanticTokens: async (model, range, token) => {
+                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
+                    return undefined;
+                }
+                const textDocument = this.m2p.asTextDocumentIdentifier(model);
+                const result = await provider.provideDocumentRangeSemanticTokens({
+                    textDocument,
+                    range: this.m2p.asRange(range)
+                }, token);
+                return result && this.p2m.asSemanticTokens(result);
             }
         }
     }

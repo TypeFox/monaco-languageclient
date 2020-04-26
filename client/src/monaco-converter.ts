@@ -19,6 +19,8 @@ import {
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind
 } from './services';
+import { SemanticTokens } from 'vscode-languageserver-protocol/lib/protocol.sematicTokens.proposed'
+
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
 export type RecursivePartial<T> = {
@@ -1122,6 +1124,13 @@ export class ProtocolToMonacoConverter {
             };
         }
         return undefined;
+    }
+
+    asSemanticTokens(semanticTokens: SemanticTokens): monaco.languages.SemanticTokens {
+        return {
+            resultId: semanticTokens.resultId,
+            data: Uint32Array.from(semanticTokens.data)
+        }
     }
 
 }
