@@ -109,8 +109,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
     public registerProposedFeatures() {
         this.registerFeature(new CallHierarchyFeature(this));
-		this.registerFeature(new SemanticTokensFeature(this));
-	}
+        this.registerFeature(new SemanticTokensFeature(this));
+    }
 
 }
 export namespace MonacoLanguageClient {

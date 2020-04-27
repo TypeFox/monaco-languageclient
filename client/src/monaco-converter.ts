@@ -58,9 +58,9 @@ export namespace ProtocolCompletionItem {
     }
 }
 
-type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange}
+type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange }
 
-function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace) : v is RangeReplace {
+function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeReplace {
     return (v as RangeReplace).insert !== undefined;
 }
 
@@ -83,7 +83,7 @@ export class MonacoToProtocolConverter {
     asRange(range: monaco.IRange): Range;
     asRange(range: monaco.IRange | undefined): Range | undefined;
     asRange(range: monaco.IRange | null): Range | null;
-    asRange(range: monaco.IRange | { insert: monaco.IRange; replace: monaco.IRange}) : Range;
+    asRange(range: monaco.IRange | { insert: monaco.IRange; replace: monaco.IRange }): Range;
     asRange(range: Partial<monaco.IRange>): RecursivePartial<Range>;
     asRange(range: Partial<monaco.IRange> | undefined): RecursivePartial<Range> | undefined;
     asRange(range: Partial<monaco.IRange> | null): RecursivePartial<Range> | null;
@@ -133,7 +133,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asSignatureHelpContext(context: monaco.languages.SignatureHelpContext) : SignatureHelpContext {
+    asSignatureHelpContext(context: monaco.languages.SignatureHelpContext): SignatureHelpContext {
         return {
             triggerKind: this.asSignatureHelpTriggerKind(context.triggerKind),
             triggerCharacter: context.triggerCharacter,
@@ -142,8 +142,8 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureHelp(signatureHelp: monaco.languages.SignatureHelp | undefined) : SignatureHelp | undefined {
-        if(signatureHelp === undefined) {
+    asSignatureHelp(signatureHelp: monaco.languages.SignatureHelp | undefined): SignatureHelp | undefined {
+        if (signatureHelp === undefined) {
             return undefined;
         }
         return {
@@ -153,7 +153,7 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureInformation(signatureInformation: monaco.languages.SignatureInformation) : SignatureInformation {
+    asSignatureInformation(signatureInformation: monaco.languages.SignatureInformation): SignatureInformation {
         return {
             documentation: this.asMarkupContent(signatureInformation.documentation),
             label: signatureInformation.label,
@@ -161,7 +161,7 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asParameterInformation(parameterInformation: monaco.languages.ParameterInformation) : ParameterInformation {
+    asParameterInformation(parameterInformation: monaco.languages.ParameterInformation): ParameterInformation {
         return {
             documentation: this.asMarkupContent(parameterInformation.documentation),
             label: parameterInformation.label
@@ -169,10 +169,10 @@ export class MonacoToProtocolConverter {
     }
 
     asMarkupContent(markupContent: (string | monaco.IMarkdownString | undefined)): string | MarkupContent | undefined {
-        if(markupContent === undefined) {
+        if (markupContent === undefined) {
             return undefined;
         }
-        if(typeof markupContent === "string") {
+        if (typeof markupContent === "string") {
             return markupContent;
         }
         return {
@@ -181,8 +181,8 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureHelpTriggerKind(triggerKind: monaco.languages.SignatureHelpTriggerKind) : SignatureHelpTriggerKind {
-        switch  (triggerKind) {
+    asSignatureHelpTriggerKind(triggerKind: monaco.languages.SignatureHelpTriggerKind): SignatureHelpTriggerKind {
+        switch (triggerKind) {
             case monaco.languages.SignatureHelpTriggerKind.ContentChange:
                 return SignatureHelpTriggerKind.ContentChange;
             case monaco.languages.SignatureHelpTriggerKind.TriggerCharacter:
@@ -559,14 +559,14 @@ export class ProtocolToMonacoConverter {
         }
         return {
             lenses: items.map((codeLens) => this.asCodeLens(codeLens)),
-            dispose: () => {}
+            dispose: () => { }
         };
     }
 
     asCodeActionList(actions: (Command | CodeAction)[]): monaco.languages.CodeActionList {
         return {
             actions: actions.map(action => this.asCodeAction(action)),
-            dispose: () => {}
+            dispose: () => { }
         };
     }
 
@@ -731,22 +731,22 @@ export class ProtocolToMonacoConverter {
     }
 
     asLocationLink(item: undefined | null): undefined;
-	asLocationLink(item: ls.LocationLink): monaco.languages.LocationLink;
-	asLocationLink(item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
-		if (!item) {
-			return undefined;
-		}
-		let result: monaco.languages.LocationLink = {
-			uri: monaco.Uri.parse(item.targetUri),
-			range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
-			originSelectionRange: this.asRange(item.originSelectionRange),
-			targetSelectionRange: this.asRange(item.targetSelectionRange)
-		};
-		if (!result.targetSelectionRange) {
-			throw new Error(`targetSelectionRange must not be undefined or null`);
-		}
-		return result;
-	}
+    asLocationLink(item: ls.LocationLink): monaco.languages.LocationLink;
+    asLocationLink(item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
+        if (!item) {
+            return undefined;
+        }
+        let result: monaco.languages.LocationLink = {
+            uri: monaco.Uri.parse(item.targetUri),
+            range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
+            originSelectionRange: this.asRange(item.originSelectionRange),
+            targetSelectionRange: this.asRange(item.targetSelectionRange)
+        };
+        if (!result.targetSelectionRange) {
+            throw new Error(`targetSelectionRange must not be undefined or null`);
+        }
+        return result;
+    }
 
     asSignatureHelpResult(item: undefined | null): undefined;
     asSignatureHelpResult(item: SignatureHelp): monaco.languages.SignatureHelpResult;
@@ -775,7 +775,7 @@ export class ProtocolToMonacoConverter {
         }
         return {
             value: result,
-            dispose: () => {}
+            dispose: () => { }
         };
     }
 
