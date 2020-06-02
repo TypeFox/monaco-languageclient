@@ -23,7 +23,7 @@ declare module monaco.commands {
     }
 
     export interface ICommandHandler {
-	    (accessor: monaco.instantiation.ServicesAccessor, ...args: any[]): void;
+        (accessor: monaco.instantiation.ServicesAccessor, ...args: any[]): void;
     }
 
     export interface ICommand {

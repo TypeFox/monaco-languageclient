@@ -12,6 +12,8 @@ import { ImplementationFeature } from "vscode-languageclient/lib/implementation"
 import { ColorProviderFeature } from "vscode-languageclient/lib/colorProvider";
 import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/workspaceFolders";
 import { FoldingRangeFeature } from "vscode-languageclient/lib/foldingRange";
+import { CallHierarchyFeature } from "vscode-languageclient/lib/callHierarchy.proposed";
+import { SemanticTokensFeature } from "vscode-languageclient/lib/semanticTokens.proposed";
 import * as p2c from 'vscode-languageclient/lib/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/codeConverter';
 import { IConnectionProvider, IConnection } from './connection';
@@ -103,6 +105,11 @@ export class MonacoLanguageClient extends BaseLanguageClient {
                 feature['asColorPresentations'] = MonacoLanguageClient.bypassConversion;
             }
         }
+    }
+
+    public registerProposedFeatures() {
+        this.registerFeature(new CallHierarchyFeature(this));
+        this.registerFeature(new SemanticTokensFeature(this));
     }
 
 }

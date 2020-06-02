@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
-    Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
+    Services, Event, DiagnosticCollection, Diagnostic, WorkspaceEdit, isDocumentSelector,
     MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
     SignatureHelpTriggerKind
 } from "./services";
@@ -51,6 +51,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         }
         contains = unsupported
         intersects = unsupported
+    }
+    class SemanticTokens implements vscode.SemanticTokens {
+        constructor(public data: Uint32Array, public resultId?: string) { }
     }
 
     class EmptyFileSystem implements vscode.FileSystem {
@@ -300,13 +303,20 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 // */
             }
 
+            function toInternalCode(code: vscode.Diagnostic['code']): Diagnostic['code']  {
+                if (code != null && typeof code === 'object') {
+                    return code.value as Diagnostic['code']
+                }
+                return code as Diagnostic['code'];
+            }
+
             if (isVsCodeUri(arg0)) {
                 if (this.collection) {
                     if (arg1) {
                         this.collection.set(arg0.toString(), arg1.map(diag => {
                             return {
                                 range: diag.range,
-                                code: diag.code,
+                                code: toInternalCode(diag.code),
                                 source: diag.source,
                                 message: diag.message,
                                 tags: diag.tags,
@@ -684,6 +694,40 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 }
             });
         },
+        registerEvaluatableExpressionProvider: unsupported,
+        registerDocumentSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+            if (!isDocumentSelector(selector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerDocumentSemanticTokensProvider) {
+                return Disposable.create(() => { });
+            }
+
+            return languages.registerDocumentSemanticTokensProvider(selector, {
+                provideDocumentSemanticTokens({ textDocument }, token) {
+                    return provider.provideDocumentSemanticTokens(<any>textDocument, token) as any;
+                },
+                provideDocumentSemanticTokensEdits: provider.provideDocumentSemanticTokensEdits && (({ textDocument, previousResultId }, token) => {
+                    return provider.provideDocumentSemanticTokensEdits!(<any>textDocument, <any>previousResultId, token) as any;
+                })
+            }, legend)
+        },
+        registerDocumentRangeSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentRangeSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+            if (!isDocumentSelector(selector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerDocumentRangeSemanticTokensProvider) {
+                return Disposable.create(() => { });
+            }
+
+            return languages.registerDocumentRangeSemanticTokensProvider(selector, {
+                provideDocumentRangeSemanticTokens({ textDocument, range }, token) {
+                    return provider.provideDocumentRangeSemanticTokens(<any>textDocument, <any>range, token) as any;
+                }
+            }, legend)
+        },
         getLanguages: unsupported,
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
@@ -807,6 +851,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeLens,
         DocumentLink,
         CodeActionKind,
+        SemanticTokens,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity
