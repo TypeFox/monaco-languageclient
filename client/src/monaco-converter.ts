@@ -563,7 +563,10 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asCodeActionList(actions: (Command | CodeAction)[]): monaco.languages.CodeActionList {
+    asCodeActionList(actions: (Command | CodeAction)[]): monaco.languages.CodeActionList | undefined {
+		if(!actions) {
+			return undefined;
+		}
         return {
             actions: actions.map(action => this.asCodeAction(action)),
             dispose: () => { }
