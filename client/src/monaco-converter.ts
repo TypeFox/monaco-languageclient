@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as ls from 'vscode-languageserver-protocol';
-import * as Is from 'vscode-languageserver-protocol/lib/utils/is';
+import * as Is from 'vscode-languageserver-protocol/lib/common/utils/is';
 import {
     CodeActionParams, CodeLensParams,
     DocumentFormattingParams, DocumentOnTypeFormattingParams,
@@ -17,9 +17,9 @@ import {
     SymbolInformation, DocumentSymbolParams, CodeActionContext, DiagnosticSeverity,
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
-    DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind
+    DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
+    SemanticTokens
 } from './services';
-import { SemanticTokens } from 'vscode-languageserver-protocol/lib/protocol.sematicTokens.proposed'
 
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 
@@ -998,9 +998,18 @@ export class ProtocolToMonacoConverter {
         : { insertText: string, range: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
         const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
         if (item.textEdit) {
-            const range = this.asRange(item.textEdit.range);
-            const value = item.textEdit.newText;
-            return { isSnippet, insertText: value, range, fromEdit: true, };
+            if (TextEdit.is(item.textEdit)) {
+                const range = this.asRange(item.textEdit.range);
+                const value = item.textEdit.newText;
+                return { isSnippet, insertText: value, range, fromEdit: true, };
+            } else {
+                const range = {
+                    insert: this.asRange(item.textEdit.insert),
+                    replace: this.asRange(item.textEdit.replace)
+                };
+                const value = item.textEdit.newText;
+                return { isSnippet, insertText: value, range, fromEdit: true, };
+            }
         }
         if (item.insertText) {
             return { isSnippet, insertText: item.insertText, fromEdit: false, range: defaultRange };

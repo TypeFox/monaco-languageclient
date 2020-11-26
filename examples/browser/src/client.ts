@@ -67,7 +67,7 @@ monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
         });
     },
 
-    resolveCompletionItem(model, position, item, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
+    resolveCompletionItem(item, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
         return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result, item.range));
     }
 });

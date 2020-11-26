@@ -6,12 +6,12 @@ import * as fs from "fs";
 import { xhr, getErrorStatusDescription } from 'request-light';
 import { URI } from 'vscode-uri';
 import { MessageReader, MessageWriter } from "vscode-jsonrpc";
-import { IConnection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver';
+import { _Connection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver/lib/node/main';
 import {
-    TextDocument, Diagnostic, Command, CompletionList, CompletionItem, Hover,
+    Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
 } from "vscode-languageserver-types";
-import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeRequestParam, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
+import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from "vscode-json-languageservice";
 import * as TextDocumentImpl from "vscode-languageserver-textdocument";
 
@@ -35,7 +35,7 @@ export class JsonServer {
     protected readonly pendingValidationRequests = new Map<string, number>();
 
     constructor(
-        protected readonly connection: IConnection
+        protected readonly connection: _Connection
     ) {
         this.documents.listen(this.connection);
         this.documents.onDidChangeContent(change =>
@@ -108,7 +108,7 @@ export class JsonServer {
         this.connection.listen();
     }
 
-    protected getFoldingRanges(params: FoldingRangeRequestParam): FoldingRange[] {
+    protected getFoldingRanges(params: FoldingRangeParams): FoldingRange[] {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return [];
@@ -225,7 +225,7 @@ export class JsonServer {
         return this.jsonService.doComplete(document, params.position, jsonDocument);
     }
 
-    protected validate(document: TextDocument): void {
+    protected validate(document: TextDocumentImpl.TextDocument): void {
         this.cleanPendingValidation(document);
         this.pendingValidationRequests.set(document.uri, setTimeout(() => {
             this.pendingValidationRequests.delete(document.uri);
@@ -233,7 +233,7 @@ export class JsonServer {
         }));
     }
 
-    protected cleanPendingValidation(document: TextDocument): void {
+    protected cleanPendingValidation(document: TextDocumentImpl.TextDocument): void {
         const request = this.pendingValidationRequests.get(document.uri);
         if (request !== undefined) {
             clearTimeout(request);
@@ -241,7 +241,7 @@ export class JsonServer {
         }
     }
 
-    protected doValidate(document: TextDocument): void {
+    protected doValidate(document: TextDocumentImpl.TextDocument): void {
         if (document.getText().length === 0) {
             this.cleanDiagnostics(document);
             return;
@@ -252,17 +252,17 @@ export class JsonServer {
         );
     }
 
-    protected cleanDiagnostics(document: TextDocument): void {
+    protected cleanDiagnostics(document: TextDocumentImpl.TextDocument): void {
         this.sendDiagnostics(document, []);
     }
 
-    protected sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): void {
+    protected sendDiagnostics(document: TextDocumentImpl.TextDocument, diagnostics: Diagnostic[]): void {
         this.connection.sendDiagnostics({
             uri: document.uri, diagnostics
         });
     }
 
-    protected getJSONDocument(document: TextDocument): JSONDocument {
+    protected getJSONDocument(document: TextDocumentImpl.TextDocument): JSONDocument {
         return this.jsonService.parseJSONDocument(document);
     }
 

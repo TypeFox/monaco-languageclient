@@ -8,19 +8,19 @@ import {
     DocumentSelector, MessageActionItem, MessageType,
     TextDocumentPositionParams, ReferenceParams, CodeActionParams, CodeLensParams, DocumentFormattingParams,
     DocumentRangeFormattingParams, DocumentOnTypeFormattingParams, RenameParams, DocumentLinkParams,
-    WorkspaceClientCapabilities, DidChangeTextDocumentParams, Diagnostic, TextDocument, CompletionItem, CompletionList,
+    WorkspaceClientCapabilities, DidChangeTextDocumentParams, Diagnostic, CompletionItem, CompletionList,
     Hover, SignatureHelp, Definition, Location, DocumentHighlight,
     SymbolInformation, Command, CodeLens, TextEdit, WorkspaceEdit,
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
-    FoldingRange, FoldingRangeRequestParam, DocumentFilter, DocumentSymbol, CodeAction,
-    Declaration, SelectionRangeParams, SelectionRange
+    FoldingRange, FoldingRangeParams, DocumentFilter, DocumentSymbol, CodeAction,
+    Declaration, SelectionRangeParams, SelectionRange, SemanticTokensParams,
+    SemanticTokens, SemanticTokensEdit, SemanticTokensLegend, SemanticTokensRangeParams,
+    SemanticTokensDeltaParams
 } from 'vscode-languageserver-protocol';
-import {
-    SemanticTokens, SemanticTokensEdits, SemanticTokensLegend, SemanticTokensParams, SemanticTokensRangeParams,
-    SemanticTokensEditsParams
-} from 'vscode-languageserver-protocol/lib/protocol.sematicTokens.proposed'
+
+import { TextDocument } from 'vscode-languageserver-textdocument'
 
 import {
     Disposable, CancellationToken, Event, Emitter
@@ -31,7 +31,11 @@ import { URI as Uri } from 'vscode-uri';
 export {
     Disposable, CancellationToken, Event, Emitter
 }
-export * from 'vscode-languageserver-protocol/lib/main';
+export * from 'vscode-languageserver-protocol/lib/common/api';
+
+export {
+    TextDocument
+}
 
 export interface Services {
     languages: Languages;
@@ -187,7 +191,7 @@ export interface DocumentColorProvider {
 }
 
 export interface FoldingRangeProvider {
-    provideFoldingRanges(params: FoldingRangeRequestParam, token: CancellationToken): ProviderResult<FoldingRange[]>;
+    provideFoldingRanges(params: FoldingRangeParams, token: CancellationToken): ProviderResult<FoldingRange[]>;
 }
 
 export interface SelectionRangeProvider {
@@ -196,7 +200,7 @@ export interface SelectionRangeProvider {
 
 export interface DocumentSemanticTokensProvider {
     provideDocumentSemanticTokens(params: SemanticTokensParams, token: CancellationToken): ProviderResult<SemanticTokens>;
-    provideDocumentSemanticTokensEdits?(params: SemanticTokensEditsParams, token: CancellationToken): ProviderResult<SemanticTokens | SemanticTokensEdits>;
+    provideDocumentSemanticTokensEdits?(params: SemanticTokensDeltaParams, token: CancellationToken): ProviderResult<SemanticTokens | SemanticTokensEdit>;
 }
 
 export interface DocumentRangeSemanticTokensProvider {

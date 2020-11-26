@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
-    Services, Event, DiagnosticCollection, Diagnostic, WorkspaceEdit, isDocumentSelector,
+    Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
     MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
     SignatureHelpTriggerKind
 } from "./services";
@@ -16,7 +16,11 @@ import { DiagnosticSeverity } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
     const unsupported = () => { throw new Error('unsupported') };
-    const Uri: typeof vscode.Uri = URI;
+    const Uri: typeof vscode.Uri = class VSCodeUri extends URI {
+        static joinPath(uri: URI, ...pathFragment: string[]): URI {
+            return unsupported();
+        }
+    };
     class CompletionItem implements vscode.CompletionItem {
         constructor(public label: string, public kind?: vscode.CompletionItemKind) { }
     }
@@ -51,6 +55,28 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         }
         contains = unsupported
         intersects = unsupported
+    }
+    class Diagnostic implements vscode.Diagnostic {
+        source?: string;
+        code?: string | number;
+        relatedInformation?: vscode.DiagnosticRelatedInformation[]
+        tags?: vscode.DiagnosticTag[]
+        constructor(readonly range: vscode.Range, readonly message: string, readonly severity: DiagnosticSeverity = DiagnosticSeverity.Error) {}
+    }
+    class CallHierarchyItem implements vscode.CallHierarchyItem {
+        _sessionId?: string;
+        _itemId?: string;
+        constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: vscode.Uri, readonly range: vscode.Range, readonly selectionRange: vscode.Range) {}
+    }
+    class CodeAction implements vscode.CodeAction {
+        edit?: vscode.WorkspaceEdit;
+        diagnostics?: Diagnostic[];
+        command?: vscode.Command;
+        isPreferred?: boolean;
+        disabled?: {
+            readonly reason: string;
+        };
+        constructor(readonly title: string, readonly kind?: CodeActionKind) {}
     }
     class SemanticTokens implements vscode.SemanticTokens {
         constructor(public data: Uint32Array, public resultId?: string) { }
@@ -821,7 +847,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeWindowState: unsupported,
         createQuickPick: unsupported,
         createInputBox: unsupported,
-        registerUriHandler: unsupported
+        registerUriHandler: unsupported,
+        registerWebviewViewProvider: unsupported,
+        registerCustomEditorProvider: unsupported,
+        registerTerminalLinkProvider: unsupported,
+        get activeColorTheme() {
+            return unsupported();
+        },
+        onDidChangeActiveColorTheme: unsupported
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
@@ -851,6 +884,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeLens,
         DocumentLink,
         CodeActionKind,
+        CodeAction,
+        Diagnostic,
+        CallHierarchyItem,
         SemanticTokens,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
