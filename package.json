@@ -5,10 +5,10 @@
     "@types/node": "^13.1.7",
     "@types/normalize-url": "^1.9.1",
     "@types/ws": "0.0.39",
-    "@types/vscode": "1.43.0",
+    "@types/vscode": "1.50.0",
     "css-loader": "^0.28.11",
     "lerna": "^3.16.4",
-    "monaco-editor-core": "^0.20.0",
+    "monaco-editor-core": "^0.21.2",
     "rimraf": "^2.6.2",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.3",
@@ -16,6 +16,9 @@
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^3.11.0",
     "webpack-merge": "^4.1.2"
+  },
+  "resolutions": {
+    "vscode-languageserver-types": "3.16.0-next.4"
   },
   "scripts": {
     "prepare": "lerna run prepare",
