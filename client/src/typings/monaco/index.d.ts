@@ -30,6 +30,16 @@ declare module monaco.commands {
         id: string,
         handler: ICommandHandler;
     }
+
+    export type ICommandsMap = Map<string, ICommand>;
+
+    export interface ICommandRegistry {
+        registerCommand(id: string, command: ICommandHandler): IDisposable;
+        registerCommand(command: ICommand): IDisposable;
+        registerCommandAlias(oldId: string, newId: string): IDisposable;
+        getCommand(id: string): ICommand | undefined;
+        getCommands(): ICommandsMap;
+    }
 }
 
 declare module monaco.instantiation {
@@ -48,7 +58,6 @@ declare module monaco.instantiation {
 declare module monaco.services {
     export class StandaloneCommandService implements monaco.commands.ICommandService {
         constructor(instantiationService: monaco.instantiation.IInstantiationService);
-        addCommand(command: monaco.commands.ICommand): IDisposable;
         onWillExecuteCommand: monaco.IEvent<monaco.commands.ICommandEvent>;
         executeCommand<T>(commandId: string, ...args: any[]): Promise<T>;
         executeCommand(commandId: string, ...args: any[]): Promise<any>;

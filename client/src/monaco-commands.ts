@@ -6,12 +6,9 @@ import { Commands, Disposable } from './services';
 
 export class MonacoCommands implements Commands {
 
-    public constructor(protected readonly editor: monaco.editor.IStandaloneCodeEditor) { }
+    public constructor(protected readonly commandRegistry: monaco.commands.ICommandRegistry) { }
 
     public registerCommand(command: string, callback: (...args: any[]) => any, thisArg?: any): Disposable {
-        return this.editor._commandService.addCommand({
-            id: command,
-            handler: (_accessor: any, ...args: any[]) => callback(...args)
-        });
+        return this.commandRegistry.registerCommand(command, (accessor: monaco.instantiation.ServicesAccessor, ...args: any[]) => callback.call(thisArg, ...args))
     }
 }

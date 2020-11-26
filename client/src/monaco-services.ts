@@ -20,18 +20,18 @@ export namespace MonacoServices {
         rootUri?: string
     }
     export type Provider = () => MonacoServices;
-    export function create(editor: monaco.editor.IStandaloneCodeEditor, options: Options = {}): MonacoServices {
+    export function create(commandRegistry: monaco.commands.ICommandRegistry, options: Options = {}): MonacoServices {
         const m2p = new MonacoToProtocolConverter();
         const p2m = new ProtocolToMonacoConverter();
         return {
-            commands: new MonacoCommands(editor),
+            commands: new MonacoCommands(commandRegistry),
             languages: new MonacoLanguages(p2m, m2p),
             workspace: new MonacoWorkspace(p2m, m2p, options.rootUri),
             window: new ConsoleWindow()
         }
     }
-    export function install(editor: monaco.editor.IStandaloneCodeEditor, options: Options = {}): MonacoServices {
-        const services = create(editor, options);
+    export function install(commandRegistry: monaco.commands.ICommandRegistry, options: Options = {}): MonacoServices {
+        const services = create(commandRegistry, options);
         Services.install(services);
         return services;
     }
