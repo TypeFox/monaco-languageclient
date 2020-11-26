@@ -24,7 +24,7 @@ const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-const editor = monaco.editor.create(document.getElementById("container")!, {
+monaco.editor.create(document.getElementById("container")!, {
     model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
     glyphMargin: true,
     lightbulb: {
@@ -33,7 +33,7 @@ const editor = monaco.editor.create(document.getElementById("container")!, {
 });
 
 // install Monaco language client services
-MonacoServices.install(editor);
+MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
 
 // create the web socket
 const url = createUrl('/sampleServer')
