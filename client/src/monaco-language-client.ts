@@ -4,22 +4,23 @@
  * ------------------------------------------------------------------------------------------ */
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions,
-    CompletionParams, WillSaveTextDocumentParams, StaticFeature, DynamicFeature
-} from "vscode-languageclient/lib/client";
-import { TypeDefinitionFeature } from "vscode-languageclient/lib/typeDefinition";
-import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/configuration";
-import { ImplementationFeature } from "vscode-languageclient/lib/implementation";
-import { ColorProviderFeature } from "vscode-languageclient/lib/colorProvider";
-import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/workspaceFolders";
-import { FoldingRangeFeature } from "vscode-languageclient/lib/foldingRange";
-import { CallHierarchyFeature } from "vscode-languageclient/lib/callHierarchy.proposed";
-import { SemanticTokensFeature } from "vscode-languageclient/lib/semanticTokens.proposed";
-import * as p2c from 'vscode-languageclient/lib/protocolConverter';
-import * as c2p from 'vscode-languageclient/lib/codeConverter';
+    StaticFeature, DynamicFeature
+} from "vscode-languageclient/lib/common/client";
+import { TypeDefinitionFeature } from "vscode-languageclient/lib/common/typeDefinition";
+import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/common/configuration";
+import { ImplementationFeature } from "vscode-languageclient/lib/common/implementation";
+import { ColorProviderFeature } from "vscode-languageclient/lib/common/colorProvider";
+import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/common/workspaceFolders";
+import { FoldingRangeFeature } from "vscode-languageclient/lib/common/foldingRange";
+import { CallHierarchyFeature } from "vscode-languageclient/lib/common/callHierarchy";
+import { SemanticTokensFeature } from "vscode-languageclient/lib/common/semanticTokens";
+import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
+import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
 import { IConnectionProvider, IConnection } from './connection';
-import { DeclarationFeature } from "vscode-languageclient/lib/declaration";
+import { DeclarationFeature } from "vscode-languageclient/lib/common/declaration";
+import { CompletionParams, WillSaveTextDocumentParams } from './services'
 
-export * from 'vscode-languageclient/lib/client';
+export * from 'vscode-languageclient/lib/common/client';
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
@@ -92,9 +93,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new ImplementationFeature(this));
         this.registerFeature(new ColorProviderFeature(this));
         this.registerFeature(new WorkspaceFoldersFeature(this));
-        const foldingRangeFeature = new FoldingRangeFeature(this);
-        foldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
-        this.registerFeature(foldingRangeFeature);
+        FoldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
+        this.registerFeature(new FoldingRangeFeature(this));
         this.registerFeature(new DeclarationFeature(this));
 
         const features = this['_features'] as ((StaticFeature | DynamicFeature<any>)[]);

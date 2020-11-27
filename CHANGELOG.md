@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2020-11-26
+
+- Upgraded to Monaco 0.21.2
+
+### Breaking changes
+
+`MonacoServices` should now be installed using the command registry instead of the editor
+
+before:
+```typescript
+const editor = monaco.editor.create(...);
+MonacoServices.install(editor);
+```
+
+after:
+```typescript
+MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
+```
+
 ## [0.13.0] - 2020-04-06
 
 - Upgraded to vscode-uri 2.x [741a3df](https://github.com/TypeFox/monaco-languageclient/commit/741a3dfb865eff55c3dcc4a51f74759921d3f2a5)
@@ -33,7 +52,7 @@ Switch to es6 from es5. For clients who cannot migrate to es6 please use babel t
     {
         test: /\\.js$/,
         // include only es6 dependencies to transpile them to es5 classes
-        include: /monaco-languageclient|vscode-ws-jsonrpc|vscode-jsonrpc|vscode-languageserver-protocol|vscode-languageserver-types|vscode-languageclient/,
+        include: /monaco-languageclient|monaco-jsonrpc|vscode-jsonrpc|vscode-languageserver-protocol|vscode-languageserver-types|vscode-languageclient/,
         use: {
             loader: 'babel-loader',
             options: {

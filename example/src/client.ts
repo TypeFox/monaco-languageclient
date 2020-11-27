@@ -2,7 +2,8 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
+import { listen } from '@codingame/monaco-jsonrpc';
+import { MessageConnection } from 'vscode-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
     MonacoServices, createConnection
@@ -23,7 +24,7 @@ const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-const editor = monaco.editor.create(document.getElementById("container")!, {
+monaco.editor.create(document.getElementById("container")!, {
     model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
     glyphMargin: true,
     lightbulb: {
@@ -32,7 +33,7 @@ const editor = monaco.editor.create(document.getElementById("container")!, {
 });
 
 // install Monaco language client services
-MonacoServices.install(editor);
+MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
 
 // create the web socket
 const url = createUrl('/sampleServer')

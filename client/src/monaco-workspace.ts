@@ -3,7 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './monaco-converter';
-import { Workspace, WorkspaceEdit, TextDocumentDidChangeEvent, TextDocument, Event, Emitter } from './services';
+import { Workspace, WorkspaceEdit, TextDocumentDidChangeEvent, Event, Emitter } from './services';
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import IModel = monaco.editor.IModel;
 import IIdentifiedSingleEditOperation = monaco.editor.IIdentifiedSingleEditOperation;
 

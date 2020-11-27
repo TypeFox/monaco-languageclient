@@ -5,11 +5,11 @@
 'use strict';
 
 import {
-    Message, MessageType as RPCMessageType,
+    Message,
     RequestType, RequestType0, RequestHandler, RequestHandler0, GenericRequestHandler,
     NotificationType, NotificationType0,
     NotificationHandler, NotificationHandler0, GenericNotificationHandler,
-    Trace, Tracer, CancellationToken, MessageConnection
+    Trace, Tracer, CancellationToken, MessageConnection, MessageSignature, Disposable
 } from 'vscode-jsonrpc';
 
 import {
@@ -24,10 +24,10 @@ import {
     DidCloseTextDocumentNotification, DidCloseTextDocumentParams,
     DidSaveTextDocumentNotification, DidSaveTextDocumentParams,
     DidChangeWatchedFilesNotification, DidChangeWatchedFilesParams,
-    PublishDiagnosticsNotification, PublishDiagnosticsParams,
-} from 'vscode-languageserver-protocol/lib/main';
+    PublishDiagnosticsNotification, PublishDiagnosticsParams
+} from 'vscode-languageserver-protocol';
 
-import * as Is from 'vscode-languageserver-protocol/lib/utils/is';
+import * as Is from 'vscode-languageserver-protocol/lib/common/utils/is';
 
 import { OutputChannel } from "./services";
 
@@ -35,27 +35,27 @@ export interface IConnection {
 
     listen(): void;
 
-    sendRequest<R, E, RO>(type: RequestType0<R, E, RO>, token?: CancellationToken): Thenable<R>;
-    sendRequest<P, R, E, RO>(type: RequestType<P, R, E, RO>, params: P, token?: CancellationToken): Thenable<R>;
+    sendRequest<R, E>(type: RequestType0<R, E>, token?: CancellationToken): Thenable<R>;
+    sendRequest<P, R, E>(type: RequestType<P, R, E>, params: P, token?: CancellationToken): Thenable<R>;
     sendRequest<R>(method: string, token?: CancellationToken): Thenable<R>;
     sendRequest<R>(method: string, param: any, token?: CancellationToken): Thenable<R>;
-    sendRequest<R>(type: string | RPCMessageType, ...params: any[]): Thenable<R>;
+    sendRequest<R>(type: string | MessageSignature, ...params: any[]): Thenable<R>;
 
-    onRequest<R, E, RO>(type: RequestType0<R, E, RO>, handler: RequestHandler0<R, E>): void;
-    onRequest<P, R, E, RO>(type: RequestType<P, R, E, RO>, handler: RequestHandler<P, R, E>): void;
+    onRequest<R, E>(type: RequestType0<R, E>, handler: RequestHandler0<R, E>): void;
+    onRequest<P, R, E>(type: RequestType<P, R, E>, handler: RequestHandler<P, R, E>): void;
     onRequest<R, E>(method: string, handler: GenericRequestHandler<R, E>): void;
-    onRequest<R, E>(method: string | RPCMessageType, handler: GenericRequestHandler<R, E>): void;
+    onRequest<R, E>(method: string | MessageSignature, handler: GenericRequestHandler<R, E>): void;
 
-    sendNotification<RO>(type: NotificationType0<RO>): void;
-    sendNotification<P, RO>(type: NotificationType<P, RO>, params?: P): void;
+    sendNotification<RO>(type: NotificationType0): void;
+    sendNotification<P>(type: NotificationType<P>, params?: P): void;
     sendNotification(method: string): void;
     sendNotification(method: string, params: any): void;
-    sendNotification(method: string | RPCMessageType, params?: any): void;
+    sendNotification(method: string | MessageSignature, params?: any): void;
 
-    onNotification<RO>(type: NotificationType0<RO>, handler: NotificationHandler0): void;
-    onNotification<P, RO>(type: NotificationType<P, RO>, handler: NotificationHandler<P>): void;
+    onNotification<RO>(type: NotificationType0, handler: NotificationHandler0): void;
+    onNotification<P>(type: NotificationType<P>, handler: NotificationHandler<P>): void;
     onNotification(method: string, handler: GenericNotificationHandler): void;
-    onNotification(method: string | RPCMessageType, handler: GenericNotificationHandler): void;
+    onNotification(method: string | MessageSignature, handler: GenericNotificationHandler): void;
 
     trace(value: Trace, tracer: Tracer, sendNotification?: boolean): void;
 
@@ -77,6 +77,7 @@ export interface IConnection {
     onDiagnostics(handler: NotificationHandler<PublishDiagnosticsParams>): void;
 
     dispose(): void;
+    end(): void
 }
 
 export interface ConnectionErrorHandler {
@@ -95,11 +96,11 @@ export function createConnection(connection: MessageConnection, errorHandler: Co
 
         listen: (): void => connection.listen(),
 
-        sendRequest: <R>(type: string | RPCMessageType, ...params: any[]): Thenable<R> => connection.sendRequest(Is.string(type) ? type : type.method, ...params),
-        onRequest: <R, E>(type: string | RPCMessageType, handler: GenericRequestHandler<R, E>): void => connection.onRequest(Is.string(type) ? type : type.method, handler),
+        sendRequest: <R>(type: string | MessageSignature, ...params: any[]): Thenable<R> => connection.sendRequest(Is.string(type) ? type : type.method, ...params),
+        onRequest: <R, E>(type: string | MessageSignature, handler: GenericRequestHandler<R, E>): Disposable => connection.onRequest(Is.string(type) ? type : type.method, handler),
 
-        sendNotification: (type: string | RPCMessageType, params?: any): void => connection.sendNotification(Is.string(type) ? type : type.method, params),
-        onNotification: (type: string | RPCMessageType, handler: GenericNotificationHandler): void => connection.onNotification(Is.string(type) ? type : type.method, handler),
+        sendNotification: (type: string | MessageSignature, params?: any): void => connection.sendNotification(Is.string(type) ? type : type.method, params),
+        onNotification: (type: string | MessageSignature, handler: GenericNotificationHandler): Disposable => connection.onNotification(Is.string(type) ? type : type.method, handler),
 
         trace: (value: Trace, tracer: Tracer, sendNotification: boolean = false): void => connection.trace(value, tracer, sendNotification),
 
@@ -121,6 +122,7 @@ export function createConnection(connection: MessageConnection, errorHandler: Co
 
         onDiagnostics: (handler: NotificationHandler<PublishDiagnosticsParams>) => connection.onNotification(PublishDiagnosticsNotification.type, handler),
 
-        dispose: () => connection.dispose()
+        dispose: () => connection.dispose(),
+        end: () => connection.end()
     };
 }
