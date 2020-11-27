@@ -8,7 +8,7 @@ jobs:
   - stage: deploy
     if: NOT type IN (cron, pull_request)
     os: linux
-    node_js: '8'
+    node_js: '12'
     before_script: skip
     script: skip
     install: skip
