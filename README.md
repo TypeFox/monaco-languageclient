@@ -49,7 +49,7 @@ There are two different examples that demonstrate how the `monaco-languageclient
 The example node package is located under the `monaco-languageclient/example` directory. All tasks below should be run from this directory.
 
 From CLI:
-- Run `yarn` and `yarn run build` to install dependencies and build the example node package.
+- Run `yarn` and `yarn prepare` to install dependencies and build the example node package.
 - Run `yarn run start` to start the express server with the language server running in the same process.
 - Run `yarn run start:ext` to start the express server with language server running in the external process.
 
