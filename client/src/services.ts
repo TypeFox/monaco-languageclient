@@ -56,7 +56,7 @@ export namespace Services {
     }
     export function install(services: Services): Disposable {
         if (global[symbol]) {
-            console.error(new Error('Language Client services has been overridden'));
+            console.warn('Language Client services have been overridden');
         }
         global[symbol] = services;
 
