@@ -22,7 +22,7 @@
   },
   "scripts": {
     "prepare": "lerna run prepare",
-    "start": "lerna run start node-example",
+    "start": "lerna run start",
     "publish:latest": "lerna publish minor",
     "publish:patch": "lerna publish patch",
     "publish:next": "lerna publish --canary --preid next --dist-tag next --yes",
