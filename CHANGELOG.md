@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2021-02-03
+
+- Upgrade to Monaco 0.22.3
+
+### Breaking changes
+
+- `MonacoServices` now takes the `monaco` object instead of the `CommandRegistry`
+
+before:
+```typescript
+MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
+```
+
+after:
+```typescript
+import * as monaco from 'monaco-editor-core'
+
+MonacoServices.install(monaco);
+```
+
 ## [0.14.0] - 2020-11-26
 
 - Upgraded to Monaco 0.21.2
