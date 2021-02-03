@@ -33,7 +33,7 @@ monaco.editor.create(document.getElementById("container")!, {
 });
 
 // install Monaco language client services
-MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
+MonacoServices.install();
 
 // create the web socket
 const url = createUrl('/sampleServer')
