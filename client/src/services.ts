@@ -8,7 +8,7 @@ import {
     DocumentSelector, MessageActionItem, MessageType,
     TextDocumentPositionParams, ReferenceParams, CodeActionParams, CodeLensParams, DocumentFormattingParams,
     DocumentRangeFormattingParams, DocumentOnTypeFormattingParams, RenameParams, DocumentLinkParams,
-    WorkspaceClientCapabilities, DidChangeTextDocumentParams, Diagnostic, CompletionItem, CompletionList,
+    WorkspaceClientCapabilities, Diagnostic, CompletionItem, CompletionList,
     Hover, SignatureHelp, Definition, Location, DocumentHighlight,
     SymbolInformation, Command, CodeLens, TextEdit, WorkspaceEdit,
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
@@ -20,7 +20,7 @@ import {
     SemanticTokensDeltaParams
 } from 'vscode-languageserver-protocol';
 
-import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import {
     Disposable, CancellationToken, Event, Emitter
@@ -283,7 +283,7 @@ export interface Workspace {
     readonly textDocuments: TextDocument[];
     readonly onDidOpenTextDocument: Event<TextDocument>;
     readonly onDidCloseTextDocument: Event<TextDocument>;
-    readonly onDidChangeTextDocument: Event<DidChangeTextDocumentParams>;
+    readonly onDidChangeTextDocument: Event<TextDocumentDidChangeEvent>;
     readonly configurations?: Configurations;
     readonly onWillSaveTextDocument?: Event<TextDocumentWillSaveEvent>;
     readonly onDidSaveTextDocument?: Event<TextDocument>;

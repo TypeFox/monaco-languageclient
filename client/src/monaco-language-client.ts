@@ -112,6 +112,9 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new SemanticTokensFeature(this));
     }
 
+    protected getLocale(): string {
+        return navigator.language || 'en-US'
+    }
 }
 export namespace MonacoLanguageClient {
     export interface Options {

@@ -9,7 +9,8 @@ import { Disposable } from "./disposable";
 import {
     Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
     MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
-    SignatureHelpTriggerKind
+    SignatureHelpTriggerKind,
+    MessageActionItem
 } from "./services";
 import * as ServicesModule from "./services"
 import { DiagnosticSeverity } from "vscode-languageserver-protocol";
@@ -83,6 +84,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
     }
 
     class EmptyFileSystem implements vscode.FileSystem {
+        isWritableFileSystem(scheme: string): boolean | undefined {
+            return false;
+        }
         stat(uri: vscode.Uri): Thenable<vscode.FileStat> {
             throw new Error("Method not implemented.");
         }
@@ -758,7 +762,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
         setLanguageConfiguration: unsupported,
-        onDidChangeDiagnostics: unsupported
+        onDidChangeDiagnostics: unsupported,
+        registerLinkedEditingRangeProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
         if (typeof arg0 !== "string") {
@@ -768,7 +773,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         if (arg1 !== undefined && !Array.isArray(arg1)) {
             throw new Error('unexpected actions: ' + JSON.stringify(arg1));
         }
-        const actions: vscode.MessageItem[] = arg1 || [];
+        const actions: MessageActionItem[] = arg1 || [];
         const { window } = servicesProvider();
         if (!window) {
             return Promise.resolve(undefined);
@@ -854,7 +859,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         get activeColorTheme() {
             return unsupported();
         },
-        onDidChangeActiveColorTheme: unsupported
+        onDidChangeActiveColorTheme: unsupported,
+        registerFileDecorationProvider: unsupported
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
@@ -874,11 +880,35 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             this.callOnDispose();
         }
     }
+
+    const env: typeof vscode.env = {
+        appName: 'Monaco',
+        appRoot: '',
+        language: navigator.language || 'en-US',
+        get uriScheme () {
+            return unsupported();
+        },
+        get clipboard () {
+            return unsupported();
+        },
+        get machineId () {
+            return unsupported();
+        },
+        get sessionId () {
+            return unsupported();
+        },
+        remoteName: undefined,
+        shell: '',
+        uiKind: 2, // vscode.UIKind.Web,
+        asExternalUri: unsupported,
+        openExternal: unsupported
+    }
     return {
         workspace,
         languages,
         window,
         commands,
+        env,
         Uri,
         CompletionItem,
         CodeLens,
