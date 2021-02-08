@@ -47,6 +47,8 @@ export class MonacoModelDiagnostics implements Disposable {
     readonly uri: monaco.Uri;
     protected _markers: monaco.editor.IMarkerData[] = [];
     protected _diagnostics: Diagnostic[] = [];
+    protected readonly toDispose = new DisposableCollection();
+
     constructor(
         protected readonly _monaco: typeof monaco,
         uri: string,
@@ -56,7 +58,7 @@ export class MonacoModelDiagnostics implements Disposable {
     ) {
         this.uri = this._monaco.Uri.parse(uri);
         this.diagnostics = diagnostics;
-        this._monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
+        this.toDispose.push(this._monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model)));
     }
 
     set diagnostics(diagnostics: Diagnostic[]) {
@@ -76,6 +78,7 @@ export class MonacoModelDiagnostics implements Disposable {
     dispose(): void {
         this._markers = [];
         this.updateModelMarkers();
+        this.toDispose.dispose();
     }
 
     updateModelMarkers(): void {
