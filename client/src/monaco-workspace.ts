@@ -2,12 +2,10 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import * as monaco from 'monaco-editor-core';
+import type * as monaco from 'monaco-editor-core';
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './monaco-converter';
 import { Workspace, WorkspaceEdit, TextDocumentDidChangeEvent, Event, Emitter } from './services';
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import IModel = monaco.editor.IModel;
-import IIdentifiedSingleEditOperation = monaco.editor.IIdentifiedSingleEditOperation;
 
 export class MonacoWorkspace implements Workspace {
 
@@ -17,21 +15,22 @@ export class MonacoWorkspace implements Workspace {
     protected readonly onDidChangeTextDocumentEmitter = new Emitter<TextDocumentDidChangeEvent>();
 
     constructor(
+        protected readonly _monaco: typeof monaco,
         protected readonly p2m: ProtocolToMonacoConverter,
         protected readonly m2p: MonacoToProtocolConverter,
         protected _rootUri: string | null = null) {
-        for (const model of monaco.editor.getModels()) {
+        for (const model of this._monaco.editor.getModels()) {
             this.addModel(model);
         }
-        monaco.editor.onDidCreateModel(model => this.addModel(model));
-        monaco.editor.onWillDisposeModel(model => this.removeModel(model));
+        this._monaco.editor.onDidCreateModel(model => this.addModel(model));
+        this._monaco.editor.onWillDisposeModel(model => this.removeModel(model));
     }
 
     get rootUri() {
         return this._rootUri;
     }
 
-    protected removeModel(model: IModel): void {
+    protected removeModel(model: monaco.editor.IModel): void {
         const uri = model.uri.toString();
         const document = this.documents.get(uri);
         if (document) {
@@ -40,7 +39,7 @@ export class MonacoWorkspace implements Workspace {
         }
     }
 
-    protected addModel(model: IModel): void {
+    protected addModel(model: monaco.editor.IModel): void {
         const uri = model.uri.toString();
         const document = this.setModel(uri, model);
         this.onDidOpenTextDocumentEmitter.fire(document)
@@ -49,7 +48,7 @@ export class MonacoWorkspace implements Workspace {
         );
     }
 
-    protected onDidChangeContent(uri: string, model: IModel, event: monaco.editor.IModelContentChangedEvent) {
+    protected onDidChangeContent(uri: string, model: monaco.editor.IModel, event: monaco.editor.IModelContentChangedEvent) {
         const textDocument = this.setModel(uri, model);
         const contentChanges = [];
         for (const change of event.changes) {
@@ -64,7 +63,7 @@ export class MonacoWorkspace implements Workspace {
         });
     }
 
-    protected setModel(uri: string, model: IModel): TextDocument {
+    protected setModel(uri: string, model: monaco.editor.IModel): TextDocument {
         const document = TextDocument.create(uri, model.getModeId(), model.getVersionId(), model.getValue());
         this.documents.set(uri, document);
         return document;
@@ -93,7 +92,7 @@ export class MonacoWorkspace implements Workspace {
         const models: { [uri: string]: monaco.editor.IModel } = edit.edits ? edit.edits.reduce(
             (acc: { [uri: string]: monaco.editor.IModel }, currentEdit) => {
                 const textEdit = currentEdit as monaco.languages.WorkspaceTextEdit;
-                acc[textEdit.resource.toString()] = monaco.editor.getModel(textEdit.resource) as monaco.editor.ITextModel;
+                acc[textEdit.resource.toString()] = this._monaco.editor.getModel(textEdit.resource) as monaco.editor.ITextModel;
                 return acc;
             }, {}
         ) : {};
@@ -104,15 +103,15 @@ export class MonacoWorkspace implements Workspace {
         }
 
         // Group edits by resource so we can batch them when applying
-        const editsByResource: { [uri: string]: IIdentifiedSingleEditOperation[] } = edit.edits ? edit.edits.reduce(
-            (acc: { [uri: string]: IIdentifiedSingleEditOperation[] }, currentEdit) => {
+        const editsByResource: { [uri: string]: monaco.editor.IIdentifiedSingleEditOperation[] } = edit.edits ? edit.edits.reduce(
+            (acc: { [uri: string]: monaco.editor.IIdentifiedSingleEditOperation[] }, currentEdit) => {
                 const textEdit = currentEdit as monaco.languages.WorkspaceTextEdit;
                 const uri = textEdit.resource.toString();
                 if (!(uri in acc)) {
                     acc[uri] = [];
                 }
                 acc[uri].push({
-                    range: monaco.Range.lift(textEdit.edit.range as monaco.IRange),
+                    range: this._monaco.Range.lift(textEdit.edit.range as monaco.IRange),
                     text: textEdit.edit.text as string,
                 });
                 return acc;

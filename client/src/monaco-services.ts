@@ -2,6 +2,7 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+import type * as monaco from 'monaco-editor-core';
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from "./monaco-converter";
 import { MonacoCommands } from './monaco-commands';
 import { MonacoLanguages } from "./monaco-languages";
@@ -20,18 +21,18 @@ export namespace MonacoServices {
         rootUri?: string
     }
     export type Provider = () => MonacoServices;
-    export function create(options: Options = {}): MonacoServices {
-        const m2p = new MonacoToProtocolConverter();
-        const p2m = new ProtocolToMonacoConverter();
+    export function create(_monaco: typeof monaco, options: Options = {}): MonacoServices {
+        const m2p = new MonacoToProtocolConverter(_monaco);
+        const p2m = new ProtocolToMonacoConverter(_monaco);
         return {
-            commands: new MonacoCommands(),
-            languages: new MonacoLanguages(p2m, m2p),
-            workspace: new MonacoWorkspace(p2m, m2p, options.rootUri),
+            commands: new MonacoCommands(_monaco),
+            languages: new MonacoLanguages(_monaco, p2m, m2p),
+            workspace: new MonacoWorkspace(_monaco, p2m, m2p, options.rootUri),
             window: new ConsoleWindow()
         }
     }
-    export function install(options: Options = {}): MonacoServices {
-        const services = create(options);
+    export function install(_monaco: typeof monaco, options: Options = {}): MonacoServices {
+        const services = create(_monaco, options);
         Services.install(services);
         return services;
     }

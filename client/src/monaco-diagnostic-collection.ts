@@ -2,12 +2,10 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import * as monaco from 'monaco-editor-core';
+import type * as monaco from 'monaco-editor-core';
 import { DiagnosticCollection, Diagnostic } from './services';
 import { DisposableCollection, Disposable } from './disposable';
 import { ProtocolToMonacoConverter } from './monaco-converter';
-import IModel = monaco.editor.IModel;
-import IMarkerData = monaco.editor.IMarkerData;
 
 export class MonacoDiagnosticCollection implements DiagnosticCollection {
 
@@ -15,6 +13,7 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
     protected readonly toDispose = new DisposableCollection();
 
     constructor(
+        protected readonly _monaco: typeof monaco,
         protected readonly name: string,
         protected readonly p2m: ProtocolToMonacoConverter) {
     }
@@ -33,7 +32,7 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
         if (existing) {
             existing.diagnostics = diagnostics;
         } else {
-            const modelDiagnostics = new MonacoModelDiagnostics(uri, diagnostics, this.name, this.p2m);
+            const modelDiagnostics = new MonacoModelDiagnostics(this._monaco, uri, diagnostics, this.name, this.p2m);
             this.diagnostics.set(uri, modelDiagnostics);
             this.toDispose.push(Disposable.create(() => {
                 this.diagnostics.delete(uri);
@@ -46,17 +45,18 @@ export class MonacoDiagnosticCollection implements DiagnosticCollection {
 
 export class MonacoModelDiagnostics implements Disposable {
     readonly uri: monaco.Uri;
-    protected _markers: IMarkerData[] = [];
+    protected _markers: monaco.editor.IMarkerData[] = [];
     protected _diagnostics: Diagnostic[] = [];
     constructor(
+        protected readonly _monaco: typeof monaco,
         uri: string,
         diagnostics: Diagnostic[],
         readonly owner: string,
         protected readonly p2m: ProtocolToMonacoConverter
     ) {
-        this.uri = monaco.Uri.parse(uri);
+        this.uri = this._monaco.Uri.parse(uri);
         this.diagnostics = diagnostics;
-        monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
+        this._monaco.editor.onDidCreateModel(model => this.doUpdateModelMarkers(model));
     }
 
     set diagnostics(diagnostics: Diagnostic[]) {
@@ -69,7 +69,7 @@ export class MonacoModelDiagnostics implements Disposable {
         return this._diagnostics;
     }
 
-    get markers(): ReadonlyArray<IMarkerData> {
+    get markers(): ReadonlyArray<monaco.editor.IMarkerData> {
         return this._markers;
     }
 
@@ -79,13 +79,13 @@ export class MonacoModelDiagnostics implements Disposable {
     }
 
     updateModelMarkers(): void {
-        const model = monaco.editor.getModel(this.uri);
+        const model = this._monaco.editor.getModel(this.uri);
         this.doUpdateModelMarkers(model ? model : undefined);
     }
 
-    protected doUpdateModelMarkers(model: IModel | undefined): void {
+    protected doUpdateModelMarkers(model: monaco.editor.IModel | undefined): void {
         if (model && this.uri.toString() === model.uri.toString()) {
-            monaco.editor.setModelMarkers(model, this.owner, this._markers);
+            this._monaco.editor.setModelMarkers(model, this.owner, this._markers);
         }
     }
 }
