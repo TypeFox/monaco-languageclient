@@ -50,8 +50,8 @@ function resolveSchema(url: string): Promise<string> {
     return promise;
 }
 
-const m2p = new MonacoToProtocolConverter();
-const p2m = new ProtocolToMonacoConverter();
+const m2p = new MonacoToProtocolConverter(monaco);
+const p2m = new ProtocolToMonacoConverter(monaco);
 const jsonService = getLanguageService({
     schemaRequestService: resolveSchema
 });
