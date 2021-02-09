@@ -2,6 +2,7 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+import * as monaco from 'monaco-editor-core'
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
 
@@ -49,8 +50,8 @@ function resolveSchema(url: string): Promise<string> {
     return promise;
 }
 
-const m2p = new MonacoToProtocolConverter();
-const p2m = new ProtocolToMonacoConverter();
+const m2p = new MonacoToProtocolConverter(monaco);
+const p2m = new ProtocolToMonacoConverter(monaco);
 const jsonService = getLanguageService({
     schemaRequestService: resolveSchema
 });

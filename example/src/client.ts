@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { listen } from '@codingame/monaco-jsonrpc';
+import * as monaco from 'monaco-editor-core'
 import { MessageConnection } from 'vscode-jsonrpc';
 import {
     MonacoLanguageClient, CloseAction, ErrorAction,
@@ -33,7 +34,7 @@ monaco.editor.create(document.getElementById("container")!, {
 });
 
 // install Monaco language client services
-MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
+MonacoServices.install(monaco);
 
 // create the web socket
 const url = createUrl('/sampleServer')
