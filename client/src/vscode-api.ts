@@ -876,6 +876,21 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
     };
     class CodeDisposable implements vscode.Disposable {
         constructor(public callOnDispose: Function) { }
+
+        static from(...inDisposables: { dispose(): any; }[]): Disposable {
+            let disposables: ReadonlyArray<{ dispose(): any; }> | undefined = inDisposables;
+            return new CodeDisposable(function () {
+                if (disposables) {
+                    for (const disposable of disposables) {
+                        if (disposable && typeof disposable.dispose === 'function') {
+                            disposable.dispose();
+                        }
+                    }
+                    disposables = undefined;
+                }
+            });
+        }
+
         dispose() {
             this.callOnDispose();
         }
