@@ -903,7 +903,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         asExternalUri: unsupported,
         openExternal: unsupported
     }
-    return {
+
+    const partialApi: Partial<typeof vscode> = {
         workspace,
         languages,
         window,
@@ -921,5 +922,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity
-    } as any;
+    };
+
+    return partialApi as any;
 }
