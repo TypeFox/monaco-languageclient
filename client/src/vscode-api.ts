@@ -12,7 +12,7 @@ import {
     SignatureHelpTriggerKind,
     MessageActionItem
 } from "./services";
-import * as ServicesModule from "./services"
+import * as ServicesModule from "./services";
 import { DiagnosticSeverity } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
@@ -936,7 +936,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         SemanticTokens,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
-        DiagnosticSeverity: ServicesModule.DiagnosticSeverity
+        DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
+        EventEmitter: ServicesModule.Emitter
     };
 
     return partialApi as any;
