@@ -12,7 +12,7 @@ import {
     SignatureHelpTriggerKind,
     MessageActionItem
 } from "./services";
-import * as ServicesModule from "./services"
+import * as ServicesModule from "./services";
 import { DiagnosticSeverity } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
@@ -876,6 +876,21 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
     };
     class CodeDisposable implements vscode.Disposable {
         constructor(public callOnDispose: Function) { }
+
+        static from(...inDisposables: { dispose(): any; }[]): Disposable {
+            let disposables: ReadonlyArray<{ dispose(): any; }> | undefined = inDisposables;
+            return new CodeDisposable(function () {
+                if (disposables) {
+                    for (const disposable of disposables) {
+                        if (disposable && typeof disposable.dispose === 'function') {
+                            disposable.dispose();
+                        }
+                    }
+                    disposables = undefined;
+                }
+            });
+        }
+
         dispose() {
             this.callOnDispose();
         }
@@ -903,7 +918,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         asExternalUri: unsupported,
         openExternal: unsupported
     }
-    return {
+
+    const partialApi: Partial<typeof vscode> = {
         workspace,
         languages,
         window,
@@ -920,6 +936,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         SemanticTokens,
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
-        DiagnosticSeverity: ServicesModule.DiagnosticSeverity
-    } as any;
+        DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
+        EventEmitter: ServicesModule.Emitter
+    };
+
+    return partialApi as any;
 }
