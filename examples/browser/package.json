@@ -1,10 +1,10 @@
 {
   "private": true,
   "name": "browser-example",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "dependencies": {
     "file-loader": "^4.3.0",
-    "monaco-languageclient": "^0.13.0",
+    "monaco-languageclient": "^0.14.0",
     "vscode-json-languageservice": "^4.0.2",
     "vscode-languageserver-types": "^3.16.0"
   },
