@@ -793,6 +793,9 @@ export class ProtocolToMonacoConverter {
         } else {
             result.parameters = [];
         }
+        if (item.activeParameter) {
+            result.activeParameter = item.activeParameter
+        }
         return result;
     }
 
