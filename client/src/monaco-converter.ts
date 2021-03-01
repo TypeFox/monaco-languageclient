@@ -19,7 +19,7 @@ import {
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
-    SemanticTokens
+    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation
 } from './services';
 
 export type RecursivePartial<T> = {
@@ -50,9 +50,19 @@ export interface ProtocolCompletionItem extends monaco.languages.CompletionItem 
     documentationFormat?: string;
     originalItemKind?: CompletionItemKind;
     deprecated?: boolean;
+    insertTextMode?: InsertTextMode;
 }
 export namespace ProtocolCompletionItem {
     export function is(item: any): item is ProtocolCompletionItem {
+        return !!item && 'data' in item;
+    }
+}
+
+export interface ProtocolCodeAction extends monaco.languages.CodeAction {
+    data?: any;
+}
+export namespace ProtocolCodeAction {
+    export function is(item: any): item is ProtocolCodeAction {
         return !!item && 'data' in item;
     }
 }
@@ -158,7 +168,8 @@ export class MonacoToProtocolConverter {
         return {
             documentation: this.asMarkupContent(signatureInformation.documentation),
             label: signatureInformation.label,
-            parameters: signatureInformation.parameters.map(paramInfo => this.asParameterInformation(paramInfo))
+            parameters: signatureInformation.parameters.map(paramInfo => this.asParameterInformation(paramInfo)),
+            activeParameter: signatureInformation.activeParameter
         };
     }
 
@@ -306,6 +317,7 @@ export class MonacoToProtocolConverter {
         } else {
             target.insertText = text;
         }
+        target.insertTextMode = source.insertTextMode
     }
 
     asTextEdit(edit: monaco.editor.ISingleEditOperation): TextEdit {
@@ -454,6 +466,36 @@ export class MonacoToProtocolConverter {
         if (ProtocolDocumentLink.is(item) && item.data) {
             result.data = item.data;
         }
+        if (item.tooltip) { result.tooltip = item.tooltip }
+        return result;
+    }
+
+    asCodeAction(item: monaco.languages.CodeAction): CodeAction {
+        const result: CodeAction = { title: item.title }
+        const protocolCodeAction = ProtocolCodeAction.is(item) ? item : undefined;
+        if (Is.number(item.kind)) {
+            result.kind = item.kind;
+        }
+        if (item.diagnostics) {
+            result.diagnostics = this.asDiagnostics(item.diagnostics);
+        }
+        if (item.edit) {
+            throw new Error (`VS Code code actions can only be converted to a protocol code action without an edit.`);
+        }
+        if (item.command) {
+            result.command = this.asCommand(item.command);
+        }
+        if (item.isPreferred !== undefined) {
+            result.isPreferred = item.isPreferred;
+        }
+        if (item.disabled) {
+            result.disabled = { reason: item.disabled };
+        }
+        if (protocolCodeAction) {
+            if (protocolCodeAction.data !== undefined) {
+                result.data = protocolCodeAction.data;
+            }
+        }
         return result;
     }
 }
@@ -461,12 +503,21 @@ export class MonacoToProtocolConverter {
 export class ProtocolToMonacoConverter {
     public constructor(protected readonly _monaco: typeof monaco) { }
 
-    asResourceEdits(resource: monaco.Uri, edits: TextEdit[], modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
+    asResourceEdits(resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
         return edits.map(edit => ({
             resource: resource,
             edit: this.asTextEdit(edit),
-            modelVersionId
+            modelVersionId,
+            metadata: AnnotatedTextEdit.is(edit) ? asMetadata(edit.annotationId) : undefined
         }))
+    }
+
+    asWorkspaceEditMetadata(changeAnnotation: ChangeAnnotation): monaco.languages.WorkspaceEditMetadata {
+        return {
+            needsConfirmation: changeAnnotation.needsConfirmation === true,
+            label: changeAnnotation.label,
+            description: changeAnnotation.description
+        }
     }
 
     asWorkspaceEdit(item: WorkspaceEdit): monaco.languages.WorkspaceEdit;
@@ -476,29 +527,46 @@ export class ProtocolToMonacoConverter {
         if (!item) {
             return undefined;
         }
+        const sharedMetadata: Map<string, monaco.languages.WorkspaceEditMetadata> = new Map();
+        if (item.changeAnnotations !== undefined) {
+            for (const key of Object.keys(item.changeAnnotations)) {
+                const metaData = this.asWorkspaceEditMetadata(item.changeAnnotations[key]);
+                sharedMetadata.set(key, metaData);
+            }
+        }
+        const asMetadata = (annotation: ls.ChangeAnnotationIdentifier | undefined): monaco.languages.WorkspaceEditMetadata | undefined => {
+            if (annotation === undefined) {
+                return undefined;
+            } else {
+                return sharedMetadata.get(annotation);
+            }
+        };
         const edits: (monaco.languages.WorkspaceTextEdit | monaco.languages.WorkspaceFileEdit)[] = [];
         if (item.documentChanges) {
             item.documentChanges.forEach(change => {
                 if (ls.CreateFile.is(change)) {
                     edits.push(<monaco.languages.WorkspaceFileEdit>{
                         newUri: this._monaco.Uri.parse(change.uri),
-                        options: change.options
+                        options: change.options,
+                        metadata: asMetadata(change.annotationId)
                     });
                 } else if (ls.RenameFile.is(change)) {
                     edits.push(<monaco.languages.WorkspaceFileEdit>{
                         oldUri: this._monaco.Uri.parse(change.oldUri),
                         newUri: this._monaco.Uri.parse(change.newUri),
-                        options: change.options
+                        options: change.options,
+                        metadata: asMetadata(change.annotationId)
                     });
                 } else if (ls.DeleteFile.is(change)) {
                     edits.push(<monaco.languages.WorkspaceFileEdit>{
                         oldUri: this._monaco.Uri.parse(change.uri),
-                        options: change.options
+                        options: change.options,
+                        metadata: asMetadata(change.annotationId)
                     });
                 } else if (ls.TextDocumentEdit.is(change)) {
                     const resource = this._monaco.Uri.parse(change.textDocument.uri);
                     const version = typeof change.textDocument.version === 'number' ? change.textDocument.version : undefined;
-                    edits.push(...this.asResourceEdits(resource, change.edits, version));
+                    edits.push(...this.asResourceEdits(resource, change.edits, asMetadata, version));
                 } else {
                     console.error(`Unknown workspace edit change received:\n${JSON.stringify(change, undefined, 4)}`);
                 }
@@ -506,7 +574,7 @@ export class ProtocolToMonacoConverter {
         } else if (item.changes) {
             for (const key of Object.keys(item.changes)) {
                 const resource = this._monaco.Uri.parse(key);
-                edits.push(...this.asResourceEdits(resource, item.changes[key]));
+                edits.push(...this.asResourceEdits(resource, item.changes[key], asMetadata));
             }
         }
         return {
@@ -572,14 +640,17 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asCodeAction(item: Command | CodeAction): monaco.languages.CodeAction {
+    asCodeAction(item: Command | CodeAction): ProtocolCodeAction {
         if (CodeAction.is(item)) {
             return {
                 title: item.title,
                 command: this.asCommand(item.command),
                 edit: this.asWorkspaceEdit(item.edit),
                 diagnostics: this.asDiagnostics(item.diagnostics),
-                kind: item.kind
+                kind: item.kind,
+                disabled: item.disabled ? item.disabled.reason : undefined,
+                isPreferred: item.isPreferred,
+                data: item.data
             };
         }
         return {
@@ -612,7 +683,7 @@ export class ProtocolToMonacoConverter {
             name: value.name,
             detail: value.detail || "",
             kind: this.asSymbolKind(value.kind),
-            tags: [],
+            tags: value.tags || [],
             range: this.asRange(value.range),
             selectionRange: this.asRange(value.selectionRange),
             children
@@ -643,7 +714,7 @@ export class ProtocolToMonacoConverter {
             detail: '',
             containerName: item.containerName,
             kind: this.asSymbolKind(item.kind),
-            tags: [],
+            tags: item.tags || [],
             range: location.range,
             selectionRange: location.range
         };
@@ -793,6 +864,7 @@ export class ProtocolToMonacoConverter {
         } else {
             result.parameters = [];
         }
+        if (item.activeParameter) { result.activeParameter = item.activeParameter }
         return result;
     }
 
@@ -958,6 +1030,7 @@ export class ProtocolToMonacoConverter {
         if (item.deprecated === true || item.deprecated === false) {
             result.deprecated = item.deprecated;
         }
+        result.insertTextMode = item.insertTextMode
         return result;
     }
 
@@ -1028,7 +1101,8 @@ export class ProtocolToMonacoConverter {
         return {
             range: this.asRange(documentLink.range),
             url: documentLink.target,
-            data: documentLink.data
+            data: documentLink.data,
+            tooltip: documentLink.tooltip
         };
     }
 
