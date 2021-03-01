@@ -96,6 +96,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         FoldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
         this.registerFeature(new FoldingRangeFeature(this));
         this.registerFeature(new DeclarationFeature(this));
+        this.registerFeature(new SemanticTokensFeature(this));
+        this.registerFeature(new CallHierarchyFeature(this));
 
         const features = this['_features'] as ((StaticFeature | DynamicFeature<any>)[]);
         for (const feature of features) {
@@ -108,8 +110,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     }
 
     public registerProposedFeatures() {
-        this.registerFeature(new CallHierarchyFeature(this));
-        this.registerFeature(new SemanticTokensFeature(this));
     }
 
     protected getLocale(): string {
