@@ -12,7 +12,6 @@
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
     "vscode-json-languageservice": "^4.0.2",
-    "vscode-jsonrpc": "6.0.0",
     "vscode-languageserver": "7.0.0",
     "vscode-uri": "^3.0.2",
     "ws": "^5.0.0"
