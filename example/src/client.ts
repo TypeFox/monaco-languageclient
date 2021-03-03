@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 import { listen } from '@codingame/monaco-jsonrpc';
 import * as monaco from 'monaco-editor-core'
-import { MessageConnection } from 'vscode-jsonrpc';
 import {
-    MonacoLanguageClient, CloseAction, ErrorAction,
+    MonacoLanguageClient, MessageConnection, CloseAction, ErrorAction,
     MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
