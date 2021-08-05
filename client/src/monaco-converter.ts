@@ -219,13 +219,11 @@ export class MonacoToProtocolConverter {
         const result: CompletionItem = { label: item.label as string };
         const protocolItem = ProtocolCompletionItem.is(item) ? item : undefined;
         if (item.detail) { result.detail = item.detail; }
-        // We only send items back we created. So this can't be something else than
-        // a string right now.
         if (item.documentation) {
-            if (!protocolItem || !protocolItem.documentationFormat) {
-                result.documentation = item.documentation as string;
+            if (typeof item.documentation === 'string') {
+                result.documentation = item.documentation;
             } else {
-                result.documentation = this.asDocumentation(protocolItem.documentationFormat, item.documentation);
+                result.documentation = this.asDocumentation(protocolItem?.documentationFormat ?? MarkupKind.Markdown, item.documentation);
             }
         }
         if (item.filterText) { result.filterText = item.filterText; }
