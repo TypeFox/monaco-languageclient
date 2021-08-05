@@ -24,6 +24,10 @@ export class MonacoWorkspace implements Workspace {
         }
         this._monaco.editor.onDidCreateModel(model => this.addModel(model));
         this._monaco.editor.onWillDisposeModel(model => this.removeModel(model));
+        this._monaco.editor.onDidChangeModelLanguage((event) => {
+            this.removeModel(event.model);
+            this.addModel(event.model);
+        });
     }
 
     get rootUri() {
