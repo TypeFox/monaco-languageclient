@@ -244,13 +244,11 @@ export class MonacoLanguages implements Languages {
         return {
             provideCodeActions: async (model, range, context, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    // FIXME: get rid of `!` when https://github.com/microsoft/monaco-editor/issues/1560 is resolved
-                    return undefined!;
+                    return undefined;
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 const result = await provider.provideCodeActions(params, token);
-                // FIXME: get rid of `|| undefined!` when https://github.com/microsoft/monaco-editor/issues/1560 is resolved
-                return result && this.p2m.asCodeActionList(result) || undefined!;
+                return result && this.p2m.asCodeActionList(result) || undefined;
             }
         }
     }
