@@ -11,7 +11,7 @@ import {
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, Command
 } from "./services";
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
@@ -247,8 +247,25 @@ export class MonacoLanguages implements Languages {
                     return undefined;
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
-                const result = await provider.provideCodeActions(params, token);
-                return result && this.p2m.asCodeActionList(result) || undefined;
+                let result = await provider.provideCodeActions(params, token);
+
+                // FIXME: get rid of it and implement resolveCodeAction when https://github.com/microsoft/monaco-editor/issues/2663 is resolved
+                if (result) {
+                    if (provider.resolveCodeAction) {
+                        result = await Promise.all(result.map(async item => {
+                            if (!Command.is(item) && !item.edit) {
+                                const resolved = await provider.resolveCodeAction!(item, token)
+                                if (resolved) {
+                                    return resolved
+                                }
+                            }
+                            return item
+                        }))
+                    }
+
+                    return this.p2m.asCodeActionList(result)
+                }
+                return undefined
             }
         }
     }
