@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import * as monaco from 'monaco-editor-core'
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
-import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
+import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from '@codingame/monaco-languageclient/lib/monaco-converter';
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'

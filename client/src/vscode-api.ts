@@ -434,7 +434,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return languages.registerCodeActionsProvider(selector, {
                 provideCodeActions({ textDocument, range, context }, token) {
                     return provider.provideCodeActions(<any>textDocument, <any>range, <any>context, token) as any;
-                }
+                },
+                resolveCodeAction: provider.resolveCodeAction ? (codeAction, token) => {
+                    return provider.resolveCodeAction!(<any>codeAction, <any>token) as any
+                } : undefined
             });
         },
         registerCodeLensProvider(selector, provider) {

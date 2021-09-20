@@ -133,8 +133,9 @@ export interface WorkspaceSymbolProvider {
     provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): ProviderResult<SymbolInformation[]>;
 }
 
-export interface CodeActionProvider {
+export interface CodeActionProvider<T extends CodeAction = CodeAction> {
     provideCodeActions(params: CodeActionParams, token: CancellationToken): ProviderResult<(Command | CodeAction)[]>;
+    resolveCodeAction?(codeAction: T, token: CancellationToken): ProviderResult<T>;
 }
 
 export interface CodeLensProvider {
