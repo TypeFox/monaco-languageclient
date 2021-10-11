@@ -30,6 +30,17 @@
   dependencies:
     vscode-jsonrpc "^6.0.0"
 
+"@codingame/monaco-languageclient@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-languageclient/-/monaco-languageclient-0.14.0.tgz#d5cf712e5ee58159ec443f821503dbf8287badb8"
+  integrity sha512-4KBN/GmfXqALSORrCC6O1gKPpRHvA1pi2Psma/VniG1vPpAsUHQunfL1mGOw3OWd9W1v1yRZzt+wnHB1P14UuA==
+  dependencies:
+    glob-to-regexp "^0.4.1"
+    vscode-jsonrpc "6.0.0"
+    vscode-languageclient "7.0.0"
+    vscode-languageserver-textdocument "^1.0.1"
+    vscode-uri "^3.0.2"
+
 "@evocateur/libnpmaccess@^3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@evocateur/libnpmaccess/-/libnpmaccess-3.1.2.tgz#ecf7f6ce6b004e9f942b098d92200be4a4b1c845"
@@ -4776,10 +4787,10 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-monaco-editor-core@^0.22.3:
-  version "0.22.3"
-  resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.22.3.tgz#decb2d53d4c87f1d838c4a78e27570f9aca2ecbd"
-  integrity sha512-QUA8fbVz769QBR5Xp8vKJngJM35PRvMuqDjVSsM5IJfWwwVEsQAKu/8SUD3jcEHfnE4YgQfeLktapBwJvWntgw==
+monaco-editor-core@^0.29.0:
+  version "0.29.1"
+  resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.29.1.tgz#187bd48b4c0eef7dd4c60e012ad5df4823cfdc74"
+  integrity sha512-A2+iNWf2Jhy/yAJ8HaDIszEhAlS1xjLvQfbk41yAyGwC4wDwbcTymUud1g0I9nV31S1x7QlXNC0BABc2uZN1Qg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"

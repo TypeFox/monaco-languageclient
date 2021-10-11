@@ -639,25 +639,25 @@ export class ProtocolToMonacoConverter {
     }
 
     asCodeAction(item: Command | CodeAction): ProtocolCodeAction {
-        if (CodeAction.is(item)) {
+        if (Command.is(item)) {
             return {
-                title: item.title,
-                command: this.asCommand(item.command),
-                edit: this.asWorkspaceEdit(item.edit),
-                diagnostics: this.asDiagnostics(item.diagnostics),
-                kind: item.kind,
-                disabled: item.disabled ? item.disabled.reason : undefined,
-                isPreferred: item.isPreferred,
-                data: item.data
+                command: {
+                    id: item.command,
+                    title: item.title,
+                    arguments: item.arguments
+                },
+                title: item.title
             };
         }
         return {
-            command: {
-                id: item.command,
-                title: item.title,
-                arguments: item.arguments
-            },
-            title: item.title
+            title: item.title,
+            command: this.asCommand(item.command),
+            edit: this.asWorkspaceEdit(item.edit),
+            diagnostics: this.asDiagnostics(item.diagnostics),
+            kind: item.kind,
+            disabled: item.disabled ? item.disabled.reason : undefined,
+            isPreferred: item.isPreferred,
+            data: item.data
         };
     }
 

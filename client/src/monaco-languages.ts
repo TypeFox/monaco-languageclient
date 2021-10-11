@@ -11,7 +11,7 @@ import {
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, Command
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider
 } from "./services";
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
@@ -248,25 +248,17 @@ export class MonacoLanguages implements Languages {
                 }
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 let result = await provider.provideCodeActions(params, token);
-
-                // FIXME: get rid of it and implement resolveCodeAction when https://github.com/microsoft/monaco-editor/issues/2663 is resolved
+                return result && this.p2m.asCodeActionList(result);
+            },
+            resolveCodeAction: provider.resolveCodeAction ? async (codeAction, token) => {
+                const params = this.m2p.asCodeAction(codeAction);
+                const result = await provider.resolveCodeAction!(params, token);
                 if (result) {
-                    if (provider.resolveCodeAction) {
-                        result = await Promise.all(result.map(async item => {
-                            if (!Command.is(item) && !item.edit) {
-                                const resolved = await provider.resolveCodeAction!(item, token)
-                                if (resolved) {
-                                    return resolved
-                                }
-                            }
-                            return item
-                        }))
-                    }
-
-                    return this.p2m.asCodeActionList(result)
+                    const resolvedCodeAction = this.p2m.asCodeAction(result);
+                    Object.assign(codeAction, resolvedCodeAction);
                 }
-                return undefined
-            }
+                return codeAction;
+            } : undefined
         }
     }
 
@@ -300,7 +292,7 @@ export class MonacoLanguages implements Languages {
                     Object.assign(codeLens, resolvedCodeLens);
                 }
                 return codeLens;
-            } : ((_, codeLens) => codeLens)
+            } : undefined
         }
     }
 
