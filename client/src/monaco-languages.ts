@@ -292,7 +292,7 @@ export class MonacoLanguages implements Languages {
                     Object.assign(codeLens, resolvedCodeLens);
                 }
                 return codeLens;
-            } : ((_, codeLens) => codeLens)
+            } : undefined
         }
     }
 
