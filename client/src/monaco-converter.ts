@@ -27,7 +27,7 @@ export type RecursivePartial<T> = {
 };
 
 export interface ProtocolDocumentLink extends monaco.languages.ILink {
-    data?: any;
+    data?: unknown;
 }
 export namespace ProtocolDocumentLink {
     export function is(item: any): item is ProtocolDocumentLink {
@@ -36,7 +36,7 @@ export namespace ProtocolDocumentLink {
 }
 
 export interface ProtocolCodeLens extends monaco.languages.CodeLens {
-    data?: any;
+    data?: unknown;
 }
 export namespace ProtocolCodeLens {
     export function is(item: any): item is ProtocolCodeLens {
@@ -45,7 +45,7 @@ export namespace ProtocolCodeLens {
 }
 
 export interface ProtocolCompletionItem extends monaco.languages.CompletionItem {
-    data?: any;
+    data?: unknown;
     fromEdit?: boolean;
     documentationFormat?: string;
     originalItemKind?: CompletionItemKind;
@@ -59,7 +59,7 @@ export namespace ProtocolCompletionItem {
 }
 
 export interface ProtocolCodeAction extends monaco.languages.CodeAction {
-    data?: any;
+    data?: unknown;
 }
 export namespace ProtocolCodeAction {
     export function is(item: any): item is ProtocolCodeAction {
