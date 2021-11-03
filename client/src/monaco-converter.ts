@@ -19,7 +19,7 @@ import {
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
-    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation
+    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, CodeDescription
 } from './services';
 
 export type RecursivePartial<T> = {
@@ -54,6 +54,15 @@ export interface ProtocolCompletionItem extends monaco.languages.CompletionItem 
 }
 export namespace ProtocolCompletionItem {
     export function is(item: any): item is ProtocolCompletionItem {
+        return !!item && 'data' in item;
+    }
+}
+export interface ProtocolIMarkerData extends monaco.editor.IMarkerData {
+    data?: unknown;
+    codeDescription?: CodeDescription;
+}
+export namespace ProtocolIMarkerData {
+    export function is(item: any): item is ProtocolIMarkerData {
         return !!item && 'data' in item;
     }
 }
@@ -236,7 +245,7 @@ export class MonacoToProtocolConverter {
         if (item.command) { result.command = this.asCommand(item.command); }
         if (item.commitCharacters) { result.commitCharacters = item.commitCharacters.slice(); }
         if (item.command) { result.command = this.asCommand(item.command); }
-        // TODO if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
+        if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
         if (protocolItem) {
             if (protocolItem.data !== undefined) {
                 result.data = protocolItem.data;
@@ -245,6 +254,7 @@ export class MonacoToProtocolConverter {
                 result.deprecated = protocolItem.deprecated;
             }
         }
+        if (item.tags) { result.tags = item.tags?.slice(); }
         return result;
     }
 
@@ -373,7 +383,12 @@ export class MonacoToProtocolConverter {
     asDiagnostic(marker: monaco.editor.IMarkerData): Diagnostic {
         const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
         const severity = this.asDiagnosticSeverity(marker.severity);
-        return Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
+        const diag = Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
+        if (ProtocolIMarkerData.is(marker)) {
+            diag.data = marker.data
+            diag.codeDescription = marker.codeDescription;
+        }
+        return diag
     }
 
     asDiagnostics(markers: monaco.editor.IMarkerData[]): Diagnostic[] {
@@ -935,16 +950,16 @@ export class ProtocolToMonacoConverter {
     }
 
     asDiagnostics(diagnostics: undefined): undefined;
-    asDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[];
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined;
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
+    asDiagnostics(diagnostics: Diagnostic[]): ProtocolIMarkerData[];
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined;
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined {
         if (!diagnostics) {
             return undefined;
         }
         return diagnostics.map(diagnostic => this.asDiagnostic(diagnostic));
     }
 
-    asDiagnostic(diagnostic: Diagnostic): monaco.editor.IMarkerData {
+    asDiagnostic(diagnostic: Diagnostic): ProtocolIMarkerData {
         return {
             code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code,
             severity: this.asSeverity(diagnostic.severity),
@@ -955,7 +970,9 @@ export class ProtocolToMonacoConverter {
             endLineNumber: diagnostic.range.end.line + 1,
             endColumn: diagnostic.range.end.character + 1,
             relatedInformation: this.asRelatedInformations(diagnostic.relatedInformation),
-            tags: diagnostic.tags
+            codeDescription: diagnostic.codeDescription,
+            tags: diagnostic.tags,
+            data: diagnostic.data
         }
     }
 
@@ -1029,7 +1046,8 @@ export class ProtocolToMonacoConverter {
         if (item.deprecated === true || item.deprecated === false) {
             result.deprecated = item.deprecated;
         }
-        result.insertTextMode = item.insertTextMode
+        if (item.insertTextMode) { result.insertTextMode = item.insertTextMode; }
+        if (item.tags) { result.tags = item.tags; }
         return result;
     }
 
