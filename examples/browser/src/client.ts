@@ -36,7 +36,7 @@ function getModel(): monaco.editor.IModel {
 }
 
 function createDocument(model: monaco.editor.IReadOnlyModel) {
-    return TextDocument.create(MODEL_URI, model.getModeId(), model.getVersionId(), model.getValue());
+    return TextDocument.create(MODEL_URI, model.getLanguageId(), model.getVersionId(), model.getValue());
 }
 
 function resolveSchema(url: string): Promise<string> {

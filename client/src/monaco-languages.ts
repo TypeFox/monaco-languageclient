@@ -33,7 +33,7 @@ export namespace MonacoModelIdentifier {
     export function fromModel(model: monaco.editor.IReadOnlyModel): MonacoModelIdentifier {
         return {
             uri: model.uri,
-            languageId: model.getModeId()
+            languageId: model.getLanguageId()
         }
     }
 }
