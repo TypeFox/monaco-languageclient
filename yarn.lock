@@ -4792,6 +4792,11 @@ monaco-editor-core@^0.29.0:
   resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.29.1.tgz#187bd48b4c0eef7dd4c60e012ad5df4823cfdc74"
   integrity sha512-A2+iNWf2Jhy/yAJ8HaDIszEhAlS1xjLvQfbk41yAyGwC4wDwbcTymUud1g0I9nV31S1x7QlXNC0BABc2uZN1Qg==
 
+monaco-editor-core@^0.30.1:
+  version "0.30.1"
+  resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.30.1.tgz#f42f6245e6fb75eb922ed421933eedeb27ca7f9b"
+  integrity sha512-WNxfchYafMZXVfysqg/ESW4MtOpYLPaIKrzudNlgwYvfYID+O/nwSZI5X+KxW84roVzHsNgFGyOOesfHFZwYUA==
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
