@@ -68,7 +68,7 @@ export class MonacoWorkspace implements Workspace {
     }
 
     protected setModel(uri: string, model: monaco.editor.IModel): TextDocument {
-        const document = TextDocument.create(uri, model.getModeId(), model.getVersionId(), model.getValue());
+        const document = TextDocument.create(uri, model.getLanguageId(), model.getVersionId(), model.getValue());
         this.documents.set(uri, document);
         return document;
     }
