@@ -4,8 +4,8 @@
   "version": "0.13.0",
   "dependencies": {
     "file-loader": "^4.3.0",
-    "@codingame/monaco-languageclient": "^0.14.0",
-    "vscode-json-languageservice": "^4.0.2",
+    "@codingame/monaco-languageclient": "^0.17.0",
+    "vscode-json-languageservice": "^4.1.9",
     "vscode-languageserver-types": "^3.16.0"
   },
   "scripts": {
