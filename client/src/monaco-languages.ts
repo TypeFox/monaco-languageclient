@@ -610,6 +610,9 @@ export class MonacoLanguages implements Languages {
         } else {
             languages.add(this.matchLanguageByFilter(selector));
         }
+        if (languages.has('*')) {
+            return new Set(['*'])
+        }
         return languages;
     }
 
