@@ -100,6 +100,12 @@ export enum VsCodeDiagnosticSeverity {
     Hint = 3
 }
 
+export enum ProgressLocation {
+    SourceControl = 1,
+    Window = 10,
+    Notification = 15
+}
+
 export interface SignatureHelpContext {
     readonly triggerKind: SignatureHelpTriggerKind;
     readonly triggerCharacter?: string;
@@ -200,6 +206,7 @@ export interface SelectionRangeProvider {
 }
 
 export interface DocumentSemanticTokensProvider {
+    onDidChange?: Event<void>;
     provideDocumentSemanticTokens(params: SemanticTokensParams, token: CancellationToken): ProviderResult<SemanticTokens>;
     provideDocumentSemanticTokensEdits?(params: SemanticTokensDeltaParams, token: CancellationToken): ProviderResult<SemanticTokens | SemanticTokensEdit>;
 }

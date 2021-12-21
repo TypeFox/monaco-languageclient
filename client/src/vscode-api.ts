@@ -13,7 +13,7 @@ import {
     MessageActionItem
 } from "./services";
 import * as ServicesModule from "./services";
-import { DiagnosticSeverity } from "vscode-languageserver-protocol";
+import { CancellationTokenSource, DiagnosticSeverity } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
     const unsupported = () => { throw new Error('unsupported') };
@@ -738,6 +738,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }
 
             return languages.registerDocumentSemanticTokensProvider(selector, {
+                onDidChange: provider.onDidChangeSemanticTokens,
                 provideDocumentSemanticTokens({ textDocument }, token) {
                     return provider.provideDocumentSemanticTokens(<any>textDocument, token) as any;
                 },
@@ -811,7 +812,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             if (window && window.withProgress) {
                 return window.withProgress(options, task);
             }
-            return task({ report: () => { } }, new vscode.CancellationTokenSource().token);
+            return task({ report: () => { } }, new CancellationTokenSource().token);
         },
         showTextDocument: unsupported,
         createTextEditorDecorationType: unsupported,
@@ -940,7 +941,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         Disposable: CodeDisposable,
         SignatureHelpTriggerKind: SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
-        EventEmitter: ServicesModule.Emitter
+        EventEmitter: ServicesModule.Emitter,
+        CancellationTokenSource,
+        ProgressLocation: ServicesModule.ProgressLocation
     };
 
     return partialApi as any;

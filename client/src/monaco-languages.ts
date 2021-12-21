@@ -538,6 +538,7 @@ export class MonacoLanguages implements Languages {
             getLegend() {
                 return legend;
             },
+            onDidChange: provider.onDidChange,
             provideDocumentSemanticTokens: async (model, lastResultId, token) => {
                 if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
                     return undefined;
@@ -608,6 +609,9 @@ export class MonacoLanguages implements Languages {
             }
         } else {
             languages.add(this.matchLanguageByFilter(selector));
+        }
+        if (languages.has('*')) {
+            return new Set(['*'])
         }
         return languages;
     }
