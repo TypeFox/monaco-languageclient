@@ -100,6 +100,12 @@ export enum VsCodeDiagnosticSeverity {
     Hint = 3
 }
 
+export enum ProgressLocation {
+    SourceControl = 1,
+    Window = 10,
+    Notification = 15
+}
+
 export interface SignatureHelpContext {
     readonly triggerKind: SignatureHelpTriggerKind;
     readonly triggerCharacter?: string;
