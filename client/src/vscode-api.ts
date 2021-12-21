@@ -738,6 +738,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }
 
             return languages.registerDocumentSemanticTokensProvider(selector, {
+                onDidChange: provider.onDidChangeSemanticTokens,
                 provideDocumentSemanticTokens({ textDocument }, token) {
                     return provider.provideDocumentSemanticTokens(<any>textDocument, token) as any;
                 },
