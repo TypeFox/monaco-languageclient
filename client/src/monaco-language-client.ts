@@ -13,6 +13,7 @@ import { ColorProviderFeature } from "vscode-languageclient/lib/common/colorProv
 import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/common/workspaceFolders";
 import { FoldingRangeFeature } from "vscode-languageclient/lib/common/foldingRange";
 import { CallHierarchyFeature } from "vscode-languageclient/lib/common/callHierarchy";
+import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
 import { SemanticTokensFeature } from "vscode-languageclient/lib/common/semanticTokens";
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
@@ -98,6 +99,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new DeclarationFeature(this));
         this.registerFeature(new SemanticTokensFeature(this));
         this.registerFeature(new CallHierarchyFeature(this));
+        this.registerFeature(new ProgressFeature(this));
 
         const features = this['_features'] as ((StaticFeature | DynamicFeature<any>)[]);
         for (const feature of features) {
