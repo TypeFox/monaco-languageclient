@@ -16,7 +16,7 @@ import {
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './monaco-converter';
-import { DisposableCollection, Disposable } from './disposable';
+import { Disposable } from './disposable';
 
 export interface MonacoModelIdentifier {
     uri: monaco.Uri;
@@ -64,11 +64,7 @@ export class MonacoLanguages implements Languages {
 
     registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
         const completionProvider = this.createCompletionProvider(selector, provider, ...triggerCharacters);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCompletionItemProvider(language, completionProvider))
-        };
-        return providers;
+        return this._monaco.languages.registerCompletionItemProvider(selector as any, completionProvider);
     }
 
     protected createCompletionProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): monaco.languages.CompletionItemProvider {
@@ -98,11 +94,7 @@ export class MonacoLanguages implements Languages {
 
     registerHoverProvider(selector: DocumentSelector, provider: HoverProvider): Disposable {
         const hoverProvider = this.createHoverProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerHoverProvider(language, hoverProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerHoverProvider(selector as any, hoverProvider);
     }
 
     protected createHoverProvider(selector: DocumentSelector, provider: HoverProvider): monaco.languages.HoverProvider {
@@ -120,11 +112,7 @@ export class MonacoLanguages implements Languages {
 
     registerSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): Disposable {
         const signatureHelpProvider = this.createSignatureHelpProvider(selector, provider, ...triggerCharacters);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerSignatureHelpProvider(language, signatureHelpProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerSignatureHelpProvider(selector as any, signatureHelpProvider);
     }
 
     protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
@@ -145,11 +133,7 @@ export class MonacoLanguages implements Languages {
 
     registerDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): Disposable {
         const definitionProvider = this.createDefinitionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDefinitionProvider(language, definitionProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDefinitionProvider(selector as any, definitionProvider);
     }
 
     protected createDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): monaco.languages.DefinitionProvider {
@@ -167,11 +151,7 @@ export class MonacoLanguages implements Languages {
 
     registerReferenceProvider(selector: DocumentSelector, provider: ReferenceProvider): Disposable {
         const referenceProvider = this.createReferenceProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerReferenceProvider(language, referenceProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerReferenceProvider(selector as any, referenceProvider);
     }
 
     protected createReferenceProvider(selector: DocumentSelector, provider: ReferenceProvider): monaco.languages.ReferenceProvider {
@@ -189,11 +169,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentHighlightProvider(selector: DocumentSelector, provider: DocumentHighlightProvider): Disposable {
         const documentHighlightProvider = this.createDocumentHighlightProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentHighlightProvider(language, documentHighlightProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentHighlightProvider(selector as any, documentHighlightProvider);
     }
 
     protected createDocumentHighlightProvider(selector: DocumentSelector, provider: DocumentHighlightProvider): monaco.languages.DocumentHighlightProvider {
@@ -211,11 +187,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): Disposable {
         const documentSymbolProvider = this.createDocumentSymbolProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentSymbolProvider(language, documentSymbolProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentSymbolProvider(selector as any, documentSymbolProvider);
     }
 
     protected createDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): monaco.languages.DocumentSymbolProvider {
@@ -233,11 +205,7 @@ export class MonacoLanguages implements Languages {
 
     registerCodeActionsProvider(selector: DocumentSelector, provider: CodeActionProvider): Disposable {
         const codeActionProvider = this.createCodeActionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCodeActionProvider(language, codeActionProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerCodeActionProvider(selector as any, codeActionProvider);
     }
 
     protected createCodeActionProvider(selector: DocumentSelector, provider: CodeActionProvider): monaco.languages.CodeActionProvider {
@@ -264,11 +232,7 @@ export class MonacoLanguages implements Languages {
 
     registerCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): Disposable {
         const codeLensProvider = this.createCodeLensProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCodeLensProvider(language, codeLensProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerCodeLensProvider(selector as any, codeLensProvider);
     }
 
     protected createCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): monaco.languages.CodeLensProvider {
@@ -298,11 +262,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): Disposable {
         const documentFormattingEditProvider = this.createDocumentFormattingEditProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentFormattingEditProvider(selector as any, documentFormattingEditProvider);
     }
 
     protected createDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): monaco.languages.DocumentFormattingEditProvider {
@@ -320,11 +280,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): Disposable {
         const documentRangeFormattingEditProvider = this.createDocumentRangeFormattingEditProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentRangeFormattingEditProvider(language, documentRangeFormattingEditProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentRangeFormattingEditProvider(selector as any, documentRangeFormattingEditProvider);
     }
 
     createDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): monaco.languages.DocumentRangeFormattingEditProvider {
@@ -342,11 +298,7 @@ export class MonacoLanguages implements Languages {
 
     registerOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): Disposable {
         const onTypeFormattingEditProvider = this.createOnTypeFormattingEditProvider(selector, provider, firstTriggerCharacter, ...moreTriggerCharacter);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerOnTypeFormattingEditProvider(language, onTypeFormattingEditProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerOnTypeFormattingEditProvider(selector as any, onTypeFormattingEditProvider);
     }
 
     protected createOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): monaco.languages.OnTypeFormattingEditProvider {
@@ -366,11 +318,7 @@ export class MonacoLanguages implements Languages {
 
     registerRenameProvider(selector: DocumentSelector, provider: RenameProvider): Disposable {
         const renameProvider = this.createRenameProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerRenameProvider(language, renameProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerRenameProvider(selector as any, renameProvider);
     }
 
     protected createRenameProvider(selector: DocumentSelector, provider: RenameProvider): monaco.languages.RenameProvider {
@@ -388,11 +336,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): Disposable {
         const linkProvider = this.createDocumentLinkProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerLinkProvider(language, linkProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerLinkProvider(selector as any, linkProvider);
     }
 
     protected createDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): monaco.languages.LinkProvider {
@@ -423,11 +367,7 @@ export class MonacoLanguages implements Languages {
 
     registerImplementationProvider(selector: DocumentSelector, provider: ImplementationProvider): Disposable {
         const implementationProvider = this.createImplementationProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerImplementationProvider(language, implementationProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerImplementationProvider(selector as any, implementationProvider);
     }
 
     protected createImplementationProvider(selector: DocumentSelector, provider: ImplementationProvider): monaco.languages.ImplementationProvider {
@@ -445,11 +385,7 @@ export class MonacoLanguages implements Languages {
 
     registerTypeDefinitionProvider(selector: DocumentSelector, provider: TypeDefinitionProvider): Disposable {
         const typeDefinitionProvider = this.createTypeDefinitionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerTypeDefinitionProvider(language, typeDefinitionProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerTypeDefinitionProvider(selector as any, typeDefinitionProvider);
     }
 
     protected createTypeDefinitionProvider(selector: DocumentSelector, provider: TypeDefinitionProvider): monaco.languages.TypeDefinitionProvider {
@@ -467,11 +403,7 @@ export class MonacoLanguages implements Languages {
 
     registerColorProvider(selector: DocumentSelector, provider: DocumentColorProvider): Disposable {
         const documentColorProvider = this.createDocumentColorProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerColorProvider(language, documentColorProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerColorProvider(selector as any, documentColorProvider);
     }
 
     protected createDocumentColorProvider(selector: DocumentSelector, provider: DocumentColorProvider): monaco.languages.DocumentColorProvider {
@@ -502,11 +434,7 @@ export class MonacoLanguages implements Languages {
 
     registerFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable {
         const foldingRangeProvider = this.createFoldingRangeProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerFoldingRangeProvider(language, foldingRangeProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerFoldingRangeProvider(selector as any, foldingRangeProvider);
     }
 
     protected createFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): monaco.languages.FoldingRangeProvider {
@@ -526,11 +454,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
         const semanticTokensProvider = this.createSemanticTokensProvider(selector, provider, legend);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentSemanticTokensProvider(language, semanticTokensProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentSemanticTokensProvider(selector as any, semanticTokensProvider);
     }
 
     protected createSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentSemanticTokensProvider {
@@ -556,11 +480,7 @@ export class MonacoLanguages implements Languages {
 
     registerDocumentRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
         const rangeSemanticTokensProvider = this.createRangeSemanticTokensProvider(selector, provider, legend);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentRangeSemanticTokensProvider(language, rangeSemanticTokensProvider));
-        }
-        return providers;
+        return this._monaco.languages.registerDocumentRangeSemanticTokensProvider(selector as any, rangeSemanticTokensProvider);
     }
 
     protected createRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentRangeSemanticTokensProvider {
@@ -599,31 +519,6 @@ export class MonacoLanguages implements Languages {
             return true;
         }
         return selector === model.languageId;
-    }
-
-    protected matchLanguage(selector: string | DocumentFilter | DocumentSelector): Set<string> {
-        const languages = new Set<string>();
-        if (Array.isArray(selector)) {
-            for (const filter of selector) {
-                languages.add(this.matchLanguageByFilter(filter));
-            }
-        } else {
-            languages.add(this.matchLanguageByFilter(selector));
-        }
-        if (languages.has('*')) {
-            return new Set(['*'])
-        }
-        return languages;
-    }
-
-    protected matchLanguageByFilter(selector: string | DocumentFilter): string {
-        if (DocumentFilter.is(selector)) {
-            if (!selector.language) {
-                return '*';
-            }
-            return selector.language;
-        }
-        return selector;
     }
 
 }
