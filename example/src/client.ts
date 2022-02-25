@@ -7,7 +7,7 @@ import * as monaco from 'monaco-editor-core'
 import {
     MonacoLanguageClient, MessageConnection, CloseAction, ErrorAction,
     MonacoServices, createConnection
-} from '@codingame/monaco-languageclient';
+} from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 

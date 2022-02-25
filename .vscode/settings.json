@@ -1,8 +1,19 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "editor.insertSpaces": true,
-    "editor.tabSize": 4,
-    "[json]": {
-        "editor.tabSize": 2
-    }
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.guides.bracketPairs": true,
+  "editor.formatOnSave": false,
+  "workbench.editor.revealIfOpen": true,
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

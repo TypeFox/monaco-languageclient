@@ -1,73 +1,110 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
-## [0.15.0] - 2021-02-03
+## [0.17.3] - 2021-12-21
 
-- Upgrade to Monaco 0.22.3
+* First released as @codingame/monaco-languageclient@0.17.3 on specified date
+* Release of monaco-languageclient@0.17.3 was made up on 2022-02-23
+* Releases `0.17.1` and `0.17.2` were mistakes
+* Fix various issues: outdated api, missing stuff in compatibility-api... [#309](https://github.com/TypeFox/monaco-languageclient/pull/309)
+
+## [0.17.0] - 2021-11-10
+
+* First released as @codingame/monaco-languageclient@0.17.0 on specified date
+* Release of monaco-languageclient@0.17.0 was made up on 2022-02-23
+* Update to monaco 0.30.1 [#301](https://github.com/TypeFox/monaco-languageclient/pull/301)
+
+## [0.16.1] - 2021-11-03
+
+* First released as @codingame/monaco-languageclient@0.16.1 on specified date
+* Release of monaco-languageclient@0.16.1 was made up on 2022-02-23
+* Fix dropped tags in Diagnostic -> IMarkerData [#297](https://github.com/TypeFox/monaco-languageclient/pull/297)
+* Missing protocol convention [#298](https://github.com/TypeFox/monaco-languageclient/pull/298)
+
+## [0.16.0] - 2021-10-11
+
+* First released as @codingame/monaco-languageclient@0.16.0 on specified date
+* Release of monaco-languageclient@0.15.1 was made up on 2022-02-23
+* Updated `monaco-editor-core` version to `0.29.0`
+* Async resolve code actions [#294](https://github.com/TypeFox/monaco-languageclient/pull/294)
+
+## [0.15.1] - 2021-09-20
+
+* First released as @codingame/monaco-languageclient@0.15.1 on specified date
+* Release of monaco-languageclient@0.15.1 was made up on 2022-02-23
+* Resolve code actions [#290](https://github.com/TypeFox/monaco-languageclient/pull/290)
+* Release `0.15.0` was skipped
+
+## [0.14.0] - 2021-08-05
+
+* First released as @codingame/monaco-languageclient@0.14.0 on specified date
+* Release of monaco-languageclient@0.14.0 was made up on 2022-02-23
+* Upgraded to Monaco 0.22.3
 
 ### Breaking changes
 
-- `MonacoServices` now takes the `monaco` object instead of the `CommandRegistry`
+* `MonacoServices` now takes the `monaco` object instead of the `CommandRegistry`
 
 before:
+
 ```typescript
 MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
 ```
 
 after:
+
 ```typescript
 import * as monaco from 'monaco-editor-core'
 
 MonacoServices.install(monaco);
 ```
 
-## [0.14.0] - 2020-11-26
-
-- Upgraded to Monaco 0.21.2
-
-### Breaking changes
-
-`MonacoServices` should now be installed using the command registry instead of the editor
+* `MonacoServices` should now be installed using the command registry instead of the editor
 
 before:
+
 ```typescript
 const editor = monaco.editor.create(...);
 MonacoServices.install(editor);
 ```
 
 after:
+
 ```typescript
 MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
 ```
 
 ## [0.13.0] - 2020-04-06
 
-- Upgraded to vscode-uri 2.x [741a3df](https://github.com/TypeFox/monaco-languageclient/commit/741a3dfb865eff55c3dcc4a51f74759921d3f2a5)
+* Upgraded to vscode-uri 2.x [741a3df](https://github.com/TypeFox/monaco-languageclient/commit/741a3dfb865eff55c3dcc4a51f74759921d3f2a5)
 
 ## [0.12.0] - 2020-03-19
 
-- Upgraded to Monaco 0.19.1 [#199](https://github.com/TypeFox/monaco-languageclient/pull/199)
+* Upgraded to Monaco 0.19.1 [#199](https://github.com/TypeFox/monaco-languageclient/pull/199)
 
 ## [0.11.0] - 2020-01-23
 
-- Upgraded to Monaco 0.18.1 [#178](https://github.com/TypeFox/monaco-languageclient/pull/178)
+* Upgraded to Monaco 0.18.1 [#178](https://github.com/TypeFox/monaco-languageclient/pull/178)
 
 ## [0.10.2] - 2019-09-10
 
-- register language features regardless whether a language is registered (https://github.com/TypeFox/monaco-languageclient/commit/0559be6c20744182ede699f594fdbe6d9f3d7145)
+* register language features regardless whether a language is registered (<https://github.com/TypeFox/monaco-languageclient/commit/0559be6c20744182ede699f594fdbe6d9f3d7145>)
 
 ## [0.10.1] - 2019-09-04
 
-- aligned CompletionItemKind with Monaco 0.17.0 [#174](https://github.com/TypeFox/monaco-languageclient/pull/174)
+* aligned CompletionItemKind with Monaco 0.17.0 [#174](https://github.com/TypeFox/monaco-languageclient/pull/174)
 
 ## [0.10.0] - 2019-08-26
 
-- upgraded to LSP 5.3.0 and Monaco 0.17.0
+* upgraded to LSP 5.3.0 and Monaco 0.17.0
 
 ### Breaking changes
 
 Switch to es6 from es5. For clients who cannot migrate to es6 please use babel to transpile Monaco and LSP to es5.
-  - to configure babel wit webpack:
+
+* to configure babel wit webpack:
+
 ```js
     {
         test: /\\.js$/,
@@ -93,37 +130,43 @@ Switch to es6 from es5. For clients who cannot migrate to es6 please use babel t
 
 ## [0.9.0] - 2018-09-06
 
-- use monaco-editor-core as a dev dependency to allow alternative implementations [#119](https://github.com/TypeFox/monaco-languageclient/pull/119)
+* use monaco-editor-core as a dev dependency to allow alternative implementations [#119](https://github.com/TypeFox/monaco-languageclient/pull/119)
 
 ### Breaking changes
 
 Clients have to explicitly declare a dependency to `monaco-editor-core` or another package providing Monaco:
-- `monaco-editor-core` is tree shaked to get rid of unused VS Code's code.
-- [@typefox/monaco-editor-core](https://www.npmjs.com/package/@typefox/monaco-editor-core) is a not tree-shaked alternative.
+
+* `monaco-editor-core` is tree shaked to get rid of unused VS Code's code.
+* [@typefox/monaco-editor-core](https://www.npmjs.com/package/@typefox/monaco-editor-core) is a not tree-shaked alternative.
 
 ## [0.8.0] - 2018-09-04
-- updated dependency to Monaco 0.14.x, with adaptation for breaking changes from monaco [#107](https://github.com/TypeFox/monaco-languageclient/pull/107) - thanks to [@Twinside](https://github.com/Twinside)
-- ensure that SignatureHelp and SignatureHelp has non-null arrays [#112](https://github.com/TypeFox/monaco-languageclient/pull/112) - thanks to [@rcjsuen](https://github.com/rcjsuen)
+
+* updated dependency to Monaco 0.14.x, with adaptation for breaking changes from monaco [#107](https://github.com/TypeFox/monaco-languageclient/pull/107) - thanks to [@Twinside](https://github.com/Twinside)
+* ensure that SignatureHelp and SignatureHelp has non-null arrays [#112](https://github.com/TypeFox/monaco-languageclient/pull/112) - thanks to [@rcjsuen](https://github.com/rcjsuen)
 
 ## [0.7.3] - 2018-08-30
-- fixed folding ranges conversion - [12d8c91](https://github.com/TypeFox/monaco-languageclient/commit/12d8c91cf1676061c44d43e745b7500c77ea4a14)
-- implement `toJSON` for workspace configurations - [9e50a48](https://github.com/TypeFox/monaco-languageclient/commit/9e50a48addb474be66fa317684461976eda45192)
-- fixed markdown conversion [#103](https://github.com/TypeFox/monaco-languageclient/pull/103)
+
+* fixed folding ranges conversion - [12d8c91](https://github.com/TypeFox/monaco-languageclient/commit/12d8c91cf1676061c44d43e745b7500c77ea4a14)
+* implement `toJSON` for workspace configurations - [9e50a48](https://github.com/TypeFox/monaco-languageclient/commit/9e50a48addb474be66fa317684461976eda45192)
+* fixed markdown conversion [#103](https://github.com/TypeFox/monaco-languageclient/pull/103)
 
 ## [0.7.2] - 2018-08-02
-- amd distribution ([#97](https://github.com/TypeFox/monaco-languageclient/pull/97)) - thanks to [@zewa666](https://github.com/zewa666)
-- updated dependency to Monaco 0.13.2 ([#100](https://github.com/TypeFox/monaco-languageclient/pull/100))
-- register providers only for languages matching the documentSelector ([#101](https://github.com/TypeFox/monaco-languageclient/pull/101)) - thanks to [@gins3000](https://github.com/gins3000)
+
+* amd distribution ([#97](https://github.com/TypeFox/monaco-languageclient/pull/97)) - thanks to [@zewa666](https://github.com/zewa666)
+* updated dependency to Monaco 0.13.2 ([#100](https://github.com/TypeFox/monaco-languageclient/pull/100))
+* register providers only for languages matching the documentSelector ([#101](https://github.com/TypeFox/monaco-languageclient/pull/101)) - thanks to [@gins3000](https://github.com/gins3000)
 
 ## [0.7.0] - 2018-07-31
+
 Updated to `vscode-languageclient` 4.4.0 to support LSP 3.10.0 features like hierarchical document symbols, go to type defition/implementation, workspace folders and document color provider ([#89](https://github.com/TypeFox/monaco-languageclient/pull/89)).
 
 ### Breaking changes
 
 In order to use `vscode-languageclient` directly the compatibility layer was implemented for subset of `vscode` APIs used by the client:
 
-- `vscode-compatibility` should be used as an implementation of `vscode` module at the runtime
-  - to adjust module resolution with `webpack`:
+* `vscode-compatibility` should be used as an implementation of `vscode` module at the runtime
+  * to adjust module resolution with `webpack`:
+
   ```js
       resolve: {
           alias: {
@@ -131,19 +174,25 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
           }
       }
   ```
-  - `register-vscode` should be required once to adjust module resolution with `Node.js`, for example to stub `vscode` APIs for Mocha tests:
+
+  * `register-vscode` should be required once to adjust module resolution with `Node.js`, for example to stub `vscode` APIs for Mocha tests:
+
   ```
   --require monaco-languageclient/lib/register-vscode
   ```
-- `MonacoLanguageClient` should be used instead of `BaseLanguageClient`
-- `MonacoServices` should be installed globally to be accessible for `vscode-compatibility` module, not per a language client
-  - for the use case with a single standalone editor:
+
+* `MonacoLanguageClient` should be used instead of `BaseLanguageClient`
+* `MonacoServices` should be installed globally to be accessible for `vscode-compatibility` module, not per a language client
+  * for the use case with a single standalone editor:
+
   ```ts
   import { MonacoServices } from 'monaco-languageclient';
 
   MonacoServices.install(editor);
   ```
-  - to support sophisticated use cases one can install custom Monaco services:
+
+  * to support sophisticated use cases one can install custom Monaco services:
+
   ```ts
   import { MonacoServices, Services } from 'monaco-languageclient';
 
@@ -154,32 +203,38 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
   ```
 
 ## [0.6.0] - 2018-04-18
-- updated dependency to Monaco 0.12 ([#70](https://github.com/TypeFox/monaco-languageclient/pull/70))
-- support `CompletionItem`'s `additionalTextEdits` property ([#39](https://github.com/TypeFox/monaco-languageclient/issues/39))
-- convert `monaco.MarkerSeverity.Hint` values to `DiagnosticSeverity.Hint` ([#71](https://github.com/TypeFox/monaco-languageclient/pull/71))
+
+* updated dependency to Monaco 0.12 ([#70](https://github.com/TypeFox/monaco-languageclient/pull/70))
+* support `CompletionItem`'s `additionalTextEdits` property ([#39](https://github.com/TypeFox/monaco-languageclient/issues/39))
+* convert `monaco.MarkerSeverity.Hint` values to `DiagnosticSeverity.Hint` ([#71](https://github.com/TypeFox/monaco-languageclient/pull/71))
 
 ## [0.4.0] - 2018-02-13
-- add support for `textDocument/documentLink` and `documentLink/resolve` ([#53](https://github.com/TypeFox/monaco-languageclient/issues/53))
-- state that `workspace/applyEdit` is supported in the capabilities ([#55](https://github.com/TypeFox/monaco-languageclient/pull/55))
-- state that versioned changes are supported in a `WorkspaceEdit` ([#56](https://github.com/TypeFox/monaco-languageclient/pull/56))
-- replaced `monaco-editor` with `monaco-editor-core` ([#58](https://github.com/TypeFox/monaco-languageclient/pull/58))
+
+* add support for `textDocument/documentLink` and `documentLink/resolve` ([#53](https://github.com/TypeFox/monaco-languageclient/issues/53))
+* state that `workspace/applyEdit` is supported in the capabilities ([#55](https://github.com/TypeFox/monaco-languageclient/pull/55))
+* state that versioned changes are supported in a `WorkspaceEdit` ([#56](https://github.com/TypeFox/monaco-languageclient/pull/56))
+* replaced `monaco-editor` with `monaco-editor-core` ([#58](https://github.com/TypeFox/monaco-languageclient/pull/58))
 
 ## [0.3.0] - 2018-02-08
-- fix handling of `codeLens/resolve` if no provider exists ([#46](https://github.com/TypeFox/monaco-languageclient/pull/46))
-- removed `monaco-editor-core` dependency, keeping only `monaco-editor` ([#42](https://github.com/TypeFox/monaco-languageclient/issues/42))
-- fix typings in `glob-to-regexp`([#49](https://github.com/TypeFox/monaco-languageclient/pull/49))
+
+* fix handling of `codeLens/resolve` if no provider exists ([#46](https://github.com/TypeFox/monaco-languageclient/pull/46))
+* removed `monaco-editor-core` dependency, keeping only `monaco-editor` ([#42](https://github.com/TypeFox/monaco-languageclient/issues/42))
+* fix typings in `glob-to-regexp`([#49](https://github.com/TypeFox/monaco-languageclient/pull/49))
 
 ## [0.2.1] - 2018-01-14
-- allow a `rootUri` to be set with `createMonacoServices` ([#31](https://github.com/TypeFox/monaco-languageclient/issues/31))
+
+* allow a `rootUri` to be set with `createMonacoServices` ([#31](https://github.com/TypeFox/monaco-languageclient/issues/31))
 
 ## [0.2.0] - 2017-08-30
-- handle `number` value of zero in a `Diagnostic`'s `code` ([#14](https://github.com/TypeFox/monaco-languageclient/pull/14))
-- add support to lazily load Monaco ([#19](https://github.com/TypeFox/monaco-languageclient/pull/19))
-- add support for `textDocument/codeActions` and `workspace/executeCommand` ([#21](https://github.com/TypeFox/monaco-languageclient/pull/21))
-- updated dependency to Monaco 0.10 ([#29](https://github.com/TypeFox/monaco-languageclient/pull/29))
+
+* handle `number` value of zero in a `Diagnostic`'s `code` ([#14](https://github.com/TypeFox/monaco-languageclient/pull/14))
+* add support to lazily load Monaco ([#19](https://github.com/TypeFox/monaco-languageclient/pull/19))
+* add support for `textDocument/codeActions` and `workspace/executeCommand` ([#21](https://github.com/TypeFox/monaco-languageclient/pull/21))
+* updated dependency to Monaco 0.10 ([#29](https://github.com/TypeFox/monaco-languageclient/pull/29))
 
 ## 0.1.0 - 2017-0
-- initial 0.1.0 release, depends on Monaco 0.9.0
+
+* initial 0.1.0 release, depends on Monaco 0.9.0
 
 [0.13.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/TypeFox/monaco-languageclient/compare/v0.11.0...v0.12.0

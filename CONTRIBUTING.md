@@ -11,17 +11,22 @@ There is no guarantee on time of response to issues and pull requests.
 
 #### Current Maintainers
 
-- @AlexTugarev - Alex Tugarev
+- @CGNonofr - Loïc Mangeonjean
 - @gatesn - Nicholas Gates
 - @mofux - Thomas Zilz
-- @akosyakov - Anton Kosyakov
 - @BroKun - Yukun Wang
 - @rcjsuen - Remy Suen
 - @asual - Rostislav Hristov
-- @zewa666 - Vildan Softic
 - @johnwiseheart - John Wiseheart
 - @RomanNikitenko - Roman Nikitenko
 - @azatsarynnyy - Artem Zatsarynnyi
+- @kaisalmen - Kai Salmen
+
+#### Past Maintainers
+
+- @AlexTugarev - Alex Tugarev
+- @akosyakov - Anton Kosyakov
+- @zewa666 - Vildan Softic
 
 #### How to become a maintainer?
 
