@@ -37,7 +37,7 @@ const common = {
     },
     resolve: {
         alias: {
-            'vscode': require.resolve('@codingame/monaco-languageclient/lib/vscode-compatibility')
+            'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
         },
         extensions: ['.js', '.json', '.ttf']
     }
@@ -65,4 +65,4 @@ if (process.env['NODE_ENV'] === 'production') {
             }]
         }
     })
-} 
+}
