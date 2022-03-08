@@ -16,7 +16,7 @@ import {
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
 import { ProtocolToMonacoConverter, MonacoToProtocolConverter } from './monaco-converter';
-import { DisposableCollection, Disposable } from './disposable';
+import { Disposable } from './disposable';
 
 export interface MonacoModelIdentifier {
     uri: monaco.Uri;
@@ -63,21 +63,14 @@ export class MonacoLanguages implements Languages {
     }
 
     registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
-        const completionProvider = this.createCompletionProvider(selector, provider, ...triggerCharacters);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCompletionItemProvider(language, completionProvider))
-        };
-        return providers;
+        const completionProvider = this.createCompletionProvider(provider, ...triggerCharacters);
+        return this._monaco.languages.registerCompletionItemProvider(selector as any, completionProvider);
     }
 
-    protected createCompletionProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): monaco.languages.CompletionItemProvider {
+    protected createCompletionProvider(provider: CompletionItemProvider, ...triggerCharacters: string[]): monaco.languages.CompletionItemProvider {
         return {
             triggerCharacters,
             provideCompletionItems: async (model, position, context, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const wordUntil = model.getWordUntilPosition(position);
                 const defaultRange = new this._monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
                 const params = this.m2p.asCompletionParams(model, position, context);
@@ -97,20 +90,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerHoverProvider(selector: DocumentSelector, provider: HoverProvider): Disposable {
-        const hoverProvider = this.createHoverProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerHoverProvider(language, hoverProvider));
-        }
-        return providers;
+        const hoverProvider = this.createHoverProvider(provider);
+        return this._monaco.languages.registerHoverProvider(selector as any, hoverProvider);
     }
 
-    protected createHoverProvider(selector: DocumentSelector, provider: HoverProvider): monaco.languages.HoverProvider {
+    protected createHoverProvider(provider: HoverProvider): monaco.languages.HoverProvider {
         return {
             provideHover: async (model, position, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const hover = await provider.provideHover(params, token);
                 return hover && this.p2m.asHover(hover);
@@ -119,23 +105,16 @@ export class MonacoLanguages implements Languages {
     }
 
     registerSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): Disposable {
-        const signatureHelpProvider = this.createSignatureHelpProvider(selector, provider, ...triggerCharacters);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerSignatureHelpProvider(language, signatureHelpProvider));
-        }
-        return providers;
+        const signatureHelpProvider = this.createSignatureHelpProvider(provider, ...triggerCharacters);
+        return this._monaco.languages.registerSignatureHelpProvider(selector as any, signatureHelpProvider);
     }
 
-    protected createSignatureHelpProvider(selector: DocumentSelector, provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
+    protected createSignatureHelpProvider(provider: SignatureHelpProvider, ...triggerCharacters: string[]): monaco.languages.SignatureHelpProvider {
         const signatureHelpTriggerCharacters = [...(provider.triggerCharacters || triggerCharacters || [])];
         return {
             signatureHelpTriggerCharacters,
             signatureHelpRetriggerCharacters: provider.retriggerCharacters,
             provideSignatureHelp: async (model, position, token, context) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const signatureHelp = await provider.provideSignatureHelp(params, token, this.m2p.asSignatureHelpContext(context))
                 return signatureHelp && this.p2m.asSignatureHelpResult(signatureHelp);
@@ -144,20 +123,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): Disposable {
-        const definitionProvider = this.createDefinitionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDefinitionProvider(language, definitionProvider));
-        }
-        return providers;
+        const definitionProvider = this.createDefinitionProvider(provider);
+        return this._monaco.languages.registerDefinitionProvider(selector as any, definitionProvider);
     }
 
-    protected createDefinitionProvider(selector: DocumentSelector, provider: DefinitionProvider): monaco.languages.DefinitionProvider {
+    protected createDefinitionProvider(provider: DefinitionProvider): monaco.languages.DefinitionProvider {
         return {
             provideDefinition: async (model, position, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const result = await provider.provideDefinition(params, token);
                 return result && this.p2m.asDefinitionResult(result);
@@ -166,20 +138,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerReferenceProvider(selector: DocumentSelector, provider: ReferenceProvider): Disposable {
-        const referenceProvider = this.createReferenceProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerReferenceProvider(language, referenceProvider));
-        }
-        return providers;
+        const referenceProvider = this.createReferenceProvider(provider);
+        return this._monaco.languages.registerReferenceProvider(selector as any, referenceProvider);
     }
 
-    protected createReferenceProvider(selector: DocumentSelector, provider: ReferenceProvider): monaco.languages.ReferenceProvider {
+    protected createReferenceProvider(provider: ReferenceProvider): monaco.languages.ReferenceProvider {
         return {
             provideReferences: async (model, position, context, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asReferenceParams(model, position, context);
                 const result = await provider.provideReferences(params, token);
                 return result && this.p2m.asReferences(result);
@@ -188,20 +153,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentHighlightProvider(selector: DocumentSelector, provider: DocumentHighlightProvider): Disposable {
-        const documentHighlightProvider = this.createDocumentHighlightProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentHighlightProvider(language, documentHighlightProvider));
-        }
-        return providers;
+        const documentHighlightProvider = this.createDocumentHighlightProvider(provider);
+        return this._monaco.languages.registerDocumentHighlightProvider(selector as any, documentHighlightProvider);
     }
 
-    protected createDocumentHighlightProvider(selector: DocumentSelector, provider: DocumentHighlightProvider): monaco.languages.DocumentHighlightProvider {
+    protected createDocumentHighlightProvider(provider: DocumentHighlightProvider): monaco.languages.DocumentHighlightProvider {
         return {
             provideDocumentHighlights: async (model, position, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const result = await provider.provideDocumentHighlights(params, token);
                 return result && this.p2m.asDocumentHighlights(result);
@@ -210,20 +168,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): Disposable {
-        const documentSymbolProvider = this.createDocumentSymbolProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentSymbolProvider(language, documentSymbolProvider));
-        }
-        return providers;
+        const documentSymbolProvider = this.createDocumentSymbolProvider(provider);
+        return this._monaco.languages.registerDocumentSymbolProvider(selector as any, documentSymbolProvider);
     }
 
-    protected createDocumentSymbolProvider(selector: DocumentSelector, provider: DocumentSymbolProvider): monaco.languages.DocumentSymbolProvider {
+    protected createDocumentSymbolProvider(provider: DocumentSymbolProvider): monaco.languages.DocumentSymbolProvider {
         return {
             provideDocumentSymbols: async (model, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asDocumentSymbolParams(model);
                 const result = await provider.provideDocumentSymbols(params, token);
                 return result && this.p2m.asDocumentSymbols(result);
@@ -232,20 +183,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerCodeActionsProvider(selector: DocumentSelector, provider: CodeActionProvider): Disposable {
-        const codeActionProvider = this.createCodeActionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCodeActionProvider(language, codeActionProvider));
-        }
-        return providers;
+        const codeActionProvider = this.createCodeActionProvider(provider);
+        return this._monaco.languages.registerCodeActionProvider(selector as any, codeActionProvider);
     }
 
-    protected createCodeActionProvider(selector: DocumentSelector, provider: CodeActionProvider): monaco.languages.CodeActionProvider {
+    protected createCodeActionProvider(provider: CodeActionProvider): monaco.languages.CodeActionProvider {
         return {
             provideCodeActions: async (model, range, context, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asCodeActionParams(model, range, context);
                 let result = await provider.provideCodeActions(params, token);
                 return result && this.p2m.asCodeActionList(result);
@@ -263,28 +207,18 @@ export class MonacoLanguages implements Languages {
     }
 
     registerCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): Disposable {
-        const codeLensProvider = this.createCodeLensProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerCodeLensProvider(language, codeLensProvider));
-        }
-        return providers;
+        const codeLensProvider = this.createCodeLensProvider(provider);
+        return this._monaco.languages.registerCodeLensProvider(selector as any, codeLensProvider);
     }
 
-    protected createCodeLensProvider(selector: DocumentSelector, provider: CodeLensProvider): monaco.languages.CodeLensProvider {
+    protected createCodeLensProvider(provider: CodeLensProvider): monaco.languages.CodeLensProvider {
         return {
             provideCodeLenses: async (model, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asCodeLensParams(model);
                 const result = await provider.provideCodeLenses(params, token);
                 return result && this.p2m.asCodeLensList(result);
             },
             resolveCodeLens: provider.resolveCodeLens ? async (model, codeLens, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return codeLens;
-                }
                 const protocolCodeLens = this.m2p.asCodeLens(codeLens);
                 const result = await provider.resolveCodeLens!(protocolCodeLens, token);
                 if (result) {
@@ -297,20 +231,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): Disposable {
-        const documentFormattingEditProvider = this.createDocumentFormattingEditProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentFormattingEditProvider(language, documentFormattingEditProvider));
-        }
-        return providers;
+        const documentFormattingEditProvider = this.createDocumentFormattingEditProvider(provider);
+        return this._monaco.languages.registerDocumentFormattingEditProvider(selector as any, documentFormattingEditProvider);
     }
 
-    protected createDocumentFormattingEditProvider(selector: DocumentSelector, provider: DocumentFormattingEditProvider): monaco.languages.DocumentFormattingEditProvider {
+    protected createDocumentFormattingEditProvider(provider: DocumentFormattingEditProvider): monaco.languages.DocumentFormattingEditProvider {
         return {
             provideDocumentFormattingEdits: async (model, options, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asDocumentFormattingParams(model, options);
                 const result = await provider.provideDocumentFormattingEdits(params, token);
                 return result && this.p2m.asTextEdits(result);
@@ -319,20 +246,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): Disposable {
-        const documentRangeFormattingEditProvider = this.createDocumentRangeFormattingEditProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentRangeFormattingEditProvider(language, documentRangeFormattingEditProvider));
-        }
-        return providers;
+        const documentRangeFormattingEditProvider = this.createDocumentRangeFormattingEditProvider(provider);
+        return this._monaco.languages.registerDocumentRangeFormattingEditProvider(selector as any, documentRangeFormattingEditProvider);
     }
 
-    createDocumentRangeFormattingEditProvider(selector: DocumentSelector, provider: DocumentRangeFormattingEditProvider): monaco.languages.DocumentRangeFormattingEditProvider {
+    createDocumentRangeFormattingEditProvider(provider: DocumentRangeFormattingEditProvider): monaco.languages.DocumentRangeFormattingEditProvider {
         return {
             provideDocumentRangeFormattingEdits: async (model, range, options, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asDocumentRangeFormattingParams(model, range, options);
                 const result = await provider.provideDocumentRangeFormattingEdits(params, token);
                 return result && this.p2m.asTextEdits(result);
@@ -341,22 +261,15 @@ export class MonacoLanguages implements Languages {
     }
 
     registerOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): Disposable {
-        const onTypeFormattingEditProvider = this.createOnTypeFormattingEditProvider(selector, provider, firstTriggerCharacter, ...moreTriggerCharacter);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerOnTypeFormattingEditProvider(language, onTypeFormattingEditProvider));
-        }
-        return providers;
+        const onTypeFormattingEditProvider = this.createOnTypeFormattingEditProvider(provider, firstTriggerCharacter, ...moreTriggerCharacter);
+        return this._monaco.languages.registerOnTypeFormattingEditProvider(selector as any, onTypeFormattingEditProvider);
     }
 
-    protected createOnTypeFormattingEditProvider(selector: DocumentSelector, provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): monaco.languages.OnTypeFormattingEditProvider {
+    protected createOnTypeFormattingEditProvider(provider: OnTypeFormattingEditProvider, firstTriggerCharacter: string, ...moreTriggerCharacter: string[]): monaco.languages.OnTypeFormattingEditProvider {
         const autoFormatTriggerCharacters = [firstTriggerCharacter].concat(moreTriggerCharacter)
         return {
             autoFormatTriggerCharacters,
             provideOnTypeFormattingEdits: async (model, position, ch, options, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asDocumentOnTypeFormattingParams(model, position, ch, options);
                 const result = await provider.provideOnTypeFormattingEdits(params, token);
                 return result && this.p2m.asTextEdits(result);
@@ -365,20 +278,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerRenameProvider(selector: DocumentSelector, provider: RenameProvider): Disposable {
-        const renameProvider = this.createRenameProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerRenameProvider(language, renameProvider));
-        }
-        return providers;
+        const renameProvider = this.createRenameProvider(provider);
+        return this._monaco.languages.registerRenameProvider(selector as any, renameProvider);
     }
 
-    protected createRenameProvider(selector: DocumentSelector, provider: RenameProvider): monaco.languages.RenameProvider {
+    protected createRenameProvider(provider: RenameProvider): monaco.languages.RenameProvider {
         return {
             provideRenameEdits: async (model, position, newName, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asRenameParams(model, position, newName);
                 const result = await provider.provideRenameEdits(params, token);
                 return result && this.p2m.asWorkspaceEdit(result);
@@ -387,20 +293,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): Disposable {
-        const linkProvider = this.createDocumentLinkProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerLinkProvider(language, linkProvider));
-        }
-        return providers;
+        const linkProvider = this.createDocumentLinkProvider(provider);
+        return this._monaco.languages.registerLinkProvider(selector as any, linkProvider);
     }
 
-    protected createDocumentLinkProvider(selector: DocumentSelector, provider: DocumentLinkProvider): monaco.languages.LinkProvider {
+    protected createDocumentLinkProvider(provider: DocumentLinkProvider): monaco.languages.LinkProvider {
         return {
             provideLinks: async (model, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asDocumentLinkParams(model);
                 const result = await provider.provideDocumentLinks(params, token);
                 return result && this.p2m.asDocumentLinks(result);
@@ -422,20 +321,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerImplementationProvider(selector: DocumentSelector, provider: ImplementationProvider): Disposable {
-        const implementationProvider = this.createImplementationProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerImplementationProvider(language, implementationProvider));
-        }
-        return providers;
+        const implementationProvider = this.createImplementationProvider(provider);
+        return this._monaco.languages.registerImplementationProvider(selector as any, implementationProvider);
     }
 
-    protected createImplementationProvider(selector: DocumentSelector, provider: ImplementationProvider): monaco.languages.ImplementationProvider {
+    protected createImplementationProvider(provider: ImplementationProvider): monaco.languages.ImplementationProvider {
         return {
             provideImplementation: async (model, position, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const result = await provider.provideImplementation(params, token);
                 return result && this.p2m.asDefinitionResult(result);
@@ -444,20 +336,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerTypeDefinitionProvider(selector: DocumentSelector, provider: TypeDefinitionProvider): Disposable {
-        const typeDefinitionProvider = this.createTypeDefinitionProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerTypeDefinitionProvider(language, typeDefinitionProvider));
-        }
-        return providers;
+        const typeDefinitionProvider = this.createTypeDefinitionProvider(provider);
+        return this._monaco.languages.registerTypeDefinitionProvider(selector as any, typeDefinitionProvider);
     }
 
-    protected createTypeDefinitionProvider(selector: DocumentSelector, provider: TypeDefinitionProvider): monaco.languages.TypeDefinitionProvider {
+    protected createTypeDefinitionProvider(provider: TypeDefinitionProvider): monaco.languages.TypeDefinitionProvider {
         return {
             provideTypeDefinition: async (model, position, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const params = this.m2p.asTextDocumentPositionParams(model, position);
                 const result = await provider.provideTypeDefinition(params, token);
                 return result && this.p2m.asDefinitionResult(result);
@@ -466,28 +351,18 @@ export class MonacoLanguages implements Languages {
     }
 
     registerColorProvider(selector: DocumentSelector, provider: DocumentColorProvider): Disposable {
-        const documentColorProvider = this.createDocumentColorProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerColorProvider(language, documentColorProvider));
-        }
-        return providers;
+        const documentColorProvider = this.createDocumentColorProvider(provider);
+        return this._monaco.languages.registerColorProvider(selector as any, documentColorProvider);
     }
 
-    protected createDocumentColorProvider(selector: DocumentSelector, provider: DocumentColorProvider): monaco.languages.DocumentColorProvider {
+    protected createDocumentColorProvider(provider: DocumentColorProvider): monaco.languages.DocumentColorProvider {
         return {
             provideDocumentColors: async (model, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const result = await provider.provideDocumentColors({ textDocument }, token);
                 return result && this.p2m.asColorInformations(result);
             },
             provideColorPresentations: async (model, info, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const range = this.m2p.asRange(info.range);
                 const result = await provider.provideColorPresentations({
@@ -501,20 +376,13 @@ export class MonacoLanguages implements Languages {
     }
 
     registerFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable {
-        const foldingRangeProvider = this.createFoldingRangeProvider(selector, provider);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerFoldingRangeProvider(language, foldingRangeProvider));
-        }
-        return providers;
+        const foldingRangeProvider = this.createFoldingRangeProvider(provider);
+        return this._monaco.languages.registerFoldingRangeProvider(selector as any, foldingRangeProvider);
     }
 
-    protected createFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): monaco.languages.FoldingRangeProvider {
+    protected createFoldingRangeProvider(provider: FoldingRangeProvider): monaco.languages.FoldingRangeProvider {
         return {
             provideFoldingRanges: async (model, context, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const result = await provider.provideFoldingRanges({
                     textDocument
@@ -525,24 +393,17 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
-        const semanticTokensProvider = this.createSemanticTokensProvider(selector, provider, legend);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentSemanticTokensProvider(language, semanticTokensProvider));
-        }
-        return providers;
+        const semanticTokensProvider = this.createSemanticTokensProvider(provider, legend);
+        return this._monaco.languages.registerDocumentSemanticTokensProvider(selector as any, semanticTokensProvider);
     }
 
-    protected createSemanticTokensProvider(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentSemanticTokensProvider {
+    protected createSemanticTokensProvider(provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentSemanticTokensProvider {
         return {
             getLegend() {
                 return legend;
             },
             onDidChange: provider.onDidChange,
             provideDocumentSemanticTokens: async (model, lastResultId, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const result = await provider.provideDocumentSemanticTokens({
                     textDocument
@@ -555,23 +416,16 @@ export class MonacoLanguages implements Languages {
     }
 
     registerDocumentRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable {
-        const rangeSemanticTokensProvider = this.createRangeSemanticTokensProvider(selector, provider, legend);
-        const providers = new DisposableCollection();
-        for (const language of this.matchLanguage(selector)) {
-            providers.push(this._monaco.languages.registerDocumentRangeSemanticTokensProvider(language, rangeSemanticTokensProvider));
-        }
-        return providers;
+        const rangeSemanticTokensProvider = this.createRangeSemanticTokensProvider(provider, legend);
+        return this._monaco.languages.registerDocumentRangeSemanticTokensProvider(selector as any, rangeSemanticTokensProvider);
     }
 
-    protected createRangeSemanticTokensProvider(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentRangeSemanticTokensProvider {
+    protected createRangeSemanticTokensProvider(provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): monaco.languages.DocumentRangeSemanticTokensProvider {
         return {
             getLegend() {
                 return legend;
             },
             provideDocumentRangeSemanticTokens: async (model, range, token) => {
-                if (!this.matchModel(selector, MonacoModelIdentifier.fromModel(model))) {
-                    return undefined;
-                }
                 const textDocument = this.m2p.asTextDocumentIdentifier(model);
                 const result = await provider.provideDocumentRangeSemanticTokens({
                     textDocument,
@@ -599,31 +453,6 @@ export class MonacoLanguages implements Languages {
             return true;
         }
         return selector === model.languageId;
-    }
-
-    protected matchLanguage(selector: string | DocumentFilter | DocumentSelector): Set<string> {
-        const languages = new Set<string>();
-        if (Array.isArray(selector)) {
-            for (const filter of selector) {
-                languages.add(this.matchLanguageByFilter(filter));
-            }
-        } else {
-            languages.add(this.matchLanguageByFilter(selector));
-        }
-        if (languages.has('*')) {
-            return new Set(['*'])
-        }
-        return languages;
-    }
-
-    protected matchLanguageByFilter(selector: string | DocumentFilter): string {
-        if (DocumentFilter.is(selector)) {
-            if (!selector.language) {
-                return '*';
-            }
-            return selector.language;
-        }
-        return selector;
     }
 
 }
