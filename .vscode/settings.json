@@ -13,7 +13,7 @@
     "javascript",
     "typescript"
   ],
-  "[jsonc]": {
+  "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   }
 }
