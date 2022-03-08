@@ -2,44 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.17.3] - 2021-12-21
+## [0.17.4] - 2022-02-22 (2022-03-08)
+
+* First released as @codingame/monaco-languageclient@0.17.4 on specified date
+* Release of monaco-languageclient@0.17.4 was made available on date in brackets
+* Register providers using the document selector directly [#317](https://github.com/TypeFox/monaco-languageclient/pull/317)
+
+## [0.17.3] - 2021-12-21 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.17.3 on specified date
-* Release of monaco-languageclient@0.17.3 was made up on 2022-02-23
+* Release of monaco-languageclient@0.17.3 was made available on date in brackets
 * Releases `0.17.1` and `0.17.2` were mistakes
 * Fix various issues: outdated api, missing stuff in compatibility-api... [#309](https://github.com/TypeFox/monaco-languageclient/pull/309)
 
-## [0.17.0] - 2021-11-10
+## [0.17.0] - 2021-11-10 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.17.0 on specified date
-* Release of monaco-languageclient@0.17.0 was made up on 2022-02-23
+* Release of monaco-languageclient@0.17.0 was made available on date in brackets
 * Update to monaco 0.30.1 [#301](https://github.com/TypeFox/monaco-languageclient/pull/301)
 
-## [0.16.1] - 2021-11-03
+## [0.16.1] - 2021-11-03 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.16.1 on specified date
-* Release of monaco-languageclient@0.16.1 was made up on 2022-02-23
+* Release of monaco-languageclient@0.16.1 was made available on date in brackets
 * Fix dropped tags in Diagnostic -> IMarkerData [#297](https://github.com/TypeFox/monaco-languageclient/pull/297)
 * Missing protocol convention [#298](https://github.com/TypeFox/monaco-languageclient/pull/298)
 
-## [0.16.0] - 2021-10-11
+## [0.16.0] - 2021-10-11 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.16.0 on specified date
-* Release of monaco-languageclient@0.15.1 was made up on 2022-02-23
+* Release of monaco-languageclient@0.15.1 was made available on date in brackets
 * Updated `monaco-editor-core` version to `0.29.0`
 * Async resolve code actions [#294](https://github.com/TypeFox/monaco-languageclient/pull/294)
 
-## [0.15.1] - 2021-09-20
+## [0.15.1] - 2021-09-20 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.15.1 on specified date
-* Release of monaco-languageclient@0.15.1 was made up on 2022-02-23
+* Release of monaco-languageclient@0.15.1 was made available on date in brackets
 * Resolve code actions [#290](https://github.com/TypeFox/monaco-languageclient/pull/290)
 * Release `0.15.0` was skipped
 
-## [0.14.0] - 2021-08-05
+## [0.14.0] - 2021-08-05 (2022-02-23)
 
 * First released as @codingame/monaco-languageclient@0.14.0 on specified date
-* Release of monaco-languageclient@0.14.0 was made up on 2022-02-23
+* Release of monaco-languageclient@0.14.0 was made available on date in brackets
 * Upgraded to Monaco 0.22.3
 
 ### Breaking changes
