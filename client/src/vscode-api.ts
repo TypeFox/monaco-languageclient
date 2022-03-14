@@ -62,12 +62,12 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         code?: string | number;
         relatedInformation?: vscode.DiagnosticRelatedInformation[]
         tags?: vscode.DiagnosticTag[]
-        constructor(readonly range: vscode.Range, readonly message: string, readonly severity: DiagnosticSeverity = DiagnosticSeverity.Error) {}
+        constructor(readonly range: vscode.Range, readonly message: string, readonly severity: DiagnosticSeverity = DiagnosticSeverity.Error) { }
     }
     class CallHierarchyItem implements vscode.CallHierarchyItem {
         _sessionId?: string;
         _itemId?: string;
-        constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: vscode.Uri, readonly range: vscode.Range, readonly selectionRange: vscode.Range) {}
+        constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: vscode.Uri, readonly range: vscode.Range, readonly selectionRange: vscode.Range) { }
     }
     class CodeAction implements vscode.CodeAction {
         edit?: vscode.WorkspaceEdit;
@@ -77,10 +77,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         disabled?: {
             readonly reason: string;
         };
-        constructor(readonly title: string, readonly kind?: CodeActionKind) {}
+        constructor(readonly title: string, readonly kind?: CodeActionKind) { }
     }
     class SemanticTokens implements vscode.SemanticTokens {
-        constructor(public data: Uint32Array, public resultId?: string) { }
+        constructor(public data: Uint32Array, public resultId: string) { }
     }
 
     class EmptyFileSystem implements vscode.FileSystem {
@@ -213,11 +213,12 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         get onDidChangeTextDocument(): typeof vscode.workspace.onDidChangeTextDocument {
             const services = servicesProvider();
             return (listener: (e: vscode.TextDocumentChangeEvent) => any, thisArgs?: any, disposables?: Disposable[]): Disposable => {
-                return services.workspace.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
+                return services.workspace.onDidChangeTextDocument(({ textDocument, contentChanges, isRedoing, isUndoing }) => {
                     const l: (e: vscode.TextDocumentChangeEvent) => any = listener.bind(thisArgs);
                     l({
                         document: <any>textDocument,
-                        contentChanges: <any>contentChanges
+                        contentChanges: <any>contentChanges,
+                        reason: isUndoing ? vscode.TextDocumentChangeReason.Undo : isRedoing ? vscode.TextDocumentChangeReason.Redo : undefined
                     });
                 }, undefined, disposables);
             }
@@ -272,6 +273,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return Event.None
         },
 
+        get onDidGrantWorkspaceTrust(): vscode.Event<void> {
+            return Event.None
+        },
+
         getWorkspaceFolder: unsupported,
         asRelativePath: unsupported,
         updateWorkspaceFolders: unsupported,
@@ -281,6 +286,12 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         registerTextDocumentContentProvider: unsupported,
         registerTaskProvider: unsupported,
         registerFileSystemProvider: unsupported,
+        openNotebookDocument: unsupported,
+        registerNotebookSerializer: unsupported,
+        notebookDocuments: [],
+        onDidOpenNotebookDocument: unsupported,
+        onDidCloseNotebookDocument: unsupported,
+        isTrusted: true,
         rootPath: undefined,
         name: undefined
     };
@@ -333,7 +344,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 // */
             }
 
-            function toInternalCode(code: vscode.Diagnostic['code']): Diagnostic['code']  {
+            function toInternalCode(code: vscode.Diagnostic['code']): Diagnostic['code'] {
                 if (code != null && typeof code === 'object') {
                     return code.value as Diagnostic['code']
                 }
@@ -414,8 +425,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             const resolveCompletionItem = provider.resolveCompletionItem;
             return languages.registerCompletionItemProvider(selector, {
                 provideCompletionItems({ textDocument, position, context }, token) {
-                    return provider.provideCompletionItems(<any>textDocument, <any>position, token, context || {
-                        triggerKind: CompletionTriggerKind.Invoked
+                    return provider.provideCompletionItems(<any>textDocument, <any>position, token, {
+                        triggerKind: context?.triggerKind ?? CompletionTriggerKind.Invoked,
+                        triggerCharacter: context?.triggerCharacter
                     }) as any;
                 },
                 resolveCompletionItem: resolveCompletionItem ? (item, token) => {
@@ -728,7 +740,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerEvaluatableExpressionProvider: unsupported,
-        registerDocumentSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+        registerDocumentSemanticTokensProvider(selector: vscode.DocumentSelector, provider: vscode.DocumentSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
             if (!isDocumentSelector(selector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
@@ -747,7 +759,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 })
             }, legend)
         },
-        registerDocumentRangeSemanticTokensProvider (selector: vscode.DocumentSelector, provider: vscode.DocumentRangeSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
+        registerDocumentRangeSemanticTokensProvider(selector: vscode.DocumentSelector, provider: vscode.DocumentRangeSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
             if (!isDocumentSelector(selector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
@@ -767,7 +779,11 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         getDiagnostics: unsupported,
         setLanguageConfiguration: unsupported,
         onDidChangeDiagnostics: unsupported,
-        registerLinkedEditingRangeProvider: unsupported
+        registerLinkedEditingRangeProvider: unsupported,
+        createLanguageStatusItem: unsupported,
+        registerInlineValuesProvider: unsupported,
+        registerInlayHintsProvider: unsupported,
+        registerTypeHierarchyProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
         if (typeof arg0 !== "string") {
@@ -804,6 +820,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                     return channel ? channel.show(arg) : () => { }
                 },
                 hide: unsupported,
+                replace: unsupported,
                 dispose: channel ? channel.dispose.bind(channel) : () => { }
             };
         },
@@ -864,7 +881,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return unsupported();
         },
         onDidChangeActiveColorTheme: unsupported,
-        registerFileDecorationProvider: unsupported
+        registerFileDecorationProvider: unsupported,
+        registerTerminalProfileProvider: unsupported,
+        onDidChangeTerminalState: unsupported
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
@@ -904,23 +923,29 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         appName: 'Monaco',
         appRoot: '',
         language: navigator.language || 'en-US',
-        get uriScheme () {
+        get uriScheme() {
             return unsupported();
         },
-        get clipboard () {
+        get clipboard() {
             return unsupported();
         },
-        get machineId () {
+        get machineId() {
             return unsupported();
         },
-        get sessionId () {
+        get sessionId() {
             return unsupported();
         },
         remoteName: undefined,
         shell: '',
         uiKind: 2, // vscode.UIKind.Web,
         asExternalUri: unsupported,
-        openExternal: unsupported
+        openExternal: unsupported,
+        get appHost() {
+            return unsupported();
+        },
+        isNewAppInstall: false,
+        isTelemetryEnabled: false,
+        onDidChangeTelemetryEnabled: unsupported
     }
 
     const partialApi: Partial<typeof vscode> = {
