@@ -5,7 +5,7 @@
     "@types/node": "^13.1.7",
     "@types/normalize-url": "^1.9.1",
     "@types/ws": "0.0.39",
-    "@types/vscode": "1.52.0",
+    "@types/vscode": "1.65.0",
     "css-loader": "^0.28.11",
     "lerna": "^3.16.4",
     "monaco-editor-core": "^0.33.0",
