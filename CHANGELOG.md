@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.4] - 2022-03-15
+
+* Update to monaco 0.33 & vscode 1.65 [#329](https://github.com/TypeFox/monaco-languageclient/pull/329)
+* Updated minor versions of vscode-languageserver-textdocument and vscode-uri and removed engines entry from client
+
 ## [0.17.4] - 2022-02-22 (2022-03-08)
 
 * First released as @codingame/monaco-languageclient@0.17.4 on specified date

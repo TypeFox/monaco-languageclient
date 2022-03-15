@@ -1,12 +1,9 @@
 {
     "name": "monaco-languageclient",
-    "version": "0.17.4",
+    "version": "0.18.0",
     "description": "Monaco Language client implementation",
     "author": "TypeFox GmbH (http://www.typefox.io)",
     "license": "MIT",
-    "engines": {
-        "vscode": "^1.50.0"
-    },
     "repository": {
         "type": "git",
         "url": "https://github.com/TypeFox/monaco-languageclient.git"
@@ -20,8 +17,8 @@
         "glob-to-regexp": "^0.4.1",
         "vscode-jsonrpc": "6.0.0",
         "vscode-languageclient": "7.0.0",
-        "vscode-languageserver-textdocument": "^1.0.1",
-        "vscode-uri": "^3.0.2"
+        "vscode-languageserver-textdocument": "^1.0.4",
+        "vscode-uri": "^3.0.3"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run compile",

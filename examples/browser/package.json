@@ -4,7 +4,7 @@
   "version": "0.17.4",
   "dependencies": {
     "file-loader": "^4.3.0",
-    "monaco-languageclient": "^0.17.4",
+    "monaco-languageclient": "^0.18.0",
     "vscode-json-languageservice": "^4.1.9",
     "vscode-languageserver-types": "^3.16.0"
   },
