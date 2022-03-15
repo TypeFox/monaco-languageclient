@@ -63,7 +63,9 @@ export class MonacoWorkspace implements Workspace {
         }
         this.onDidChangeTextDocumentEmitter.fire({
             textDocument,
-            contentChanges
+            contentChanges,
+            isRedoing: event.isRedoing,
+            isUndoing: event.isUndoing
         });
     }
 

@@ -246,6 +246,8 @@ export interface Languages {
 export interface TextDocumentDidChangeEvent {
     readonly textDocument: TextDocument;
     readonly contentChanges: TextDocumentContentChangeEvent[];
+    readonly isUndoing: boolean;
+    readonly isRedoing: boolean;
 }
 
 export interface TextDocumentWillSaveEvent {
