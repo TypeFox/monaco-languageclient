@@ -9,6 +9,7 @@ import { MonacoLanguages } from "./monaco-languages";
 import { MonacoWorkspace } from "./monaco-workspace";
 import { ConsoleWindow } from "./console-window";
 import { Services } from "./services";
+import { Disposable, DisposableCollection } from './disposable';
 
 export interface MonacoServices extends Services {
     commands: MonacoCommands
