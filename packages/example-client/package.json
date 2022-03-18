@@ -1,0 +1,37 @@
+{
+  "name": "node-example",
+  "private": true,
+  "version": "0.19.0-next.0",
+  "dependencies": {
+    "@types/ws": "^8.5.3",
+    "@codingame/monaco-jsonrpc": "^0.3.1",
+    "monaco-editor": "^0.33.0",
+    "monaco-languageclient": "../client",
+    "express": "^4.17.3",
+    "file-loader": "^6.2.0",
+    "reconnecting-websocket": "^4.4.0",
+    "request-light": "^0.5.7",
+    "vscode-json-languageservice": "^4.2.1",
+    "vscode-languageserver": "7.0.0",
+    "normalize-url": "^7.0.3",
+    "vscode-uri": "^3.0.3",
+    "ws": "^8.5.0",
+    "css-loader": "^6.7.1",
+    "source-map-loader": "^3.0.1",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.1",
+    "webpack": "^5.70.0",
+    "webpack-merge": "^5.8.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "scripts": {
+    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "compile": "npm run clean && tsc -b .",
+    "build-webpack": "webpack",
+    "build": "npm run clean && npm run compile && npm run copy",
+    "watch": "tsc -w",
+    "copy": "shx cp src/index.html lib/index.html",
+    "start": "node lib/server.js",
+    "start:ext": "node lib/server.js --external"
+  }
+}
