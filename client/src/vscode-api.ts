@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
@@ -119,6 +119,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         }
     }
 
+    enum TextDocumentChangeReason {
+        /** The text change is caused by an undo operation. */
+        Undo = 1,
+
+        /** The text change is caused by an redo operation. */
+        Redo = 2,
+    }
+
     const workspace: typeof vscode.workspace = {
         fs: new EmptyFileSystem(),
         workspaceFile: undefined,
@@ -218,7 +226,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                     l({
                         document: <any>textDocument,
                         contentChanges: <any>contentChanges,
-                        reason: isUndoing ? vscode.TextDocumentChangeReason.Undo : isRedoing ? vscode.TextDocumentChangeReason.Redo : undefined
+                        reason: isUndoing ? TextDocumentChangeReason.Undo : isRedoing ? TextDocumentChangeReason.Redo : undefined
                     });
                 }, undefined, disposables);
             }
@@ -968,7 +976,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
         EventEmitter: ServicesModule.Emitter,
         CancellationTokenSource,
-        ProgressLocation: ServicesModule.ProgressLocation
+        ProgressLocation: ServicesModule.ProgressLocation,
+        TextDocumentChangeReason
     };
 
     return partialApi as any;
