@@ -4,7 +4,19 @@
       "rootDir": "src",
       "outDir": "lib",
       "declarationDir": "lib",
-      "noUnusedParameters": false
+      "noUnusedParameters": false,
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "inlineSources": false,
+      "stripInternal": true,
+      "lib": [
+        "es2016",
+        "dom"
+      ],
+      "strict": true,
+      "noImplicitReturns": true,
+      "noUnusedLocals": true
   },
   "include": [
       "src/**/*"
