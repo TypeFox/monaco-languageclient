@@ -33,6 +33,11 @@
     "vscode-languageserver-textdocument": "^1.0.4",
     "vscode-uri": "^3.0.3"
   },
+  "devDependencies": {
+    "@types/vscode": "1.65.0",
+    "@types/node": "^16.11.7",
+    "@types/glob-to-regexp": "^0.4.1"
+  },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
     "compile": "tsc",
@@ -40,8 +45,5 @@
     "build": "npm run clean && npm run compile",
     "prepublishOnly": "npm run dist:amd",
     "dist:amd": "tsc --outDir dist/amd --module amd"
-  },
-  "devDependencies": {
-    "@types/glob-to-regexp": "^0.4.1"
   }
 }
