@@ -19,8 +19,7 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
-    "compile": "npm run clean && tsc -b .",
-    "build-webpack": "webpack",
+    "compile": "tsc -b .",
     "build": "npm run clean && npm run compile",
     "watch": "tsc -w",
     "start": "node lib/server.js",

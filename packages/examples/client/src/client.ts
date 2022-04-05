@@ -1,11 +1,32 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+import 'monaco-editor/esm/vs/editor/editor.all.js';
+
+import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuickInputService.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
+
+// support all basic-languages
+import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
+
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
 import { MonacoLanguageClient, MessageConnection, CloseAction, ErrorAction, MonacoServices, createConnection } from 'monaco-languageclient';
 import { listen } from '@codingame/monaco-jsonrpc';
 import normalizeUrl from 'normalize-url';
+
+import { buildWorkerDefinition } from "monaco-editor-workers";
+buildWorkerDefinition('../dist/workers', import.meta.url, false);
+//buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
 
 // register Monaco languages
 monaco.languages.register({
