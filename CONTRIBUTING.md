@@ -36,6 +36,8 @@ A new maintainer should be listed as [a current maintainer](#current-maintainers
 
 ### Releasing
 
+**TODO: This is outdated and needs to be discussed.**
+
 For simplicity, each release should bump the minor version.
 
 - Publish:

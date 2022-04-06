@@ -2,7 +2,7 @@
 
 [![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
-[![Build Status](https://travis-ci.org/TypeFox/monaco-languageclient.svg?branch=master)](https://travis-ci.org/TypeFox/monaco-languageclient)
+[![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
 [![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 [![NPM Download](https://img.shields.io/npm/dt/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 
@@ -24,7 +24,7 @@
 
 ### Project Modernization
 
-From release 0.19.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore we the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
+From release 0.19.0 onward the project switched to npm workspaces. We no longer require yarn, lerna  and webpack. Mostly therefore we the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/).
 

@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 * Switch to npm workspace and vite and thereby drop yarn, lerna and webpack
 * Restructure project: All code is moved to packages directory
 * Update and clean-up all dependencies
-* Use monaco-editor in examples
+* Use monaco-editor in examples instead of monaco-editor-core
 * README is fully updated
 
 ## [0.18.1] - 2022-03-21
