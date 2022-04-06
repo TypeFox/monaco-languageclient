@@ -24,7 +24,7 @@
 
 ### Project Modernization
 
-From release 0.19.0 onward the project switched to npm workspaces. We no longer require yarn, lerna  and webpack. Mostly therefore we the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
+From release 0.19.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/).
 

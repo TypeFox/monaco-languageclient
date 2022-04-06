@@ -18,10 +18,9 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                client: path.resolve(__dirname, '/packages/examples/client/index.html')
-            },
-            plugins: [
-            ]
+                client: path.resolve(__dirname, '/packages/examples/client/index.html'),
+                browser: path.resolve(__dirname, '/packages/examples/browser/index.html')
+            }
         }
     },
     server: {
