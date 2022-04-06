@@ -2,9 +2,30 @@
  * Copyright (c) 2018 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+
+import 'monaco-editor/esm/vs/editor/editor.all.js';
+
+import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuickInputService.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
+
+// support all basic-languages
+import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
+
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+import { buildWorkerDefinition } from "monaco-editor-workers";
+buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
-import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient/lib/monaco-converter';
+import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient';
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'
@@ -55,10 +76,10 @@ const p2m = new ProtocolToMonacoConverter(monaco);
 const jsonService = getLanguageService({
     schemaRequestService: resolveSchema
 });
-const pendingValidationRequests = new Map<string, number>();
+const pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
 monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    provideCompletionItems(model, position, context, token): monaco.Thenable<monaco.languages.CompletionList> {
+    provideCompletionItems(model, position, _context, _token): monaco.Thenable<monaco.languages.CompletionList> {
         const document = createDocument(model);
         const wordUntil = model.getWordUntilPosition(position);
         const defaultRange = new monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
@@ -68,13 +89,13 @@ monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
         });
     },
 
-    resolveCompletionItem(item, token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
+    resolveCompletionItem(item, _token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
         return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result, item.range));
     }
 });
 
 monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
-    provideDocumentRangeFormattingEdits(model, range, options, token): monaco.languages.TextEdit[] | monaco.Thenable<monaco.languages.TextEdit[]> {
+    provideDocumentRangeFormattingEdits(model, range, options, _token): monaco.languages.TextEdit[] | monaco.Thenable<monaco.languages.TextEdit[]> {
         const document = createDocument(model);
         const edits = jsonService.format(document, m2p.asRange(range), m2p.asFormattingOptions(options));
         return p2m.asTextEdits(edits);
@@ -82,7 +103,7 @@ monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
 });
 
 monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
-    provideDocumentSymbols(model, token): monaco.languages.DocumentSymbol[] | monaco.Thenable<monaco.languages.DocumentSymbol[]> {
+    provideDocumentSymbols(model, _token): monaco.languages.DocumentSymbol[] | monaco.Thenable<monaco.languages.DocumentSymbol[]> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return p2m.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
@@ -90,7 +111,7 @@ monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
 });
 
 monaco.languages.registerHoverProvider(LANGUAGE_ID, {
-    provideHover(model, position, token): monaco.languages.Hover | monaco.Thenable<monaco.languages.Hover> {
+    provideHover(model, position, _token): monaco.languages.Hover | monaco.Thenable<monaco.languages.Hover> {
         const document = createDocument(model);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return jsonService.doHover(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((hover) => {
@@ -99,7 +120,7 @@ monaco.languages.registerHoverProvider(LANGUAGE_ID, {
     }
 });
 
-getModel().onDidChangeContent((event) => {
+getModel().onDidChangeContent((_event) => {
     validate();
 });
 

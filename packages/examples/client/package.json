@@ -4,20 +4,16 @@
   "version": "0.19.0-next.0",
   "dependencies": {
     "monaco-editor": "^0.33.0",
-    "monaco-languageclient": "0.18.1",
-    "@codingame/monaco-jsonrpc": "^0.3.1",
     "monaco-editor-workers": "^0.33.0-next.2",
-    "normalize-url": "^7.0.3",
-    "shx": "^0.3.4",
-    "typescript": "^4.6.3",
-    "vite": "^2.9.1"
+    "monaco-languageclient": "../../client",
+    "@codingame/monaco-jsonrpc": "^0.3.1",
+    "normalize-url": "^7.0.3"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
-    "compile": "tsc -b .",
-    "build": "npm run clean && npm run compile && npm run copy-workers",
+    "compile": "tsc",
     "watch": "tsc -w",
-    "copy-workers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers ./dist",
-    "start": "npm run copy-workers && vite --debug"
+    "build": "npm run clean && npm run compile",
+    "copy-monaco-workers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers ./dist"
   }
 }

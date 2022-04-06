@@ -10,7 +10,7 @@
       "src/**/*"
   ],
   "exclude": [
-    "lib",
+    "dist",
     "node_modules"
   ]
 }

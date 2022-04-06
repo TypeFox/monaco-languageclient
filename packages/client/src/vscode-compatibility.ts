@@ -5,6 +5,4 @@
 import { createVSCodeApi } from "./vscode-api";
 import { Services } from "./services";
 
-const vscodeCompatibility = createVSCodeApi(Services.get);
-
-export { vscodeCompatibility };
+export = createVSCodeApi(Services.get);

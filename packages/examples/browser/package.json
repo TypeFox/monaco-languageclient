@@ -3,28 +3,15 @@
   "name": "browser-example",
   "version": "0.19.0-next.0",
   "dependencies": {
-    "file-loader": "^6.2.0",
     "monaco-editor": "^0.33.0",
-    "monaco-languageclient": "^0.18.1",
-    "vscode-json-languageservice": "^4.1.9",
-    "vscode-languageserver-types": "^3.16.0",
-    "css-loader": "^0.28.11",
-    "source-map-loader": "^0.2.3",
-    "style-loader": "^0.20.3",
-    "terser": "^5.12.1",
-    "webpack": "^5.70.0",
-    "webpack-merge": "^5.8.0"
+    "monaco-editor-workers": "^0.33.0-next.2",
+    "monaco-languageclient": "../../client",
+    "vscode-json-languageservice": "^4.2.1"
   },
   "scripts": {
-    "clean": "npx shx rm -fr dist",
+    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
     "compile": "tsc",
     "watch": "tsc -w",
-    "copy": "shx cp src/index.html dist/index.html",
-    "build": "echo 'Build of browser-example not ready, yet.'",
-    "build-full": "npm run clean && npm run compile && webpack && npm run copy",
-    "update:file-deps": "npm run clean:file-deps && npm install",
-    "clean:file-deps": "npm run clean:monaco-languageclient",
-    "update:monaco-languageclient": "npm run clean:monaco-languageclient && npm install",
-    "clean:monaco-languageclient": "npx shx -fr node_modules/monaco-languageclient"
+    "build": "npm run clean && npm run compile"
   }
 }

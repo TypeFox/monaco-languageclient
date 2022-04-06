@@ -132,3 +132,4 @@ export function createConnection(connection: MessageConnection, errorHandler: Co
         end: () => connection.end()
     };
 }
+

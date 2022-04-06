@@ -20,13 +20,12 @@ import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
+import { buildWorkerDefinition } from "monaco-editor-workers";
+buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+
 import { MonacoLanguageClient, MessageConnection, CloseAction, ErrorAction, MonacoServices, createConnection } from 'monaco-languageclient';
 import { listen } from '@codingame/monaco-jsonrpc';
 import normalizeUrl from 'normalize-url';
-
-import { buildWorkerDefinition } from "monaco-editor-workers";
-buildWorkerDefinition('../dist/workers', import.meta.url, false);
-//buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
 
 // register Monaco languages
 monaco.languages.register({
@@ -60,12 +59,12 @@ const webSocket = new WebSocket(url);
 listen({
     webSocket,
     onConnection: connection => {
-        console.log('Connected to: ' + url);
-
         // create and start the language client
         const languageClient = createLanguageClient(connection);
         const disposable = languageClient.start();
         connection.onClose(() => disposable.dispose());
+
+        console.log(`Connected to "${url}" and started the language client.`);
     }
 });
 
