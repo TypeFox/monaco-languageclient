@@ -42,8 +42,8 @@
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build": "npm run clean && npm run compile",
-    "prepublishOnly": "npm run dist:amd",
-    "dist:amd": "tsc --outDir dist/amd --module amd"
+    "clean:amd": "npx shx rm -fr dist",
+    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd",
+    "build": "npm run clean && npm run compile && npm run build:amd"
   }
 }
