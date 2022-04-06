@@ -20,9 +20,14 @@
     ".": {
       "default": "./lib/index.js",
       "types": "./lib/index.d.ts"
+    },
+    "./amd": {
+      "default": "./dist/amd/index.js",
+      "types": "./dist/amd/index.d.ts"
     }
   },
   "files": [
+    "dist/amd",
     "lib",
     "src"
   ],
@@ -43,7 +48,7 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "clean:amd": "npx shx rm -fr dist",
-    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd",
+    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd --declarationDir dist/amd --declaration",
     "build": "npm run clean && npm run compile && npm run build:amd"
   }
 }
