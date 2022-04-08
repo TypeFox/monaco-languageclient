@@ -12,3 +12,17 @@ export * from './monaco-languages';
 export * from './monaco-workspace';
 export * from './monaco-services';
 export * from './monaco-converter';
+
+//import * as ServicesModule from "./services";
+//import * as LcModule from "./monaco-language-client";
+
+export {
+    BaseLanguageClient,
+    CloseAction,
+    ErrorAction,
+    MessageTransports,
+    MonacoLanguageClient,
+    RevealOutputChannelOn,
+    State,
+    TextDocumentFeature
+ } from "./monaco-language-client";

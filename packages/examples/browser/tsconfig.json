@@ -7,7 +7,7 @@
     "module": "ES2020",
     "lib": ["ES2020", "dom"]
   },
-  "references": [{ "path": "../../client" }],
+  "references": [{ "path": "../../client/tsconfig.cjs.json" }],
   "include": [
       "src/**/*.ts"
   ],

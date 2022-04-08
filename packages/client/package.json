@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "0.19.0-next.0",
+  "version": "0.19.0-next.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -14,16 +14,28 @@
   "bugs": {
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "types": "./lib/cjs/index.d.ts",
   "exports": {
     ".": {
-      "default": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "default": "./lib/cjs/index.js",
+      "types": "./lib/cjs/index.d.ts"
     },
-    "./amd": {
-      "default": "./dist/amd/index.js",
-      "types": "./dist/amd/index.d.ts"
+    "./bundle-cjs": {
+      "default": "./dist/mlc-cjs.js",
+      "types": "./lib/cjs/index.d.ts"
+    },
+    "./lib-es": {
+      "import": "./lib/es/index.js",
+      "types": "./lib/es/index.d.ts"
+    },
+    "./bundle-es": {
+      "import": "./dist/mlc-es.js",
+      "types": "./lib/es/index.d.ts"
+    },
+    "./lib-amd": {
+      "default": "./lib/amd/index.js",
+      "types": "./lib/amd/index.d.ts"
     },
     "./vscode-compatibility": {
       "default": "./lib/vscode-compatibility.js",
@@ -35,8 +47,10 @@
     }
   },
   "files": [
-    "dist/amd",
-    "lib",
+    "dist",
+    "lib/cjs",
+    "lib/es",
+    "lib/amd",
     "src"
   ],
   "dependencies": {
@@ -52,11 +66,13 @@
     "@types/glob-to-regexp": "^0.4.1"
   },
   "scripts": {
-    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
-    "compile": "tsc",
-    "watch": "tsc -w",
-    "clean:amd": "npx shx rm -fr dist",
-    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd --declarationDir dist/amd --declaration",
-    "build": "npm run clean && npm run compile && npm run build:amd"
+    "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",
+    "compile": "tsc -p tsconfig.cjs.json",
+    "watch": "tsc -w -p tsconfig.cjs.json",
+    "compile:es": "tsc -p tsconfig.es.json",
+    "compile:amd": "tsc -p tsconfig.amd.json",
+    "build:libs": "npm run build:amd && npm run build:umd && npm run build:es",
+    "build:bundles": "vite --config vite.lib.config.ts build",
+    "build": "npm run clean && npm run compile && npm run compile:es && npm run compile:amd && npm run build:bundles"
   }
 }

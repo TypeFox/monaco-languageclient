@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+      "rootDir": "src",
+      "outDir": "lib/amd",
+      "declarationDir": "lib/amd",
+      "noUnusedParameters": false,
+      "target": "es6",
+      "module": "amd",
+      "moduleResolution": "node",
+      "inlineSources": false,
+      "stripInternal": true,
+      "lib": [
+        "es2016",
+        "dom"
+      ],
+      "strict": true,
+      "noImplicitReturns": true,
+      "noUnusedLocals": true
+  },
+  "include": [
+      "src/**/*"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
+}

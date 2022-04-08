@@ -6,7 +6,7 @@ export default defineConfig({
         alias: [
             {
                 find: 'vscode',
-                replacement: path.resolve(__dirname, './packages/client/lib/cjs/vscode-compatibility')
+                replacement: path.resolve(__dirname, './src/vscode-compatibility')
             }
         ]
     },
@@ -17,11 +17,15 @@ export default defineConfig({
     },
     build: {
         rollupOptions: {
-            input: {
-                client: path.resolve(__dirname, '/packages/examples/client/index.html'),
-                browser: path.resolve(__dirname, '/packages/examples/browser/index.html')
-            }
-        }
+        },
+        outDir: 'dist',
+        emptyOutDir: false,
+        lib: {
+            entry: path.resolve(__dirname, './src/index.ts'),
+            name: 'mlc',
+            fileName: () => 'mlc-[format].js',
+            formats: ['cjs', 'es']
+        },
     },
     server: {
         port: 8080
