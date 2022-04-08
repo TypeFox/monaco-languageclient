@@ -24,6 +24,14 @@
     "./amd": {
       "default": "./dist/amd/index.js",
       "types": "./dist/amd/index.d.ts"
+    },
+    "./vscode-compatibility": {
+      "default": "./lib/vscode-compatibility.js",
+      "types": "./lib/vscode-compatibility.d.ts"
+    },
+    "./amd/vscode-compatibility": {
+      "default": "./dist/amd/vscode-compatibility.js",
+      "types": "./dist/amd/vscode-compatibility.d.ts"
     }
   },
   "files": [
