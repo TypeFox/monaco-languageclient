@@ -1,70 +1,110 @@
 # Monaco language client
+
 [![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
-[![Build Status](https://travis-ci.org/TypeFox/monaco-languageclient.svg?branch=master)](https://travis-ci.org/TypeFox/monaco-languageclient)
+[![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
 [![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 [![NPM Download](https://img.shields.io/npm/dt/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 
-[NPM module](https://www.npmjs.com/) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/)
+[NPM module](https://www.npmjs.com/) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).<br>Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsofts-monaco-editor) for a detail explanation how to connect the Monaco editor to your language server.
 
-- Look at [the example client](https://github.com/TypeFox/monaco-languageclient/blob/master/example/src/client.ts) to learn how to start Monaco language client.
-- Look at [the example express app](https://github.com/TypeFox/monaco-languageclient/blob/master/example/src/server.ts) to learn how to open a web socket with an express app and launch a language server within the current process or as an external process.
-- Look at [the browser example](https://github.com/TypeFox/monaco-languageclient/blob/master/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page.
-
-Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsofts-monaco-editor) for a detail explanation how to connect the Monaco editor to your language server.
-
+- [**Introduction**](#introduction)
+  - [Project Modernization](#project-modernization)
 - [**Getting started**](#getting-started)
-   - [Local dev env](#local-dev-env)
-  - [Gitpod](#gitpod)
+  - [Development environments](#development-environments)
+  - [Scripts Overview](#scripts-overview)
 - [**Examples**](#examples)
-  - [Node.js](#nodejs)
+  - [ Node.js Language Server + web client example](#nodejs-language-server-plus-web-client-example)
   - [Browser](#browser)
+  - [VSCode integration](#vscode-integration)
 - [**History**](CHANGELOG.md)
 - [**License**](#license)
 
+## Introduction
+
+### Project Modernization
+
+From release 0.19.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
+
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/).
+
 ## Getting started
 
-### Local dev env
+### Development environments
 
+On your local machine you can prepare your dev environment as follows. From CLI in root of the project run:
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
-yarn
+npm i
+# Cleans-up and compiles everything
+npm run build
 ```
 
-### Gitpod
-
-Just start a fresh dev environment in Gitpod.
+Or you use a fresh dev environment in [Gitpod](https://www.gitpod.io) which is a one-click online IDE for GitHub.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 
-[Gitpod](https://www.gitpod.io) is a one-click online IDE for GitHub. It is based on [Theia IDE framework](http://www.theia-ide.org) and make use of Monaco and the language server protocol by means of monaco-languageclient.
+### Scripts Overview
+
+The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` amd `compile`, but it also has entries for launching script from the packages (lib and examples).
+
+For example if you want to rebuild the library you can do it in different ways. From CLI run one of:
+```bash
+# from the root
+npm run build-client
+npm --prefix packages/client run build
+npm --workspace packages/client run build
+# or from packages/client
+cd packages/client && npm run build
+```
 
 ## Examples
 
-There are two different examples that demonstrate how the `monaco-languageclient` can be used. The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application. The browser example shows how a language service written in JavaScript can be used in a Monaco Editor contained in a simple HTML page.
+There are two different examples (one is a client-server one now separated) that demonstrate how the `monaco-languageclient` can be used. The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application. The browser example shows how a language service written in JavaScript can be used in a Monaco Editor contained in a simple HTML page.
 
-### Node.js
+All example packages now are now located under [./packages/examples](./packages/examples):
 
-The example node package is located under the `monaco-languageclient/example` directory. All tasks below should be run from this directory.
+- Node.js Language Server example: [./packages/examples/node](./packages/examples/node): - Look at the [example express app](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/node/src/server.ts) to learn how to open a web socket with an express app and launch a language server within the current process or as an external process.
+- Web Client for Node.js Language Server: [./packages/examples/client](./packages/examples/client): Look at the [example client](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/client/src/client.ts) to learn how to start Monaco language client.
+- Browser example: [./packages/examples/browser](./packages/examples/browser): Look at the [browser example](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page.
 
-From CLI:
-- Run `yarn` and `yarn prepare` to install dependencies and build the example node package.
-- Run `yarn run start` to start the express server with the language server running in the same process.
-- Run `yarn run start:ext` to start the express server with language server running in the external process.
+### Node.js Language Server plus web client example
 
-After staring the express server go to http://localhost:3000 to open the sample page.
+From CLI in root of the project run:
 
-You can as well run vscode tasks to start and debug the server in different modes.
+```bash
+# optionally: we assume everything is build as stated above
+npm run build
+# to start the express server with the language server running in the same process.
+npm run start-example-node
+# to start the express server with language server running in the external process.
+npm run start-example-node:ext
+# launches vite development server
+npm run dev
+```
 
-### Browser
+After launching vite development server go to http://localhost:8080/packages/examples/client/index.html . vite actually servers all client code and if you go to just http://localhost:8080 you can select if you want to open **Web Client for Node.js Language Server** or **Browser Example**.
 
-The example browser package is located under the `monaco-languageclient/examples/browser` directory. All tasks below should be run from this directory.
+You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
 
-From CLI:
-- Run `yarn` and `yarn run build` to install dependencies and build the example HTML and JavaScript files.
+### Browser example
 
-After the example has been built, open `monaco-languageclient/examples/browser/lib/index.html` in a browser to open the sample page.
+From CLI in root of the project you just need to run. If it is already running there is nothing more to do berforehand:
+
+```bash
+# launches vite development server
+npm run dev
+```
+
+After launching vite development server go to http://localhost:8080/packages/examples/browser/index.html . vite actually servers all client code and if you go to just http://localhost:8080 you can select if you want to open **Web Client for Node.js Language Server** or **Browser Example**.
+
+You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
+
+### VSCode integration
+
+You can as well run vscode tasks to start and debug the server in different modes and the client.
 
 ## License
+
 [MIT](https://github.com/TypeFox/monaco-languageclient/blob/master/License.txt)

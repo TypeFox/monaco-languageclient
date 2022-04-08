@@ -1,0 +1,28 @@
+{
+  "name": "node-example",
+  "private": true,
+  "version": "0.19.0-next.0",
+  "dependencies": {
+    "@types/ws": "^8.5.3",
+    "@codingame/monaco-jsonrpc": "^0.3.1",
+    "express": "^4.17.3",
+    "request-light": "^0.5.7",
+    "vscode-json-languageservice": "^4.2.1",
+    "vscode-languageserver": "7.0.0",
+    "normalize-url": "^7.0.3",
+    "vscode-uri": "^3.0.3",
+    "ws": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.7"
+  },
+  "scripts": {
+    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "compile": "tsc -b .",
+    "build": "npm run clean && npm run compile",
+    "watch": "tsc -w",
+    "start": "node lib/server.js",
+    "start:ext": "node lib/server.js --external"
+  }
+}

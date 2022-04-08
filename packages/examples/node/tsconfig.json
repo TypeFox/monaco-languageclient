@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig",
+  "compilerOptions": {
+      "rootDir": "src",
+      "outDir": "lib",
+      "declarationDir": "lib"
+  },
+  "references": [{ "path": "../../client" }],
+  "include": [
+      "src/**/*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

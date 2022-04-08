@@ -8,24 +8,31 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Sample Server",
-            "program": "${workspaceRoot}/example/lib/server.js",
+            "program": "${workspaceRoot}/packages/examples/client/lib/server.js",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceRoot}/example/lib/**/*.js"
+                "${workspaceRoot}/packages/examples/client/lib/**/*.js"
             ]
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Sample Server (external)",
-            "program": "${workspaceRoot}/example/lib/server.js",
+            "program": "${workspaceRoot}/packages/examples/client/lib/server.js",
             "args": [
                 "--external"
             ],
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceRoot}/example/lib/**/*.js"
+                "${workspaceRoot}/packages/examples/client/lib/**/*.js"
             ]
-        }
+        },
+        {
+          "type": "pwa-chrome",
+          "request": "launch",
+          "name": "Launch Chrome against localhost",
+          "url": "http://localhost:8080",
+          "webRoot": "${workspaceFolder}"
+      }
     ]
 }

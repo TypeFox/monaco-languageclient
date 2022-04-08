@@ -1,0 +1,20 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+    name: monaco-languageclient
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Build
+      shell: bash
+      run: |
+        npm i && npm run build

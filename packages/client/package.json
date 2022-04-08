@@ -1,0 +1,54 @@
+{
+  "name": "monaco-languageclient",
+  "version": "0.19.0-next.0",
+  "description": "Monaco Language client implementation",
+  "author": {
+    "name": "TypeFox GmbH ",
+    "url": "http://www.typefox.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypeFox/monaco-languageclient.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./amd": {
+      "default": "./dist/amd/index.js",
+      "types": "./dist/amd/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/amd",
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "glob-to-regexp": "^0.4.1",
+    "vscode-jsonrpc": "6.0.0",
+    "vscode-languageclient": "7.0.0",
+    "vscode-languageserver-textdocument": "1.0.4",
+    "vscode-uri": "3.0.3"
+  },
+  "devDependencies": {
+    "@types/vscode": "1.66.0",
+    "@types/node": "^16.11.7",
+    "@types/glob-to-regexp": "^0.4.1"
+  },
+  "scripts": {
+    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "clean:amd": "npx shx rm -fr dist",
+    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd --declarationDir dist/amd --declaration",
+    "build": "npm run clean && npm run compile && npm run build:amd"
+  }
+}

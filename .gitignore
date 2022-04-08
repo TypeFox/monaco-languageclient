@@ -1,5 +1,8 @@
 .DS_Store
-lib
-node_modules
 *.log
+
+node_modules
+lib
 dist
+
+*.tsbuildinfo
