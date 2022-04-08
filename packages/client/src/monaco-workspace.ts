@@ -4,12 +4,15 @@
  * ------------------------------------------------------------------------------------------ */
 import type * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from './monaco-converter';
-import { Workspace, WorkspaceEdit, TextDocumentDidChangeEvent, Event, Emitter } from './services';
+import { Workspace, WorkspaceEdit, TextDocumentDidChangeEvent, Event, Emitter, Disposable } from './services';
 import { TextDocument } from 'vscode-languageserver-textdocument'
+import { DisposableCollection } from './disposable';
 
-export class MonacoWorkspace implements Workspace {
+export class MonacoWorkspace implements Workspace, Disposable {
 
+    protected readonly disposableCollection = new DisposableCollection()
     protected readonly documents = new Map<string, TextDocument>();
+    protected readonly documentDisposables = new Map<string, Disposable>();
     protected readonly onDidOpenTextDocumentEmitter = new Emitter<TextDocument>();
     protected readonly onDidCloseTextDocumentEmitter = new Emitter<TextDocument>();
     protected readonly onDidChangeTextDocumentEmitter = new Emitter<TextDocumentDidChangeEvent>();
@@ -22,12 +25,21 @@ export class MonacoWorkspace implements Workspace {
         for (const model of this._monaco.editor.getModels()) {
             this.addModel(model);
         }
-        this._monaco.editor.onDidCreateModel(model => this.addModel(model));
-        this._monaco.editor.onWillDisposeModel(model => this.removeModel(model));
-        this._monaco.editor.onDidChangeModelLanguage((event) => {
+
+        this.disposableCollection.push(this._monaco.editor.onDidCreateModel(model => this.addModel(model)));
+        this.disposableCollection.push(this._monaco.editor.onWillDisposeModel(model => this.removeModel(model)));
+        this.disposableCollection.push(this._monaco.editor.onDidChangeModelLanguage((event) => {
             this.removeModel(event.model);
             this.addModel(event.model);
-        });
+        }));
+    }
+
+    dispose(): void {
+        this.disposableCollection.dispose()
+
+        for (const model of this._monaco.editor.getModels()) {
+            this.removeModel(model);
+        }
     }
 
     get rootUri() {
@@ -41,15 +53,20 @@ export class MonacoWorkspace implements Workspace {
             this.documents.delete(uri);
             this.onDidCloseTextDocumentEmitter.fire(document);
         }
+        const disposable = this.documentDisposables.get(uri)
+        if (disposable) {
+            disposable.dispose()
+            this.documentDisposables.delete(uri)
+        }
     }
 
     protected addModel(model: monaco.editor.IModel): void {
         const uri = model.uri.toString();
         const document = this.setModel(uri, model);
         this.onDidOpenTextDocumentEmitter.fire(document)
-        model.onDidChangeContent(event =>
+        this.documentDisposables.set(uri, model.onDidChangeContent(event =>
             this.onDidChangeContent(uri, model, event)
-        );
+        ));
     }
 
     protected onDidChangeContent(uri: string, model: monaco.editor.IModel, event: monaco.editor.IModelContentChangedEvent) {

@@ -9,6 +9,7 @@ import { MonacoLanguages } from "./monaco-languages";
 import { MonacoWorkspace } from "./monaco-workspace";
 import { ConsoleWindow } from "./console-window";
 import { Services } from "./services";
+import { Disposable, DisposableCollection } from './disposable';
 
 export interface MonacoServices extends Services {
     commands: MonacoCommands
@@ -31,10 +32,14 @@ export namespace MonacoServices {
             window: new ConsoleWindow()
         }
     }
-    export function install(_monaco: typeof monaco, options: Options = {}): MonacoServices {
+    export function install(_monaco: typeof monaco, options: Options = {}): Disposable {
+        const disposableCollection = new DisposableCollection()
+
         const services = create(_monaco, options);
-        Services.install(services);
-        return services;
+        disposableCollection.push(services.workspace)
+        disposableCollection.push(Services.install(services));
+
+        return disposableCollection;
     }
     export function get(): MonacoServices {
         return Services.get() as MonacoServices;
