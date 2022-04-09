@@ -15,7 +15,7 @@
   - [Scripts Overview](#scripts-overview)
 - [**Examples**](#examples)
   - [ Node.js Language Server + web client example](#nodejs-language-server-plus-web-client-example)
-  - [Browser](#browser)
+  - [Browser](#browser-example)
   - [VSCode integration](#vscode-integration)
 - [**History**](CHANGELOG.md)
 - [**License**](#license)
