@@ -28,6 +28,8 @@ From release 0.19.0 onward the project switched to npm workspaces. We no longer 
 
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/).
 
+The default and protected branch is now `main`.
+
 ## Getting started
 
 ### Development environments
