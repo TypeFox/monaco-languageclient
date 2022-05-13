@@ -151,7 +151,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 onDidChange: Event.None,
                 onDidDelete: Event.None,
                 dispose: () => { }
-            }
+            };
         },
         applyEdit: async (edit) => {
             const services = servicesProvider();
@@ -229,7 +229,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                         reason: isUndoing ? TextDocumentChangeReason.Undo : isRedoing ? TextDocumentChangeReason.Redo : undefined
                     });
                 }, undefined, disposables);
-            }
+            };
         },
         get onWillSaveTextDocument(): typeof vscode.workspace.onWillSaveTextDocument {
             const services = servicesProvider();
@@ -250,7 +250,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                         }
                     });
                 }, undefined, disposables);
-            }
+            };
         },
         get onDidSaveTextDocument(): typeof vscode.workspace.onDidSaveTextDocument {
             const services = servicesProvider();
@@ -278,11 +278,11 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         },
 
         get onDidRenameFiles(): vscode.Event<vscode.FileRenameEvent> {
-            return Event.None
+            return Event.None;
         },
 
         get onDidGrantWorkspaceTrust(): vscode.Event<void> {
-            return Event.None
+            return Event.None;
         },
 
         getWorkspaceFolder: unsupported,
@@ -850,7 +850,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                     if (arg !== undefined && typeof arg !== 'boolean') {
                         throw new Error('unexpected preserveFocus argument: ' + JSON.stringify(arg, undefined, 4));
                     }
-                    return channel ? channel.show(arg) : () => { }
+                    return channel ? channel.show(arg) : () => { };
                 },
                 hide: unsupported,
                 replace: unsupported,
