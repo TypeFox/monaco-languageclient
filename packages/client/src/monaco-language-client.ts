@@ -3,14 +3,13 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import {
-    BaseLanguageClient, MessageTransports, LanguageClientOptions,
-    StaticFeature, DynamicFeature
-} from "vscode-languageclient/lib/common/client";
+    BaseLanguageClient, MessageTransports, LanguageClientOptions
+} from "vscode-languageclient";
 import { TypeDefinitionFeature } from "vscode-languageclient/lib/common/typeDefinition";
 import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/common/configuration";
 import { ImplementationFeature } from "vscode-languageclient/lib/common/implementation";
 import { ColorProviderFeature } from "vscode-languageclient/lib/common/colorProvider";
-import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/common/workspaceFolders";
+import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/common/workspaceFolder";
 import { FoldingRangeFeature } from "vscode-languageclient/lib/common/foldingRange";
 import { CallHierarchyFeature } from "vscode-languageclient/lib/common/callHierarchy";
 import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
@@ -94,21 +93,11 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new ImplementationFeature(this));
         this.registerFeature(new ColorProviderFeature(this));
         this.registerFeature(new WorkspaceFoldersFeature(this));
-        FoldingRangeFeature['asFoldingRanges'] = MonacoLanguageClient.bypassConversion;
         this.registerFeature(new FoldingRangeFeature(this));
         this.registerFeature(new DeclarationFeature(this));
         this.registerFeature(new SemanticTokensFeature(this));
         this.registerFeature(new CallHierarchyFeature(this));
         this.registerFeature(new ProgressFeature(this));
-
-        const features = this['_features'] as ((StaticFeature | DynamicFeature<any>)[]);
-        for (const feature of features) {
-            if (feature instanceof ColorProviderFeature) {
-                feature['asColor'] = MonacoLanguageClient.bypassConversion;
-                feature['asColorInformations'] = MonacoLanguageClient.bypassConversion;
-                feature['asColorPresentations'] = MonacoLanguageClient.bypassConversion;
-            }
-        }
     }
 
     public registerProposedFeatures() {
