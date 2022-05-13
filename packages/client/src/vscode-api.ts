@@ -807,6 +807,29 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 }
             }, legend)
         },
+        registerInlayHintsProvider(selector: vscode.DocumentSelector, provider: vscode.InlayHintsProvider) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerInlayHintsProvider) {
+                return Disposable.create(() => { });
+            }
+
+            const resolveInlayHint = provider.resolveInlayHint;
+            return languages.registerInlayHintsProvider(documentSelector, {
+                onDidChangeInlayHints: provider.onDidChangeInlayHints,
+                provideInlayHints({ textDocument, range }, token) {
+                    return provider.provideInlayHints(<any>textDocument, <any>range, token) as any
+                },
+                resolveInlayHint: resolveInlayHint ? (link, token) => {
+                    return resolveInlayHint(<any>link, token) as any
+                } : undefined
+            })
+        },
+        // FIXME: Should be implemented with monaco 0.34
+        registerInlineValuesProvider: unsupported,
         getLanguages: unsupported,
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
@@ -814,8 +837,6 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeDiagnostics: unsupported,
         registerLinkedEditingRangeProvider: unsupported,
         createLanguageStatusItem: unsupported,
-        registerInlineValuesProvider: unsupported,
-        registerInlayHintsProvider: unsupported,
         registerTypeHierarchyProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {

@@ -17,7 +17,7 @@ import {
     FoldingRange, FoldingRangeParams, DocumentSymbol, CodeAction,
     Declaration, SelectionRangeParams, SelectionRange, SemanticTokensParams,
     SemanticTokens, SemanticTokensEdit, SemanticTokensLegend, SemanticTokensRangeParams,
-    SemanticTokensDeltaParams
+    SemanticTokensDeltaParams, InlayHint, InlayHintParams
 } from 'vscode-languageserver-protocol';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -208,6 +208,12 @@ export interface DocumentRangeSemanticTokensProvider {
     provideDocumentRangeSemanticTokens(params: SemanticTokensRangeParams, token: CancellationToken): ProviderResult<SemanticTokens>;
 }
 
+export interface InlayHintsProvider<T extends InlayHint = InlayHint> {
+    onDidChangeInlayHints?: Event<void>;
+    provideInlayHints(params: InlayHintParams, token: CancellationToken): ProviderResult<T[]>;
+    resolveInlayHint?(hint: T, token: CancellationToken): ProviderResult<T>;
+}
+
 export interface Languages {
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean;
     createDiagnosticCollection?(name?: string): DiagnosticCollection;
@@ -234,6 +240,7 @@ export interface Languages {
     registerSelectionRangeProvider?(selector: DocumentSelector, provider: SelectionRangeProvider): Disposable;
     registerDocumentSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
     registerDocumentRangeSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
+    registerInlayHintsProvider(selector: DocumentSelector, provider: InlayHintsProvider): Disposable;
 }
 
 export interface TextDocumentDidChangeEvent {
