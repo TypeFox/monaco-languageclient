@@ -301,7 +301,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidCloseNotebookDocument: unsupported,
         isTrusted: true,
         rootPath: undefined,
-        name: undefined
+        name: undefined,
+        onDidChangeNotebookDocument: unsupported,
+        onDidSaveNotebookDocument: unsupported
     };
 
     function isVsCodeUri(v: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): v is vscode.Uri {
@@ -914,7 +916,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeActiveColorTheme: unsupported,
         registerFileDecorationProvider: unsupported,
         registerTerminalProfileProvider: unsupported,
-        onDidChangeTerminalState: unsupported
+        onDidChangeTerminalState: unsupported,
+        get tabGroups() {
+            return unsupported();
+        }
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
