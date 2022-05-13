@@ -61,8 +61,8 @@ listen({
     onConnection: connection => {
         // create and start the language client
         const languageClient = createLanguageClient(connection);
-        const disposable = languageClient.start();
-        connection.onClose(() => disposable.dispose());
+        languageClient.start();
+        connection.onClose(() => languageClient.stop());
 
         console.log(`Connected to "${url}" and started the language client.`);
     }
@@ -76,8 +76,8 @@ function createLanguageClient(connection: MessageConnection): MonacoLanguageClie
             documentSelector: ['json'],
             // disable the default error handler
             errorHandler: {
-                error: () => ErrorAction.Continue,
-                closed: () => CloseAction.DoNotRestart
+                error: () => ({ action: ErrorAction.Continue }),
+                closed: () => ({ action: CloseAction.DoNotRestart })
             }
         },
         // create a language client connection from the JSON RPC connection on demand

@@ -108,7 +108,7 @@ export function createConnection(connection: MessageConnection, errorHandler: Co
         onProgress: <P>(type: ProgressType<P>, token: string | number, handler: NotificationHandler<P>): Disposable => connection.onProgress(type, token, handler),
         sendProgress: async <P>(type: ProgressType<P>, token: string | number, value: P) => connection.sendProgress(type, token, value),
 
-        trace: (value: Trace, tracer: Tracer, sendNotification: boolean = false): void => connection.trace(value, tracer, sendNotification),
+        trace: (value: Trace, tracer: Tracer, sendNotification: boolean = false): Promise<void> => connection.trace(value, tracer, sendNotification),
 
         initialize: (params: InitializeParams) => connection.sendRequest(InitializeRequest.type, params),
         shutdown: () => connection.sendRequest(ShutdownRequest.type, undefined),

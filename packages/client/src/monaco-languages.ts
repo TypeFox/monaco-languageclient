@@ -11,7 +11,7 @@ import {
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, TextDocumentFilter
 } from "./services";
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
@@ -440,7 +440,7 @@ export class MonacoLanguages implements Languages {
         if (Array.isArray(selector)) {
             return selector.some(filter => this.matchModel(filter, model));
         }
-        if (DocumentFilter.is(selector)) {
+        if (TextDocumentFilter.is(selector)) {
             if (!!selector.language && selector.language !== model.languageId) {
                 return false;
             }
@@ -451,8 +451,11 @@ export class MonacoLanguages implements Languages {
                 return false;
             }
             return true;
+        } else if (typeof selector === 'string') {
+            return selector === model.languageId;
+        } else {
+            return false
         }
-        return selector === model.languageId;
     }
 
 }
