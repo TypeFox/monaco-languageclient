@@ -14,7 +14,7 @@ import {
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
-    FoldingRange, FoldingRangeParams, DocumentFilter, DocumentSymbol, CodeAction,
+    FoldingRange, FoldingRangeParams, DocumentSymbol, CodeAction,
     Declaration, SelectionRangeParams, SelectionRange, SemanticTokensParams,
     SemanticTokens, SemanticTokensEdit, SemanticTokensLegend, SemanticTokensRangeParams,
     SemanticTokensDeltaParams
@@ -62,13 +62,6 @@ export namespace Services {
 
         return Disposable.create(() => global[symbol] = undefined)
     }
-}
-
-export function isDocumentSelector(selector: any): selector is DocumentSelector {
-    if (!selector || !Array.isArray(selector)) {
-        return false;
-    }
-    return selector.every(value => typeof value === 'string' || DocumentFilter.is(value));
 }
 
 export interface DiagnosticCollection extends Disposable {
