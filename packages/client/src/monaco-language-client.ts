@@ -21,10 +21,11 @@ import { DeclarationFeature } from "vscode-languageclient/lib/common/declaration
 import { CompletionParams, WillSaveTextDocumentParams } from './services'
 
 export * from 'vscode-languageclient/lib/common/client';
+import type * as vscode from 'vscode'
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
-    static bypassConversion = (result: any) => result || undefined;
+    static bypassConversion = (result: any, token?: vscode.CancellationToken) => token != null ? Promise.resolve(result || undefined) : (result || undefined);
 
     protected readonly connectionProvider: IConnectionProvider;
 
