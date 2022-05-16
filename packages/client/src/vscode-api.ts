@@ -69,6 +69,36 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         _itemId?: string;
         constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: vscode.Uri, readonly range: vscode.Range, readonly selectionRange: vscode.Range) { }
     }
+
+    class TypeHierarchyItem implements vscode.TypeHierarchyItem {
+        _sessionId?: string;
+        _itemId?: string;
+        constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: URI, readonly range: vscode.Range, readonly selectionRange: vscode.Range) { }
+    }
+
+    class SymbolInformation implements vscode.SymbolInformation {
+        location: vscode.Location;
+        tags?: vscode.SymbolTag[];
+        readonly containerName: string
+        constructor(readonly name: string, readonly kind: vscode.SymbolKind, rangeOrContainer: string | undefined | vscode.Range, locationOrUri?: vscode.Location | vscode.Uri, containerName?: string) {
+            this.containerName = containerName!
+            if (typeof rangeOrContainer === 'string') {
+                this.containerName = rangeOrContainer;
+            }
+        }
+    }
+
+    class InlayHint implements vscode.InlayHint {
+        constructor(readonly position: vscode.Position, readonly label: string | vscode.InlayHintLabelPart[], readonly kind?: vscode.InlayHintKind) { }
+    }
+
+    class CancellationError extends Error {
+        constructor() {
+            super('Canceled');
+            this.name = this.message;
+        }
+    }
+
     class CodeAction implements vscode.CodeAction {
         edit?: vscode.WorkspaceEdit;
         diagnostics?: Diagnostic[];
@@ -1019,14 +1049,18 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeAction,
         Diagnostic,
         CallHierarchyItem,
+        TypeHierarchyItem,
         SemanticTokens,
         Disposable: CodeDisposable,
-        SignatureHelpTriggerKind: SignatureHelpTriggerKind,
+        SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
         EventEmitter: ServicesModule.Emitter,
         CancellationTokenSource,
         ProgressLocation: ServicesModule.ProgressLocation,
-        TextDocumentChangeReason
+        TextDocumentChangeReason,
+        SymbolInformation,
+        InlayHint,
+        CancellationError
     };
 
     return partialApi as any;
