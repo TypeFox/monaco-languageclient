@@ -915,7 +915,24 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }
             return task({ report: () => { } }, new CancellationTokenSource().token);
         },
-        showTextDocument: unsupported,
+        showTextDocument: async (textDocumentOrUri: vscode.TextDocument | vscode.Uri, columnOrOptions: vscode.ViewColumn | vscode.TextDocumentShowOptions | undefined, preserveFocus?: boolean) => {
+            const { window } = servicesProvider();
+            let options: vscode.TextDocumentShowOptions | undefined;
+            if (typeof columnOrOptions === 'number') {
+                options = {
+                    viewColumn: columnOrOptions,
+                    preserveFocus
+                };
+            } else {
+                options = columnOrOptions
+            }
+
+            if (window && window.showTextDocument) {
+                await window.showTextDocument((textDocumentOrUri as vscode.TextDocument).uri ?? textDocumentOrUri, options)
+            }
+            // The language client doesn't use the return value of this method
+            return undefined as unknown as vscode.TextEditor
+        },
         createTextEditorDecorationType: unsupported,
         showQuickPick: unsupported,
         showWorkspaceFolderPick: unsupported,
@@ -1026,7 +1043,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         shell: '',
         uiKind: 2, // vscode.UIKind.Web,
         asExternalUri: unsupported,
-        openExternal: unsupported,
+        openExternal: async (uri: vscode.Uri) => {
+            const { env } = servicesProvider();
+
+            if (env && env.openExternal) {
+                return env.openExternal(uri)
+            }
+            return false
+        },
         get appHost() {
             return unsupported();
         },

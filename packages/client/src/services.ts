@@ -27,6 +27,7 @@ import {
 } from 'vscode-jsonrpc';
 
 import { URI as Uri } from 'vscode-uri';
+import { TextDocumentShowOptions } from 'vscode';
 
 export {
     Disposable, CancellationToken, Event, Emitter
@@ -42,6 +43,7 @@ export interface Services {
     workspace: Workspace;
     commands?: Commands;
     window?: Window;
+    env?: Env
 }
 export namespace Services {
     const global = window as any;
@@ -314,5 +316,10 @@ export interface OutputChannel extends Disposable {
 export interface Window {
     showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): PromiseLike<T | undefined>;
     createOutputChannel?(name: string): OutputChannel;
-    withProgress?: typeof import('vscode').window.withProgress
+    withProgress?: typeof import('vscode').window.withProgress;
+    showTextDocument?(document: Uri, options?: TextDocumentShowOptions): PromiseLike<void>;
+}
+
+export interface Env {
+    openExternal?(document: Uri): PromiseLike<boolean>;
 }
