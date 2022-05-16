@@ -16,7 +16,7 @@ import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
 import { SemanticTokensFeature } from "vscode-languageclient/lib/common/semanticTokens";
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
-import { IConnectionProvider, IConnection } from './connection';
+import { IConnectionProvider } from './connection';
 import { DeclarationFeature } from "vscode-languageclient/lib/common/declaration";
 import { CompletionParams, WillSaveTextDocumentParams } from './services'
 
@@ -31,7 +31,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClient.Options) {
         super(id || name.toLowerCase(), name, clientOptions);
         this.connectionProvider = connectionProvider;
-        (this as any).createConnection = this.doCreateConnection.bind(this);
 
         // bypass LSP <=> VS Code conversion
         const self: {
@@ -76,14 +75,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         });
     }
 
-    protected doCreateConnection(): Thenable<IConnection> {
-        const errorHandler = (this as any).handleConnectionError.bind(this);
-        const closeHandler = this.handleConnectionClosed.bind(this);
-        return this.connectionProvider.get(errorHandler, closeHandler, this.outputChannel);
-    }
-
     protected createMessageTransports(encoding: string): Promise<MessageTransports> {
-        throw new Error('Unsupported');
+        return this.connectionProvider.get(encoding);
     }
 
     protected registerBuiltinFeatures(): void {
