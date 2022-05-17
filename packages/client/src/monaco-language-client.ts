@@ -5,19 +5,9 @@
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions
 } from "vscode-languageclient";
-import { TypeDefinitionFeature } from "vscode-languageclient/lib/common/typeDefinition";
-import { ConfigurationFeature as PullConfigurationFeature } from "vscode-languageclient/lib/common/configuration";
-import { ImplementationFeature } from "vscode-languageclient/lib/common/implementation";
-import { ColorProviderFeature } from "vscode-languageclient/lib/common/colorProvider";
-import { WorkspaceFoldersFeature } from "vscode-languageclient/lib/common/workspaceFolder";
-import { FoldingRangeFeature } from "vscode-languageclient/lib/common/foldingRange";
-import { CallHierarchyFeature } from "vscode-languageclient/lib/common/callHierarchy";
-import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
-import { SemanticTokensFeature } from "vscode-languageclient/lib/common/semanticTokens";
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
 import { IConnectionProvider } from './connection';
-import { DeclarationFeature } from "vscode-languageclient/lib/common/declaration";
 import { CompletionParams, WillSaveTextDocumentParams } from './services'
 
 export * from 'vscode-languageclient/lib/common/client';
@@ -78,23 +68,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
     protected createMessageTransports(encoding: string): Promise<MessageTransports> {
         return this.connectionProvider.get(encoding);
-    }
-
-    protected registerBuiltinFeatures(): void {
-        super.registerBuiltinFeatures();
-        this.registerFeature(new PullConfigurationFeature(this));
-        this.registerFeature(new TypeDefinitionFeature(this));
-        this.registerFeature(new ImplementationFeature(this));
-        this.registerFeature(new ColorProviderFeature(this));
-        this.registerFeature(new WorkspaceFoldersFeature(this));
-        this.registerFeature(new FoldingRangeFeature(this));
-        this.registerFeature(new DeclarationFeature(this));
-        this.registerFeature(new SemanticTokensFeature(this));
-        this.registerFeature(new CallHierarchyFeature(this));
-        this.registerFeature(new ProgressFeature(this));
-    }
-
-    public registerProposedFeatures() {
     }
 
     protected getLocale(): string {
