@@ -976,7 +976,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asSeverity(severity?: number): monaco.MarkerSeverity {
+    asSeverity(severity?: ls.DiagnosticSeverity): monaco.MarkerSeverity {
         if (severity === 1) {
             return this._monaco.MarkerSeverity.Error;
         }
