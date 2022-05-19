@@ -78,30 +78,49 @@ From CLI in root of the project run:
 ```bash
 # optionally: we assume everything is build as stated above
 npm run build
-# to start the express server with the language server running in the same process.
+# start the express server with the language server running in the same process.
 npm run start-example-node
-# to start the express server with language server running in the external process.
+# alternative: start the express server with language server running in the external process.
 npm run start-example-node:ext
 # launches vite development server
 npm run dev
 ```
 
-After launching vite development server go to http://localhost:8080/packages/examples/client/index.html . vite actually servers all client code and if you go to just http://localhost:8080 you can select if you want to open **Web Client for Node.js Language Server** or **Browser Example**.
+After launching vite development server go to http://localhost:8080/packages/examples/client/index.html
 
-You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
+You can edit the client example code directly (TypeScript) and vite ensures it automatically made available.
 
 ### Browser example
 
-From CLI in root of the project you just need to run. If it is already running there is nothing more to do berforehand:
+From CLI in root of the project you just need to run. If it is already running there is nothing more to do beforehand:
 
 ```bash
 # launches vite development server
 npm run dev
 ```
 
-After launching vite development server go to http://localhost:8080/packages/examples/browser/index.html . vite actually servers all client code and if you go to just http://localhost:8080 you can select if you want to open **Web Client for Node.js Language Server** or **Browser Example**.
+After launching vite development server go to http://localhost:8080/packages/examples/browser/index.html
 
 You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
+
+**Hint:** Vite serves all client code from http://localhost:8080 . You can go to the index.html and from there select if you want to open **Web Client for Node.js Language Server** or **Browser Example** as well.
+
+### Optional webpack build for client example
+
+The web client example can alternatively build with webpack. We recently switched to vite, but webpack is still the most popular bundler out there.
+
+```bash
+# optionally: we assume everything is build as stated above
+npm run build
+# start the express server with the language server running in the same process.
+npm run start-example-node
+# alternative: start the express server with language server running in the external process.
+npm run start-example-node:ext
+# build the webpack code
+npm run webpack:example-client-build
+# start http-server
+npm run webpack:example-client-start
+```
 
 ### VSCode integration
 
