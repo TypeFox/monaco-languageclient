@@ -57,15 +57,6 @@ export namespace ProtocolCompletionItem {
         return !!item && 'data' in item;
     }
 }
-export interface ProtocolIMarkerData extends monaco.editor.IMarkerData {
-    data?: unknown;
-    codeDescription?: CodeDescription;
-}
-export namespace ProtocolIMarkerData {
-    export function is(item: any): item is ProtocolIMarkerData {
-        return !!item && 'data' in item;
-    }
-}
 
 export interface ProtocolCodeAction extends monaco.languages.CodeAction {
     data?: unknown;
@@ -409,10 +400,6 @@ export class MonacoToProtocolConverter {
         const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
         const severity = this.asDiagnosticSeverity(marker.severity);
         const diag = Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
-        if (ProtocolIMarkerData.is(marker)) {
-            diag.data = marker.data
-            diag.codeDescription = marker.codeDescription;
-        }
         return diag
     }
 
@@ -1003,16 +990,16 @@ export class ProtocolToMonacoConverter {
     }
 
     asDiagnostics(diagnostics: undefined): undefined;
-    asDiagnostics(diagnostics: Diagnostic[]): ProtocolIMarkerData[];
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined;
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined {
+    asDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[];
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined;
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
         if (!diagnostics) {
             return undefined;
         }
         return diagnostics.map(diagnostic => this.asDiagnostic(diagnostic));
     }
 
-    asDiagnostic(diagnostic: Diagnostic): ProtocolIMarkerData {
+    asDiagnostic(diagnostic: Diagnostic): monaco.editor.IMarkerData {
         return {
             code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code,
             severity: this.asSeverity(diagnostic.severity),
@@ -1023,9 +1010,7 @@ export class ProtocolToMonacoConverter {
             endLineNumber: diagnostic.range.end.line + 1,
             endColumn: diagnostic.range.end.character + 1,
             relatedInformation: this.asRelatedInformations(diagnostic.relatedInformation),
-            codeDescription: diagnostic.codeDescription,
-            tags: diagnostic.tags,
-            data: diagnostic.data
+            tags: diagnostic.tags
         }
     }
 
