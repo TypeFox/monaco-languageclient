@@ -13,7 +13,7 @@ import {
     MessageActionItem
 } from "./services";
 import * as ServicesModule from "./services";
-import { CancellationTokenSource, DiagnosticSeverity, DocumentSelector } from "vscode-languageserver-protocol";
+import { CancellationTokenSource, DiagnosticSeverity, DocumentSelector, Diagnostic as ProtocolDiagnostics } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
     const unsupported = () => { throw new Error('unsupported') };
@@ -361,53 +361,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         set(arg0: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>,
             arg1?: ReadonlyArray<vscode.Diagnostic>): void {
 
-            function toInternalSeverity(severity: vscode.DiagnosticSeverity): DiagnosticSeverity {
-                // there is a typing mismatch, trying to use the proper switch
-                // mixes error with warnings etc...
-                // just cast for now, this as the correct behaviour
-                return severity as DiagnosticSeverity;
-                // we don't want to rely on the runtime vscode module here, so we use our version
-                // of the enum
-                /*
-                switch ((severity as unknown) as VsCodeDiagnosticSeverity)
-                {
-                    case VsCodeDiagnosticSeverity.Warning:
-                        return DiagnosticSeverity.Warning;
-                    case VsCodeDiagnosticSeverity.Information:
-                        return DiagnosticSeverity.Information;
-                    case VsCodeDiagnosticSeverity.Hint:
-                        return DiagnosticSeverity.Hint;
-                    case VsCodeDiagnosticSeverity.Error:
-                        return DiagnosticSeverity.Error;
-                }
-                return DiagnosticSeverity.Error;
-                // */
-            }
-
-            function toInternalCode(code: vscode.Diagnostic['code']): Diagnostic['code'] {
-                if (code != null && typeof code === 'object') {
-                    return code.value as Diagnostic['code']
-                }
-                return code as Diagnostic['code'];
-            }
-
             if (isVsCodeUri(arg0)) {
                 if (this.collection) {
-                    if (arg1) {
-                        this.collection.set(arg0.toString(), arg1.map(diag => {
-                            return {
-                                range: diag.range,
-                                code: toInternalCode(diag.code),
-                                source: diag.source,
-                                message: diag.message,
-                                tags: diag.tags,
-                                relatedInformation: undefined,
-                                severity: toInternalSeverity(diag.severity)
-                            };
-                        }));
-                    } else {
-                        this.collection.set(arg0.toString(), []);
-                    }
+                    this.collection.set(arg0.toString(), arg1 as unknown as ProtocolDiagnostics[] ?? []);
                 }
             } else {
                 arg0.forEach(element => {

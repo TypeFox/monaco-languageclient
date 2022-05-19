@@ -19,7 +19,7 @@ import {
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
-    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, CodeDescription, InlayHint, InlayHintLabelPart
+    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, InlayHint, InlayHintLabelPart
 } from './services';
 
 export type RecursivePartial<T> = {
@@ -410,19 +410,18 @@ export class MonacoToProtocolConverter {
         return markers.map(marker => this.asDiagnostic(marker));
     }
 
-    asCodeActionContext(context: monaco.languages.CodeActionContext): CodeActionContext {
+    asCodeActionContext(context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionContext {
         if (context === void 0 || context === null) {
             return context;
         }
-        const diagnostics = this.asDiagnostics(context.markers);
         return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined);
     }
 
-    asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext): CodeActionParams {
+    asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
-            context: this.asCodeActionContext(context)
+            context: this.asCodeActionContext(context, diagnostics)
         }
     }
 

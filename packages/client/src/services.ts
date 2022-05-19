@@ -68,6 +68,7 @@ export namespace Services {
 
 export interface DiagnosticCollection extends Disposable {
     set(uri: string, diagnostics: Diagnostic[]): void;
+    get(uri: string): Diagnostic[];
 }
 
 export type ProviderResult<T> = T | undefined | null | PromiseLike<T | undefined | null>;

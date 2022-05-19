@@ -11,7 +11,7 @@ import {
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, TextDocumentFilter, InlayHintsProvider
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, TextDocumentFilter, InlayHintsProvider, Diagnostic
 } from "./services";
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
@@ -46,20 +46,70 @@ export function testGlob(pattern: string, value: string): boolean {
     return regExp.test(value);
 }
 
-export class MonacoLanguages implements Languages {
+class ExtHostDiagnostics {
+    private static _idPool: number = 0;
+    private readonly _collections = new Map<string, DiagnosticCollection>();
 
+    constructor(
+        protected readonly _monaco: typeof monaco,
+        protected readonly p2m: ProtocolToMonacoConverter
+    ) {
+    }
+
+    createDiagnosticCollection(name?: string): DiagnosticCollection {
+        let owner: string;
+        if (!name) {
+            name = '_generated_diagnostic_collection_name_#' + ExtHostDiagnostics._idPool++;
+            owner = name;
+        } else if (!this._collections.has(name)) {
+            owner = name;
+        } else {
+            do {
+                owner = name + ExtHostDiagnostics._idPool++;
+            } while (this._collections.has(owner));
+        }
+
+        const _this = this
+        return new class extends MonacoDiagnosticCollection {
+            constructor() {
+                super(_this._monaco, name || 'default', _this.p2m);
+                _this._collections.set(owner, this);
+            }
+            override dispose() {
+                super.dispose();
+                _this._collections.delete(owner);
+            }
+        };
+    }
+
+    getDiagnostics(resourceUri: string): Diagnostic[] {
+        let res: Diagnostic[] = [];
+        for (let collection of this._collections.values()) {
+            const diagnostics = collection.get(resourceUri)
+            if (diagnostics) {
+                res = res.concat(diagnostics);
+            }
+        }
+        return res;
+    }
+}
+
+export class MonacoLanguages implements Languages {
+    private readonly extHostDiagnostics: ExtHostDiagnostics;
     constructor(
         protected readonly _monaco: typeof monaco,
         protected readonly p2m: ProtocolToMonacoConverter,
         protected readonly m2p: MonacoToProtocolConverter
-    ) { }
+    ) {
+        this.extHostDiagnostics = new ExtHostDiagnostics(_monaco, p2m)
+    }
 
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean {
         return this.matchModel(selector, MonacoModelIdentifier.fromDocument(this._monaco, document));
     }
 
     createDiagnosticCollection(name?: string): DiagnosticCollection {
-        return new MonacoDiagnosticCollection(this._monaco, name || 'default', this.p2m);
+        return this.extHostDiagnostics.createDiagnosticCollection(name)
     }
 
     registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
@@ -190,7 +240,17 @@ export class MonacoLanguages implements Languages {
     protected createCodeActionProvider(provider: CodeActionProvider): monaco.languages.CodeActionProvider {
         return {
             provideCodeActions: async (model, range, context, token) => {
-                const params = this.m2p.asCodeActionParams(model, range, context);
+                const allDiagnostics: Diagnostic[] = [];
+                for (const diagnostic of this.extHostDiagnostics.getDiagnostics(model.uri.toString())) {
+                    if (range.intersectRanges(this.p2m.asRange(diagnostic.range))) {
+                        const newLen = allDiagnostics.push(diagnostic);
+                        if (newLen > 1000) {
+                            break;
+                        }
+                    }
+                }
+
+                const params = this.m2p.asCodeActionParams(model, range, context, allDiagnostics);
                 let result = await provider.provideCodeActions(params, token);
                 return result && this.p2m.asCodeActionList(result);
             },
