@@ -12,6 +12,7 @@
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build": "npm run clean && npm run compile"
+    "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
+    "build": "npm run clean && npm run compile && npm run copy:monacoworkers"
   }
 }
