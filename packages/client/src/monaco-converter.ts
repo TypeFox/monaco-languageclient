@@ -19,7 +19,7 @@ import {
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
-    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, CodeDescription
+    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, CodeDescription, InlayHint, InlayHintLabelPart
 } from './services';
 
 export type RecursivePartial<T> = {
@@ -76,6 +76,16 @@ export namespace ProtocolCodeAction {
     }
 }
 
+export interface ProtocolInlayHint extends monaco.languages.InlayHint {
+    data?: unknown;
+}
+export namespace ProtocolInlayHint {
+    export function is(item: any): item is ProtocolInlayHint {
+        return !!item && 'data' in item;
+    }
+}
+
+
 type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange }
 
 function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeReplace {
@@ -124,6 +134,21 @@ export class MonacoToProtocolConverter {
             return {
                 start, end
             };
+        }
+    }
+
+    asLocation(item: monaco.languages.Location): Location;
+    asLocation(item: undefined | null): undefined;
+    asLocation(item: monaco.languages.Location | undefined | null): Location | undefined;
+    asLocation(item: monaco.languages.Location | undefined | null): Location | undefined {
+        if (!item) {
+            return undefined;
+        }
+        const uri = item.uri.toString();
+        const range = this.asRange(item.range);
+        return {
+            uri,
+            range
         }
     }
 
@@ -493,7 +518,7 @@ export class MonacoToProtocolConverter {
             result.diagnostics = this.asDiagnostics(item.diagnostics);
         }
         if (item.edit) {
-            throw new Error (`VS Code code actions can only be converted to a protocol code action without an edit.`);
+            throw new Error(`VS Code code actions can only be converted to a protocol code action without an edit.`);
         }
         if (item.command) {
             result.command = this.asCommand(item.command);
@@ -508,6 +533,34 @@ export class MonacoToProtocolConverter {
             if (protocolCodeAction.data !== undefined) {
                 result.data = protocolCodeAction.data;
             }
+        }
+        return result;
+    }
+
+    asInlayHintLabelPart(part: monaco.languages.InlayHintLabelPart): InlayHintLabelPart {
+        return {
+            value: part.label,
+            command: this.asCommand(part.command),
+            location: this.asLocation(part.location),
+            tooltip: this.asMarkupContent(part.tooltip)
+        }
+    }
+
+    asInlayHintLabel(label: string | monaco.languages.InlayHintLabelPart[]): string | InlayHintLabelPart[] {
+        if (Array.isArray(label)) {
+            return label.map(part => this.asInlayHintLabelPart(part))
+        }
+        return label
+    }
+
+    asInlayHint(item: monaco.languages.InlayHint): InlayHint {
+        let result = InlayHint.create(
+            this.asPosition(item.position.lineNumber, item.position.column),
+            this.asInlayHintLabel(item.label),
+            item.kind
+        );
+        if (ProtocolInlayHint.is(item)) {
+            if (item.data) { result.data = item.data };
         }
         return result;
     }
@@ -1233,6 +1286,47 @@ export class ProtocolToMonacoConverter {
             resultId: semanticTokens.resultId,
             data: Uint32Array.from(semanticTokens.data)
         }
+    }
+
+    asInlayHintLabelPart(part: InlayHintLabelPart): monaco.languages.InlayHintLabelPart {
+        return {
+            label: part.value,
+            command: this.asCommand(part.command),
+            location: this.asLocation(part.location),
+            tooltip: part.tooltip && this.asMarkdownString(part.tooltip)
+        }
+    }
+
+    asInlayHintLabel(label: string | InlayHintLabelPart[]): string | monaco.languages.InlayHintLabelPart[] {
+        if (Array.isArray(label)) {
+            return label.map(part => this.asInlayHintLabelPart(part))
+        }
+        return label
+    }
+
+    asInlayHint(inlayHint: InlayHint): ProtocolInlayHint {
+        return {
+            data: inlayHint.data,
+            label: this.asInlayHintLabel(inlayHint.label),
+            position: this.asPosition(inlayHint.position),
+            kind: inlayHint.kind,
+            paddingLeft: inlayHint.paddingLeft,
+            paddingRight: inlayHint.paddingRight,
+            tooltip: inlayHint.tooltip && this.asMarkdownString(inlayHint.tooltip)
+        }
+    }
+
+    asInlayHintList(items: InlayHint[]): monaco.languages.InlayHintList;
+    asInlayHintList(items: undefined | null): undefined;
+    asInlayHintList(items: InlayHint[] | undefined | null): monaco.languages.InlayHintList | undefined;
+    asInlayHintList(items: InlayHint[] | undefined | null): monaco.languages.InlayHintList | undefined {
+        if (!items) {
+            return undefined;
+        }
+        return {
+            hints: items.map((hint) => this.asInlayHint(hint)),
+            dispose: () => { }
+        };
     }
 
 }

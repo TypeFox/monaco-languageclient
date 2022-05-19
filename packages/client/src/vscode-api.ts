@@ -7,13 +7,13 @@ import type * as vscode from "vscode";
 import { URI } from "vscode-uri"
 import { Disposable } from "./disposable";
 import {
-    Services, Event, DiagnosticCollection, WorkspaceEdit, isDocumentSelector,
+    Services, Event, DiagnosticCollection, WorkspaceEdit,
     MessageType, OutputChannel, CompletionTriggerKind, DocumentIdentifier,
     SignatureHelpTriggerKind,
     MessageActionItem
 } from "./services";
 import * as ServicesModule from "./services";
-import { CancellationTokenSource, DiagnosticSeverity } from "vscode-languageserver-protocol";
+import { CancellationTokenSource, DiagnosticSeverity, DocumentSelector } from "vscode-languageserver-protocol";
 
 export function createVSCodeApi(servicesProvider: Services.Provider): typeof vscode {
     const unsupported = () => { throw new Error('unsupported') };
@@ -69,6 +69,36 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         _itemId?: string;
         constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: vscode.Uri, readonly range: vscode.Range, readonly selectionRange: vscode.Range) { }
     }
+
+    class TypeHierarchyItem implements vscode.TypeHierarchyItem {
+        _sessionId?: string;
+        _itemId?: string;
+        constructor(readonly kind: vscode.SymbolKind, readonly name: string, readonly detail: string, readonly uri: URI, readonly range: vscode.Range, readonly selectionRange: vscode.Range) { }
+    }
+
+    class SymbolInformation implements vscode.SymbolInformation {
+        location: vscode.Location;
+        tags?: vscode.SymbolTag[];
+        readonly containerName: string
+        constructor(readonly name: string, readonly kind: vscode.SymbolKind, rangeOrContainer: string | undefined | vscode.Range, locationOrUri?: vscode.Location | vscode.Uri, containerName?: string) {
+            this.containerName = containerName!
+            if (typeof rangeOrContainer === 'string') {
+                this.containerName = rangeOrContainer;
+            }
+        }
+    }
+
+    class InlayHint implements vscode.InlayHint {
+        constructor(readonly position: vscode.Position, readonly label: string | vscode.InlayHintLabelPart[], readonly kind?: vscode.InlayHintKind) { }
+    }
+
+    class CancellationError extends Error {
+        constructor() {
+            super('Canceled');
+            this.name = this.message;
+        }
+    }
+
     class CodeAction implements vscode.CodeAction {
         edit?: vscode.WorkspaceEdit;
         diagnostics?: Diagnostic[];
@@ -151,7 +181,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 onDidChange: Event.None,
                 onDidDelete: Event.None,
                 dispose: () => { }
-            }
+            };
         },
         applyEdit: async (edit) => {
             const services = servicesProvider();
@@ -229,7 +259,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                         reason: isUndoing ? TextDocumentChangeReason.Undo : isRedoing ? TextDocumentChangeReason.Redo : undefined
                     });
                 }, undefined, disposables);
-            }
+            };
         },
         get onWillSaveTextDocument(): typeof vscode.workspace.onWillSaveTextDocument {
             const services = servicesProvider();
@@ -250,7 +280,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                         }
                     });
                 }, undefined, disposables);
-            }
+            };
         },
         get onDidSaveTextDocument(): typeof vscode.workspace.onDidSaveTextDocument {
             const services = servicesProvider();
@@ -278,11 +308,11 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         },
 
         get onDidRenameFiles(): vscode.Event<vscode.FileRenameEvent> {
-            return Event.None
+            return Event.None;
         },
 
         get onDidGrantWorkspaceTrust(): vscode.Event<void> {
-            return Event.None
+            return Event.None;
         },
 
         getWorkspaceFolder: unsupported,
@@ -301,7 +331,9 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidCloseNotebookDocument: unsupported,
         isTrusted: true,
         rootPath: undefined,
-        name: undefined
+        name: undefined,
+        onDidChangeNotebookDocument: unsupported,
+        onDidSaveNotebookDocument: unsupported
     };
 
     function isVsCodeUri(v: vscode.Uri | ReadonlyArray<[vscode.Uri, ReadonlyArray<vscode.Diagnostic> | undefined]>): v is vscode.Uri {
@@ -399,14 +431,15 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
 
     const languages: typeof vscode.languages = {
         match(selector, document): number {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             if (!DocumentIdentifier.is(document)) {
                 throw new Error('unexpected document: ' + JSON.stringify(document));
             }
             const services = servicesProvider();
-            const result = services.languages.match(selector, document);
+            const result = services.languages.match(documentSelector, document);
             return result ? 1 : 0;
         },
         registerCallHierarchyProvider(
@@ -423,7 +456,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return new ApiDiagnosticCollection(name);
         },
         registerCompletionItemProvider(selector, provider, ...triggerCharacters) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -431,7 +465,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 return Disposable.create(() => { });
             }
             const resolveCompletionItem = provider.resolveCompletionItem;
-            return languages.registerCompletionItemProvider(selector, {
+            return languages.registerCompletionItemProvider(documentSelector, {
                 provideCompletionItems({ textDocument, position, context }, token) {
                     return provider.provideCompletionItems(<any>textDocument, <any>position, token, {
                         triggerKind: context?.triggerKind ?? CompletionTriggerKind.Invoked,
@@ -444,14 +478,15 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }, ...triggerCharacters);
         },
         registerCodeActionsProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerCodeActionsProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerCodeActionsProvider(selector, {
+            return languages.registerCodeActionsProvider(documentSelector, {
                 provideCodeActions({ textDocument, range, context }, token) {
                     return provider.provideCodeActions(<any>textDocument, <any>range, <any>context, token) as any;
                 },
@@ -461,7 +496,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerCodeLensProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -469,7 +505,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 return Disposable.create(() => { });
             }
             const resolveCodeLens = provider.resolveCodeLens;
-            return languages.registerCodeLensProvider(selector, {
+            return languages.registerCodeLensProvider(documentSelector, {
                 provideCodeLenses({ textDocument }, token) {
                     return provider.provideCodeLenses(<any>textDocument, token) as any;
                 },
@@ -479,68 +515,73 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerDefinitionProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDefinitionProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDefinitionProvider(selector, {
+            return languages.registerDefinitionProvider(documentSelector, {
                 provideDefinition({ textDocument, position }, token) {
                     return provider.provideDefinition(<any>textDocument, <any>position, token) as any;
                 }
             });
         },
         registerImplementationProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerImplementationProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerImplementationProvider(selector, {
+            return languages.registerImplementationProvider(documentSelector, {
                 provideImplementation({ textDocument, position }, token) {
                     return provider.provideImplementation(<any>textDocument, <any>position, token) as any;
                 }
             });
         },
         registerTypeDefinitionProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerTypeDefinitionProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerTypeDefinitionProvider(selector, {
+            return languages.registerTypeDefinitionProvider(documentSelector, {
                 provideTypeDefinition({ textDocument, position }, token) {
                     return provider.provideTypeDefinition(<any>textDocument, <any>position, token) as any;
                 }
             });
         },
         registerDeclarationProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDeclarationProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDeclarationProvider(selector, {
+            return languages.registerDeclarationProvider(documentSelector, {
                 provideDeclaration({ textDocument, position }, token) {
                     return provider.provideDeclaration(<any>textDocument, <any>position, token) as any;
                 }
             })
         },
         registerHoverProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (languages.registerHoverProvider) {
-                return languages.registerHoverProvider(selector, {
+                return languages.registerHoverProvider(documentSelector, {
                     provideHover({ textDocument, position }, token) {
                         return provider.provideHover(<any>textDocument, <any>position, token) as any;
                     }
@@ -549,28 +590,30 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             return Disposable.create(() => { });
         },
         registerDocumentHighlightProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDocumentHighlightProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDocumentHighlightProvider(selector, {
+            return languages.registerDocumentHighlightProvider(documentSelector, {
                 provideDocumentHighlights({ textDocument, position }, token) {
                     return provider.provideDocumentHighlights(<any>textDocument, <any>position, token) as any;
                 }
             });
         },
         registerDocumentSymbolProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDocumentSymbolProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDocumentSymbolProvider(selector, {
+            return languages.registerDocumentSymbolProvider(documentSelector, {
                 provideDocumentSymbols({ textDocument }, token) {
                     return provider.provideDocumentSymbols(<any>textDocument, token) as any;
                 }
@@ -588,77 +631,83 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerReferenceProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerReferenceProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerReferenceProvider(selector, {
+            return languages.registerReferenceProvider(documentSelector, {
                 provideReferences({ textDocument, position, context }, token) {
                     return provider.provideReferences(<any>textDocument, <any>position, context, token) as any
                 }
             });
         },
         registerRenameProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerRenameProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerRenameProvider(selector, {
+            return languages.registerRenameProvider(documentSelector, {
                 provideRenameEdits({ textDocument, position, newName }, token) {
                     return provider.provideRenameEdits(<any>textDocument, <any>position, newName, token) as any
                 }
             });
         },
         registerDocumentFormattingEditProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDocumentFormattingEditProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDocumentFormattingEditProvider(selector, {
+            return languages.registerDocumentFormattingEditProvider(documentSelector, {
                 provideDocumentFormattingEdits({ textDocument, options }, token) {
                     return provider.provideDocumentFormattingEdits(<any>textDocument, <any>options, token) as any
                 }
             });
         },
         registerDocumentRangeFormattingEditProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerDocumentRangeFormattingEditProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerDocumentRangeFormattingEditProvider(selector, {
+            return languages.registerDocumentRangeFormattingEditProvider(documentSelector, {
                 provideDocumentRangeFormattingEdits({ textDocument, range, options }, token) {
                     return provider.provideDocumentRangeFormattingEdits(<any>textDocument, <any>range, <any>options, token) as any
                 }
             });
         },
         registerOnTypeFormattingEditProvider(selector, provider, firstTriggerCharacter, ...moreTriggerCharacter) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerOnTypeFormattingEditProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerOnTypeFormattingEditProvider(selector, {
+            return languages.registerOnTypeFormattingEditProvider(documentSelector, {
                 provideOnTypeFormattingEdits({ textDocument, position, ch, options }, token) {
                     return provider.provideOnTypeFormattingEdits(<any>textDocument, <any>position, ch, <any>options, token) as any
                 }
             }, firstTriggerCharacter, ...moreTriggerCharacter);
         },
         registerSignatureHelpProvider(selector: vscode.DocumentSelector, provider: vscode.SignatureHelpProvider, firstItem?: string | vscode.SignatureHelpProviderMetadata, ...remaining: string[]) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -673,7 +722,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 triggerCharacters = firstItem.triggerCharacters;
                 retriggerCharacters = firstItem.retriggerCharacters;
             }
-            return languages.registerSignatureHelpProvider(selector, {
+            return languages.registerSignatureHelpProvider(documentSelector, {
                 triggerCharacters,
                 retriggerCharacters,
                 provideSignatureHelp({ textDocument, position }, token, context) {
@@ -682,7 +731,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerDocumentLinkProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -690,7 +740,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 return Disposable.create(() => { });
             }
             const resolveDocumentLink = provider.resolveDocumentLink;
-            return languages.registerDocumentLinkProvider(selector, {
+            return languages.registerDocumentLinkProvider(documentSelector, {
                 provideDocumentLinks({ textDocument }, token) {
                     return provider.provideDocumentLinks(<any>textDocument, token) as any
                 },
@@ -700,14 +750,15 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerColorProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerColorProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerColorProvider(selector, {
+            return languages.registerColorProvider(documentSelector, {
                 provideDocumentColors({ textDocument }, token) {
                     return provider.provideDocumentColors(<any>textDocument, token) as any
                 },
@@ -720,28 +771,30 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             });
         },
         registerFoldingRangeProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerFoldingRangeProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerFoldingRangeProvider(selector, {
+            return languages.registerFoldingRangeProvider(documentSelector, {
                 provideFoldingRanges({ textDocument }, token) {
                     return provider.provideFoldingRanges(<any>textDocument, {}, token) as any;
                 }
             });
         },
         registerSelectionRangeProvider(selector, provider) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
             if (!languages.registerSelectionRangeProvider) {
                 return Disposable.create(() => { });
             }
-            return languages.registerSelectionRangeProvider(selector, {
+            return languages.registerSelectionRangeProvider(documentSelector, {
                 provideSelectionRanges({ textDocument, positions }, token) {
                     return provider.provideSelectionRanges(<any>textDocument, <any>positions, token) as any;
                 }
@@ -749,7 +802,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         },
         registerEvaluatableExpressionProvider: unsupported,
         registerDocumentSemanticTokensProvider(selector: vscode.DocumentSelector, provider: vscode.DocumentSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -757,7 +811,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 return Disposable.create(() => { });
             }
 
-            return languages.registerDocumentSemanticTokensProvider(selector, {
+            return languages.registerDocumentSemanticTokensProvider(documentSelector, {
                 onDidChange: provider.onDidChangeSemanticTokens,
                 provideDocumentSemanticTokens({ textDocument }, token) {
                     return provider.provideDocumentSemanticTokens(<any>textDocument, token) as any;
@@ -768,7 +822,8 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }, legend)
         },
         registerDocumentRangeSemanticTokensProvider(selector: vscode.DocumentSelector, provider: vscode.DocumentRangeSemanticTokensProvider, legend: vscode.SemanticTokensLegend) {
-            if (!isDocumentSelector(selector)) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
                 throw new Error('unexpected selector: ' + JSON.stringify(selector));
             }
             const { languages } = servicesProvider();
@@ -776,12 +831,35 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                 return Disposable.create(() => { });
             }
 
-            return languages.registerDocumentRangeSemanticTokensProvider(selector, {
+            return languages.registerDocumentRangeSemanticTokensProvider(documentSelector, {
                 provideDocumentRangeSemanticTokens({ textDocument, range }, token) {
                     return provider.provideDocumentRangeSemanticTokens(<any>textDocument, <any>range, token) as any;
                 }
             }, legend)
         },
+        registerInlayHintsProvider(selector: vscode.DocumentSelector, provider: vscode.InlayHintsProvider) {
+            const documentSelector = Array.isArray(selector) ? selector : [selector]
+            if (!DocumentSelector.is(documentSelector)) {
+                throw new Error('unexpected selector: ' + JSON.stringify(selector));
+            }
+            const { languages } = servicesProvider();
+            if (!languages.registerInlayHintsProvider) {
+                return Disposable.create(() => { });
+            }
+
+            const resolveInlayHint = provider.resolveInlayHint;
+            return languages.registerInlayHintsProvider(documentSelector, {
+                onDidChangeInlayHints: provider.onDidChangeInlayHints,
+                provideInlayHints({ textDocument, range }, token) {
+                    return provider.provideInlayHints(<any>textDocument, <any>range, token) as any
+                },
+                resolveInlayHint: resolveInlayHint ? (link, token) => {
+                    return resolveInlayHint(<any>link, token) as any
+                } : undefined
+            })
+        },
+        // FIXME: Should be implemented with monaco 0.34
+        registerInlineValuesProvider: unsupported,
         getLanguages: unsupported,
         setTextDocumentLanguage: unsupported,
         getDiagnostics: unsupported,
@@ -789,8 +867,6 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeDiagnostics: unsupported,
         registerLinkedEditingRangeProvider: unsupported,
         createLanguageStatusItem: unsupported,
-        registerInlineValuesProvider: unsupported,
-        registerInlayHintsProvider: unsupported,
         registerTypeHierarchyProvider: unsupported
     };
     function showMessage(type: MessageType, arg0: any, ...arg1: any[]): Thenable<any> {
@@ -825,7 +901,7 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
                     if (arg !== undefined && typeof arg !== 'boolean') {
                         throw new Error('unexpected preserveFocus argument: ' + JSON.stringify(arg, undefined, 4));
                     }
-                    return channel ? channel.show(arg) : () => { }
+                    return channel ? channel.show(arg) : () => { };
                 },
                 hide: unsupported,
                 replace: unsupported,
@@ -839,7 +915,24 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             }
             return task({ report: () => { } }, new CancellationTokenSource().token);
         },
-        showTextDocument: unsupported,
+        showTextDocument: async (textDocumentOrUri: vscode.TextDocument | vscode.Uri, columnOrOptions: vscode.ViewColumn | vscode.TextDocumentShowOptions | undefined, preserveFocus?: boolean) => {
+            const { window } = servicesProvider();
+            let options: vscode.TextDocumentShowOptions | undefined;
+            if (typeof columnOrOptions === 'number') {
+                options = {
+                    viewColumn: columnOrOptions,
+                    preserveFocus
+                };
+            } else {
+                options = columnOrOptions
+            }
+
+            if (window && window.showTextDocument) {
+                await window.showTextDocument((textDocumentOrUri as vscode.TextDocument).uri ?? textDocumentOrUri, options)
+            }
+            // The language client doesn't use the return value of this method
+            return undefined as unknown as vscode.TextEditor
+        },
         createTextEditorDecorationType: unsupported,
         showQuickPick: unsupported,
         showWorkspaceFolderPick: unsupported,
@@ -891,7 +984,10 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         onDidChangeActiveColorTheme: unsupported,
         registerFileDecorationProvider: unsupported,
         registerTerminalProfileProvider: unsupported,
-        onDidChangeTerminalState: unsupported
+        onDidChangeTerminalState: unsupported,
+        get tabGroups() {
+            return unsupported();
+        }
     };
     const commands: typeof vscode.commands = {
         registerCommand(command, callback, thisArg): Disposable {
@@ -947,7 +1043,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         shell: '',
         uiKind: 2, // vscode.UIKind.Web,
         asExternalUri: unsupported,
-        openExternal: unsupported,
+        openExternal: async (uri: vscode.Uri) => {
+            const { env } = servicesProvider();
+
+            if (env && env.openExternal) {
+                return env.openExternal(uri)
+            }
+            return false
+        },
         get appHost() {
             return unsupported();
         },
@@ -970,14 +1073,18 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
         CodeAction,
         Diagnostic,
         CallHierarchyItem,
+        TypeHierarchyItem,
         SemanticTokens,
         Disposable: CodeDisposable,
-        SignatureHelpTriggerKind: SignatureHelpTriggerKind,
+        SignatureHelpTriggerKind,
         DiagnosticSeverity: ServicesModule.DiagnosticSeverity,
         EventEmitter: ServicesModule.Emitter,
         CancellationTokenSource,
         ProgressLocation: ServicesModule.ProgressLocation,
-        TextDocumentChangeReason
+        TextDocumentChangeReason,
+        SymbolInformation,
+        InlayHint,
+        CancellationError
     };
 
     return partialApi as any;

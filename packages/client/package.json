@@ -41,13 +41,13 @@
   ],
   "dependencies": {
     "glob-to-regexp": "^0.4.1",
-    "vscode-jsonrpc": "6.0.0",
-    "vscode-languageclient": "7.0.0",
+    "vscode-jsonrpc": "8.0.1",
+    "vscode-languageclient": "8.0.1",
     "vscode-languageserver-textdocument": "1.0.4",
     "vscode-uri": "3.0.3"
   },
   "devDependencies": {
-    "@types/vscode": "1.66.0",
+    "@types/vscode": "1.67.0",
     "@types/node": "^16.11.7",
     "@types/glob-to-regexp": "^0.4.1"
   },

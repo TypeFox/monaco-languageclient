@@ -14,10 +14,10 @@ import {
     DocumentLink, TextDocumentSaveReason, DocumentSymbolParams,
     WorkspaceSymbolParams, TextDocumentContentChangeEvent, CompletionParams,
     ColorInformation, ColorPresentation, DocumentColorParams, ColorPresentationParams,
-    FoldingRange, FoldingRangeParams, DocumentFilter, DocumentSymbol, CodeAction,
+    FoldingRange, FoldingRangeParams, DocumentSymbol, CodeAction,
     Declaration, SelectionRangeParams, SelectionRange, SemanticTokensParams,
     SemanticTokens, SemanticTokensEdit, SemanticTokensLegend, SemanticTokensRangeParams,
-    SemanticTokensDeltaParams
+    SemanticTokensDeltaParams, InlayHint, InlayHintParams
 } from 'vscode-languageserver-protocol';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -27,6 +27,7 @@ import {
 } from 'vscode-jsonrpc';
 
 import { URI as Uri } from 'vscode-uri';
+import { TextDocumentShowOptions } from 'vscode';
 
 export {
     Disposable, CancellationToken, Event, Emitter
@@ -42,6 +43,7 @@ export interface Services {
     workspace: Workspace;
     commands?: Commands;
     window?: Window;
+    env?: Env
 }
 export namespace Services {
     const global = window as any;
@@ -62,13 +64,6 @@ export namespace Services {
 
         return Disposable.create(() => global[symbol] = undefined)
     }
-}
-
-export function isDocumentSelector(selector: any): selector is DocumentSelector {
-    if (!selector || !Array.isArray(selector)) {
-        return false;
-    }
-    return selector.every(value => typeof value === 'string' || DocumentFilter.is(value));
 }
 
 export interface DiagnosticCollection extends Disposable {
@@ -215,6 +210,12 @@ export interface DocumentRangeSemanticTokensProvider {
     provideDocumentRangeSemanticTokens(params: SemanticTokensRangeParams, token: CancellationToken): ProviderResult<SemanticTokens>;
 }
 
+export interface InlayHintsProvider<T extends InlayHint = InlayHint> {
+    onDidChangeInlayHints?: Event<void>;
+    provideInlayHints(params: InlayHintParams, token: CancellationToken): ProviderResult<T[]>;
+    resolveInlayHint?(hint: T, token: CancellationToken): ProviderResult<T>;
+}
+
 export interface Languages {
     match(selector: DocumentSelector, document: DocumentIdentifier): boolean;
     createDiagnosticCollection?(name?: string): DiagnosticCollection;
@@ -241,6 +242,7 @@ export interface Languages {
     registerSelectionRangeProvider?(selector: DocumentSelector, provider: SelectionRangeProvider): Disposable;
     registerDocumentSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
     registerDocumentRangeSemanticTokensProvider?(selector: DocumentSelector, provider: DocumentRangeSemanticTokensProvider, legend: SemanticTokensLegend): Disposable;
+    registerInlayHintsProvider(selector: DocumentSelector, provider: InlayHintsProvider): Disposable;
 }
 
 export interface TextDocumentDidChangeEvent {
@@ -314,5 +316,10 @@ export interface OutputChannel extends Disposable {
 export interface Window {
     showMessage<T extends MessageActionItem>(type: MessageType, message: string, ...actions: T[]): PromiseLike<T | undefined>;
     createOutputChannel?(name: string): OutputChannel;
-    withProgress?: typeof import('vscode').window.withProgress
+    withProgress?: typeof import('vscode').window.withProgress;
+    showTextDocument?(document: Uri, options?: TextDocumentShowOptions): PromiseLike<void>;
+}
+
+export interface Env {
+    openExternal?(document: Uri): PromiseLike<boolean>;
 }

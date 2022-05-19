@@ -11,7 +11,7 @@ import {
     OnTypeFormattingEditProvider, RenameProvider,
     DocumentFilter, DocumentSelector, DocumentLinkProvider, ImplementationProvider, TypeDefinitionProvider, DocumentColorProvider,
     FoldingRangeProvider, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider
+    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, TextDocumentFilter, InlayHintsProvider
 } from "./services";
 
 import { MonacoDiagnosticCollection } from './monaco-diagnostic-collection';
@@ -436,11 +436,41 @@ export class MonacoLanguages implements Languages {
         }
     }
 
+    registerInlayHintsProvider(selector: DocumentSelector, provider: InlayHintsProvider): Disposable {
+        const inlayHintsProvider = this.createInlayHintsProvider(provider);
+        return this._monaco.languages.registerInlayHintsProvider(selector, inlayHintsProvider);
+    }
+
+    protected createInlayHintsProvider(provider: InlayHintsProvider): monaco.languages.InlayHintsProvider {
+        return {
+            onDidChangeInlayHints: provider.onDidChangeInlayHints,
+            provideInlayHints: async (model, range, token) => {
+                const textDocument = this.m2p.asTextDocumentIdentifier(model);
+                const result = await provider.provideInlayHints({
+                    textDocument,
+                    range: this.m2p.asRange(range)
+                }, token);
+                return result && this.p2m.asInlayHintList(result)
+            },
+            resolveInlayHint: async (hint: monaco.languages.InlayHint, token) => {
+                if (provider.resolveInlayHint) {
+                    const documentLink = this.m2p.asInlayHint(hint);
+                    const result = await provider.resolveInlayHint(documentLink, token);
+                    if (result) {
+                        const resolvedInlayHint = this.p2m.asInlayHint(result);
+                        Object.assign(hint, resolvedInlayHint);
+                    }
+                }
+                return hint;
+            }
+        }
+    }
+
     protected matchModel(selector: string | DocumentFilter | DocumentSelector, model: MonacoModelIdentifier): boolean {
         if (Array.isArray(selector)) {
             return selector.some(filter => this.matchModel(filter, model));
         }
-        if (DocumentFilter.is(selector)) {
+        if (TextDocumentFilter.is(selector)) {
             if (!!selector.language && selector.language !== model.languageId) {
                 return false;
             }
@@ -451,8 +481,11 @@ export class MonacoLanguages implements Languages {
                 return false;
             }
             return true;
+        } else if (typeof selector === 'string') {
+            return selector === model.languageId;
+        } else {
+            return false
         }
-        return selector === model.languageId;
     }
 
 }

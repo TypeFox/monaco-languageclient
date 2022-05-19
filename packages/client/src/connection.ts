@@ -11,6 +11,7 @@ import {
     NotificationHandler, NotificationHandler0, GenericNotificationHandler,
     Trace, Tracer, CancellationToken, MessageConnection, MessageSignature, Disposable, ProgressType
 } from 'vscode-jsonrpc';
+import { MessageTransports } from 'vscode-languageclient';
 
 import {
     InitializeRequest, InitializeParams, InitializeResult,
@@ -28,8 +29,6 @@ import {
 } from 'vscode-languageserver-protocol';
 
 import * as Is from 'vscode-languageserver-protocol/lib/common/utils/is';
-
-import { OutputChannel } from "./services";
 
 export interface IConnection {
 
@@ -90,7 +89,7 @@ export interface ConnectionCloseHandler {
     (): void;
 }
 export interface IConnectionProvider {
-    get(errorHandler: ConnectionErrorHandler, closeHandler: ConnectionCloseHandler, outputChannel: OutputChannel | undefined): Thenable<IConnection>;
+    get(encoding: string): Promise<MessageTransports>;
 }
 export function createConnection(connection: MessageConnection, errorHandler: ConnectionErrorHandler, closeHandler: ConnectionCloseHandler): IConnection {
     connection.onError((data) => { errorHandler(data[0], data[1], data[2]) });
@@ -108,7 +107,7 @@ export function createConnection(connection: MessageConnection, errorHandler: Co
         onProgress: <P>(type: ProgressType<P>, token: string | number, handler: NotificationHandler<P>): Disposable => connection.onProgress(type, token, handler),
         sendProgress: async <P>(type: ProgressType<P>, token: string | number, value: P) => connection.sendProgress(type, token, value),
 
-        trace: (value: Trace, tracer: Tracer, sendNotification: boolean = false): void => connection.trace(value, tracer, sendNotification),
+        trace: (value: Trace, tracer: Tracer, sendNotification: boolean = false): Promise<void> => connection.trace(value, tracer, sendNotification),
 
         initialize: (params: InitializeParams) => connection.sendRequest(InitializeRequest.type, params),
         shutdown: () => connection.sendRequest(ShutdownRequest.type, undefined),

@@ -23,8 +23,8 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { buildWorkerDefinition } from "monaco-editor-workers";
 buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
 
-import { MonacoLanguageClient, MessageConnection, CloseAction, ErrorAction, MonacoServices, createConnection } from 'monaco-languageclient';
-import { listen } from '@codingame/monaco-jsonrpc';
+import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codingame/monaco-jsonrpc';
 import normalizeUrl from 'normalize-url';
 
 // register Monaco languages
@@ -55,20 +55,19 @@ MonacoServices.install(monaco);
 const url = createUrl('localhost', 3000, '/sampleServer')
 const webSocket = new WebSocket(url);
 
-// listen when the web socket is opened
-listen({
-    webSocket,
-    onConnection: connection => {
-        // create and start the language client
-        const languageClient = createLanguageClient(connection);
-        const disposable = languageClient.start();
-        connection.onClose(() => disposable.dispose());
+webSocket.onopen = () => {
+    const socket = toSocket(webSocket);
+    const reader = new WebSocketMessageReader(socket);
+    const writer = new WebSocketMessageWriter(socket);
+    const languageClient = createLanguageClient({
+        reader,
+        writer
+    });
+    languageClient.start();
+    reader.onClose(() => languageClient.stop());
+};
 
-        console.log(`Connected to "${url}" and started the language client.`);
-    }
-});
-
-function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
+function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
     return new MonacoLanguageClient({
         name: "Sample Language Client",
         clientOptions: {
@@ -76,14 +75,14 @@ function createLanguageClient(connection: MessageConnection): MonacoLanguageClie
             documentSelector: ['json'],
             // disable the default error handler
             errorHandler: {
-                error: () => ErrorAction.Continue,
-                closed: () => CloseAction.DoNotRestart
+                error: () => ({ action: ErrorAction.Continue }),
+                closed: () => ({ action: CloseAction.DoNotRestart })
             }
         },
         // create a language client connection from the JSON RPC connection on demand
         connectionProvider: {
-            get: (errorHandler, closeHandler) => {
-                return Promise.resolve(createConnection(connection, errorHandler, closeHandler))
+            get: () => {
+                return Promise.resolve(transports)
             }
         }
     });
