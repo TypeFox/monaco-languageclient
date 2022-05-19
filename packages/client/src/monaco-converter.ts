@@ -414,7 +414,8 @@ export class MonacoToProtocolConverter {
         if (context === void 0 || context === null) {
             return context;
         }
-        return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined);
+        // FIXME: CodeActionTriggerKind is missing
+        return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined, undefined);
     }
 
     asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionParams {
