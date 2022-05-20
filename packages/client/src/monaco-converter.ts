@@ -19,7 +19,7 @@ import {
     Command, CodeLens, FormattingOptions, TextEdit, WorkspaceEdit, DocumentLinkParams, DocumentLink,
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
-    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, CodeDescription, InlayHint, InlayHintLabelPart
+    SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, InlayHint, InlayHintLabelPart
 } from './services';
 
 export type RecursivePartial<T> = {
@@ -54,15 +54,6 @@ export interface ProtocolCompletionItem extends monaco.languages.CompletionItem 
 }
 export namespace ProtocolCompletionItem {
     export function is(item: any): item is ProtocolCompletionItem {
-        return !!item && 'data' in item;
-    }
-}
-export interface ProtocolIMarkerData extends monaco.editor.IMarkerData {
-    data?: unknown;
-    codeDescription?: CodeDescription;
-}
-export namespace ProtocolIMarkerData {
-    export function is(item: any): item is ProtocolIMarkerData {
         return !!item && 'data' in item;
     }
 }
@@ -409,10 +400,6 @@ export class MonacoToProtocolConverter {
         const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
         const severity = this.asDiagnosticSeverity(marker.severity);
         const diag = Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
-        if (ProtocolIMarkerData.is(marker)) {
-            diag.data = marker.data
-            diag.codeDescription = marker.codeDescription;
-        }
         return diag
     }
 
@@ -423,19 +410,19 @@ export class MonacoToProtocolConverter {
         return markers.map(marker => this.asDiagnostic(marker));
     }
 
-    asCodeActionContext(context: monaco.languages.CodeActionContext): CodeActionContext {
+    asCodeActionContext(context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionContext {
         if (context === void 0 || context === null) {
             return context;
         }
-        const diagnostics = this.asDiagnostics(context.markers);
-        return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined);
+        // FIXME: CodeActionTriggerKind is missing
+        return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined, undefined);
     }
 
-    asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext): CodeActionParams {
+    asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
-            context: this.asCodeActionContext(context)
+            context: this.asCodeActionContext(context, diagnostics)
         }
     }
 
@@ -989,7 +976,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asSeverity(severity?: number): monaco.MarkerSeverity {
+    asSeverity(severity?: ls.DiagnosticSeverity): monaco.MarkerSeverity {
         if (severity === 1) {
             return this._monaco.MarkerSeverity.Error;
         }
@@ -1003,16 +990,16 @@ export class ProtocolToMonacoConverter {
     }
 
     asDiagnostics(diagnostics: undefined): undefined;
-    asDiagnostics(diagnostics: Diagnostic[]): ProtocolIMarkerData[];
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined;
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): ProtocolIMarkerData[] | undefined {
+    asDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[];
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined;
+    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
         if (!diagnostics) {
             return undefined;
         }
         return diagnostics.map(diagnostic => this.asDiagnostic(diagnostic));
     }
 
-    asDiagnostic(diagnostic: Diagnostic): ProtocolIMarkerData {
+    asDiagnostic(diagnostic: Diagnostic): monaco.editor.IMarkerData {
         return {
             code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code,
             severity: this.asSeverity(diagnostic.severity),
@@ -1023,9 +1010,7 @@ export class ProtocolToMonacoConverter {
             endLineNumber: diagnostic.range.end.line + 1,
             endColumn: diagnostic.range.end.character + 1,
             relatedInformation: this.asRelatedInformations(diagnostic.relatedInformation),
-            codeDescription: diagnostic.codeDescription,
-            tags: diagnostic.tags,
-            data: diagnostic.data
+            tags: diagnostic.tags
         }
     }
 
