@@ -12,7 +12,7 @@
     "src/**/*.ts",
   ],
   "exclude": [
-    "dist",
+    "src/dist",
     "node_modules"
   ]
 }

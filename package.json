@@ -21,7 +21,9 @@
     "build-client": "npm run build --workspace packages/client",
     "build-example-node": "npm run build --workspace packages/examples/node",
     "build-example-client": "npm run build --workspace packages/examples/client",
-    "build-example-browser": "npm run build --workspace packages/examples/browser"
+    "build-example-browser": "npm run build --workspace packages/examples/browser",
+    "webpack:example-client-build": "npm run webpack:build --workspace packages/examples/client",
+    "webpack:example-client-start": "npm run webpack:start --workspace packages/examples/client"
   },
   "workspaces": [
     "packages/client",

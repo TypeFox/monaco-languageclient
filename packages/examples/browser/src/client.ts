@@ -5,6 +5,7 @@
 
 import 'monaco-editor/esm/vs/editor/editor.all.js';
 
+// support all editor features
 import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
@@ -16,13 +17,10 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuic
 import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 
-// support all basic-languages
-import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
-
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-import { buildWorkerDefinition } from "monaco-editor-workers";
-buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+import { buildWorkerDefinition } from 'monaco-editor-workers';
+buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient';

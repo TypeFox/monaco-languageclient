@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import 'monaco-editor/esm/vs/editor/editor.all.js';
 
+// support all editor features
 import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
@@ -15,13 +16,10 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuic
 import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 
-// support all basic-languages
-import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
-
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-import { buildWorkerDefinition } from "monaco-editor-workers";
-buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+import { buildWorkerDefinition } from 'monaco-editor-workers';
+buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codingame/monaco-jsonrpc';
@@ -32,7 +30,7 @@ monaco.languages.register({
     id: 'json',
     extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
     aliases: ['JSON', 'json'],
-    mimetypes: ['application/json'],
+    mimetypes: ['application/json']
 });
 
 // create Monaco editor

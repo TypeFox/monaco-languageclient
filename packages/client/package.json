@@ -18,20 +18,20 @@
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "default": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
     },
     "./amd": {
-      "default": "./dist/amd/index.js",
-      "types": "./dist/amd/index.d.ts"
+      "types": "./dist/amd/index.d.ts",
+      "default": "./dist/amd/index.js"
     },
     "./vscode-compatibility": {
-      "default": "./lib/vscode-compatibility.js",
-      "types": "./lib/vscode-compatibility.d.ts"
+      "types": "./lib/vscode-compatibility.d.ts",
+      "default": "./lib/vscode-compatibility.js"
     },
     "./amd/vscode-compatibility": {
-      "default": "./dist/amd/vscode-compatibility.js",
-      "types": "./dist/amd/vscode-compatibility.d.ts"
+      "types": "./dist/amd/vscode-compatibility.d.ts",
+      "default": "./dist/amd/vscode-compatibility.js"
     }
   },
   "files": [
