@@ -12,7 +12,7 @@ export default defineConfig({
     },
     optimizeDeps: {
         // we need this as it is locally referenced/linked by the examples
-        // if it is regular dependency resoled from npmjs this is not required
+        // if it is regular dependency resolved from npmjs this is not required
         include: ['monaco-languageclient']
     },
     build: {
@@ -21,6 +21,9 @@ export default defineConfig({
                 client: path.resolve(__dirname, '/packages/examples/client/index.html'),
                 browser: path.resolve(__dirname, '/packages/examples/browser/index.html')
             }
+        },
+        commonjsOptions: {
+            include: [/monaco-languageclient/, /node_modules/]
         }
     },
     server: {
