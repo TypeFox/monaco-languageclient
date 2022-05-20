@@ -56,6 +56,9 @@ class ExtHostDiagnostics {
     ) {
     }
 
+    /**
+     * This method is greatly inspired by https://github.com/microsoft/vscode/blob/e9393b096d90a5ac49b1528d1ec60483fc6b993e/src/vs/workbench/api/common/extHostDiagnostics.ts#L248
+     */
     createDiagnosticCollection(name?: string): DiagnosticCollection {
         let owner: string;
         if (!name) {
@@ -95,6 +98,9 @@ class ExtHostDiagnostics {
 }
 
 export class MonacoLanguages implements Languages {
+    /**
+     * This constant comes from vscode itself: https://github.com/microsoft/vscode/blob/e9393b096d90a5ac49b1528d1ec60483fc6b993e/src/vs/workbench/api/common/extHostLanguageFeatures.ts#L377
+     */
     private static readonly _maxCodeActionsPerFile: number = 1000;
 
     private readonly extHostDiagnostics: ExtHostDiagnostics;
@@ -242,6 +248,9 @@ export class MonacoLanguages implements Languages {
     protected createCodeActionProvider(provider: CodeActionProvider): monaco.languages.CodeActionProvider {
         return {
             provideCodeActions: async (model, range, context, token) => {
+                /**
+                 * This few lines of code are greatly inspired from https://github.com/microsoft/vscode/blob/e9393b096d90a5ac49b1528d1ec60483fc6b993e/src/vs/workbench/api/common/extHostLanguageFeatures.ts#L400
+                 */
                 const allDiagnostics: Diagnostic[] = [];
                 for (const diagnostic of this.extHostDiagnostics.getDiagnostics(model.uri.toString())) {
                     if (range.intersectRanges(this.p2m.asRange(diagnostic.range))) {
