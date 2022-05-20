@@ -95,6 +95,8 @@ class ExtHostDiagnostics {
 }
 
 export class MonacoLanguages implements Languages {
+    private static readonly _maxCodeActionsPerFile: number = 1000;
+
     private readonly extHostDiagnostics: ExtHostDiagnostics;
     constructor(
         protected readonly _monaco: typeof monaco,
@@ -244,7 +246,7 @@ export class MonacoLanguages implements Languages {
                 for (const diagnostic of this.extHostDiagnostics.getDiagnostics(model.uri.toString())) {
                     if (range.intersectRanges(this.p2m.asRange(diagnostic.range))) {
                         const newLen = allDiagnostics.push(diagnostic);
-                        if (newLen > 1000) {
+                        if (newLen > MonacoLanguages._maxCodeActionsPerFile) {
                             break;
                         }
                     }
