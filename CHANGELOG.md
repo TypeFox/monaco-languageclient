@@ -2,13 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.19.0] - 2022-04-xx
+## [1.0.0] - 2022-05-20
 
-* Switch to npm workspace and vite and thereby drop yarn, lerna and webpack
-* Restructure project: All code is moved to packages directory
-* Update and clean-up all dependencies
-* Use monaco-editor in examples instead of monaco-editor-core
-* README is fully updated
+* Switch to npm workspace and vite and thereby drop yarn, lerna and webpack [#340](https://github.com/TypeFox/monaco-languageclient/pull/340)
+  * Restructure project: All code is moved to packages directory
+  * Update and clean-up all dependencies
+  * Use monaco-editor in examples instead of monaco-editor-core
+  * README was fully revised
+  * Bugfixes resulting from this:
+    * fix: Fix vscode-compatibility using webpack [#342](https://github.com/TypeFox/monaco-languageclient/pull/342)
+    * Use ts-node for example [#344](https://github.com/TypeFox/monaco-languageclient/pull/344)
+    * Update README.md  [#345](https://github.com/TypeFox/monaco-languageclient/pull/345)
+    * Integrate webpack client example as second option [#353](https://github.com/TypeFox/monaco-languageclient/pull/353)
+* Make monaco workspace disposable [#330](https://github.com/TypeFox/monaco-languageclient/pull/330)
+* Update the protocol to version 3.17 [#350](https://github.com/TypeFox/monaco-languageclient/pull/350)
+* Fix code action diagnostics [#352](https://github.com/TypeFox/monaco-languageclient/pull/352)
+* Bump version to 1.0.0
 
 ## [0.18.1] - 2022-03-21
 

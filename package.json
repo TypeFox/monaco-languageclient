@@ -1,26 +1,26 @@
 {
   "private": true,
   "devDependencies": {
-    "typescript": "^4.6.3",
-    "vite": "^2.9.1",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.9",
     "editorconfig": "^0.15.3",
     "shx": "^0.3.4",
-    "tslib": "^2.3.1"
+    "tslib": "^2.4.0"
   },
   "resolutions": {
     "vscode-languageserver-types": "3.17.1"
   },
   "scripts": {
-    "clean": "npm run clean --workspaces",
+    "clean": "npm run clean --workspaces && npm run clean:amd --workspace packages/client && npm run webpack:clean --workspace packages/examples/client",
     "compile": "npm run compile --workspaces",
     "lint": "echo 'No linting yet'",
     "dev": "vite --debug",
     "start-example-node": "npm run start --workspace packages/examples/node",
     "start-example-node:ext": "npm run start:ext --workspace packages/examples/node",
-    "build": "npm run build --workspaces",
+    "build": "npm run build-client && npm run build-example-node && npm run build-example-client && npm run build-example-browser",
     "build-client": "npm run build --workspace packages/client",
     "build-example-node": "npm run build --workspace packages/examples/node",
-    "build-example-client": "npm run build --workspace packages/examples/client",
+    "build-example-client": "npm run build --workspace packages/examples/client && npm run webpack:example-client-build",
     "build-example-browser": "npm run build --workspace packages/examples/browser",
     "webpack:example-client-build": "npm run webpack:build --workspace packages/examples/client",
     "webpack:example-client-start": "npm run webpack:start --workspace packages/examples/client"
