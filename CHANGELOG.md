@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 * Make monaco workspace disposable [#330](https://github.com/TypeFox/monaco-languageclient/pull/330)
 * Update the protocol to version 3.17 [#350](https://github.com/TypeFox/monaco-languageclient/pull/350)
 * Fix code action diagnostics [#352](https://github.com/TypeFox/monaco-languageclient/pull/352)
+* Fix resolving, never overwrite by undefined [#354](https://github.com/TypeFox/monaco-languageclient/pull/354)
 * Bump version to 1.0.0
 
 ## [0.18.1] - 2022-03-21
