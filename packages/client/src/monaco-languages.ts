@@ -46,6 +46,15 @@ export function testGlob(pattern: string, value: string): boolean {
     return regExp.test(value);
 }
 
+function overrideWithResolvedValue<T>(item: T, resolvedItem: T): void {
+    for (const key in resolvedItem) {
+        const value = resolvedItem[key]
+        if (value != null) {
+            item[key] = value
+        }
+    }
+}
+
 class ExtHostDiagnostics {
     private static _idPool: number = 0;
     private readonly _collections = new Map<string, DiagnosticCollection>();
@@ -140,7 +149,7 @@ export class MonacoLanguages implements Languages {
                 const resolvedItem = await provider.resolveCompletionItem!(protocolItem, token);
                 if (resolvedItem) {
                     const resolvedCompletionItem = this.p2m.asCompletionItem(resolvedItem, item.range);
-                    Object.assign(item, resolvedCompletionItem);
+                    overrideWithResolvedValue(item, resolvedCompletionItem);
                 }
                 return item;
             } : undefined
@@ -270,7 +279,7 @@ export class MonacoLanguages implements Languages {
                 const result = await provider.resolveCodeAction!(params, token);
                 if (result) {
                     const resolvedCodeAction = this.p2m.asCodeAction(result);
-                    Object.assign(codeAction, resolvedCodeAction);
+                    overrideWithResolvedValue(codeAction, resolvedCodeAction);
                 }
                 return codeAction;
             } : undefined
@@ -294,7 +303,7 @@ export class MonacoLanguages implements Languages {
                 const result = await provider.resolveCodeLens!(protocolCodeLens, token);
                 if (result) {
                     const resolvedCodeLens = this.p2m.asCodeLens(result);
-                    Object.assign(codeLens, resolvedCodeLens);
+                    overrideWithResolvedValue(codeLens, resolvedCodeLens);
                 }
                 return codeLens;
             } : undefined
@@ -383,7 +392,7 @@ export class MonacoLanguages implements Languages {
                     const result = await provider.resolveDocumentLink(documentLink, token);
                     if (result) {
                         const resolvedLink = this.p2m.asDocumentLink(result);
-                        Object.assign(link, resolvedLink);
+                        overrideWithResolvedValue(link, resolvedLink);
                     }
                 }
                 return link;
@@ -529,7 +538,7 @@ export class MonacoLanguages implements Languages {
                     const result = await provider.resolveInlayHint(documentLink, token);
                     if (result) {
                         const resolvedInlayHint = this.p2m.asInlayHint(result);
-                        Object.assign(hint, resolvedInlayHint);
+                        overrideWithResolvedValue(hint, resolvedInlayHint);
                     }
                 }
                 return hint;
