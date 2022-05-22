@@ -38,7 +38,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         });
         self._c2p = new Proxy(self._c2p, {
             get: (target: c2p.Converter, prop: string) => {
-                if (prop === 'asUri') {
+                if (prop === 'asUri' || prop === 'asFormattingOptions') {
                     return target[prop];
                 }
                 if (prop === 'asCompletionParams') {
