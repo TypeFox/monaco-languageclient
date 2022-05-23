@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 * Update the protocol to version 3.17 [#350](https://github.com/TypeFox/monaco-languageclient/pull/350)
 * Fix code action diagnostics [#352](https://github.com/TypeFox/monaco-languageclient/pull/352)
 * Fix resolving, never overwrite by undefined [#354](https://github.com/TypeFox/monaco-languageclient/pull/354)
+* The `connectionProvider` now expects a `MessageTransports` instead of a `MessageConnection`
 * Bump version to 1.0.0
 
 ## [0.18.1] - 2022-03-21
