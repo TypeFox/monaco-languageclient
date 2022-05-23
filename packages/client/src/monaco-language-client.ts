@@ -8,10 +8,10 @@ import {
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
 import { IConnectionProvider } from './connection';
-import { CompletionParams, WillSaveTextDocumentParams } from './services'
 
 export * from 'vscode-languageclient/lib/common/client';
 import type * as vscode from 'vscode'
+import { MonacoC2PConverter, MonacoP2CConverter } from "./converters";
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
@@ -28,42 +28,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
             _p2c: p2c.Converter,
             _c2p: c2p.Converter
         } = this as any;
-        self._p2c = new Proxy(self._p2c, {
-            get: (target: any, prop: string) => {
-                if (prop === 'asUri') {
-                    return target[prop];
-                }
-                return MonacoLanguageClient.bypassConversion;
-            }
-        });
-        self._c2p = new Proxy(self._c2p, {
-            get: (target: c2p.Converter, prop: string) => {
-                if (prop === 'asUri') {
-                    return target[prop];
-                }
-                if (prop === 'asCompletionParams') {
-                    return (textDocument: any, position: any, context: any): CompletionParams => {
-                        return {
-                            textDocument: target.asTextDocumentIdentifier(textDocument),
-                            position,
-                            context
-                        }
-                    }
-                }
-                if (prop === 'asWillSaveTextDocumentParams') {
-                    return (event: any): WillSaveTextDocumentParams => {
-                        return {
-                            textDocument: target.asTextDocumentIdentifier(event.document),
-                            reason: event.reason
-                        }
-                    }
-                }
-                if (prop.endsWith('Params')) {
-                    return (target as any)[prop];
-                }
-                return MonacoLanguageClient.bypassConversion;
-            }
-        });
+        self._p2c = new MonacoP2CConverter(self._p2c);
+        self._c2p = new MonacoC2PConverter(self._c2p);
     }
 
     protected createMessageTransports(encoding: string): Promise<MessageTransports> {
