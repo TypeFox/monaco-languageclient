@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "typescript": "^4.6.4",
-    "vite": "^2.9.9",
+    "vite": "2.9.6",
     "editorconfig": "^0.15.3",
     "shx": "^0.3.4",
     "tslib": "^2.4.0"

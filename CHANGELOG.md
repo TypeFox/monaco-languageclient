@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2022-05-21
+
+* Add some typing on the code/proto converters [#359](https://github.com/TypeFox/monaco-languageclient/pull/359)
+
 ## [1.0.0] - 2022-05-20
 
 * Switch to npm workspace and vite and thereby drop yarn, lerna and webpack [#340](https://github.com/TypeFox/monaco-languageclient/pull/340)
