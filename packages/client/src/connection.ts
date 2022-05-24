@@ -4,14 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 'use strict';
 
-import {
+import type {
     Message,
     RequestType, RequestType0, RequestHandler, RequestHandler0, GenericRequestHandler,
     NotificationType, NotificationType0,
     NotificationHandler, NotificationHandler0, GenericNotificationHandler,
     Trace, Tracer, CancellationToken, MessageConnection, MessageSignature, Disposable, ProgressType
-} from 'vscode-jsonrpc';
-import { MessageTransports } from 'vscode-languageclient';
+} from 'vscode-jsonrpc/lib/common/api';
+import type { MessageTransports } from 'vscode-languageclient/lib/common/api';
 
 import {
     InitializeRequest, InitializeParams, InitializeResult,

@@ -24,7 +24,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import {
     Disposable, CancellationToken, Event, Emitter
-} from 'vscode-jsonrpc';
+} from 'vscode-jsonrpc/lib/common/api';
 
 import { URI as Uri } from 'vscode-uri';
 import { TextDocumentShowOptions } from 'vscode';
