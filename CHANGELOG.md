@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.1] - 2022-05-21
 
 * Add some typing on the code/proto converters [#359](https://github.com/TypeFox/monaco-languageclient/pull/359)
+* Fix to vite 2.9.6 for now
 
 ## [1.0.0] - 2022-05-20
 
