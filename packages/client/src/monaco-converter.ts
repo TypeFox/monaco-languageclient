@@ -1032,7 +1032,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined, defaultRange: monaco.IRange): monaco.languages.CompletionList {
+    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined, defaultMonacoRange: monaco.IRange): monaco.languages.CompletionList {
         if (!result) {
             return {
                 incomplete: false,
@@ -1040,19 +1040,20 @@ export class ProtocolToMonacoConverter {
             }
         }
         if (Array.isArray(result)) {
-            const suggestions = result.map(item => this.asCompletionItem(item, defaultRange));
+            const suggestions = result.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange));
             return {
                 incomplete: false,
                 suggestions
             }
         }
+        const defaultRange = this.getCompletionItemDefaultRange(result);
         return {
             incomplete: result.isIncomplete,
-            suggestions: result.items.map(item => this.asCompletionItem(item, defaultRange))
+            suggestions: result.items.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange, result.itemDefaults))
         }
     }
 
-    asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace): ProtocolCompletionItem {
+    asCompletionItem(item: CompletionItem, defaultMonacoRange: monaco.IRange | RangeReplace, defaultRange?: monaco.IRange | RangeReplace, itemDefaults?: CompletionList['itemDefaults']): ProtocolCompletionItem {
         const result = <ProtocolCompletionItem>{ label: this.asCompletionItemLabel(item) };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
@@ -1060,9 +1061,9 @@ export class ProtocolToMonacoConverter {
             result.documentationFormat = Is.string(item.documentation) ? undefined : item.documentation.kind;
         };
         if (item.filterText) { result.filterText = item.filterText; }
-        const insertText = this.asCompletionInsertText(item, defaultRange);
+        const insertText = this.asCompletionInsertText(item, defaultRange, itemDefaults?.insertTextFormat);
         result.insertText = insertText.insertText;
-        result.range = insertText.range;
+        result.range = insertText.range ?? defaultMonacoRange;
         result.fromEdit = insertText.fromEdit;
         if (insertText.isSnippet) {
             result.insertTextRules = this._monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
@@ -1080,15 +1081,25 @@ export class ProtocolToMonacoConverter {
         if (item.command) { result.command = this.asCommand(item.command); }
         if (item.deprecated === true || item.deprecated === false) { result.deprecated = item.deprecated; }
         if (item.preselect === true || item.preselect === false) { result.preselect = item.preselect; }
-        if (item.data !== undefined) { result.data = item.data; }
+        const data = item.data ?? itemDefaults?.data;
+        if (data !== undefined) { result.data = data; }
         if (item.deprecated === true || item.deprecated === false) {
             result.deprecated = item.deprecated;
         }
-        if (item.insertTextMode) { result.insertTextMode = item.insertTextMode; }
+        const insertTextMode = item.insertTextMode ?? itemDefaults?.insertTextMode
+        if (insertTextMode) { result.insertTextMode = insertTextMode; }
         if (item.tags) { result.tags = item.tags; }
         return result;
     }
 
+    getCompletionItemDefaultRange(list: CompletionList): monaco.Range | RangeReplace | undefined {
+        const rangeDefaults = list.itemDefaults?.editRange;
+        return ls.Range.is(rangeDefaults)
+            ? this.asRange(rangeDefaults)
+            : rangeDefaults !== undefined
+                ? { insert: this.asRange(rangeDefaults.insert), replace: this.asRange(rangeDefaults.replace) }
+                : undefined;
+    }
 
     asCompletionItemLabel(item: ls.CompletionItem): monaco.languages.CompletionItemLabel | string {
         if (ls.CompletionItemLabelDetails.is(item.labelDetails)) {
@@ -1101,6 +1112,7 @@ export class ProtocolToMonacoConverter {
             return item.label;
         }
     }
+
     asCompletionItemKind(value: CompletionItemKind): [monaco.languages.CompletionItemKind, CompletionItemKind | undefined] {
         if (CompletionItemKind.Text <= value && value <= CompletionItemKind.TypeParameter) {
             switch (value) {
@@ -1136,27 +1148,28 @@ export class ProtocolToMonacoConverter {
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace)
-        : { insertText: string, range: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
-        const isSnippet = item.insertTextFormat === InsertTextFormat.Snippet;
-        if (item.textEdit) {
-            if (TextEdit.is(item.textEdit)) {
-                const range = this.asRange(item.textEdit.range);
-                const value = item.textEdit.newText;
-                return { isSnippet, insertText: value, range, fromEdit: true, };
-            } else {
-                const range = {
-                    insert: this.asRange(item.textEdit.insert),
-                    replace: this.asRange(item.textEdit.replace)
-                };
-                const value = item.textEdit.newText;
-                return { isSnippet, insertText: value, range, fromEdit: true, };
-            }
-        }
-        if (item.insertText) {
+    asCompletionInsertText(item: CompletionItem, defaultRange?: monaco.IRange | RangeReplace, defaultInsertTextFormat?: InsertTextFormat): { insertText: string, range?: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
+        const insertTextFormat = item.insertTextFormat ?? defaultInsertTextFormat;
+
+        const isSnippet = insertTextFormat === InsertTextFormat.Snippet;
+        if (item.textEdit !== undefined || defaultRange !== undefined) {
+            const [range, newText] = item.textEdit !== undefined
+                ? this.getCompletionRangeAndText(item.textEdit)
+                : [defaultRange, item.textEditText ?? item.label];
+
+            return { insertText: newText, range: range, fromEdit: true, isSnippet };
+        } else if (item.insertText) {
             return { isSnippet, insertText: item.insertText, fromEdit: false, range: defaultRange };
         }
         return { insertText: item.label, range: defaultRange, fromEdit: false, isSnippet: false };
+    }
+
+    getCompletionRangeAndText(value: ls.TextEdit | ls.InsertReplaceEdit): [monaco.Range | RangeReplace, string] {
+        if (ls.InsertReplaceEdit.is(value)) {
+            return [{ insert: this.asRange(value.insert), replace: this.asRange(value.replace) }, value.newText];
+        } else {
+            return [this.asRange(value.range), value.newText];
+        }
     }
 
     asDocumentLinks(documentLinks: DocumentLink[]): monaco.languages.ILinksList {
