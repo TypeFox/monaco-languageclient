@@ -1053,7 +1053,7 @@ export class ProtocolToMonacoConverter {
     }
 
     asCompletionItem(item: CompletionItem, defaultRange: monaco.IRange | RangeReplace): ProtocolCompletionItem {
-        const result = <ProtocolCompletionItem>{ label: item.label };
+        const result = <ProtocolCompletionItem>{ label: this.asCompletionItemLabel(item) };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
             result.documentation = this.asDocumentation(item.documentation);
@@ -1089,6 +1089,18 @@ export class ProtocolToMonacoConverter {
         return result;
     }
 
+
+    asCompletionItemLabel(item: ls.CompletionItem): monaco.languages.CompletionItemLabel | string {
+        if (ls.CompletionItemLabelDetails.is(item.labelDetails)) {
+            return {
+                label: item.label,
+                detail: item.labelDetails.detail,
+                description: item.labelDetails.description
+            };
+        } else {
+            return item.label;
+        }
+    }
     asCompletionItemKind(value: CompletionItemKind): [monaco.languages.CompletionItemKind, CompletionItemKind | undefined] {
         if (CompletionItemKind.Text <= value && value <= CompletionItemKind.TypeParameter) {
             switch (value) {
