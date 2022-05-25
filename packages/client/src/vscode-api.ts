@@ -580,10 +580,14 @@ export function createVSCodeApi(servicesProvider: Services.Provider): typeof vsc
             if (!languages.registerWorkspaceSymbolProvider) {
                 return Disposable.create(() => { });
             }
+            const resolveWorkspaceSymbol = provider.resolveWorkspaceSymbol;
             return languages.registerWorkspaceSymbolProvider({
                 provideWorkspaceSymbols({ query }, token) {
                     return provider.provideWorkspaceSymbols(query, token) as any;
-                }
+                },
+                resolveWorkspaceSymbol: resolveWorkspaceSymbol ? (symbol, token) => {
+                    return resolveWorkspaceSymbol(<any>symbol, token) as any
+                } : undefined
             });
         },
         registerReferenceProvider(selector, provider) {
