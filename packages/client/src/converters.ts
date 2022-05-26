@@ -1,6 +1,6 @@
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
-import { WillSaveTextDocumentParams } from 'vscode-languageclient';
+import type { WillSaveTextDocumentParams } from 'vscode-languageserver-protocol';
 import * as code from 'vscode';
 import * as proto from 'vscode-languageserver-protocol';
 

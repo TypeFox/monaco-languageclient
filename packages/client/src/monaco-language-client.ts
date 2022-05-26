@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions
-} from "vscode-languageclient";
+} from "vscode-languageclient/lib/common/client";
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
 import { IConnectionProvider } from './connection';
