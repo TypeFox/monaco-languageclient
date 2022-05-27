@@ -21,7 +21,6 @@ import { DefinitionFeature } from "vscode-languageclient/lib/common/definition";
 import { ReferencesFeature } from "vscode-languageclient/lib/common/reference";
 import { DocumentHighlightFeature } from "vscode-languageclient/lib/common/documentHighlight";
 import { DocumentSymbolFeature } from "vscode-languageclient/lib/common/documentSymbol";
-import { WorkspaceSymbolFeature } from "vscode-languageclient/lib/common/workspaceSymbol";
 import { CodeActionFeature } from "vscode-languageclient/lib/common/codeAction";
 import { CodeLensFeature } from "vscode-languageclient/lib/common/codeLens";
 import { DocumentFormattingFeature, DocumentOnTypeFormattingFeature, DocumentRangeFormattingFeature } from "vscode-languageclient/lib/common/formatting";
@@ -37,15 +36,9 @@ import { DeclarationFeature } from "vscode-languageclient/lib/common/declaration
 import { SelectionRangeFeature } from "vscode-languageclient/lib/common/selectionRange";
 import { SemanticTokensFeature } from "vscode-languageclient/lib/common/semanticTokens";
 import { LinkedEditingFeature } from "vscode-languageclient/lib/common/linkedEditingRange";
-import { TypeHierarchyFeature } from "vscode-languageclient/lib/common/typeHierarchy";
 import { InlayHintsFeature } from "vscode-languageclient/lib/common/inlayHint";
 import { DiagnosticFeature } from "vscode-languageclient/lib/common/diagnostic";
 import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
-import { CallHierarchyFeature } from "vscode-languageclient/lib/common/callHierarchy";
-import { DidCreateFilesFeature, DidDeleteFilesFeature, DidRenameFilesFeature, WillCreateFilesFeature, WillDeleteFilesFeature, WillRenameFilesFeature } from "vscode-languageclient/lib/common/fileOperations";
-import { InlineValueFeature } from "vscode-languageclient/lib/common/inlineValue";
-import { NotebookDocumentSyncFeature } from "vscode-languageclient/lib/common/notebook";
-import { FileSystemWatcherFeature } from 'vscode-languageclient/lib/common/fileSystemWatcher';
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
@@ -82,7 +75,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new WillSaveWaitUntilFeature(this));
         this.registerFeature(new DidSaveTextDocumentFeature(this));
         this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments']));
-        this.registerFeature(new FileSystemWatcherFeature(this, (event) => this['notifyFileEvent'](event)));
         this.registerFeature(new CompletionItemFeature(this));
         this.registerFeature(new HoverFeature(this));
         this.registerFeature(new SignatureHelpFeature(this));
@@ -90,7 +82,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new ReferencesFeature(this));
         this.registerFeature(new DocumentHighlightFeature(this));
         this.registerFeature(new DocumentSymbolFeature(this));
-        this.registerFeature(new WorkspaceSymbolFeature(this));
         this.registerFeature(new CodeActionFeature(this));
         this.registerFeature(new CodeLensFeature(this));
         this.registerFeature(new DocumentFormattingFeature(this));
@@ -112,20 +103,10 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new DeclarationFeature(this));
         this.registerFeature(new SelectionRangeFeature(this));
         this.registerFeature(new ProgressFeature(this));
-        this.registerFeature(new CallHierarchyFeature(this));
         this.registerFeature(new SemanticTokensFeature(this));
         this.registerFeature(new LinkedEditingFeature(this));
-        this.registerFeature(new DidCreateFilesFeature(this));
-        this.registerFeature(new DidRenameFilesFeature(this));
-        this.registerFeature(new DidDeleteFilesFeature(this));
-        this.registerFeature(new WillCreateFilesFeature(this));
-        this.registerFeature(new WillRenameFilesFeature(this));
-        this.registerFeature(new WillDeleteFilesFeature(this));
-        this.registerFeature(new TypeHierarchyFeature(this));
-        this.registerFeature(new InlineValueFeature(this));
         this.registerFeature(new InlayHintsFeature(this));
         this.registerFeature(new DiagnosticFeature(this));
-        this.registerFeature(new NotebookDocumentSyncFeature(this));
     }
 }
 export namespace MonacoLanguageClient {
