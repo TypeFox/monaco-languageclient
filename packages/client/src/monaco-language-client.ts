@@ -68,12 +68,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     }
 
     protected override registerBuiltinFeatures() {
-        this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
         this.registerFeature(new DidChangeTextDocumentFeature(this));
-        this.registerFeature(new WillSaveFeature(this));
-        this.registerFeature(new WillSaveWaitUntilFeature(this));
-        this.registerFeature(new DidSaveTextDocumentFeature(this));
         this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments']));
         this.registerFeature(new CompletionItemFeature(this));
         this.registerFeature(new HoverFeature(this));
@@ -90,7 +86,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new RenameFeature(this));
         this.registerFeature(new DocumentLinkFeature(this));
         this.registerFeature(new ExecuteCommandFeature(this));
-        this.registerFeature(new SyncConfigurationFeature(this));
         this.registerFeature(new TypeDefinitionFeature(this));
         this.registerFeature(new ImplementationFeature(this));
         this.registerFeature(new ColorProviderFeature(this));
@@ -102,11 +97,25 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new FoldingRangeFeature(this));
         this.registerFeature(new DeclarationFeature(this));
         this.registerFeature(new SelectionRangeFeature(this));
-        this.registerFeature(new ProgressFeature(this));
         this.registerFeature(new SemanticTokensFeature(this));
         this.registerFeature(new LinkedEditingFeature(this));
         this.registerFeature(new InlayHintsFeature(this));
         this.registerFeature(new DiagnosticFeature(this));
+    }
+
+    public registerTextDocumentSaveFeatures() {
+        this.registerFeature(new WillSaveFeature(this));
+        this.registerFeature(new WillSaveWaitUntilFeature(this));
+        this.registerFeature(new DidSaveTextDocumentFeature(this));
+    }
+
+    public registerConfigurationFeatures() {
+        this.registerFeature(new ConfigurationFeature(this));
+        this.registerFeature(new SyncConfigurationFeature(this));
+    }
+
+    public registerProgressFeatures() {
+        this.registerFeature(new ProgressFeature(this));
     }
 }
 export namespace MonacoLanguageClient {
