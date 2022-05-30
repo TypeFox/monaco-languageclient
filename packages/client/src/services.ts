@@ -133,6 +133,7 @@ export interface DocumentSymbolProvider {
 
 export interface WorkspaceSymbolProvider {
     provideWorkspaceSymbols(params: WorkspaceSymbolParams, token: CancellationToken): ProviderResult<SymbolInformation[]>;
+    resolveWorkspaceSymbol?(codeAction: SymbolInformation, token: CancellationToken): ProviderResult<SymbolInformation>;
 }
 
 export interface CodeActionProvider<T extends CodeAction = CodeAction> {
