@@ -10,6 +10,14 @@
   "resolutions": {
     "vscode-languageserver-types": "3.17.1"
   },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.10.0"
+  },
+  "volta": {
+    "node": "16.15.0",
+    "npm": "8.11.0"
+  },
   "scripts": {
     "clean": "npm run clean --workspaces && npm run clean:amd --workspace packages/client && npm run webpack:clean --workspace packages/examples/client",
     "compile": "npm run compile --workspaces",
