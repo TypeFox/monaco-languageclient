@@ -39,6 +39,7 @@ import { LinkedEditingFeature } from "vscode-languageclient/lib/common/linkedEdi
 import { InlayHintsFeature } from "vscode-languageclient/lib/common/inlayHint";
 import { DiagnosticFeature } from "vscode-languageclient/lib/common/diagnostic";
 import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
+import { RegistrationParams, UnregistrationParams } from "vscode-languageclient";
 
 export class MonacoLanguageClient extends BaseLanguageClient {
 
@@ -57,6 +58,23 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         } = this as any;
         self._p2c = new MonacoP2CConverter(self._p2c);
         self._c2p = new MonacoC2PConverter(self._c2p);
+
+        // Hack because vscode-language client rejects the whole registration block if one capability registration has no associated client feature registered
+        // Some language servers still send the registration even though the client says it doesn't support it
+        const originalHandleRegistrationRequest: (params: RegistrationParams) => Promise<void> = this['handleRegistrationRequest'].bind(this)
+        this['handleRegistrationRequest'] = (params: RegistrationParams) => {
+            originalHandleRegistrationRequest({
+                ...params,
+                registrations: params.registrations.filter(registration => this.getFeature(<any>registration.method) != null)
+            })
+        }
+        const originalHandleUnregistrationRequest: (params: UnregistrationParams) => Promise<void> = this['handleUnregistrationRequest'].bind(this)
+        this['handleUnregistrationRequest'] = (params: UnregistrationParams) => {
+            originalHandleUnregistrationRequest({
+                ...params,
+                unregisterations: params.unregisterations.filter(unregistration => this.getFeature(<any>unregistration.method) != null)
+            })
+        }
     }
 
     protected createMessageTransports(encoding: string): Promise<MessageTransports> {
