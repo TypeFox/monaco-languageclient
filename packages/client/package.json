@@ -21,6 +21,14 @@
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
+    "./monaco-converter": {
+      "types": "./lib/monaco-converter.d.ts",
+      "default": "./lib/monaco-converter.js"
+    },
+    "./amd/monaco-converter": {
+      "types": "./dist/amd/monaco-converter.d.ts",
+      "default": "./dist/amd/monaco-converter.js"
+    },
     "./amd": {
       "types": "./dist/amd/index.d.ts",
       "default": "./dist/amd/index.js"
