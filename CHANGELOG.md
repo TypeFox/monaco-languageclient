@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2022-06-08
+
+* feat(package.json): export monaco-converter #[376](https://github.com/TypeFox/monaco-languageclient/pull/376)
+* Clean unregistered featured from registration requests #[372](https://github.com/TypeFox/monaco-languageclient/pull/372)
+* Introduce global engines entries for node and npm #[370](https://github.com/TypeFox/monaco-languageclient/pull/370)
+* Implement missing 3.17 api #[364](https://github.com/TypeFox/monaco-languageclient/pull/364)
+* Remove unsupported features #[362](https://github.com/TypeFox/monaco-languageclient/pull/362)
+* Do not include node code #[361](https://github.com/TypeFox/monaco-languageclient/pull/361)
+
 ## [1.0.1] - 2022-05-21
 
 * Add some typing on the code/proto converters [#359](https://github.com/TypeFox/monaco-languageclient/pull/359)

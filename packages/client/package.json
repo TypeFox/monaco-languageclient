@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -51,7 +51,7 @@
     "glob-to-regexp": "^0.4.1",
     "vscode-jsonrpc": "8.0.1",
     "vscode-languageclient": "8.0.1",
-    "vscode-languageserver-textdocument": "1.0.4",
+    "vscode-languageserver-textdocument": "1.0.5",
     "vscode-uri": "3.0.3"
   },
   "devDependencies": {
