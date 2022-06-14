@@ -7,7 +7,6 @@ import {
 } from "vscode-languageclient/lib/common/client";
 import * as p2c from 'vscode-languageclient/lib/common/protocolConverter';
 import * as c2p from 'vscode-languageclient/lib/common/codeConverter';
-import { IConnectionProvider } from './connection';
 
 export * from 'vscode-languageclient/lib/common/client';
 import type * as vscode from 'vscode'
@@ -41,6 +40,9 @@ import { DiagnosticFeature } from "vscode-languageclient/lib/common/diagnostic";
 import { ProgressFeature } from "vscode-languageclient/lib/common/progress";
 import { RegistrationParams, UnregistrationParams } from "vscode-languageclient";
 
+export interface IConnectionProvider {
+    get(encoding: string): Promise<MessageTransports>;
+}
 export class MonacoLanguageClient extends BaseLanguageClient {
 
     static bypassConversion = (result: any, token?: vscode.CancellationToken) => token != null ? Promise.resolve(result || undefined) : (result || undefined);
