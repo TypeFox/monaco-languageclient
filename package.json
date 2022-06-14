@@ -39,6 +39,7 @@
     "packages/client",
     "packages/examples/node",
     "packages/examples/client",
-    "packages/examples/browser"
+    "packages/examples/browser",
+    "packages/examples/browser-old"
   ]
 }

@@ -101,6 +101,8 @@ npm run dev
 
 After launching vite development server go to http://localhost:8080/packages/examples/browser/index.html
 
+You can also go to http://localhost:8080/packages/examples/browser-old/index.html for the old implementation using the deprecated monaco converters
+
 You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
 
 **Hint:** Vite serves all client code from http://localhost:8080 . You can go to the index.html and from there select if you want to open **Web Client for Node.js Language Server** or **Browser Example** as well.
