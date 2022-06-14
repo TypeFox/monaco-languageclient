@@ -27,9 +27,6 @@ module.exports = {
     },
     target: 'web',
     resolve: {
-        alias: {
-            'vscode': require.resolve('monaco-languageclient/vscode-compatibility')
-        },
         extensions: ['.ts', '.js', '.json', '.ttf'],
         fallback: {
             fs: 'empty',

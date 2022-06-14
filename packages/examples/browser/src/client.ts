@@ -18,12 +18,16 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standalon
 import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as vscode from 'vscode'
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { getLanguageService, TextDocument } from "vscode-json-languageservice";
-import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient';
+import { createConverter as createCodeConverter } from "vscode-languageclient/lib/common/codeConverter"
+import { createConverter as createProtocolConverter } from "vscode-languageclient/lib/common/protocolConverter"
+const codeConverter = createCodeConverter()
+const protocolConverter = createProtocolConverter(undefined, true, true)
 
 const LANGUAGE_ID = 'json';
 const MODEL_URI = 'inmemory://model.json'
@@ -42,20 +46,19 @@ const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
+const model = monaco.editor.createModel(value, LANGUAGE_ID, MONACO_URI)
 monaco.editor.create(document.getElementById("container")!, {
-    model: monaco.editor.createModel(value, LANGUAGE_ID, MONACO_URI),
+    model,
     glyphMargin: true,
     lightbulb: {
         enabled: true
     }
 });
 
-function getModel(): monaco.editor.IModel {
-    return monaco.editor.getModel(MONACO_URI) as monaco.editor.IModel;
-}
+const vscodeDocument = vscode.workspace.textDocuments[0]
 
-function createDocument(model: monaco.editor.IReadOnlyModel) {
-    return TextDocument.create(MODEL_URI, model.getLanguageId(), model.getVersionId(), model.getValue());
+function createDocument(vscodeDocument: vscode.TextDocument) {
+    return TextDocument.create(MODEL_URI, vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
 }
 
 function resolveSchema(url: string): Promise<string> {
@@ -69,61 +72,57 @@ function resolveSchema(url: string): Promise<string> {
     return promise;
 }
 
-const m2p = new MonacoToProtocolConverter(monaco);
-const p2m = new ProtocolToMonacoConverter(monaco);
 const jsonService = getLanguageService({
     schemaRequestService: resolveSchema
 });
 const pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
-monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    provideCompletionItems(model, position, _context, _token): monaco.Thenable<monaco.languages.CompletionList> {
-        const document = createDocument(model);
-        const wordUntil = model.getWordUntilPosition(position);
-        const defaultRange = new monaco.Range(position.lineNumber, wordUntil.startColumn, position.lineNumber, wordUntil.endColumn);
+vscode.languages.registerCompletionItemProvider(LANGUAGE_ID, {
+    async provideCompletionItems(vscodeDocument, position, _token, _context) {
+        const document = createDocument(vscodeDocument)
         const jsonDocument = jsonService.parseJSONDocument(document);
-        return jsonService.doComplete(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((list) => {
-            return p2m.asCompletionResult(list, defaultRange);
-        });
+        const completionList = await jsonService.doComplete(document, codeConverter.asPosition(position), jsonDocument);
+        return protocolConverter.asCompletionResult(completionList);
     },
 
-    resolveCompletionItem(item, _token): monaco.languages.CompletionItem | monaco.Thenable<monaco.languages.CompletionItem> {
-        return jsonService.doResolve(m2p.asCompletionItem(item)).then(result => p2m.asCompletionItem(result, item.range));
+    resolveCompletionItem(item, _token) {
+        return jsonService.doResolve(codeConverter.asCompletionItem(item)).then(result => protocolConverter.asCompletionItem(result));
     }
 });
 
-monaco.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
-    provideDocumentRangeFormattingEdits(model, range, options, _token): monaco.languages.TextEdit[] | monaco.Thenable<monaco.languages.TextEdit[]> {
-        const document = createDocument(model);
-        const edits = jsonService.format(document, m2p.asRange(range), m2p.asFormattingOptions(options));
-        return p2m.asTextEdits(edits);
+vscode.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
+    provideDocumentRangeFormattingEdits(vscodeDocument, range, options, _token) {
+        const document = createDocument(vscodeDocument);
+        const edits = jsonService.format(document, codeConverter.asRange(range), codeConverter.asFormattingOptions(options, {}));
+        return protocolConverter.asTextEdits(edits);
     }
 });
 
-monaco.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
-    provideDocumentSymbols(model, _token): monaco.languages.DocumentSymbol[] | monaco.Thenable<monaco.languages.DocumentSymbol[]> {
-        const document = createDocument(model);
+vscode.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
+    provideDocumentSymbols(vscodeDocument, _token) {
+        const document = createDocument(vscodeDocument);
         const jsonDocument = jsonService.parseJSONDocument(document);
-        return p2m.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
+        return protocolConverter.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
     }
 });
 
-monaco.languages.registerHoverProvider(LANGUAGE_ID, {
-    provideHover(model, position, _token): monaco.languages.Hover | monaco.Thenable<monaco.languages.Hover> {
-        const document = createDocument(model);
+vscode.languages.registerHoverProvider(LANGUAGE_ID, {
+    provideHover(vscodeDocument, position, _token) {
+        const document = createDocument(vscodeDocument);
         const jsonDocument = jsonService.parseJSONDocument(document);
-        return jsonService.doHover(document, m2p.asPosition(position.lineNumber, position.column), jsonDocument).then((hover) => {
-            return p2m.asHover(hover)!;
+        return jsonService.doHover(document, codeConverter.asPosition(position), jsonDocument).then((hover) => {
+            return protocolConverter.asHover(hover)!;
         });
     }
 });
 
-getModel().onDidChangeContent((_event) => {
+model.onDidChangeContent((_event) => {
     validate();
 });
+validate();
 
 function validate(): void {
-    const document = createDocument(getModel());
+    const document = createDocument(vscodeDocument);
     cleanPendingValidation(document);
     pendingValidationRequests.set(document.uri, setTimeout(() => {
         pendingValidationRequests.delete(document.uri);
@@ -139,18 +138,21 @@ function cleanPendingValidation(document: TextDocument): void {
     }
 }
 
+const diagnosticCollection = vscode.languages.createDiagnosticCollection('json');
 function doValidate(document: TextDocument): void {
     if (document.getText().length === 0) {
         cleanDiagnostics();
         return;
     }
     const jsonDocument = jsonService.parseJSONDocument(document);
-    jsonService.doValidation(document, jsonDocument).then((diagnostics) => {
-        const markers = p2m.asDiagnostics(diagnostics);
-        monaco.editor.setModelMarkers(getModel(), 'default', markers);
+
+
+    jsonService.doValidation(document, jsonDocument).then(async (pDiagnostics) => {
+        const diagnostics = await protocolConverter.asDiagnostics(pDiagnostics);
+        diagnosticCollection.set(MONACO_URI, diagnostics);
     });
 }
 
 function cleanDiagnostics(): void {
-    monaco.editor.setModelMarkers(getModel(), 'default', []);
+    diagnosticCollection.clear()
 }

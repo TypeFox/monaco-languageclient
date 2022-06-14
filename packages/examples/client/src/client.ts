@@ -47,7 +47,7 @@ monaco.editor.create(document.getElementById("container")!, {
 });
 
 // install Monaco language client services
-MonacoServices.install(monaco);
+MonacoServices.install();
 
 // create the web socket
 const url = createUrl('localhost', 3000, '/sampleServer')
