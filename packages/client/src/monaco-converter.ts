@@ -83,6 +83,9 @@ function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeRep
     return (v as RangeReplace).insert !== undefined;
 }
 
+/**
+ * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/codeConverter (see browser example)
+ */
 export class MonacoToProtocolConverter {
     public constructor(protected readonly _monaco: typeof monaco) { }
 
@@ -553,6 +556,9 @@ export class MonacoToProtocolConverter {
     }
 }
 
+/**
+ * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/protocolConverter (see browser example)
+ */
 export class ProtocolToMonacoConverter {
     public constructor(protected readonly _monaco: typeof monaco) { }
 
