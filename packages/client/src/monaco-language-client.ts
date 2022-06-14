@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import {
-    BaseLanguageClient, MessageTransports, LanguageClientOptions
+    BaseLanguageClient, MessageTransports, LanguageClientOptions, CloseAction, ErrorAction
 } from "vscode-languageclient/lib/common/client";
 
 export * from 'vscode-languageclient/lib/common/client';
@@ -135,3 +135,5 @@ export namespace MonacoLanguageClient {
         connectionProvider: IConnectionProvider;
     }
 }
+
+export { CloseAction, ErrorAction }
