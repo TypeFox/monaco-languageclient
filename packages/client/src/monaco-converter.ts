@@ -20,7 +20,7 @@ import {
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
     SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, InlayHint, InlayHintLabelPart
-} from './services';
+} from 'vscode-languageserver-protocol/lib/common/api';
 
 export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
@@ -225,7 +225,7 @@ export class MonacoToProtocolConverter {
             case this._monaco.languages.SignatureHelpTriggerKind.TriggerCharacter:
                 return SignatureHelpTriggerKind.TriggerCharacter;
             default:
-                return SignatureHelpTriggerKind.Invoke;
+                return SignatureHelpTriggerKind.Invoked;
         }
     }
 
