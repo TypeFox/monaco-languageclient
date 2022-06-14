@@ -23,6 +23,6 @@
     "build": "npm run clean && npm run compile",
     "watch": "tsc -w",
     "start": "node -r ts-node/register src/server.ts",
-    "start:ext": "node -r ts-node/register lib/server.ts --external"
+    "start:ext": "node -r ts-node/register lib/server.js --external"
   }
 }
