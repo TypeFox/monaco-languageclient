@@ -1,0 +1,30 @@
+{
+  "name": "vscode-ws-jsonrpc",
+  "version": "0.2.0",
+  "description": "VSCode JSON RPC over WebSocket",
+  "author": "TypeFox GmbH (http://www.typefox.io)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypeFox/vscode-ws-jsonrpc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/vscode-ws-jsonrpc/issues"
+  },
+  "main": "./lib/index.js",
+  "typings": "./lib/index",
+  "devDependencies": {
+    "@types/node": "10.17.14",
+    "rimraf": "^2.6.2",
+    "typescript": "3.7.5"
+  },
+  "dependencies": {
+    "vscode-jsonrpc": "^5.0.0"
+  },
+  "scripts": {
+    "prepublish": "npm run compile",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf lib"
+  }
+}
