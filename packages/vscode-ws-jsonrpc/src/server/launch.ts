@@ -6,7 +6,7 @@
 import * as net from 'net';
 import * as stream from 'stream';
 import * as cp from 'child_process';
-import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from "vscode-jsonrpc";
+import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from "vscode-jsonrpc/node";
 import { IConnection, createConnection } from "./connection";
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter, IWebSocketConnection } from '../socket';
 

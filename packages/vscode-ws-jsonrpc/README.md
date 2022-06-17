@@ -54,4 +54,5 @@ server.forward(socketConnection, serverConnection, message => {
 ```
 
 ## License
-[MIT](https://github.com/TypeFox/vscode-ws-jsonrpc/blob/master/License.txt)
+
+[MIT](https://github.com/TypeFox/vscode-ws-jsonrpc/blob/main/packages/vscode-ws-jsonrpc/License.txt)

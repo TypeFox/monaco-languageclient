@@ -55,7 +55,7 @@ The main [package.json](./package.json) contains script entries applicable to th
 For example if you want to rebuild the library you can do it in different ways. From CLI run one of:
 ```bash
 # from the root
-npm run build-client
+npm run build:client
 npm --prefix packages/client run build
 npm --workspace packages/client run build
 # or from packages/client
