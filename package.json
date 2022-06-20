@@ -1,11 +1,18 @@
 {
   "private": true,
   "devDependencies": {
-    "typescript": "^4.7.3",
-    "vite": "2.9.6",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
     "editorconfig": "^0.15.3",
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "shx": "^0.3.4",
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "vite": "2.9.6"
   },
   "resolutions": {
     "vscode-languageserver-types": "3.17.1"
@@ -21,7 +28,7 @@
   "scripts": {
     "clean": "npm run clean --workspaces && npm run clean:amd --workspace packages/client && npm run webpack:clean --workspace packages/examples/client",
     "compile": "npm run compile --workspaces",
-    "lint": "echo 'No linting yet'",
+    "lint": "npm run lint --workspaces",
     "dev": "vite --debug --force",
     "start-example-node": "npm run start --workspace packages/examples/node",
     "start-example-node:ext": "npm run start:ext --workspace packages/examples/node",

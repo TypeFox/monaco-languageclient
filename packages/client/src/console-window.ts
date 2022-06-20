@@ -2,8 +2,8 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { Window, Severity } from 'vscode/services'
-import * as vscode from 'vscode'
+import { Window, Severity } from 'vscode/services';
+import * as vscode from 'vscode';
 
 export class ConsoleWindow implements Window {
     protected readonly channels = new Map<string, vscode.OutputChannel>();
@@ -22,6 +22,7 @@ export class ConsoleWindow implements Window {
         }
         return Promise.resolve(undefined);
     }
+
     createOutputChannel(name: string): vscode.OutputChannel {
         const existing = this.channels.get(name);
         if (existing) {
@@ -50,8 +51,8 @@ export class ConsoleWindow implements Window {
             hide: function (): void {
                 // no-op
             }
-        }
-        this.channels.set(name, channel)
+        };
+        this.channels.set(name, channel);
         return channel;
     }
 }

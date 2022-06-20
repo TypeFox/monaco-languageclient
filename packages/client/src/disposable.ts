@@ -3,18 +3,14 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from "vscode-jsonrpc";
-
-export {
-    Disposable
-}
+import { Disposable } from 'vscode-jsonrpc';
 
 export class DisposableCollection implements Disposable {
     protected readonly disposables: Disposable[] = [];
 
     dispose(): void {
         while (this.disposables.length !== 0) {
-            this.disposables.pop()!.dispose();
+            this.disposables.pop()?.dispose();
         }
     }
 
@@ -28,6 +24,8 @@ export class DisposableCollection implements Disposable {
                     disposables.splice(index, 1);
                 }
             }
-        }
+        };
     }
 }
+
+export { Disposable };

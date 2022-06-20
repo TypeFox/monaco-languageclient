@@ -19,6 +19,7 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "lint": "echo 'No linting yet'",
     "compile": "tsc -b .",
     "build": "npm run clean && npm run compile",
     "watch": "tsc -w",

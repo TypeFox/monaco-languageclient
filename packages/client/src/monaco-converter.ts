@@ -29,6 +29,7 @@ export type RecursivePartial<T> = {
 export interface ProtocolDocumentLink extends monaco.languages.ILink {
     data?: unknown;
 }
+
 export namespace ProtocolDocumentLink {
     export function is(item: any): item is ProtocolDocumentLink {
         return !!item && 'data' in item;
@@ -38,6 +39,7 @@ export namespace ProtocolDocumentLink {
 export interface ProtocolCodeLens extends monaco.languages.CodeLens {
     data?: unknown;
 }
+
 export namespace ProtocolCodeLens {
     export function is(item: any): item is ProtocolCodeLens {
         return !!item && 'data' in item;
@@ -75,7 +77,6 @@ export namespace ProtocolInlayHint {
         return !!item && 'data' in item;
     }
 }
-
 
 type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange }
 
@@ -121,7 +122,6 @@ export class MonacoToProtocolConverter {
 
         if (isRangeReplace(range)) {
             return this.asRange(range.insert);
-
         } else {
             const start = this.asPosition(range.startLineNumber, range.startColumn);
             const end = this.asPosition(range.endLineNumber, range.endColumn);
@@ -143,13 +143,13 @@ export class MonacoToProtocolConverter {
         return {
             uri,
             range
-        }
+        };
     }
 
     asTextDocumentIdentifier(model: monaco.editor.IReadOnlyModel): TextDocumentIdentifier {
         return {
             uri: model.uri.toString()
-        }
+        };
     }
 
     asTextDocumentPositionParams(model: monaco.editor.IReadOnlyModel, position: monaco.Position): TextDocumentPositionParams {
@@ -169,7 +169,7 @@ export class MonacoToProtocolConverter {
         return {
             triggerKind: this.asCompletionTriggerKind(context.triggerKind),
             triggerCharacter: context.triggerCharacter
-        }
+        };
     }
 
     asSignatureHelpContext(context: monaco.languages.SignatureHelpContext): SignatureHelpContext {
@@ -212,7 +212,7 @@ export class MonacoToProtocolConverter {
         if (markupContent === undefined) {
             return undefined;
         }
-        if (typeof markupContent === "string") {
+        if (typeof markupContent === 'string') {
             return markupContent;
         }
         return {
@@ -340,11 +340,11 @@ export class MonacoToProtocolConverter {
 
         target.insertTextFormat = format;
         if (source.fromEdit && text && range) {
-            target.textEdit = { newText: text, range: range };
+            target.textEdit = { newText: text, range };
         } else {
             target.insertText = text;
         }
-        target.insertTextMode = source.insertTextMode
+        target.insertTextMode = source.insertTextMode;
     }
 
     asTextEdit(edit: monaco.editor.ISingleEditOperation): TextEdit {
@@ -352,7 +352,7 @@ export class MonacoToProtocolConverter {
         return {
             range,
             newText: edit.text || ''
-        }
+        };
     }
 
     asTextEdits(items: monaco.editor.ISingleEditOperation[]): TextEdit[];
@@ -376,13 +376,13 @@ export class MonacoToProtocolConverter {
     asDocumentSymbolParams(model: monaco.editor.IReadOnlyModel): DocumentSymbolParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
     asCodeLensParams(model: monaco.editor.IReadOnlyModel): CodeLensParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
     asDiagnosticSeverity(value: monaco.MarkerSeverity): DiagnosticSeverity | undefined {
@@ -400,10 +400,10 @@ export class MonacoToProtocolConverter {
     }
 
     asDiagnostic(marker: monaco.editor.IMarkerData): Diagnostic {
-        const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
+        const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn));
         const severity = this.asDiagnosticSeverity(marker.severity);
         const diag = Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
-        return diag
+        return diag;
     }
 
     asDiagnostics(markers: monaco.editor.IMarkerData[]): Diagnostic[] {
@@ -426,22 +426,22 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
             context: this.asCodeActionContext(context, diagnostics)
-        }
+        };
     }
 
     asCommand(item: monaco.languages.Command | undefined | null): Command | undefined {
         if (item) {
-            let args = item.arguments || [];
+            const args = item.arguments || [];
             return Command.create(item.title, item.id, ...args);
         }
         return undefined;
     }
 
     asCodeLens(item: monaco.languages.CodeLens): CodeLens {
-        let result = CodeLens.create(this.asRange(item.range));
+        const result = CodeLens.create(this.asRange(item.range));
         if (item.command) { result.command = this.asCommand(item.command); }
         if (ProtocolCodeLens.is(item)) {
-            if (item.data) { result.data = item.data };
+            if (item.data) { result.data = item.data; }
         }
         return result;
     }
@@ -454,7 +454,7 @@ export class MonacoToProtocolConverter {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
     asDocumentRangeFormattingParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, options: monaco.languages.FormattingOptions): DocumentRangeFormattingParams {
@@ -462,7 +462,7 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
     asDocumentOnTypeFormattingParams(model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, ch: string, options: monaco.languages.FormattingOptions): DocumentOnTypeFormattingParams {
@@ -471,7 +471,7 @@ export class MonacoToProtocolConverter {
             position: this.asPosition(position.lineNumber, position.column),
             ch,
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
     asRenameParams(model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, newName: string): RenameParams {
@@ -479,27 +479,27 @@ export class MonacoToProtocolConverter {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
             newName
-        }
+        };
     }
 
     asDocumentLinkParams(model: monaco.editor.IReadOnlyModel): DocumentLinkParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
     asDocumentLink(item: monaco.languages.ILink): DocumentLink {
-        let result = DocumentLink.create(this.asRange(item.range));
+        const result = DocumentLink.create(this.asRange(item.range));
         if (item.url) { result.target = typeof item.url === 'string' ? item.url : item.url.toString(); }
         if (ProtocolDocumentLink.is(item) && item.data) {
             result.data = item.data;
         }
-        if (item.tooltip) { result.tooltip = item.tooltip }
+        if (item.tooltip) { result.tooltip = item.tooltip; }
         return result;
     }
 
     asCodeAction(item: monaco.languages.CodeAction): CodeAction {
-        const result: CodeAction = { title: item.title }
+        const result: CodeAction = { title: item.title };
         const protocolCodeAction = ProtocolCodeAction.is(item) ? item : undefined;
         if (Is.number(item.kind)) {
             result.kind = item.kind;
@@ -508,7 +508,7 @@ export class MonacoToProtocolConverter {
             result.diagnostics = this.asDiagnostics(item.diagnostics);
         }
         if (item.edit) {
-            throw new Error(`VS Code code actions can only be converted to a protocol code action without an edit.`);
+            throw new Error('VS Code code actions can only be converted to a protocol code action without an edit.');
         }
         if (item.command) {
             result.command = this.asCommand(item.command);
@@ -533,24 +533,24 @@ export class MonacoToProtocolConverter {
             command: this.asCommand(part.command),
             location: this.asLocation(part.location),
             tooltip: this.asMarkupContent(part.tooltip)
-        }
+        };
     }
 
     asInlayHintLabel(label: string | monaco.languages.InlayHintLabelPart[]): string | InlayHintLabelPart[] {
         if (Array.isArray(label)) {
-            return label.map(part => this.asInlayHintLabelPart(part))
+            return label.map(part => this.asInlayHintLabelPart(part));
         }
-        return label
+        return label;
     }
 
     asInlayHint(item: monaco.languages.InlayHint): InlayHint {
-        let result = InlayHint.create(
+        const result = InlayHint.create(
             this.asPosition(item.position.lineNumber, item.position.column),
             this.asInlayHintLabel(item.label),
             item.kind
         );
         if (ProtocolInlayHint.is(item)) {
-            if (item.data) { result.data = item.data };
+            if (item.data) { result.data = item.data; }
         }
         return result;
     }
@@ -564,11 +564,11 @@ export class ProtocolToMonacoConverter {
 
     asResourceEdits(resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
         return edits.map(edit => ({
-            resource: resource,
+            resource,
             edit: this.asTextEdit(edit),
             modelVersionId,
             metadata: AnnotatedTextEdit.is(edit) ? asMetadata(edit.annotationId) : undefined
-        }))
+        }));
     }
 
     asWorkspaceEditMetadata(changeAnnotation: ChangeAnnotation): monaco.languages.WorkspaceEditMetadata {
@@ -576,7 +576,7 @@ export class ProtocolToMonacoConverter {
             needsConfirmation: changeAnnotation.needsConfirmation === true,
             label: changeAnnotation.label,
             description: changeAnnotation.description
-        }
+        };
     }
 
     asWorkspaceEdit(item: WorkspaceEdit): monaco.languages.WorkspaceEdit;
@@ -652,7 +652,7 @@ export class ProtocolToMonacoConverter {
         return {
             range,
             text: edit.newText
-        }
+        };
     }
 
     asTextEdits(items: TextEdit[]): monaco.languages.TextEdit[];
@@ -673,7 +673,7 @@ export class ProtocolToMonacoConverter {
             return undefined;
         }
         const range = this.asRange(item.range);
-        let result = <ProtocolCodeLens>{ range };
+        const result = <ProtocolCodeLens>{ range };
         if (item.command) { result.command = this.asCommand(item.command); }
         if (item.data !== void 0 && item.data !== null) { result.data = item.data; }
         return result;
@@ -740,7 +740,7 @@ export class ProtocolToMonacoConverter {
         const children = value.children && value.children.map(c => this.asDocumentSymbol(c));
         return {
             name: value.name,
-            detail: value.detail || "",
+            detail: value.detail || '',
             kind: this.asSymbolKind(value.kind),
             tags: value.tags || [],
             range: this.asRange(value.range),
@@ -834,13 +834,13 @@ export class ProtocolToMonacoConverter {
             return undefined;
         }
         if (Is.array(item)) {
-            if (item.length == 0) {
+            if (item.length === 0) {
                 return undefined;
             } else if (LocationLink.is(item[0])) {
-                let links: LocationLink[] = item as LocationLink[];
+                const links: LocationLink[] = item as LocationLink[];
                 return links.map((location) => this.asLocationLink(location));
             } else {
-                let locations: Location[] = item as Location[];
+                const locations: Location[] = item as Location[];
                 return locations.map((location) => this.asLocation(location));
             }
         } else {
@@ -859,7 +859,7 @@ export class ProtocolToMonacoConverter {
         const range = this.asRange(item.range)!;
         return {
             uri, range
-        }
+        };
     }
 
     asLocationLink(item: undefined | null): undefined;
@@ -868,14 +868,14 @@ export class ProtocolToMonacoConverter {
         if (!item) {
             return undefined;
         }
-        let result: monaco.languages.LocationLink = {
+        const result: monaco.languages.LocationLink = {
             uri: this._monaco.Uri.parse(item.targetUri),
             range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
             originSelectionRange: this.asRange(item.originSelectionRange),
             targetSelectionRange: this.asRange(item.targetSelectionRange)
         };
         if (!result.targetSelectionRange) {
-            throw new Error(`targetSelectionRange must not be undefined or null`);
+            throw new Error('targetSelectionRange must not be undefined or null');
         }
         return result;
     }
@@ -887,7 +887,7 @@ export class ProtocolToMonacoConverter {
         if (!item) {
             return undefined;
         }
-        let result = <monaco.languages.SignatureHelp>{};
+        const result = <monaco.languages.SignatureHelp>{};
         if (Is.number(item.activeSignature)) {
             result.activeSignature = item.activeSignature;
         } else {
@@ -916,14 +916,14 @@ export class ProtocolToMonacoConverter {
     }
 
     asSignatureInformation(item: SignatureInformation): monaco.languages.SignatureInformation {
-        let result = <monaco.languages.SignatureInformation>{ label: item.label };
+        const result = <monaco.languages.SignatureInformation>{ label: item.label };
         if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
         if (item.parameters) {
             result.parameters = this.asParameterInformations(item.parameters);
         } else {
             result.parameters = [];
         }
-        if (item.activeParameter) { result.activeParameter = item.activeParameter }
+        if (item.activeParameter) { result.activeParameter = item.activeParameter; }
         return result;
     }
 
@@ -932,8 +932,8 @@ export class ProtocolToMonacoConverter {
     }
 
     asParameterInformation(item: ParameterInformation): monaco.languages.ParameterInformation {
-        let result = <monaco.languages.ParameterInformation>{ label: item.label };
-        if (item.documentation) { result.documentation = this.asDocumentation(item.documentation) };
+        const result = <monaco.languages.ParameterInformation>{ label: item.label };
+        if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
         return result;
     }
 
@@ -1007,7 +1007,7 @@ export class ProtocolToMonacoConverter {
 
     asDiagnostic(diagnostic: Diagnostic): monaco.editor.IMarkerData {
         return {
-            code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code,
+            code: typeof diagnostic.code === 'number' ? diagnostic.code.toString() : diagnostic.code,
             severity: this.asSeverity(diagnostic.severity),
             message: diagnostic.message,
             source: diagnostic.source,
@@ -1017,7 +1017,7 @@ export class ProtocolToMonacoConverter {
             endColumn: diagnostic.range.end.character + 1,
             relatedInformation: this.asRelatedInformations(diagnostic.relatedInformation),
             tags: diagnostic.tags
-        }
+        };
     }
 
     asRelatedInformations(relatedInformation?: DiagnosticRelatedInformation[]): monaco.editor.IRelatedInformation[] | undefined {
@@ -1035,7 +1035,7 @@ export class ProtocolToMonacoConverter {
             endLineNumber: relatedInformation.location.range.end.line + 1,
             endColumn: relatedInformation.location.range.end.character + 1,
             message: relatedInformation.message
-        }
+        };
     }
 
     asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined, defaultMonacoRange: monaco.IRange): monaco.languages.CompletionList {
@@ -1043,20 +1043,20 @@ export class ProtocolToMonacoConverter {
             return {
                 incomplete: false,
                 suggestions: []
-            }
+            };
         }
         if (Array.isArray(result)) {
             const suggestions = result.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange));
             return {
                 incomplete: false,
                 suggestions
-            }
+            };
         }
         const defaultRange = this.getCompletionItemDefaultRange(result);
         return {
             incomplete: result.isIncomplete,
             suggestions: result.items.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange, result.itemDefaults))
-        }
+        };
     }
 
     asCompletionItem(item: CompletionItem, defaultMonacoRange: monaco.IRange | RangeReplace, defaultRange?: monaco.IRange | RangeReplace, itemDefaults?: CompletionList['itemDefaults']): ProtocolCompletionItem {
@@ -1065,7 +1065,7 @@ export class ProtocolToMonacoConverter {
         if (item.documentation) {
             result.documentation = this.asDocumentation(item.documentation);
             result.documentationFormat = Is.string(item.documentation) ? undefined : item.documentation.kind;
-        };
+        }
         if (item.filterText) { result.filterText = item.filterText; }
         const insertText = this.asCompletionInsertText(item, defaultRange, itemDefaults?.insertTextFormat);
         result.insertText = insertText.insertText;
@@ -1075,7 +1075,7 @@ export class ProtocolToMonacoConverter {
             result.insertTextRules = this._monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
         }
         if (Is.number(item.kind)) {
-            let [itemKind, original] = this.asCompletionItemKind(item.kind);
+            const [itemKind, original] = this.asCompletionItemKind(item.kind);
             result.kind = itemKind;
             if (original) {
                 result.originalItemKind = original;
@@ -1092,7 +1092,7 @@ export class ProtocolToMonacoConverter {
         if (item.deprecated === true || item.deprecated === false) {
             result.deprecated = item.deprecated;
         }
-        const insertTextMode = item.insertTextMode ?? itemDefaults?.insertTextMode
+        const insertTextMode = item.insertTextMode ?? itemDefaults?.insertTextMode;
         if (insertTextMode) { result.insertTextMode = insertTextMode; }
         if (item.tags) { result.tags = item.tags; }
         return result;
@@ -1149,8 +1149,7 @@ export class ProtocolToMonacoConverter {
                 case CompletionItemKind.TypeParameter: return [this._monaco.languages.CompletionItemKind.TypeParameter, undefined];
                 default: return [value - 1, undefined];
             }
-
-        };
+        }
         return [CompletionItemKind.Text, value];
     }
 
@@ -1163,7 +1162,7 @@ export class ProtocolToMonacoConverter {
                 ? this.getCompletionRangeAndText(item.textEdit)
                 : [defaultRange, item.textEditText ?? item.label];
 
-            return { insertText: newText, range: range, fromEdit: true, isSnippet };
+            return { insertText: newText, range, fromEdit: true, isSnippet };
         } else if (item.insertText) {
             return { isSnippet, insertText: item.insertText, fromEdit: false, range: defaultRange };
         }
@@ -1251,7 +1250,7 @@ export class ProtocolToMonacoConverter {
         return {
             range: this.asRange(item.range),
             color: item.color
-        }
+        };
     }
 
     asColorPresentations(items: ColorPresentation[]): monaco.languages.IColorPresentation[] {
@@ -1263,7 +1262,7 @@ export class ProtocolToMonacoConverter {
             label: item.label,
             textEdit: this.asTextEdit(item.textEdit),
             additionalTextEdits: this.asTextEdits(item.additionalTextEdits)
-        }
+        };
     }
 
     asFoldingRanges(items: undefined | null): undefined | null;
@@ -1292,7 +1291,7 @@ export class ProtocolToMonacoConverter {
                     return this._monaco.languages.FoldingRangeKind.Imports;
                 case FoldingRangeKind.Region:
                     return this._monaco.languages.FoldingRangeKind.Region;
-            };
+            }
         }
         return undefined;
     }
@@ -1301,7 +1300,7 @@ export class ProtocolToMonacoConverter {
         return {
             resultId: semanticTokens.resultId,
             data: Uint32Array.from(semanticTokens.data)
-        }
+        };
     }
 
     asInlayHintLabelPart(part: InlayHintLabelPart): monaco.languages.InlayHintLabelPart {
@@ -1310,14 +1309,14 @@ export class ProtocolToMonacoConverter {
             command: this.asCommand(part.command),
             location: this.asLocation(part.location),
             tooltip: part.tooltip && this.asMarkdownString(part.tooltip)
-        }
+        };
     }
 
     asInlayHintLabel(label: string | InlayHintLabelPart[]): string | monaco.languages.InlayHintLabelPart[] {
         if (Array.isArray(label)) {
-            return label.map(part => this.asInlayHintLabelPart(part))
+            return label.map(part => this.asInlayHintLabelPart(part));
         }
-        return label
+        return label;
     }
 
     asInlayHint(inlayHint: InlayHint): ProtocolInlayHint {
@@ -1329,7 +1328,7 @@ export class ProtocolToMonacoConverter {
             paddingLeft: inlayHint.paddingLeft,
             paddingRight: inlayHint.paddingRight,
             tooltip: inlayHint.tooltip && this.asMarkdownString(inlayHint.tooltip)
-        }
+        };
     }
 
     asInlayHintList(items: InlayHint[]): monaco.languages.InlayHintList;
@@ -1344,5 +1343,4 @@ export class ProtocolToMonacoConverter {
             dispose: () => { }
         };
     }
-
 }
