@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "1.1.0",
+  "version": "2.0.0-dev.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -25,6 +25,14 @@
       "types": "./lib/monaco-converter.d.ts",
       "default": "./lib/monaco-converter.js"
     },
+    "./cjs/monaco-converter": {
+      "types": "./dist/cjs/monaco-converter.d.ts",
+      "default": "./dist/cjs/monaco-converter.js"
+    },
+    "./cjs": {
+      "types": "./dist/cjs/index.d.ts",
+      "default": "./dist/cjs/index.js"
+    },
     "./amd/monaco-converter": {
       "types": "./dist/amd/monaco-converter.d.ts",
       "default": "./dist/amd/monaco-converter.js"
@@ -32,14 +40,6 @@
     "./amd": {
       "types": "./dist/amd/index.d.ts",
       "default": "./dist/amd/index.js"
-    },
-    "./vscode-compatibility": {
-      "types": "./lib/vscode-compatibility.d.ts",
-      "default": "./lib/vscode-compatibility.js"
-    },
-    "./amd/vscode-compatibility": {
-      "types": "./dist/amd/vscode-compatibility.d.ts",
-      "default": "./dist/amd/vscode-compatibility.js"
     }
   },
   "files": [
@@ -49,22 +49,25 @@
   ],
   "dependencies": {
     "glob-to-regexp": "^0.4.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@^1.68.0",
     "vscode-jsonrpc": "8.0.1",
     "vscode-languageclient": "8.0.1",
     "vscode-languageserver-textdocument": "1.0.5",
     "vscode-uri": "3.0.3"
   },
   "devDependencies": {
-    "@types/vscode": "1.67.0",
+    "@types/glob-to-regexp": "^0.4.1",
     "@types/node": "^16.11.7",
-    "@types/glob-to-regexp": "^0.4.1"
+    "@types/vscode": "1.68.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
     "compile": "tsc",
     "watch": "tsc -w",
-    "clean:amd": "npx shx rm -fr dist",
+    "clean:amd": "npx shx rm -fr dist/amd",
+    "clean:cjs": "npx shx rm -fr dist/cjs",
     "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd --declarationDir dist/amd --declaration",
-    "build": "npm run clean && npm run compile && npm run build:amd"
+    "build:cjs": "npm run clean:cjs && tsc --outDir dist/cjs --module commonjs --declarationDir dist/cjs --declaration",
+    "build": "npm run clean && npm run compile && npm run build:amd && npm run build:cjs"
   }
 }

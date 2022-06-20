@@ -20,7 +20,7 @@ import {
     MarkedString, MarkupContent, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind,
     DiagnosticRelatedInformation, MarkupKind, SymbolKind, DocumentSymbol, CodeAction, SignatureHelpContext, SignatureHelpTriggerKind,
     SemanticTokens, InsertTextMode, AnnotatedTextEdit, ChangeAnnotation, InlayHint, InlayHintLabelPart
-} from './services';
+} from 'vscode-languageserver-protocol/lib/common/api';
 
 export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
@@ -83,6 +83,9 @@ function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeRep
     return (v as RangeReplace).insert !== undefined;
 }
 
+/**
+ * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/codeConverter (see browser example)
+ */
 export class MonacoToProtocolConverter {
     public constructor(protected readonly _monaco: typeof monaco) { }
 
@@ -225,7 +228,7 @@ export class MonacoToProtocolConverter {
             case this._monaco.languages.SignatureHelpTriggerKind.TriggerCharacter:
                 return SignatureHelpTriggerKind.TriggerCharacter;
             default:
-                return SignatureHelpTriggerKind.Invoke;
+                return SignatureHelpTriggerKind.Invoked;
         }
     }
 
@@ -553,6 +556,9 @@ export class MonacoToProtocolConverter {
     }
 }
 
+/**
+ * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/protocolConverter (see browser example)
+ */
 export class ProtocolToMonacoConverter {
     public constructor(protected readonly _monaco: typeof monaco) { }
 
