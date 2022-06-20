@@ -21,11 +21,6 @@ module.exports = {
         indent: ['error', 4, {
             SwitchCase: 1
         }],
-        'space-before-function-paren': ['error', {
-            anonymous: 'always',
-            named: 'never',
-            asyncArrow: 'always'
-        }],
         semi: ['error', 'always'],
         'no-extra-semi': 'off',
         '@typescript-eslint/no-extra-semi': ['error'],

@@ -18,17 +18,17 @@ export namespace MonacoServices {
         rootPath?: string
     }
     export type Provider = () => MonacoServices;
-    export function create(options: Options = {}): MonacoServices {
+    export function create (options: Options = {}): MonacoServices {
         return {
             workspace: new MonacoWorkspace(options.workspaceFolders, options.rootPath),
             window: new ConsoleWindow()
         };
     }
-    export function install(options: Options = {}): vscode.Disposable {
+    export function install (options: Options = {}): vscode.Disposable {
         const services = create(options);
         return Services.install(services);
     }
-    export function get(): MonacoServices {
+    export function get (): MonacoServices {
         return Services.get() as MonacoServices;
     }
 }

@@ -48,7 +48,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
     protected readonly connectionProvider: IConnectionProvider;
 
-    constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClient.Options) {
+    constructor ({ id, name, clientOptions, connectionProvider }: MonacoLanguageClient.Options) {
         super(id || name.toLowerCase(), name, clientOptions);
         this.connectionProvider = connectionProvider;
 
@@ -70,15 +70,15 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         };
     }
 
-    protected createMessageTransports(encoding: string): Promise<MessageTransports> {
+    protected createMessageTransports (encoding: string): Promise<MessageTransports> {
         return this.connectionProvider.get(encoding);
     }
 
-    protected getLocale(): string {
+    protected getLocale (): string {
         return navigator.language || 'en-US';
     }
 
-    protected override registerBuiltinFeatures() {
+    protected override registerBuiltinFeatures () {
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
         this.registerFeature(new DidChangeTextDocumentFeature(this));
         this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments']));
@@ -114,18 +114,18 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new DiagnosticFeature(this));
     }
 
-    public registerTextDocumentSaveFeatures() {
+    public registerTextDocumentSaveFeatures () {
         this.registerFeature(new WillSaveFeature(this));
         this.registerFeature(new WillSaveWaitUntilFeature(this));
         this.registerFeature(new DidSaveTextDocumentFeature(this));
     }
 
-    public registerConfigurationFeatures() {
+    public registerConfigurationFeatures () {
         this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new SyncConfigurationFeature(this));
     }
 
-    public registerProgressFeatures() {
+    public registerProgressFeatures () {
         this.registerFeature(new ProgressFeature(this));
     }
 }

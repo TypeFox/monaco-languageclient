@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { Workspace } from 'vscode/services';
 
 export class MonacoWorkspace implements Workspace {
-    constructor(
+    constructor (
         public readonly workspaceFolders?: vscode.WorkspaceFolder[],
         public readonly rootPath?: string | undefined
     ) {
