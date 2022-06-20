@@ -1,7 +1,9 @@
 # VSCode WebSocket JSON RPC
+
 NPM module to implement communication between a jsonrpc client and server over WebSocket.
 
-### Client side connection handling
+## Client side connection handling
+
 ```ts
 import * as rpc from 'vscode-ws-jsonrpc';
 
@@ -16,7 +18,8 @@ rpc.listen({
 });
 ```
 
-### Server side connection handling
+## Server side connection handling
+
 ```ts
 import * as rpc from 'vscode-ws-jsonrpc';
 
@@ -33,7 +36,8 @@ connection.onNotification(notification, (param: string) => {
 connection.listen();
 ```
 
-### Server side connection forwarding
+## Server side connection forwarding
+
 ```ts
 import * as rpc from 'vscode-ws-jsonrpc';
 import * as server from 'vscode-ws-jsonrpc/lib/server';

@@ -7,7 +7,7 @@ import * as http from "http";
 import * as url from "url";
 import * as net from "net";
 import express from "express";
-import * as rpc from "@codingame/monaco-jsonrpc";
+import * as rpc from "vscode-ws-jsonrpc";
 import { launch } from "./json-server-launcher";
 
 process.on('uncaughtException', function (err: any) {

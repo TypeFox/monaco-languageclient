@@ -12,7 +12,14 @@
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
   "main": "./lib/index.js",
-  "typings": "./lib/index",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "License.txt"
+  ],
   "dependencies": {
     "vscode-jsonrpc": "^8.0.1"
   },
@@ -20,10 +27,10 @@
     "@types/node": "16.11.7"
   },
   "scripts": {
-    "prepublish": "npm run compile",
+    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
     "compile": "tsc",
     "watch": "tsc -w",
-    "clean": "rimraf lib"
+    "build": "npm run clean && npm run compile"
   },
   "homepage": "https://github.com/TypeFox/vscode-ws-jsonrpc/blob/main/packages/vscode-ws-jsonrpc/README.md",
   "directories": {

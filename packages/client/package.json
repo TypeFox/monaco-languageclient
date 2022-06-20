@@ -45,7 +45,10 @@
   "files": [
     "dist/amd",
     "lib",
-    "src"
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "License.txt"
   ],
   "dependencies": {
     "glob-to-regexp": "0.4.1",

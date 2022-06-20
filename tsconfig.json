@@ -13,6 +13,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "inlineSources": false,
+    "stripInternal": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "importHelpers": true,
