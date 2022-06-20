@@ -25,10 +25,11 @@
     "dev": "vite --debug --force",
     "start-example-node": "npm run start --workspace packages/examples/node",
     "start-example-node:ext": "npm run start:ext --workspace packages/examples/node",
-    "build": "npm run build-client && npm run build-example-node && npm run build-example-client && npm run build-example-browser && npm run build-example-browser-old",
+    "build": "npm run build --workspaces",
     "build-client": "npm run build --workspace packages/client",
     "build-example-node": "npm run build --workspace packages/examples/node",
     "build-example-client": "npm run build --workspace packages/examples/client && npm run webpack:example-client-build",
+    "build-example-browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
     "build-example-browser": "npm run build --workspace packages/examples/browser",
     "build-example-browser-old": "npm run build --workspace packages/examples/browser-old",
     "webpack:example-client-build": "npm run webpack:build --workspace packages/examples/client",
@@ -40,6 +41,7 @@
     "packages/client",
     "packages/examples/node",
     "packages/examples/client",
+    "packages/examples/browser-lsp",
     "packages/examples/browser",
     "packages/examples/browser-old"
   ]

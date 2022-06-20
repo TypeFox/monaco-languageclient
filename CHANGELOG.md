@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - Not yet release
+
+* TBA
+
 ## [1.1.0] - 2022-06-08
 
 * feat(package.json): export monaco-converter #[376](https://github.com/TypeFox/monaco-languageclient/pull/376)
