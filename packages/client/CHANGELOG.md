@@ -2,9 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2.0.0] - Not yet release
+## [2.0.0] - 2022-06-21
 
-* TBA
+* Use monaco vscode api #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)
+* Merge monaco-jsonrpc and vscode-ws-jsonrpc into new sub package #[383](https://github.com/TypeFox/monaco-languageclient/pull/383)
+* Integrate eslint with eslint-config-standard #[385](https://github.com/TypeFox/monaco-languageclient/pull/385)
+* Add example with client and server both running in the browser #[386](https://github.com/TypeFox/monaco-languageclient/pull/386)
 
 ## [1.1.0] - 2022-06-08
 
