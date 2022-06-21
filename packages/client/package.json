@@ -52,7 +52,7 @@
   ],
   "dependencies": {
     "glob-to-regexp": "0.4.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@^1.68.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@^1.68.4",
     "vscode-jsonrpc": "8.0.1",
     "vscode-languageclient": "8.0.1",
     "vscode-languageserver-textdocument": "1.0.5",
@@ -65,6 +65,7 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
     "clean:amd": "npx shx rm -fr dist/amd",

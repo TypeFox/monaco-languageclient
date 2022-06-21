@@ -3,13 +3,13 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as path from 'path';
-import * as rpc from "vscode-ws-jsonrpc";
-import * as server from "vscode-ws-jsonrpc/lib/server";
-import * as lsp from "vscode-languageserver";
-import { start } from "./json-server";
+import * as rpc from 'vscode-ws-jsonrpc';
+import * as server from 'vscode-ws-jsonrpc/lib/server';
+import * as lsp from 'vscode-languageserver';
+import { start } from './json-server';
 import { Message } from 'vscode-languageserver';
 
-export function launch(socket: rpc.IWebSocket) {
+export function launch (socket: rpc.IWebSocket) {
     const reader = new rpc.WebSocketMessageReader(socket);
     const writer = new rpc.WebSocketMessageWriter(socket);
     const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;

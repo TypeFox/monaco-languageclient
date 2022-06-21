@@ -19,10 +19,10 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggle
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
+buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 // register Monaco languages
 monaco.languages.register({
@@ -38,7 +38,7 @@ const editorText = `
 #00ff00 (green)
 #0000ff (blue)
 `;
-monaco.editor.create(document.getElementById("container")!, {
+monaco.editor.create(document.getElementById('container')!, {
     model: monaco.editor.createModel(editorText, 'plaintext', monaco.Uri.parse('inmemory://model.txt')),
     glyphMargin: true,
     lightbulb: {
@@ -46,9 +46,9 @@ monaco.editor.create(document.getElementById("container")!, {
     }
 });
 
-function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
+function createLanguageClient (transports: MessageTransports): MonacoLanguageClient {
     return new MonacoLanguageClient({
-        name: "Sample Language Client",
+        name: 'Sample Language Client',
         clientOptions: {
             // use a language id as a document selector
             documentSelector: [{ language: 'plaintext' }],

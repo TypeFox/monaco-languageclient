@@ -29,8 +29,9 @@ export type RecursivePartial<T> = {
 export interface ProtocolDocumentLink extends monaco.languages.ILink {
     data?: unknown;
 }
+
 export namespace ProtocolDocumentLink {
-    export function is(item: any): item is ProtocolDocumentLink {
+    export function is (item: any): item is ProtocolDocumentLink {
         return !!item && 'data' in item;
     }
 }
@@ -38,8 +39,9 @@ export namespace ProtocolDocumentLink {
 export interface ProtocolCodeLens extends monaco.languages.CodeLens {
     data?: unknown;
 }
+
 export namespace ProtocolCodeLens {
-    export function is(item: any): item is ProtocolCodeLens {
+    export function is (item: any): item is ProtocolCodeLens {
         return !!item && 'data' in item;
     }
 }
@@ -53,7 +55,7 @@ export interface ProtocolCompletionItem extends monaco.languages.CompletionItem 
     insertTextMode?: InsertTextMode;
 }
 export namespace ProtocolCompletionItem {
-    export function is(item: any): item is ProtocolCompletionItem {
+    export function is (item: any): item is ProtocolCompletionItem {
         return !!item && 'data' in item;
     }
 }
@@ -62,7 +64,7 @@ export interface ProtocolCodeAction extends monaco.languages.CodeAction {
     data?: unknown;
 }
 export namespace ProtocolCodeAction {
-    export function is(item: any): item is ProtocolCodeAction {
+    export function is (item: any): item is ProtocolCodeAction {
         return !!item && 'data' in item;
     }
 }
@@ -71,15 +73,14 @@ export interface ProtocolInlayHint extends monaco.languages.InlayHint {
     data?: unknown;
 }
 export namespace ProtocolInlayHint {
-    export function is(item: any): item is ProtocolInlayHint {
+    export function is (item: any): item is ProtocolInlayHint {
         return !!item && 'data' in item;
     }
 }
 
-
 type RangeReplace = { insert: monaco.IRange; replace: monaco.IRange }
 
-function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeReplace {
+function isRangeReplace (v: Partial<monaco.IRange> | RangeReplace): v is RangeReplace {
     return (v as RangeReplace).insert !== undefined;
 }
 
@@ -87,14 +88,14 @@ function isRangeReplace(v: Partial<monaco.IRange> | RangeReplace): v is RangeRep
  * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/codeConverter (see browser example)
  */
 export class MonacoToProtocolConverter {
-    public constructor(protected readonly _monaco: typeof monaco) { }
+    public constructor (protected readonly _monaco: typeof monaco) { }
 
     asPosition(lineNumber: undefined | null, column: undefined | null): {};
     asPosition(lineNumber: number, column: undefined | null): Pick<Position, 'line'>;
     asPosition(lineNumber: undefined | null, column: number): Pick<Position, 'character'>;
     asPosition(lineNumber: number, column: number): Position;
     asPosition(lineNumber: number | undefined | null, column: number | undefined | null): Partial<Position>;
-    asPosition(lineNumber: number | undefined | null, column: number | undefined | null): Partial<Position> {
+    asPosition (lineNumber: number | undefined | null, column: number | undefined | null): Partial<Position> {
         const line = lineNumber === undefined || lineNumber === null ? undefined : lineNumber - 1;
         const character = column === undefined || column === null ? undefined : column - 1;
         return {
@@ -111,7 +112,7 @@ export class MonacoToProtocolConverter {
     asRange(range: Partial<monaco.IRange>): RecursivePartial<Range>;
     asRange(range: Partial<monaco.IRange> | undefined): RecursivePartial<Range> | undefined;
     asRange(range: Partial<monaco.IRange> | null): RecursivePartial<Range> | null;
-    asRange(range: Partial<monaco.IRange> | undefined | null | RangeReplace): RecursivePartial<Range> | undefined | null {
+    asRange (range: Partial<monaco.IRange> | undefined | null | RangeReplace): RecursivePartial<Range> | undefined | null {
         if (range === undefined) {
             return undefined;
         }
@@ -121,7 +122,6 @@ export class MonacoToProtocolConverter {
 
         if (isRangeReplace(range)) {
             return this.asRange(range.insert);
-
         } else {
             const start = this.asPosition(range.startLineNumber, range.startColumn);
             const end = this.asPosition(range.endLineNumber, range.endColumn);
@@ -134,7 +134,7 @@ export class MonacoToProtocolConverter {
     asLocation(item: monaco.languages.Location): Location;
     asLocation(item: undefined | null): undefined;
     asLocation(item: monaco.languages.Location | undefined | null): Location | undefined;
-    asLocation(item: monaco.languages.Location | undefined | null): Location | undefined {
+    asLocation (item: monaco.languages.Location | undefined | null): Location | undefined {
         if (!item) {
             return undefined;
         }
@@ -143,36 +143,36 @@ export class MonacoToProtocolConverter {
         return {
             uri,
             range
-        }
+        };
     }
 
-    asTextDocumentIdentifier(model: monaco.editor.IReadOnlyModel): TextDocumentIdentifier {
+    asTextDocumentIdentifier (model: monaco.editor.IReadOnlyModel): TextDocumentIdentifier {
         return {
             uri: model.uri.toString()
-        }
+        };
     }
 
-    asTextDocumentPositionParams(model: monaco.editor.IReadOnlyModel, position: monaco.Position): TextDocumentPositionParams {
+    asTextDocumentPositionParams (model: monaco.editor.IReadOnlyModel, position: monaco.Position): TextDocumentPositionParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column)
         };
     }
 
-    asCompletionParams(model: monaco.editor.IReadOnlyModel, position: monaco.Position, context: monaco.languages.CompletionContext): CompletionParams {
+    asCompletionParams (model: monaco.editor.IReadOnlyModel, position: monaco.Position, context: monaco.languages.CompletionContext): CompletionParams {
         return Object.assign(this.asTextDocumentPositionParams(model, position), {
             context: this.asCompletionContext(context)
         });
     }
 
-    asCompletionContext(context: monaco.languages.CompletionContext): CompletionContext {
+    asCompletionContext (context: monaco.languages.CompletionContext): CompletionContext {
         return {
             triggerKind: this.asCompletionTriggerKind(context.triggerKind),
             triggerCharacter: context.triggerCharacter
-        }
+        };
     }
 
-    asSignatureHelpContext(context: monaco.languages.SignatureHelpContext): SignatureHelpContext {
+    asSignatureHelpContext (context: monaco.languages.SignatureHelpContext): SignatureHelpContext {
         return {
             triggerKind: this.asSignatureHelpTriggerKind(context.triggerKind),
             triggerCharacter: context.triggerCharacter,
@@ -181,7 +181,7 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureHelp(signatureHelp: monaco.languages.SignatureHelp | undefined): SignatureHelp | undefined {
+    asSignatureHelp (signatureHelp: monaco.languages.SignatureHelp | undefined): SignatureHelp | undefined {
         if (signatureHelp === undefined) {
             return undefined;
         }
@@ -192,7 +192,7 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureInformation(signatureInformation: monaco.languages.SignatureInformation): SignatureInformation {
+    asSignatureInformation (signatureInformation: monaco.languages.SignatureInformation): SignatureInformation {
         return {
             documentation: this.asMarkupContent(signatureInformation.documentation),
             label: signatureInformation.label,
@@ -201,18 +201,18 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asParameterInformation(parameterInformation: monaco.languages.ParameterInformation): ParameterInformation {
+    asParameterInformation (parameterInformation: monaco.languages.ParameterInformation): ParameterInformation {
         return {
             documentation: this.asMarkupContent(parameterInformation.documentation),
             label: parameterInformation.label
         };
     }
 
-    asMarkupContent(markupContent: (string | monaco.IMarkdownString | undefined)): string | MarkupContent | undefined {
+    asMarkupContent (markupContent: (string | monaco.IMarkdownString | undefined)): string | MarkupContent | undefined {
         if (markupContent === undefined) {
             return undefined;
         }
-        if (typeof markupContent === "string") {
+        if (typeof markupContent === 'string') {
             return markupContent;
         }
         return {
@@ -221,7 +221,7 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asSignatureHelpTriggerKind(triggerKind: monaco.languages.SignatureHelpTriggerKind): SignatureHelpTriggerKind {
+    asSignatureHelpTriggerKind (triggerKind: monaco.languages.SignatureHelpTriggerKind): SignatureHelpTriggerKind {
         switch (triggerKind) {
             case this._monaco.languages.SignatureHelpTriggerKind.ContentChange:
                 return SignatureHelpTriggerKind.ContentChange;
@@ -232,7 +232,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asCompletionTriggerKind(triggerKind: monaco.languages.CompletionTriggerKind): CompletionTriggerKind {
+    asCompletionTriggerKind (triggerKind: monaco.languages.CompletionTriggerKind): CompletionTriggerKind {
         switch (triggerKind) {
             case this._monaco.languages.CompletionTriggerKind.TriggerCharacter:
                 return CompletionTriggerKind.TriggerCharacter;
@@ -243,7 +243,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    asCompletionItem(item: monaco.languages.CompletionItem): CompletionItem {
+    asCompletionItem (item: monaco.languages.CompletionItem): CompletionItem {
         const result: CompletionItem = { label: item.label as string };
         const protocolItem = ProtocolCompletionItem.is(item) ? item : undefined;
         if (item.detail) { result.detail = item.detail; }
@@ -277,7 +277,7 @@ export class MonacoToProtocolConverter {
         return result;
     }
 
-    protected asCompletionItemKind(value: monaco.languages.CompletionItemKind, original: CompletionItemKind | undefined): CompletionItemKind {
+    protected asCompletionItemKind (value: monaco.languages.CompletionItemKind, original: CompletionItemKind | undefined): CompletionItemKind {
         if (original !== undefined) {
             return original;
         }
@@ -312,7 +312,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    protected asDocumentation(format: string, documentation: string | monaco.IMarkdownString): string | MarkupContent {
+    protected asDocumentation (format: string, documentation: string | monaco.IMarkdownString): string | MarkupContent {
         switch (format) {
             case MarkupKind.PlainText:
                 return { kind: format, value: documentation as string };
@@ -323,7 +323,7 @@ export class MonacoToProtocolConverter {
         }
     }
 
-    protected fillPrimaryInsertText(target: CompletionItem, source: ProtocolCompletionItem): void {
+    protected fillPrimaryInsertText (target: CompletionItem, source: ProtocolCompletionItem): void {
         let format: InsertTextFormat = InsertTextFormat.PlainText;
         let text: string | undefined;
         let range: Range | undefined;
@@ -340,32 +340,32 @@ export class MonacoToProtocolConverter {
 
         target.insertTextFormat = format;
         if (source.fromEdit && text && range) {
-            target.textEdit = { newText: text, range: range };
+            target.textEdit = { newText: text, range };
         } else {
             target.insertText = text;
         }
-        target.insertTextMode = source.insertTextMode
+        target.insertTextMode = source.insertTextMode;
     }
 
-    asTextEdit(edit: monaco.editor.ISingleEditOperation): TextEdit {
+    asTextEdit (edit: monaco.editor.ISingleEditOperation): TextEdit {
         const range = this.asRange(edit.range)!;
         return {
             range,
             newText: edit.text || ''
-        }
+        };
     }
 
     asTextEdits(items: monaco.editor.ISingleEditOperation[]): TextEdit[];
     asTextEdits(items: undefined | null): undefined;
     asTextEdits(items: monaco.editor.ISingleEditOperation[] | undefined | null): TextEdit[] | undefined;
-    asTextEdits(items: monaco.editor.ISingleEditOperation[] | undefined | null): TextEdit[] | undefined {
+    asTextEdits (items: monaco.editor.ISingleEditOperation[] | undefined | null): TextEdit[] | undefined {
         if (!items) {
             return undefined;
         }
         return items.map(item => this.asTextEdit(item));
     }
 
-    asReferenceParams(model: monaco.editor.IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
+    asReferenceParams (model: monaco.editor.IReadOnlyModel, position: monaco.Position, options: { includeDeclaration: boolean; }): ReferenceParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
@@ -373,19 +373,19 @@ export class MonacoToProtocolConverter {
         };
     }
 
-    asDocumentSymbolParams(model: monaco.editor.IReadOnlyModel): DocumentSymbolParams {
+    asDocumentSymbolParams (model: monaco.editor.IReadOnlyModel): DocumentSymbolParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
-    asCodeLensParams(model: monaco.editor.IReadOnlyModel): CodeLensParams {
+    asCodeLensParams (model: monaco.editor.IReadOnlyModel): CodeLensParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
-    asDiagnosticSeverity(value: monaco.MarkerSeverity): DiagnosticSeverity | undefined {
+    asDiagnosticSeverity (value: monaco.MarkerSeverity): DiagnosticSeverity | undefined {
         switch (value) {
             case this._monaco.MarkerSeverity.Error:
                 return DiagnosticSeverity.Error;
@@ -399,21 +399,21 @@ export class MonacoToProtocolConverter {
         return undefined;
     }
 
-    asDiagnostic(marker: monaco.editor.IMarkerData): Diagnostic {
-        const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn))
+    asDiagnostic (marker: monaco.editor.IMarkerData): Diagnostic {
+        const range = this.asRange(new this._monaco.Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn));
         const severity = this.asDiagnosticSeverity(marker.severity);
         const diag = Diagnostic.create(range, marker.message, severity, marker.code as string, marker.source);
-        return diag
+        return diag;
     }
 
-    asDiagnostics(markers: monaco.editor.IMarkerData[]): Diagnostic[] {
+    asDiagnostics (markers: monaco.editor.IMarkerData[]): Diagnostic[] {
         if (markers === void 0 || markers === null) {
             return markers;
         }
         return markers.map(marker => this.asDiagnostic(marker));
     }
 
-    asCodeActionContext(context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionContext {
+    asCodeActionContext (context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionContext {
         if (context === void 0 || context === null) {
             return context;
         }
@@ -421,85 +421,85 @@ export class MonacoToProtocolConverter {
         return CodeActionContext.create(diagnostics, Is.string(context.only) ? [context.only] : undefined, undefined);
     }
 
-    asCodeActionParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionParams {
+    asCodeActionParams (model: monaco.editor.IReadOnlyModel, range: monaco.Range, context: monaco.languages.CodeActionContext, diagnostics: Diagnostic[]): CodeActionParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
             context: this.asCodeActionContext(context, diagnostics)
-        }
+        };
     }
 
-    asCommand(item: monaco.languages.Command | undefined | null): Command | undefined {
+    asCommand (item: monaco.languages.Command | undefined | null): Command | undefined {
         if (item) {
-            let args = item.arguments || [];
+            const args = item.arguments || [];
             return Command.create(item.title, item.id, ...args);
         }
         return undefined;
     }
 
-    asCodeLens(item: monaco.languages.CodeLens): CodeLens {
-        let result = CodeLens.create(this.asRange(item.range));
+    asCodeLens (item: monaco.languages.CodeLens): CodeLens {
+        const result = CodeLens.create(this.asRange(item.range));
         if (item.command) { result.command = this.asCommand(item.command); }
         if (ProtocolCodeLens.is(item)) {
-            if (item.data) { result.data = item.data };
+            if (item.data) { result.data = item.data; }
         }
         return result;
     }
 
-    asFormattingOptions(options: monaco.languages.FormattingOptions): FormattingOptions {
+    asFormattingOptions (options: monaco.languages.FormattingOptions): FormattingOptions {
         return { tabSize: options.tabSize, insertSpaces: options.insertSpaces };
     }
 
-    asDocumentFormattingParams(model: monaco.editor.IReadOnlyModel, options: monaco.languages.FormattingOptions): DocumentFormattingParams {
+    asDocumentFormattingParams (model: monaco.editor.IReadOnlyModel, options: monaco.languages.FormattingOptions): DocumentFormattingParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
-    asDocumentRangeFormattingParams(model: monaco.editor.IReadOnlyModel, range: monaco.Range, options: monaco.languages.FormattingOptions): DocumentRangeFormattingParams {
+    asDocumentRangeFormattingParams (model: monaco.editor.IReadOnlyModel, range: monaco.Range, options: monaco.languages.FormattingOptions): DocumentRangeFormattingParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             range: this.asRange(range),
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
-    asDocumentOnTypeFormattingParams(model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, ch: string, options: monaco.languages.FormattingOptions): DocumentOnTypeFormattingParams {
+    asDocumentOnTypeFormattingParams (model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, ch: string, options: monaco.languages.FormattingOptions): DocumentOnTypeFormattingParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
             ch,
             options: this.asFormattingOptions(options)
-        }
+        };
     }
 
-    asRenameParams(model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, newName: string): RenameParams {
+    asRenameParams (model: monaco.editor.IReadOnlyModel, position: monaco.IPosition, newName: string): RenameParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model),
             position: this.asPosition(position.lineNumber, position.column),
             newName
-        }
+        };
     }
 
-    asDocumentLinkParams(model: monaco.editor.IReadOnlyModel): DocumentLinkParams {
+    asDocumentLinkParams (model: monaco.editor.IReadOnlyModel): DocumentLinkParams {
         return {
             textDocument: this.asTextDocumentIdentifier(model)
-        }
+        };
     }
 
-    asDocumentLink(item: monaco.languages.ILink): DocumentLink {
-        let result = DocumentLink.create(this.asRange(item.range));
+    asDocumentLink (item: monaco.languages.ILink): DocumentLink {
+        const result = DocumentLink.create(this.asRange(item.range));
         if (item.url) { result.target = typeof item.url === 'string' ? item.url : item.url.toString(); }
         if (ProtocolDocumentLink.is(item) && item.data) {
             result.data = item.data;
         }
-        if (item.tooltip) { result.tooltip = item.tooltip }
+        if (item.tooltip) { result.tooltip = item.tooltip; }
         return result;
     }
 
-    asCodeAction(item: monaco.languages.CodeAction): CodeAction {
-        const result: CodeAction = { title: item.title }
+    asCodeAction (item: monaco.languages.CodeAction): CodeAction {
+        const result: CodeAction = { title: item.title };
         const protocolCodeAction = ProtocolCodeAction.is(item) ? item : undefined;
         if (Is.number(item.kind)) {
             result.kind = item.kind;
@@ -508,7 +508,7 @@ export class MonacoToProtocolConverter {
             result.diagnostics = this.asDiagnostics(item.diagnostics);
         }
         if (item.edit) {
-            throw new Error(`VS Code code actions can only be converted to a protocol code action without an edit.`);
+            throw new Error('VS Code code actions can only be converted to a protocol code action without an edit.');
         }
         if (item.command) {
             result.command = this.asCommand(item.command);
@@ -527,30 +527,30 @@ export class MonacoToProtocolConverter {
         return result;
     }
 
-    asInlayHintLabelPart(part: monaco.languages.InlayHintLabelPart): InlayHintLabelPart {
+    asInlayHintLabelPart (part: monaco.languages.InlayHintLabelPart): InlayHintLabelPart {
         return {
             value: part.label,
             command: this.asCommand(part.command),
             location: this.asLocation(part.location),
             tooltip: this.asMarkupContent(part.tooltip)
-        }
+        };
     }
 
-    asInlayHintLabel(label: string | monaco.languages.InlayHintLabelPart[]): string | InlayHintLabelPart[] {
+    asInlayHintLabel (label: string | monaco.languages.InlayHintLabelPart[]): string | InlayHintLabelPart[] {
         if (Array.isArray(label)) {
-            return label.map(part => this.asInlayHintLabelPart(part))
+            return label.map(part => this.asInlayHintLabelPart(part));
         }
-        return label
+        return label;
     }
 
-    asInlayHint(item: monaco.languages.InlayHint): InlayHint {
-        let result = InlayHint.create(
+    asInlayHint (item: monaco.languages.InlayHint): InlayHint {
+        const result = InlayHint.create(
             this.asPosition(item.position.lineNumber, item.position.column),
             this.asInlayHintLabel(item.label),
             item.kind
         );
         if (ProtocolInlayHint.is(item)) {
-            if (item.data) { result.data = item.data };
+            if (item.data) { result.data = item.data; }
         }
         return result;
     }
@@ -560,29 +560,29 @@ export class MonacoToProtocolConverter {
  * @deprecated use @CodinGame/monaco-vscode-api and vscode-languageclient/lib/common/protocolConverter (see browser example)
  */
 export class ProtocolToMonacoConverter {
-    public constructor(protected readonly _monaco: typeof monaco) { }
+    public constructor (protected readonly _monaco: typeof monaco) { }
 
-    asResourceEdits(resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
+    asResourceEdits (resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
         return edits.map(edit => ({
-            resource: resource,
+            resource,
             edit: this.asTextEdit(edit),
             modelVersionId,
             metadata: AnnotatedTextEdit.is(edit) ? asMetadata(edit.annotationId) : undefined
-        }))
+        }));
     }
 
-    asWorkspaceEditMetadata(changeAnnotation: ChangeAnnotation): monaco.languages.WorkspaceEditMetadata {
+    asWorkspaceEditMetadata (changeAnnotation: ChangeAnnotation): monaco.languages.WorkspaceEditMetadata {
         return {
             needsConfirmation: changeAnnotation.needsConfirmation === true,
             label: changeAnnotation.label,
             description: changeAnnotation.description
-        }
+        };
     }
 
     asWorkspaceEdit(item: WorkspaceEdit): monaco.languages.WorkspaceEdit;
     asWorkspaceEdit(item: undefined | null): undefined;
     asWorkspaceEdit(item: WorkspaceEdit | undefined | null): monaco.languages.WorkspaceEdit | undefined;
-    asWorkspaceEdit(item: WorkspaceEdit | undefined | null): monaco.languages.WorkspaceEdit | undefined {
+    asWorkspaceEdit (item: WorkspaceEdit | undefined | null): monaco.languages.WorkspaceEdit | undefined {
         if (!item) {
             return undefined;
         }
@@ -644,7 +644,7 @@ export class ProtocolToMonacoConverter {
     asTextEdit(edit: TextEdit): monaco.languages.TextEdit;
     asTextEdit(edit: undefined | null): undefined;
     asTextEdit(edit: TextEdit | undefined | null): undefined;
-    asTextEdit(edit: TextEdit | undefined | null): monaco.languages.TextEdit | undefined {
+    asTextEdit (edit: TextEdit | undefined | null): monaco.languages.TextEdit | undefined {
         if (!edit) {
             return undefined;
         }
@@ -652,13 +652,13 @@ export class ProtocolToMonacoConverter {
         return {
             range,
             text: edit.newText
-        }
+        };
     }
 
     asTextEdits(items: TextEdit[]): monaco.languages.TextEdit[];
     asTextEdits(items: undefined | null): undefined;
     asTextEdits(items: TextEdit[] | undefined | null): monaco.languages.TextEdit[] | undefined;
-    asTextEdits(items: TextEdit[] | undefined | null): monaco.languages.TextEdit[] | undefined {
+    asTextEdits (items: TextEdit[] | undefined | null): monaco.languages.TextEdit[] | undefined {
         if (!items) {
             return undefined;
         }
@@ -668,12 +668,12 @@ export class ProtocolToMonacoConverter {
     asCodeLens(item: CodeLens): monaco.languages.CodeLens;
     asCodeLens(item: undefined | null): undefined;
     asCodeLens(item: CodeLens | undefined | null): monaco.languages.CodeLens | undefined;
-    asCodeLens(item: CodeLens | undefined | null): monaco.languages.CodeLens | undefined {
+    asCodeLens (item: CodeLens | undefined | null): monaco.languages.CodeLens | undefined {
         if (!item) {
             return undefined;
         }
         const range = this.asRange(item.range);
-        let result = <ProtocolCodeLens>{ range };
+        const result = <ProtocolCodeLens>{ range };
         if (item.command) { result.command = this.asCommand(item.command); }
         if (item.data !== void 0 && item.data !== null) { result.data = item.data; }
         return result;
@@ -682,7 +682,7 @@ export class ProtocolToMonacoConverter {
     asCodeLensList(items: CodeLens[]): monaco.languages.CodeLensList;
     asCodeLensList(items: undefined | null): undefined;
     asCodeLensList(items: CodeLens[] | undefined | null): monaco.languages.CodeLensList | undefined;
-    asCodeLensList(items: CodeLens[] | undefined | null): monaco.languages.CodeLensList | undefined {
+    asCodeLensList (items: CodeLens[] | undefined | null): monaco.languages.CodeLensList | undefined {
         if (!items) {
             return undefined;
         }
@@ -692,14 +692,14 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asCodeActionList(actions: (Command | CodeAction)[]): monaco.languages.CodeActionList {
+    asCodeActionList (actions: (Command | CodeAction)[]): monaco.languages.CodeActionList {
         return {
             actions: actions.map(action => this.asCodeAction(action)),
             dispose: () => { }
         };
     }
 
-    asCodeAction(item: Command | CodeAction): ProtocolCodeAction {
+    asCodeAction (item: Command | CodeAction): ProtocolCodeAction {
         if (Command.is(item)) {
             return {
                 command: {
@@ -725,7 +725,7 @@ export class ProtocolToMonacoConverter {
     asCommand(command: Command): monaco.languages.Command;
     asCommand(command: undefined): undefined;
     asCommand(command: Command | undefined): monaco.languages.Command | undefined;
-    asCommand(command: Command | undefined): monaco.languages.Command | undefined {
+    asCommand (command: Command | undefined): monaco.languages.Command | undefined {
         if (!command) {
             return undefined;
         }
@@ -736,11 +736,11 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asDocumentSymbol(value: DocumentSymbol): monaco.languages.DocumentSymbol {
+    asDocumentSymbol (value: DocumentSymbol): monaco.languages.DocumentSymbol {
         const children = value.children && value.children.map(c => this.asDocumentSymbol(c));
         return {
             name: value.name,
-            detail: value.detail || "",
+            detail: value.detail || '',
             kind: this.asSymbolKind(value.kind),
             tags: value.tags || [],
             range: this.asRange(value.range),
@@ -749,7 +749,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asDocumentSymbols(values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
+    asDocumentSymbols (values: SymbolInformation[] | DocumentSymbol[]): monaco.languages.DocumentSymbol[] {
         if (DocumentSymbol.is(values[0])) {
             return (values as DocumentSymbol[]).map(s => this.asDocumentSymbol(s));
         }
@@ -759,14 +759,14 @@ export class ProtocolToMonacoConverter {
     asSymbolInformations(values: SymbolInformation[], uri?: monaco.Uri): monaco.languages.DocumentSymbol[];
     asSymbolInformations(values: undefined | null, uri?: monaco.Uri): undefined;
     asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined;
-    asSymbolInformations(values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined {
+    asSymbolInformations (values: SymbolInformation[] | undefined | null, uri?: monaco.Uri): monaco.languages.DocumentSymbol[] | undefined {
         if (!values) {
             return undefined;
         }
         return values.map(information => this.asSymbolInformation(information, uri));
     }
 
-    asSymbolInformation(item: SymbolInformation, uri?: monaco.Uri): monaco.languages.DocumentSymbol {
+    asSymbolInformation (item: SymbolInformation, uri?: monaco.Uri): monaco.languages.DocumentSymbol {
         const location = this.asLocation(uri ? { ...item.location, uri: uri.toString() } : item.location);
         return {
             name: item.name,
@@ -779,7 +779,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asSymbolKind(item: SymbolKind): monaco.languages.SymbolKind {
+    asSymbolKind (item: SymbolKind): monaco.languages.SymbolKind {
         if (item <= SymbolKind.TypeParameter) {
             // Symbol kind is one based in the protocol and zero based in code.
             return item - 1;
@@ -790,20 +790,20 @@ export class ProtocolToMonacoConverter {
     asDocumentHighlights(values: DocumentHighlight[]): monaco.languages.DocumentHighlight[];
     asDocumentHighlights(values: undefined | null): undefined;
     asDocumentHighlights(values: DocumentHighlight[] | undefined | null): monaco.languages.DocumentHighlight[] | undefined;
-    asDocumentHighlights(values: DocumentHighlight[] | undefined | null): monaco.languages.DocumentHighlight[] | undefined {
+    asDocumentHighlights (values: DocumentHighlight[] | undefined | null): monaco.languages.DocumentHighlight[] | undefined {
         if (!values) {
             return undefined;
         }
         return values.map(item => this.asDocumentHighlight(item));
     }
 
-    asDocumentHighlight(item: DocumentHighlight): monaco.languages.DocumentHighlight {
+    asDocumentHighlight (item: DocumentHighlight): monaco.languages.DocumentHighlight {
         const range = this.asRange(item.range)!;
         const kind = Is.number(item.kind) ? this.asDocumentHighlightKind(item.kind) : undefined!;
         return { range, kind };
     }
 
-    asDocumentHighlightKind(item: number): monaco.languages.DocumentHighlightKind {
+    asDocumentHighlightKind (item: number): monaco.languages.DocumentHighlightKind {
         switch (item) {
             case DocumentHighlightKind.Text:
                 return this._monaco.languages.DocumentHighlightKind.Text;
@@ -818,7 +818,7 @@ export class ProtocolToMonacoConverter {
     asReferences(values: Location[]): monaco.languages.Location[];
     asReferences(values: undefined | null): monaco.languages.Location[] | undefined;
     asReferences(values: Location[] | undefined | null): monaco.languages.Location[] | undefined;
-    asReferences(values: Location[] | undefined | null): monaco.languages.Location[] | undefined {
+    asReferences (values: Location[] | undefined | null): monaco.languages.Location[] | undefined {
         if (!values) {
             return undefined;
         }
@@ -829,18 +829,18 @@ export class ProtocolToMonacoConverter {
     asDefinitionResult(item: DefinitionLink[]): monaco.languages.Definition;
     asDefinitionResult(item: undefined | null): undefined;
     asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined;
-    asDefinitionResult(item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined {
+    asDefinitionResult (item: Definition | DefinitionLink[] | undefined | null): monaco.languages.Definition | undefined {
         if (!item) {
             return undefined;
         }
         if (Is.array(item)) {
-            if (item.length == 0) {
+            if (item.length === 0) {
                 return undefined;
             } else if (LocationLink.is(item[0])) {
-                let links: LocationLink[] = item as LocationLink[];
+                const links: LocationLink[] = item as LocationLink[];
                 return links.map((location) => this.asLocationLink(location));
             } else {
-                let locations: Location[] = item as Location[];
+                const locations: Location[] = item as Location[];
                 return locations.map((location) => this.asLocation(location));
             }
         } else {
@@ -851,7 +851,7 @@ export class ProtocolToMonacoConverter {
     asLocation(item: Location): monaco.languages.Location;
     asLocation(item: undefined | null): undefined;
     asLocation(item: Location | undefined | null): monaco.languages.Location | undefined;
-    asLocation(item: Location | undefined | null): monaco.languages.Location | undefined {
+    asLocation (item: Location | undefined | null): monaco.languages.Location | undefined {
         if (!item) {
             return undefined;
         }
@@ -859,23 +859,23 @@ export class ProtocolToMonacoConverter {
         const range = this.asRange(item.range)!;
         return {
             uri, range
-        }
+        };
     }
 
     asLocationLink(item: undefined | null): undefined;
     asLocationLink(item: ls.LocationLink): monaco.languages.LocationLink;
-    asLocationLink(item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
+    asLocationLink (item: ls.LocationLink | undefined | null): monaco.languages.LocationLink | undefined {
         if (!item) {
             return undefined;
         }
-        let result: monaco.languages.LocationLink = {
+        const result: monaco.languages.LocationLink = {
             uri: this._monaco.Uri.parse(item.targetUri),
             range: this.asRange(item.targetSelectionRange)!, // See issue: https://github.com/Microsoft/vscode/issues/58649
             originSelectionRange: this.asRange(item.originSelectionRange),
             targetSelectionRange: this.asRange(item.targetSelectionRange)
         };
         if (!result.targetSelectionRange) {
-            throw new Error(`targetSelectionRange must not be undefined or null`);
+            throw new Error('targetSelectionRange must not be undefined or null');
         }
         return result;
     }
@@ -883,11 +883,11 @@ export class ProtocolToMonacoConverter {
     asSignatureHelpResult(item: undefined | null): undefined;
     asSignatureHelpResult(item: SignatureHelp): monaco.languages.SignatureHelpResult;
     asSignatureHelpResult(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelpResult | undefined;
-    asSignatureHelpResult(item: SignatureHelp | undefined | null): monaco.languages.SignatureHelpResult | undefined {
+    asSignatureHelpResult (item: SignatureHelp | undefined | null): monaco.languages.SignatureHelpResult | undefined {
         if (!item) {
             return undefined;
         }
-        let result = <monaco.languages.SignatureHelp>{};
+        const result = <monaco.languages.SignatureHelp>{};
         if (Is.number(item.activeSignature)) {
             result.activeSignature = item.activeSignature;
         } else {
@@ -911,36 +911,36 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asSignatureInformations(items: SignatureInformation[]): monaco.languages.SignatureInformation[] {
+    asSignatureInformations (items: SignatureInformation[]): monaco.languages.SignatureInformation[] {
         return items.map(item => this.asSignatureInformation(item));
     }
 
-    asSignatureInformation(item: SignatureInformation): monaco.languages.SignatureInformation {
-        let result = <monaco.languages.SignatureInformation>{ label: item.label };
+    asSignatureInformation (item: SignatureInformation): monaco.languages.SignatureInformation {
+        const result = <monaco.languages.SignatureInformation>{ label: item.label };
         if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
         if (item.parameters) {
             result.parameters = this.asParameterInformations(item.parameters);
         } else {
             result.parameters = [];
         }
-        if (item.activeParameter) { result.activeParameter = item.activeParameter }
+        if (item.activeParameter) { result.activeParameter = item.activeParameter; }
         return result;
     }
 
-    asParameterInformations(item: ParameterInformation[]): monaco.languages.ParameterInformation[] {
+    asParameterInformations (item: ParameterInformation[]): monaco.languages.ParameterInformation[] {
         return item.map(item => this.asParameterInformation(item));
     }
 
-    asParameterInformation(item: ParameterInformation): monaco.languages.ParameterInformation {
-        let result = <monaco.languages.ParameterInformation>{ label: item.label };
-        if (item.documentation) { result.documentation = this.asDocumentation(item.documentation) };
+    asParameterInformation (item: ParameterInformation): monaco.languages.ParameterInformation {
+        const result = <monaco.languages.ParameterInformation>{ label: item.label };
+        if (item.documentation) { result.documentation = this.asDocumentation(item.documentation); }
         return result;
     }
 
     asHover(hover: Hover): monaco.languages.Hover;
     asHover(hover: undefined | null): undefined;
     asHover(hover: Hover | undefined | null): monaco.languages.Hover | undefined;
-    asHover(hover: Hover | undefined | null): monaco.languages.Hover | undefined {
+    asHover (hover: Hover | undefined | null): monaco.languages.Hover | undefined {
         if (!hover) {
             return undefined;
         }
@@ -950,14 +950,14 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asHoverContent(contents: MarkedString | MarkedString[] | MarkupContent): monaco.IMarkdownString[] {
+    asHoverContent (contents: MarkedString | MarkedString[] | MarkupContent): monaco.IMarkdownString[] {
         if (Array.isArray(contents)) {
             return contents.map(content => this.asMarkdownString(content));
         }
         return [this.asMarkdownString(contents)];
     }
 
-    asDocumentation(value: string | MarkupContent): string | monaco.IMarkdownString {
+    asDocumentation (value: string | MarkupContent): string | monaco.IMarkdownString {
         if (Is.string(value)) {
             return value;
         }
@@ -967,7 +967,7 @@ export class ProtocolToMonacoConverter {
         return this.asMarkdownString(value);
     }
 
-    asMarkdownString(content: MarkedString | MarkupContent): monaco.IMarkdownString {
+    asMarkdownString (content: MarkedString | MarkupContent): monaco.IMarkdownString {
         if (MarkupContent.is(content)) {
             return {
                 value: content.value
@@ -982,7 +982,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asSeverity(severity?: ls.DiagnosticSeverity): monaco.MarkerSeverity {
+    asSeverity (severity?: ls.DiagnosticSeverity): monaco.MarkerSeverity {
         if (severity === 1) {
             return this._monaco.MarkerSeverity.Error;
         }
@@ -998,16 +998,16 @@ export class ProtocolToMonacoConverter {
     asDiagnostics(diagnostics: undefined): undefined;
     asDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[];
     asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined;
-    asDiagnostics(diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
+    asDiagnostics (diagnostics: Diagnostic[] | undefined): monaco.editor.IMarkerData[] | undefined {
         if (!diagnostics) {
             return undefined;
         }
         return diagnostics.map(diagnostic => this.asDiagnostic(diagnostic));
     }
 
-    asDiagnostic(diagnostic: Diagnostic): monaco.editor.IMarkerData {
+    asDiagnostic (diagnostic: Diagnostic): monaco.editor.IMarkerData {
         return {
-            code: typeof diagnostic.code === "number" ? diagnostic.code.toString() : diagnostic.code,
+            code: typeof diagnostic.code === 'number' ? diagnostic.code.toString() : diagnostic.code,
             severity: this.asSeverity(diagnostic.severity),
             message: diagnostic.message,
             source: diagnostic.source,
@@ -1017,17 +1017,17 @@ export class ProtocolToMonacoConverter {
             endColumn: diagnostic.range.end.character + 1,
             relatedInformation: this.asRelatedInformations(diagnostic.relatedInformation),
             tags: diagnostic.tags
-        }
+        };
     }
 
-    asRelatedInformations(relatedInformation?: DiagnosticRelatedInformation[]): monaco.editor.IRelatedInformation[] | undefined {
+    asRelatedInformations (relatedInformation?: DiagnosticRelatedInformation[]): monaco.editor.IRelatedInformation[] | undefined {
         if (!relatedInformation) {
             return undefined;
         }
         return relatedInformation.map(item => this.asRelatedInformation(item));
     }
 
-    asRelatedInformation(relatedInformation: DiagnosticRelatedInformation): monaco.editor.IRelatedInformation {
+    asRelatedInformation (relatedInformation: DiagnosticRelatedInformation): monaco.editor.IRelatedInformation {
         return {
             resource: this._monaco.Uri.parse(relatedInformation.location.uri),
             startLineNumber: relatedInformation.location.range.start.line + 1,
@@ -1035,37 +1035,37 @@ export class ProtocolToMonacoConverter {
             endLineNumber: relatedInformation.location.range.end.line + 1,
             endColumn: relatedInformation.location.range.end.character + 1,
             message: relatedInformation.message
-        }
+        };
     }
 
-    asCompletionResult(result: CompletionItem[] | CompletionList | null | undefined, defaultMonacoRange: monaco.IRange): monaco.languages.CompletionList {
+    asCompletionResult (result: CompletionItem[] | CompletionList | null | undefined, defaultMonacoRange: monaco.IRange): monaco.languages.CompletionList {
         if (!result) {
             return {
                 incomplete: false,
                 suggestions: []
-            }
+            };
         }
         if (Array.isArray(result)) {
             const suggestions = result.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange));
             return {
                 incomplete: false,
                 suggestions
-            }
+            };
         }
         const defaultRange = this.getCompletionItemDefaultRange(result);
         return {
             incomplete: result.isIncomplete,
             suggestions: result.items.map(item => this.asCompletionItem(item, defaultMonacoRange, defaultRange, result.itemDefaults))
-        }
+        };
     }
 
-    asCompletionItem(item: CompletionItem, defaultMonacoRange: monaco.IRange | RangeReplace, defaultRange?: monaco.IRange | RangeReplace, itemDefaults?: CompletionList['itemDefaults']): ProtocolCompletionItem {
+    asCompletionItem (item: CompletionItem, defaultMonacoRange: monaco.IRange | RangeReplace, defaultRange?: monaco.IRange | RangeReplace, itemDefaults?: CompletionList['itemDefaults']): ProtocolCompletionItem {
         const result = <ProtocolCompletionItem>{ label: this.asCompletionItemLabel(item) };
         if (item.detail) { result.detail = item.detail; }
         if (item.documentation) {
             result.documentation = this.asDocumentation(item.documentation);
             result.documentationFormat = Is.string(item.documentation) ? undefined : item.documentation.kind;
-        };
+        }
         if (item.filterText) { result.filterText = item.filterText; }
         const insertText = this.asCompletionInsertText(item, defaultRange, itemDefaults?.insertTextFormat);
         result.insertText = insertText.insertText;
@@ -1075,7 +1075,7 @@ export class ProtocolToMonacoConverter {
             result.insertTextRules = this._monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
         }
         if (Is.number(item.kind)) {
-            let [itemKind, original] = this.asCompletionItemKind(item.kind);
+            const [itemKind, original] = this.asCompletionItemKind(item.kind);
             result.kind = itemKind;
             if (original) {
                 result.originalItemKind = original;
@@ -1092,13 +1092,13 @@ export class ProtocolToMonacoConverter {
         if (item.deprecated === true || item.deprecated === false) {
             result.deprecated = item.deprecated;
         }
-        const insertTextMode = item.insertTextMode ?? itemDefaults?.insertTextMode
+        const insertTextMode = item.insertTextMode ?? itemDefaults?.insertTextMode;
         if (insertTextMode) { result.insertTextMode = insertTextMode; }
         if (item.tags) { result.tags = item.tags; }
         return result;
     }
 
-    getCompletionItemDefaultRange(list: CompletionList): monaco.Range | RangeReplace | undefined {
+    getCompletionItemDefaultRange (list: CompletionList): monaco.Range | RangeReplace | undefined {
         const rangeDefaults = list.itemDefaults?.editRange;
         return ls.Range.is(rangeDefaults)
             ? this.asRange(rangeDefaults)
@@ -1107,7 +1107,7 @@ export class ProtocolToMonacoConverter {
                 : undefined;
     }
 
-    asCompletionItemLabel(item: ls.CompletionItem): monaco.languages.CompletionItemLabel | string {
+    asCompletionItemLabel (item: ls.CompletionItem): monaco.languages.CompletionItemLabel | string {
         if (ls.CompletionItemLabelDetails.is(item.labelDetails)) {
             return {
                 label: item.label,
@@ -1119,7 +1119,7 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asCompletionItemKind(value: CompletionItemKind): [monaco.languages.CompletionItemKind, CompletionItemKind | undefined] {
+    asCompletionItemKind (value: CompletionItemKind): [monaco.languages.CompletionItemKind, CompletionItemKind | undefined] {
         if (CompletionItemKind.Text <= value && value <= CompletionItemKind.TypeParameter) {
             switch (value) {
                 case CompletionItemKind.Text: return [this._monaco.languages.CompletionItemKind.Text, undefined];
@@ -1149,12 +1149,11 @@ export class ProtocolToMonacoConverter {
                 case CompletionItemKind.TypeParameter: return [this._monaco.languages.CompletionItemKind.TypeParameter, undefined];
                 default: return [value - 1, undefined];
             }
-
-        };
+        }
         return [CompletionItemKind.Text, value];
     }
 
-    asCompletionInsertText(item: CompletionItem, defaultRange?: monaco.IRange | RangeReplace, defaultInsertTextFormat?: InsertTextFormat): { insertText: string, range?: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
+    asCompletionInsertText (item: CompletionItem, defaultRange?: monaco.IRange | RangeReplace, defaultInsertTextFormat?: InsertTextFormat): { insertText: string, range?: monaco.IRange | RangeReplace, fromEdit: boolean, isSnippet: boolean } {
         const insertTextFormat = item.insertTextFormat ?? defaultInsertTextFormat;
 
         const isSnippet = insertTextFormat === InsertTextFormat.Snippet;
@@ -1163,14 +1162,14 @@ export class ProtocolToMonacoConverter {
                 ? this.getCompletionRangeAndText(item.textEdit)
                 : [defaultRange, item.textEditText ?? item.label];
 
-            return { insertText: newText, range: range, fromEdit: true, isSnippet };
+            return { insertText: newText, range, fromEdit: true, isSnippet };
         } else if (item.insertText) {
             return { isSnippet, insertText: item.insertText, fromEdit: false, range: defaultRange };
         }
         return { insertText: item.label, range: defaultRange, fromEdit: false, isSnippet: false };
     }
 
-    getCompletionRangeAndText(value: ls.TextEdit | ls.InsertReplaceEdit): [monaco.Range | RangeReplace, string] {
+    getCompletionRangeAndText (value: ls.TextEdit | ls.InsertReplaceEdit): [monaco.Range | RangeReplace, string] {
         if (ls.InsertReplaceEdit.is(value)) {
             return [{ insert: this.asRange(value.insert), replace: this.asRange(value.replace) }, value.newText];
         } else {
@@ -1178,12 +1177,12 @@ export class ProtocolToMonacoConverter {
         }
     }
 
-    asDocumentLinks(documentLinks: DocumentLink[]): monaco.languages.ILinksList {
+    asDocumentLinks (documentLinks: DocumentLink[]): monaco.languages.ILinksList {
         const links = documentLinks.map(link => this.asDocumentLink(link));
         return { links };
     }
 
-    asDocumentLink(documentLink: DocumentLink): ProtocolDocumentLink {
+    asDocumentLink (documentLink: DocumentLink): ProtocolDocumentLink {
         return {
             range: this.asRange(documentLink.range),
             url: documentLink.target,
@@ -1200,7 +1199,7 @@ export class ProtocolToMonacoConverter {
     asRange(range: RecursivePartial<Range>): Partial<monaco.IRange>;
     asRange(range: RecursivePartial<Range> | undefined): monaco.Range | Partial<monaco.IRange> | undefined;
     asRange(range: RecursivePartial<Range> | null): monaco.Range | Partial<monaco.IRange> | null;
-    asRange(range: RecursivePartial<Range> | undefined | null): monaco.Range | Partial<monaco.IRange> | undefined | null {
+    asRange (range: RecursivePartial<Range> | undefined | null): monaco.Range | Partial<monaco.IRange> | undefined | null {
         if (range === undefined) {
             return undefined;
         }
@@ -1227,7 +1226,7 @@ export class ProtocolToMonacoConverter {
     asPosition(position: Partial<Position>): Partial<monaco.IPosition>;
     asPosition(position: Partial<Position> | undefined): monaco.Position | Partial<monaco.IPosition> | undefined;
     asPosition(position: Partial<Position> | null): monaco.Position | Partial<monaco.IPosition> | null;
-    asPosition(position: Partial<Position> | undefined | null): monaco.Position | Partial<monaco.IPosition> | undefined | null {
+    asPosition (position: Partial<Position> | undefined | null): monaco.Position | Partial<monaco.IPosition> | undefined | null {
         if (position === undefined) {
             return undefined;
         }
@@ -1243,39 +1242,39 @@ export class ProtocolToMonacoConverter {
         return { lineNumber, column };
     }
 
-    asColorInformations(items: ColorInformation[]): monaco.languages.IColorInformation[] {
+    asColorInformations (items: ColorInformation[]): monaco.languages.IColorInformation[] {
         return items.map(item => this.asColorInformation(item));
     }
 
-    asColorInformation(item: ColorInformation): monaco.languages.IColorInformation {
+    asColorInformation (item: ColorInformation): monaco.languages.IColorInformation {
         return {
             range: this.asRange(item.range),
             color: item.color
-        }
+        };
     }
 
-    asColorPresentations(items: ColorPresentation[]): monaco.languages.IColorPresentation[] {
+    asColorPresentations (items: ColorPresentation[]): monaco.languages.IColorPresentation[] {
         return items.map(item => this.asColorPresentation(item));
     }
 
-    asColorPresentation(item: ColorPresentation): monaco.languages.IColorPresentation {
+    asColorPresentation (item: ColorPresentation): monaco.languages.IColorPresentation {
         return {
             label: item.label,
             textEdit: this.asTextEdit(item.textEdit),
             additionalTextEdits: this.asTextEdits(item.additionalTextEdits)
-        }
+        };
     }
 
     asFoldingRanges(items: undefined | null): undefined | null;
     asFoldingRanges(items: FoldingRange[]): monaco.languages.FoldingRange[];
-    asFoldingRanges(items: FoldingRange[] | undefined | null): monaco.languages.FoldingRange[] | undefined | null {
+    asFoldingRanges (items: FoldingRange[] | undefined | null): monaco.languages.FoldingRange[] | undefined | null {
         if (!items) {
             return items;
         }
         return items.map(item => this.asFoldingRange(item));
     }
 
-    asFoldingRange(item: FoldingRange): monaco.languages.FoldingRange {
+    asFoldingRange (item: FoldingRange): monaco.languages.FoldingRange {
         return {
             start: item.startLine + 1,
             end: item.endLine + 1,
@@ -1283,7 +1282,7 @@ export class ProtocolToMonacoConverter {
         };
     }
 
-    asFoldingRangeKind(kind?: string): monaco.languages.FoldingRangeKind | undefined {
+    asFoldingRangeKind (kind?: string): monaco.languages.FoldingRangeKind | undefined {
         if (kind) {
             switch (kind) {
                 case FoldingRangeKind.Comment:
@@ -1292,35 +1291,35 @@ export class ProtocolToMonacoConverter {
                     return this._monaco.languages.FoldingRangeKind.Imports;
                 case FoldingRangeKind.Region:
                     return this._monaco.languages.FoldingRangeKind.Region;
-            };
+            }
         }
         return undefined;
     }
 
-    asSemanticTokens(semanticTokens: SemanticTokens): monaco.languages.SemanticTokens {
+    asSemanticTokens (semanticTokens: SemanticTokens): monaco.languages.SemanticTokens {
         return {
             resultId: semanticTokens.resultId,
             data: Uint32Array.from(semanticTokens.data)
-        }
+        };
     }
 
-    asInlayHintLabelPart(part: InlayHintLabelPart): monaco.languages.InlayHintLabelPart {
+    asInlayHintLabelPart (part: InlayHintLabelPart): monaco.languages.InlayHintLabelPart {
         return {
             label: part.value,
             command: this.asCommand(part.command),
             location: this.asLocation(part.location),
             tooltip: part.tooltip && this.asMarkdownString(part.tooltip)
-        }
+        };
     }
 
-    asInlayHintLabel(label: string | InlayHintLabelPart[]): string | monaco.languages.InlayHintLabelPart[] {
+    asInlayHintLabel (label: string | InlayHintLabelPart[]): string | monaco.languages.InlayHintLabelPart[] {
         if (Array.isArray(label)) {
-            return label.map(part => this.asInlayHintLabelPart(part))
+            return label.map(part => this.asInlayHintLabelPart(part));
         }
-        return label
+        return label;
     }
 
-    asInlayHint(inlayHint: InlayHint): ProtocolInlayHint {
+    asInlayHint (inlayHint: InlayHint): ProtocolInlayHint {
         return {
             data: inlayHint.data,
             label: this.asInlayHintLabel(inlayHint.label),
@@ -1329,13 +1328,13 @@ export class ProtocolToMonacoConverter {
             paddingLeft: inlayHint.paddingLeft,
             paddingRight: inlayHint.paddingRight,
             tooltip: inlayHint.tooltip && this.asMarkdownString(inlayHint.tooltip)
-        }
+        };
     }
 
     asInlayHintList(items: InlayHint[]): monaco.languages.InlayHintList;
     asInlayHintList(items: undefined | null): undefined;
     asInlayHintList(items: InlayHint[] | undefined | null): monaco.languages.InlayHintList | undefined;
-    asInlayHintList(items: InlayHint[] | undefined | null): monaco.languages.InlayHintList | undefined {
+    asInlayHintList (items: InlayHint[] | undefined | null): monaco.languages.InlayHintList | undefined {
         if (!items) {
             return undefined;
         }
@@ -1344,5 +1343,4 @@ export class ProtocolToMonacoConverter {
             dispose: () => { }
         };
     }
-
 }
