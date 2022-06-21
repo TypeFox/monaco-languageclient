@@ -3,11 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from 'vscode-jsonrpc/lib/common/disposable';
-
-export {
-    Disposable
-};
+import { Disposable } from 'vscode-jsonrpc';
 
 export class DisposableCollection implements Disposable {
     protected readonly disposables: Disposable[] = [];
@@ -31,3 +27,5 @@ export class DisposableCollection implements Disposable {
         };
     }
 }
+
+export { Disposable };

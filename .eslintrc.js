@@ -12,7 +12,8 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: '2020',
-        sourceType: 'module'
+        sourceType: 'module',
+        project: './tsconfig.json'
     },
     plugins: [
         '@typescript-eslint',
@@ -40,7 +41,9 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['warn', {
             argsIgnorePattern: '^_'
         }],
-        'header/header': [2, headerDef]
+        'header/header': [2, headerDef],
+        'dot-notation': 'off',
+        '@typescript-eslint/dot-notation': ['error']
     },
     ignorePatterns: ['.eslintrc.js', './packages/examples/browser-lsp/src/serverWorker.ts']
 };

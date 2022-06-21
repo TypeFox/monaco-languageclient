@@ -10,7 +10,7 @@ export class DisposableCollection implements Disposable {
 
     dispose (): void {
         while (this.disposables.length !== 0) {
-            this.disposables.pop()?.dispose();
+            this.disposables.pop()!.dispose();
         }
     }
 
