@@ -25,14 +25,6 @@
       "types": "./lib/monaco-converter.d.ts",
       "default": "./lib/monaco-converter.js"
     },
-    "./cjs/monaco-converter": {
-      "types": "./dist/cjs/monaco-converter.d.ts",
-      "default": "./dist/cjs/monaco-converter.js"
-    },
-    "./cjs": {
-      "types": "./dist/cjs/index.d.ts",
-      "default": "./dist/cjs/index.js"
-    },
     "./amd/monaco-converter": {
       "types": "./dist/amd/monaco-converter.d.ts",
       "default": "./dist/amd/monaco-converter.js"
