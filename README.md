@@ -15,6 +15,7 @@
   - [Scripts Overview](#scripts-overview)
 - [**Examples**](#examples)
   - [ Node.js Language Server + web client example](#nodejs-language-server-plus-web-client-example)
+  - [Browser-LSP](#browser-language-client-and-server)
   - [Browser](#browser-example)
   - [VSCode integration](#vscode-integration)
 - [**History**](CHANGELOG.md)
@@ -63,13 +64,19 @@ cd packages/client && npm run build
 
 ## Examples
 
-There are two different examples (one is a client-server one now separated) that demonstrate how the `monaco-languageclient` can be used. The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application. The browser example shows how a language service written in JavaScript can be used in a Monaco Editor contained in a simple HTML page.
+There are three examples different examples that demonstrate how the `monaco-languageclient` can be used. The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application.
+
+The Browser Language Client & Server examples does the same, but the server runs in a web worker and communication is via direct LSP message exchange.
+
+The browser example shows how a language service written in JavaScript can be used in a Monaco
+Editor contained in a simple HTML page.
 
 All example packages now are now located under [./packages/examples](./packages/examples):
 
-- Node.js Language Server example: [./packages/examples/node](./packages/examples/node): - Look at the [example express app](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/node/src/server.ts) to learn how to open a web socket with an express app and launch a language server within the current process or as an external process.
-- Web Client for Node.js Language Server: [./packages/examples/client](./packages/examples/client): Look at the [example client](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/client/src/client.ts) to learn how to start Monaco language client.
-- Browser example: [./packages/examples/browser](./packages/examples/browser): Look at the [browser example](https://github.com/TypeFox/monaco-languageclient/blob/sandbox-331/packages/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page.
+- Node.js Language Server example: [./packages/examples/node](./packages/examples/node): - Look at the [example express app](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/node/src/server.ts) to learn how to open a web socket with an express app and launch a language server within the current process or as an external process.
+- Web Client for Node.js Language Server: [./packages/examples/client](./packages/examples/client): Look at the [example client](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/client/src/client.ts) to learn how to start Monaco language client.
+- Browser Language Client and Server: [./packages/examples/browser-lsp](./packages/examples/browser-lsp): Look at the [client](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-lsp/src/client.ts) and the [web worker](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-lsp/src/serverWorker.ts) implementing the language server. They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the first example.
+- Browser example: [./packages/examples/browser](./packages/examples/browser): Look at the [browser example](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page ([here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-old/src/client.ts) you find the old now deprecated implementation using the [monaco converters](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/src/monaco-converters.ts).)
 
 ### Node.js Language Server plus web client example
 
@@ -86,9 +93,24 @@ npm run start-example-node:ext
 npm run dev
 ```
 
-After launching vite development server go to http://localhost:8080/packages/examples/client/index.html
+After launching vite development server go to [client example](http://localhost:8080/packages/examples/client/index.html)
 
-You can edit the client example code directly (TypeScript) and vite ensures it automatically made available.
+**Hints for all examples:** Vite serves all client code from [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and vite ensures it automatically made available.
+
+### Browser Language Client and Server
+
+If you have build all packages or the specific package `packages/examples/browser-lsp` before you just need to run the vite development server:
+
+```bash
+# Optional: Build all packages
+npm run build
+# Launch vite development server if not already done
+npm run dev
+```
+
+After launching vite development an go to the [example](http://localhost:8080/packages/examples/browser-lsp/index.html)
+
+**Hint:** If you change the worker code, you have to re-create it (use `npm run build:worker` from the within the example [directory](./packages/examples/browser-lsp)!
 
 ### Browser example
 
@@ -99,13 +121,9 @@ From CLI in root of the project you just need to run. If it is already running t
 npm run dev
 ```
 
-After launching vite development server go to http://localhost:8080/packages/examples/browser/index.html
+After launching vite development an go to the [example](http://localhost:8080/packages/examples/browser/index.html)
 
-You can also go to http://localhost:8080/packages/examples/browser-old/index.html for the old implementation using the deprecated monaco converters
-
-You can edit the client example code directly (TypeScript) and vite ensures it automatically made available
-
-**Hint:** Vite serves all client code from http://localhost:8080 . You can go to the index.html and from there select if you want to open **Web Client for Node.js Language Server** or **Browser Example** as well.
+You can also [go to](http://localhost:8080/packages/examples/browser-old/index.html) for the old implementation using the deprecated monaco converters.
 
 ### Optional webpack build for client example
 
