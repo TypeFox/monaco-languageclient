@@ -33,7 +33,7 @@
     "watch": "tsc -w",
     "build": "npm run clean && npm run compile"
   },
-  "homepage": "https://github.com/TypeFox/vscode-ws-jsonrpc/blob/main/packages/vscode-ws-jsonrpc/README.md",
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
   "directories": {
     "lib": "lib"
   }
