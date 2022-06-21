@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import { start } from "./json-server";
+import { start } from './json-server';
 
 const reader = new StreamMessageReader(process.stdin);
 const writer = new StreamMessageWriter(process.stdout);

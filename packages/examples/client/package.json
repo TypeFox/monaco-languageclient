@@ -20,7 +20,7 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
-    "lint": "echo 'No linting yet'",
+    "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",

@@ -6,7 +6,7 @@ import { MessageConnection, Logger } from 'vscode-jsonrpc';
 import { createWebSocketConnection, IWebSocket } from './socket';
 import { ConsoleLogger } from './logger';
 
-export function listen(options: {
+export function listen (options: {
     webSocket: WebSocket;
     logger?: Logger;
     onConnection: (connection: MessageConnection) => void;
@@ -20,16 +20,22 @@ export function listen(options: {
     };
 }
 
-export function toSocket(webSocket: WebSocket): IWebSocket {
+export function toSocket (webSocket: WebSocket): IWebSocket {
     return {
         send: content => webSocket.send(content),
-        onMessage: cb => webSocket.onmessage = event => cb(event.data),
-        onError: cb => webSocket.onerror = event => {
-            if ('message' in event) {
-                cb((event as any).message)
-            }
+        onMessage: cb => {
+            webSocket.onmessage = event => cb(event.data);
         },
-        onClose: cb => webSocket.onclose = event => cb(event.code, event.reason),
+        onError: cb => {
+            webSocket.onerror = event => {
+                if ('message' in event) {
+                    cb((event as any).message);
+                }
+            };
+        },
+        onClose: cb => {
+            webSocket.onclose = event => cb(event.code, event.reason);
+        },
         dispose: () => webSocket.close()
-    }
+    };
 }

@@ -19,11 +19,11 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggle
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
+buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 // register Monaco languages
 monaco.languages.register({
@@ -38,7 +38,7 @@ const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-monaco.editor.create(document.getElementById("container")!, {
+monaco.editor.create(document.getElementById('container')!, {
     model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
     glyphMargin: true,
     lightbulb: {
@@ -50,7 +50,7 @@ monaco.editor.create(document.getElementById("container")!, {
 MonacoServices.install();
 
 // create the web socket
-const url = createUrl('localhost', 3000, '/sampleServer')
+const url = createUrl('localhost', 3000, '/sampleServer');
 const webSocket = new WebSocket(url);
 
 webSocket.onopen = () => {
@@ -65,9 +65,9 @@ webSocket.onopen = () => {
     reader.onClose(() => languageClient.stop());
 };
 
-function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
+function createLanguageClient (transports: MessageTransports): MonacoLanguageClient {
     return new MonacoLanguageClient({
-        name: "Sample Language Client",
+        name: 'Sample Language Client',
         clientOptions: {
             // use a language id as a document selector
             documentSelector: ['json'],
@@ -80,13 +80,13 @@ function createLanguageClient(transports: MessageTransports): MonacoLanguageClie
         // create a language client connection from the JSON RPC connection on demand
         connectionProvider: {
             get: () => {
-                return Promise.resolve(transports)
+                return Promise.resolve(transports);
             }
         }
     });
 }
 
-function createUrl(hostname: string, port: number, path: string): string {
+function createUrl (hostname: string, port: number, path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
     return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
 }

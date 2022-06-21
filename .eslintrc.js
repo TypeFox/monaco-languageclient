@@ -5,7 +5,6 @@ module.exports = {
     },
     extends: 'standard',
     globals: {
-        Thenable: 'readonly'
     },
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -29,6 +28,13 @@ module.exports = {
         'no-redeclare': 'off',
         '@typescript-eslint/no-redeclare': ['error'],
         'no-useless-constructor': 'warn',
-        'no-void': 'warn'
+        'no-void': 'warn',
+        // Following recommendation:
+        // https://typescript-eslint.io/docs/linting/troubleshooting/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
+        'no-undef': 'off',
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['warn', {
+            argsIgnorePattern: '^_'
+        }]
     }
 };
