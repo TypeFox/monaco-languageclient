@@ -1,3 +1,6 @@
+const path = require('path');
+const headerDef = path.resolve(__dirname, './packages/config/header.js');
+
 module.exports = {
     env: {
         browser: true,
@@ -14,7 +17,8 @@ module.exports = {
     plugins: [
         '@typescript-eslint',
         'import',
-        'unused-imports'
+        'unused-imports',
+        'header'
     ],
     rules: {
         indent: ['error', 4, {
@@ -35,6 +39,8 @@ module.exports = {
         'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': ['warn', {
             argsIgnorePattern: '^_'
-        }]
-    }
+        }],
+        'header/header': [2, headerDef]
+    },
+    ignorePatterns: ['.eslintrc.js', './packages/examples/browser-lsp/src/serverWorker.ts']
 };

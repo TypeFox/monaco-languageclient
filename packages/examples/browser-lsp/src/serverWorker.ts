@@ -1,16 +1,16 @@
-/* ---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *-------------------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
-// This is an example copied as is from here:
-// https://github.com/microsoft/vscode-extension-samples/blob/main/lsp-web-extension-sample/server/src/browserServerMain.ts
-// the only addition is the following line:
 import { createConnection, BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser';
 
 import { Color, ColorInformation, Range, InitializeParams, InitializeResult, ServerCapabilities, TextDocuments, ColorPresentation, TextEdit, TextDocumentIdentifier } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
+// This is an example copied as is from here:
+// https://github.com/microsoft/vscode-extension-samples/blob/main/lsp-web-extension-sample/server/src/browserServerMain.ts
+// the only addition is the following line:
 declare const self: DedicatedWorkerGlobalScope;
 
 console.log('running server lsp-web-extension-sample');
