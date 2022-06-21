@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2.0.1] - 2022-06-21
+
+* No cjs fragments to export #[388](https://github.com/TypeFox/monaco-languageclient/issues/388)
+
 ## [2.0.0] - 2022-06-21
 
 * Use monaco vscode api #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)

@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -44,6 +44,7 @@
   },
   "files": [
     "dist/amd",
+    "dist/cjs",
     "lib",
     "src",
     "README.md",
