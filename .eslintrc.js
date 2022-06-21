@@ -25,7 +25,9 @@ module.exports = {
         'no-extra-semi': 'off',
         '@typescript-eslint/no-extra-semi': ['error'],
         'no-dupe-class-members': 'off',
-        'no-redeclare': 'warn',
+        '@typescript-eslint/no-dupe-class-members': ['error'],
+        'no-redeclare': 'off',
+        '@typescript-eslint/no-redeclare': ['error'],
         'no-useless-constructor': 'warn',
         'no-void': 'warn'
     }

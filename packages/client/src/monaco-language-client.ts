@@ -61,8 +61,8 @@ export class MonacoLanguageClient extends BaseLanguageClient {
                 registrations: params.registrations.filter(registration => this.getFeature(<any>registration.method) != null)
             });
         };
-        const originalHandleUnregistrationRequest: (params: UnregistrationParams) => Promise<void> = this['handleRegistrationRequest'].bind(this);
-        this['handleRegistrationRequest'] = (params: UnregistrationParams) => {
+        const originalHandleUnregistrationRequest: (params: UnregistrationParams) => Promise<void> = this['handleUnregistrationRequest'].bind(this);
+        this['handleUnregistrationRequest'] = (params: UnregistrationParams) => {
             originalHandleUnregistrationRequest({
                 ...params,
                 unregisterations: params.unregisterations.filter(unregistration => this.getFeature(<any>unregistration.method) != null)
