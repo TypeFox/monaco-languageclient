@@ -4,19 +4,14 @@
       "rootDir": "src",
       "outDir": "lib",
       "declarationDir": "lib",
-      "noUnusedParameters": false,
       "target": "es2020",
       "module": "es2020",
       "moduleResolution": "node",
-      "inlineSources": false,
-      "stripInternal": true,
       "lib": [
         "es2016",
         "dom"
       ],
-      "strict": true,
-      "noImplicitReturns": true,
-      "noUnusedLocals": true
+      "noUnusedParameters": false
   },
   "include": [
       "src/**/*"

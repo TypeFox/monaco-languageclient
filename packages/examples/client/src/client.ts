@@ -22,7 +22,7 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from '@codingame/monaco-jsonrpc';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 
 // register Monaco languages

@@ -1,0 +1,39 @@
+{
+  "name": "vscode-ws-jsonrpc",
+  "version": "0.5.0-dev.0",
+  "description": "VSCode JSON RPC over WebSocket",
+  "author": "TypeFox GmbH (http://www.typefox.io)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypeFox/monaco-languageclient.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "License.txt"
+  ],
+  "dependencies": {
+    "vscode-jsonrpc": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.7"
+  },
+  "scripts": {
+    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "build": "npm run clean && npm run compile"
+  },
+  "homepage": "https://github.com/TypeFox/vscode-ws-jsonrpc/blob/main/packages/vscode-ws-jsonrpc/README.md",
+  "directories": {
+    "lib": "lib"
+  }
+}

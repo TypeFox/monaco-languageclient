@@ -2,7 +2,7 @@
   "name": "node-example",
   "private": true,
   "dependencies": {
-    "@codingame/monaco-jsonrpc": "^0.4.0",
+    "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "@types/ws": "^8.5.3",
     "express": "^4.17.3",
     "normalize-url": "^7.0.3",
