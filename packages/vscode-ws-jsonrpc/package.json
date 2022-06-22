@@ -6,7 +6,7 @@
     "name": "TypeFox GmbH ",
     "url": "http://www.typefox.io"
   },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
   "license": "MIT",
   "repository": {
     "type": "git",
