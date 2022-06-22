@@ -1,11 +1,12 @@
 {
   "name": "monaco-languageclient",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
     "url": "http://www.typefox.io"
   },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,6 +16,7 @@
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
   "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
@@ -28,22 +30,15 @@
     "./cjs/monaco-converter": {
       "types": "./dist/cjs/monaco-converter.d.ts",
       "default": "./dist/cjs/monaco-converter.js"
-    },
-    "./cjs": {
-      "types": "./dist/cjs/index.d.ts",
-      "default": "./dist/cjs/index.js"
-    },
-    "./amd/monaco-converter": {
-      "types": "./dist/amd/monaco-converter.d.ts",
-      "default": "./dist/amd/monaco-converter.js"
-    },
-    "./amd": {
-      "types": "./dist/amd/index.d.ts",
-      "default": "./dist/amd/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "monaco-converter": [ "lib/monaco-converter" ],
+      "monaco-converter/cjs": [ "dist/cjs/monaco-converter" ]
     }
   },
   "files": [
-    "dist/amd",
     "dist/cjs",
     "lib",
     "src",
@@ -66,13 +61,11 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "clean:cjs": "npx shx rm -fr dist",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "clean:amd": "npx shx rm -fr dist/amd",
-    "clean:cjs": "npx shx rm -fr dist/cjs",
-    "build:amd": "npm run clean:amd && tsc --outDir dist/amd --module amd --declarationDir dist/amd --declaration",
-    "build:cjs": "npm run clean:cjs && tsc --outDir dist/cjs --module commonjs --declarationDir dist/cjs --declaration",
-    "build": "npm run clean && npm run compile && npm run build:amd && npm run build:cjs"
+    "build:cjs": "npm run clean:cjs && tsc -p ./tsconfig.cjs.json",
+    "build": "npm run clean && npm run compile && npm run build:cjs"
   }
 }

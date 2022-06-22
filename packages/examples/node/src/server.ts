@@ -7,7 +7,7 @@ import * as http from 'http';
 import * as url from 'url';
 import * as net from 'net';
 import express from 'express';
-import * as rpc from 'vscode-ws-jsonrpc';
+import * as rpc from 'vscode-ws-jsonrpc/cjs';
 import { launch } from './json-server-launcher';
 
 process.on('uncaughtException', function (err: any) {
@@ -29,7 +29,8 @@ const wss = new ws.Server({
     perMessageDeflate: false
 });
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-    const pathname = request.url ? new url.URL(request.url).pathname : undefined;
+    // eslint-disable-next-line n/no-deprecated-api
+    const pathname = request.url ? url.parse(request.url).pathname : undefined;
     if (pathname === '/sampleServer') {
         wss.handleUpgrade(request, socket, head, webSocket => {
             const socket: rpc.IWebSocket = {

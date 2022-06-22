@@ -50,7 +50,7 @@ Or you use a fresh dev environment in [Gitpod](https://www.gitpod.io) which is a
 
 ### Scripts Overview
 
-The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` amd `compile`, but it also has entries for launching script from the packages (lib and examples).
+The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` and `compile`, but it also has entries for launching script from the packages (lib and examples).
 
 For example if you want to rebuild the library you can do it in different ways. From CLI run one of:
 ```bash

@@ -2,9 +2,9 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib",
-    "declarationDir": "lib",
-    "noUnusedParameters": false
+    "outDir": "dist/cjs",
+    "declarationDir": "dist/cjs",
+    "module": "CommonJS"
   },
   "include": [
     "src/**/*.ts",

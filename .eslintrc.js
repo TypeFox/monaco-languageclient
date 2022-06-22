@@ -45,5 +45,9 @@ module.exports = {
         'dot-notation': 'off',
         '@typescript-eslint/dot-notation': ['error']
     },
-    ignorePatterns: ['.eslintrc.js', './packages/examples/browser-lsp/src/serverWorker.ts']
+    ignorePatterns: [
+        '.eslintrc.js',
+        'vite.config.ts',
+        'packages/examples/browser-lsp/src/serverWorker.ts'
+    ]
 };

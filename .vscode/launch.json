@@ -5,27 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Sample Server",
-            "program": "${workspaceRoot}/packages/examples/node/lib/server.js",
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/packages/examples/node/lib/**/*.js"
-            ]
+          "name": "Launch Sample Server",
+          "type": "node",
+          "request": "launch",
+          "args": ["${workspaceRoot}/packages/examples/node/src/server.ts"],
+          "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+          "cwd": "${workspaceRoot}/packages/examples/node",
+          "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Sample Server (external)",
-            "program": "${workspaceRoot}/packages/examples/node/lib/server.js",
-            "args": [
-                "--external"
-            ],
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/packages/examples/node/lib/**/*.js"
-            ]
+          "name": "Launch Sample Server (external)",
+          "type": "node",
+          "request": "launch",
+          "args": ["${workspaceRoot}/packages/examples/node/dist/server.js", "--external"],
+          "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+          "cwd": "${workspaceRoot}/packages/examples/node",
+          "internalConsoleOptions": "openOnSessionStart"
         },
         {
           "type": "pwa-chrome",

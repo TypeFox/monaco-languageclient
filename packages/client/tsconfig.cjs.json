@@ -2,12 +2,13 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib",
-    "declarationDir": "lib",
-    "noUnusedParameters": false
+    "outDir": "dist/cjs",
+    "declarationDir": "dist/cjs",
+    "noUnusedParameters": false,
+    "module": "CommonJS"
   },
   "include": [
-    "src/**/*.ts",
+    "src/monaco-converter.ts",
   ],
   "exclude": [
     "dist",
