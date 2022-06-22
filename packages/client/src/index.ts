@@ -10,6 +10,6 @@ export * from './monaco-services';
 export * from './monaco-converter';
 
 export {
-    Disposable, CancellationToken, Event, Emitter
+    CancellationToken, Event, Emitter
 } from 'vscode-jsonrpc/lib/common/api';
 export * from 'vscode-languageserver-protocol/lib/common/api';

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2.0.2] - 2022-06-22
+
+* Align tsconfig and use `typesVersions` in **package.json** for proper TypeScript import support (used in node example)
+
 ## [2.0.1] - 2022-06-21
 
 * No cjs fragments to export #[388](https://github.com/TypeFox/monaco-languageclient/issues/388)
@@ -12,6 +16,11 @@ All notable changes to this npm module are documented in this file.
 * Merge monaco-jsonrpc and vscode-ws-jsonrpc into new sub package #[383](https://github.com/TypeFox/monaco-languageclient/pull/383)
 * Integrate eslint with eslint-config-standard #[385](https://github.com/TypeFox/monaco-languageclient/pull/385)
 * Add example with client and server both running in the browser #[386](https://github.com/TypeFox/monaco-languageclient/pull/386)
+
+## BREAKING CHANGES
+
+* If you use Webpack or vite for bundling, you have to remove the `vscode` alias entry from the configuration
+* If you customized monaco services, then you have to add them
 
 ## [1.1.0] - 2022-06-08
 

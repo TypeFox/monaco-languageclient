@@ -1,16 +1,21 @@
 {
   "extends": "../../../tsconfig",
   "compilerOptions": {
-      "rootDir": "src",
-      "outDir": "lib",
-      "declarationDir": "lib"
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist",
+    "module": "CommonJS"
   },
-  "references": [{ "path": "../../client" }],
+  "references": [{
+    "path": "../../client"
+  },
+  {
+    "path": "../../vscode-ws-jsonrpc"
+  }],
   "include": [
-      "src/**/*"
+      "src/**/*.ts"
   ],
   "exclude": [
-    "dist",
-    "node_modules"
+    "dist"
   ]
 }

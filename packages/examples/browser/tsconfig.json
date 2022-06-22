@@ -3,16 +3,15 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist",
-    "module": "ES2020",
-    "lib": ["ES2020", "dom"]
+    "declarationDir": "dist"
   },
-  "references": [{ "path": "../../client" }],
+  "references": [{
+    "path": "../../client"
+  }],
   "include": [
-      "src/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "dist",
-    "node_modules"
+    "dist"
   ]
 }

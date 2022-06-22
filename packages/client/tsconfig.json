@@ -1,22 +1,16 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-      "rootDir": "src",
-      "outDir": "lib",
-      "declarationDir": "lib",
-      "target": "es2020",
-      "module": "es2020",
-      "moduleResolution": "node",
-      "lib": [
-        "es2016",
-        "dom"
-      ],
-      "noUnusedParameters": false
+    "rootDir": "src",
+    "outDir": "lib",
+    "declarationDir": "lib",
+    "noUnusedParameters": false
   },
   "include": [
-      "src/**/*"
+    "src/**/*.ts",
   ],
   "exclude": [
+    "dist",
     "lib",
     "node_modules"
   ]

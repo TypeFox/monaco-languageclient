@@ -1,8 +1,12 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VSCode JSON RPC over WebSocket",
-  "author": "TypeFox GmbH (http://www.typefox.io)",
+  "author": {
+    "name": "TypeFox GmbH ",
+    "url": "http://www.typefox.io"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,8 +16,45 @@
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
   "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./server": {
+      "types": "./lib/server/index.d.ts",
+      "default": "./lib/server/index.js"
+    },
+    "./socket": {
+      "types": "./lib/socket/index.d.ts",
+      "default": "./lib/socket/index.js"
+    },
+    "./cjs": {
+      "types": "./dist/cjs/index.d.ts",
+      "default": "./dist/cjs/index.js"
+    },
+    "./cjs/server": {
+      "types": "./dist/cjs/server/index.d.ts",
+      "default": "./dist/cjs/server/index.js"
+    },
+    "./cjs/socket": {
+      "types": "./dist/cjs/socket/index.d.ts",
+      "default": "./dist/cjs/socket/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "server": [ "lib/server" ],
+      "socket": [ "lib/server" ],
+      "cjs": [ "dist/cjs/index" ],
+      "cjs/server": [ "dist/cjs/server/index" ],
+      "cjs/socket": [ "dist/cjs/server/index" ]
+    }
+  },
   "files": [
+    "dist/cjs",
     "lib",
     "src",
     "README.md",
@@ -28,13 +69,11 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "clean:cjs": "npx shx rm -fr dist/cjs dist/tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build": "npm run clean && npm run compile"
-  },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
-  "directories": {
-    "lib": "lib"
+    "build:cjs": "npm run clean:cjs && tsc --outDir dist/cjs --module commonjs --declarationDir dist/cjs --declaration",
+    "build": "npm run clean && npm run compile && npm run build:cjs"
   }
 }

@@ -4,15 +4,15 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist",
-    "module": "ES2020",
-    "lib": ["ES2020", "dom"]
   },
-  "references": [{ "path": "../../client" }],
+  "references": [{
+    "path": "../../client"
+  }],
   "include": [
     "src/**/*.ts",
   ],
   "exclude": [
-    "src/dist",
-    "node_modules"
+    "dist",
+    "webpack/dist"
   ]
 }
