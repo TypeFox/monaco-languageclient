@@ -69,11 +69,11 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
-    "clean:cjs": "npx shx rm -fr dist/cjs dist/tsconfig.tsbuildinfo",
+    "clean:cjs": "npx shx rm -fr dist",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build:cjs": "npm run clean:cjs && tsc --outDir dist/cjs --module commonjs --declarationDir dist/cjs --declaration",
+    "build:cjs": "npm run clean:cjs && tsc -p ./tsconfig.cjs.json",
     "build": "npm run clean && npm run compile && npm run build:cjs"
   }
 }

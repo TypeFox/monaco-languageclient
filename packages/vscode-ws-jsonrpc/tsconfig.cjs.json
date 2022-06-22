@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist/cjs",
+    "declarationDir": "dist/cjs",
+    "module": "CommonJS"
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "dist",
+    "lib",
+    "node_modules"
+  ]
+}
