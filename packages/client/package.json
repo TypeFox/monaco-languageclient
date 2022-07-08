@@ -49,7 +49,7 @@
   ],
   "dependencies": {
     "glob-to-regexp": "0.4.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@^1.68.4",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.67.19",
     "vscode-jsonrpc": "8.0.1",
     "vscode-languageclient": "8.0.1",
     "vscode-languageserver-textdocument": "1.0.5",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@types/glob-to-regexp": "^0.4.1",
     "@types/node": "16.11.7",
-    "@types/vscode": "1.68.0"
+    "@types/vscode": "~1.67.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
