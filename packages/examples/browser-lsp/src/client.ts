@@ -22,6 +22,13 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
+import { StandaloneServices } from 'vscode/services';
+import getMessageServiceOverride from 'vscode/service-override/messages';
+
+StandaloneServices.initialize({
+    ...getMessageServiceOverride(document.body)
+});
+
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 // register Monaco languages

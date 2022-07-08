@@ -25,6 +25,13 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter';
+import { StandaloneServices } from 'vscode/services';
+import getMessageServiceOverride from 'vscode/service-override/messages';
+
+StandaloneServices.initialize({
+    ...getMessageServiceOverride(document.body)
+});
+
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 const codeConverter = createCodeConverter();
 const protocolConverter = createProtocolConverter(undefined, true, true);
