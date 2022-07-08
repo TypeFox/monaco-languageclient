@@ -15,7 +15,7 @@ export function launch (socket: rpc.IWebSocket) {
     const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;
     if (asExternalProccess) {
         // start the language server as an external process
-        const extJsonServerPath = path.resolve(__dirname, 'ext-json-server.js');
+        const extJsonServerPath = path.resolve(__dirname, '../dist/ext-json-server.js');
         const socketConnection = server.createConnection(reader, writer, () => socket.dispose());
         const serverConnection = server.createServerProcess('JSON', 'node', [extJsonServerPath]);
         if (serverConnection) {
