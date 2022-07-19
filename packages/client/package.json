@@ -50,8 +50,8 @@
   "dependencies": {
     "glob-to-regexp": "0.4.1",
     "vscode": "npm:@codingame/monaco-vscode-api@~1.67.19",
-    "vscode-jsonrpc": "8.0.1",
-    "vscode-languageclient": "8.0.1",
+    "vscode-jsonrpc": "8.0.2",
+    "vscode-languageclient": "8.0.2",
     "vscode-languageserver-textdocument": "1.0.5",
     "vscode-uri": "3.0.3"
   },
