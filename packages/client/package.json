@@ -35,8 +35,12 @@
   },
   "typesVersions": {
     "*": {
-      "monaco-converter": [ "lib/monaco-converter" ],
-      "monaco-converter/cjs": [ "dist/cjs/monaco-converter" ]
+      "monaco-converter": [
+        "lib/monaco-converter"
+      ],
+      "monaco-converter/cjs": [
+        "dist/cjs/monaco-converter"
+      ]
     }
   },
   "files": [
@@ -49,7 +53,7 @@
   ],
   "dependencies": {
     "glob-to-regexp": "0.4.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.67.19",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.67.20",
     "vscode-jsonrpc": "8.0.2",
     "vscode-languageclient": "8.0.2",
     "vscode-languageserver-textdocument": "1.0.5",

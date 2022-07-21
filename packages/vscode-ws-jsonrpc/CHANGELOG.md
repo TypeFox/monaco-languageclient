@@ -14,6 +14,11 @@ The npm packages exports the following:
 - `vscode-ws-jsonrpc/cjs/server`
 - `vscode-ws-jsonrpc/cjs/socket`
 
+## [1.0.2] - 2022-07-21
+
+- Update `vscode-jsonrpc` to `8.0.2`
+- Updated `vite` to `3.0.2`
+
 ## [1.0.1] - 2022-06-22
 
 - Library ships as src, esm and cjs builds. Use `typesVersions` in **package.json** for proper TypeScript import support

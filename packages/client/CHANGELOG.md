@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## 2.x.x BREAKING CHANGES
 
-v2+ of this library is dependant on [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) which removed all vscode-api/-compatibility related code. The change has mostly no effect on end users code, but it there two things that need to be taken into account:
+v2+ of this library is dependant on [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) which removed all vscode-api/-compatibility related code. The change has mostly no effect on end users code, but there are two things that need to be taken into account:
 
 - If you use Webpack or vite for bundling, you have to remove the `vscode` alias entry from the configuration
 - If you customized monaco services, then you have to adjust them to the changed interface
@@ -14,6 +14,11 @@ The npm packages exports the following:
 - `monaco-languagclient`
 - `monaco-languagclient/monaco-converters`
 - `monaco-languagclient/monaco-converters/cjs`
+
+## [2.1.0] - 2022-07-21
+
+- Update vscode api [#399](https://github.com/TypeFox/monaco-languageclient/pull/399)
+- Updated `vite` to `3.0.2`
 
 ## [2.0.2] - 2022-06-22
 

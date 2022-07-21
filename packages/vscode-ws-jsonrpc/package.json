@@ -47,11 +47,21 @@
   },
   "typesVersions": {
     "*": {
-      "server": [ "lib/server" ],
-      "socket": [ "lib/server" ],
-      "cjs": [ "dist/cjs/index" ],
-      "cjs/server": [ "dist/cjs/server/index" ],
-      "cjs/socket": [ "dist/cjs/server/index" ]
+      "server": [
+        "lib/server"
+      ],
+      "socket": [
+        "lib/server"
+      ],
+      "cjs": [
+        "dist/cjs/index"
+      ],
+      "cjs/server": [
+        "dist/cjs/server/index"
+      ],
+      "cjs/socket": [
+        "dist/cjs/server/index"
+      ]
     }
   },
   "files": [
@@ -63,7 +73,7 @@
     "License.txt"
   ],
   "dependencies": {
-    "vscode-jsonrpc": "^8.0.1"
+    "vscode-jsonrpc": "^8.0.2"
   },
   "devDependencies": {
     "@types/node": "16.11.7"
