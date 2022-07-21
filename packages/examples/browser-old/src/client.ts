@@ -23,6 +23,13 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { MonacoToProtocolConverter, ProtocolToMonacoConverter } from 'monaco-languageclient';
+import { StandaloneServices } from 'vscode/services';
+import getMessageServiceOverride from 'vscode/service-override/messages';
+
+StandaloneServices.initialize({
+    ...getMessageServiceOverride(document.body)
+});
+
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const LANGUAGE_ID = 'json';
