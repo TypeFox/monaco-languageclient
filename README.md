@@ -68,11 +68,11 @@ cd packages/client && npm run build
 
 There are three examples different examples that demonstrate how the `monaco-languageclient` can be used:
 
-* The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application.
+- The Node.js example uses Express and WebSockets to enable communication between the language server process and the web application.
 
-* The Browser Language Client & Server examples does the same, but the server runs in a web worker and communication is via direct LSP message exchange.
+- The Browser Language Client & Server examples does the same, but the server runs in a web worker and communication is via direct LSP message exchange.
 
-* The browser example shows how a language service written in JavaScript can be used in a Monaco
+- The browser example shows how a language service written in JavaScript can be used in a Monaco
 Editor contained in a simple HTML page.
 
 All example packages now are now located under [./packages/examples](./packages/examples):
