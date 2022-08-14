@@ -6,7 +6,6 @@
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions, CloseAction, ErrorAction
 } from 'vscode-languageclient/lib/common/client';
-import type * as vscode from 'vscode';
 import { ConfigurationFeature, SyncConfigurationFeature } from 'vscode-languageclient/lib/common/configuration';
 import { DidChangeTextDocumentFeature, DidCloseTextDocumentFeature, DidOpenTextDocumentFeature, DidSaveTextDocumentFeature, WillSaveFeature, WillSaveWaitUntilFeature } from 'vscode-languageclient/lib/common/textSynchronization';
 import { CompletionItemFeature } from 'vscode-languageclient/lib/common/completion';
@@ -42,8 +41,6 @@ export interface IConnectionProvider {
     get(encoding: string): Promise<MessageTransports>;
 }
 export class MonacoLanguageClient extends BaseLanguageClient {
-    static bypassConversion = (result: any, token?: vscode.CancellationToken) => token != null ? Promise.resolve(result || undefined) : (result || undefined);
-
     protected readonly connectionProvider: IConnectionProvider;
 
     constructor ({ id, name, clientOptions, connectionProvider }: MonacoLanguageClient.Options) {
