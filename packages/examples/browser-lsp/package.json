@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "monaco-editor": "0.34.0",
-    "monaco-editor-workers": "0.34.0-rc.1",
+    "monaco-editor-workers": "0.34.0",
     "monaco-languageclient": "../../client",
     "vscode-languageserver": "8.0.1",
     "vscode-languageserver-protocol": "3.17.1"

@@ -4,7 +4,7 @@
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "monaco-editor": "0.34.0",
-    "monaco-editor-workers": "0.34.0-rc.1",
+    "monaco-editor-workers": "0.34.0",
     "monaco-languageclient": "../../client",
     "normalize-url": "^7.0.3"
   },
