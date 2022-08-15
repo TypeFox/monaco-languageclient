@@ -23,7 +23,9 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 - [**History**](CHANGELOG.md)
 - [**License**](#license)
 
-## Introduction
+## Introduction & Project History
+
+### May 2022
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
@@ -31,7 +33,11 @@ As before the library code is just compiled with the TypeScript compiler and the
 
 The default and protected branch is now `main`.
 
-In June 2022 we added the independent `vscode-ws-jsonrpc` as sub-package into this repository.
+### June 2022
+
+[monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
+
+We added the independent **vscode-ws-jsonrpc** as sub-package into this repository.
 
 ## Getting started
 
