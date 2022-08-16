@@ -562,12 +562,13 @@ export class MonacoToProtocolConverter {
 export class ProtocolToMonacoConverter {
     public constructor (protected readonly _monaco: typeof monaco) { }
 
-    asResourceEdits (resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.WorkspaceTextEdit[] {
+    asResourceEdits (resource: monaco.Uri, edits: (TextEdit | AnnotatedTextEdit)[], asMetadata: (annotation: ls.ChangeAnnotationIdentifier | undefined) => monaco.languages.WorkspaceEditMetadata | undefined, modelVersionId?: number): monaco.languages.IWorkspaceTextEdit[] {
         return edits.map(edit => ({
             resource,
-            edit: this.asTextEdit(edit),
+            textEdit: this.asTextEdit(edit),
             modelVersionId,
-            metadata: AnnotatedTextEdit.is(edit) ? asMetadata(edit.annotationId) : undefined
+            metadata: AnnotatedTextEdit.is(edit) ? asMetadata(edit.annotationId) : undefined,
+            versionId: undefined
         }));
     }
 
@@ -600,24 +601,24 @@ export class ProtocolToMonacoConverter {
                 return sharedMetadata.get(annotation);
             }
         };
-        const edits: (monaco.languages.WorkspaceTextEdit | monaco.languages.WorkspaceFileEdit)[] = [];
+        const edits: (monaco.languages.IWorkspaceTextEdit | monaco.languages.IWorkspaceFileEdit)[] = [];
         if (item.documentChanges) {
             item.documentChanges.forEach(change => {
                 if (ls.CreateFile.is(change)) {
-                    edits.push(<monaco.languages.WorkspaceFileEdit>{
+                    edits.push(<monaco.languages.IWorkspaceFileEdit>{
                         newUri: this._monaco.Uri.parse(change.uri),
                         options: change.options,
                         metadata: asMetadata(change.annotationId)
                     });
                 } else if (ls.RenameFile.is(change)) {
-                    edits.push(<monaco.languages.WorkspaceFileEdit>{
+                    edits.push(<monaco.languages.IWorkspaceFileEdit>{
                         oldUri: this._monaco.Uri.parse(change.oldUri),
                         newUri: this._monaco.Uri.parse(change.newUri),
                         options: change.options,
                         metadata: asMetadata(change.annotationId)
                     });
                 } else if (ls.DeleteFile.is(change)) {
-                    edits.push(<monaco.languages.WorkspaceFileEdit>{
+                    edits.push(<monaco.languages.IWorkspaceFileEdit>{
                         oldUri: this._monaco.Uri.parse(change.uri),
                         options: change.options,
                         metadata: asMetadata(change.annotationId)

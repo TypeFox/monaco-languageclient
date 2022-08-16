@@ -3,8 +3,8 @@
   "private": true,
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
-    "monaco-editor": "0.33.0",
-    "monaco-editor-workers": "0.33.0",
+    "monaco-editor": "0.34.0",
+    "monaco-editor-workers": "0.34.0",
     "monaco-languageclient": "../../client",
     "normalize-url": "^7.0.3"
   },

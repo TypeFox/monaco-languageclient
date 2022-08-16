@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.0.0] - 2022-08-15
+
+- Update to monaco 0.34/vscode 1.69 [#409](https://github.com/TypeFox/monaco-languageclient/pull/409)
+
 ## 2.x.x BREAKING CHANGES
 
 v2+ of this library is dependant on [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) which removed all vscode-api/-compatibility related code. The change has mostly no effect on end users code, but there are two things that need to be taken into account:
