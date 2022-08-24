@@ -3,9 +3,9 @@
   "private": true,
   "dependencies": {
     "monaco-editor": "0.34.0",
-    "monaco-editor-workers": "0.34.0",
+    "monaco-editor-workers": "0.34.1",
     "monaco-languageclient": "../../client",
-    "vscode-json-languageservice": "^5.0.0"
+    "vscode-json-languageservice": "5.1.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",

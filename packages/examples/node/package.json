@@ -4,12 +4,12 @@
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "@types/ws": "^8.5.3",
-    "express": "^4.17.3",
+    "express": "^4.18.1",
     "normalize-url": "^7.0.3",
-    "request-light": "^0.5.7",
-    "vscode-json-languageservice": "^5.0.0",
-    "vscode-languageserver": "8.0.1",
-    "vscode-uri": "^3.0.3",
+    "request-light": "^0.5.8",
+    "vscode-json-languageservice": "5.1.0",
+    "vscode-languageserver": "8.0.2",
+    "vscode-uri": "3.0.3",
     "ws": "^8.8.0"
   },
   "devDependencies": {

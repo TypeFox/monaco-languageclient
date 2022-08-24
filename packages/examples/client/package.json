@@ -4,19 +4,19 @@
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "monaco-editor": "0.34.0",
-    "monaco-editor-workers": "0.34.0",
+    "monaco-editor-workers": "0.34.1",
     "monaco-languageclient": "../../client",
-    "normalize-url": "^7.0.3"
+    "normalize-url": "7.0.3"
   },
   "devDependencies": {
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",
-    "http-server": "^14.1.0",
+    "http-server": "^14.1.1",
     "path-browserify": "^1.0.1",
-    "source-map-loader": "^3.0.1",
+    "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
-    "ts-loader": "^9.3.0",
-    "webpack-cli": "^4.9.2"
+    "ts-loader": "^9.3.1",
+    "webpack-cli": "^4.10.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
