@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -16,32 +16,17 @@
   "bugs": {
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
+  "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
-    },
-    "./monaco-converter": {
-      "types": "./lib/monaco-converter.d.ts",
-      "default": "./lib/monaco-converter.js"
-    },
-    "./cjs/monaco-converter": {
-      "types": "./dist/cjs/monaco-converter.d.ts",
-      "default": "./dist/cjs/monaco-converter.js"
     }
   },
   "typesVersions": {
-    "*": {
-      "monaco-converter": [
-        "lib/monaco-converter"
-      ],
-      "monaco-converter/cjs": [
-        "dist/cjs/monaco-converter"
-      ]
-    }
+    "*": {}
   },
   "files": [
     "dist/cjs",
@@ -52,25 +37,19 @@
     "License.txt"
   ],
   "dependencies": {
-    "glob-to-regexp": "0.4.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.69.9",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.69.10",
     "vscode-jsonrpc": "8.0.2",
-    "vscode-languageclient": "8.0.2",
-    "vscode-languageserver-textdocument": "1.0.5",
-    "vscode-uri": "3.0.3"
+    "vscode-languageclient": "8.0.2"
   },
   "devDependencies": {
-    "@types/glob-to-regexp": "0.4.1",
-    "@types/node": "16.11.7",
+    "@types/node": "16.11.55",
     "@types/vscode": "~1.69.1"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
-    "clean:cjs": "npx shx rm -fr dist",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build:cjs": "npm run clean:cjs && tsc -p ./tsconfig.cjs.json",
-    "build": "npm run clean && npm run compile && npm run build:cjs"
+    "build": "npm run clean && npm run compile"
   }
 }
