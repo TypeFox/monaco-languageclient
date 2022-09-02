@@ -1,6 +1,7 @@
 {
   "name": "browser-lsp",
   "private": true,
+  "type": "module",
   "dependencies": {
     "monaco-editor": "0.34.0",
     "monaco-editor-workers": "0.34.1",
