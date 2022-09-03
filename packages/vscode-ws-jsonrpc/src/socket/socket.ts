@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from '../disposable';
-import { IConnection } from '../server/connection';
+import { Disposable } from '../disposable.js';
+import { IConnection } from '../server/connection.js';
 
 export interface IWebSocket extends Disposable {
     send(content: string): void;

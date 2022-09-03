@@ -4,8 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 export * from 'vscode-jsonrpc';
-export * from 'vscode-jsonrpc/lib/common/messages';
-export * from './disposable';
-export * from './socket';
-export * from './logger';
-export * from './connection';
+export * from 'vscode-jsonrpc/lib/common/messages.js';
+export * from './disposable.js';
+export * from './socket/socket.js';
+export * from './socket/reader.js';
+export * from './socket/writer.js';
+export * from './socket/connection.js';
+export * from './logger.js';
+export * from './connection.js';

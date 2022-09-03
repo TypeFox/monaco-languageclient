@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './socket';
-export * from './reader';
-export * from './writer';
-export * from './connection';
+export * from './socket.js';
+export * from './reader.js';
+export * from './writer.js';
+export * from './connection.js';

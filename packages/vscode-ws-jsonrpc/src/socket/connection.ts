@@ -4,9 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MessageConnection, createMessageConnection, Logger } from 'vscode-jsonrpc';
-import { IWebSocket } from './socket';
-import { WebSocketMessageReader } from './reader';
-import { WebSocketMessageWriter } from './writer';
+import { IWebSocket } from './socket.js';
+import { WebSocketMessageReader } from './reader.js';
+import { WebSocketMessageWriter } from './writer.js';
 
 export function createWebSocketConnection (socket: IWebSocket, logger: Logger): MessageConnection {
     const messageReader = new WebSocketMessageReader(socket);

@@ -29,7 +29,6 @@
     "*": {}
   },
   "files": [
-    "dist/cjs",
     "lib",
     "src",
     "README.md",
@@ -46,7 +45,7 @@
     "@types/vscode": "~1.69.1"
   },
   "scripts": {
-    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
+    "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
