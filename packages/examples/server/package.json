@@ -1,6 +1,7 @@
 {
   "name": "node-example",
   "private": true,
+  "type": "module",
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "@types/ws": "^8.5.3",
@@ -23,8 +24,7 @@
     "compile": "tsc -b .",
     "build": "npm run clean && npm run compile",
     "watch": "tsc -w",
-    "start": "node -r ts-node/register src/server.ts",
-    "start:alt": "node dist/server.js",
-    "start:ext": "node -r ts-node/register src/server.ts --external"
+    "start": "node --loader ts-node/esm src/server.ts",
+    "start:ext": "node --loader ts-node/esm src/server.ts --external"
   }
 }

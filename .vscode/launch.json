@@ -9,7 +9,7 @@
           "type": "node",
           "request": "launch",
           "args": ["${workspaceRoot}/packages/examples/node/src/server.ts"],
-          "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+          "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples/node",
           "internalConsoleOptions": "openOnSessionStart"
         },
@@ -18,12 +18,12 @@
           "type": "node",
           "request": "launch",
           "args": ["${workspaceRoot}/packages/examples/node/dist/server.js", "--external"],
-          "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+          "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples/node",
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
-          "type": "pwa-chrome",
+          "type": "chrome",
           "request": "launch",
           "name": "Launch Chrome against localhost",
           "url": "http://localhost:8080",

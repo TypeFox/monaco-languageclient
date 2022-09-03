@@ -2,13 +2,18 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import * as ws from 'ws';
+import { WebSocketServer } from 'ws';
 import * as http from 'http';
-import * as url from 'url';
+import { fileURLToPath, parse } from 'url';
 import * as net from 'net';
 import express from 'express';
 import * as rpc from 'vscode-ws-jsonrpc/cjs';
-import { launch } from './json-server-launcher';
+import { launch } from './json-server-launcher.js';
+
+// solve: __dirname is not defined in ES module scope
+import path from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 process.on('uncaughtException', function (err: any) {
     console.error('Uncaught Exception: ', err.toString());
@@ -24,13 +29,13 @@ app.use(express.static(__dirname));
 // start the server
 const server = app.listen(3000);
 // create the web socket
-const wss = new ws.Server({
+const wss = new WebSocketServer({
     noServer: true,
     perMessageDeflate: false
 });
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
     // eslint-disable-next-line n/no-deprecated-api
-    const pathname = request.url ? url.parse(request.url).pathname : undefined;
+    const pathname = request.url ? parse(request.url).pathname : undefined;
     if (pathname === '/sampleServer') {
         wss.handleUpgrade(request, socket, head, webSocket => {
             const socket: rpc.IWebSocket = {

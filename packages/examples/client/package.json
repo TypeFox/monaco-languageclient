@@ -1,6 +1,7 @@
 {
   "name": "example-client",
   "private": true,
+  "type": "module",
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "monaco-editor": "0.34.0",

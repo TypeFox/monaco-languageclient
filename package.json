@@ -33,27 +33,25 @@
     "lint": "npm run lint --workspaces",
     "dev": "vite",
     "dev:debug": "vite --debug --force",
-    "start-example-node": "npm run start --workspace packages/examples/node",
-    "start-example-node:ext": "npm run start:ext --workspace packages/examples/node",
+    "start:example:server": "npm run start --workspace packages/examples/server",
+    "start:example:server:ext": "npm run start:ext --workspace packages/examples/server",
     "build": "npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
     "build:vscode-ws-jsonrpc": "npm run build --workspace packages/vscode-ws-jsonrpc",
-    "build:example-node": "npm run build --workspace packages/examples/node && npm run webpack:build --workspace packages/examples/client",
-    "build:example-browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
-    "build:example-browser": "npm run build --workspace packages/examples/browser",
-    "build:example-browser-old": "npm run build --workspace packages/examples/browser-old",
-    "webpack:example-client-build": "npm run webpack:build --workspace packages/examples/client",
-    "webpack:example-client-start": "npm run webpack:start --workspace packages/examples/client",
-    "dev:link": "npm link monaco-languageclient --workspace packages/examples/node && npm link monaco-languageclient --workspace packages/examples/client && npm link monaco-languageclient --workspace packages/examples/browser",
-    "dev:unlink": "npm unlink monaco-languageclient --workspace packages/examples/node && npm unlink monaco-languageclient --workspace packages/examples/client && npm unlink monaco-languageclient --workspace packages/examples/browser"
+    "build:example:server": "npm run build --workspace packages/examples/server && npm run webpack:build --workspace packages/examples/client",
+    "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
+    "build:example:browser": "npm run build --workspace packages/examples/browser",
+    "webpack:example:client:build": "npm run webpack:build --workspace packages/examples/client",
+    "webpack:example:client:start": "npm run webpack:start --workspace packages/examples/client",
+    "dev:link": "npm link monaco-languageclient --workspace packages/examples/server && npm link monaco-languageclient --workspace packages/examples/client && npm link monaco-languageclient --workspace packages/examples/browser",
+    "dev:unlink": "npm unlink monaco-languageclient --workspace packages/examples/server && npm unlink monaco-languageclient --workspace packages/examples/client && npm unlink monaco-languageclient --workspace packages/examples/browser"
   },
   "workspaces": [
     "packages/client",
     "packages/vscode-ws-jsonrpc",
-    "packages/examples/node",
+    "packages/examples/server",
     "packages/examples/client",
     "packages/examples/browser-lsp",
-    "packages/examples/browser",
-    "packages/examples/browser-old"
+    "packages/examples/browser"
   ]
 }

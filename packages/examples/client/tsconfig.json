@@ -4,6 +4,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist",
+    "module": "Node16",
+    "moduleResolution": "Node16"
   },
   "references": [{
     "path": "../../client"
