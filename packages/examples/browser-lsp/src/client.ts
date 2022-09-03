@@ -77,7 +77,7 @@ function createLanguageClient (transports: MessageTransports): MonacoLanguageCli
 // install Monaco language client services
 MonacoServices.install();
 
-const worker = new Worker(new URL('./src/serverWorker.ts', window.location.href).href, { type: 'module'});
+const worker = new Worker(new URL('./src/serverWorker.ts', window.location.href).href, { type: 'module' });
 const reader = new BrowserMessageReader(worker);
 const writer = new BrowserMessageWriter(worker);
 const languageClient = createLanguageClient({ reader, writer });

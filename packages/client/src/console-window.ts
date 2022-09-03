@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 
 export class ConsoleWindow implements Window {
     protected readonly channels = new Map<string, vscode.OutputChannel>();
-    showMessage<T extends vscode.MessageOptions | string | vscode.MessageItem> (severity: Severity, message: string, ...actions: T[]): Thenable<T | undefined> {
+    showMessage<T extends vscode.MessageOptions | string | vscode.MessageItem> (severity: Severity, message: string, ..._actions: T[]): Thenable<T | undefined> {
         if (severity === Severity.Error) {
             console.error(message);
         }
@@ -42,7 +42,7 @@ export class ConsoleWindow implements Window {
             dispose (): void {
                 // no-op
             },
-            replace: function (value: string): void {
+            replace: function (_value: string): void {
                 // no-op
             },
             clear: function (): void {

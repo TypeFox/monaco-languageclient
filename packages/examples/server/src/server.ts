@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import { WebSocketServer } from 'ws';
 import * as http from 'http';
-import { fileURLToPath, parse } from 'url';
+import { fileURLToPath, URL } from 'url';
 import * as net from 'net';
 import express from 'express';
 import * as rpc from 'vscode-ws-jsonrpc';
@@ -34,8 +34,8 @@ const wss = new WebSocketServer({
     perMessageDeflate: false
 });
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-    // eslint-disable-next-line n/no-deprecated-api
-    const pathname = request.url ? parse(request.url).pathname : undefined;
+    const baseURL = `http://${request.headers.host}/`;
+    const pathname = request.url ? new URL(request.url, baseURL).pathname : undefined;
     if (pathname === '/sampleServer') {
         wss.handleUpgrade(request, socket, head, webSocket => {
             const socket: rpc.IWebSocket = {
