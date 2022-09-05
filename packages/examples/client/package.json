@@ -11,8 +11,6 @@
   },
   "devDependencies": {
     "css-loader": "^6.7.1",
-    "file-loader": "^6.2.0",
-    "http-server": "^14.1.1",
     "path-browserify": "^1.0.1",
     "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
@@ -25,10 +23,9 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
-    "build": "npm run clean && npm run compile && npm run copy:monacoworkers",
+    "build": "npm run clean && npm run compile && npm run webpack:build && npm run copy:monacoworkers",
     "webpack:clean": "npx shx rm -fr webpack/dist",
     "webpack:copy:monacoworkers": "shx mkdir -p webpack/dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./webpack/dist",
-    "webpack:build": "npm run webpack:clean && npx webpack && npm run webpack:copy:monacoworkers",
-    "webpack:start": "http-server ./webpack"
+    "webpack:build": "npm run webpack:clean && npx webpack && npm run webpack:copy:monacoworkers"
   }
 }

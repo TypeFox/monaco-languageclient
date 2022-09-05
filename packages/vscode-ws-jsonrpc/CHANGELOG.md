@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [1.1.0] - 2022-09-XX
+
+- Transform to packages of type module. All cjs exports have been removed.
+
 ## 1.x.x BREAKING CHANGES
 
 The default export now provides esm code. If you require CommonJS modules you can use the additional exports.

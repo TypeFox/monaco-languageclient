@@ -1,40 +1,51 @@
-const path = require('path');
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
-module.exports = {
-    entry: path.resolve(__dirname, 'src', 'client.ts'),
+// solve: __dirname is not defined in ES module scope
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectRoot = resolve(__dirname, '../../..');
+
+const config = {
+    entry: resolve(__dirname, 'src', 'client.ts'),
     module: {
         rules: [{
             test: /\.css$/,
             use: ['style-loader', 'css-loader']
         },
         {
-            test: /\.ttf$/,
-            use: ['file-loader']
-        },
-        {
             test: /\.ts?$/,
             use: ['ts-loader']
         },
-        ]
+        {
+            test: /\.js$/,
+            enforce: 'pre',
+            use: ['source-map-loader'],
+            // These modules seems to have broken sourcemaps, exclude them to prevent an error flood in the logs
+            exclude: [/vscode-jsonrpc/, /vscode-languageclient/, /vscode-languageserver-protocol/]
+        }]
     },
     experiments: {
-        outputModule: true,
+        outputModule: true
     },
     output: {
         filename: 'main.js',
-        path: path.resolve(__dirname, 'webpack', 'dist'),
+        path: resolve(__dirname, 'webpack', 'dist'),
         module: true
     },
     target: 'web',
     resolve: {
         extensions: ['.ts', '.js', '.json', '.ttf'],
         fallback: {
-            fs: 'empty',
-            child_process: 'empty',
-            net: 'empty',
-            crypto: 'empty',
-            path: require.resolve("path-browserify")
+            path: resolve(projectRoot, 'node_modules', 'path-browserify')
         }
     },
-    mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development'
+    mode: 'development',
+    devtool: 'source-map'
 };
+
+export default config;

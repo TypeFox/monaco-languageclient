@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.1.0] - 2022-09-XX
+
+- Transform to packages of type module. All cjs exports have been removed.
+
 ## [3.0.1] - 2022-08-24
 
 - Update `monaco-vscode-api` to version `1.69.9`

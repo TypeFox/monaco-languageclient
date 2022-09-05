@@ -1,18 +1,18 @@
 {
   "private": true,
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.34.0",
-    "@typescript-eslint/parser": "^5.34.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "editorconfig": "^0.15.3",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "shx": "^0.3.4",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.2",
     "vite": "3.0.9",
     "path-browserify": "1.0.1"
   },
@@ -42,8 +42,7 @@
     "build:example:server": "npm run build --workspace packages/examples/server && npm run webpack:build --workspace packages/examples/client",
     "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
     "build:example:browser": "npm run build --workspace packages/examples/browser",
-    "webpack:example:client:build": "npm run webpack:build --workspace packages/examples/client",
-    "webpack:example:client:start": "npm run webpack:start --workspace packages/examples/client",
+    "build:example:client": "npm run build --workspace packages/examples/client",
     "dev:link": "npm link monaco-languageclient --workspace packages/examples/server && npm link monaco-languageclient --workspace packages/examples/client && npm link monaco-languageclient --workspace packages/examples/browser",
     "dev:unlink": "npm unlink monaco-languageclient --workspace packages/examples/server && npm unlink monaco-languageclient --workspace packages/examples/client && npm unlink monaco-languageclient --workspace packages/examples/browser"
   },

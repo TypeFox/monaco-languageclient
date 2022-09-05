@@ -10,20 +10,34 @@ Repository for [NPM module](https://www.npmjs.com/package/monaco-languageclient)
 
 Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsofts-monaco-editor) for a detail explanation how to connect the Monaco editor to your language server.
 
-- [**Introduction**](#introduction)
-  - [Project Modernization](#project-modernization)
-- [**Getting started**](#getting-started)
-  - [Development environments](#development-environments)
-  - [Scripts Overview](#scripts-overview)
-- [**Examples**](#examples)
-  - [ Node.js Language Server + web client example](#nodejs-language-server-plus-web-client-example)
-  - [Browser-LSP](#browser-language-client-and-server)
-  - [Browser](#browser-example)
-  - [VSCode integration](#vscode-integration)
-- [**History**](CHANGELOG.md)
-- [**License**](#license)
+- [Monaco Language Client & VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
+  - [Introduction & Project History](#introduction--project-history)
+    - [September 2022](#september-2022)
+    - [June 2022](#june-2022)
+    - [May 2022](#may-2022)
+  - [Getting started](#getting-started)
+    - [Development environments](#development-environments)
+    - [Scripts Overview](#scripts-overview)
+  - [Examples](#examples)
+    - [Node.js Language Server plus web client example](#nodejs-language-server-plus-web-client-example)
+    - [Browser Language Client and Server](#browser-language-client-and-server)
+    - [Browser example](#browser-example)
+    - [Optional webpack build for client example](#optional-webpack-build-for-client-example)
+    - [VSCode integration](#vscode-integration)
+  - [License](#license)
 
 ## Introduction & Project History
+
+### September 2022
+
+All code has been transformedto esm and npm packages are now of type module. cjs bundles are no longer available.
+The `monaco-converter` has been removed.
+
+### June 2022
+
+[monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
+
+We added the independent **vscode-ws-jsonrpc** as sub-package into this repository.
 
 ### May 2022
 
@@ -32,12 +46,6 @@ From release 1.0.0 onward the project switched to npm workspaces. We no longer r
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [second build option]( #optional-webpack-build-for-client-example) for the web client example using webpack.
 
 The default and protected branch is now `main`.
-
-### June 2022
-
-[monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
-
-We added the independent **vscode-ws-jsonrpc** as sub-package into this repository.
 
 ## Getting started
 
@@ -86,7 +94,9 @@ All example packages now are now located under [./packages/examples](./packages/
 - Node.js Language Server example: [./packages/examples/node](./packages/examples/node): - Look at the [example express app](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/node/src/server.ts) to learn how to open a web socket with an express app and launch a language server within the current process or as an external process.
 - Web Client for Node.js Language Server: [./packages/examples/client](./packages/examples/client): Look at the [example client](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/client/src/client.ts) to learn how to start Monaco language client.
 - Browser Language Client and Server: [./packages/examples/browser-lsp](./packages/examples/browser-lsp): Look at the [client](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-lsp/src/client.ts) and the [web worker](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-lsp/src/serverWorker.ts) implementing the language server. They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the first example.
-- Browser example: [./packages/examples/browser](./packages/examples/browser): Look at the [browser example](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page ([here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser-old/src/client.ts) you find the old now deprecated implementation using the [monaco converters](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/src/monaco-converters.ts).)
+- Browser example: [./packages/examples/browser](./packages/examples/browser): Look at the [browser example](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/browser/src/client.ts) to learn how to use a language service written in JavaScript in a simple HTML page.
+
+**TODO** Simplify example instructions
 
 ### Node.js Language Server plus web client example
 
@@ -133,8 +143,6 @@ npm run dev
 
 After launching vite development an go to the [example](http://localhost:8080/packages/examples/browser/index.html)
 
-You can also [go to](http://localhost:8080/packages/examples/browser-old/index.html) for the old implementation using the deprecated monaco converters.
-
 ### Optional webpack build for client example
 
 The web client example can alternatively build with webpack. We recently switched to vite, but webpack is still the most popular bundler out there.
@@ -143,9 +151,9 @@ The web client example can alternatively build with webpack. We recently switche
 # optionally: we assume everything is build as stated above
 npm run build
 # start the express server with the language server running in the same process.
-npm run start-example-node
+npm run start:example:server
 # alternative: start the express server with language server running in the external process.
-npm run start-example-node:ext
+npm run start:example:server:ext
 # build the webpack code
 npm run webpack:example-client-build
 # start http-server
