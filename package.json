@@ -1,8 +1,8 @@
 {
   "private": true,
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "editorconfig": "^0.15.3",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
@@ -13,7 +13,7 @@
     "shx": "^0.3.4",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2",
-    "vite": "3.0.9",
+    "vite": "3.1.0",
     "path-browserify": "1.0.1"
   },
   "resolutions": {

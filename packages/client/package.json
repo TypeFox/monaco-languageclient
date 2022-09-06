@@ -26,7 +26,11 @@
     }
   },
   "typesVersions": {
-    "*": {}
+    "*": {
+      ".": [
+        "lib/index"
+      ]
+    }
   },
   "files": [
     "lib",
