@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [3.1.0] - 2022-09-XX
+## [3.0.0] - 2022-09-XX
 
 - Transform to package of type module. All cjs exports have been removed.
 - Revised all READMEs

@@ -9,6 +9,10 @@
     "monaco-languageclient": "../../client",
     "normalize-url": "7.0.3"
   },
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
+  },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",

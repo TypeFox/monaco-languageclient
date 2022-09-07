@@ -15,14 +15,17 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^16.11.7",
     "ts-node": "^10.8.1"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc -b .",
-    "build:msg": "echo Building client-webpack example:",
+    "build:msg": "echo Building server example:",
     "build": "npm run build:msg && npm run clean && npm run compile",
     "watch": "tsc -w",
     "start": "node --loader ts-node/esm src/server.ts",

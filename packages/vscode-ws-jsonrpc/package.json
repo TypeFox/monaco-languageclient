@@ -1,6 +1,6 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "1.1.0",
+  "version": "2.0.0-next.0",
   "description": "VSCode JSON RPC over WebSocket",
   "author": {
     "name": "TypeFox GmbH ",
@@ -43,6 +43,14 @@
         "lib/socket"
       ]
     }
+  },
+  "engines": {
+    "node": ">=16.11.0",
+    "npm": ">=8.0.0"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
   },
   "files": [
     "lib",
