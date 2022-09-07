@@ -1,0 +1,28 @@
+{
+  "name": "example-client-vite",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
+    "monaco-editor": "0.34.0",
+    "monaco-editor-workers": "0.34.2",
+    "monaco-languageclient": "../../client",
+    "normalize-url": "7.0.3"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
+  },
+  "scripts": {
+    "clean": "npx shx rm -fr dist src tsconfig.tsbuildinfo",
+    "lint": "echo Nothing to do in client-vite",
+    "vite:prepare": "npx shx mkdir -p ./src && npx shx cp -f ../../examples/client/src/client.ts ./src/client.ts",
+    "copy:monacoworkers": "shx mkdir -p dist/dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist/dist",
+    "build:msg": "echo Building client-vite example:",
+    "build": "npm run build:msg && npm run clean && npm run vite:prepare && npx vite build && npm run copy:monacoworkers",
+    "start": "http-server --port 8082 ./dist"
+  }
+}

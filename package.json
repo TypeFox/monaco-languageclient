@@ -42,17 +42,20 @@
     "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
     "build:example:browser": "npm run build --workspace packages/examples/browser",
     "build:example:client": "npm run build --workspace packages/examples/client",
-    "build:example:client-webpack": "npm run build --workspace packages/examples/client-webpack",
+    "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
+    "build:verify:vite": "npm run build --workspace packages/verify/vite",
     "start:example:server": "npm run start --workspace packages/examples/server",
-    "start:example:server:ext": "npm run start:ext --workspace packages/examples/server"
+    "start:example:client:webpack": "npm run start --workspace packages/examples/client-webpack",
+    "start:example:client:vite": "npm run start --workspace packages/examples/vite"
   },
   "workspaces": [
     "packages/client",
     "packages/vscode-ws-jsonrpc",
     "packages/examples/server",
     "packages/examples/client",
-    "packages/examples/client-webpack",
     "packages/examples/browser-lsp",
-    "packages/examples/browser"
+    "packages/examples/browser",
+    "packages/verify/webpack",
+    "packages/verify/vite"
   ]
 }

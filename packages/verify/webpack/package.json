@@ -15,18 +15,20 @@
     "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.1",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.10.0",
+    "http-server": "^14.1.1"
   },
   "volta": {
     "node": "16.17.0",
     "npm": "8.15.0"
   },
   "scripts": {
-    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
+    "clean": "npx shx rm -fr dist src tsconfig.tsbuildinfo",
     "lint": "echo Nothing to do in client-webpack",
-    "webpack:prepare": "npx shx mkdir -p ./src && npx shx cp -f ../client/src/client.ts ./src/client.ts",
+    "webpack:prepare": "npx shx mkdir -p ./src && npx shx cp -f ../../examples/client/src/client.ts ./src/client.ts",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
     "build:msg": "echo Building client-webpack example:",
-    "build": "npm run build:msg && npm run clean && npm run webpack:prepare && npx webpack && npm run copy:monacoworkers"
+    "build": "npm run build:msg && npm run clean && npm run webpack:prepare && npx webpack && npm run copy:monacoworkers",
+    "start": "http-server --port 8081 ./"
   }
 }

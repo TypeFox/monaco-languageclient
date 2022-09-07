@@ -20,6 +20,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [Dev environment: Gitpod](#dev-environment-gitpod)
     - [Scripts Overview](#scripts-overview)
   - [Examples](#examples)
+  - [Verification](#verification)
   - [Example usage](#example-usage)
     - [VSCode integration](#vscode-integration)
   - [License](#license)
@@ -93,7 +94,11 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **browser** example located in [./packages/examples/browser](./packages/examples/browser) demonstrates how a [language service  written in JavaScript](./packages/examples/browser/src/client.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
-- The **client-webpack** example located in example located in [./packages/examples/client-webpack](./packages/examples/client-webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/examples/client-webpack/webpack.config.js).
+## Verification
+
+- The **webpack** verification example located in [./packages/verify/webpack](./packages/verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/verify/webpack/webpack.config.js).
+
+- The **vite** verification example located in [./packages/verify/vite](./packages/verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required
 
 ## Example usage
 
@@ -114,7 +119,13 @@ npm run start:example:server
 npm run start:example:server:ext
 ```
 
-For everything else Vite is sufficient.
+For everything else Vite is sufficient. If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
+```shell
+# Serve the webpack verification example on http://localhost:8081
+npm run start:verify:webpack
+# Serve the vite verification example on http://localhost:8082
+npm run start:verify:vite
+```
 
 ### VSCode integration
 

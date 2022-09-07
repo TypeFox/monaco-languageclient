@@ -9,6 +9,9 @@
   },
   "references": [{
     "path": "../../client"
+  },
+  {
+    "path": "../../vscode-ws-jsonrpc"
   }],
   "include": [
     "src/**/*.ts",
