@@ -1,5 +1,5 @@
 {
-  "name": "node-example",
+  "name": "server-example",
   "private": true,
   "type": "module",
   "dependencies": {
@@ -22,7 +22,8 @@
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc -b .",
-    "build": "npm run clean && npm run compile",
+    "build:msg": "echo Building client-webpack example:",
+    "build": "npm run build:msg && npm run clean && npm run compile",
     "watch": "tsc -w",
     "start": "node --loader ts-node/esm src/server.ts",
     "start:ext": "node --loader ts-node/esm src/server.ts --external"

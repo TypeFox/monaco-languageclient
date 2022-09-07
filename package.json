@@ -3,6 +3,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
+    "@types/node": "^16.11.57",
     "editorconfig": "^0.15.3",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
@@ -20,12 +21,12 @@
     "vscode-languageserver-types": "3.17.2"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=7.10.0"
+    "node": ">=16.11.0",
+    "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "16.16.0",
-    "npm": "8.17.0"
+    "node": "16.17.0",
+    "npm": "8.15.0"
   },
   "scripts": {
     "clean": "npm run clean --workspaces && npm run webpack:clean --workspace packages/examples/client",
@@ -33,8 +34,6 @@
     "lint": "npm run lint --workspaces",
     "dev": "vite",
     "dev:debug": "vite --debug --force",
-    "start:example:server": "npm run start --workspace packages/examples/server",
-    "start:example:server:ext": "npm run start:ext --workspace packages/examples/server",
     "report:versions": "echo Reporting versions: && echo tsc: && tsc --version && echo npm: && npm --version && echo node: && node --version",
     "build": "npm run report:versions && npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
@@ -43,14 +42,16 @@
     "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
     "build:example:browser": "npm run build --workspace packages/examples/browser",
     "build:example:client": "npm run build --workspace packages/examples/client",
-    "dev:link": "npm link monaco-languageclient --workspace packages/examples/server && npm link monaco-languageclient --workspace packages/examples/client && npm link monaco-languageclient --workspace packages/examples/browser",
-    "dev:unlink": "npm unlink monaco-languageclient --workspace packages/examples/server && npm unlink monaco-languageclient --workspace packages/examples/client && npm unlink monaco-languageclient --workspace packages/examples/browser"
+    "build:example:client-webpack": "npm run build --workspace packages/examples/client-webpack",
+    "start:example:server": "npm run start --workspace packages/examples/server",
+    "start:example:server:ext": "npm run start:ext --workspace packages/examples/server"
   },
   "workspaces": [
     "packages/client",
     "packages/vscode-ws-jsonrpc",
     "packages/examples/server",
     "packages/examples/client",
+    "packages/examples/client-webpack",
     "packages/examples/browser-lsp",
     "packages/examples/browser"
   ]

@@ -45,7 +45,6 @@
     "vscode-languageclient": "8.0.2"
   },
   "devDependencies": {
-    "@types/node": "16.11.55",
     "@types/vscode": "~1.69.1"
   },
   "scripts": {
@@ -53,6 +52,7 @@
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build": "npm run clean && npm run compile"
+    "build:msg": "echo Building monaco-languageclient:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
   }
 }

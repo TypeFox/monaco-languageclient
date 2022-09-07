@@ -54,14 +54,12 @@
   "dependencies": {
     "vscode-jsonrpc": "^8.0.2"
   },
-  "devDependencies": {
-    "@types/node": "16.11.7"
-  },
   "scripts": {
     "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build": "npm run clean && npm run compile"
+    "build:msg": "echo Building vscode-ws-jsonrpc:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
   }
 }
