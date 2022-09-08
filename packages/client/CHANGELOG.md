@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [4.0.0] - 2022-09-XX
+## [4.0.0] - 2022-09-08
 
 - **BREAKING CHANGE**: Transform to package of type module and switch to TypeScript ECMAScript Module Support in Node.js.
 - **BREAKING CHANGE**: All cjs exports have been removed.

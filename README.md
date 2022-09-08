@@ -22,7 +22,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Examples](#examples)
   - [Verification](#verification)
   - [Example usage](#example-usage)
-    - [VSCode integration](#vscode-integration)
+  - [VSCode integration](#vscode-integration)
   - [License](#license)
 
 ## Latest Important Project Changes
@@ -127,7 +127,7 @@ npm run start:verify:webpack
 npm run start:verify:vite
 ```
 
-### VSCode integration
+## VSCode integration
 
 You can as well run vscode tasks to start and debug the server in different modes and the client.
 
