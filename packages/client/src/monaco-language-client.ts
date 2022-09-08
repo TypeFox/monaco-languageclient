@@ -5,37 +5,37 @@
 
 import {
     BaseLanguageClient, MessageTransports, LanguageClientOptions, CloseAction, ErrorAction
-} from 'vscode-languageclient/lib/common/client';
-import { ConfigurationFeature, SyncConfigurationFeature } from 'vscode-languageclient/lib/common/configuration';
-import { DidChangeTextDocumentFeature, DidCloseTextDocumentFeature, DidOpenTextDocumentFeature, DidSaveTextDocumentFeature, WillSaveFeature, WillSaveWaitUntilFeature } from 'vscode-languageclient/lib/common/textSynchronization';
-import { CompletionItemFeature } from 'vscode-languageclient/lib/common/completion';
-import { HoverFeature } from 'vscode-languageclient/lib/common/hover';
-import { SignatureHelpFeature } from 'vscode-languageclient/lib/common/signatureHelp';
-import { DefinitionFeature } from 'vscode-languageclient/lib/common/definition';
-import { ReferencesFeature } from 'vscode-languageclient/lib/common/reference';
-import { DocumentHighlightFeature } from 'vscode-languageclient/lib/common/documentHighlight';
-import { DocumentSymbolFeature } from 'vscode-languageclient/lib/common/documentSymbol';
-import { CodeActionFeature } from 'vscode-languageclient/lib/common/codeAction';
-import { CodeLensFeature } from 'vscode-languageclient/lib/common/codeLens';
-import { DocumentFormattingFeature, DocumentOnTypeFormattingFeature, DocumentRangeFormattingFeature } from 'vscode-languageclient/lib/common/formatting';
-import { RenameFeature } from 'vscode-languageclient/lib/common/rename';
-import { DocumentLinkFeature } from 'vscode-languageclient/lib/common/documentLink';
-import { ExecuteCommandFeature } from 'vscode-languageclient/lib/common/executeCommand';
-import { TypeDefinitionFeature } from 'vscode-languageclient/lib/common/typeDefinition';
-import { ImplementationFeature } from 'vscode-languageclient/lib/common/implementation';
-import { ColorProviderFeature } from 'vscode-languageclient/lib/common/colorProvider';
-import { WorkspaceFoldersFeature } from 'vscode-languageclient/lib/common/workspaceFolder';
-import { FoldingRangeFeature } from 'vscode-languageclient/lib/common/foldingRange';
-import { DeclarationFeature } from 'vscode-languageclient/lib/common/declaration';
-import { SelectionRangeFeature } from 'vscode-languageclient/lib/common/selectionRange';
-import { SemanticTokensFeature } from 'vscode-languageclient/lib/common/semanticTokens';
-import { LinkedEditingFeature } from 'vscode-languageclient/lib/common/linkedEditingRange';
-import { InlayHintsFeature } from 'vscode-languageclient/lib/common/inlayHint';
-import { DiagnosticFeature } from 'vscode-languageclient/lib/common/diagnostic';
-import { ProgressFeature } from 'vscode-languageclient/lib/common/progress';
+} from 'vscode-languageclient/lib/common/client.js';
+import { ConfigurationFeature, SyncConfigurationFeature } from 'vscode-languageclient/lib/common/configuration.js';
+import { DidChangeTextDocumentFeature, DidCloseTextDocumentFeature, DidOpenTextDocumentFeature, DidSaveTextDocumentFeature, WillSaveFeature, WillSaveWaitUntilFeature } from 'vscode-languageclient/lib/common/textSynchronization.js';
+import { CompletionItemFeature } from 'vscode-languageclient/lib/common/completion.js';
+import { HoverFeature } from 'vscode-languageclient/lib/common/hover.js';
+import { SignatureHelpFeature } from 'vscode-languageclient/lib/common/signatureHelp.js';
+import { DefinitionFeature } from 'vscode-languageclient/lib/common/definition.js';
+import { ReferencesFeature } from 'vscode-languageclient/lib/common/reference.js';
+import { DocumentHighlightFeature } from 'vscode-languageclient/lib/common/documentHighlight.js';
+import { DocumentSymbolFeature } from 'vscode-languageclient/lib/common/documentSymbol.js';
+import { CodeActionFeature } from 'vscode-languageclient/lib/common/codeAction.js';
+import { CodeLensFeature } from 'vscode-languageclient/lib/common/codeLens.js';
+import { DocumentFormattingFeature, DocumentOnTypeFormattingFeature, DocumentRangeFormattingFeature } from 'vscode-languageclient/lib/common/formatting.js';
+import { RenameFeature } from 'vscode-languageclient/lib/common/rename.js';
+import { DocumentLinkFeature } from 'vscode-languageclient/lib/common/documentLink.js';
+import { ExecuteCommandFeature } from 'vscode-languageclient/lib/common/executeCommand.js';
+import { TypeDefinitionFeature } from 'vscode-languageclient/lib/common/typeDefinition.js';
+import { ImplementationFeature } from 'vscode-languageclient/lib/common/implementation.js';
+import { ColorProviderFeature } from 'vscode-languageclient/lib/common/colorProvider.js';
+import { WorkspaceFoldersFeature } from 'vscode-languageclient/lib/common/workspaceFolder.js';
+import { FoldingRangeFeature } from 'vscode-languageclient/lib/common/foldingRange.js';
+import { DeclarationFeature } from 'vscode-languageclient/lib/common/declaration.js';
+import { SelectionRangeFeature } from 'vscode-languageclient/lib/common/selectionRange.js';
+import { SemanticTokensFeature } from 'vscode-languageclient/lib/common/semanticTokens.js';
+import { LinkedEditingFeature } from 'vscode-languageclient/lib/common/linkedEditingRange.js';
+import { InlayHintsFeature } from 'vscode-languageclient/lib/common/inlayHint.js';
+import { DiagnosticFeature } from 'vscode-languageclient/lib/common/diagnostic.js';
+import { ProgressFeature } from 'vscode-languageclient/lib/common/progress.js';
 import { RegistrationParams, UnregistrationParams } from 'vscode-languageclient';
 
-export * from 'vscode-languageclient/lib/common/client';
+export * from 'vscode-languageclient/lib/common/client.js';
 
 export interface IConnectionProvider {
     get(encoding: string): Promise<MessageTransports>;

@@ -3,15 +3,15 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as path from 'path';
-import * as rpc from 'vscode-ws-jsonrpc/cjs';
-import * as server from 'vscode-ws-jsonrpc/cjs/server';
+import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import * as server from 'vscode-ws-jsonrpc/server';
 import * as lsp from 'vscode-languageserver';
-import { start } from './json-server';
+import { start } from './json-server.js';
 import { Message } from 'vscode-languageserver';
 
-export function launch (socket: rpc.IWebSocket) {
-    const reader = new rpc.WebSocketMessageReader(socket);
-    const writer = new rpc.WebSocketMessageWriter(socket);
+export function launch (socket: IWebSocket) {
+    const reader = new WebSocketMessageReader(socket);
+    const writer = new WebSocketMessageWriter(socket);
     const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;
     if (asExternalProccess) {
         // start the language server as an external process

@@ -40,7 +40,7 @@ connection.listen();
 
 ```ts
 import * as rpc from 'vscode-ws-jsonrpc';
-import * as server from 'vscode-ws-jsonrpc/lib/server';
+import * as server from 'vscode-ws-jsonrpc/server';
 
 const socket: rpc.IWebSocket; // open the web socket
 const reader = new rpc.WebSocketMessageReader(socket);

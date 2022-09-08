@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MessageReader, MessageWriter, Disposable, Message } from 'vscode-jsonrpc';
-import { DisposableCollection } from '../disposable';
+import { DisposableCollection } from '../disposable.js';
 
 export interface IConnection extends Disposable {
     readonly reader: MessageReader;

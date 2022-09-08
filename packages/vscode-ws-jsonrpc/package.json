@@ -1,6 +1,6 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "1.0.2",
+  "version": "2.0.0-next.0",
   "description": "VSCode JSON RPC over WebSocket",
   "author": {
     "name": "TypeFox GmbH ",
@@ -16,6 +16,7 @@
   "bugs": {
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
   },
+  "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -31,18 +32,6 @@
     "./socket": {
       "types": "./lib/socket/index.d.ts",
       "default": "./lib/socket/index.js"
-    },
-    "./cjs": {
-      "types": "./dist/cjs/index.d.ts",
-      "default": "./dist/cjs/index.js"
-    },
-    "./cjs/server": {
-      "types": "./dist/cjs/server/index.d.ts",
-      "default": "./dist/cjs/server/index.js"
-    },
-    "./cjs/socket": {
-      "types": "./dist/cjs/socket/index.d.ts",
-      "default": "./dist/cjs/socket/index.js"
     }
   },
   "typesVersions": {
@@ -51,21 +40,19 @@
         "lib/server"
       ],
       "socket": [
-        "lib/server"
-      ],
-      "cjs": [
-        "dist/cjs/index"
-      ],
-      "cjs/server": [
-        "dist/cjs/server/index"
-      ],
-      "cjs/socket": [
-        "dist/cjs/server/index"
+        "lib/socket"
       ]
     }
   },
+  "engines": {
+    "node": ">=16.11.0",
+    "npm": ">=8.0.0"
+  },
+  "volta": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
+  },
   "files": [
-    "dist/cjs",
     "lib",
     "src",
     "README.md",
@@ -75,16 +62,12 @@
   "dependencies": {
     "vscode-jsonrpc": "^8.0.2"
   },
-  "devDependencies": {
-    "@types/node": "16.11.7"
-  },
   "scripts": {
-    "clean": "npx shx rm -fr lib tsconfig.tsbuildinfo",
-    "clean:cjs": "npx shx rm -fr dist",
+    "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
     "watch": "tsc -w",
-    "build:cjs": "npm run clean:cjs && tsc -p ./tsconfig.cjs.json",
-    "build": "npm run clean && npm run compile && npm run build:cjs"
+    "build:msg": "echo Building vscode-ws-jsonrpc:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
   }
 }

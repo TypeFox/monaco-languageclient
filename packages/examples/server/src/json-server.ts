@@ -3,10 +3,10 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as fs from 'fs';
-import { xhr, getErrorStatusDescription } from 'request-light';
-import { URI } from 'vscode-uri';
+import requestLight from 'request-light';
+import URI from 'vscode-uri';
 import { MessageReader, MessageWriter } from 'vscode-jsonrpc';
-import { _Connection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver/lib/node/main';
+import { _Connection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver/lib/node/main.js';
 import {
     Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
@@ -23,7 +23,7 @@ export function start (reader: MessageReader, writer: MessageWriter): JsonServer
 }
 
 export class JsonServer {
-    protected workspaceRoot: URI | undefined;
+    protected workspaceRoot: URI.URI | undefined;
 
     protected readonly documents = new TextDocuments(TextDocumentImpl.TextDocument);
 
@@ -47,9 +47,9 @@ export class JsonServer {
 
         this.connection.onInitialize(params => {
             if (params.rootPath) {
-                this.workspaceRoot = URI.file(params.rootPath);
+                this.workspaceRoot = URI.URI.file(params.rootPath);
             } else if (params.rootUri) {
-                this.workspaceRoot = URI.parse(params.rootUri);
+                this.workspaceRoot = URI.URI.parse(params.rootUri);
             }
             this.connection.console.log('The server is initialized.');
             return {
@@ -194,7 +194,7 @@ export class JsonServer {
     }
 
     protected async resolveSchema (url: string): Promise<string> {
-        const uri = URI.parse(url);
+        const uri = URI.URI.parse(url);
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
                 fs.readFile(uri.fsPath, { encoding: 'utf8' }, (err, result) => {
@@ -203,11 +203,11 @@ export class JsonServer {
             });
         }
         try {
-            const response = await xhr({ url, followRedirects: 5 });
+            const response = await requestLight.xhr({ url, followRedirects: 5 });
             return response.responseText;
         } catch (error: unknown) {
             const err = error as Record<string, unknown>;
-            return Promise.reject(err.responseText || getErrorStatusDescription(err.status as number) || err.toString());
+            return Promise.reject(err.responseText || requestLight.getErrorStatusDescription(err.status as number) || err.toString());
         }
     }
 

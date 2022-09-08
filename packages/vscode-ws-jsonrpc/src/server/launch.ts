@@ -6,9 +6,11 @@
 import * as net from 'net';
 import * as stream from 'stream';
 import * as cp from 'child_process';
-import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
-import { IConnection, createConnection } from './connection';
-import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter, IWebSocketConnection } from '../socket';
+import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node.js';
+import { IConnection, createConnection } from './connection.js';
+import { IWebSocket, IWebSocketConnection } from '../socket/socket.js';
+import { WebSocketMessageReader } from '../socket/reader.js';
+import { WebSocketMessageWriter } from '../socket/writer.js';
 
 export function createServerProcess (serverName: string, command: string, args?: string[], options?: cp.SpawnOptions): IConnection | undefined {
     const serverProcess = cp.spawn(command, args || [], options || {});

@@ -3,5 +3,5 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './connection';
-export * from './launch';
+export * from './connection.js';
+export * from './launch.js';

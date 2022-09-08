@@ -2,8 +2,8 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { MonacoWorkspace } from './monaco-workspace';
-import { ConsoleWindow } from './console-window';
+import { MonacoWorkspace } from './monaco-workspace.js';
+import { ConsoleWindow } from './console-window.js';
 import { Services } from 'vscode/services';
 import * as vscode from 'vscode';
 

@@ -16,7 +16,7 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuic
 import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
