@@ -45,8 +45,8 @@
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
     "start:example:server": "npm run start --workspace packages/examples/server",
-    "start:example:client:webpack": "npm run start --workspace packages/examples/client-webpack",
-    "start:example:client:vite": "npm run start --workspace packages/examples/vite"
+    "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
+    "start:verify:vite": "npm run start --workspace packages/verify/vite"
   },
   "workspaces": [
     "packages/client",
