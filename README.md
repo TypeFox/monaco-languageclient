@@ -92,7 +92,7 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **browser-lsp** example located in [./packages/examples/browser-lsp](./packages/examples/browser-lsp) contains both the [language client](./packages/examples/browser-lsp/src/client.ts) and the [langauge server implementation running in a web worker](./packages/examples/browser-lsp/src/serverWorker.ts). They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
 
-- The **browser** example located in [./packages/examples/browser](./packages/examples/browser) demonstrates how a [language service  written in JavaScript](./packages/examples/browser/src/client.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
+- The **browser** example located in [./packages/examples/browser](./packages/examples/browser) demonstrates how a [language service written in JavaScript](./packages/examples/browser/src/client.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
 ## Verification
 
