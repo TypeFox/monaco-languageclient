@@ -2,6 +2,14 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
+
+/**
+ * @deprecated
+ * monaco-converter will soon be deprecated. If you still rely on it,
+ * please take a look at the browser example (pacakges/examples/browser/src/client.ts)
+ * and adapt to the new converters available since v2.0.0.
+ */
+
 import type * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import * as ls from 'vscode-languageserver-protocol';
 import * as Is from 'vscode-languageserver-protocol/lib/common/utils/is.js';

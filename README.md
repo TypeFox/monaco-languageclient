@@ -30,7 +30,6 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 ### September 2022
 
 All code has been transformed to esm and npm packages are now of type module. cjs bundles are no longer available.
-The `monaco-converter` has been removed.
 
 ### June 2022
 
@@ -42,7 +41,7 @@ We added the independent **vscode-ws-jsonrpc** as sub-package into this reposito
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
-As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [second build option]( #optional-webpack-build-for-client-example) for the web client example using webpack.
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification example](#verification) for the web client example using webpack.
 
 The default and protected branch is now `main`.
 
@@ -51,6 +50,7 @@ The default and protected branch is now `main`.
 ### Dev environment: Local machine
 
 On your local machine you can prepare your dev environment as follows. From CLI in root of the project run:
+
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
@@ -70,6 +70,7 @@ Use a fresh dev environment in [Gitpod](https://www.gitpod.io) which is a one-cl
 The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` and `compile`, but it also has entries for launching script from the packages (lib and examples).
 
 For example if you want to rebuild the **monaco-languageclient** or **vscode-ws-jsonrpc** library you can do it in different ways. From CLI run one of:
+
 ```bash
 # from the root
 npm run build:client
@@ -80,6 +81,7 @@ npm --prefix packages/client run build
 # or manually got to packages/client and run th build there
 cd packages/client && npm run build
 ```
+
 **Hint**: Use *vscode-ws-jsonrpc* instead of *client* for the other lib.
 
 ## Examples
@@ -120,6 +122,7 @@ npm run start:example:server:ext
 ```
 
 For everything else Vite is sufficient. If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
+
 ```shell
 # Serve the webpack verification example on http://localhost:8081
 npm run start:verify:webpack
