@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "4.0.0",
+  "version": "4.0.1-next.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -23,12 +23,19 @@
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
+    },
+    "./monaco-converter": {
+      "types": "./lib/monaco-converter.d.ts",
+      "default": "./lib/monaco-converter.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "lib/index"
+      ],
+      "monaco-converter": [
+        "lib/monaco-converter"
       ]
     }
   },
