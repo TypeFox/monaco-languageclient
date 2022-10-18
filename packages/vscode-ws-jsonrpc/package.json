@@ -51,8 +51,8 @@
     "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "16.17.0",
-    "npm": "8.15.0"
+    "node": "16.18.0",
+    "npm": "8.19.2"
   },
   "files": [
     "lib",
@@ -62,7 +62,7 @@
     "License.txt"
   ],
   "dependencies": {
-    "vscode-jsonrpc": "^8.0.2"
+    "vscode-jsonrpc": "8.0.2"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",

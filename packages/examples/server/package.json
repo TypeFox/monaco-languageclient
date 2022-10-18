@@ -5,21 +5,21 @@
   "dependencies": {
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
     "@types/ws": "^8.5.3",
-    "express": "^4.18.1",
-    "normalize-url": "^7.0.3",
+    "express": "4.18.2",
+    "normalize-url": "7.2.0",
     "request-light": "^0.5.8",
-    "vscode-json-languageservice": "5.1.0",
+    "vscode-json-languageservice": "5.1.1",
     "vscode-languageserver": "8.0.2",
-    "vscode-uri": "3.0.3",
-    "ws": "^8.8.0"
+    "vscode-uri": "3.0.6",
+    "ws": "^8.9.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.13",
-    "ts-node": "^10.8.1"
+    "@types/express": "^4.17.14",
+    "ts-node": "^10.9.1"
   },
   "volta": {
-    "node": "16.17.0",
-    "npm": "8.15.0"
+    "node": "16.18.0",
+    "npm": "8.19.2"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",

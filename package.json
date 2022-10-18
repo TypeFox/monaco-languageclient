@@ -1,11 +1,12 @@
 {
   "private": true,
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.36.2",
-    "@typescript-eslint/parser": "^5.36.2",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
     "@types/node": "^16.11.57",
-    "editorconfig": "^0.15.3",
-    "eslint": "^8.23.0",
+    "@types/vscode": "~1.69.1",
+    "editorconfig": "^1.0.0",
+    "eslint": "^8.25.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
@@ -13,8 +14,8 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "shx": "^0.3.4",
     "tslib": "^2.4.0",
-    "typescript": "^4.8.2",
-    "vite": "3.1.0",
+    "typescript": "^4.8.4",
+    "vite": "3.1.8",
     "path-browserify": "1.0.1"
   },
   "resolutions": {
@@ -25,8 +26,8 @@
     "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "16.17.0",
-    "npm": "8.15.0"
+    "node": "16.18.0",
+    "npm": "8.19.2"
   },
   "scripts": {
     "clean": "npm run clean --workspaces && npm run webpack:clean --workspace packages/examples/client",

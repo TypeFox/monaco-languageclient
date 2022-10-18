@@ -2,14 +2,14 @@
   "name": "browser-example",
   "private": true,
   "dependencies": {
-    "monaco-editor": "0.34.0",
+    "monaco-editor": "0.34.1",
     "monaco-editor-workers": "0.34.2",
     "monaco-languageclient": "../../client",
-    "vscode-json-languageservice": "5.1.0"
+    "vscode-json-languageservice": "5.1.1"
   },
   "volta": {
-    "node": "16.17.0",
-    "npm": "8.15.0"
+    "node": "16.18.0",
+    "npm": "8.19.2"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
