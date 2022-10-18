@@ -23,6 +23,10 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Verification](#verification)
   - [Example usage](#example-usage)
   - [VSCode integration](#vscode-integration)
+  - [Troubleshooting](#troubleshooting)
+    - [General](#general)
+    - [monaco-ediotor-core](#monaco-ediotor-core)
+    - [@monaco-editor/react](#monaco-editorreact)
   - [License](#license)
 
 ## Latest Important Project Changes
@@ -130,6 +134,51 @@ npm run start:verify:vite
 ## VSCode integration
 
 You can as well run vscode tasks to start and debug the server in different modes and the client.
+
+## Troubleshooting
+
+### General
+
+If you use **monaco-languageclient** make sure you have a version of **monaco-editor** installed in your project that is compliant with **monaco-languageclient** and its peer dependency [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
+
+Ensure **monaco-editor** and **monaco-languageclient** are imported before you do any **monaco-editor** intialization. This ensures `monaco` and `vscode` (from **monaco-vscode-api**) are imported beforehand. This is for example done like this in all examples contained in this repository.
+
+### monaco-ediotor-core
+
+Originally **monaco-languageclient** was dependent on **monaco-editor-core**, but we changed this with version **1.0.0**. If your project requires to use **monaco-editor-core** and you want to stay compatible with **1.0.0** of **monaco-languageclient** you can install **monaco-editor-core** as **monaco-editor**:
+
+```shell
+npm install monaco-editor@npm:monaco-editor-core
+```
+
+Or if you are using **Webpack** you can alternatively add this alias to its config:
+
+```javascript
+resolve: {
+  alias: {
+    // This doesn't pull any languages into bundles and works as monaco-editor-core was installed
+    'monaco-editor$': 'monaco-editor-core$',
+    'monaco-editor/': 'monaco-editor-core/',
+  }
+}
+```
+
+If you use **monaco-editor** as dependency, but only want to have the content of **monaco-editor-core** than just only import:
+
+```javascript
+import * as monaco from 'monaco-editor/esm/vs/editor/edcore.main.js';
+```
+
+### @monaco-editor/react
+
+Add the **monaco-editor** import at the top of your editor component file [source](https://github.com/suren-atoyan/monaco-react#use-monaco-editor-as-an-npm-package):
+
+```javascript
+import * as monaco from "monaco-editor";
+import { loader } from "@monaco-editor/react";
+
+loader.config({ monaco });
+```
 
 ## License
 
