@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [4.0.1] - 2022-10-19
+
+- Update to monaco-editor 0.34.1 #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)
+  - Update to `monaco-vscode-api@1.69.12`
+  - Update exmaple dependencies (which don't affect the library)
+
 ## [4.0.0] - 2022-09-08
 
 - **BREAKING CHANGE**: Transform to package of type module and switch to TypeScript ECMAScript Module Support in Node.js.
