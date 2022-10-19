@@ -25,6 +25,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
+    - [Volta](#volta)
     - [monaco-ediotor-core](#monaco-ediotor-core)
     - [@monaco-editor/react](#monaco-editorreact)
   - [License](#license)
@@ -142,6 +143,10 @@ You can as well run vscode tasks to start and debug the server in different mode
 If you use **monaco-languageclient** make sure you have a version of **monaco-editor** installed in your project that is compliant with **monaco-languageclient** and its peer dependency [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
 Ensure **monaco-editor** and **monaco-languageclient** are imported before you do any **monaco-editor** intialization. This ensures `monaco` and `vscode` (from **monaco-vscode-api**) are imported beforehand. This is for example done like this in all examples contained in this repository.
+
+### Volta
+
+There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
 
 ### monaco-ediotor-core
 
