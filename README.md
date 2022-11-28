@@ -10,7 +10,7 @@ Repository for [NPM module](https://www.npmjs.com/package/monaco-languageclient)
 
 Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsofts-monaco-editor) for a detail explanation how to connect the Monaco editor to your language server.
 
-- [Monaco Language Client & VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
+- [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
     - [September 2022](#september-2022)
     - [June 2022](#june-2022)
@@ -23,6 +23,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Verification](#verification)
   - [Example usage](#example-usage)
   - [VSCode integration](#vscode-integration)
+  - [Monaco-editor compatibility table](#monaco-editor-compatibility-table)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Volta](#volta)
@@ -41,7 +42,7 @@ The `monaco-converter` has been removed.
 
 [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
 
-We added the independent **vscode-ws-jsonrpc** as sub-package into this repository.
+We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
 
 ### May 2022
 
@@ -56,6 +57,7 @@ The default and protected branch is now `main`.
 ### Dev environment: Local machine
 
 On your local machine you can prepare your dev environment as follows. From CLI in root of the project run:
+
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
@@ -66,15 +68,14 @@ npm run build
 
 ### Dev environment: Gitpod
 
-Use a fresh dev environment in [Gitpod](https://www.gitpod.io) which is a one-click online IDE for GitHub.
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
+Use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
 
 ### Scripts Overview
 
 The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` and `compile`, but it also has entries for launching script from the packages (lib and examples).
 
 For example if you want to rebuild the **monaco-languageclient** or **vscode-ws-jsonrpc** library you can do it in different ways. From CLI run one of:
+
 ```bash
 # from the root
 npm run build:client
@@ -85,6 +86,7 @@ npm --prefix packages/client run build
 # or manually got to packages/client and run th build there
 cd packages/client && npm run build
 ```
+
 **Hint**: Use *vscode-ws-jsonrpc* instead of *client* for the other lib.
 
 ## Examples
@@ -125,6 +127,7 @@ npm run start:example:server:ext
 ```
 
 For everything else Vite is sufficient. If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
+
 ```shell
 # Serve the webpack verification example on http://localhost:8081
 npm run start:verify:webpack
@@ -134,7 +137,20 @@ npm run start:verify:vite
 
 ## VSCode integration
 
-You can as well run vscode tasks to start and debug the server in different modes and the client.
+You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the server in different modes and the client.
+
+## Monaco-editor compatibility table
+
+The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
+
+| monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
+| :----         | :----   | :---   | :--- |
+| 4.0.1         | 1.69.12 | 0.34.1 |  |
+| 4.0.0         | 1.69.10 | 0.34.0 |  |
+| 3.0.1         | 1.69.9  | 0.34.0 |  |
+| 3.0.0         | 1.69.0  | 0.34.0 |  |
+| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
+| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
 
 ## Troubleshooting
 
