@@ -5,12 +5,14 @@
   "workbench.editor.revealIfOpen": true,
   "[javascript]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescript]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.format.enable": true,
   "eslint.validate": [
     "javascript",
     "typescript"

@@ -3,15 +3,14 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "0.34.1",
     "monaco-editor-workers": "0.34.2",
     "monaco-languageclient": "../../client",
     "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
-    "normalize-url": "7.2.0"
+    "normalize-url": "~8.0.0"
   },
   "volta": {
-    "node": "16.18.0",
-    "npm": "8.19.2"
+    "node": "16.18.1",
+    "npm": "8.19.3"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
