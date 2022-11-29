@@ -12,7 +12,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
     protected callback: DataCallback | undefined;
     protected readonly events: { message?: any, error?: any }[] = [];
 
-    constructor (protected readonly socket: IWebSocket) {
+    constructor(protected readonly socket: IWebSocket) {
         super();
         this.socket.onMessage(message =>
             this.readMessage(message)
@@ -32,7 +32,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         });
     }
 
-    listen (callback: DataCallback): Disposable {
+    listen(callback: DataCallback): Disposable {
         if (this.state === 'initial') {
             this.state = 'listening';
             this.callback = callback;
@@ -56,7 +56,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         };
     }
 
-    protected readMessage (message: any): void {
+    protected readMessage(message: any): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, { message });
         } else if (this.state === 'listening') {
@@ -65,7 +65,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         }
     }
 
-    protected fireError (error: any): void {
+    protected fireError(error: any): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, { error });
         } else if (this.state === 'listening') {
@@ -73,7 +73,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         }
     }
 
-    protected fireClose (): void {
+    protected fireClose(): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, {});
         } else if (this.state === 'listening') {

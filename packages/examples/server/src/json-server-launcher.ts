@@ -9,7 +9,7 @@ import * as lsp from 'vscode-languageserver';
 import { start } from './json-server.js';
 import { Message } from 'vscode-languageserver';
 
-export function launch (socket: IWebSocket) {
+export function launch(socket: IWebSocket) {
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
     const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;

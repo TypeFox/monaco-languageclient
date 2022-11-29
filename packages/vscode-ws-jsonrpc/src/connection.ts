@@ -8,7 +8,7 @@ import { createWebSocketConnection } from './socket/connection.js';
 import { IWebSocket } from './socket/socket.js';
 import { ConsoleLogger } from './logger.js';
 
-export function listen (options: {
+export function listen(options: {
     webSocket: WebSocket;
     logger?: Logger;
     onConnection: (connection: MessageConnection) => void;
@@ -22,7 +22,7 @@ export function listen (options: {
     };
 }
 
-export function toSocket (webSocket: WebSocket): IWebSocket {
+export function toSocket(webSocket: WebSocket): IWebSocket {
     return {
         send: content => webSocket.send(content),
         onMessage: cb => {

@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 
 export class ConsoleWindow implements Window {
     protected readonly channels = new Map<string, vscode.OutputChannel>();
-    showMessage<T extends vscode.MessageOptions | string | vscode.MessageItem> (severity: Severity, message: string, ..._actions: T[]): Thenable<T | undefined> {
+    showMessage<T extends vscode.MessageOptions | string | vscode.MessageItem>(severity: Severity, message: string, ..._actions: T[]): Thenable<T | undefined> {
         if (severity === Severity.Error) {
             console.error(message);
         }
@@ -23,32 +23,32 @@ export class ConsoleWindow implements Window {
         return Promise.resolve(undefined);
     }
 
-    createOutputChannel (name: string): vscode.OutputChannel {
+    createOutputChannel(name: string): vscode.OutputChannel {
         const existing = this.channels.get(name);
         if (existing) {
             return existing;
         }
         const channel: vscode.OutputChannel = {
             name: 'default',
-            append (value: string): void {
+            append(value: string): void {
                 console.log(name + ': ' + value);
             },
-            appendLine (line: string): void {
+            appendLine(line: string): void {
                 console.log(name + ': ' + line);
             },
-            show (): void {
+            show(): void {
                 // no-op
             },
-            dispose (): void {
+            dispose(): void {
                 // no-op
             },
-            replace: function (_value: string): void {
+            replace: function(_value: string): void {
                 // no-op
             },
-            clear: function (): void {
+            clear: function(): void {
                 // no-op
             },
-            hide: function (): void {
+            hide: function(): void {
                 // no-op
             }
         };

@@ -53,7 +53,7 @@ monaco.editor.create(document.getElementById('container')!, {
     }
 });
 
-function createLanguageClient (transports: MessageTransports): MonacoLanguageClient {
+function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {

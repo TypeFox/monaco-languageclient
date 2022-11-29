@@ -15,7 +15,7 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-process.on('uncaughtException', function (err: any) {
+process.on('uncaughtException', function(err: any) {
     console.error('Uncaught Exception: ', err.toString());
     if (err.stack) {
         console.error(err.stack);

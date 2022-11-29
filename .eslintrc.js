@@ -43,7 +43,12 @@ module.exports = {
         }],
         'header/header': [2, headerDef],
         'dot-notation': 'off',
-        '@typescript-eslint/dot-notation': ['error']
+        '@typescript-eslint/dot-notation': ['error'],
+        'space-before-function-paren': ['error', {
+            'anonymous': 'never',
+            'named': 'never',
+            'asyncArrow': 'always'
+        }]
     },
     ignorePatterns: [
         '.eslintrc.js',

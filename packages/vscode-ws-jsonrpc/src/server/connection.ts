@@ -13,14 +13,14 @@ export interface IConnection extends Disposable {
     onClose(callback: () => void): Disposable;
 }
 
-export function forward (clientConnection: IConnection, serverConnection: IConnection, map?: (message: Message) => Message): void {
+export function forward(clientConnection: IConnection, serverConnection: IConnection, map?: (message: Message) => Message): void {
     clientConnection.forward(serverConnection, map);
     serverConnection.forward(clientConnection, map);
     clientConnection.onClose(() => serverConnection.dispose());
     serverConnection.onClose(() => clientConnection.dispose());
 }
 
-export function createConnection<T extends {}> (reader: MessageReader, writer: MessageWriter, onDispose: () => void,
+export function createConnection<T extends {}>(reader: MessageReader, writer: MessageWriter, onDispose: () => void,
     extensions: T = {} as T): IConnection & T {
     const disposeOnClose = new DisposableCollection();
     reader.onClose(() => disposeOnClose.dispose());
@@ -28,13 +28,13 @@ export function createConnection<T extends {}> (reader: MessageReader, writer: M
     return {
         reader,
         writer,
-        forward (to: IConnection, map: (message: Message) => Message = (message) => message): void {
+        forward(to: IConnection, map: (message: Message) => Message = (message) => message): void {
             reader.listen(input => {
                 const output = map(input);
                 to.writer.write(output);
             });
         },
-        onClose (callback: () => void): Disposable {
+        onClose(callback: () => void): Disposable {
             return disposeOnClose.push(Disposable.create(callback));
         },
         dispose: () => onDispose(),

@@ -64,11 +64,11 @@ monaco.editor.create(document.getElementById('container')!, {
 
 const vscodeDocument = vscode.workspace.textDocuments[0];
 
-function createDocument (vscodeDocument: vscode.TextDocument) {
+function createDocument(vscodeDocument: vscode.TextDocument) {
     return TextDocument.create(MODEL_URI, vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
 }
 
-function resolveSchema (url: string): Promise<string> {
+function resolveSchema(url: string): Promise<string> {
     const promise = new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = () => resolve(xhr.responseText);
@@ -85,20 +85,20 @@ const jsonService = getLanguageService({
 const pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
 vscode.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    async provideCompletionItems (vscodeDocument, position, _token, _context) {
+    async provideCompletionItems(vscodeDocument, position, _token, _context) {
         const document = createDocument(vscodeDocument);
         const jsonDocument = jsonService.parseJSONDocument(document);
         const completionList = await jsonService.doComplete(document, codeConverter.asPosition(position), jsonDocument);
         return protocolConverter.asCompletionResult(completionList);
     },
 
-    resolveCompletionItem (item, _token) {
+    resolveCompletionItem(item, _token) {
         return jsonService.doResolve(codeConverter.asCompletionItem(item)).then(result => protocolConverter.asCompletionItem(result));
     }
 });
 
 vscode.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
-    provideDocumentRangeFormattingEdits (vscodeDocument, range, options, _token) {
+    provideDocumentRangeFormattingEdits(vscodeDocument, range, options, _token) {
         const document = createDocument(vscodeDocument);
         const edits = jsonService.format(document, codeConverter.asRange(range), codeConverter.asFormattingOptions(options, {}));
         return protocolConverter.asTextEdits(edits);
@@ -106,7 +106,7 @@ vscode.languages.registerDocumentRangeFormattingEditProvider(LANGUAGE_ID, {
 });
 
 vscode.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
-    provideDocumentSymbols (vscodeDocument, _token) {
+    provideDocumentSymbols(vscodeDocument, _token) {
         const document = createDocument(vscodeDocument);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return protocolConverter.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
@@ -114,7 +114,7 @@ vscode.languages.registerDocumentSymbolProvider(LANGUAGE_ID, {
 });
 
 vscode.languages.registerHoverProvider(LANGUAGE_ID, {
-    provideHover (vscodeDocument, position, _token) {
+    provideHover(vscodeDocument, position, _token) {
         const document = createDocument(vscodeDocument);
         const jsonDocument = jsonService.parseJSONDocument(document);
         return jsonService.doHover(document, codeConverter.asPosition(position), jsonDocument).then((hover) => {
@@ -128,7 +128,7 @@ model.onDidChangeContent((_event) => {
 });
 validate();
 
-function validate (): void {
+function validate(): void {
     const document = createDocument(vscodeDocument);
     cleanPendingValidation(document);
     pendingValidationRequests.set(document.uri, setTimeout(() => {
@@ -137,7 +137,7 @@ function validate (): void {
     }));
 }
 
-function cleanPendingValidation (document: TextDocument): void {
+function cleanPendingValidation(document: TextDocument): void {
     const request = pendingValidationRequests.get(document.uri);
     if (request !== undefined) {
         clearTimeout(request);
@@ -146,7 +146,7 @@ function cleanPendingValidation (document: TextDocument): void {
 }
 
 const diagnosticCollection = vscode.languages.createDiagnosticCollection('json');
-function doValidate (document: TextDocument): void {
+function doValidate(document: TextDocument): void {
     if (document.getText().length === 0) {
         cleanDiagnostics();
         return;
@@ -159,6 +159,6 @@ function doValidate (document: TextDocument): void {
     });
 }
 
-function cleanDiagnostics (): void {
+function cleanDiagnostics(): void {
     diagnosticCollection.clear();
 }

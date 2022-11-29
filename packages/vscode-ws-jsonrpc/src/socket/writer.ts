@@ -10,14 +10,14 @@ import { IWebSocket } from './socket.js';
 export class WebSocketMessageWriter extends AbstractMessageWriter implements MessageWriter {
     protected errorCount = 0;
 
-    constructor (protected readonly socket: IWebSocket) {
+    constructor(protected readonly socket: IWebSocket) {
         super();
     }
 
-    end (): void {
+    end(): void {
     }
 
-    async write (msg: Message): Promise<void> {
+    async write(msg: Message): Promise<void> {
         try {
             const content = JSON.stringify(msg);
             this.socket.send(content);

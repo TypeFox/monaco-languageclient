@@ -71,7 +71,7 @@ webSocket.onopen = () => {
     reader.onClose(() => languageClient.stop());
 };
 
-function createLanguageClient (transports: MessageTransports): MonacoLanguageClient {
+function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {
@@ -92,7 +92,7 @@ function createLanguageClient (transports: MessageTransports): MonacoLanguageCli
     });
 }
 
-function createUrl (hostname: string, port: number, path: string): string {
+function createUrl(hostname: string, port: number, path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
     return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
 }

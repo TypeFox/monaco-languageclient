@@ -15,7 +15,7 @@ import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteComma
 import { getLanguageService, LanguageService, JSONDocument } from 'vscode-json-languageservice';
 import * as TextDocumentImpl from 'vscode-languageserver-textdocument';
 
-export function start (reader: MessageReader, writer: MessageWriter): JsonServer {
+export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
     const connection = createConnection(reader, writer);
     const server = new JsonServer(connection);
     server.start();
@@ -33,7 +33,7 @@ export class JsonServer {
 
     protected readonly pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
-    constructor (
+    constructor(
         protected readonly connection: _Connection
     ) {
         this.documents.listen(this.connection);
@@ -103,11 +103,11 @@ export class JsonServer {
         );
     }
 
-    start () {
+    start() {
         this.connection.listen();
     }
 
-    protected getFoldingRanges (params: FoldingRangeParams): FoldingRange[] {
+    protected getFoldingRanges(params: FoldingRangeParams): FoldingRange[] {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return [];
@@ -115,7 +115,7 @@ export class JsonServer {
         return this.jsonService.getFoldingRanges(document);
     }
 
-    protected findDocumentColors (params: DocumentColorParams): Thenable<ColorInformation[]> {
+    protected findDocumentColors(params: DocumentColorParams): Thenable<ColorInformation[]> {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return Promise.resolve([]);
@@ -124,7 +124,7 @@ export class JsonServer {
         return this.jsonService.findDocumentColors(document, jsonDocument);
     }
 
-    protected getColorPresentations (params: ColorPresentationParams): ColorPresentation[] {
+    protected getColorPresentations(params: ColorPresentationParams): ColorPresentation[] {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return [];
@@ -133,7 +133,7 @@ export class JsonServer {
         return this.jsonService.getColorPresentations(document, jsonDocument, params.color, params.range);
     }
 
-    protected codeAction (params: CodeActionParams): Command[] {
+    protected codeAction(params: CodeActionParams): Command[] {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return [];
@@ -149,12 +149,12 @@ export class JsonServer {
         }];
     }
 
-    protected format (params: DocumentRangeFormattingParams): TextEdit[] {
+    protected format(params: DocumentRangeFormattingParams): TextEdit[] {
         const document = this.documents.get(params.textDocument.uri);
         return document ? this.jsonService.format(document, params.range, params.options) : [];
     }
 
-    protected findDocumentSymbols (params: DocumentSymbolParams): SymbolInformation[] {
+    protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return [];
@@ -163,7 +163,7 @@ export class JsonServer {
         return this.jsonService.findDocumentSymbols(document, jsonDocument);
     }
 
-    protected executeCommand (params: ExecuteCommandParams): any {
+    protected executeCommand(params: ExecuteCommandParams): any {
         if (params.command === 'json.documentUpper' && params.arguments) {
             const versionedTextDocumentIdentifier = params.arguments[0];
             const document = this.documents.get(versionedTextDocumentIdentifier.uri);
@@ -184,7 +184,7 @@ export class JsonServer {
         }
     }
 
-    protected hover (params: TextDocumentPositionParams): Thenable<Hover | null> {
+    protected hover(params: TextDocumentPositionParams): Thenable<Hover | null> {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return Promise.resolve(null);
@@ -193,7 +193,7 @@ export class JsonServer {
         return this.jsonService.doHover(document, params.position, jsonDocument);
     }
 
-    protected async resolveSchema (url: string): Promise<string> {
+    protected async resolveSchema(url: string): Promise<string> {
         const uri = URI.URI.parse(url);
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
@@ -211,11 +211,11 @@ export class JsonServer {
         }
     }
 
-    protected resolveCompletion (item: CompletionItem): Thenable<CompletionItem> {
+    protected resolveCompletion(item: CompletionItem): Thenable<CompletionItem> {
         return this.jsonService.doResolve(item);
     }
 
-    protected completion (params: TextDocumentPositionParams): Thenable<CompletionList | null> {
+    protected completion(params: TextDocumentPositionParams): Thenable<CompletionList | null> {
         const document = this.documents.get(params.textDocument.uri);
         if (!document) {
             return Promise.resolve(null);
@@ -224,7 +224,7 @@ export class JsonServer {
         return this.jsonService.doComplete(document, params.position, jsonDocument);
     }
 
-    protected validate (document: TextDocumentImpl.TextDocument): void {
+    protected validate(document: TextDocumentImpl.TextDocument): void {
         this.cleanPendingValidation(document);
         this.pendingValidationRequests.set(document.uri, setTimeout(() => {
             this.pendingValidationRequests.delete(document.uri);
@@ -232,7 +232,7 @@ export class JsonServer {
         }));
     }
 
-    protected cleanPendingValidation (document: TextDocumentImpl.TextDocument): void {
+    protected cleanPendingValidation(document: TextDocumentImpl.TextDocument): void {
         const request = this.pendingValidationRequests.get(document.uri);
         if (request !== undefined) {
             clearTimeout(request);
@@ -240,7 +240,7 @@ export class JsonServer {
         }
     }
 
-    protected doValidate (document: TextDocumentImpl.TextDocument): void {
+    protected doValidate(document: TextDocumentImpl.TextDocument): void {
         if (document.getText().length === 0) {
             this.cleanDiagnostics(document);
             return;
@@ -251,17 +251,17 @@ export class JsonServer {
         );
     }
 
-    protected cleanDiagnostics (document: TextDocumentImpl.TextDocument): void {
+    protected cleanDiagnostics(document: TextDocumentImpl.TextDocument): void {
         this.sendDiagnostics(document, []);
     }
 
-    protected sendDiagnostics (document: TextDocumentImpl.TextDocument, diagnostics: Diagnostic[]): void {
+    protected sendDiagnostics(document: TextDocumentImpl.TextDocument, diagnostics: Diagnostic[]): void {
         this.connection.sendDiagnostics({
             uri: document.uri, diagnostics
         });
     }
 
-    protected getJSONDocument (document: TextDocumentImpl.TextDocument): JSONDocument {
+    protected getJSONDocument(document: TextDocumentImpl.TextDocument): JSONDocument {
         return this.jsonService.parseJSONDocument(document);
     }
 }
