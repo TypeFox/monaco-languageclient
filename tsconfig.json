@@ -5,7 +5,8 @@
     "moduleResolution": "Node",
     "lib": [
       "ES2022",
-      "dom"
+      "DOM",
+      "DOM.Iterable"
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,

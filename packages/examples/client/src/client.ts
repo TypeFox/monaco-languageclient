@@ -34,7 +34,7 @@ buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 // register Monaco languages
 monaco.languages.register({
     id: 'json',
-    extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
+    extensions: ['.json', '.jsonc'],
     aliases: ['JSON', 'json'],
     mimetypes: ['application/json']
 });

@@ -43,7 +43,7 @@ const MONACO_URI = monaco.Uri.parse(MODEL_URI);
 // register the JSON language with Monaco
 monaco.languages.register({
     id: LANGUAGE_ID,
-    extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
+    extensions: ['.json', '.jsonc'],
     aliases: ['JSON', 'json'],
     mimetypes: ['application/json']
 });

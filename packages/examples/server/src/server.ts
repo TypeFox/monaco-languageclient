@@ -40,6 +40,7 @@ server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: B
         wss.handleUpgrade(request, socket, head, webSocket => {
             const socket: rpc.IWebSocket = {
                 send: content => webSocket.send(content, error => {
+                    console.log(content);
                     if (error) {
                         throw error;
                     }
