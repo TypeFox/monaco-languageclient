@@ -12,9 +12,4 @@ const text = `{
 }`;
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(<ReactMonacoEditor
-    text={text}
-    hostname='localhost'
-    port='3000'
-    path='/sampleServer'
-/>);
+root.render(<ReactMonacoEditor text={text} />);

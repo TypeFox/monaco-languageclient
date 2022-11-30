@@ -22,41 +22,84 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { CloseAction, ErrorAction, MessageTransports, MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
 
-import React from 'react';
 import normalizeUrl from 'normalize-url';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
+
+import React, { createRef, useEffect, useMemo, useRef } from 'react';
 
 StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
-export interface EditorProps {
+export type EditorProps = {
     text: string;
     hostname?: string;
     port?: string;
     path?: string;
-    className?: string
+    className?: string;
 }
 
-export class ReactMonacoEditor extends React.Component<EditorProps> {
-    private containerElement?: HTMLDivElement;
-    private editor: monaco.editor.IStandaloneCodeEditor;
+export function createUrl(hostname: string, port: string, path: string): string {
+    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+    return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
+}
 
-    private resizeEvent: () => void;
+function createWebSocket(url: string) {
+    const webSocket = new WebSocket(url);
+    webSocket.onopen = () => {
+        const socket = toSocket(webSocket);
+        const reader = new WebSocketMessageReader(socket);
+        const writer = new WebSocketMessageWriter(socket);
+        const languageClient = createLanguageClient({
+            reader,
+            writer
+        });
+        languageClient.start();
+        reader.onClose(() => languageClient.stop());
+    };
+}
 
-    constructor(props: EditorProps) {
-        super(props);
-        this.containerElement = undefined;
-    }
+function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
+    return new MonacoLanguageClient({
+        name: 'Sample Language Client',
+        clientOptions: {
+            // use a language id as a document selector
+            documentSelector: ['json'],
+            // disable the default error handler
+            errorHandler: {
+                error: () => ({ action: ErrorAction.Continue }),
+                closed: () => ({ action: CloseAction.DoNotRestart })
+            }
+        },
+        // create a language client connection from the JSON RPC connection on demand
+        connectionProvider: {
+            get: () => {
+                return Promise.resolve(transports);
+            }
+        }
+    });
+}
 
-    componentDidMount() {
-        const { text, className } = this.props;
-        if (this.containerElement) {
-            this.containerElement.className = className ?? '';
+export type Tester<P = {}> = React.FunctionComponent<P> & {
+    fun2: () => void;
+}
 
+export const ReactMonacoEditor: React.FC<EditorProps> = ({
+    text,
+    hostname = 'localhost',
+    path = '/sampleServer',
+    port = '3000',
+    className
+}) => {
+    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+    const ref = createRef<HTMLDivElement>();
+    const url = useMemo(() => createUrl(hostname, port, path), [hostname, port, path]);
+
+    useEffect(() => {
+        if (ref.current != null) {
             // register Monaco languages
             monaco.languages.register({
                 id: 'json',
@@ -66,7 +109,7 @@ export class ReactMonacoEditor extends React.Component<EditorProps> {
             });
 
             // create Monaco editor
-            this.editor = monaco.editor.create(this.containerElement, {
+            editorRef.current = monaco.editor.create(ref.current!, {
                 model: monaco.editor.createModel(text, 'json', monaco.Uri.parse('inmemory://model.json')),
                 glyphMargin: true,
                 lightbulb: {
@@ -77,82 +120,27 @@ export class ReactMonacoEditor extends React.Component<EditorProps> {
             // install Monaco language client services
             MonacoServices.install();
 
-            this.createWebSocket();
+            createWebSocket(url);
 
-            this.resizeEvent = () => this.editor?.layout();
-            window.addEventListener('resize', this.resizeEvent);
+            const resizeEvent = () => editorRef.current!.layout();
+            window.addEventListener('resize', resizeEvent);
+
+            console.log('React component initialized');
+            return () => {
+                console.log('React component finalized');
+                window.removeEventListener('resize', resizeEvent);
+                editorRef.current!.dispose();
+            };
         }
-    }
 
-    componentDidUpdate(_prevProps: EditorProps) {
-        const { text } = this.props;
-        const model = this.editor.getModel();
-        if (model && text !== model.getValue() && text) {
-            model.setValue(text);
-        }
-    }
+        return () => {};
+    }, []);
 
-    componentWillUnmount() {
-    }
-
-    assignRef = (component: HTMLDivElement) => {
-        this.containerElement = component;
-    };
-
-    private createWebSocket() {
-        // create the web socket
-        const url = this.createUrl();
-        const webSocket = new WebSocket(url);
-
-        webSocket.onopen = () => {
-            const socket = toSocket(webSocket);
-            const reader = new WebSocketMessageReader(socket);
-            const writer = new WebSocketMessageWriter(socket);
-            const languageClient = this.createLanguageClient({
-                reader,
-                writer
-            });
-            languageClient.start();
-            reader.onClose(() => languageClient.stop());
-        };
-    }
-
-    private createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
-        return new MonacoLanguageClient({
-            name: 'Sample Language Client',
-            clientOptions: {
-                // use a language id as a document selector
-                documentSelector: ['json'],
-                // disable the default error handler
-                errorHandler: {
-                    error: () => ({ action: ErrorAction.Continue }),
-                    closed: () => ({ action: CloseAction.DoNotRestart })
-                }
-            },
-            // create a language client connection from the JSON RPC connection on demand
-            connectionProvider: {
-                get: () => {
-                    return Promise.resolve(transports);
-                }
-            }
-        });
-    }
-
-    private createUrl(): string {
-        const { hostname, port, path } = this.props;
-        const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-        return normalizeUrl(`${protocol}://${hostname ?? 'localhost'}:${Number(port ?? +'3000')}${path ?? '/sampleServer'}`);
-    }
-
-    render() {
-        return (
-            <div
-                ref= { this.assignRef }
-                style = {
-                    { height: '50vh' }
-                }
-                className = { this.props.className }
-            />
-        );
-    }
-}
+    return (
+        <div
+            ref={ref}
+            style={{ height: '50vh' }}
+            className={className}
+        />
+    );
+};
