@@ -3,9 +3,11 @@
   "private": "true",
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
-    "start": "ng serve",
+    "start": "npm run build:prepare && ng serve",
+    "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
     "build:msg": "echo Building angular-client example:",
-    "build": "npm run clean && npm run build:msg && ng build",
+    "build:prepare": "npm run clean && npm run build:msg && npm run copy:monacoworkers",
+    "build": "npm run build:prepare && ng build ",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
@@ -13,13 +15,15 @@
     "@angular/core": "~15.0.1",
     "@angular/platform-browser": "~15.0.1",
     "@angular/platform-browser-dynamic": "~15.0.1",
-    "monaco-languageclient": "^4.0.1",
+    "monaco-languageclient": "^4.0.2-next.3",
     "rxjs": "~7.5.7",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^15.0.0-beta.0",
     "@angular-devkit/build-angular": "^15.0.1",
     "@angular/cli": "~15.0.1",
-    "@angular/compiler-cli": "~15.0.1"
+    "@angular/compiler-cli": "~15.0.1",
+    "path-browserify": "1.0.1"
   }
 }

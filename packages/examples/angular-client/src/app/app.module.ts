@@ -5,17 +5,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
+import { MonacoEditorComponent } from './app.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        MonacoEditorComponent
     ],
     imports: [
         BrowserModule
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [
+        MonacoEditorComponent
+    ]
 })
 export class AppModule {
 

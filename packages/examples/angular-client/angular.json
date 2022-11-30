@@ -11,7 +11,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/angular-client",
             "index": "src/index.html",
@@ -22,7 +22,15 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [],
             "styles": [],
-            "scripts": []
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "./custom-webpack.config.js"
+            },
+            "allowedCommonJsDependencies": [
+              "vscode-jsonrpc",
+              "vscode-languageclient",
+              "vscode-languageserver-protocol"
+            ]
           },
           "configurations": {
             "production": {
@@ -52,7 +60,7 @@
           "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "angular-client:build:production"
