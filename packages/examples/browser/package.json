@@ -1,6 +1,7 @@
 {
   "name": "browser-example",
   "private": true,
+  "type": "module",
   "dependencies": {
     "monaco-editor-workers": "0.34.2",
     "monaco-languageclient": "../../client",

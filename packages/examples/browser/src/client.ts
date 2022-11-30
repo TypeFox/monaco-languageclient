@@ -17,14 +17,14 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuic
 import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import * as vscode from 'vscode';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
-import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter';
-import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter';
+import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
+import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 
@@ -82,7 +82,7 @@ function resolveSchema(url: string): Promise<string> {
 const jsonService = getLanguageService({
     schemaRequestService: resolveSchema
 });
-const pendingValidationRequests = new Map<string, NodeJS.Timeout>();
+const pendingValidationRequests = new Map<string, number>();
 
 vscode.languages.registerCompletionItemProvider(LANGUAGE_ID, {
     async provideCompletionItems(vscodeDocument, position, _token, _context) {
@@ -131,7 +131,7 @@ validate();
 function validate(): void {
     const document = createDocument(vscodeDocument);
     cleanPendingValidation(document);
-    pendingValidationRequests.set(document.uri, setTimeout(() => {
+    pendingValidationRequests.set(document.uri, window.setTimeout(() => {
         pendingValidationRequests.delete(document.uri);
         doValidate(document);
     }));
@@ -140,7 +140,7 @@ function validate(): void {
 function cleanPendingValidation(document: TextDocument): void {
     const request = pendingValidationRequests.get(document.uri);
     if (request !== undefined) {
-        clearTimeout(request);
+        window.clearTimeout(request);
         pendingValidationRequests.delete(document.uri);
     }
 }

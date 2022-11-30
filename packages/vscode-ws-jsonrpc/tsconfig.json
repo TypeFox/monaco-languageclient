@@ -4,7 +4,6 @@
     "rootDir": "src",
     "outDir": "lib",
     "declarationDir": "lib",
-    "module": "Node16",
     "moduleResolution": "Node16"
   },
   "include": [

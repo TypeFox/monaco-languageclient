@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "Node",
     "lib": [
@@ -9,7 +9,8 @@
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "composite": true, // Enable project compilation
+    // Enable project compilation
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -22,7 +23,10 @@
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "skipLibCheck": true, // Skip type checking of declaration files.
-    "forceConsistentCasingInFileNames": true // Disallow inconsistently-cased references to the same file
+     // Skip type checking of declaration files.
+    "skipLibCheck": true,
+     // Disallow inconsistently-cased references to the same file
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true
   }
 }
