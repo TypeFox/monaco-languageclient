@@ -35,7 +35,7 @@ StandaloneServices.initialize({
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 export type EditorProps = {
-    text: string;
+    defaultCode: string;
     hostname?: string;
     port?: string;
     path?: string;
@@ -88,7 +88,7 @@ export type Tester<P = {}> = React.FunctionComponent<P> & {
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
-    text,
+    defaultCode,
     hostname = 'localhost',
     path = '/sampleServer',
     port = '3000',
@@ -110,11 +110,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
             // create Monaco editor
             editorRef.current = monaco.editor.create(ref.current!, {
-                model: monaco.editor.createModel(text, 'json', monaco.Uri.parse('inmemory://model.json')),
+                model: monaco.editor.createModel(defaultCode, 'json', monaco.Uri.parse('inmemory://model.json')),
                 glyphMargin: true,
                 lightbulb: {
                     enabled: true
-                }
+                },
+                automaticLayout: true
             });
 
             // install Monaco language client services
@@ -122,13 +123,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
             createWebSocket(url);
 
-            const resizeEvent = () => editorRef.current!.layout();
-            window.addEventListener('resize', resizeEvent);
-
-            console.log('React component initialized');
             return () => {
-                console.log('React component finalized');
-                window.removeEventListener('resize', resizeEvent);
                 editorRef.current!.dispose();
             };
         }

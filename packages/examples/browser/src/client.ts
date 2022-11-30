@@ -59,7 +59,8 @@ monaco.editor.create(document.getElementById('container')!, {
     glyphMargin: true,
     lightbulb: {
         enabled: true
-    }
+    },
+    automaticLayout: true
 });
 
 const vscodeDocument = vscode.workspace.textDocuments[0];

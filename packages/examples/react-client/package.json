@@ -1,5 +1,5 @@
 {
-  "name": "example-react",
+  "name": "example-react-client",
   "private": true,
   "type": "module",
   "dependencies": {
@@ -24,7 +24,7 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
-    "build:msg": "echo Building client example:",
+    "build:msg": "echo Building react-client example:",
     "build": "npm run build:msg && npm run compile && npm run copy:monacoworkers"
   }
 }

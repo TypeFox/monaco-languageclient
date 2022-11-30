@@ -6,10 +6,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ReactMonacoEditor } from './app.js';
 
-const text = `{
+const defaultCode = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(<ReactMonacoEditor text={text} />);
+root.render(<ReactMonacoEditor defaultCode={defaultCode} />);
