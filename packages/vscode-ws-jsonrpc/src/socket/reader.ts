@@ -65,7 +65,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         }
     }
 
-    protected fireError(error: any): void {
+    protected override fireError(error: any): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, { error });
         } else if (this.state === 'listening') {
@@ -73,7 +73,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         }
     }
 
-    protected fireClose(): void {
+    protected override fireClose(): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, {});
         } else if (this.state === 'listening') {
