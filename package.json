@@ -57,6 +57,7 @@
     "packages/examples/browser-lsp",
     "packages/examples/browser",
     "packages/examples/react-client",
+    "packages/examples/angular-client",
     "packages/verify/webpack",
     "packages/verify/vite"
   ]

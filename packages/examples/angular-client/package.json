@@ -1,0 +1,25 @@
+{
+  "name": "example-angular-client",
+  "private": "true",
+  "scripts": {
+    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
+    "start": "ng serve",
+    "build:msg": "echo Building angular-client example:",
+    "build": "npm run clean && npm run build:msg && ng build",
+    "watch": "ng build --watch --configuration development"
+  },
+  "dependencies": {
+    "@angular/compiler": "~15.0.1",
+    "@angular/core": "~15.0.1",
+    "@angular/platform-browser": "~15.0.1",
+    "@angular/platform-browser-dynamic": "~15.0.1",
+    "monaco-languageclient": "^4.0.1",
+    "rxjs": "~7.5.7",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.0.1",
+    "@angular/cli": "~15.0.1",
+    "@angular/compiler-cli": "~15.0.1"
+  }
+}
