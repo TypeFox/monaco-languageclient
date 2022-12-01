@@ -1,6 +1,7 @@
 {
   "name": "example-angular-client",
   "private": "true",
+  "type": "module",
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo src/assets",
     "lint": "eslint src --ext .ts",

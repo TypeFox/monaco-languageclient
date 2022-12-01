@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [4.0.3] - 2022-12-01
+
+- Fixed compile target configuration
+
 ## [4.0.2] - 2022-12-01
 
 - Changed the compile target and module to ES2022. Applied linting. Code was functionally not changed.

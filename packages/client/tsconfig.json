@@ -5,8 +5,6 @@
     "outDir": "lib",
     "declarationDir": "lib",
     "noUnusedParameters": false,
-    "module": "Node16",
-    "moduleResolution": "Node16"
   },
   "include": [
     "src/**/*.ts",

@@ -4,7 +4,6 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist",
-    "moduleResolution": "Node16",
     "lib": [
       "ES2022",
       "dom",

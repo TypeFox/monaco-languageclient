@@ -3,8 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist",
-    "moduleResolution": "Node16"
+    "declarationDir": "dist"
   },
   "references": [{
     "path": "../../client"
