@@ -30,7 +30,7 @@
     "npm": "8.19.3"
   },
   "scripts": {
-    "clean": "npm run clean --workspaces && npm run webpack:clean --workspace packages/examples/client",
+    "clean": "npm run clean --workspaces",
     "compile": "npm run compile --workspaces",
     "lint": "npm run lint --workspaces",
     "dev": "vite",
@@ -46,6 +46,7 @@
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
     "start:example:server": "npm run start --workspace packages/examples/server",
+    "start:example:angular": "npm run start --workspace packages/examples/angular-client",
     "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
     "start:verify:vite": "npm run start --workspace packages/verify/vite"
   },
@@ -57,6 +58,7 @@
     "packages/examples/browser-lsp",
     "packages/examples/browser",
     "packages/examples/react-client",
+    "packages/examples/angular-client",
     "packages/verify/webpack",
     "packages/verify/vite"
   ]

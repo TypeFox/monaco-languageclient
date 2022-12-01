@@ -8,6 +8,9 @@
       "DOM",
       "DOM.Iterable"
     ],
+    "types": [
+      "vite/client"
+    ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
     // Enable project compilation

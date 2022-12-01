@@ -1,0 +1,7 @@
+.monaco-editor {
+    height: 50vh;
+}
+@font-face {
+    font-family: "codicon";
+    src: url("../assets/codicon.ttf") format("truetype");
+}

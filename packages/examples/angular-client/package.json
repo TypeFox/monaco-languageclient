@@ -1,0 +1,28 @@
+{
+  "name": "example-angular-client",
+  "private": "true",
+  "scripts": {
+    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo src/assets",
+    "start": "npm run clean && npm run copy:codicon && ng serve",
+    "build:msg": "echo Building angular-client example:",
+    "build": "npm run build:msg && npm run clean && npm run copy:codicon && ng build ",
+    "copy:codicon": "npx shx mkdir -p ./src/assets && npx shx cp ../../../node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf ./src/assets/codicon.ttf",
+    "watch": "npm run clean && npm run copy:codicon && ng build --watch --configuration development"
+  },
+  "dependencies": {
+    "@angular/compiler": "~15.0.2",
+    "@angular/core": "~15.0.2",
+    "@angular/platform-browser": "~15.0.2",
+    "@angular/platform-browser-dynamic": "~15.0.2",
+    "monaco-languageclient": "../../client",
+    "rxjs": "~7.5.7",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "^15.0.0-beta.0",
+    "@angular-devkit/build-angular": "~15.0.2",
+    "@angular/cli": "~15.0.2",
+    "@angular/compiler-cli": "~15.0.2",
+    "path-browserify": "~1.0.1"
+  }
+}
