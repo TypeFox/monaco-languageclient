@@ -8,10 +8,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(codicon.css$)/i,
-                type: 'asset'
-            },
-            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
                 include: [

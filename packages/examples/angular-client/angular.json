@@ -20,7 +20,13 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "../../../node_modules/monaco-editor-workers/dist",
+                "output": "assets/monaco-editor-workers"
+              }
+            ],
             "styles": [],
             "scripts": [],
             "customWebpackConfig": {

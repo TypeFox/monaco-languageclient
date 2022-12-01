@@ -19,6 +19,6 @@
     "watch": "tsc -w",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
     "build:msg": "echo Building client example:",
-    "build": "npm run build:msg && npm run compile && npm run copy:monacoworkers"
+    "build": "npm run build:msg && npm run clean && npm run compile && npm run copy:monacoworkers"
   }
 }

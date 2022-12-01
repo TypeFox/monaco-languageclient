@@ -32,7 +32,7 @@ StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 
-buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+buildWorkerDefinition('./assets/monaco-editor-workers/workers', window.location.href + '../..', false);
 
 @Component({
     selector: 'app-root',

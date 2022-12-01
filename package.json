@@ -30,7 +30,7 @@
     "npm": "8.19.3"
   },
   "scripts": {
-    "clean": "npm run clean --workspaces && npm run webpack:clean --workspace packages/examples/client",
+    "clean": "npm run clean --workspaces",
     "compile": "npm run compile --workspaces",
     "lint": "npm run lint --workspaces",
     "dev": "vite",
