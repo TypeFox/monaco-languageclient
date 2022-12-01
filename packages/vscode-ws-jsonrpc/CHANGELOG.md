@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2.0.1] - 2022-12-01
+
+- Changed the compile target and module to ES2022. Applied linting. Code was functionally not changed.
+
 ## [2.0.0] - 2022-09-08
 
 - **BREAKING**: Transform to package of type module and switch to TypeScript ECMAScript Module Support in Node.js.

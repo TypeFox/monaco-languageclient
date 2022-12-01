@@ -3,6 +3,7 @@
   "private": "true",
   "scripts": {
     "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo src/assets",
+    "lint": "eslint src --ext .ts",
     "start": "npm run clean && npm run copy:codicon && ng serve",
     "build:msg": "echo Building angular-client example:",
     "build": "npm run build:msg && npm run clean && npm run copy:codicon && ng build ",

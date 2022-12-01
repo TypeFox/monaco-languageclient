@@ -101,6 +101,10 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **browser** example located in [./packages/examples/browser](./packages/examples/browser) demonstrates how a [language service written in JavaScript](./packages/examples/browser/src/client.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
+- The **react-client** example located in [./packages/examples/react-client](./packages/examples/react-client) contains the [React client](./packages/examples/react-client/src/main.tsx). It does the same as the regular client example but inside a React Functional Component.
+
+- The **angular-client** example located in [./packages/examples/angular-client](./packages/examples/angular-client) contains the [Angular client](./packages/examples/angular-client/src/main.tsx). It does the same as the regular client example but inside an Angular Component.
+
 ## Verification
 
 - The **webpack** verification example located in [./packages/verify/webpack](./packages/verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/verify/webpack/webpack.config.js).

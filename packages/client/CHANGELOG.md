@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [4.0.2] - 2022-12-01
+
+- Changed the compile target and module to ES2022. Applied linting. Code was functionally not changed.
+- Updated to `monaco-vscode-api@1.69.13`
+- Added [react-client](../../packages/examples/react-client) and [angular-client](../../packages/examples/angular-client)
+
 ## [4.0.1] - 2022-10-19
 
 - Update to monaco-editor 0.34.1 #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)
