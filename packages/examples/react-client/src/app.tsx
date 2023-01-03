@@ -132,11 +132,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
         window.onbeforeunload = () => {
           // On page reload/exit, close web socket connection
-          !!lspWebSocket && lspWebSocket.close();
+          lspWebSocket?.close();
         };
         return () => {
             // On component unmount, close web socket connection
-            !!lspWebSocket && lspWebSocket.close();
+            lspWebSocket?.close();
         };
     }, []);
 
