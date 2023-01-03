@@ -98,7 +98,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
     const url = useMemo(() => createUrl(hostname, port, path), [hostname, port, path]);
-    let LSPWebSocket: WebSocket;
+    let lspWebSocket: WebSocket;
     
     useEffect(() => {
         if (ref.current != null) {
@@ -123,7 +123,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             // install Monaco language client services
             MonacoServices.install();
 
-            LSPWebSocket = createWebSocket(url);
+            lspWebSocket = createWebSocket(url);
 
             return () => {
                 editorRef.current!.dispose();
@@ -132,11 +132,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
         window.onbeforeunload = () => {
           // On page reload/exit, close web socket connection
-          !!LSPWebSocket && LSPWebSocket.close();
+          !!lspWebSocket && lspWebSocket.close();
         };
         return () => {
             // On component unmount, close web socket connection
-            !!LSPWebSocket && LSPWebSocket.close();
+            !!lspWebSocket && lspWebSocket.close();
         };
     }, []);
 
