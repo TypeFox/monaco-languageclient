@@ -27,7 +27,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Volta](#volta)
-    - [monaco-ediotor-core](#monaco-ediotor-core)
+    - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
   - [License](#license)
 
@@ -149,6 +149,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 4.0.3         | 1.69.13 | 0.34.1 |  |
 | 4.0.1         | 1.69.12 | 0.34.1 |  |
 | 4.0.0         | 1.69.10 | 0.34.0 |  |
 | 3.0.1         | 1.69.9  | 0.34.0 |  |
@@ -168,7 +169,7 @@ Ensure **monaco-editor** and **monaco-languageclient** are imported before you d
 
 There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
 
-### monaco-ediotor-core
+### monaco-editor-core
 
 Originally **monaco-languageclient** was dependent on **monaco-editor-core**, but we changed this with version **1.0.0**. If your project requires to use **monaco-editor-core** and you want to stay compatible with **1.0.0** of **monaco-languageclient** you can install **monaco-editor-core** as **monaco-editor**:
 
