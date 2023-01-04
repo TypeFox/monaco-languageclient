@@ -6,6 +6,9 @@ on:
       - '**'
     tags-ignore:
       - '**'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:

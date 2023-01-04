@@ -99,7 +99,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const ref = createRef<HTMLDivElement>();
     const url = useMemo(() => createUrl(hostname, port, path), [hostname, port, path]);
     let lspWebSocket: WebSocket;
-    
+
     useEffect(() => {
         if (ref.current != null) {
             // register Monaco languages
@@ -131,8 +131,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
 
         window.onbeforeunload = () => {
-          // On page reload/exit, close web socket connection
-          lspWebSocket?.close();
+            // On page reload/exit, close web socket connection
+            lspWebSocket?.close();
         };
         return () => {
             // On component unmount, close web socket connection
