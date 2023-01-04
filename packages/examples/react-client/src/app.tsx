@@ -60,6 +60,7 @@ function createWebSocket(url: string) {
         languageClient.start();
         reader.onClose(() => languageClient.stop());
     };
+    return webSocket;
 }
 
 function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
@@ -97,7 +98,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
     const url = useMemo(() => createUrl(hostname, port, path), [hostname, port, path]);
-
+    let lspWebSocket: WebSocket;
+    
     useEffect(() => {
         if (ref.current != null) {
             // register Monaco languages
@@ -121,14 +123,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             // install Monaco language client services
             MonacoServices.install();
 
-            createWebSocket(url);
+            lspWebSocket = createWebSocket(url);
 
             return () => {
                 editorRef.current!.dispose();
             };
         }
 
-        return () => {};
+        window.onbeforeunload = () => {
+          // On page reload/exit, close web socket connection
+          lspWebSocket?.close();
+        };
+        return () => {
+            // On component unmount, close web socket connection
+            lspWebSocket?.close();
+        };
     }, []);
 
     return (
