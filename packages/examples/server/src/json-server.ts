@@ -2,7 +2,7 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import * as fs from 'fs';
+import { readFile } from 'fs';
 import requestLight from 'request-light';
 import URI from 'vscode-uri';
 import { MessageReader, MessageWriter } from 'vscode-jsonrpc';
@@ -13,7 +13,7 @@ import {
 } from 'vscode-languageserver-types';
 import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from 'vscode-json-languageservice';
-import * as TextDocumentImpl from 'vscode-languageserver-textdocument';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
     const connection = createConnection(reader, writer);
@@ -25,7 +25,7 @@ export function start(reader: MessageReader, writer: MessageWriter): JsonServer 
 export class JsonServer {
     protected workspaceRoot: URI.URI | undefined;
 
-    protected readonly documents = new TextDocuments(TextDocumentImpl.TextDocument);
+    protected readonly documents = new TextDocuments(TextDocument);
 
     protected readonly jsonService: LanguageService = getLanguageService({
         schemaRequestService: this.resolveSchema.bind(this)
@@ -33,9 +33,7 @@ export class JsonServer {
 
     protected readonly pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
-    constructor(
-        protected readonly connection: _Connection
-    ) {
+    constructor(protected readonly connection: _Connection) {
         this.documents.listen(this.connection);
         this.documents.onDidChangeContent(change =>
             this.validate(change.document)
@@ -197,7 +195,7 @@ export class JsonServer {
         const uri = URI.URI.parse(url);
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
-                fs.readFile(uri.fsPath, { encoding: 'utf8' }, (err, result) => {
+                readFile(uri.fsPath, { encoding: 'utf8' }, (err, result) => {
                     err ? reject(err) : resolve(result.toString());
                 });
             });
@@ -224,7 +222,7 @@ export class JsonServer {
         return this.jsonService.doComplete(document, params.position, jsonDocument);
     }
 
-    protected validate(document: TextDocumentImpl.TextDocument): void {
+    protected validate(document: TextDocument): void {
         this.cleanPendingValidation(document);
         this.pendingValidationRequests.set(document.uri, setTimeout(() => {
             this.pendingValidationRequests.delete(document.uri);
@@ -232,7 +230,7 @@ export class JsonServer {
         }));
     }
 
-    protected cleanPendingValidation(document: TextDocumentImpl.TextDocument): void {
+    protected cleanPendingValidation(document: TextDocument): void {
         const request = this.pendingValidationRequests.get(document.uri);
         if (request !== undefined) {
             clearTimeout(request);
@@ -240,7 +238,7 @@ export class JsonServer {
         }
     }
 
-    protected doValidate(document: TextDocumentImpl.TextDocument): void {
+    protected doValidate(document: TextDocument): void {
         if (document.getText().length === 0) {
             this.cleanDiagnostics(document);
             return;
@@ -251,17 +249,17 @@ export class JsonServer {
         );
     }
 
-    protected cleanDiagnostics(document: TextDocumentImpl.TextDocument): void {
+    protected cleanDiagnostics(document: TextDocument): void {
         this.sendDiagnostics(document, []);
     }
 
-    protected sendDiagnostics(document: TextDocumentImpl.TextDocument, diagnostics: Diagnostic[]): void {
+    protected sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): void {
         this.connection.sendDiagnostics({
             uri: document.uri, diagnostics
         });
     }
 
-    protected getJSONDocument(document: TextDocumentImpl.TextDocument): JSONDocument {
+    protected getJSONDocument(document: TextDocument): JSONDocument {
         return this.jsonService.parseJSONDocument(document);
     }
 }
