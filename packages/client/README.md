@@ -8,12 +8,12 @@
 
 Module to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
 
-See [here](https://github.com/TypeFox/monaco-languageclient/blob/master/README.md) for a detailed documentation.
+See [here](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md) for a detailed documentation.
 
 ## History
 
-For the history please see the [main repository](https://github.com/TypeFox/monaco-languageclient/blob/master/CHANGELOG.md).
+For the history please see the [main repository](https://github.com/TypeFox/monaco-languageclient/blob/main/CHANGELOG.md).
 
 ## License
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/master/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/License.txt)

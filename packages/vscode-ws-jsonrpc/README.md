@@ -2,15 +2,21 @@
 
 NPM module to implement communication between a jsonrpc client and server over WebSocket.
 
+See the following example code how to use this library or take a look of the `monaco-languageclient` and `vscode-ws-jsonrpc` examples here:
+
+- [client](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/client/)
+- [server](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/server/)
+
 ## Client side connection handling
 
 ```ts
-import * as rpc from 'vscode-ws-jsonrpc';
+import { MessageConnection, NotificationType } from 'vscode-jsonrpc';
+import { listen } from 'vscode-ws-jsonrpc';
 
 const webSocket = new WebSocket('ws://www.example.com/socketserver');
-rpc.listen({
+listen({
     webSocket,
-    onConnection: (connection: rpc.MessageConnection) => {
+    onConnection: (connection: MessageConnection) => {
         const notification = new rpc.NotificationType<string, void>('testNotification');
         connection.listen();
         connection.sendNotification(notification, 'Hello World');
@@ -21,16 +27,15 @@ rpc.listen({
 ## Server side connection handling
 
 ```ts
-import * as rpc from 'vscode-ws-jsonrpc';
+import { createWebSocketConnection, ConsoleLogger, IWebSocket } from 'vscode-ws-jsonrpc';
+import { NotificationType } from 'vscode-languageserver';
 
-const socket: rpc.IWebSocket; // open the web socket
-const reader = new rpc.WebSocketMessageReader(socket);
-const writer = new rpc.WebSocketMessageWriter(socket);
-const logger = new rpc.ConsoleLogger();
-const connection = rpc.createMessageConnection(reader, writer, logger);
-const notification = new rpc.NotificationType<string, void>('testNotification');
+const socket: IWebSocket; // open the web socket
+const logger = new ConsoleLogger();
+const connection = createWebSocketConnection(socket, logger);
+const notification = new NotificationType<string, void>('testNotification');
 connection.onNotification(notification, (param: string) => {
-	console.log(param); // This prints Hello World
+  console.log(param); // This prints Hello World
 });
 
 connection.listen();
@@ -39,16 +44,17 @@ connection.listen();
 ## Server side connection forwarding
 
 ```ts
-import * as rpc from 'vscode-ws-jsonrpc';
-import * as server from 'vscode-ws-jsonrpc/server';
+import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
+import { Message } from 'vscode-languageserver';
 
-const socket: rpc.IWebSocket; // open the web socket
-const reader = new rpc.WebSocketMessageReader(socket);
-const writer = new rpc.WebSocketMessageWriter(socket);
-const socketConnection = server.createConnection(reader, writer, () => socket.dispose())
-const serverConnection = server.createServerProcess('Example', 'node', ['example.js']);
-server.forward(socketConnection, serverConnection, message => {
-    if (rpc.isNotificationMessage(message)) {
+const socket: IWebSocket; // open the web socket
+const reader = new WebSocketMessageReader(socket);
+const writer = new WebSocketMessageWriter(socket);
+const socketConnection = createConnection(reader, writer, () => socket.dispose())
+const serverConnection = createServerProcess('Example', 'node', ['example.js']);
+forward(socketConnection, serverConnection, message => {
+    if (Message.isNotification(message)) {
         if (message.method === 'testNotification') {
             // handle the test notification
         }
@@ -59,4 +65,4 @@ server.forward(socketConnection, serverConnection, message => {
 
 ## License
 
-[MIT](https://github.com/TypeFox/vscode-ws-jsonrpc/blob/main/packages/vscode-ws-jsonrpc/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/License.txt)

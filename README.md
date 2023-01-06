@@ -29,7 +29,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [Volta](#volta)
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
-  - [License](#license)
+  - [Licenses](#licenses)
 
 ## Latest Important Project Changes
 
@@ -206,6 +206,7 @@ import { loader } from "@monaco-editor/react";
 loader.config({ monaco });
 ```
 
-## License
+## Licenses
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/master/License.txt)
+- monaco-languageclient: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/License.txt)
+- vscode-ws-jsonrpc: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/License.txt)
