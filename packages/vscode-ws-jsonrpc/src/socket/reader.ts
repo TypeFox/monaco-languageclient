@@ -60,8 +60,16 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         if (this.state === 'initial') {
             this.events.splice(0, 0, { message });
         } else if (this.state === 'listening') {
-            const data = JSON.parse(message);
-            this.callback!(data);
+            try {
+                const data = JSON.parse(message);
+                this.callback!(data);
+            } catch (err) {
+                const error: Error = {
+                    name: '' + 400,
+                    message: `Error during message parsing, reason = ${typeof err === 'object' ? (err as any).message : 'unknown'}`
+                };
+                this.fireError(error);
+            }
         }
     }
 
