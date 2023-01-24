@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2.0.2] - 2022-01-24
+
+- Gracefully handle JSON.parse errors #[455](https://github.com/TypeFox/monaco-languageclient/pull/455)
+
 ## [2.0.1] - 2022-12-01
 
 - Changed the compile target and module to ES2022. Applied linting. Code was functionally not changed.
