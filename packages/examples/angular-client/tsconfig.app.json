@@ -1,8 +1,19 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.json",
+  "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./out-tsc/app"
+    "baseUrl": "./",
+    "outDir": "./out-tsc/app",
+    "experimentalDecorators": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "composite": false
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   },
   "files": [
     "src/main.ts",

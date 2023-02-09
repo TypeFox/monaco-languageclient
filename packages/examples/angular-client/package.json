@@ -1,30 +1,35 @@
 {
   "name": "example-angular-client",
+  "version": "0.0.0",
   "private": "true",
   "type": "module",
   "scripts": {
-    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo src/assets",
-    "lint": "eslint src --ext .ts",
-    "start": "npm run clean && npm run copy:codicon && ng serve",
+    "clean": "npx shx rm -fr dist *.tsbuildinfo src/assets",
     "build:msg": "echo Building angular-client example:",
-    "build": "npm run build:msg && npm run clean && npm run copy:codicon && ng build ",
+    "build": "npm run build:msg && npm run clean && npm run copy:codicon && ng build",
+    "start": "npm run clean && npm run copy:codicon && ng serve",
     "copy:codicon": "npx shx mkdir -p ./src/assets && npx shx cp ../../../node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf ./src/assets/codicon.ttf",
     "watch": "npm run clean && npm run copy:codicon && ng build --watch --configuration development"
   },
   "dependencies": {
-    "@angular/compiler": "~15.0.4",
-    "@angular/core": "~15.0.4",
-    "@angular/platform-browser": "~15.0.4",
-    "@angular/platform-browser-dynamic": "~15.0.4",
-    "monaco-languageclient": "../../client",
+    "@angular/compiler": "~15.1.4",
+    "@angular/core": "~15.1.4",
+    "@angular/platform-browser": "~15.1.4",
+    "@angular/platform-browser-dynamic": "~15.1.4",
+    "monaco-languageclient": "5.0.0-next.0",
     "rxjs": "~7.8.0",
+    "vscode-languageclient": "~8.0.2",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "~15.0.0",
-    "@angular-devkit/build-angular": "~15.0.4",
-    "@angular/cli": "~15.0.4",
-    "@angular/compiler-cli": "~15.0.4",
+    "@angular-devkit/build-angular": "~15.1.5",
+    "@angular/cli": "~15.1.5",
+    "@angular/compiler-cli": "~15.1.4",
     "path-browserify": "~1.0.1"
+  },
+  "volta": {
+    "node": "18.14.0",
+    "npm": "9.4.1"
   }
 }

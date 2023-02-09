@@ -4,17 +4,18 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist",
-    "lib": [
-      "ES2022",
-      "dom",
-      "WebWorker"
-    ]
+    "jsx": "react"
   },
+  "types": [
+    "react/next",
+    "react-dom/next"
+  ],
   "references": [{
-    "path": "../../client"
+    "path": "../../client/tsconfig.src.json"
   }],
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "dist"

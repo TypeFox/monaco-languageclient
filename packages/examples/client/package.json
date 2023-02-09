@@ -1,22 +1,22 @@
 {
   "name": "example-client",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "dependencies": {
     "monaco-editor-workers": "0.34.2",
-    "monaco-languageclient": "../../client",
-    "vscode-ws-jsonrpc": "../../vscode-ws-jsonrpc",
+    "monaco-languageclient": "5.0.0-next.0",
+    "vscode-languageclient": "~8.0.2",
+    "vscode-ws-jsonrpc": "3.0.0-next.0",
     "normalize-url": "~8.0.0"
   },
   "volta": {
-    "node": "16.18.1",
-    "npm": "8.19.3"
+    "node": "18.14.0",
+    "npm": "9.4.1"
   },
   "scripts": {
-    "clean": "npx shx rm -fr dist tsconfig.tsbuildinfo",
-    "lint": "eslint src --ext .ts",
-    "compile": "tsc",
-    "watch": "tsc -w",
+    "clean": "npx shx rm -fr dist *.tsbuildinfo",
+    "compile": "tsc --build tsconfig.src.json",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
     "build:msg": "echo Building client example:",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run copy:monacoworkers"

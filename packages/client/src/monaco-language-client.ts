@@ -3,9 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import {
-    BaseLanguageClient, MessageTransports, LanguageClientOptions, CloseAction, ErrorAction
-} from 'vscode-languageclient/lib/common/client.js';
+import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/lib/common/client.js';
 import { ConfigurationFeature, SyncConfigurationFeature } from 'vscode-languageclient/lib/common/configuration.js';
 import { DidChangeTextDocumentFeature, DidCloseTextDocumentFeature, DidOpenTextDocumentFeature, DidSaveTextDocumentFeature, WillSaveFeature, WillSaveWaitUntilFeature } from 'vscode-languageclient/lib/common/textSynchronization.js';
 import { CompletionItemFeature } from 'vscode-languageclient/lib/common/completion.js';
@@ -35,11 +33,10 @@ import { DiagnosticFeature } from 'vscode-languageclient/lib/common/diagnostic.j
 import { ProgressFeature } from 'vscode-languageclient/lib/common/progress.js';
 import { RegistrationParams, UnregistrationParams } from 'vscode-languageclient';
 
-export * from 'vscode-languageclient/lib/common/client.js';
-
 export interface IConnectionProvider {
     get(encoding: string): Promise<MessageTransports>;
 }
+
 export class MonacoLanguageClient extends BaseLanguageClient {
     protected readonly connectionProvider: IConnectionProvider;
 
@@ -138,5 +135,3 @@ export namespace MonacoLanguageClient {
         connectionProvider: IConnectionProvider;
     }
 }
-
-export { CloseAction, ErrorAction };

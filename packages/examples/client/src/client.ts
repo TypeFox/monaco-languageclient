@@ -20,14 +20,17 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, CloseAction, ErrorAction, MonacoServices, MessageTransports } from 'monaco-languageclient';
+import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 import { StandaloneServices } from 'vscode/services';
-import getMessageServiceOverride from 'vscode/service-override/messages';
+import getNotificationServiceOverride from 'vscode/service-override/notifications';
+import getDialogServiceOverride from 'vscode/service-override/dialogs';
+import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
 StandaloneServices.initialize({
-    ...getMessageServiceOverride(document.body)
+    ...getNotificationServiceOverride(document.body),
+    ...getDialogServiceOverride()
 });
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 

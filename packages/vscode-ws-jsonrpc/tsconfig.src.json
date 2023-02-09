@@ -7,10 +7,5 @@
   },
   "include": [
     "src/**/*.ts",
-  ],
-  "exclude": [
-    "dist",
-    "lib",
-    "node_modules"
   ]
 }

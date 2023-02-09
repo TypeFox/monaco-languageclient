@@ -1,17 +1,18 @@
 const path = require('path');
-const headerDef = path.resolve(__dirname, './packages/config/header.js');
+const headerDef = path.resolve(__dirname, './config/header.js');
 
 module.exports = {
     env: {
+        node: true,
         browser: true,
-        es2020: true
+        es2022: true
     },
     extends: 'standard',
     globals: {
     },
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        ecmaVersion: '2020',
+        ecmaVersion: '2022',
         sourceType: 'module',
         project: './tsconfig.json'
     },
@@ -51,8 +52,8 @@ module.exports = {
         }]
     },
     ignorePatterns: [
+        '**/{node_modules,dist,lib,out,bin}',
         '.eslintrc.js',
-        'vite.config.ts',
         'packages/examples/browser-lsp/src/serverWorker.ts'
     ]
 };

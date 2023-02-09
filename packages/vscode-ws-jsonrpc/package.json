@@ -1,6 +1,6 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "2.0.2",
+  "version": "3.0.0-next.0",
   "description": "VSCode JSON RPC over WebSocket",
   "author": {
     "name": "TypeFox GmbH ",
@@ -51,8 +51,8 @@
     "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "16.18.1",
-    "npm": "8.19.3"
+    "node": "18.14.0",
+    "npm": "9.4.1"
   },
   "files": [
     "lib",
@@ -65,10 +65,8 @@
     "vscode-jsonrpc": "8.0.2"
   },
   "scripts": {
-    "clean": "npx shx rm -fr lib dist tsconfig.tsbuildinfo",
-    "lint": "eslint src --ext .ts",
-    "compile": "tsc",
-    "watch": "tsc -w",
+    "clean": "npx shx rm -fr lib *.tsbuildinfo",
+    "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building vscode-ws-jsonrpc:",
     "build": "npm run build:msg && npm run clean && npm run compile"
   }
