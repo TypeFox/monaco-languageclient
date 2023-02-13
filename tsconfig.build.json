@@ -6,10 +6,6 @@
     "references": [
         { "path": "packages/client/tsconfig.src.json" },
         { "path": "packages/vscode-ws-jsonrpc/tsconfig.src.json" },
-        { "path": "packages/examples/server/tsconfig.src.json" },
-        { "path": "packages/examples/client/tsconfig.src.json" },
-        { "path": "packages/examples/browser-lsp/tsconfig.src.json" },
-        { "path": "packages/examples/browser/tsconfig.src.json" },
-        { "path": "packages/examples/react-client/tsconfig.src.json" },
+        { "path": "packages/examples/main/tsconfig.src.json" }
     ]
  }

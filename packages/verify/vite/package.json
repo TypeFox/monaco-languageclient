@@ -19,7 +19,7 @@
   },
   "scripts": {
     "clean": "npx shx rm -fr dist src",
-    "vite:prepare": "npx shx mkdir -p ./src && npx shx cp -f ../../examples/client/src/client.ts ./src/client.ts",
+    "vite:prepare": "npx shx mkdir -p ./src/client && npx shx cp -f ../../examples/main/src/client/main.ts ./src/client/main.ts",
     "copy:monacoworkers": "shx mkdir -p dist/dist && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist/dist",
     "build:msg": "echo Building client-vite example:",
     "build": "npm run build:msg && npm run clean && npm run vite:prepare && vite build && npm run copy:monacoworkers",

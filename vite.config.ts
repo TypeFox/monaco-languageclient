@@ -5,11 +5,10 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                client: path.resolve(__dirname, '/packages/examples/client/index.html'),
-                browserLsp: path.resolve(__dirname, '/packages/examples/browser-lsp/index.html'),
-                browser: path.resolve(__dirname, '/packages/examples/browser/index.html'),
-                browserOld: path.resolve(__dirname, '/packages/examples/browser-old/index.html'),
-                reactClient: path.resolve(__dirname, '/packages/examples/react-client/index.html')
+                client: path.resolve(__dirname, '/packages/examples/main/client.html'),
+                langiumLsp: path.resolve(__dirname, '/packages/examples/main/langium_wwls.html'),
+                browser: path.resolve(__dirname, '/packages/examples/main/browser.html'),
+                react: path.resolve(__dirname, '/packages/examples/main/react.html')
             }
         }
     },

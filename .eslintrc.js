@@ -54,6 +54,7 @@ module.exports = {
     ignorePatterns: [
         '**/{node_modules,dist,lib,out,bin}',
         '.eslintrc.js',
-        'packages/examples/browser-lsp/src/serverWorker.ts'
+        'config/header.js',
+        'packages/examples/*/*.ts'
     ]
 };

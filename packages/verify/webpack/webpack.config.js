@@ -11,7 +11,7 @@ const __dirname = dirname(__filename);
 const projectRoot = resolve(__dirname, '../../..');
 
 const config = {
-    entry: resolve(__dirname, 'src', 'client.ts'),
+    entry: resolve(__dirname, 'src', 'client', 'main.ts'),
     module: {
         rules: [{
             test: /\.css$/,
