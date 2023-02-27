@@ -34,7 +34,7 @@ const config = {
     },
     output: {
         filename: 'main.js',
-        path: resolve(__dirname, 'dist'),
+        path: resolve(__dirname, 'dist', 'client'),
         module: true
     },
     target: 'web',

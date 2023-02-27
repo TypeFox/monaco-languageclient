@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "5.0.0-next.0",
+  "version": "5.0.0-next.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -37,8 +37,8 @@
     "npm": ">=9.0.0"
   },
   "volta": {
-    "node": "18.14.0",
-    "npm": "9.4.1"
+    "node": "18.14.2",
+    "npm": "9.5.0"
   },
   "files": [
     "lib",

@@ -8,7 +8,7 @@
     "langium": "~1.0.1",
     "langium-statemachine-dsl": "~1.0.0",
     "monaco-editor-workers": "0.34.2",
-    "monaco-languageclient": "5.0.0-next.0",
+    "monaco-languageclient": "5.0.0-next.1",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -18,7 +18,7 @@
     "vscode-languageclient": "~8.0.2",
     "vscode-languageserver": "~8.0.2",
     "vscode-uri": "~3.0.7",
-    "vscode-ws-jsonrpc": "3.0.0-next.0",
+    "vscode-ws-jsonrpc": "3.0.0-next.1",
     "vscode-oniguruma": "~1.7.0",
     "ws": "~8.12.0"
   },
@@ -31,7 +31,7 @@
     "vscode-languageserver-types": "~3.17.2"
   },
   "volta": {
-    "node": "18.14.1",
+    "node": "18.14.2",
     "npm": "9.5.0"
   },
   "scripts": {
@@ -40,8 +40,8 @@
     "build:msg": "echo Building main examples:",
     "build:worker": "vite --config  vite.langium-worker.ts build",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker",
-    "start": "node --loader ts-node/esm src/server/server.ts",
-    "start:ext": "node --loader ts-node/esm src/server.ts --external",
+    "start": "node --loader ts-node/esm src/server/main.ts",
+    "start:ext": "node --loader ts-node/esm src/main.ts --external",
     "fetch:themes": "node resources/fetchThemes.mjs"
   }
 }

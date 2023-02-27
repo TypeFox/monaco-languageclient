@@ -12,6 +12,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
+    - [March 2023](#march-2023)
     - [September 2022](#september-2022)
     - [June 2022](#june-2022)
     - [May 2022](#may-2022)
@@ -32,6 +33,10 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Licenses](#licenses)
 
 ## Latest Important Project Changes
+
+### March 2023
+
+Both libraries no longer export code from other libraries (`vscode-jsonrpc`, `vscode-languageclient` and `vscode-languageserver-protocol`).
 
 ### September 2022
 
@@ -93,23 +98,23 @@ cd packages/client && npm run build
 
 There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used:
 
-- The **server** example located in [./packages/examples/server](./packages/examples/server) runs a Node.js [Express app](./packages/examples/server/src/server.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process.
+- The **server** example located in [./packages/examples/main/src/server](./packages/examples/main/src/server) runs a Node.js [Express app](./packages/examples/main/src/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process.
 
-- The **client** example located in [./packages/examples/client](./packages/examples/client) contains the [client web app](./packages/examples/client/src/client.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+- The **client** example located in [./packages/examples/main/src/client](./packages/examples/main/src/client) contains the [client web app](./packages/examples/main/src/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- The **browser-lsp** example located in [./packages/examples/browser-lsp](./packages/examples/browser-lsp) contains both the [language client](./packages/examples/browser-lsp/src/client.ts) and the [langauge server implementation running in a web worker](./packages/examples/browser-lsp/src/serverWorker.ts). They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
+- The **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/main.ts) and the [langauge server implementation running in a web worker](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
 
-- The **browser** example located in [./packages/examples/browser](./packages/examples/browser) demonstrates how a [language service written in JavaScript](./packages/examples/browser/src/client.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
+- The **browser** example located in [./packages/examples/main/src/browser](./packages/examples/main/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/main/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
-- The **react-client** example located in [./packages/examples/react-client](./packages/examples/react-client) contains the [React client](./packages/examples/react-client/src/main.tsx). It does the same as the regular client example but inside a React Functional Component.
+- The **react-client** example located in [./packages/examples/main/src/react](./packages/examples/main/src/react) contains the [React client](./packages/examples/main/src/react/main.tsx). It does the same as the regular client example but inside a React Functional Component.
 
-- The **angular-client** example located in [./packages/examples/angular-client](./packages/examples/angular-client) contains the [Angular client](./packages/examples/angular-client/src/main.tsx). It does the same as the regular client example but inside an Angular Component.
+- The **angular-client** example located in [./packages/examples/angular-client](./packages/examples/angular-client) contains the [Angular client](./packages/examples/angular-client/src/main.ts). It does the same as the regular client example but inside an Angular Component.
 
 ## Verification
 
 - The **webpack** verification example located in [./packages/verify/webpack](./packages/verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/verify/webpack/webpack.config.js).
 
-- The **vite** verification example located in [./packages/verify/vite](./packages/verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required
+- The **vite** verification example located in [./packages/verify/vite](./packages/verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required.
 
 ## Example usage
 
@@ -149,6 +154,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 5.0.0         | 1.69.21 | 0.36.0 | Planned |
 | 4.0.3         | 1.69.13 | 0.34.1 |  |
 | 4.0.1         | 1.69.12 | 0.34.1 |  |
 | 4.0.0         | 1.69.10 | 0.34.0 |  |

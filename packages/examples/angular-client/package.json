@@ -12,24 +12,23 @@
     "watch": "npm run clean && npm run copy:codicon && ng build --watch --configuration development"
   },
   "dependencies": {
-    "@angular/compiler": "~15.1.4",
-    "@angular/core": "~15.1.4",
-    "@angular/platform-browser": "~15.1.4",
-    "@angular/platform-browser-dynamic": "~15.1.4",
-    "monaco-languageclient": "5.0.0-next.0",
+    "@angular/compiler": "~15.2.0",
+    "@angular/core": "~15.2.0",
+    "@angular/platform-browser": "~15.2.0",
+    "@angular/platform-browser-dynamic": "~15.2.0",
+    "monaco-languageclient": "5.0.0-next.1",
     "rxjs": "~7.8.0",
-    "vscode-languageclient": "~8.0.2",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "~15.0.0",
-    "@angular-devkit/build-angular": "~15.1.5",
-    "@angular/cli": "~15.1.5",
-    "@angular/compiler-cli": "~15.1.4",
+    "@angular-devkit/build-angular": "~15.2.0",
+    "@angular/cli": "~15.2.0",
+    "@angular/compiler-cli": "~15.2.0",
     "path-browserify": "~1.0.1"
   },
   "volta": {
-    "node": "18.14.0",
-    "npm": "9.4.1"
+    "node": "18.14.2",
+    "npm": "9.5.0"
   }
 }

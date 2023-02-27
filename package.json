@@ -20,7 +20,7 @@
     "path-browserify": "~1.0.1"
   },
   "volta": {
-    "node": "18.14.1",
+    "node": "18.14.2",
     "npm": "9.5.0"
   },
   "scripts": {
@@ -35,13 +35,11 @@
     "build": "npm run report:versions && npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
     "build:vscode-ws-jsonrpc": "npm run build --workspace packages/vscode-ws-jsonrpc",
-    "build:example:server": "npm run build --workspace packages/examples/server && npm run webpack:build --workspace packages/examples/client",
-    "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
-    "build:example:browser": "npm run build --workspace packages/examples/browser",
-    "build:example:client": "npm run build --workspace packages/examples/client",
+    "build:example:main": "npm run build --workspace packages/examples/main",
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
-    "start:example:server": "npm run start --workspace packages/examples/server",
+    "start:example:server": "npm run start --workspace packages/examples/main",
+    "start:example:server:ext": "npm run start:ext --workspace packages/examples/main",
     "start:example:angular": "npm run start --workspace packages/examples/angular-client",
     "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
     "start:verify:vite": "npm run start --workspace packages/verify/vite"

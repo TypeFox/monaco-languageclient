@@ -2,6 +2,14 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [5.0.0] - upcoming
+
+- **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) #[459](https://github.com/TypeFox/monaco-languageclient/pull/459)
+  - Content of `vscode-jsonrpc`,`vscode-languageclient` and `vscode-languageserver-protocol` is no longer re-exported
+  - Restructures example into less packages. It reduces maintenace efforts
+  - Web worker language server example is replaced with Langium Statemachine
+  - More services from `monaco-vscode-api` are used in this example (themes, text mate, keyboard)
+
 ## [4.0.3] - 2022-12-01
 
 - Fixed compile target configuration
