@@ -8,6 +8,7 @@
   "types": [
     "react/next",
     "react-dom/next",
+    "vite/client",
     "node"
   ],
   "references": [{

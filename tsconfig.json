@@ -10,7 +10,8 @@
       "WebWorker"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,

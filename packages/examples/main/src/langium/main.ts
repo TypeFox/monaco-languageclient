@@ -19,6 +19,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import { loadAllDefaultThemes } from 'monaco-languageclient/themeLocalHelper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
@@ -34,7 +35,6 @@ import getLanguagesServiceOverride, { setLanguages } from 'vscode/service-overri
 import getTokenClassificationServiceOverride from 'vscode/service-override/tokenClassification';
 import getLanguageConfigurationServiceOverride, { setLanguageConfiguration } from 'vscode/service-override/languageConfiguration';
 import getThemeServiceOverride from 'vscode/service-override/theme';
-import { loadDefaultThemes } from './themes.js';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
@@ -72,7 +72,7 @@ const setup = async () => {
     });
 
     // IMPORTANT: Please run 'npm run fetch:themes' otherwise the themes are not available
-    loadDefaultThemes();
+    loadAllDefaultThemes('./resources/themes');
 
     setLanguages([{
         id: languageId,
