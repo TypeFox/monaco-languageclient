@@ -20,13 +20,14 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, CloseAction, ErrorAction, MessageTransports, MonacoServices } from 'monaco-languageclient';
+import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 
 import { AfterViewInit, Component } from '@angular/core';
+import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/lib/common/client.js';
 
 StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)

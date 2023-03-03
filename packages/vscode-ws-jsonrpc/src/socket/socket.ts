@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from '../disposable.js';
+import { Disposable } from 'vscode-jsonrpc';
 import { IConnection } from '../server/connection.js';
 
 export interface IWebSocket extends Disposable {

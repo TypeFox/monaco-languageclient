@@ -1,51 +1,45 @@
 {
   "private": true,
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "~5.48.0",
-    "@typescript-eslint/parser": "~5.48.0",
-    "@types/node": "~16.18.11",
+    "@typescript-eslint/eslint-plugin": "~5.54.0",
+    "@typescript-eslint/parser": "~5.54.0",
+    "@types/node": "~18.14.5",
     "@types/vscode": "~1.69.1",
-    "editorconfig": "~1.0.1",
-    "eslint": "~8.31.0",
+    "editorconfig": "~1.0.2",
+    "eslint": "~8.35.0",
     "eslint-config-standard": "~17.0.0",
     "eslint-plugin-header": "~3.1.1",
-    "eslint-plugin-import": "~2.26.0",
+    "eslint-plugin-import": "~2.27.5",
     "eslint-plugin-promise": "~6.1.1",
     "eslint-plugin-unused-imports": "~2.0.0",
     "shx": "~0.3.4",
-    "tslib": "~2.4.1",
-    "typescript": "~4.8.4",
-    "vite": "~4.0.4",
+    "tslib": "~2.5.0",
+    "typescript": "~4.9.5",
+    "vite": "~4.1.4",
+    "vitest": "~0.29.2",
     "path-browserify": "~1.0.1"
   },
-  "resolutions": {
-    "vscode-languageserver-types": "3.17.2"
-  },
-  "engines": {
-    "node": ">=16.11.0",
-    "npm": ">=8.0.0"
-  },
   "volta": {
-    "node": "16.18.1",
-    "npm": "8.19.3"
+    "node": "18.14.2",
+    "npm": "9.5.1"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
     "compile": "npm run compile --workspaces",
-    "lint": "npm run lint --workspaces",
+    "watch:clean": "tsc --build tsconfig.build.json --clean",
+    "watch": "tsc --build tsconfig.build.json --watch --verbose",
+    "lint": "eslint {**/src/**/*.ts,**/src/**/*.tsx,**/test/**/*.ts,**/test/**/*.tsx}",
     "dev": "vite",
     "dev:debug": "vite --debug --force",
     "report:versions": "echo Reporting versions: && echo tsc: && tsc --version && echo npm: && npm --version && echo node: && node --version",
     "build": "npm run report:versions && npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
     "build:vscode-ws-jsonrpc": "npm run build --workspace packages/vscode-ws-jsonrpc",
-    "build:example:server": "npm run build --workspace packages/examples/server && npm run webpack:build --workspace packages/examples/client",
-    "build:example:browser-lsp": "npm run build --workspace packages/examples/browser-lsp",
-    "build:example:browser": "npm run build --workspace packages/examples/browser",
-    "build:example:client": "npm run build --workspace packages/examples/client",
+    "build:example:main": "npm run build --workspace packages/examples/main",
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
-    "start:example:server": "npm run start --workspace packages/examples/server",
+    "start:example:server": "npm run start --workspace packages/examples/main",
+    "start:example:server:ext": "npm run start:ext --workspace packages/examples/main",
     "start:example:angular": "npm run start --workspace packages/examples/angular-client",
     "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
     "start:verify:vite": "npm run start --workspace packages/verify/vite"
@@ -53,11 +47,7 @@
   "workspaces": [
     "packages/client",
     "packages/vscode-ws-jsonrpc",
-    "packages/examples/server",
-    "packages/examples/client",
-    "packages/examples/browser-lsp",
-    "packages/examples/browser",
-    "packages/examples/react-client",
+    "packages/examples/main",
     "packages/examples/angular-client",
     "packages/verify/webpack",
     "packages/verify/vite"

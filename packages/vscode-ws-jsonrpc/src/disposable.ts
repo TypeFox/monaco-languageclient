@@ -27,5 +27,3 @@ export class DisposableCollection implements Disposable {
         };
     }
 }
-
-export { Disposable };

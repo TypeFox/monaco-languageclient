@@ -11,7 +11,7 @@ const __dirname = dirname(__filename);
 const projectRoot = resolve(__dirname, '../../..');
 
 const config = {
-    entry: resolve(__dirname, 'src', 'client.ts'),
+    entry: resolve(__dirname, 'src', 'client', 'main.ts'),
     module: {
         rules: [{
             test: /\.css$/,
@@ -34,7 +34,7 @@ const config = {
     },
     output: {
         filename: 'main.js',
-        path: resolve(__dirname, 'dist'),
+        path: resolve(__dirname, 'dist', 'client'),
         module: true
     },
     target: 'web',

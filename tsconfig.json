@@ -6,10 +6,12 @@
     "lib": [
       "ES2022",
       "DOM",
-      "DOM.Iterable"
+      "DOM.Iterable",
+      "WebWorker"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -31,6 +33,22 @@
     "skipLibCheck": true,
      // Disallow inconsistently-cased references to the same file
     "forceConsistentCasingInFileNames": true,
-    "noImplicitOverride": true
-  }
+    "noImplicitOverride": true,
+    "jsx": "react"
+  },
+  "include": [
+    "**/src/**/*.ts",
+    "**/test/**/*.ts",
+    "**/src/**/*.tsx",
+    "**/test/**/*.tsx",
+    "**/packages/*/*/*.ts",
+    "**/packages/*/*/*.js",
+    "**/resources/**/*.mts",
+    "**/resources/**/*.mjs"
+, "packages/examples/main/resources/fetchThemes.jts"  ],
+  "exclude": [
+    "dist/**/*",
+    "lib/**/*",
+    "node_modules/**/*"
+  ]
 }

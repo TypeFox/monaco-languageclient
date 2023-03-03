@@ -1,0 +1,11 @@
+{
+    "files": [],
+    // watch everything except for:
+    // - angular due to build specialities
+    // - verify packages (no own source)
+    "references": [
+        { "path": "packages/client/tsconfig.src.json" },
+        { "path": "packages/vscode-ws-jsonrpc/tsconfig.src.json" },
+        { "path": "packages/examples/main/tsconfig.src.json" }
+    ]
+ }

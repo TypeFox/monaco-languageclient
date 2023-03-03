@@ -5,10 +5,17 @@
     "outDir": "dist",
     "declarationDir": "dist"
   },
+  "types": [
+    "react/next",
+    "react-dom/next",
+    "vite/client",
+    "node"
+  ],
   "references": [{
     "path": "../../client/tsconfig.src.json"
   }],
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

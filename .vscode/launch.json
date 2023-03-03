@@ -8,18 +8,18 @@
           "name": "Launch Sample Server",
           "type": "node",
           "request": "launch",
-          "args": ["${workspaceRoot}/packages/examples/server/src/server.ts"],
+          "args": ["${workspaceRoot}/packages/examples/main/src/server/main.ts"],
           "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
-          "cwd": "${workspaceRoot}/packages/examples/server",
+          "cwd": "${workspaceRoot}/packages/examples/main",
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
           "name": "Launch Sample Server (external)",
           "type": "node",
           "request": "launch",
-          "args": ["${workspaceRoot}/packages/examples/server/dist/server.js", "--external"],
+          "args": ["${workspaceRoot}/packages/examples/main/src/server/main.ts", "--external"],
           "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
-          "cwd": "${workspaceRoot}/packages/examples/server",
+          "cwd": "${workspaceRoot}/packages/examples/main",
           "internalConsoleOptions": "openOnSessionStart"
         },
         {

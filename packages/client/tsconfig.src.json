@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "declarationDir": "lib"
+  },
+  "references": [{
+    "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
+  }],
+  "include": [
+    "src/**/*.ts",
+  ]
+}
