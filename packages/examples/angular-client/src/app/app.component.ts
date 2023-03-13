@@ -24,13 +24,15 @@ import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 import { StandaloneServices } from 'vscode/services';
-import getMessageServiceOverride from 'vscode/service-override/messages';
+import getNotificationServiceOverride from 'vscode/service-override/notifications';
+import getDialogsServiceOverride from 'vscode/service-override/dialogs';
 
 import { AfterViewInit, Component } from '@angular/core';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/lib/common/client.js';
 
 StandaloneServices.initialize({
-    ...getMessageServiceOverride(document.body)
+    ...getNotificationServiceOverride(),
+    ...getDialogsServiceOverride()
 });
 
 buildWorkerDefinition('./assets/monaco-editor-workers/workers', window.location.href + '../..', false);
