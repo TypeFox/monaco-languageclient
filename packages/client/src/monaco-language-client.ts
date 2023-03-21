@@ -70,16 +70,17 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         return this.connectionProvider.get(encoding);
     }
 
-    protected getLocale(): string {
+    protected override getLocale(): string {
         return navigator.language || 'en-US';
     }
 
     protected override registerBuiltinFeatures() {
         // eslint-disable-next-line @typescript-eslint/dot-notation
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
-        this.registerFeature(new DidChangeTextDocumentFeature(this));
         // eslint-disable-next-line @typescript-eslint/dot-notation
-        this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments']));
+        this.registerFeature(new DidChangeTextDocumentFeature(this, this['_syncedDocuments']));
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments'], this['_syncedDocuments']));
         this.registerFeature(new CompletionItemFeature(this));
         this.registerFeature(new HoverFeature(this));
         this.registerFeature(new SignatureHelpFeature(this));
