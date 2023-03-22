@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/* eslint-disable @typescript-eslint/dot-notation */
+
 import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/lib/common/client.js';
 import { ConfigurationFeature, SyncConfigurationFeature } from 'vscode-languageclient/lib/common/configuration.js';
 import { DidChangeTextDocumentFeature, DidCloseTextDocumentFeature, DidOpenTextDocumentFeature, DidSaveTextDocumentFeature, WillSaveFeature, WillSaveWaitUntilFeature } from 'vscode-languageclient/lib/common/textSynchronization.js';
@@ -32,6 +34,13 @@ import { InlayHintsFeature } from 'vscode-languageclient/lib/common/inlayHint.js
 import { DiagnosticFeature } from 'vscode-languageclient/lib/common/diagnostic.js';
 import { ProgressFeature } from 'vscode-languageclient/lib/common/progress.js';
 import { RegistrationParams, UnregistrationParams } from 'vscode-languageclient';
+import { TextDocument } from 'vscode';
+import { WorkspaceSymbolFeature } from 'vscode-languageclient/lib/common/workspaceSymbol.js';
+import { CallHierarchyFeature } from 'vscode-languageclient/lib/common/callHierarchy.js';
+import { DidCreateFilesFeature, DidDeleteFilesFeature, DidRenameFilesFeature, WillCreateFilesFeature, WillDeleteFilesFeature, WillRenameFilesFeature } from 'vscode-languageclient/lib/common/fileOperations.js';
+import { TypeHierarchyFeature } from 'vscode-languageclient/lib/common/typeHierarchy.js';
+import { InlineValueFeature } from 'vscode-languageclient/lib/common/inlineValue.js';
+import { NotebookDocumentSyncFeature } from 'vscode-languageclient/lib/common/notebook.js';
 
 export interface IConnectionProvider {
     get(encoding: string): Promise<MessageTransports>;
@@ -46,18 +55,14 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
         // Hack because vscode-language client rejects the whole registration block if one capability registration has no associated client feature registered
         // Some language servers still send the registration even though the client says it doesn't support it
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         const originalHandleRegistrationRequest: (params: RegistrationParams) => Promise<void> = this['handleRegistrationRequest'].bind(this);
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         this['handleRegistrationRequest'] = (params: RegistrationParams) => {
             originalHandleRegistrationRequest({
                 ...params,
                 registrations: params.registrations.filter(registration => this.getFeature(<any>registration.method) != null)
             });
         };
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         const originalHandleUnregistrationRequest: (params: UnregistrationParams) => Promise<void> = this['handleUnregistrationRequest'].bind(this);
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         this['handleUnregistrationRequest'] = (params: UnregistrationParams) => {
             originalHandleUnregistrationRequest({
                 ...params,
@@ -75,12 +80,15 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     }
 
     protected override registerBuiltinFeatures() {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
+        const pendingFullTextDocumentChanges: Map<string, TextDocument> = new Map();
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         this.registerFeature(new DidChangeTextDocumentFeature(this, this['_syncedDocuments']));
-        // eslint-disable-next-line @typescript-eslint/dot-notation
-        this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments'], this['_syncedDocuments']));
+        this['_didChangeTextDocumentFeature'] = new DidChangeTextDocumentFeature(this, pendingFullTextDocumentChanges);
+        this['_didChangeTextDocumentFeature'].onPendingChangeAdded(() => {
+            this['triggerPendingChangeDelivery']();
+        });
+        this.registerFeature(this['_didChangeTextDocumentFeature']);
+        this.registerFeature(new DidCloseTextDocumentFeature(this, this['_syncedDocuments'], pendingFullTextDocumentChanges));
         this.registerFeature(new CompletionItemFeature(this));
         this.registerFeature(new HoverFeature(this));
         this.registerFeature(new SignatureHelpFeature(this));
@@ -113,19 +121,28 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new DiagnosticFeature(this));
     }
 
-    public registerTextDocumentSaveFeatures() {
+    /**
+     * These are all contained in BaseLanguageClient#registerBuiltinFeatures but not registered
+     * in MonacoLanguageClient. This method is not called!
+     */
+    public registerNotUsedFeatures() {
+        this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new WillSaveFeature(this));
         this.registerFeature(new WillSaveWaitUntilFeature(this));
         this.registerFeature(new DidSaveTextDocumentFeature(this));
-    }
-
-    public registerConfigurationFeatures() {
-        this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new SyncConfigurationFeature(this));
-    }
-
-    public registerProgressFeatures() {
+        this.registerFeature(new WorkspaceSymbolFeature(this));
         this.registerFeature(new ProgressFeature(this));
+        this.registerFeature(new DidCreateFilesFeature(this));
+        this.registerFeature(new DidRenameFilesFeature(this));
+        this.registerFeature(new DidDeleteFilesFeature(this));
+        this.registerFeature(new WillCreateFilesFeature(this));
+        this.registerFeature(new WillRenameFilesFeature(this));
+        this.registerFeature(new WillDeleteFilesFeature(this));
+        this.registerFeature(new CallHierarchyFeature(this));
+        this.registerFeature(new TypeHierarchyFeature(this));
+        this.registerFeature(new InlineValueFeature(this));
+        this.registerFeature(new NotebookDocumentSyncFeature(this));
     }
 }
 export namespace MonacoLanguageClient {
