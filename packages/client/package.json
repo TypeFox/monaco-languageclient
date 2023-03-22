@@ -23,26 +23,12 @@
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
-    },
-    "./themeRemoteHelper": {
-      "types": "./lib/helpers/themeRemoteHelper.d.ts",
-      "default": "./lib/helpers/themeRemoteHelper.js"
-    },
-    "./themeLocalHelper": {
-      "types": "./lib/helpers/themeLocalHelper.d.ts",
-      "default": "./lib/helpers/themeLocalHelper.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "lib/index.d.ts"
-      ],
-      "themeRemoteHelper": [
-        "./lib/helpers/themeRemoteHelper.d.ts"
-      ],
-      "themeLocalHelper": [
-        "./lib/helpers/themeLocalHelper.d.ts"
       ]
     }
   },
@@ -66,7 +52,7 @@
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.76.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.76.2"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib *.tsbuildinfo",

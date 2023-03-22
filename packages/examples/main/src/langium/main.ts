@@ -19,7 +19,6 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
-import { loadAllDefaultThemes } from 'monaco-languageclient/themeLocalHelper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
@@ -42,14 +41,12 @@ const languageId = 'statemachine';
 let editorText = '';
 
 const setup = async () => {
-    const onigFileUrl = new URL('../../../node_modules/vscode-oniguruma/release/onig.wasm', window.location.href).href;
     const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
     const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
     const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
 
     const responseLanguageConfig = await fetch(statemachineLanguageConfig);
     const responseStatemachineTm = await fetch(statemachineTmUrl);
-    const responseOnig = await fetch(onigFileUrl);
     const responseStatemachine = await fetch(exampleStatemachineUrl);
     editorText = await responseStatemachine.text();
 
@@ -62,17 +59,12 @@ const setup = async () => {
         ...getDialogsServiceOverride(),
         ...getConfigurationServiceOverride(),
         ...getKeybindingsServiceOverride(),
-        ...getTextmateServiceOverride(async () => {
-            return await responseOnig.arrayBuffer();
-        }),
+        ...getTextmateServiceOverride(),
         ...getThemeServiceOverride(),
         ...getTokenClassificationServiceOverride(),
         ...getLanguageConfigurationServiceOverride(),
         ...getLanguagesServiceOverride()
     });
-
-    // IMPORTANT: Please run 'npm run fetch:themes' otherwise the themes are not available
-    loadAllDefaultThemes('./resources/themes');
 
     setLanguages([{
         id: languageId,
@@ -101,9 +93,9 @@ const setup = async () => {
     });
 
     updateUserConfiguration(`{
-        "workbench.colorTheme": "Dark+ (Experimental)",
         "editor.fontSize": 14
     }`);
+
 };
 
 const run = async () => {

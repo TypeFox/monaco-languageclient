@@ -81,6 +81,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
 
     protected override registerBuiltinFeatures() {
         const pendingFullTextDocumentChanges: Map<string, TextDocument> = new Map();
+        this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
         this.registerFeature(new DidChangeTextDocumentFeature(this, this['_syncedDocuments']));
         this['_didChangeTextDocumentFeature'] = new DidChangeTextDocumentFeature(this, pendingFullTextDocumentChanges);
@@ -104,6 +105,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new RenameFeature(this));
         this.registerFeature(new DocumentLinkFeature(this));
         this.registerFeature(new ExecuteCommandFeature(this));
+        this.registerFeature(new SyncConfigurationFeature(this));
         this.registerFeature(new TypeDefinitionFeature(this));
         this.registerFeature(new ImplementationFeature(this));
         this.registerFeature(new ColorProviderFeature(this));
@@ -126,11 +128,9 @@ export class MonacoLanguageClient extends BaseLanguageClient {
      * in MonacoLanguageClient. This method is not called!
      */
     public registerNotUsedFeatures() {
-        this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new WillSaveFeature(this));
         this.registerFeature(new WillSaveWaitUntilFeature(this));
         this.registerFeature(new DidSaveTextDocumentFeature(this));
-        this.registerFeature(new SyncConfigurationFeature(this));
         this.registerFeature(new WorkspaceSymbolFeature(this));
         this.registerFeature(new ProgressFeature(this));
         this.registerFeature(new DidCreateFilesFeature(this));
