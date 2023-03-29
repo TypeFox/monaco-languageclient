@@ -15,7 +15,7 @@ export function launch(socket: IWebSocket) {
     const asExternalProccess = process.argv.findIndex(value => value === '--external') !== -1;
     if (asExternalProccess) {
         // start the language server as an external process
-        const extJsonServerPath = resolve(getLocalDirectory(), '../dist/ext-json-server.js');
+        const extJsonServerPath = resolve(getLocalDirectory(), '../../dist/server/ext-json-server.js');
         const socketConnection = createConnection(reader, writer, () => socket.dispose());
         const serverConnection = createServerProcess('JSON', 'node', [extJsonServerPath]);
         if (serverConnection) {
