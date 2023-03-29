@@ -29,11 +29,13 @@ import getNotificationServiceOverride from 'vscode/service-override/notification
 import getDialogsServiceOverride from 'vscode/service-override/dialogs';
 import getConfigurationServiceOverride, { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
-import getTextmateServiceOverride, { setGrammars } from 'vscode/service-override/textmate';
-import getLanguagesServiceOverride, { setLanguages } from 'vscode/service-override/languages';
+import { registerExtension } from 'vscode/extensions';
+import getTextmateServiceOverride from 'vscode/service-override/textmate';
+import getLanguagesServiceOverride from 'vscode/service-override/languages';
 import getTokenClassificationServiceOverride from 'vscode/service-override/tokenClassification';
-import getLanguageConfigurationServiceOverride, { setLanguageConfiguration } from 'vscode/service-override/languageConfiguration';
+import getLanguageConfigurationServiceOverride from 'vscode/service-override/languageConfiguration';
 import getThemeServiceOverride from 'vscode/service-override/theme';
+import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
@@ -45,8 +47,6 @@ const setup = async () => {
     const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
     const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
 
-    const responseLanguageConfig = await fetch(statemachineLanguageConfig);
-    const responseStatemachineTm = await fetch(statemachineTmUrl);
     const responseStatemachine = await fetch(exampleStatemachineUrl);
     editorText = await responseStatemachine.text();
 
@@ -63,39 +63,48 @@ const setup = async () => {
         ...getThemeServiceOverride(),
         ...getTokenClassificationServiceOverride(),
         ...getLanguageConfigurationServiceOverride(),
-        ...getLanguagesServiceOverride()
-    });
-
-    setLanguages([{
-        id: languageId,
-        extensions: [
-            '.statemachine'
-        ],
-        aliases: [
-            'Statemachine',
-            'statemachine'
-        ],
-        configuration: './statemachine-configuration.json'
-    }]);
-    setLanguageConfiguration('/statemachine-configuration.json', () => responseLanguageConfig.text());
-
-    setGrammars([{
-        language: languageId,
-        scopeName: 'source.statemachine',
-        path: './statemachine-grammar.json'
-    }], (grammar) => {
-        switch (grammar.language) {
-            case languageId:
-                return responseStatemachineTm.text();
-            default:
-                return Promise.reject(new Error(`Grammar language ${grammar.language} not found!`));
-        }
+        ...getLanguagesServiceOverride(),
+        ...getAudioCueServiceOverride()
     });
 
     updateUserConfiguration(`{
         "editor.fontSize": 14
     }`);
 
+    const extension = {
+        name: 'langium-example',
+        publisher: 'monaco-languageclient-project',
+        version: '1.0.0',
+        engines: {
+            vscode: '*'
+        },
+        contributes: {
+            languages: [{
+                id: languageId,
+                extensions: [
+                    `.${languageId}`
+                ],
+                aliases: [
+                    languageId
+                ],
+                configuration: './statemachine-configuration.json'
+            }],
+            grammars: [{
+                language: languageId,
+                scopeName: 'source.statemachine',
+                path: './statemachine-grammar.json'
+            }]
+        }
+    };
+    const { registerFile: registerExtensionFile } = registerExtension(extension);
+
+    registerExtensionFile('/java-configuration.json', async () => {
+        return (await fetch(statemachineLanguageConfig)).text();
+    });
+
+    registerExtensionFile('/java-grammar.json', async () => {
+        return (await fetch(statemachineTmUrl)).text();
+    });
 };
 
 const run = async () => {

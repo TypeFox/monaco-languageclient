@@ -12,10 +12,10 @@
     "watch": "npm run clean && npm run copy:codicon && ng build --watch --configuration development"
   },
   "dependencies": {
-    "@angular/compiler": "~15.2.3",
-    "@angular/core": "~15.2.3",
-    "@angular/platform-browser": "~15.2.3",
-    "@angular/platform-browser-dynamic": "~15.2.3",
+    "@angular/compiler": "~15.2.5",
+    "@angular/core": "~15.2.5",
+    "@angular/platform-browser": "~15.2.5",
+    "@angular/platform-browser-dynamic": "~15.2.5",
     "monaco-languageclient": "5.0.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.13.0"
@@ -24,7 +24,7 @@
     "@angular-builders/custom-webpack": "~15.0.0",
     "@angular-devkit/build-angular": "~15.2.4",
     "@angular/cli": "~15.2.4",
-    "@angular/compiler-cli": "~15.2.3",
+    "@angular/compiler-cli": "~15.2.5",
     "path-browserify": "~1.0.1"
   },
   "volta": {
