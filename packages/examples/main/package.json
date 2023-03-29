@@ -41,7 +41,7 @@
     "build:worker": "vite --config  vite.langium-worker.ts build",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker",
     "start": "node --loader ts-node/esm src/server/main.ts",
-    "start:ext": "node --loader ts-node/esm src/main.ts --external",
+    "start:ext": "node --loader ts-node/esm src/server/main.ts --external",
     "fetch:themes": "node resources/fetchThemes.mjs"
   }
 }
