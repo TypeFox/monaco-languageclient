@@ -88,11 +88,11 @@ const setup = async () => {
     };
     const { registerFile: registerExtensionFile } = registerExtension(extension);
 
-    registerExtensionFile('/java-configuration.json', async () => {
+    registerExtensionFile('/statemachine-configuration.json', async () => {
         return (await fetch(statemachineLanguageConfig)).text();
     });
 
-    registerExtensionFile('/java-grammar.json', async () => {
+    registerExtensionFile('/statemachine-grammar.json', async () => {
         return (await fetch(statemachineTmUrl)).text();
     });
 };
