@@ -76,6 +76,15 @@ const setup = async () => {
                 language: languageId,
                 scopeName: 'source.statemachine',
                 path: './statemachine-grammar.json'
+            }],
+            keybindings: [{
+                key: 'ctrl+p',
+                command: 'editor.action.quickCommand',
+                when: 'editorTextFocus'
+            }, {
+                key: 'ctrl+shift+c',
+                command: 'editor.action.commentLine',
+                when: 'editorTextFocus'
             }]
         }
     };

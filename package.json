@@ -37,6 +37,7 @@
     "build:client": "npm run build --workspace packages/client",
     "build:vscode-ws-jsonrpc": "npm run build --workspace packages/vscode-ws-jsonrpc",
     "build:example:main": "npm run build --workspace packages/examples/main",
+    "build:example:angular": "npm run build --workspace packages/examples/angular-client",
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
     "start:example:server": "npm run start --workspace packages/examples/main",

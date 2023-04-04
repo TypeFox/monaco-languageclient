@@ -2,13 +2,15 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [5.0.0] - upcoming
+## [5.0.0] - 2023-04-04
 
+- **BREAKING CHANGE**: Update to monaco-vscode-api 1.76 #[470](https://github.com/TypeFox/monaco-languageclient/pull/470)
+  - More services from `monaco-vscode-api` are used in the langium example (language config, text mate, keyboard bindings)
+  - Updates to `monaco-editor` version `0.36.1` and vscode api compatibility to `1.76.0`
 - **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) #[459](https://github.com/TypeFox/monaco-languageclient/pull/459)
   - Content of `vscode-jsonrpc`,`vscode-languageclient` and `vscode-languageserver-protocol` is no longer re-exported
   - Restructures example into less packages. It reduces maintenace efforts
   - Web worker language server example is replaced with Langium Statemachine
-  - More services from `monaco-vscode-api` are used in this example (themes, text mate, keyboard)
 
 ## [4.0.3] - 2022-12-01
 

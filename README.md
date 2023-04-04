@@ -12,13 +12,12 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
-    - [March 2023](#march-2023)
+    - [April 2023](#april-2023)
     - [September 2022](#september-2022)
     - [June 2022](#june-2022)
     - [May 2022](#may-2022)
   - [Getting started](#getting-started)
-    - [Dev environment: Local machine](#dev-environment-local-machine)
-    - [Dev environment: Gitpod](#dev-environment-gitpod)
+    - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
   - [Examples](#examples)
   - [Verification](#verification)
@@ -34,7 +33,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ## Latest Important Project Changes
 
-### March 2023
+### April 2023
 
 Both libraries no longer export code from other libraries (`vscode-jsonrpc`, `vscode-languageclient` and `vscode-languageserver-protocol`).
 
@@ -59,9 +58,9 @@ The default and protected branch is now `main`.
 
 ## Getting started
 
-### Dev environment: Local machine
+### Dev environments
 
-On your local machine you can prepare your dev environment as follows. From CLI in root of the project run:
+On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. From CLI in root of the project run:
 
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
@@ -71,28 +70,20 @@ npm i
 npm run build
 ```
 
-### Dev environment: Gitpod
-
-Use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
+Or, use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
 
 ### Scripts Overview
 
-The main [package.json](./package.json) contains script entries applicable to the whole workspace like `clean` and `compile`, but it also has entries for launching script from the packages (lib and examples).
-
-For example if you want to rebuild the **monaco-languageclient** or **vscode-ws-jsonrpc** library you can do it in different ways. From CLI run one of:
+The main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the packages. See some examples:
 
 ```bash
-# from the root
+# Build only monaco-languageclient
 npm run build:client
-# it performs the following what you could execute manually as well
-npm --workspace packages/client run build
-# instruct npm to execute in different directory
-npm --prefix packages/client run build
-# or manually got to packages/client and run th build there
-cd packages/client && npm run build
+# Build only vscode-ws-jsonrpc
+npm run build:vscode-ws-jsonrpc
+# Build main examples
+npm run build:example:main
 ```
-
-**Hint**: Use *vscode-ws-jsonrpc* instead of *client* for the other lib.
 
 ## Examples
 
@@ -126,6 +117,12 @@ npm run dev
 
 Vite serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available.
 
+If you want to change the libries and see this reflected directly, then you need to run the watch command that compiles all TypeScript files form both libraries and the examples:
+
+```shell
+npm run watch
+```
+
 For the **client** or the **client-webpack** examples you need to ensure the **server** example is running:
 
 ```shell
@@ -154,7 +151,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
-| 5.0.0         | 1.69.24 | 0.34.1 | Planned |
+| 5.0.0         | 1.76.6  | 0.36.1 | April2023 |
 | 4.0.3         | 1.69.13 | 0.34.1 |  |
 | 4.0.1         | 1.69.12 | 0.34.1 |  |
 | 4.0.0         | 1.69.10 | 0.34.0 |  |
@@ -200,6 +197,8 @@ If you use **monaco-editor** as dependency, but only want to have the content of
 ```javascript
 import * as monaco from 'monaco-editor/esm/vs/editor/edcore.main.js';
 ```
+
+Especially, if you are using your own language server or define your own language it may be a good idea to only import the core of monaco-editor
 
 ### @monaco-editor/react
 
