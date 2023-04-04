@@ -30,19 +30,11 @@ import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
-let editorText = '';
 
 const setup = async () => {
-    const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
-    const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
-    const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
-
-    const responseStatemachine = await fetch(exampleStatemachineUrl);
-    editorText = await responseStatemachine.text();
-
     StandaloneServices.initialize({
         ...getModelEditorServiceOverride(async (model, options) => {
-            console.log('trying to open a model', model, options);
+            console.log('Trying to open a model', model, options);
             return undefined;
         }),
         ...getNotificationServiceOverride(),
@@ -58,7 +50,8 @@ const setup = async () => {
     });
 
     updateUserConfiguration(`{
-        "editor.fontSize": 14
+        "editor.fontSize": 14,
+        "window.autoDetectColorScheme": true
     }`);
 
     const extension = {
@@ -89,15 +82,21 @@ const setup = async () => {
     const { registerFile: registerExtensionFile } = registerExtension(extension);
 
     registerExtensionFile('/statemachine-configuration.json', async () => {
+        const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
         return (await fetch(statemachineLanguageConfig)).text();
     });
 
     registerExtensionFile('/statemachine-grammar.json', async () => {
+        const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
         return (await fetch(statemachineTmUrl)).text();
     });
 };
 
 const run = async () => {
+    const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
+    const responseStatemachine = await fetch(exampleStatemachineUrl);
+    const editorText = await responseStatemachine.text();
+
     const editorOptions = {
         model: monaco.editor.createModel(editorText, languageId, monaco.Uri.parse('inmemory://example.statemachine')),
         automaticLayout: true

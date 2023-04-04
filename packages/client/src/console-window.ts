@@ -34,9 +34,7 @@ export class ConsoleWindow implements Window {
         const channel: vscode.LogOutputChannel = {
             name: 'default',
             logLevel: vscode.LogLevel.Info,
-            get onDidChangeLogLevel(): vscode.Event<vscode.LogLevel.Info> {
-                return {} as vscode.Event<vscode.LogLevel.Info>;
-            },
+            onDidChangeLogLevel: new vscode.EventEmitter<vscode.LogLevel.Info>().event,
             trace(_message: string, ..._args: any[]): void {
                 // no-op
             },
