@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "5.0.0-next.3",
+  "version": "5.0.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -23,26 +23,12 @@
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
-    },
-    "./themeRemoteHelper": {
-      "types": "./lib/helpers/themeRemoteHelper.d.ts",
-      "default": "./lib/helpers/themeRemoteHelper.js"
-    },
-    "./themeLocalHelper": {
-      "types": "./lib/helpers/themeLocalHelper.d.ts",
-      "default": "./lib/helpers/themeLocalHelper.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "lib/index.d.ts"
-      ],
-      "themeRemoteHelper": [
-        "./lib/helpers/themeRemoteHelper.d.ts"
-      ],
-      "themeLocalHelper": [
-        "./lib/helpers/themeLocalHelper.d.ts"
       ]
     }
   },
@@ -51,8 +37,8 @@
     "npm": ">=9.0.0"
   },
   "volta": {
-    "node": "18.14.2",
-    "npm": "9.5.1"
+    "node": "18.15.0",
+    "npm": "9.6.2"
   },
   "files": [
     "lib",
@@ -62,11 +48,11 @@
     "License.txt"
   ],
   "dependencies": {
-    "vscode-jsonrpc": "8.0.2",
-    "vscode-languageclient": "8.0.2"
+    "vscode-jsonrpc": "~8.1.0",
+    "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.69.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.76.5"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib *.tsbuildinfo",

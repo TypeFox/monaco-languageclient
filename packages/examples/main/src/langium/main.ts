@@ -3,23 +3,12 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 // support all editor features
-import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuickInputService.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
+import 'monaco-editor/esm/vs/editor/edcore.main.js';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
 import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
-import { loadAllDefaultThemes } from 'monaco-languageclient/themeLocalHelper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
@@ -30,83 +19,84 @@ import getNotificationServiceOverride from 'vscode/service-override/notification
 import getDialogsServiceOverride from 'vscode/service-override/dialogs';
 import getConfigurationServiceOverride, { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
-import getTextmateServiceOverride, { setGrammars } from 'vscode/service-override/textmate';
-import getLanguagesServiceOverride, { setLanguages } from 'vscode/service-override/languages';
+import { registerExtension } from 'vscode/extensions';
+import getTextmateServiceOverride from 'vscode/service-override/textmate';
+import getLanguagesServiceOverride from 'vscode/service-override/languages';
 import getTokenClassificationServiceOverride from 'vscode/service-override/tokenClassification';
-import getLanguageConfigurationServiceOverride, { setLanguageConfiguration } from 'vscode/service-override/languageConfiguration';
+import getLanguageConfigurationServiceOverride from 'vscode/service-override/languageConfiguration';
 import getThemeServiceOverride from 'vscode/service-override/theme';
+import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
-let editorText = '';
 
 const setup = async () => {
-    const onigFileUrl = new URL('../../../node_modules/vscode-oniguruma/release/onig.wasm', window.location.href).href;
-    const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
-    const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
-    const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
-
-    const responseLanguageConfig = await fetch(statemachineLanguageConfig);
-    const responseStatemachineTm = await fetch(statemachineTmUrl);
-    const responseOnig = await fetch(onigFileUrl);
-    const responseStatemachine = await fetch(exampleStatemachineUrl);
-    editorText = await responseStatemachine.text();
-
     StandaloneServices.initialize({
         ...getModelEditorServiceOverride(async (model, options) => {
-            console.log('trying to open a model', model, options);
+            console.log('Trying to open a model', model, options);
             return undefined;
         }),
         ...getNotificationServiceOverride(),
         ...getDialogsServiceOverride(),
         ...getConfigurationServiceOverride(),
         ...getKeybindingsServiceOverride(),
-        ...getTextmateServiceOverride(async () => {
-            return await responseOnig.arrayBuffer();
-        }),
+        ...getTextmateServiceOverride(),
         ...getThemeServiceOverride(),
         ...getTokenClassificationServiceOverride(),
         ...getLanguageConfigurationServiceOverride(),
-        ...getLanguagesServiceOverride()
-    });
-
-    // IMPORTANT: Please run 'npm run fetch:themes' otherwise the themes are not available
-    loadAllDefaultThemes('./resources/themes');
-
-    setLanguages([{
-        id: languageId,
-        extensions: [
-            '.statemachine'
-        ],
-        aliases: [
-            'Statemachine',
-            'statemachine'
-        ],
-        configuration: './statemachine-configuration.json'
-    }]);
-    setLanguageConfiguration('/statemachine-configuration.json', () => responseLanguageConfig.text());
-
-    setGrammars([{
-        language: languageId,
-        scopeName: 'source.statemachine',
-        path: './statemachine-grammar.json'
-    }], (grammar) => {
-        switch (grammar.language) {
-            case languageId:
-                return responseStatemachineTm.text();
-            default:
-                return Promise.reject(new Error(`Grammar language ${grammar.language} not found!`));
-        }
+        ...getLanguagesServiceOverride(),
+        ...getAudioCueServiceOverride()
     });
 
     updateUserConfiguration(`{
-        "workbench.colorTheme": "Dark+ (Experimental)",
-        "editor.fontSize": 14
+        "editor.fontSize": 14,
+        "window.autoDetectColorScheme": true
     }`);
+
+    const extension = {
+        name: 'langium-example',
+        publisher: 'monaco-languageclient-project',
+        version: '1.0.0',
+        engines: {
+            vscode: '*'
+        },
+        contributes: {
+            languages: [{
+                id: languageId,
+                extensions: [
+                    `.${languageId}`
+                ],
+                aliases: [
+                    languageId
+                ],
+                configuration: './statemachine-configuration.json'
+            }],
+            grammars: [{
+                language: languageId,
+                scopeName: 'source.statemachine',
+                path: './statemachine-grammar.json'
+            }]
+        }
+    };
+    const { registerFile: registerExtensionFile } = registerExtension(extension);
+
+    registerExtensionFile('/statemachine-configuration.json', async () => {
+        const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
+        return (await fetch(statemachineLanguageConfig)).text();
+    });
+
+    registerExtensionFile('/statemachine-grammar.json', async () => {
+        const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
+        return (await fetch(statemachineTmUrl)).text();
+    });
 };
 
 const run = async () => {
+    const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
+    const responseStatemachine = await fetch(exampleStatemachineUrl);
+    const editorText = await responseStatemachine.text();
+
     const editorOptions = {
         model: monaco.editor.createModel(editorText, languageId, monaco.Uri.parse('inmemory://example.statemachine')),
         automaticLayout: true

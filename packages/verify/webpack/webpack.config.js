@@ -27,6 +27,10 @@ const config = {
             use: ['source-map-loader'],
             // These modules seems to have broken sourcemaps, exclude them to prevent an error flood in the logs
             exclude: [/vscode-jsonrpc/, /vscode-languageclient/, /vscode-languageserver-protocol/]
+        },
+        {
+            test: /\.(mp3|wasm)$/i,
+            type: 'asset/resource'
         }]
     },
     experiments: {

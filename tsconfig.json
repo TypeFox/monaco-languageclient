@@ -44,8 +44,9 @@
     "**/packages/*/*/*.ts",
     "**/packages/*/*/*.js",
     "**/resources/**/*.mts",
-    "**/resources/**/*.mjs"
-, "packages/examples/main/resources/fetchThemes.jts"  ],
+    "**/resources/**/*.mjs",
+    "*.ts"
+  ],
   "exclude": [
     "dist/**/*",
     "lib/**/*",

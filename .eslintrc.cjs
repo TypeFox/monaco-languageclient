@@ -53,7 +53,7 @@ module.exports = {
     },
     ignorePatterns: [
         '**/{node_modules,dist,lib,out,bin}',
-        '.eslintrc.js',
+        '.eslintrc.cjs',
         'config/header.js',
         'packages/examples/*/*.ts'
     ]

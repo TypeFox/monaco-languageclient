@@ -7,20 +7,19 @@
     "express": "~4.18.2",
     "langium": "~1.1.0",
     "langium-statemachine-dsl": "~1.1.0",
-    "monaco-editor-workers": "0.34.2",
-    "monaco-languageclient": "5.0.0-next.3",
+    "monaco-editor-workers": "0.36.0",
+    "monaco-languageclient": "5.0.0",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "request-light": "~0.7.0",
-    "vscode-json-languageservice": "~5.1.4",
-    "vscode-jsonrpc": "~8.0.2",
-    "vscode-languageclient": "~8.0.2",
-    "vscode-languageserver": "~8.0.2",
+    "vscode-json-languageservice": "~5.3.2",
+    "vscode-jsonrpc": "~8.1.0",
+    "vscode-languageclient": "~8.1.0",
+    "vscode-languageserver": "~8.1.0",
     "vscode-uri": "~3.0.7",
-    "vscode-ws-jsonrpc": "3.0.0-next.1",
-    "vscode-oniguruma": "~1.6.2",
-    "ws": "~8.12.1"
+    "vscode-ws-jsonrpc": "3.0.0",
+    "ws": "~8.13.0"
   },
   "devDependencies": {
     "@types/ws": "~8.5.4",
@@ -28,17 +27,18 @@
     "@types/react": "~18.0.28",
     "@types/react-dom": "~18.0.11",
     "ts-node": "~10.9.1",
-    "vscode-languageserver-types": "~3.17.2"
+    "vscode-languageserver-types": "~3.17.3"
   },
   "volta": {
-    "node": "18.14.2",
-    "npm": "9.5.1"
+    "node": "18.15.0",
+    "npm": "9.6.2"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building main examples:",
-    "build:worker": "vite --config  vite.langium-worker.ts build",
+    "build:worker:vite": "vite --config  vite.langium-worker.ts build",
+    "build:worker": "esbuild ../../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker",
     "start": "node --loader ts-node/esm src/server/main.ts",
     "start:ext": "node --loader ts-node/esm src/server/main.ts --external",

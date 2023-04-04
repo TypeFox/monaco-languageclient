@@ -1,6 +1,6 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "3.0.0-next.1",
+  "version": "3.0.0",
   "description": "VSCode JSON RPC over WebSocket",
   "author": {
     "name": "TypeFox GmbH ",
@@ -51,8 +51,8 @@
     "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "18.14.2",
-    "npm": "9.5.1"
+    "node": "18.15.0",
+    "npm": "9.6.2"
   },
   "files": [
     "lib",
@@ -62,7 +62,7 @@
     "License.txt"
   ],
   "dependencies": {
-    "vscode-jsonrpc": "8.0.2"
+    "vscode-jsonrpc": "~8.1.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib *.tsbuildinfo",

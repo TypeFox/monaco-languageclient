@@ -18,6 +18,10 @@ const config = {
                 include: [
                     resolve(__dirname, '../../../node_modules/monaco-editor')
                 ]
+            },
+            {
+                test: /\.(mp3|wasm)$/i,
+                type: 'asset/resource'
             }
         ]
     },
