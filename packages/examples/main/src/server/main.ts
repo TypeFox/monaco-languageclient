@@ -36,12 +36,14 @@ server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) =>
         wss.handleUpgrade(request, socket, head, webSocket => {
             const socket: IWebSocket = {
                 send: content => webSocket.send(content, error => {
-                    console.log(content);
                     if (error) {
                         throw error;
                     }
                 }),
-                onMessage: cb => webSocket.on('message', cb),
+                onMessage: cb => webSocket.on('message', (data) => {
+                    console.log(data.toString());
+                    cb(data);
+                }),
                 onError: cb => webSocket.on('error', cb),
                 onClose: cb => webSocket.on('close', cb),
                 dispose: () => webSocket.close()

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [5.0.1] - 2023-04-04
+
+- Bugfix: textDocument/didChange message is doubled #[479](https://github.com/TypeFox/monaco-languageclient/issues/479)
+
 ## [5.0.0] - 2023-04-04
 
 - **BREAKING CHANGE**: Update to monaco-vscode-api 1.76 #[470](https://github.com/TypeFox/monaco-languageclient/pull/470)

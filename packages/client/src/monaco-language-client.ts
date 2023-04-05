@@ -83,7 +83,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         const pendingFullTextDocumentChanges: Map<string, TextDocument> = new Map();
         this.registerFeature(new ConfigurationFeature(this));
         this.registerFeature(new DidOpenTextDocumentFeature(this, this['_syncedDocuments']));
-        this.registerFeature(new DidChangeTextDocumentFeature(this, this['_syncedDocuments']));
         this['_didChangeTextDocumentFeature'] = new DidChangeTextDocumentFeature(this, pendingFullTextDocumentChanges);
         this['_didChangeTextDocumentFeature'].onPendingChangeAdded(() => {
             this['triggerPendingChangeDelivery']();
