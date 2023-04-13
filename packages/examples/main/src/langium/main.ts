@@ -8,50 +8,55 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
 import { createConfiguredEditor } from 'vscode/monaco';
-import { StandaloneServices } from 'vscode/services';
+import { initialize as initializeMonacoService } from 'vscode/services';
+import { initialize as initializeVscodeExtensions, registerExtension } from 'vscode/extensions';
 import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
 import getNotificationServiceOverride from 'vscode/service-override/notifications';
 import getDialogsServiceOverride from 'vscode/service-override/dialogs';
 import getConfigurationServiceOverride, { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
-import { registerExtension } from 'vscode/extensions';
 import getTextmateServiceOverride from 'vscode/service-override/textmate';
 import getLanguagesServiceOverride from 'vscode/service-override/languages';
-import getTokenClassificationServiceOverride from 'vscode/service-override/tokenClassification';
-import getLanguageConfigurationServiceOverride from 'vscode/service-override/languageConfiguration';
 import getThemeServiceOverride from 'vscode/service-override/theme';
 import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
+import getPreferencesServiceOverride from 'vscode/service-override/preferences';
+import 'vscode/default-extensions/theme-defaults';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
 
 const setup = async () => {
-    StandaloneServices.initialize({
-        ...getModelEditorServiceOverride(async (model, options) => {
-            console.log('Trying to open a model', model, options);
+    await initializeMonacoService({
+        ...getModelEditorServiceOverride(async (model, options, sideBySide) => {
+            console.log('Trying to open a model: ', model, options, sideBySide);
             return undefined;
         }),
         ...getNotificationServiceOverride(),
         ...getDialogsServiceOverride(),
-        ...getConfigurationServiceOverride(),
+        ...getConfigurationServiceOverride(monaco.Uri.file('/')),
         ...getKeybindingsServiceOverride(),
         ...getTextmateServiceOverride(),
         ...getThemeServiceOverride(),
-        ...getTokenClassificationServiceOverride(),
-        ...getLanguageConfigurationServiceOverride(),
         ...getLanguagesServiceOverride(),
-        ...getAudioCueServiceOverride()
-    });
+        ...getAudioCueServiceOverride(),
+        ...getPreferencesServiceOverride()
+    })
+        .then(() => console.log('initializeMonacoService completed successfully'))
+        .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+
+    await initializeVscodeExtensions()
+        .then(() => console.log('initializeVscodeExtensions completed successfully'))
+        .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
 
     updateUserConfiguration(`{
         "editor.fontSize": 14,
-        "window.autoDetectColorScheme": true
+        "workbench.colorTheme": "Default Dark+"
     }`);
 
     const extension = {
@@ -132,9 +137,6 @@ const run = async () => {
             }
         });
     }
-
-    // install Monaco language client services
-    MonacoServices.install();
 
     const langiumWorkerUrl = new URL('./dist/worker/statemachineServerWorker.js', window.location.href).href;
     const worker = new Worker(langiumWorkerUrl, {

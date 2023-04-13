@@ -7,30 +7,20 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import normalizeUrl from 'normalize-url';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
-import { StandaloneServices } from 'vscode/services';
+import { initialize as initializeMonacoService } from 'vscode/services';
+import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
+import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
 import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getDialogServiceOverride from 'vscode/service-override/dialogs';
+import getTextmateServiceOverride from 'vscode/service-override/textmate';
+import getThemeServiceOverride from 'vscode/service-override/theme';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
-
-StandaloneServices.initialize({
-    ...getNotificationServiceOverride(document.body),
-    ...getDialogServiceOverride()
-});
-
-export type EditorProps = {
-    defaultCode: string;
-    hostname?: string;
-    port?: string;
-    path?: string;
-    className?: string;
-}
 
 export function createUrl(hostname: string, port: string, path: string): string {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
@@ -74,8 +64,14 @@ function createLanguageClient(transports: MessageTransports): MonacoLanguageClie
     });
 }
 
-export type Tester<P = {}> = React.FunctionComponent<P> & {
-    fun2: () => void;
+let init = false;
+
+export type EditorProps = {
+    defaultCode: string;
+    hostname?: string;
+    port?: string;
+    path?: string;
+    className?: string;
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
@@ -92,6 +88,28 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     useEffect(() => {
         if (ref.current != null) {
+            const firstRun = async () => {
+                await initializeMonacoService({
+                    ...getModelEditorServiceOverride(async (model, options, sideBySide) => {
+                        console.log('Trying to open a model: ', model, options, sideBySide);
+                        return undefined;
+                    }),
+                    ...getNotificationServiceOverride(),
+                    ...getTextmateServiceOverride(),
+                    ...getThemeServiceOverride()
+                })
+                    .then(() => console.log('initializeMonacoService completed successfully'))
+                    .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+
+                await initializeVscodeExtensions()
+                    .then(() => console.log('initializeVscodeExtensions completed successfully'))
+                    .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
+                init = true;
+            };
+            if (!init) {
+                firstRun();
+            }
+
             // register Monaco languages
             monaco.languages.register({
                 id: 'json',
@@ -109,9 +127,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 },
                 automaticLayout: true
             });
-
-            // install Monaco language client services
-            MonacoServices.install();
 
             lspWebSocket = createWebSocket(url);
 

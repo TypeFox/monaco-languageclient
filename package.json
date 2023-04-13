@@ -2,12 +2,12 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "~5.56.0",
-    "@typescript-eslint/parser": "~5.56.0",
-    "@types/node": "~18.15.5",
-    "@types/vscode": "~1.76.0",
+    "@typescript-eslint/eslint-plugin": "~5.58.0",
+    "@typescript-eslint/parser": "~5.58.0",
+    "@types/node": "~18.15.11",
+    "@types/vscode": "~1.77.0",
     "editorconfig": "~1.0.2",
-    "eslint": "~8.36.0",
+    "eslint": "~8.38.0",
     "eslint-config-standard": "~17.0.0",
     "eslint-plugin-header": "~3.1.1",
     "eslint-plugin-import": "~2.27.5",
@@ -16,13 +16,13 @@
     "path-browserify": "~1.0.1",
     "shx": "~0.3.4",
     "tslib": "~2.5.0",
-    "typescript": "~4.9.5",
+    "typescript": "~5.0.4",
     "vite": "~4.2.1",
-    "vitest": "~0.29.8"
+    "vitest": "~0.30.1"
   },
   "volta": {
-    "node": "18.15.0",
-    "npm": "9.6.2"
+    "node": "18.16.0",
+    "npm": "9.6.3"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
