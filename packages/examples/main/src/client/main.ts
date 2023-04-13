@@ -7,17 +7,10 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
-
-import { initialize as initializeMonacoService } from 'vscode/services';
-import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getTextmateServiceOverride from 'vscode/service-override/textmate';
-import getThemeServiceOverride from 'vscode/service-override/theme';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
@@ -48,21 +41,14 @@ function createUrl(hostname: string, port: number, path: string): string {
 }
 
 const start = async () => {
-    await initializeMonacoService({
-        ...getModelEditorServiceOverride(async (model, options, sideBySide) => {
-            console.log('Trying to open a model: ', model, options, sideBySide);
-            return undefined;
-        }),
-        ...getNotificationServiceOverride(),
-        ...getTextmateServiceOverride(),
-        ...getThemeServiceOverride()
-    })
-        .then(() => console.log('initializeMonacoService completed successfully'))
-        .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
-
-    await initializeVscodeExtensions()
-        .then(() => console.log('initializeVscodeExtensions completed successfully'))
-        .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
+    await initServices({
+        enableDialogService: true,
+        enableNotificationService: true,
+        enableModelEditorService: {
+            useDefaultFunction: true
+        },
+        enableTextmateService: true
+    });
 
     // register Monaco languages
     monaco.languages.register({
