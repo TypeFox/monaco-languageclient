@@ -32,9 +32,7 @@ export type InitializeServiceConfig = {
     };
     enableKeybindingsService?: boolean;
     enableTextmateService?: boolean;
-    enableTokenClassificationService?: boolean;
     enableLanguagesService?: boolean;
-    enableLanguageConfigurationService?: boolean;
     enableAudioCueService?: boolean;
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;

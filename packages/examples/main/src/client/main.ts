@@ -47,7 +47,15 @@ const start = async () => {
         enableModelEditorService: {
             useDefaultFunction: true
         },
-        enableTextmateService: true
+        enableTextmateService: true,
+        enableConfigurationService: {
+            defaultWorkspaceUri: monaco.Uri.file('/')
+        },
+        enableKeybindingsService: true,
+        enableLanguagesService: true,
+        enableDebugService: true,
+        enableAudioCueService: true,
+        enablePreferencesService: true
     });
 
     // register Monaco languages
