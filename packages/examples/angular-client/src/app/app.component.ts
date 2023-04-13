@@ -7,15 +7,12 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
-import { initialize as initializeMonacoService } from 'vscode/services';
-import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 
 import { AfterViewInit, Component } from '@angular/core';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/lib/common/client.js';
-
 
 buildWorkerDefinition('./assets/monaco-editor-workers/workers', window.location.href + '../..', false);
 
@@ -54,52 +51,65 @@ export class MonacoEditorComponent implements AfterViewInit {
     }
 
     async ngAfterViewInit(): Promise<void> {
-        await initializeMonacoService({
-        })
-            .then(() => console.log('initializeMonacoService completed successfully'))
-            .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+        const createEditor = () => {
+            // register Monaco languages
+            monaco.languages.register({
+                id: 'json',
+                extensions: ['.json', '.jsonc'],
+                aliases: ['JSON', 'json'],
+                mimetypes: ['application/json']
+            });
 
-        await initializeVscodeExtensions()
-            .then(() => console.log('initializeVscodeExtensions completed successfully'))
-            .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
-
-
-        // register Monaco languages
-        monaco.languages.register({
-            id: 'json',
-            extensions: ['.json', '.jsonc'],
-            aliases: ['JSON', 'json'],
-            mimetypes: ['application/json']
-        });
-
-        // create Monaco editor
-        const value = `{
+            // create Monaco editor
+            const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-        monaco.editor.create(document.getElementById('container')!, {
-            model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
-            glyphMargin: true,
-            lightbulb: {
-                enabled: true
-            },
-            automaticLayout: true
-        });
-
-        // create the web socket
-        const url = this.createUrl('localhost', 3000, '/sampleServer');
-        const webSocket = new WebSocket(url);
-
-        webSocket.onopen = () => {
-            const socket = toSocket(webSocket);
-            const reader = new WebSocketMessageReader(socket);
-            const writer = new WebSocketMessageWriter(socket);
-            const languageClient = this.createLanguageClient({
-                reader,
-                writer
+            monaco.editor.create(document.getElementById('container')!, {
+                model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
+                glyphMargin: true,
+                lightbulb: {
+                    enabled: true
+                },
+                automaticLayout: true
             });
-            languageClient.start();
-            reader.onClose(() => languageClient.stop());
+
+            // create the web socket
+            const url = this.createUrl('localhost', 3000, '/sampleServer');
+            const webSocket = new WebSocket(url);
+
+            webSocket.onopen = () => {
+                const socket = toSocket(webSocket);
+                const reader = new WebSocketMessageReader(socket);
+                const writer = new WebSocketMessageWriter(socket);
+                const languageClient = this.createLanguageClient({
+                    reader,
+                    writer
+                });
+                languageClient.start();
+                reader.onClose(() => languageClient.stop());
+            };
         };
+
+        await initServices({
+            enableNotificationService: true,
+            enableThemeService: true,
+            enableTextmateService: true,
+            enableConfigurationService: true,
+            configurationServiceConfig: {
+                defaultWorkspaceUri: monaco.Uri.file('/')
+            },
+            enableKeybindingsService: true,
+            enableDebugService: true,
+            enableAudioCueService: true,
+            enableDialogService: false,
+            enableModelEditorService: false,
+            modelEditorServiceConfig: {
+                useDefaultFunction: true
+            },
+            enableLanguagesService: false,
+            enablePreferencesService: false
+        })
+            .then(() => createEditor());
     }
 }

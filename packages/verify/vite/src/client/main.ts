@@ -7,17 +7,10 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
-
-import { initialize as initializeMonacoService } from 'vscode/services';
-import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getTextmateServiceOverride from 'vscode/service-override/textmate';
-import getThemeServiceOverride from 'vscode/service-override/theme';
 
 buildWorkerDefinition('./workers', new URL('', window.location.href).href, false);
 
@@ -48,59 +41,65 @@ function createUrl(hostname: string, port: number, path: string): string {
 }
 
 const start = async () => {
-    await initializeMonacoService({
-        ...getModelEditorServiceOverride(async (model, options, sideBySide) => {
-            console.log('Trying to open a model: ', model, options, sideBySide);
-            return undefined;
-        }),
-        ...getNotificationServiceOverride(),
-        ...getTextmateServiceOverride(),
-        ...getThemeServiceOverride()
-    })
-        .then(() => console.log('initializeMonacoService completed successfully'))
-        .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
-
-    await initializeVscodeExtensions()
-        .then(() => console.log('initializeVscodeExtensions completed successfully'))
-        .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
-
-    // register Monaco languages
-    monaco.languages.register({
-        id: 'json',
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
-
-    // create Monaco editor
-    const value = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": "unix"
-}`;
-    monaco.editor.create(document.getElementById('container')!, {
-        model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
-        glyphMargin: true,
-        lightbulb: {
-            enabled: true
-        },
-        automaticLayout: true
-    });
-
-    // create the web socket
-    const url = createUrl('localhost', 3000, '/sampleServer');
-    const webSocket = new WebSocket(url);
-
-    webSocket.onopen = () => {
-        const socket = toSocket(webSocket);
-        const reader = new WebSocketMessageReader(socket);
-        const writer = new WebSocketMessageWriter(socket);
-        const languageClient = createLanguageClient({
-            reader,
-            writer
+    const createEditor = () => {
+        // register Monaco languages
+        monaco.languages.register({
+            id: 'json',
+            extensions: ['.json', '.jsonc'],
+            aliases: ['JSON', 'json'],
+            mimetypes: ['application/json']
         });
-        languageClient.start();
-        reader.onClose(() => languageClient.stop());
+
+        // create Monaco editor
+        const value = `{
+        "$schema": "http://json.schemastore.org/coffeelint",
+        "line_endings": "unix"
+    }`;
+        monaco.editor.create(document.getElementById('container')!, {
+            model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
+            glyphMargin: true,
+            lightbulb: {
+                enabled: true
+            },
+            automaticLayout: true
+        });
+
+        // create the web socket
+        const url = createUrl('localhost', 3000, '/sampleServer');
+        const webSocket = new WebSocket(url);
+
+        webSocket.onopen = () => {
+            const socket = toSocket(webSocket);
+            const reader = new WebSocketMessageReader(socket);
+            const writer = new WebSocketMessageWriter(socket);
+            const languageClient = createLanguageClient({
+                reader,
+                writer
+            });
+            languageClient.start();
+            reader.onClose(() => languageClient.stop());
+        };
     };
+
+    await initServices({
+        enableNotificationService: true,
+        enableThemeService: true,
+        enableTextmateService: true,
+        enableConfigurationService: true,
+        configurationServiceConfig: {
+            defaultWorkspaceUri: monaco.Uri.file('/')
+        },
+        enableKeybindingsService: true,
+        enableDebugService: true,
+        enableAudioCueService: true,
+        enableDialogService: false,
+        enableModelEditorService: false,
+        modelEditorServiceConfig: {
+            useDefaultFunction: true
+        },
+        enableLanguagesService: false,
+        enablePreferencesService: false
+    }).then(() => createEditor());
 };
 
 start();

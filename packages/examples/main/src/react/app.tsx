@@ -7,18 +7,11 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import normalizeUrl from 'normalize-url';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
-
-import { initialize as initializeMonacoService } from 'vscode/services';
-import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getTextmateServiceOverride from 'vscode/service-override/textmate';
-import getThemeServiceOverride from 'vscode/service-override/theme';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
@@ -64,7 +57,7 @@ function createLanguageClient(transports: MessageTransports): MonacoLanguageClie
     });
 }
 
-let init = false;
+const init = true;
 
 export type EditorProps = {
     defaultCode: string;
@@ -88,50 +81,51 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     useEffect(() => {
         if (ref.current != null) {
-            const firstRun = async () => {
-                await initializeMonacoService({
-                    ...getModelEditorServiceOverride(async (model, options, sideBySide) => {
-                        console.log('Trying to open a model: ', model, options, sideBySide);
-                        return undefined;
-                    }),
-                    ...getNotificationServiceOverride(),
-                    ...getTextmateServiceOverride(),
-                    ...getThemeServiceOverride()
-                })
-                    .then(() => console.log('initializeMonacoService completed successfully'))
-                    .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+            const createEditor = () => {
+                // register Monaco languages
+                monaco.languages.register({
+                    id: 'json',
+                    extensions: ['.json', '.jsonc'],
+                    aliases: ['JSON', 'json'],
+                    mimetypes: ['application/json']
+                });
 
-                await initializeVscodeExtensions()
-                    .then(() => console.log('initializeVscodeExtensions completed successfully'))
-                    .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
-                init = true;
+                // create Monaco editor
+                editorRef.current = monaco.editor.create(ref.current!, {
+                    model: monaco.editor.createModel(defaultCode, 'json', monaco.Uri.parse('inmemory://model.json')),
+                    glyphMargin: true,
+                    lightbulb: {
+                        enabled: true
+                    },
+                    automaticLayout: true
+                });
+
+                lspWebSocket = createWebSocket(url);
             };
-            if (!init) {
-                firstRun();
+
+            const monacoVscodeApiInit = async () => {
+                await initServices({
+                    enableNotificationService: true,
+                    enableThemeService: true,
+                    enableTextmateService: true,
+                    enableConfigurationService: true,
+                    configurationServiceConfig: {
+                        defaultWorkspaceUri: monaco.Uri.file('/')
+                    },
+                    enableKeybindingsService: true,
+                    enableDebugService: true,
+                    enableAudioCueService: true
+                })
+                    .then(() => createEditor());
+            };
+            if (init) {
+                monacoVscodeApiInit();
+            } else {
+                createEditor();
             }
 
-            // register Monaco languages
-            monaco.languages.register({
-                id: 'json',
-                extensions: ['.json', '.jsonc'],
-                aliases: ['JSON', 'json'],
-                mimetypes: ['application/json']
-            });
-
-            // create Monaco editor
-            editorRef.current = monaco.editor.create(ref.current!, {
-                model: monaco.editor.createModel(defaultCode, 'json', monaco.Uri.parse('inmemory://model.json')),
-                glyphMargin: true,
-                lightbulb: {
-                    enabled: true
-                },
-                automaticLayout: true
-            });
-
-            lspWebSocket = createWebSocket(url);
-
             return () => {
-                editorRef.current!.dispose();
+                editorRef.current?.dispose();
             };
         }
 

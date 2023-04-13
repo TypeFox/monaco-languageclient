@@ -7,9 +7,9 @@ import 'monaco-editor/esm/vs/editor/edcore.main.js';
 import { Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import getModelEditorServiceOverride, { OpenEditor } from 'vscode/service-override/modelEditor';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
 import getDialogsServiceOverride from 'vscode/service-override/dialogs';
+import getNotificationServiceOverride from 'vscode/service-override/notifications';
+import getModelEditorServiceOverride, { OpenEditor } from 'vscode/service-override/modelEditor';
 import getConfigurationServiceOverride from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
 import getTextmateServiceOverride from 'vscode/service-override/textmate';
@@ -20,16 +20,18 @@ import getDebugServiceOverride from 'vscode/service-override/debug';
 import getPreferencesServiceOverride from 'vscode/service-override/preferences';
 
 export type InitializeServiceConfig = {
-    // themeService is enabled by default
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
-    enableModelEditorService?: {
-        useDefaultFunction: true,
+    enableModelEditorService?: boolean;
+    modelEditorServiceConfig?: {
+        useDefaultFunction: boolean;
         openEditorFunc?: OpenEditor
     };
-    enableConfigurationService?: {
+    enableConfigurationService?: boolean
+    configurationServiceConfig?: {
         defaultWorkspaceUri: Uri;
     };
+    enableThemeService?: boolean;
     enableKeybindingsService?: boolean;
     enableTextmateService?: boolean;
     enableLanguagesService?: boolean;
@@ -39,22 +41,25 @@ export type InitializeServiceConfig = {
 };
 
 export const initServices = async (config: InitializeServiceConfig) => {
-    const themeService = getThemeServiceOverride();
+    const themeService = config.enableThemeService === true ? getThemeServiceOverride() : {};
     const dialogsService = config.enableKeybindingsService === true ? getDialogsServiceOverride() : {};
     const notificationService = config.enableNotificationService === true ? getNotificationServiceOverride() : {};
     let modelService = {};
-    if (config.enableModelEditorService) {
+    if (config.enableModelEditorService === true && config.modelEditorServiceConfig) {
         const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
             console.log('Trying to open a model', model, options, sideBySide);
             return undefined;
         };
-        if (config.enableModelEditorService.useDefaultFunction) {
+        if (config.modelEditorServiceConfig.useDefaultFunction) {
             modelService = defaultOpenEditorFunc;
-        } else if (config.enableModelEditorService.openEditorFunc) {
-            modelService = getModelEditorServiceOverride(config.enableModelEditorService.openEditorFunc);
+        } else if (config.modelEditorServiceConfig.openEditorFunc) {
+            modelService = getModelEditorServiceOverride(config.modelEditorServiceConfig.openEditorFunc);
         }
     }
-    const configurationService = config.enableConfigurationService !== undefined ? getConfigurationServiceOverride(config.enableConfigurationService!.defaultWorkspaceUri) : {};
+    let configurationService = {};
+    if (config.enableConfigurationService === true && config.configurationServiceConfig) {
+        configurationService = getConfigurationServiceOverride(config.configurationServiceConfig.defaultWorkspaceUri);
+    }
     const keybindingsService = config.enableKeybindingsService === true ? getKeybindingsServiceOverride() : {};
     const textmateService = config.enableTextmateService === true ? getTextmateServiceOverride() : {};
     const languagesService = config.enableLanguagesService === true ? getLanguagesServiceOverride() : {};
@@ -76,9 +81,9 @@ export const initServices = async (config: InitializeServiceConfig) => {
         ...preferencesService
     })
         .then(() => console.log('initializeMonacoService completed successfully'))
-        .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+        .catch((e: Error) => { throw e; });
 
     await initializeVscodeExtensions()
         .then(() => console.log('initializeVscodeExtensions completed successfully'))
-        .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
+        .catch((e: Error) => { throw e; });
 };
