@@ -7,20 +7,15 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import normalizeUrl from 'normalize-url';
-import { StandaloneServices } from 'vscode/services';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getDialogsServiceOverride from 'vscode/service-override/dialogs';
+import { initialize as initializeMonacoService } from 'vscode/services';
+import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 
 import { AfterViewInit, Component } from '@angular/core';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/lib/common/client.js';
 
-StandaloneServices.initialize({
-    ...getNotificationServiceOverride(),
-    ...getDialogsServiceOverride()
-});
 
 buildWorkerDefinition('./assets/monaco-editor-workers/workers', window.location.href + '../..', false);
 
@@ -58,7 +53,17 @@ export class MonacoEditorComponent implements AfterViewInit {
         return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
     }
 
-    ngAfterViewInit(): void {
+    async ngAfterViewInit(): Promise<void> {
+        await initializeMonacoService({
+        })
+            .then(() => console.log('initializeMonacoService completed successfully'))
+            .catch((e) => console.error(`initializeMonacoService had errors: ${e}`));
+
+        await initializeVscodeExtensions()
+            .then(() => console.log('initializeVscodeExtensions completed successfully'))
+            .catch((e) => console.error(`initializeVscodeExtensions had errors: ${e}`));
+
+
         // register Monaco languages
         monaco.languages.register({
             id: 'json',
@@ -80,9 +85,6 @@ export class MonacoEditorComponent implements AfterViewInit {
             },
             automaticLayout: true
         });
-
-        // install Monaco language client services
-        MonacoServices.install();
 
         // create the web socket
         const url = this.createUrl('localhost', 3000, '/sampleServer');
