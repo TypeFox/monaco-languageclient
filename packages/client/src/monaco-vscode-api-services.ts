@@ -4,20 +4,12 @@
  * ------------------------------------------------------------------------------------------ */
 
 import 'monaco-editor/esm/vs/editor/edcore.main.js';
-import { Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import getDialogsServiceOverride from 'vscode/service-override/dialogs';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getModelEditorServiceOverride, { OpenEditor } from 'vscode/service-override/modelEditor';
-import getConfigurationServiceOverride from 'vscode/service-override/configuration';
-import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
-import getTextmateServiceOverride from 'vscode/service-override/textmate';
-import getLanguagesServiceOverride from 'vscode/service-override/languages';
-import getThemeServiceOverride from 'vscode/service-override/theme';
-import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
-import getDebugServiceOverride from 'vscode/service-override/debug';
-import getPreferencesServiceOverride from 'vscode/service-override/preferences';
+import type { OpenEditor } from 'vscode/service-override/modelEditor';
+
+type ServiceOverride = {} | editor.IEditorOverrideServices;
 
 export type InitializeServiceConfig = {
     enableDialogService?: boolean;
@@ -40,50 +32,112 @@ export type InitializeServiceConfig = {
     enablePreferencesService?: boolean;
 };
 
-export const initServices = async (config: InitializeServiceConfig) => {
-    const themeService = config.enableThemeService === true ? getThemeServiceOverride() : {};
-    const dialogsService = config.enableKeybindingsService === true ? getDialogsServiceOverride() : {};
-    const notificationService = config.enableNotificationService === true ? getNotificationServiceOverride() : {};
-    let modelService = {};
-    if (config.enableModelEditorService === true && config.modelEditorServiceConfig) {
-        const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
-            console.log('Trying to open a model', model, options, sideBySide);
-            return undefined;
-        };
-        if (config.modelEditorServiceConfig.useDefaultFunction) {
-            modelService = defaultOpenEditorFunc;
-        } else if (config.modelEditorServiceConfig.openEditorFunc) {
-            modelService = getModelEditorServiceOverride(config.modelEditorServiceConfig.openEditorFunc);
-        }
-    }
-    let configurationService = {};
-    if (config.enableConfigurationService === true && config.configurationServiceConfig) {
-        configurationService = getConfigurationServiceOverride(config.configurationServiceConfig.defaultWorkspaceUri);
-    }
-    const keybindingsService = config.enableKeybindingsService === true ? getKeybindingsServiceOverride() : {};
-    const textmateService = config.enableTextmateService === true ? getTextmateServiceOverride() : {};
-    const languagesService = config.enableLanguagesService === true ? getLanguagesServiceOverride() : {};
-    const audioCueService = config.enableAudioCueService === true ? getAudioCueServiceOverride() : {};
-    const debugService = config.enableDebugService === true ? getDebugServiceOverride() : {};
-    const preferencesService = config.enablePreferencesService === true ? getPreferencesServiceOverride() : {};
-
-    await initializeMonacoService({
-        ...modelService,
-        ...notificationService,
-        ...dialogsService,
-        ...configurationService,
-        ...keybindingsService,
-        ...textmateService,
-        ...themeService,
-        ...languagesService,
-        ...audioCueService,
-        ...debugService,
-        ...preferencesService
-    })
+export const initServices = async (config?: InitializeServiceConfig) => {
+    await initAll(config)
+        .then(async (allServices) => {
+            await initializeMonacoService({
+                ...allServices.modelService,
+                ...allServices.notificationService,
+                ...allServices.dialogsService,
+                ...allServices.configurationService,
+                ...allServices.keybindingsService,
+                ...allServices.textmateService,
+                ...allServices.themeService,
+                ...allServices.languagesService,
+                ...allServices.audioCueService,
+                ...allServices.debugService,
+                ...allServices.preferencesService
+            });
+        })
         .then(() => console.log('initializeMonacoService completed successfully'))
-        .catch((e: Error) => { throw e; });
-
-    await initializeVscodeExtensions()
+        .then(async () => await initializeVscodeExtensions())
         .then(() => console.log('initializeVscodeExtensions completed successfully'))
         .catch((e: Error) => { throw e; });
+};
+
+const initAll = async (config?: InitializeServiceConfig) => {
+    const allServices = {
+        modelService: {} as ServiceOverride,
+        notificationService: {} as ServiceOverride,
+        dialogsService: {} as ServiceOverride,
+        configurationService: {} as ServiceOverride,
+        keybindingsService: {} as ServiceOverride,
+        textmateService: {} as ServiceOverride,
+        themeService: {} as ServiceOverride,
+        languagesService: {} as ServiceOverride,
+        audioCueService: {} as ServiceOverride,
+        debugService: {} as ServiceOverride,
+        preferencesService: {} as ServiceOverride
+    };
+
+    if (config) {
+        if (config.enableDialogService === true) {
+            const { default: getDialogsServiceOverride } = await import('vscode/service-override/dialogs');
+            allServices.dialogsService = getDialogsServiceOverride();
+        }
+
+        if (config.enableDialogService === true) {
+            const { default: getNotificationServiceOverride } = await import('vscode/service-override/notifications');
+            allServices.notificationService = getNotificationServiceOverride();
+        }
+
+        if (config.enableModelEditorService === true && config.modelEditorServiceConfig) {
+            const {
+                default: getModelEditorServiceOverride
+            } = await import('vscode/service-override/modelEditor');
+            const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
+                console.log('Trying to open a model', model, options, sideBySide);
+                return undefined;
+            };
+            if (config.modelEditorServiceConfig.useDefaultFunction) {
+                allServices.modelService = getModelEditorServiceOverride(defaultOpenEditorFunc);
+            } else if (config.modelEditorServiceConfig.openEditorFunc) {
+                allServices.modelService = getModelEditorServiceOverride(config.modelEditorServiceConfig.openEditorFunc);
+            }
+        }
+
+        if (config.enableConfigurationService === true && config.configurationServiceConfig) {
+            const { default: getConfigurationServiceOverride } = await import('vscode/service-override/configuration');
+            allServices.configurationService = getConfigurationServiceOverride(config.configurationServiceConfig.defaultWorkspaceUri);
+        }
+
+        if (config.enableThemeService === true) {
+            const { default: getThemeServiceOverride } = await import('vscode/service-override/theme');
+            allServices.themeService = getThemeServiceOverride();
+
+            // theme requires textmate
+            config.enableTextmateService = true;
+        }
+
+        if (config.enableKeybindingsService === true) {
+            const { default: getKeybindingsServiceOverride } = await import('vscode/service-override/keybindings');
+            allServices.keybindingsService = getKeybindingsServiceOverride();
+        }
+
+        if (config.enableTextmateService === true) {
+            const { default: getTextmateServiceOverride } = await import('vscode/service-override/textmate');
+            allServices.textmateService = getTextmateServiceOverride();
+        }
+
+        if (config.enableLanguagesService === true) {
+            const { default: getLanguagesServiceOverride } = await import('vscode/service-override/languages');
+            allServices.languagesService = getLanguagesServiceOverride();
+        }
+
+        if (config.enableAudioCueService === true) {
+            const { default: getAudioCueServiceOverride } = await import('vscode/service-override/audioCue');
+            allServices.audioCueService = getAudioCueServiceOverride();
+        }
+
+        if (config.enableDebugService === true) {
+            const { default: getDebugServiceOverride } = await import('vscode/service-override/debug');
+            allServices.debugService = getDebugServiceOverride();
+        }
+
+        if (config.enablePreferencesService === true) {
+            const { default: getPreferencesServiceOverride } = await import('vscode/service-override/preferences');
+            allServices.preferencesService = getPreferencesServiceOverride();
+        }
+    }
+    return allServices;
 };

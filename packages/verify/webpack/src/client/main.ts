@@ -81,25 +81,7 @@ const start = async () => {
         };
     };
 
-    await initServices({
-        enableNotificationService: true,
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableConfigurationService: true,
-        configurationServiceConfig: {
-            defaultWorkspaceUri: monaco.Uri.file('/')
-        },
-        enableKeybindingsService: true,
-        enableDebugService: true,
-        enableAudioCueService: true,
-        enableDialogService: false,
-        enableModelEditorService: false,
-        modelEditorServiceConfig: {
-            useDefaultFunction: true
-        },
-        enableLanguagesService: false,
-        enablePreferencesService: false
-    }).then(() => createEditor());
+    await initServices().then(() => createEditor());
 };
 
 start();

@@ -150,16 +150,9 @@ const start = async () => {
     };
 
     await initServices({
-        enableNotificationService: true,
         enableThemeService: true,
         enableTextmateService: true,
-        enableConfigurationService: true,
-        configurationServiceConfig: {
-            defaultWorkspaceUri: monaco.Uri.file('/')
-        },
-        enableKeybindingsService: true,
-        enableDebugService: true,
-        enableAudioCueService: true
+        enableLanguagesService: true
     }).then(() => createEditor());
 };
 

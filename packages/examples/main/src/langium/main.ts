@@ -75,7 +75,6 @@ const setup = async () => {
     };
 
     await initServices({
-        enableNotificationService: true,
         enableThemeService: true,
         enableTextmateService: true,
         enableConfigurationService: true,
@@ -83,15 +82,7 @@ const setup = async () => {
             defaultWorkspaceUri: monaco.Uri.file('/')
         },
         enableKeybindingsService: true,
-        enableDebugService: true,
-        enableAudioCueService: true,
-        enableDialogService: true,
-        enableModelEditorService: true,
-        modelEditorServiceConfig: {
-            useDefaultFunction: true
-        },
-        enableLanguagesService: true,
-        enablePreferencesService: true
+        enableLanguagesService: true
     }).then(() => configure());
 };
 

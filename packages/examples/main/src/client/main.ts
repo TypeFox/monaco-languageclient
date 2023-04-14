@@ -52,9 +52,9 @@ const start = async () => {
 
         // create Monaco editor
         const value = `{
-        "$schema": "http://json.schemastore.org/coffeelint",
-        "line_endings": "unix"
-    }`;
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
+}`;
         monaco.editor.create(document.getElementById('container')!, {
             model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
             glyphMargin: true,
@@ -81,25 +81,12 @@ const start = async () => {
         };
     };
 
-    await initServices({
-        enableNotificationService: true,
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableConfigurationService: true,
-        configurationServiceConfig: {
-            defaultWorkspaceUri: monaco.Uri.file('/')
-        },
-        enableKeybindingsService: true,
-        enableDebugService: true,
-        enableAudioCueService: true,
-        enableDialogService: false,
-        enableModelEditorService: false,
-        modelEditorServiceConfig: {
-            useDefaultFunction: true
-        },
-        enableLanguagesService: false,
-        enablePreferencesService: false
-    }).then(() => createEditor());
+    await initServices().then(() => createEditor());
+
+    // no errors
+    // await initServices({
+    //     enableThemeService: true
+    // }).then(() => createEditor());
 };
 
 start();

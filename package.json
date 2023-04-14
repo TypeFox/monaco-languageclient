@@ -30,6 +30,7 @@
     "watch:clean": "tsc --build tsconfig.build.json --clean",
     "watch": "tsc --build tsconfig.build.json --watch --verbose",
     "lint": "eslint {**/src/**/*.ts,**/src/**/*.tsx,**/test/**/*.ts,**/test/**/*.tsx}",
+    "vite:build": "vite build",
     "dev": "vite",
     "dev:debug": "vite --debug --force",
     "report:versions": "echo Reporting versions: && echo tsc: && tsc --version && echo npm: && npm --version && echo node: && node --version",
