@@ -106,8 +106,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             const monacoVscodeApiInit = async () => {
                 await initServices({
                     enableThemeService: true
-                })
-                    .then(() => createEditor());
+                }).then(() => createEditor());
             };
             if (init) {
                 monacoVscodeApiInit();

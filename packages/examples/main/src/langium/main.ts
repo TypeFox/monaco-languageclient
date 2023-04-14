@@ -15,6 +15,7 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
+import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
 import 'vscode/default-extensions/theme-defaults';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
@@ -78,11 +79,14 @@ const setup = async () => {
         enableThemeService: true,
         enableTextmateService: true,
         enableConfigurationService: true,
+        modelEditorServiceConfig: {
+            useDefaultFunction: true
+        },
         configurationServiceConfig: {
             defaultWorkspaceUri: monaco.Uri.file('/')
         },
-        enableKeybindingsService: true,
-        enableLanguagesService: true
+        enableLanguagesService: true,
+        userServices: { ...getKeybindingsServiceOverride() }
     }).then(() => configure());
 };
 

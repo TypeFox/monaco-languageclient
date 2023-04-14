@@ -52,7 +52,7 @@
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "vscode": "npm:@codingame/monaco-vscode-api@1.78.0-next.1"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.0"
   },
   "scripts": {
     "clean": "npx shx rm -fr lib *.tsbuildinfo",

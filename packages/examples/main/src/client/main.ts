@@ -81,12 +81,9 @@ const start = async () => {
         };
     };
 
-    await initServices().then(() => createEditor());
-
-    // no errors
-    // await initServices({
-    //     enableThemeService: true
-    // }).then(() => createEditor());
+    await initServices({
+        enableThemeService: true
+    }).then(() => createEditor());
 };
 
 start();

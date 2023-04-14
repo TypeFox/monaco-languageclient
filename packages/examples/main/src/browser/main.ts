@@ -149,11 +149,7 @@ const start = async () => {
         }
     };
 
-    await initServices({
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableLanguagesService: true
-    }).then(() => createEditor());
+    await initServices().then(() => createEditor());
 };
 
 start();
