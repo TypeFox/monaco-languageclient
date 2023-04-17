@@ -130,7 +130,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
                     } = loadedImport as unknown as typeof import('vscode/service-override/configuration');
                     const services = { ...getConfigurationServiceOverride(config!.configurationServiceConfig!.defaultWorkspaceUri) };
                     reportServiceLoading('provided', services);
-                    overrideServices = { ...overrideServices, services };
+                    overrideServices = { ...overrideServices, ...services };
                 } else {
                     // using the same import type here is a hack
                     const { default: getServiceOverride } = loadedImport as unknown as typeof import('vscode/service-override/files');

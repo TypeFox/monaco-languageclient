@@ -23,71 +23,57 @@ buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/
 const languageId = 'statemachine';
 
 const setup = async () => {
-    const configure = () => {
-        updateUserConfiguration(`{
+    console.log('Setting up...');
+    const extension = {
+        name: 'langium-example',
+        publisher: 'monaco-languageclient-project',
+        version: '1.0.0',
+        engines: {
+            vscode: '*'
+        },
+        contributes: {
+            languages: [{
+                id: languageId,
+                extensions: [
+                    `.${languageId}`
+                ],
+                aliases: [
+                    languageId
+                ],
+                configuration: './statemachine-configuration.json'
+            }],
+            grammars: [{
+                language: languageId,
+                scopeName: 'source.statemachine',
+                path: './statemachine-grammar.json'
+            }],
+            keybindings: [{
+                key: 'ctrl+p',
+                command: 'editor.action.quickCommand',
+                when: 'editorTextFocus'
+            }, {
+                key: 'ctrl+shift+c',
+                command: 'editor.action.commentLine',
+                when: 'editorTextFocus'
+            }]
+        }
+    };
+    const { registerFile: registerExtensionFile } = registerExtension(extension);
+
+    registerExtensionFile('/statemachine-configuration.json', async () => {
+        const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
+        return (await fetch(statemachineLanguageConfig)).text();
+    });
+
+    registerExtensionFile('/statemachine-grammar.json', async () => {
+        const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
+        return (await fetch(statemachineTmUrl)).text();
+    });
+
+    updateUserConfiguration(`{
     "editor.fontSize": 14,
     "workbench.colorTheme": "Default Dark+ Experimental"
 }`);
-        const extension = {
-            name: 'langium-example',
-            publisher: 'monaco-languageclient-project',
-            version: '1.0.0',
-            engines: {
-                vscode: '*'
-            },
-            contributes: {
-                languages: [{
-                    id: languageId,
-                    extensions: [
-                        `.${languageId}`
-                    ],
-                    aliases: [
-                        languageId
-                    ],
-                    configuration: './statemachine-configuration.json'
-                }],
-                grammars: [{
-                    language: languageId,
-                    scopeName: 'source.statemachine',
-                    path: './statemachine-grammar.json'
-                }],
-                keybindings: [{
-                    key: 'ctrl+p',
-                    command: 'editor.action.quickCommand',
-                    when: 'editorTextFocus'
-                }, {
-                    key: 'ctrl+shift+c',
-                    command: 'editor.action.commentLine',
-                    when: 'editorTextFocus'
-                }]
-            }
-        };
-        const { registerFile: registerExtensionFile } = registerExtension(extension);
-
-        registerExtensionFile('/statemachine-configuration.json', async () => {
-            const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
-            return (await fetch(statemachineLanguageConfig)).text();
-        });
-
-        registerExtensionFile('/statemachine-grammar.json', async () => {
-            const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
-            return (await fetch(statemachineTmUrl)).text();
-        });
-    };
-
-    await initServices({
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableConfigurationService: true,
-        modelEditorServiceConfig: {
-            useDefaultFunction: true
-        },
-        configurationServiceConfig: {
-            defaultWorkspaceUri: monaco.Uri.file('/')
-        },
-        enableLanguagesService: true,
-        userServices: { ...getKeybindingsServiceOverride() }
-    }).then(() => configure());
 };
 
 const run = async () => {
@@ -135,6 +121,19 @@ const run = async () => {
     reader.onClose(() => languageClient.stop());
 };
 
-setup()
+await initServices({
+    enableThemeService: true,
+    enableTextmateService: true,
+    enableConfigurationService: true,
+    modelEditorServiceConfig: {
+        useDefaultFunction: true
+    },
+    configurationServiceConfig: {
+        defaultWorkspaceUri: monaco.Uri.file('/')
+    },
+    enableLanguagesService: true,
+    userServices: { ...getKeybindingsServiceOverride() }
+})
+    .then(() => setup())
     .then(() => run())
     .catch((e: Error) => console.log(e));

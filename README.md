@@ -99,7 +99,7 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **react-client** example located in [./packages/examples/main/src/react](./packages/examples/main/src/react) contains the [React client](./packages/examples/main/src/react/main.tsx). It does the same as the regular client example but inside a React Functional Component.
 
-- The **angular-client** example located in [./packages/examples/angular-client](./packages/examples/angular-client) contains the [Angular client](./packages/examples/angular-client/src/main.ts). It does the same as the regular client example but inside an Angular Component.
+- The **angular-client** is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
 
 ## Verification
 

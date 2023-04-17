@@ -33,8 +33,8 @@ const config = {
             type: 'asset/resource'
         },
         {
-            test: /node_modules\/monaco-editor\//,
-            loader: 'vscode/webpack-loader'
+            test: /monaco-editor/,
+            use: ['vscode/webpack-loader']
         }]
     },
     experiments: {
