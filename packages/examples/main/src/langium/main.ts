@@ -125,6 +125,7 @@ await initServices({
     enableThemeService: true,
     enableTextmateService: true,
     enableConfigurationService: true,
+    enableModelEditorService: true,
     modelEditorServiceConfig: {
         useDefaultFunction: true
     },
@@ -132,7 +133,12 @@ await initServices({
         defaultWorkspaceUri: monaco.Uri.file('/')
     },
     enableLanguagesService: true,
-    userServices: { ...getKeybindingsServiceOverride() }
+    userServices: { ...getKeybindingsServiceOverride() },
+    enableAudioCueService: true,
+    enableDebugService: true,
+    enableDialogService: true,
+    enableNotificationService: true,
+    enablePreferencesService: true
 })
     .then(() => setup())
     .then(() => run())

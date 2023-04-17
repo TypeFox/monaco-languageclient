@@ -41,49 +41,46 @@ function createUrl(hostname: string, port: number, path: string): string {
 }
 
 const start = async () => {
-    const createEditor = () => {
-        // register Monaco languages
-        monaco.languages.register({
-            id: 'json',
-            extensions: ['.json', '.jsonc'],
-            aliases: ['JSON', 'json'],
-            mimetypes: ['application/json']
-        });
+    // register Monaco languages
+    monaco.languages.register({
+        id: 'json',
+        extensions: ['.json', '.jsonc'],
+        aliases: ['JSON', 'json'],
+        mimetypes: ['application/json']
+    });
 
-        // create Monaco editor
-        const value = `{
+    // create Monaco editor
+    const value = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-        monaco.editor.create(document.getElementById('container')!, {
-            model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
-            glyphMargin: true,
-            lightbulb: {
-                enabled: true
-            },
-            automaticLayout: true
+    monaco.editor.create(document.getElementById('container')!, {
+        model: monaco.editor.createModel(value, 'json', monaco.Uri.parse('inmemory://model.json')),
+        glyphMargin: true,
+        lightbulb: {
+            enabled: true
+        },
+        automaticLayout: true
+    });
+
+    // create the web socket
+    const url = createUrl('localhost', 3000, '/sampleServer');
+    const webSocket = new WebSocket(url);
+
+    webSocket.onopen = () => {
+        const socket = toSocket(webSocket);
+        const reader = new WebSocketMessageReader(socket);
+        const writer = new WebSocketMessageWriter(socket);
+        const languageClient = createLanguageClient({
+            reader,
+            writer
         });
-
-        // create the web socket
-        const url = createUrl('localhost', 3000, '/sampleServer');
-        const webSocket = new WebSocket(url);
-
-        webSocket.onopen = () => {
-            const socket = toSocket(webSocket);
-            const reader = new WebSocketMessageReader(socket);
-            const writer = new WebSocketMessageWriter(socket);
-            const languageClient = createLanguageClient({
-                reader,
-                writer
-            });
-            languageClient.start();
-            reader.onClose(() => languageClient.stop());
-        };
+        languageClient.start();
+        reader.onClose(() => languageClient.stop());
     };
-
-    await initServices({
-        enableThemeService: true
-    }).then(() => createEditor());
 };
 
-start();
+await initServices({
+    enableThemeService: true
+})
+    .then(() => start());
