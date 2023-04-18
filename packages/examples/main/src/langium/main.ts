@@ -15,6 +15,7 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
+// import getConfigurationServiceOverride from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
 import 'vscode/default-extensions/theme-defaults';
 
@@ -23,7 +24,7 @@ buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/
 const languageId = 'statemachine';
 
 const setup = async () => {
-    console.log('Setting up...');
+    console.log('Setting up Langium configuration ...');
     const extension = {
         name: 'langium-example',
         publisher: 'monaco-languageclient-project',
@@ -124,21 +125,25 @@ const run = async () => {
 await initServices({
     enableThemeService: true,
     enableTextmateService: true,
-    enableConfigurationService: true,
     enableModelEditorService: true,
     modelEditorServiceConfig: {
         useDefaultFunction: true
     },
+    enableConfigurationService: true,
     configurationServiceConfig: {
-        defaultWorkspaceUri: monaco.Uri.file('/')
+        defaultWorkspaceUri: '/tmp'
     },
+    enableKeybindingsService: false,
     enableLanguagesService: true,
-    userServices: { ...getKeybindingsServiceOverride() },
     enableAudioCueService: true,
     enableDebugService: true,
     enableDialogService: true,
     enableNotificationService: true,
-    enablePreferencesService: true
+    enablePreferencesService: true,
+    userServices: {
+        // ...getConfigurationServiceOverride(monaco.Uri.file('/')),
+        ...getKeybindingsServiceOverride()
+    }
 })
     .then(() => setup())
     .then(() => run())
