@@ -28,41 +28,54 @@ export type InitializeServiceConfig = {
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
     userServices?: editor.IEditorOverrideServices;
+    debugLogging?: boolean;
 };
 
 export const initServices = async (config?: InitializeServiceConfig) => {
     await importAllServices(config)
-        .then(() => console.log('initializeMonacoService completed successfully'))
+        .then(() => {
+            if (config?.debugLogging === true) {
+                console.log('initializeMonacoService completed successfully');
+            }
+        })
         .then(async () => await initializeVscodeExtensions())
-        .then(() => console.log('initializeVscodeExtensions completed successfully'))
+        .then(() => {
+            if (config?.debugLogging === true) {
+                console.log('initializeVscodeExtensions completed successfully');
+            }
+        })
         .catch((e: Error) => { throw e; });
 };
 
+type ModuleWithDefaultExport = {
+    default: (x?: any) => editor.IEditorOverrideServices
+}
+
 const importAllServices = async (config?: InitializeServiceConfig) => {
-    const promises: Promise<unknown>[] = [];
+    const promises: Promise<ModuleWithDefaultExport>[] = [];
     const serviceNames: string[] = [];
     const lc: InitializeServiceConfig = config ?? {};
     const userServices = lc.userServices ?? {};
 
-    const addService = (name: string, promise: Promise<unknown>) => {
+    const addService = (name: string, promise: Promise<ModuleWithDefaultExport>) => {
         promises.push(promise);
         serviceNames.push(name);
     };
 
-    if (lc.enableConfigurationService === true && lc.configurationServiceConfig !== undefined) {
-        addService('configuration', import('vscode/service-override/configuration'));
-    }
     // files service is required
     addService('files', import('vscode/service-override/files'));
 
+    if (lc.enableModelEditorService === true && lc.modelEditorServiceConfig !== undefined) {
+        addService('modelEditor', import('vscode/service-override/modelEditor'));
+    }
+    if (lc.enableConfigurationService === true && lc.configurationServiceConfig !== undefined) {
+        addService('configuration', import('vscode/service-override/configuration'));
+    }
     if (lc.enableDialogService === true) {
         addService('dialogs', import('vscode/service-override/dialogs'));
     }
     if (lc.enableNotificationService === true) {
         addService('notifications', import('vscode/service-override/notifications'));
-    }
-    if (lc.enableModelEditorService === true && lc.modelEditorServiceConfig !== undefined) {
-        addService('modelEditor', import('vscode/service-override/modelEditor'));
     }
     if (lc.enableThemeService === true) {
         addService('theme', import('vscode/service-override/theme'));
@@ -88,9 +101,11 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('preferences', import('vscode/service-override/preferences'));
     }
 
-    const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices) => {
+    const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {
         for (const serviceName of Object.keys(services)) {
-            console.log(`Loading ${origin} service: ${serviceName}`);
+            if (debugLogging) {
+                console.log(`Loading ${origin} service: ${serviceName}`);
+            }
         }
     };
 
@@ -106,44 +121,37 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
             const overrideServices: editor.IEditorOverrideServices = {};
             if (userServices) {
                 mergeServices(userServices, overrideServices);
-                reportServiceLoading('user', userServices);
+                reportServiceLoading('user', userServices, lc.debugLogging === true);
             }
 
             for (const loadedImport of loadedImports) {
                 const serviceName = serviceNames[count];
-                console.log(`Initialising provided service: ${serviceName}`);
-                if (serviceNames[count] === 'modelEditor' && lc.enableModelEditorService) {
-                    const {
-                        default: getModelEditorServiceOverride
-                    } = loadedImport as unknown as typeof import('vscode/service-override/modelEditor');
+                if (lc.debugLogging === true) {
+                    console.log(`Initialising provided service: ${serviceName}`);
+                }
+
+                let services: editor.IEditorOverrideServices = {};
+                if (serviceName === 'modelEditor' && lc.enableModelEditorService) {
                     const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
                         console.log('Trying to open a model', model, options, sideBySide);
                         return undefined;
                     };
 
-                    let services = {};
                     if (lc.modelEditorServiceConfig?.useDefaultFunction) {
-                        services = getModelEditorServiceOverride(defaultOpenEditorFunc);
+                        services = loadedImport.default(defaultOpenEditorFunc);
                     } else if (lc.modelEditorServiceConfig?.openEditorFunc) {
-                        services = getModelEditorServiceOverride(lc.modelEditorServiceConfig.openEditorFunc);
+                        services = loadedImport.default(lc.modelEditorServiceConfig.openEditorFunc);
                     }
-                    mergeServices(services, overrideServices);
-                    reportServiceLoading('user', services);
-                } else if (serviceNames[count] === 'configuration' && lc.enableConfigurationService) {
-                    const {
-                        default: getConfigurationServiceOverride
-                    } = loadedImport as unknown as typeof import('vscode/service-override/configuration');
+                } else if (serviceName === 'configuration' && lc.enableConfigurationService) {
                     const uri = Uri.file(lc.configurationServiceConfig!.defaultWorkspaceUri);
-                    const services = getConfigurationServiceOverride(uri);
-                    mergeServices(services, overrideServices);
-                    reportServiceLoading('user', services);
+                    services = loadedImport.default(uri);
                 } else {
-                    // using the same import type here is a hack
-                    const { default: getServiceOverride } = loadedImport as unknown as typeof import('vscode/service-override/files');
-                    const services = getServiceOverride();
-                    mergeServices(services, overrideServices);
-                    reportServiceLoading('user', services);
+                    services = loadedImport.default();
                 }
+
+                mergeServices(services, overrideServices);
+                reportServiceLoading('user', services, lc.debugLogging === true);
+
                 count++;
             }
 

@@ -15,7 +15,6 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-// import getConfigurationServiceOverride from 'vscode/service-override/configuration';
 import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
 import 'vscode/default-extensions/theme-defaults';
 
@@ -141,9 +140,9 @@ await initServices({
     enableNotificationService: true,
     enablePreferencesService: true,
     userServices: {
-        // ...getConfigurationServiceOverride(monaco.Uri.file('/')),
         ...getKeybindingsServiceOverride()
-    }
+    },
+    debugLogging: true
 })
     .then(() => setup())
     .then(() => run())
