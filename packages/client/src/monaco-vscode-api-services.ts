@@ -3,10 +3,14 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/modelEditor';
+
+interface MonacoEnvironmentEnhanced extends Environment {
+    vscodeApiInitialised: boolean;
+}
 
 export type InitializeServiceConfig = {
     enableDialogService?: boolean;
@@ -31,6 +35,10 @@ export type InitializeServiceConfig = {
     debugLogging?: boolean;
 };
 
+export const wasVscodeApiInitialized = () => {
+    return (window.MonacoEnvironment as MonacoEnvironmentEnhanced)?.vscodeApiInitialised === true;
+};
+
 export const initServices = async (config?: InitializeServiceConfig) => {
     await importAllServices(config);
     if (config?.debugLogging === true) {
@@ -40,6 +48,8 @@ export const initServices = async (config?: InitializeServiceConfig) => {
     if (config?.debugLogging === true) {
         console.log('initializeVscodeExtensions completed successfully');
     }
+
+    (window.MonacoEnvironment as MonacoEnvironmentEnhanced ?? {}).vscodeApiInitialised = true;
 };
 
 type ModuleWithDefaultExport = {
@@ -149,5 +159,5 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         count++;
     }
 
-    return initializeMonacoService(overrideServices);
+    await initializeMonacoService(overrideServices);
 };
