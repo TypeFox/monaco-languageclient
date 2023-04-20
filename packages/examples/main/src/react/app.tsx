@@ -57,7 +57,7 @@ function createLanguageClient(transports: MessageTransports): MonacoLanguageClie
     });
 }
 
-const init = true;
+let init = true;
 
 export type EditorProps = {
     defaultCode: string;
@@ -80,6 +80,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     let lspWebSocket: WebSocket;
 
     useEffect(() => {
+        const currentEditor = editorRef.current;
+
         if (ref.current != null) {
             const createEditor = () => {
                 // register Monaco languages
@@ -103,19 +105,20 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 lspWebSocket = createWebSocket(url);
             };
 
-            const monacoVscodeApiInit = async () => {
-                await initServices({
-                    enableThemeService: true
-                }).then(() => createEditor());
-            };
             if (init) {
-                monacoVscodeApiInit();
+                (async () => {
+                    await initServices({
+                        enableThemeService: true
+                    });
+                    createEditor();
+                    init = false;
+                })();
             } else {
                 createEditor();
             }
 
             return () => {
-                editorRef.current?.dispose();
+                currentEditor?.dispose();
             };
         }
 

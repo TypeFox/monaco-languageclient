@@ -149,7 +149,8 @@ const start = async () => {
         }
     };
 
-    await initServices().then(() => createEditor());
+    await initServices();
+    createEditor();
 };
 
 start();

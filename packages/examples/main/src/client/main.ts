@@ -82,5 +82,5 @@ const start = async () => {
 
 await initServices({
     enableThemeService: true
-})
-    .then(() => start());
+});
+start();

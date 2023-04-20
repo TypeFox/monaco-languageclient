@@ -32,19 +32,14 @@ export type InitializeServiceConfig = {
 };
 
 export const initServices = async (config?: InitializeServiceConfig) => {
-    await importAllServices(config)
-        .then(() => {
-            if (config?.debugLogging === true) {
-                console.log('initializeMonacoService completed successfully');
-            }
-        })
-        .then(async () => await initializeVscodeExtensions())
-        .then(() => {
-            if (config?.debugLogging === true) {
-                console.log('initializeVscodeExtensions completed successfully');
-            }
-        })
-        .catch((e: Error) => { throw e; });
+    await importAllServices(config);
+    if (config?.debugLogging === true) {
+        console.log('initializeMonacoService completed successfully');
+    }
+    await initializeVscodeExtensions();
+    if (config?.debugLogging === true) {
+        console.log('initializeVscodeExtensions completed successfully');
+    }
 };
 
 type ModuleWithDefaultExport = {
@@ -116,47 +111,43 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     };
 
     let count = 0;
-    return Promise.all(Object.values(promises))
-        .then((loadedImports) => {
-            const overrideServices: editor.IEditorOverrideServices = {};
-            if (userServices) {
-                mergeServices(userServices, overrideServices);
-                reportServiceLoading('user', userServices, lc.debugLogging === true);
+    const loadedImports = await Promise.all(Object.values(promises));
+    const overrideServices: editor.IEditorOverrideServices = {};
+    if (userServices) {
+        mergeServices(userServices, overrideServices);
+        reportServiceLoading('user', userServices, lc.debugLogging === true);
+    }
+
+    for (const loadedImport of loadedImports) {
+        const serviceName = serviceNames[count];
+        if (lc.debugLogging === true) {
+            console.log(`Initialising provided service: ${serviceName}`);
+        }
+
+        let services: editor.IEditorOverrideServices = {};
+        if (serviceName === 'modelEditor' && lc.enableModelEditorService) {
+            const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
+                console.log('Trying to open a model', model, options, sideBySide);
+                return undefined;
+            };
+
+            if (lc.modelEditorServiceConfig?.useDefaultFunction) {
+                services = loadedImport.default(defaultOpenEditorFunc);
+            } else if (lc.modelEditorServiceConfig?.openEditorFunc) {
+                services = loadedImport.default(lc.modelEditorServiceConfig.openEditorFunc);
             }
+        } else if (serviceName === 'configuration' && lc.enableConfigurationService) {
+            const uri = Uri.file(lc.configurationServiceConfig!.defaultWorkspaceUri);
+            services = loadedImport.default(uri);
+        } else {
+            services = loadedImport.default();
+        }
 
-            for (const loadedImport of loadedImports) {
-                const serviceName = serviceNames[count];
-                if (lc.debugLogging === true) {
-                    console.log(`Initialising provided service: ${serviceName}`);
-                }
+        mergeServices(services, overrideServices);
+        reportServiceLoading('user', services, lc.debugLogging === true);
 
-                let services: editor.IEditorOverrideServices = {};
-                if (serviceName === 'modelEditor' && lc.enableModelEditorService) {
-                    const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
-                        console.log('Trying to open a model', model, options, sideBySide);
-                        return undefined;
-                    };
+        count++;
+    }
 
-                    if (lc.modelEditorServiceConfig?.useDefaultFunction) {
-                        services = loadedImport.default(defaultOpenEditorFunc);
-                    } else if (lc.modelEditorServiceConfig?.openEditorFunc) {
-                        services = loadedImport.default(lc.modelEditorServiceConfig.openEditorFunc);
-                    }
-                } else if (serviceName === 'configuration' && lc.enableConfigurationService) {
-                    const uri = Uri.file(lc.configurationServiceConfig!.defaultWorkspaceUri);
-                    services = loadedImport.default(uri);
-                } else {
-                    services = loadedImport.default();
-                }
-
-                mergeServices(services, overrideServices);
-                reportServiceLoading('user', services, lc.debugLogging === true);
-
-                count++;
-            }
-
-            return initializeMonacoService(overrideServices);
-        }).catch(e => {
-            return Promise.reject(e);
-        });
+    return initializeMonacoService(overrideServices);
 };

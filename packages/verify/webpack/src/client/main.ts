@@ -83,7 +83,8 @@ const start = async () => {
 
     await initServices({
         enableThemeService: true
-    }).then(() => createEditor());
+    });
+    createEditor();
 };
 
 start();

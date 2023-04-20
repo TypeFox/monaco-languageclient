@@ -121,29 +121,35 @@ const run = async () => {
     reader.onClose(() => languageClient.stop());
 };
 
-await initServices({
-    enableThemeService: true,
-    enableTextmateService: true,
-    enableModelEditorService: true,
-    modelEditorServiceConfig: {
-        useDefaultFunction: true
-    },
-    enableConfigurationService: true,
-    configurationServiceConfig: {
-        defaultWorkspaceUri: '/tmp'
-    },
-    enableKeybindingsService: false,
-    enableLanguagesService: true,
-    enableAudioCueService: true,
-    enableDebugService: true,
-    enableDialogService: true,
-    enableNotificationService: true,
-    enablePreferencesService: true,
-    userServices: {
-        ...getKeybindingsServiceOverride()
-    },
-    debugLogging: true
-})
-    .then(() => setup())
-    .then(() => run())
-    .catch((e: Error) => console.log(e));
+try {
+    await initServices({
+        enableThemeService: true,
+        enableTextmateService: true,
+        enableModelEditorService: true,
+        modelEditorServiceConfig: {
+            useDefaultFunction: true
+        },
+        enableConfigurationService: true,
+        configurationServiceConfig: {
+            defaultWorkspaceUri: '/tmp'
+        },
+        // This should demonstate that you can chose to not use the built-in loading meachnism,
+        // but do it manually, see below
+        enableKeybindingsService: false,
+        enableLanguagesService: true,
+        enableAudioCueService: true,
+        enableDebugService: true,
+        enableDialogService: true,
+        enableNotificationService: true,
+        enablePreferencesService: true,
+        userServices: {
+            // manually add the KeyBindingsService
+            ...getKeybindingsServiceOverride()
+        },
+        debugLogging: true
+    });
+    setup();
+    run();
+} catch (e) {
+    console.log(e);
+}
