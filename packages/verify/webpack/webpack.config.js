@@ -33,7 +33,7 @@ const config = {
             type: 'asset/resource'
         },
         {
-            test: /monaco-editor/,
+            test: resolve(projectRoot, 'node_modules', 'monaco-editor'),
             use: ['vscode/webpack-loader']
         }]
     },
