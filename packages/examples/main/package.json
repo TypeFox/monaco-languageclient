@@ -1,8 +1,23 @@
 {
   "name": "examples-main",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/common.js",
+  "module": "./dist/common.js",
+  "exports": {
+    ".": {
+      "types": "./dist/common.d.ts",
+      "default": "./dist/common.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/common.d.ts"
+      ]
+    }
+  },
   "dependencies": {
     "express": "~4.18.2",
     "langium": "~1.1.0",

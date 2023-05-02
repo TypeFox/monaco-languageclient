@@ -12,4 +12,8 @@ const defaultCode = `{
 }`;
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(<ReactMonacoEditor defaultCode={defaultCode} />);
+root.render(<ReactMonacoEditor
+    defaultCode={defaultCode}
+    hostname={'localhost'}
+    path={'/sampleServer'}
+    port={3000} />);
