@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "5.1.0-next.5",
+  "version": "6.0.0-next.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH ",
@@ -52,7 +52,7 @@
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.5-next.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.5"
   },
   "scripts": {
     "postinstall": "monaco-treemending",
