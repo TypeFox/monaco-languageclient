@@ -31,10 +31,6 @@ const config = {
         {
             test: /\.(mp3|wasm)$/i,
             type: 'asset/resource'
-        },
-        {
-            test: resolve(projectRoot, 'node_modules', 'monaco-editor'),
-            use: ['vscode/webpack-loader']
         }]
     },
     experiments: {

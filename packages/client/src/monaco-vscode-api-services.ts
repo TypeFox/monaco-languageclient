@@ -31,6 +31,7 @@ export type InitializeServiceConfig = {
     enableAudioCueService?: boolean;
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
+    enableSnippetsService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
 };
@@ -104,6 +105,9 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enablePreferencesService === true) {
         addService('preferences', import('vscode/service-override/preferences'));
+    }
+    if (lc.enableSnippetsService === true) {
+        addService('snippets', import('vscode/service-override/snippets'));
     }
 
     const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {

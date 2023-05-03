@@ -52,9 +52,10 @@
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.4"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.5-next.0"
   },
   "scripts": {
+    "postinstall": "monaco-treemending",
     "clean": "npx shx rm -fr lib *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building monaco-languageclient:",

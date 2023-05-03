@@ -142,6 +142,7 @@ try {
         enableDialogService: true,
         enableNotificationService: true,
         enablePreferencesService: true,
+        enableSnippetsService: true,
         userServices: {
             // manually add the KeyBindingsService
             ...getKeybindingsServiceOverride()
