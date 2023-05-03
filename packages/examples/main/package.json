@@ -1,14 +1,29 @@
 {
   "name": "examples-main",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/common.js",
+  "module": "./dist/common.js",
+  "exports": {
+    ".": {
+      "types": "./dist/common.d.ts",
+      "default": "./dist/common.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/common.d.ts"
+      ]
+    }
+  },
   "dependencies": {
     "express": "~4.18.2",
     "langium": "~1.1.0",
     "langium-statemachine-dsl": "~1.1.0",
-    "monaco-editor-workers": "0.36.0",
-    "monaco-languageclient": "5.0.1",
+    "monaco-editor-workers": "0.37.0",
+    "monaco-languageclient": "6.0.0-next.0",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -24,14 +39,14 @@
   "devDependencies": {
     "@types/ws": "~8.5.4",
     "@types/express": "~4.17.17",
-    "@types/react": "~18.0.28",
+    "@types/react": "~18.0.35",
     "@types/react-dom": "~18.0.11",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.3"
   },
   "volta": {
-    "node": "18.15.0",
-    "npm": "9.6.2"
+    "node": "18.16.0",
+    "npm": "9.6.5"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist *.tsbuildinfo",

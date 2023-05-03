@@ -8,52 +8,22 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
+import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
 import { createConfiguredEditor } from 'vscode/monaco';
-import { StandaloneServices } from 'vscode/services';
-import getModelEditorServiceOverride from 'vscode/service-override/modelEditor';
-import getNotificationServiceOverride from 'vscode/service-override/notifications';
-import getDialogsServiceOverride from 'vscode/service-override/dialogs';
-import getConfigurationServiceOverride, { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
 import { registerExtension } from 'vscode/extensions';
-import getTextmateServiceOverride from 'vscode/service-override/textmate';
-import getLanguagesServiceOverride from 'vscode/service-override/languages';
-import getTokenClassificationServiceOverride from 'vscode/service-override/tokenClassification';
-import getLanguageConfigurationServiceOverride from 'vscode/service-override/languageConfiguration';
-import getThemeServiceOverride from 'vscode/service-override/theme';
-import getAudioCueServiceOverride from 'vscode/service-override/audioCue';
+import { updateUserConfiguration } from 'vscode/service-override/configuration';
+import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
+import 'vscode/default-extensions/theme-defaults';
 
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
 
 const setup = async () => {
-    StandaloneServices.initialize({
-        ...getModelEditorServiceOverride(async (model, options) => {
-            console.log('Trying to open a model', model, options);
-            return undefined;
-        }),
-        ...getNotificationServiceOverride(),
-        ...getDialogsServiceOverride(),
-        ...getConfigurationServiceOverride(),
-        ...getKeybindingsServiceOverride(),
-        ...getTextmateServiceOverride(),
-        ...getThemeServiceOverride(),
-        ...getTokenClassificationServiceOverride(),
-        ...getLanguageConfigurationServiceOverride(),
-        ...getLanguagesServiceOverride(),
-        ...getAudioCueServiceOverride()
-    });
-
-    updateUserConfiguration(`{
-        "editor.fontSize": 14,
-        "window.autoDetectColorScheme": true
-    }`);
-
+    console.log('Setting up Langium configuration ...');
     const extension = {
         name: 'langium-example',
         publisher: 'monaco-languageclient-project',
@@ -99,6 +69,11 @@ const setup = async () => {
         const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
         return (await fetch(statemachineTmUrl)).text();
     });
+
+    updateUserConfiguration(`{
+    "editor.fontSize": 14,
+    "workbench.colorTheme": "Default Dark+ Experimental"
+}`);
 };
 
 const run = async () => {
@@ -133,9 +108,6 @@ const run = async () => {
         });
     }
 
-    // install Monaco language client services
-    MonacoServices.install();
-
     const langiumWorkerUrl = new URL('./dist/worker/statemachineServerWorker.js', window.location.href).href;
     const worker = new Worker(langiumWorkerUrl, {
         type: 'module',
@@ -149,6 +121,36 @@ const run = async () => {
     reader.onClose(() => languageClient.stop());
 };
 
-setup()
-    .then(() => run())
-    .catch((e: Error) => console.log(e));
+try {
+    await initServices({
+        enableThemeService: true,
+        enableTextmateService: true,
+        enableModelEditorService: true,
+        modelEditorServiceConfig: {
+            useDefaultFunction: true
+        },
+        enableConfigurationService: true,
+        configurationServiceConfig: {
+            defaultWorkspaceUri: '/tmp'
+        },
+        // This should demonstate that you can chose to not use the built-in loading meachnism,
+        // but do it manually, see below
+        enableKeybindingsService: false,
+        enableLanguagesService: true,
+        enableAudioCueService: true,
+        enableDebugService: true,
+        enableDialogService: true,
+        enableNotificationService: true,
+        enablePreferencesService: true,
+        enableSnippetsService: true,
+        userServices: {
+            // manually add the KeyBindingsService
+            ...getKeybindingsServiceOverride()
+        },
+        debugLogging: true
+    });
+    setup();
+    run();
+} catch (e) {
+    console.log(e);
+}

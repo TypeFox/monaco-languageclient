@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor-workers": "0.36.0",
-    "monaco-languageclient": "5.0.1",
+    "monaco-editor-workers": "0.37.0",
+    "monaco-languageclient": "6.0.0-next.0",
     "vscode-ws-jsonrpc": "3.0.0",
     "normalize-url": "~8.0.0"
   },
@@ -13,8 +13,8 @@
     "http-server": "~14.1.1"
   },
   "volta": {
-    "node": "18.15.0",
-    "npm": "9.6.2"
+    "node": "18.16.0",
+    "npm": "9.6.5"
   },
   "scripts": {
     "clean": "npx shx rm -fr dist",

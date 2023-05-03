@@ -4,6 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 export * from './monaco-language-client.js';
-export * from './console-window.js';
-export * from './monaco-workspace.js';
-export * from './monaco-services.js';
+export * from './monaco-vscode-api-services.js';
