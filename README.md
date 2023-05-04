@@ -37,7 +37,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ### May 2023 (v6.0.0)
 
-Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services).
+Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
 
 ### April 2023 (v5.0.0)
 
@@ -74,11 +74,13 @@ The default and protected branch is now `main`.
 }
 ```
 
-**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
+**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 
 ### Monaco-editor compatibility table
 
 The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
+
+**Important:** Due to the `monaco-treemending` mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
