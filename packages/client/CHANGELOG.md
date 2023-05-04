@@ -2,9 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [5.1.0] - 2023-04-xx
+## [6.0.0] - 2023-05-04
 
-- Update to monaco-vscode-api 1.78
+- **BREAKING CHANGE**: Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services).
+- Most client examples now share [common code](./packages/examples/main/src/common.ts) to reduce the amount of redundant code.
+- The angular-client example is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
 
 ## [5.0.1] - 2023-04-04
 

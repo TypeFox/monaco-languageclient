@@ -12,10 +12,12 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
-    - [April 2023](#april-2023)
-    - [September 2022](#september-2022)
-    - [June 2022](#june-2022)
-    - [May 2022](#may-2022)
+    - [May 2023 (v6.0.0)](#may-2023-v600)
+    - [April 2023 (v5.0.0)](#april-2023-v500)
+    - [September 2022 (v4.0.0)](#september-2022-v400)
+    - [June 2022 (v2.0.0)](#june-2022-v200)
+    - [May 2022 (v1.0.0)](#may-2022-v100)
+  - [Using monaco-languageclient](#using-monaco-languageclient)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
@@ -33,28 +35,46 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ## Latest Important Project Changes
 
-### April 2023
+### May 2023 (v6.0.0)
+
+Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services).
+
+### April 2023 (v5.0.0)
 
 Both libraries no longer export code from other libraries (`vscode-jsonrpc`, `vscode-languageclient` and `vscode-languageserver-protocol`).
 
-### September 2022
+### September 2022 (v4.0.0)
 
 All code has been transformed to esm and npm packages are now of type module. cjs bundles are no longer available.
 The `monaco-converter` has been removed.
 
-### June 2022
+### June 2022 (v2.0.0)
 
 [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
 
 We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
 
-### May 2022
+### May 2022 (v1.0.0)
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification example](#verification) for the web client example using webpack.
 
 The default and protected branch is now `main`.
+
+## Using monaco-languageclient
+
+⚠️ **Starting with version 6.0.0** you need to add this postinstall step in your `package.json`: ⚠️
+
+```json
+{
+  "scripts": {
+    "postinstall": "monaco-treemending",
+  }
+}
+```
+
+**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 
 ## Getting started
 
@@ -87,7 +107,7 @@ npm run build:example:main
 
 ## Examples
 
-There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used:
+There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used :
 
 - The **server** example located in [./packages/examples/main/src/server](./packages/examples/main/src/server) runs a Node.js [Express app](./packages/examples/main/src/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process.
 
@@ -99,7 +119,9 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **react-client** example located in [./packages/examples/main/src/react](./packages/examples/main/src/react) contains the [React client](./packages/examples/main/src/react/main.tsx). It does the same as the regular client example but inside a React Functional Component.
 
-- The **angular-client** is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
+- The **angular-client** example is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
+
+**Hint:** Most client examples now share [common code](./packages/examples/main/src/common.ts) to reduce the amount of redundant code.
 
 ## Verification
 
@@ -151,7 +173,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
-| 5.1.0         | 1.78.0  | 0.37.1 | Released 2023-04-?? |
+| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
 | 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
 | 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
 | 4.0.3         | 1.69.13 | 0.34.1 |  |
