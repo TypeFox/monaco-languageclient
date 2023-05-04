@@ -18,6 +18,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [June 2022 (v2.0.0)](#june-2022-v200)
     - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Using monaco-languageclient](#using-monaco-languageclient)
+    - [Monaco-editor compatibility table](#monaco-editor-compatibility-table)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
@@ -25,7 +26,6 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Verification](#verification)
   - [Example usage](#example-usage)
   - [VSCode integration](#vscode-integration)
-  - [Monaco-editor compatibility table](#monaco-editor-compatibility-table)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Volta](#volta)
@@ -75,6 +75,23 @@ The default and protected branch is now `main`.
 ```
 
 **Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
+
+### Monaco-editor compatibility table
+
+The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
+
+| monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
+| :----         | :----   | :---   | :--- |
+| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
+| 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
+| 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
+| 4.0.3         | 1.69.13 | 0.34.1 |  |
+| 4.0.1         | 1.69.12 | 0.34.1 |  |
+| 4.0.0         | 1.69.10 | 0.34.0 |  |
+| 3.0.1         | 1.69.9  | 0.34.0 |  |
+| 3.0.0         | 1.69.0  | 0.34.0 |  |
+| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
+| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
 
 ## Getting started
 
@@ -166,23 +183,6 @@ npm run start:verify:vite
 ## VSCode integration
 
 You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the server in different modes and the client.
-
-## Monaco-editor compatibility table
-
-The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
-
-| monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
-| :----         | :----   | :---   | :--- |
-| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
-| 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
-| 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
-| 4.0.3         | 1.69.13 | 0.34.1 |  |
-| 4.0.1         | 1.69.12 | 0.34.1 |  |
-| 4.0.0         | 1.69.10 | 0.34.0 |  |
-| 3.0.1         | 1.69.9  | 0.34.0 |  |
-| 3.0.0         | 1.69.0  | 0.34.0 |  |
-| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
-| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
 
 ## Troubleshooting
 
