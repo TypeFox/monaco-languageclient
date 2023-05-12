@@ -117,7 +117,6 @@ const run = async () => {
     const writer = new BrowserMessageWriter(worker);
     const languageClient = createLanguageClient({ reader, writer });
     languageClient.start();
-
     reader.onClose(() => languageClient.stop());
 };
 
@@ -149,8 +148,8 @@ try {
         },
         debugLogging: true
     });
-    setup();
-    run();
+    await setup();
+    await run();
 } catch (e) {
     console.log(e);
 }

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.0.1] - 2023-05-04
+
+- Updated to `monaco-vscode-api` `1.78.6` fixing Mac related monaco-editor problems
+
 ## [6.0.0] - 2023-05-04
 
 - **BREAKING CHANGE**: Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
