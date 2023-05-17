@@ -64,15 +64,7 @@ The default and protected branch is now `main`.
 
 ## Using monaco-languageclient
 
-⚠️ **Starting with version 6.0.0** you need to add this postinstall step in your `package.json`: ⚠️
-
-```json
-{
-  "scripts": {
-    "postinstall": "monaco-treemending",
-  }
-}
-```
+⚠️ **Starting with version 6.0.0** `monaco-languageclient` runs a postinstall script when you install the dependencies in your project. If you re-run `npm install` this script is not invoked again.
 
 **Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 

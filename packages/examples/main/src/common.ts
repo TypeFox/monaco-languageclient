@@ -37,7 +37,7 @@ export const createUrl = (hostname: string, port: number, path: string): string 
     return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
 };
 
-export const createWebSocket = (url: string) => {
+export const createWebSocket = (url: string): WebSocket => {
     const webSocket = new WebSocket(url);
     webSocket.onopen = () => {
         const socket = toSocket(webSocket);
