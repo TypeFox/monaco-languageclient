@@ -44,7 +44,9 @@
     "start:example:server:ext": "npm run start:ext --workspace packages/examples/main",
     "start:example:angular": "npm run start --workspace packages/examples/angular-client",
     "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
-    "start:verify:vite": "npm run start --workspace packages/verify/vite"
+    "start:verify:vite": "npm run start --workspace packages/verify/vite",
+    "release:prepare": "npm run reset:repo && npm ci && npm run lint && npm run build",
+    "reset:repo": "git clean -f -X -d"
   },
   "workspaces": [
     "packages/client",
