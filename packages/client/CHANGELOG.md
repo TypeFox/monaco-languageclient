@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [6.0.2] - 2023-05-24
 
-- Dependencies to `monaco-editor` and `monaco-vscode-api` are now explicitly declared due to problems with yarb (see external issue: https://github.com/TypeFox/monaco-components/issues/21)
+- Dependencies to `monaco-editor` and `monaco-vscode-api` are now explicitly declared due to problems with yarn (see external issue: https://github.com/TypeFox/monaco-components/issues/21)
 
 ## [6.0.1] - 2023-05-12
 
