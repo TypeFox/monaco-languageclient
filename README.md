@@ -18,7 +18,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [June 2022 (v2.0.0)](#june-2022-v200)
     - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Using monaco-languageclient](#using-monaco-languageclient)
-    - [Monaco-editor compatibility table](#monaco-editor-compatibility-table)
+    - [Monaco-editor / monaco-vscode-api compatibility table](#monaco-editor--monaco-vscode-api-compatibility-table)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
@@ -31,6 +31,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [Volta](#volta)
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
+    - [pnpm](#pnpm)
   - [Licenses](#licenses)
 
 ## Latest Important Project Changes
@@ -68,7 +69,7 @@ The default and protected branch is now `main`.
 
 **Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 
-### Monaco-editor compatibility table
+### Monaco-editor / monaco-vscode-api compatibility table
 
 The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
 
@@ -76,6 +77,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.0.3         | 1.78.7  | 0.37.1 | Released 2023-05-31 |
 | 6.0.2         | 1.78.6  | 0.37.1 | Released 2023-05-24 |
 | 6.0.1         | 1.78.6  | 0.37.1 | Released 2023-05-12 |
 | 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
@@ -229,6 +231,14 @@ import * as monaco from "monaco-editor";
 import { loader } from "@monaco-editor/react";
 
 loader.config({ monaco });
+```
+
+### pnpm
+
+If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--monaco-vscode-api-compatibility-table)), otherwise the installation will fail.
+
+```json
+"vscode": "npm:@codingame/monaco-vscode-api@~1.78.8"
 ```
 
 ## Licenses

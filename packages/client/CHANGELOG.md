@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.0.3] - 2023-05-31
+
+- Updated to `monaco-vscode-api` version `1.78.8` fixing treemending patch issues [#491](https://github.com/TypeFox/monaco-languageclient/issues/491) / [monaco-vscode-api #116](https://github.com/CodinGame/monaco-vscode-api/pull/116) / [monaco-vscode-api #119](https://github.com/CodinGame/monaco-vscode-api/pull/119)
+
 ## [6.0.2] - 2023-05-24
 
 - Dependencies to `monaco-editor` and `monaco-vscode-api` are now explicitly declared due to problems with yarn (see external issue: https://github.com/TypeFox/monaco-components/issues/21)
@@ -18,14 +22,14 @@ All notable changes to this npm module are documented in this file.
 
 ## [5.0.1] - 2023-04-04
 
-- Bugfix: textDocument/didChange message is doubled #[479](https://github.com/TypeFox/monaco-languageclient/issues/479)
+- Bugfix: textDocument/didChange message is doubled [#479](https://github.com/TypeFox/monaco-languageclient/issues/479)
 
 ## [5.0.0] - 2023-04-04
 
-- **BREAKING CHANGE**: Update to monaco-vscode-api 1.76 #[470](https://github.com/TypeFox/monaco-languageclient/pull/470)
+- **BREAKING CHANGE**: Update to monaco-vscode-api 1.76 [#470](https://github.com/TypeFox/monaco-languageclient/pull/470)
   - More services from `monaco-vscode-api` are used in the langium example (language config, text mate, keyboard bindings)
   - Updates to `monaco-editor` version `0.36.1` and vscode api compatibility to `1.76.0`
-- **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) #[459](https://github.com/TypeFox/monaco-languageclient/pull/459)
+- **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) [#459](https://github.com/TypeFox/monaco-languageclient/pull/459)
   - Content of `vscode-jsonrpc`,`vscode-languageclient` and `vscode-languageserver-protocol` is no longer re-exported
   - Restructures example into less packages. It reduces maintenace efforts
   - Web worker language server example is replaced with Langium Statemachine
@@ -42,7 +46,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [4.0.1] - 2022-10-19
 
-- Update to monaco-editor 0.34.1 #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)
+- Update to monaco-editor 0.34.1 [#373](https://github.com/TypeFox/monaco-languageclient/pull/373)
   - Update to `monaco-vscode-api@1.69.12`
   - Update exmaple dependencies (which don't affect the library)
 
@@ -82,29 +86,29 @@ The npm packages exports the following:
 
 ## [2.0.2] - 2022-06-22
 
-- Align all tsconfigs and vscode-ws-jsonrpc provides esm/cjs #[390](https://github.com/TypeFox/monaco-languageclient/pull/390)
+- Align all tsconfigs and vscode-ws-jsonrpc provides esm/cjs [#390](https://github.com/TypeFox/monaco-languageclient/pull/390)
   - Use `typesVersions` in **package.json*- for proper TypeScript import support (used in node example)
   - Remove AMD and CJS builds adn exports of the main library. Only `monaco-converters` and `monaco-converters/cjs` are left
 
 ## [2.0.1] - 2022-06-21
 
-- No cjs fragments to export #[388](https://github.com/TypeFox/monaco-languageclient/issues/388)
+- No cjs fragments to export [#388](https://github.com/TypeFox/monaco-languageclient/issues/388)
 
 ## [2.0.0] - 2022-06-21
 
-- Use monaco vscode api #[373](https://github.com/TypeFox/monaco-languageclient/pull/373)
-- Merge monaco-jsonrpc and vscode-ws-jsonrpc into new sub package #[383](https://github.com/TypeFox/monaco-languageclient/pull/383)
-- Integrate eslint with eslint-config-standard #[385](https://github.com/TypeFox/monaco-languageclient/pull/385)
-- Add example with client and server both running in the browser #[386](https://github.com/TypeFox/monaco-languageclient/pull/386)
+- Use monaco vscode api [#373](https://github.com/TypeFox/monaco-languageclient/pull/373)
+- Merge monaco-jsonrpc and vscode-ws-jsonrpc into new sub package [#383](https://github.com/TypeFox/monaco-languageclient/pull/383)
+- Integrate eslint with eslint-config-standard [#385](https://github.com/TypeFox/monaco-languageclient/pull/385)
+- Add example with client and server both running in the browser [#386](https://github.com/TypeFox/monaco-languageclient/pull/386)
 
 ## [1.1.0] - 2022-06-08
 
-- feat(package.json): export monaco-converter #[376](https://github.com/TypeFox/monaco-languageclient/pull/376)
-- Clean unregistered featured from registration requests #[372](https://github.com/TypeFox/monaco-languageclient/pull/372)
-- Introduce global engines entries for node and npm #[370](https://github.com/TypeFox/monaco-languageclient/pull/370)
-- Implement missing 3.17 api #[364](https://github.com/TypeFox/monaco-languageclient/pull/364)
-- Remove unsupported features #[362](https://github.com/TypeFox/monaco-languageclient/pull/362)
-- Do not include node code #[361](https://github.com/TypeFox/monaco-languageclient/pull/361)
+- feat(package.json): export monaco-converter [#376](https://github.com/TypeFox/monaco-languageclient/pull/376)
+- Clean unregistered featured from registration requests [#372](https://github.com/TypeFox/monaco-languageclient/pull/372)
+- Introduce global engines entries for node and npm [#370](https://github.com/TypeFox/monaco-languageclient/pull/370)
+- Implement missing 3.17 api [#364](https://github.com/TypeFox/monaco-languageclient/pull/364)
+- Remove unsupported features [#362](https://github.com/TypeFox/monaco-languageclient/pull/362)
+- Do not include node code [#361](https://github.com/TypeFox/monaco-languageclient/pull/361)
 
 ## [1.0.1] - 2022-05-21
 
