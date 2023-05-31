@@ -10,6 +10,8 @@ import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import 'vscode/default-extensions/theme-defaults';
+import 'vscode/default-extensions/json';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -74,6 +76,7 @@ export const createJsonEditor = async (config: {
             modelEditorServiceConfig: {
                 useDefaultFunction: true
             },
+            enableLanguagesService: true,
             debugLogging: true
         });
     }
