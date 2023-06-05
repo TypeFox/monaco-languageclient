@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.1.0] - 2023-06-0x
+
+- Updated to `monaco-vscode-api` version `1.79.0` and `monaco-editor` version `0.38.0` [#493](https://github.com/TypeFox/monaco-languageclient/issues/493)
+- `initService` creates `window.MonacoEnvironment` if not yet available
+
 ## [6.0.3] - 2023-05-31
 
 - Updated to `monaco-vscode-api` version `1.78.8` fixing treemending patch issues [#491](https://github.com/TypeFox/monaco-languageclient/issues/491) / [monaco-vscode-api #116](https://github.com/CodinGame/monaco-vscode-api/pull/116) / [monaco-vscode-api #119](https://github.com/CodinGame/monaco-vscode-api/pull/119)
