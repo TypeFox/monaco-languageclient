@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import 'monaco-editor/esm/vs/editor/edcore.main.js';
-import { languages, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
-import { createConfiguredEditor, createModelReference } from 'vscode/monaco';
+import { editor, languages, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
@@ -62,6 +62,13 @@ export const createDefaultJsonContent = (): string => {
 }`;
 };
 
+export type ExampleJsonEditor = {
+    languageId: string;
+    editor: editor.IStandaloneCodeEditor;
+    uri: Uri;
+    modelRef: IReference<ITextFileEditorModel>;
+}
+
 export const createJsonEditor = async (config: {
     htmlElement: HTMLElement,
     content: string,
@@ -104,10 +111,11 @@ export const createJsonEditor = async (config: {
         automaticLayout: true
     });
 
-    return {
+    const result = {
         languageId,
         editor,
         uri,
         modelRef
-    };
+    } as ExampleJsonEditor;
+    return Promise.resolve(result);
 };

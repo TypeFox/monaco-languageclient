@@ -32,6 +32,7 @@ export type InitializeServiceConfig = {
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
+    enableViewsService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
 };
@@ -50,7 +51,10 @@ export const initServices = async (config?: InitializeServiceConfig) => {
         console.log('initializeVscodeExtensions completed successfully');
     }
 
-    (window.MonacoEnvironment as MonacoEnvironmentEnhanced ?? {}).vscodeApiInitialised = true;
+    if (!window.MonacoEnvironment) {
+        window.MonacoEnvironment = {};
+    }
+    (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
 
 type ModuleWithDefaultExport = {
@@ -108,6 +112,9 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
+    }
+    if (lc.enableViewsService === true) {
+        addService('views', import('vscode/service-override/views'));
     }
 
     const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {

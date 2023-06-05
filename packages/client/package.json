@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "6.0.3",
+  "version": "6.1.0-next.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -48,14 +48,14 @@
     "License.txt"
   ],
   "dependencies": {
-    "monaco-editor": "~0.37.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.8",
+    "monaco-editor": "~0.38.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.0",
     "vscode-jsonrpc": "~8.1.0",
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "monaco-editor": "~0.37.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.8"
+    "monaco-editor": "~0.38.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.0"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {
