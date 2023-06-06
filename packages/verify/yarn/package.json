@@ -10,7 +10,7 @@
   },
   "scripts": {
     "clean": "shx rm -fr ./node_modules yarn.lock",
-    "tester": "monaco-treemending"
+    "test:treemending": "monaco-treemending"
   },
   "volta": {
     "node": "18.16.0",

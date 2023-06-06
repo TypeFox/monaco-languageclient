@@ -4,6 +4,7 @@
   "private": "true",
   "dependencies": {
     "monaco-languageclient": "~6.0.3",
+    "monaco-editor": "~0.37.1",
     "vscode": "npm:@codingame/monaco-vscode-api@~1.78.8"
   },
   "devDependencies": {
