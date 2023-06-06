@@ -1,0 +1,19 @@
+{
+  "name": "mlc-verify-yarn",
+  "version": "0.0.0",
+  "private": "true",
+  "dependencies": {
+    "monaco-languageclient": "~6.0.3"
+  },
+  "devDependencies": {
+    "shx": "~0.3.4"
+  },
+  "scripts": {
+    "clean": "shx rm -fr ./node_modules yarn.lock",
+    "tester": "monaco-treemending"
+  },
+  "volta": {
+    "node": "18.16.0",
+    "yarn": "1.22.19"
+  }
+}

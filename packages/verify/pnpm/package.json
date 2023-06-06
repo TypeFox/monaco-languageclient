@@ -1,0 +1,20 @@
+{
+  "name": "mlc-verify-pnpm",
+  "version": "0.0.0",
+  "private": "true",
+  "dependencies": {
+    "monaco-languageclient": "~6.0.3",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.78.8"
+  },
+  "devDependencies": {
+    "shx": "~0.3.4"
+  },
+  "scripts": {
+    "clean": "shx rm -fr ./node_modules pnpm-lock.yaml",
+    "test:treemending": "monaco-treemending"
+  },
+  "volta": {
+    "node": "18.16.0",
+    "npm": "9.6.6"
+  }
+}

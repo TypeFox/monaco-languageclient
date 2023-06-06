@@ -24,6 +24,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [Scripts Overview](#scripts-overview)
   - [Examples](#examples)
   - [Verification](#verification)
+    - [Pure bundler verification](#pure-bundler-verification)
   - [Example usage](#example-usage)
   - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
@@ -144,6 +145,11 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 - The **webpack** verification example located in [./packages/verify/webpack](./packages/verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/verify/webpack/webpack.config.js).
 
 - The **vite** verification example located in [./packages/verify/vite](./packages/verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required.
+
+### Pure bundler verification
+
+- [./packages/verify/pnpm](./packages/verify/pnpm) is not part of the npm workspace. It allows to test whether `pnpm install` works as expected and it allows to test `monaco-vscode-api` treemending via `pnpm run test:treemending`.
+- [./packages/verify/yarn](./packages/verify/yarn) is not part of the npm workspace. It allows to test whether `yarn install` works as expected and it allows to test `monaco-vscode-api` treemending via `yarn run test:treemending`.
 
 ## Example usage
 
