@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "6.1.0-next.0",
+  "version": "6.1.0-next.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -49,13 +49,13 @@
   ],
   "dependencies": {
     "monaco-editor": "~0.38.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.1",
     "vscode-jsonrpc": "~8.1.0",
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
     "monaco-editor": "~0.38.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.1"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {
@@ -67,7 +67,7 @@
   },
   "scripts": {
     "postinstall": "monaco-treemending",
-    "clean": "npx shx rm -fr lib *.tsbuildinfo",
+    "clean": "shx rm -fr lib *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building monaco-languageclient:",
     "build": "npm run build:msg && npm run clean && npm run compile"

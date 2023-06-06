@@ -65,7 +65,7 @@
     "vscode-jsonrpc": "~8.1.0"
   },
   "scripts": {
-    "clean": "npx shx rm -fr lib *.tsbuildinfo",
+    "clean": "shx rm -fr lib *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building vscode-ws-jsonrpc:",
     "build": "npm run build:msg && npm run clean && npm run compile"
