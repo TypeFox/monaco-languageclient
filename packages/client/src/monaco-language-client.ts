@@ -124,14 +124,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new WillSaveFeature(this));
         this.registerFeature(new WillSaveWaitUntilFeature(this));
         this.registerFeature(new DidSaveTextDocumentFeature(this));
-    }
-
-    /**
-     * These are all contained in BaseLanguageClient#registerBuiltinFeatures but not registered
-     * in MonacoLanguageClient. This method is not called!
-     */
-    public registerNotUsedFeatures() {
-        // theses feature will become supported once https://github.com/CodinGame/monaco-vscode-api/pull/110 is ready
+        // enabled since monaco-vscode-api 1.79.0 (PR https://github.com/CodinGame/monaco-vscode-api/pull/110)
         this.registerFeature(new WorkspaceSymbolFeature(this));
         this.registerFeature(new DidCreateFilesFeature(this));
         this.registerFeature(new DidRenameFilesFeature(this));
@@ -142,7 +135,13 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.registerFeature(new CallHierarchyFeature(this));
         this.registerFeature(new TypeHierarchyFeature(this));
         this.registerFeature(new InlineValueFeature(this));
+    }
 
+    /**
+     * These are all contained in BaseLanguageClient#registerBuiltinFeatures but not registered
+     * in MonacoLanguageClient. This method is not called!
+     */
+    public registerNotUsedFeatures() {
         // these will stay unsupported for now
         this.registerFeature(new ProgressFeature(this));
         this.registerFeature(new NotebookDocumentSyncFeature(this));

@@ -14,7 +14,7 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
+import getPreferencesServiceOverride from 'vscode/service-override/preferences';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -132,25 +132,25 @@ try {
         configureConfigurationServiceConfig: {
             defaultWorkspaceUri: '/tmp'
         },
-        // This should demonstate that you can chose to not use the built-in loading meachnism,
-        // but do it manually, see below
-        enableKeybindingsService: false,
+        enableKeybindingsService: true,
         enableLanguagesService: true,
         enableAudioCueService: true,
         enableDebugService: true,
         enableDialogService: true,
         enableNotificationService: true,
-        enablePreferencesService: true,
+        // This should demonstrate that you can chose to not use the built-in loading mechanism,
+        // but do it manually, see below
+        enablePreferencesService: false,
         enableSnippetsService: true,
         enableQuickaccessService: true,
         userServices: {
-            // manually add the KeyBindingsService
-            ...getKeybindingsServiceOverride()
+            // manually add the PreferencesService
+            ...getPreferencesServiceOverride()
         },
         debugLogging: true
     });
     await setup();
     await run();
 } catch (e) {
-    console.log(e);
+    console.error(e);
 }

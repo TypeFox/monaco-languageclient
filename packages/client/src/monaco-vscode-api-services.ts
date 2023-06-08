@@ -86,9 +86,11 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         }
     }
     if (lc.enableQuickaccessService === true) {
-        addService('quickaccess', import('vscode/service-override/quickaccess'));
         // quickaccess requires keybindings
-        lc.enableKeybindingsService = true;
+        if (lc.enableKeybindingsService === undefined || lc.enableKeybindingsService === false) {
+            throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
+        }
+        addService('quickaccess', import('vscode/service-override/quickaccess'));
     }
     if (lc.configureConfigurationServiceConfig !== undefined) {
         addService('configuration', import('vscode/service-override/configuration'));
@@ -100,9 +102,11 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('notifications', import('vscode/service-override/notifications'));
     }
     if (lc.enableThemeService === true) {
-        addService('theme', import('vscode/service-override/theme'));
         // theme requires textmate
-        lc.enableTextmateService = true;
+        if (lc.enableTextmateService === undefined || lc.enableTextmateService === false) {
+            throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
+        }
+        addService('theme', import('vscode/service-override/theme'));
     }
     if (lc.enableTextmateService === true) {
         addService('textmate', import('vscode/service-override/textmate'));

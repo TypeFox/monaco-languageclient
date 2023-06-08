@@ -81,12 +81,14 @@ export const createJsonEditor = async (config: {
     if (config.init === true) {
         await initServices({
             enableThemeService: true,
+            enableTextmateService: true,
             enableModelService: true,
             configureEditorOrViewsServiceConfig: {
                 enableViewsService: false,
                 useDefaultOpenEditorFunction: true
             },
             enableLanguagesService: true,
+            enableKeybindingsService: true,
             enableQuickaccessService: true,
             debugLogging: true
         });
