@@ -6,7 +6,7 @@
 import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
-import type { OpenEditor } from 'vscode/service-override/modelEditor';
+import type { OpenEditor } from 'vscode/service-override/editor';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -15,13 +15,13 @@ interface MonacoEnvironmentEnhanced extends Environment {
 export type InitializeServiceConfig = {
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
-    enableModelEditorService?: boolean;
-    modelEditorServiceConfig?: {
-        useDefaultFunction: boolean;
+    enableModelService?: boolean;
+    configureEditorOrViewsServiceConfig?: {
+        enableViewsService: boolean;
+        useDefaultOpenEditorFunction: boolean;
         openEditorFunc?: OpenEditor
     };
-    enableConfigurationService?: boolean
-    configurationServiceConfig?: {
+    configureConfigurationServiceConfig?: {
         defaultWorkspaceUri: string;
     };
     enableThemeService?: boolean;
@@ -32,7 +32,7 @@ export type InitializeServiceConfig = {
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
-    enableViewsService?: boolean;
+    enableQuickaccessService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
 };
@@ -75,10 +75,24 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     // files service is required
     addService('files', import('vscode/service-override/files'));
 
-    if (lc.enableModelEditorService === true && lc.modelEditorServiceConfig !== undefined) {
-        addService('modelEditor', import('vscode/service-override/modelEditor'));
+    if (lc.enableModelService === true) {
+        addService('model', import('vscode/service-override/model'));
     }
-    if (lc.enableConfigurationService === true && lc.configurationServiceConfig !== undefined) {
+    if (lc.configureEditorOrViewsServiceConfig !== undefined) {
+        if (lc.configureEditorOrViewsServiceConfig.enableViewsService) {
+            addService('views', import('vscode/service-override/views'));
+        } else {
+            addService('editor', import('vscode/service-override/editor'));
+        }
+    }
+    if (lc.enableQuickaccessService === true) {
+        // quickaccess requires keybindings
+        if (lc.enableKeybindingsService === undefined || lc.enableKeybindingsService === false) {
+            throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
+        }
+        addService('quickaccess', import('vscode/service-override/quickaccess'));
+    }
+    if (lc.configureConfigurationServiceConfig !== undefined) {
         addService('configuration', import('vscode/service-override/configuration'));
     }
     if (lc.enableDialogService === true) {
@@ -88,9 +102,11 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('notifications', import('vscode/service-override/notifications'));
     }
     if (lc.enableThemeService === true) {
-        addService('theme', import('vscode/service-override/theme'));
         // theme requires textmate
-        lc.enableTextmateService = true;
+        if (lc.enableTextmateService === undefined || lc.enableTextmateService === false) {
+            throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
+        }
+        addService('theme', import('vscode/service-override/theme'));
     }
     if (lc.enableTextmateService === true) {
         addService('textmate', import('vscode/service-override/textmate'));
@@ -112,9 +128,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
-    }
-    if (lc.enableViewsService === true) {
-        addService('views', import('vscode/service-override/views'));
     }
 
     const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {
@@ -146,19 +159,18 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         }
 
         let services: editor.IEditorOverrideServices = {};
-        if (serviceName === 'modelEditor' && lc.enableModelEditorService) {
-            const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
-                console.log('Trying to open a model', model, options, sideBySide);
-                return undefined;
-            };
-
-            if (lc.modelEditorServiceConfig?.useDefaultFunction) {
+        if (serviceName === 'editor' || serviceName === 'views') {
+            if (lc.configureEditorOrViewsServiceConfig!.useDefaultOpenEditorFunction) {
+                const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
+                    console.log('Trying to open a model', model, options, sideBySide);
+                    return undefined;
+                };
                 services = loadedImport.default(defaultOpenEditorFunc);
-            } else if (lc.modelEditorServiceConfig?.openEditorFunc) {
-                services = loadedImport.default(lc.modelEditorServiceConfig.openEditorFunc);
+            } else if (lc.configureEditorOrViewsServiceConfig?.openEditorFunc) {
+                services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
             }
-        } else if (serviceName === 'configuration' && lc.enableConfigurationService) {
-            const uri = Uri.file(lc.configurationServiceConfig!.defaultWorkspaceUri);
+        } else if (serviceName === 'configuration') {
+            const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
             services = loadedImport.default(uri);
         } else {
             services = loadedImport.default();

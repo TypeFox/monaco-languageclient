@@ -3,15 +3,17 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import 'monaco-editor/esm/vs/editor/edcore.main.js';
+import 'monaco-editor/esm/vs/editor/editor.all.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
 import { editor, languages, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
+import 'vscode/default-extensions/theme-defaults';
+import 'vscode/default-extensions/json';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
-import 'vscode/default-extensions/theme-defaults';
-import 'vscode/default-extensions/json';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -79,11 +81,15 @@ export const createJsonEditor = async (config: {
     if (config.init === true) {
         await initServices({
             enableThemeService: true,
-            enableModelEditorService: true,
-            modelEditorServiceConfig: {
-                useDefaultFunction: true
+            enableTextmateService: true,
+            enableModelService: true,
+            configureEditorOrViewsServiceConfig: {
+                enableViewsService: false,
+                useDefaultOpenEditorFunction: true
             },
             enableLanguagesService: true,
+            enableKeybindingsService: true,
+            enableQuickaccessService: true,
             debugLogging: true
         });
     }

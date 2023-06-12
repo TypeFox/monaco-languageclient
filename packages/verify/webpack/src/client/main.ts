@@ -3,9 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocket } from 'examples-main';
-
+import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('dist/client/workers', new URL('', window.location.href).href, false);
 
 const start = async () => {

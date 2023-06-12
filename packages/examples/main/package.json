@@ -23,7 +23,7 @@
     "langium": "~1.2.0",
     "langium-statemachine-dsl": "~1.2.0",
     "monaco-editor-workers": "0.38.0",
-    "monaco-languageclient": "6.1.0-next.0",
+    "monaco-languageclient": "6.1.0-next.1",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -49,7 +49,7 @@
     "npm": "9.6.6"
   },
   "scripts": {
-    "clean": "npx shx rm -fr dist *.tsbuildinfo",
+    "clean": "shx rm -fr dist *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building main examples:",
     "build:worker:vite": "vite --config  vite.langium-worker.ts build",

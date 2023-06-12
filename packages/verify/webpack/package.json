@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "monaco-editor-workers": "0.38.0",
-    "monaco-languageclient": "6.1.0-next.0",
+    "monaco-languageclient": "6.1.0-next.1",
     "vscode-ws-jsonrpc": "3.0.0",
     "normalize-url": "~8.0.0"
   },
@@ -22,7 +22,7 @@
     "npm": "9.6.6"
   },
   "scripts": {
-    "clean": "npx shx rm -fr dist *.tsbuildinfo",
+    "clean": "shx rm -fr dist *.tsbuildinfo",
     "copy:monacoworkers": "shx mkdir -p dist/client/workers && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist/client/workers",
     "build:msg": "echo Building client-webpack example:",
     "build": "npm run build:msg && npm run clean && webpack && npm run copy:monacoworkers",

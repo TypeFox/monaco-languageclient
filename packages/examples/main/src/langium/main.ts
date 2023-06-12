@@ -2,22 +2,22 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-// support all editor features
-import 'monaco-editor/esm/vs/editor/edcore.main.js';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
+import 'monaco-editor/esm/vs/editor/editor.all.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
+import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
-
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getKeybindingsServiceOverride from 'vscode/service-override/keybindings';
+import getPreferencesServiceOverride from 'vscode/service-override/preferences';
 import 'vscode/default-extensions/theme-defaults';
 
+import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
@@ -72,7 +72,7 @@ const setup = async () => {
 
     updateUserConfiguration(`{
     "editor.fontSize": 14,
-    "workbench.colorTheme": "Default Dark+ Experimental"
+    "workbench.colorTheme": "Default Dark Modern"
 }`);
 };
 
@@ -82,7 +82,7 @@ const run = async () => {
     const editorText = await responseStatemachine.text();
 
     const editorOptions = {
-        model: monaco.editor.createModel(editorText, languageId, monaco.Uri.parse('inmemory://example.statemachine')),
+        model: editor.createModel(editorText, languageId, Uri.parse('inmemory://example.statemachine')),
         automaticLayout: true
     };
     createConfiguredEditor(document.getElementById('container')!, editorOptions);
@@ -124,33 +124,33 @@ try {
     await initServices({
         enableThemeService: true,
         enableTextmateService: true,
-        enableModelEditorService: true,
-        modelEditorServiceConfig: {
-            useDefaultFunction: true
+        enableModelService: true,
+        configureEditorOrViewsServiceConfig: {
+            enableViewsService: false,
+            useDefaultOpenEditorFunction: true
         },
-        enableConfigurationService: true,
-        configurationServiceConfig: {
+        configureConfigurationServiceConfig: {
             defaultWorkspaceUri: '/tmp'
         },
-        // This should demonstate that you can chose to not use the built-in loading meachnism,
-        // but do it manually, see below
-        enableKeybindingsService: false,
+        enableKeybindingsService: true,
         enableLanguagesService: true,
         enableAudioCueService: true,
         enableDebugService: true,
         enableDialogService: true,
         enableNotificationService: true,
-        enablePreferencesService: true,
+        // This should demonstrate that you can chose to not use the built-in loading mechanism,
+        // but do it manually, see below
+        enablePreferencesService: false,
         enableSnippetsService: true,
-        enableViewsService: true,
+        enableQuickaccessService: true,
         userServices: {
-            // manually add the KeyBindingsService
-            ...getKeybindingsServiceOverride()
+            // manually add the PreferencesService
+            ...getPreferencesServiceOverride()
         },
         debugLogging: true
     });
     await setup();
     await run();
 } catch (e) {
-    console.log(e);
+    console.error(e);
 }
