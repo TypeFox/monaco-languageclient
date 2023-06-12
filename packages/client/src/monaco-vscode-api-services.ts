@@ -13,6 +13,7 @@ interface MonacoEnvironmentEnhanced extends Environment {
 }
 
 export type InitializeServiceConfig = {
+    enableFilesService?: boolean;
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
     enableModelService?: boolean;
@@ -72,9 +73,9 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         serviceNames.push(name);
     };
 
-    // files service is required
-    addService('files', import('vscode/service-override/files'));
-
+    if (lc.enableFilesService === true) {
+        addService('files', import('vscode/service-override/files'));
+    }
     if (lc.enableModelService === true) {
         addService('model', import('vscode/service-override/model'));
     }
@@ -86,10 +87,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         }
     }
     if (lc.enableQuickaccessService === true) {
-        // quickaccess requires keybindings
-        if (lc.enableKeybindingsService === undefined || lc.enableKeybindingsService === false) {
-            throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
-        }
         addService('quickaccess', import('vscode/service-override/quickaccess'));
     }
     if (lc.configureConfigurationServiceConfig !== undefined) {
@@ -102,10 +99,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('notifications', import('vscode/service-override/notifications'));
     }
     if (lc.enableThemeService === true) {
-        // theme requires textmate
-        if (lc.enableTextmateService === undefined || lc.enableTextmateService === false) {
-            throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
-        }
         addService('theme', import('vscode/service-override/theme'));
     }
     if (lc.enableTextmateService === true) {
@@ -150,6 +143,23 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     if (userServices) {
         mergeServices(userServices, overrideServices);
         reportServiceLoading('user', userServices, lc.debugLogging === true);
+    }
+
+    // files service is required
+    if (!serviceNames.includes('files') && !Object.keys(overrideServices).includes('fileService')) {
+        throw new Error('"files" service was not configured, but it is mandatory. Please add it to the "initServices" config.');
+    }
+
+    // theme requires textmate
+    if ((serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService')) &&
+        !(serviceNames.includes('textmate') || Object.keys(overrideServices).includes('textMateTokenizationFeature'))) {
+        throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
+    }
+
+    // quickaccess requires keybindings
+    if ((serviceNames.includes('quickaccess') || Object.keys(overrideServices).includes('quickInputService')) &&
+        !(serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService'))) {
+        throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
     }
 
     for (const loadedImport of loadedImports) {
