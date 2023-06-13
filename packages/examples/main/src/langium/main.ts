@@ -144,6 +144,9 @@ try {
         enablePreferencesService: true,
         enableSnippetsService: true,
         enableQuickaccessService: true,
+        enableOutputService: false,
+        enableSearchService: false,
+        enableMarkersService: false,
         userServices: {
             // manually add the files service
             ...getFileServiceOverride()

@@ -7,6 +7,7 @@ import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
+import { ITerminalBackend } from 'vscode/service-override/terminal';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -34,6 +35,12 @@ export type InitializeServiceConfig = {
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
     enableQuickaccessService?: boolean;
+    enableOutputService?: boolean;
+    configureTerminalServiceConfig?: {
+        backendImpl: ITerminalBackend
+    }
+    enableSearchService?: boolean;
+    enableMarkersService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
 };
@@ -53,7 +60,11 @@ export const initServices = async (config?: InitializeServiceConfig) => {
     }
 
     if (!window.MonacoEnvironment) {
-        window.MonacoEnvironment = {};
+        window.MonacoEnvironment = {
+            createTrustedTypesPolicy: (_policyName: string) => {
+                return undefined;
+            }
+        };
     }
     (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
@@ -85,9 +96,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         } else {
             addService('editor', import('vscode/service-override/editor'));
         }
-    }
-    if (lc.enableQuickaccessService === true) {
-        addService('quickaccess', import('vscode/service-override/quickaccess'));
     }
     if (lc.configureConfigurationServiceConfig !== undefined) {
         addService('configuration', import('vscode/service-override/configuration'));
@@ -121,6 +129,21 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
+    }
+    if (lc.enableQuickaccessService === true) {
+        addService('quickaccess', import('vscode/service-override/quickaccess'));
+    }
+    if (lc.enableOutputService === true) {
+        addService('output', import('vscode/service-override/output'));
+    }
+    if (lc.configureTerminalServiceConfig !== undefined) {
+        addService('terminal', import('vscode/service-override/terminal'));
+    }
+    if (lc.enableSearchService === true) {
+        addService('search', import('vscode/service-override/search'));
+    }
+    if (lc.enableMarkersService === true) {
+        addService('markers', import('vscode/service-override/markers'));
     }
 
     const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {
@@ -180,8 +203,14 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
                 services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
             }
         } else if (serviceName === 'configuration') {
-            const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
-            services = loadedImport.default(uri);
+            if (lc.configureConfigurationServiceConfig?.defaultWorkspaceUri) {
+                const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
+                services = loadedImport.default(uri);
+            }
+        } else if (serviceName === 'terminal') {
+            if (lc.configureTerminalServiceConfig?.backendImpl) {
+                services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
+            }
         } else {
             services = loadedImport.default();
         }
