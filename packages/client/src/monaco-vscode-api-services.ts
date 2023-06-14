@@ -7,7 +7,7 @@ import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api
 import { initialize as initializeMonacoService } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
-import { ITerminalBackend } from 'vscode/service-override/terminal';
+import { ITerminalBackend, SimpleTerminalBackend } from 'vscode/service-override/terminal';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -37,7 +37,7 @@ export type InitializeServiceConfig = {
     enableQuickaccessService?: boolean;
     enableOutputService?: boolean;
     configureTerminalServiceConfig?: {
-        backendImpl: ITerminalBackend
+        backendImpl: SimpleTerminalBackend | ITerminalBackend
     }
     enableSearchService?: boolean;
     enableMarkersService?: boolean;
