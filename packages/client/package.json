@@ -49,13 +49,13 @@
   ],
   "dependencies": {
     "monaco-editor": "~0.39.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@1.79.3-next.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@1.79.3-next.4",
     "vscode-jsonrpc": "~8.1.0",
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
     "monaco-editor": "~0.39.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@1.79.3-next.2"
+    "vscode": "npm:@codingame/monaco-vscode-api@1.79.3-next.4"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

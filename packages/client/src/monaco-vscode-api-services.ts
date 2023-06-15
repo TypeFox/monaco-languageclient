@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
-import { initialize as initializeMonacoService } from 'vscode/services';
+import { ILogService, initialize as initializeMonacoService, LogLevel, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
 import { ITerminalBackend, SimpleTerminalBackend } from 'vscode/service-override/terminal';
@@ -43,6 +43,7 @@ export type InitializeServiceConfig = {
     enableMarkersService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
+    logLevel?: LogLevel
 };
 
 export const wasVscodeApiInitialized = () => {
@@ -184,6 +185,10 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         !(serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService'))) {
         throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
     }
+    if (serviceNames.includes('markers') &&
+        !(serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService'))) {
+        throw new Error('"markers" requires "views" service. Please add it to the "initServices" config.');
+    }
 
     for (const loadedImport of loadedImports) {
         const serviceName = serviceNames[count];
@@ -222,4 +227,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
 
     await initializeMonacoService(overrideServices);
+    if (lc.logLevel) {
+        StandaloneServices.get(ILogService).setLevel(lc.logLevel);
+    }
 };

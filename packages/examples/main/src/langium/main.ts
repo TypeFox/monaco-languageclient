@@ -15,6 +15,8 @@ import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getFileServiceOverride from 'vscode/service-override/files';
+import { LogLevel } from 'vscode/services';
+// import { renderPanelPart } from 'vscode/service-override/views';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -146,13 +148,15 @@ try {
         enableQuickaccessService: true,
         enableOutputService: true,
         enableSearchService: true,
-        enableMarkersService: true,
+        enableMarkersService: false,
         userServices: {
             // manually add the files service
             ...getFileServiceOverride()
         },
-        debugLogging: true
+        debugLogging: true,
+        logLevel: LogLevel.Info
     });
+    // renderPanelPart(document.querySelector<HTMLDivElement>('#panel')!);
     await setup();
     await run();
 } catch (e) {
