@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-languageclient": "6.1.0"
+    "monaco-languageclient": "6.2.0"
   },
   "devDependencies": {
     "shx": "~0.3.4"

@@ -80,6 +80,7 @@ export const createJsonEditor = async (config: {
 
     if (config.init === true) {
         await initServices({
+            enableFilesService: true,
             enableThemeService: true,
             enableTextmateService: true,
             enableModelService: true,

@@ -4,15 +4,17 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
-import { initialize as initializeMonacoService } from 'vscode/services';
+import { ILogService, initialize as initializeMonacoService, LogLevel, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
+import { ITerminalBackend, SimpleTerminalBackend } from 'vscode/service-override/terminal';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
 }
 
 export type InitializeServiceConfig = {
+    enableFilesService?: boolean;
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
     enableModelService?: boolean;
@@ -33,8 +35,15 @@ export type InitializeServiceConfig = {
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
     enableQuickaccessService?: boolean;
+    enableOutputService?: boolean;
+    configureTerminalServiceConfig?: {
+        backendImpl: SimpleTerminalBackend | ITerminalBackend
+    }
+    enableSearchService?: boolean;
+    enableMarkersService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
+    logLevel?: LogLevel
 };
 
 export const wasVscodeApiInitialized = () => {
@@ -52,7 +61,11 @@ export const initServices = async (config?: InitializeServiceConfig) => {
     }
 
     if (!window.MonacoEnvironment) {
-        window.MonacoEnvironment = {};
+        window.MonacoEnvironment = {
+            createTrustedTypesPolicy: (_policyName: string) => {
+                return undefined;
+            }
+        };
     }
     (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
@@ -72,9 +85,9 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         serviceNames.push(name);
     };
 
-    // files service is required
-    addService('files', import('vscode/service-override/files'));
-
+    if (lc.enableFilesService === true) {
+        addService('files', import('vscode/service-override/files'));
+    }
     if (lc.enableModelService === true) {
         addService('model', import('vscode/service-override/model'));
     }
@@ -84,13 +97,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         } else {
             addService('editor', import('vscode/service-override/editor'));
         }
-    }
-    if (lc.enableQuickaccessService === true) {
-        // quickaccess requires keybindings
-        if (lc.enableKeybindingsService === undefined || lc.enableKeybindingsService === false) {
-            throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
-        }
-        addService('quickaccess', import('vscode/service-override/quickaccess'));
     }
     if (lc.configureConfigurationServiceConfig !== undefined) {
         addService('configuration', import('vscode/service-override/configuration'));
@@ -102,10 +108,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('notifications', import('vscode/service-override/notifications'));
     }
     if (lc.enableThemeService === true) {
-        // theme requires textmate
-        if (lc.enableTextmateService === undefined || lc.enableTextmateService === false) {
-            throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
-        }
         addService('theme', import('vscode/service-override/theme'));
     }
     if (lc.enableTextmateService === true) {
@@ -128,6 +130,21 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
+    }
+    if (lc.enableQuickaccessService === true) {
+        addService('quickaccess', import('vscode/service-override/quickaccess'));
+    }
+    if (lc.enableOutputService === true) {
+        addService('output', import('vscode/service-override/output'));
+    }
+    if (lc.configureTerminalServiceConfig !== undefined) {
+        addService('terminal', import('vscode/service-override/terminal'));
+    }
+    if (lc.enableSearchService === true) {
+        addService('search', import('vscode/service-override/search'));
+    }
+    if (lc.enableMarkersService === true) {
+        addService('markers', import('vscode/service-override/markers'));
     }
 
     const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {
@@ -152,6 +169,27 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         reportServiceLoading('user', userServices, lc.debugLogging === true);
     }
 
+    // files service is required
+    if (!serviceNames.includes('files') && !Object.keys(overrideServices).includes('fileService')) {
+        throw new Error('"files" service was not configured, but it is mandatory. Please add it to the "initServices" config.');
+    }
+
+    // theme requires textmate
+    if ((serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService')) &&
+        !(serviceNames.includes('textmate') || Object.keys(overrideServices).includes('textMateTokenizationFeature'))) {
+        throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
+    }
+
+    // quickaccess requires keybindings
+    if ((serviceNames.includes('quickaccess') || Object.keys(overrideServices).includes('quickInputService')) &&
+        !(serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService'))) {
+        throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
+    }
+    if (serviceNames.includes('markers') &&
+        !(serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService'))) {
+        throw new Error('"markers" requires "views" service. Please add it to the "initServices" config.');
+    }
+
     for (const loadedImport of loadedImports) {
         const serviceName = serviceNames[count];
         if (lc.debugLogging === true) {
@@ -170,8 +208,14 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
                 services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
             }
         } else if (serviceName === 'configuration') {
-            const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
-            services = loadedImport.default(uri);
+            if (lc.configureConfigurationServiceConfig?.defaultWorkspaceUri) {
+                const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
+                services = loadedImport.default(uri);
+            }
+        } else if (serviceName === 'terminal') {
+            if (lc.configureTerminalServiceConfig?.backendImpl) {
+                services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
+            }
         } else {
             services = loadedImport.default();
         }
@@ -183,4 +227,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
 
     await initializeMonacoService(overrideServices);
+    if (lc.logLevel) {
+        StandaloneServices.get(ILogService).setLevel(lc.logLevel);
+    }
 };

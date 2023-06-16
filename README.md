@@ -39,7 +39,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ### May 2023 (v6.0.0)
 
-Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
+Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configuration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
 
 ### April 2023 (v5.0.0)
 
@@ -78,6 +78,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.2.0         | 1.79.3  | 0.39.0 | Released 2023-06-16 |
 | 6.1.0         | 1.79.1  | 0.38.0 | Released 2023-06-12 |
 | 6.0.3         | 1.78.8  | 0.37.1 | Released 2023-05-31 |
 | 6.0.2         | 1.78.6  | 0.37.1 | Released 2023-05-24 |

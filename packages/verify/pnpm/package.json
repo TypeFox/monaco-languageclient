@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-languageclient": "6.1.0",
-    "monaco-editor": "~0.38.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.1"
+    "monaco-languageclient": "6.2.0",
+    "monaco-editor": "~0.39.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.2"
   },
   "devDependencies": {
     "shx": "~0.3.4"
@@ -16,6 +16,6 @@
   },
   "volta": {
     "node": "18.16.0",
-    "npm": "9.6.6"
+    "npm": "9.6.7"
   }
 }

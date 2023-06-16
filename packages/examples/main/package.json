@@ -22,8 +22,8 @@
     "express": "~4.18.2",
     "langium": "~1.2.0",
     "langium-statemachine-dsl": "~1.2.0",
-    "monaco-editor-workers": "0.38.0",
-    "monaco-languageclient": "6.1.0",
+    "monaco-editor-workers": "0.39.1",
+    "monaco-languageclient": "6.2.0",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -46,7 +46,7 @@
   },
   "volta": {
     "node": "18.16.0",
-    "npm": "9.6.6"
+    "npm": "9.6.7"
   },
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo",

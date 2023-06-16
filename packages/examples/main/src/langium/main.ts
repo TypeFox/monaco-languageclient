@@ -14,7 +14,9 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getPreferencesServiceOverride from 'vscode/service-override/preferences';
+import getFileServiceOverride from 'vscode/service-override/files';
+import { LogLevel } from 'vscode/services';
+// import { renderPanelPart } from 'vscode/service-override/views';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -122,6 +124,9 @@ const run = async () => {
 
 try {
     await initServices({
+        // This should demonstrate that you can chose to not use the built-in loading mechanism,
+        // but do it manually, see below
+        enableFilesService: false,
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
@@ -138,17 +143,20 @@ try {
         enableDebugService: true,
         enableDialogService: true,
         enableNotificationService: true,
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enablePreferencesService: false,
+        enablePreferencesService: true,
         enableSnippetsService: true,
         enableQuickaccessService: true,
+        enableOutputService: true,
+        enableSearchService: true,
+        enableMarkersService: false,
         userServices: {
-            // manually add the PreferencesService
-            ...getPreferencesServiceOverride()
+            // manually add the files service
+            ...getFileServiceOverride()
         },
-        debugLogging: true
+        debugLogging: true,
+        logLevel: LogLevel.Info
     });
+    // renderPanelPart(document.querySelector<HTMLDivElement>('#panel')!);
     await setup();
     await run();
 } catch (e) {
