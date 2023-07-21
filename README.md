@@ -250,7 +250,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--monaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@~1.78.8"
+"vscode": "npm:@codingame/monaco-vscode-api@~1.80.0"
 ```
 
 ## Licenses
