@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
 import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -12,9 +11,9 @@ import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { createConfiguredEditor } from 'vscode/monaco';
-import { registerExtension } from 'vscode/extensions';
+import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getFileServiceOverride from 'vscode/service-override/files';
+import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
 import { LogLevel } from 'vscode/services';
 // import { renderPanelPart } from 'vscode/service-override/views';
 import 'vscode/default-extensions/theme-defaults';
@@ -60,17 +59,11 @@ const setup = async () => {
             }]
         }
     };
-    const { registerFile: registerExtensionFile } = registerExtension(extension);
+    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
+    // const api = await getApi();
 
-    registerExtensionFile('/statemachine-configuration.json', async () => {
-        const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
-        return (await fetch(statemachineLanguageConfig)).text();
-    });
-
-    registerExtensionFile('/statemachine-grammar.json', async () => {
-        const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
-        return (await fetch(statemachineTmUrl)).text();
-    });
+    registerFileUrl('/statemachine-configuration.json', new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
+    registerFileUrl('/statemachine-grammar.json', new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);
 
     updateUserConfiguration(`{
     "editor.fontSize": 14,
@@ -124,9 +117,6 @@ const run = async () => {
 try {
     // use this to demonstrate all possible services made available by the monaco-vscode-api
     await initServices({
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enableFilesService: false,
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
@@ -145,13 +135,22 @@ try {
         enableNotificationService: true,
         enablePreferencesService: true,
         enableSnippetsService: true,
-        enableQuickaccessService: true,
+        configureQuickaccessService: {
+            isKeybindingConfigurationVisible: true,
+            shouldUseGlobalPicker: true
+        },
         enableOutputService: true,
         enableSearchService: true,
         enableMarkersService: false,
+        // don't enable files and extensions services. They will be enabled automatically
+        enableFilesService: false,
+        enableExtensionsService: false,
+        // This should demonstrate that you can chose to not use the built-in loading mechanism,
+        // but do it manually, see below
+        enableAccessibilityService: false,
         userServices: {
-            // manually add the files service
-            ...getFileServiceOverride()
+            // manually add the accessibility service
+            ...getAccessibilityServiceOverride()
         },
         debugLogging: true,
         logLevel: LogLevel.Info
