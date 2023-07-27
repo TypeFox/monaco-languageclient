@@ -25,7 +25,6 @@ export default defineConfig(() => {
             port: 8080,
             origin: 'http://localhost:8080'
         },
-        assetsInclude: ['**/*.wasm'],
         optimizeDeps: {
             esbuildOptions: {
                 plugins: [

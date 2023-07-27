@@ -88,10 +88,7 @@ export const createJsonEditor = async (config: {
             },
             enableKeybindingsService: true,
             enableLanguagesService: true,
-            configureQuickaccessService: {
-                isKeybindingConfigurationVisible: true,
-                shouldUseGlobalPicker: true
-            },
+            enableQuickaccessService: true,
             enableOutputService: true,
             enableAccessibilityService: true,
             debugLogging: true

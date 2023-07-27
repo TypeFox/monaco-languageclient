@@ -35,10 +35,7 @@ export type InitializeServiceConfig = {
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
-    configureQuickaccessService?: {
-        isKeybindingConfigurationVisible: boolean,
-        shouldUseGlobalPicker: boolean
-    };
+    enableQuickaccessService?: boolean;
     enableOutputService?: boolean;
     configureTerminalServiceConfig?: {
         backendImpl: SimpleTerminalBackend | ITerminalBackend
@@ -48,6 +45,7 @@ export type InitializeServiceConfig = {
     enableAccessibilityService?: boolean;
     enableEnvironmentService?: boolean;
     enableLayoutService?: boolean;
+    enableLanguageDetectionWorkerService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
     logLevel?: LogLevel
@@ -141,7 +139,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
     }
-    if (lc.configureQuickaccessService !== undefined) {
+    if (lc.enableQuickaccessService === true) {
         addService('quickaccess', import('vscode/service-override/quickaccess'));
     }
     if (lc.enableOutputService === true) {
@@ -164,6 +162,9 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableLayoutService === true) {
         addService('layout', import('vscode/service-override/layout'));
+    }
+    if (lc.enableLanguageDetectionWorkerService === true) {
+        addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
     }
 
     const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean, origin?: string) => {
@@ -238,11 +239,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
             if (lc.configureTerminalServiceConfig?.backendImpl) {
                 services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
             }
-        } else if (serviceName === 'quickaccess') {
-            services = loadedImport.default({
-                isKeybindingConfigurationVisible: lc.configureQuickaccessService?.isKeybindingConfigurationVisible,
-                shouldUseGlobalPicker: lc.configureQuickaccessService?.shouldUseGlobalPicker
-            });
         } else {
             services = loadedImport.default();
         }
