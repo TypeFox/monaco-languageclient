@@ -60,7 +60,6 @@ const setup = async () => {
         }
     };
     const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
-    // const api = await getApi();
 
     registerFileUrl('/statemachine-configuration.json', new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
     registerFileUrl('/statemachine-grammar.json', new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);

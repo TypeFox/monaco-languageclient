@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
 import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -13,7 +12,7 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserve
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 
 import { createConfiguredEditor } from 'vscode/monaco';
-import { registerExtension } from 'vscode/extensions';
+import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
 import 'vscode/default-extensions/theme-defaults';
 
@@ -49,18 +48,11 @@ const setup = async () => {
             }]
         }
     };
-    const { registerFile: registerExtensionFile } = registerExtension(extension);
+    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
 
     // these two files are taken from the langium-vscode
-    registerExtensionFile('/langium-configuration.json', async () => {
-        const langiumLanguageConfig = new URL('./src/langium/langium.configuration.json', window.location.href).href;
-        return (await fetch(langiumLanguageConfig)).text();
-    });
-
-    registerExtensionFile('/langium-grammar.json', async () => {
-        const langiumTmUrl = new URL('./src/langium/langium.tmLanguage.json', window.location.href).href;
-        return (await fetch(langiumTmUrl)).text();
-    });
+    registerFileUrl('/langium-configuration.json', new URL('./src/langium/langium.configuration.json', window.location.href).href);
+    registerFileUrl('/langium-grammar.json', new URL('./src/langium/langium.tmLanguage.json', window.location.href).href);
 
     // set vscode configuration parameters
     updateUserConfiguration(`{
