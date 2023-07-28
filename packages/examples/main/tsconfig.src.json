@@ -12,7 +12,10 @@
     "node"
   ],
   "references": [{
-    "path": "../../client/tsconfig.src.json"
+    "path": "../../client/tsconfig.src.json",
+  },
+  {
+    "path": "../../vscode-ws-jsonrpc/tsconfig.src.json"
   }],
   "include": [
     "src/**/*.ts",

@@ -11,23 +11,21 @@ import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
+
 import { createConfiguredEditor } from 'vscode/monaco';
 import { registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getFileServiceOverride from 'vscode/service-override/files';
-import { LogLevel } from 'vscode/services';
-// import { renderPanelPart } from 'vscode/service-override/views';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
-const languageId = 'statemachine';
+const languageId = 'langium';
 
 const setup = async () => {
-    console.log('Setting up Langium configuration ...');
+    console.log('Setting up Langium client configuration ...');
     const extension = {
-        name: 'langium-example',
+        name: 'langium-client',
         publisher: 'monaco-languageclient-project',
         version: '1.0.0',
         engines: {
@@ -42,56 +40,47 @@ const setup = async () => {
                 aliases: [
                     languageId
                 ],
-                configuration: './statemachine-configuration.json'
+                configuration: './langium-configuration.json'
             }],
             grammars: [{
                 language: languageId,
-                scopeName: 'source.statemachine',
-                path: './statemachine-grammar.json'
-            }],
-            keybindings: [{
-                key: 'ctrl+p',
-                command: 'editor.action.quickCommand',
-                when: 'editorTextFocus'
-            }, {
-                key: 'ctrl+shift+c',
-                command: 'editor.action.commentLine',
-                when: 'editorTextFocus'
+                scopeName: 'source.langium',
+                path: './langium-grammar.json'
             }]
         }
     };
     const { registerFile: registerExtensionFile } = registerExtension(extension);
 
-    registerExtensionFile('/statemachine-configuration.json', async () => {
-        const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href;
-        return (await fetch(statemachineLanguageConfig)).text();
+    // these two files are taken from the langium-vscode
+    registerExtensionFile('/langium-configuration.json', async () => {
+        const langiumLanguageConfig = new URL('./src/langium/langium.configuration.json', window.location.href).href;
+        return (await fetch(langiumLanguageConfig)).text();
     });
 
-    registerExtensionFile('/statemachine-grammar.json', async () => {
-        const statemachineTmUrl = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href;
-        return (await fetch(statemachineTmUrl)).text();
+    registerExtensionFile('/langium-grammar.json', async () => {
+        const langiumTmUrl = new URL('./src/langium/langium.tmLanguage.json', window.location.href).href;
+        return (await fetch(langiumTmUrl)).text();
     });
 
+    // set vscode configuration parameters
     updateUserConfiguration(`{
-    "editor.fontSize": 14,
     "workbench.colorTheme": "Default Dark Modern"
 }`);
 };
 
 const run = async () => {
-    const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
-    const responseStatemachine = await fetch(exampleStatemachineUrl);
-    const editorText = await responseStatemachine.text();
+    const exampleLangiumUrl = new URL('./src/langium/example.langium', window.location.href).href;
+    const editorText = await (await fetch(exampleLangiumUrl)).text();
 
     const editorOptions = {
-        model: editor.createModel(editorText, languageId, Uri.parse('inmemory://example.statemachine')),
+        model: editor.createModel(editorText, languageId, Uri.parse('inmemory://example.langium')),
         automaticLayout: true
     };
     createConfiguredEditor(document.getElementById('container')!, editorOptions);
 
     function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
         return new MonacoLanguageClient({
-            name: 'Langium Statemachine Client',
+            name: 'Langium Client',
             clientOptions: {
                 // use a language id as a document selector
                 documentSelector: [{ language: languageId }],
@@ -110,23 +99,32 @@ const run = async () => {
         });
     }
 
-    const langiumWorkerUrl = new URL('./dist/worker/statemachineServerWorker.js', window.location.href).href;
+    // works only if browser supports module workers
+    const langiumWorkerUrl = new URL('./src/langium/langiumServerWorker.ts', window.location.href).href;
+    // use this if module workers aren't supported
+    // const langiumWorkerUrl = new URL('./dist/worker/langiumServerWorker.js', window.location.href).href;
     const worker = new Worker(langiumWorkerUrl, {
         type: 'module',
-        name: 'Statemachine LS'
+        name: 'Langium LS'
     });
     const reader = new BrowserMessageReader(worker);
     const writer = new BrowserMessageWriter(worker);
     const languageClient = createLanguageClient({ reader, writer });
     languageClient.start();
     reader.onClose(() => languageClient.stop());
+
+    languageClient.onTelemetry((t) => {
+        console.log(t);
+    });
+
+    languageClient.sendNotification('tester', { test: 'test' });
+
+    // any further language client / server interaction can't be defined as needed
 };
 
 try {
     await initServices({
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enableFilesService: false,
+        enableFilesService: true,
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
@@ -139,26 +137,10 @@ try {
         },
         enableKeybindingsService: true,
         enableLanguagesService: true,
-        enableAudioCueService: true,
-        enableDebugService: true,
-        enableDialogService: true,
-        enableNotificationService: true,
-        enablePreferencesService: true,
-        enableSnippetsService: true,
-        enableQuickaccessService: true,
-        enableOutputService: true,
-        enableSearchService: true,
-        enableMarkersService: false,
-        userServices: {
-            // manually add the files service
-            ...getFileServiceOverride()
-        },
-        debugLogging: true,
-        logLevel: LogLevel.Info
+        debugLogging: true
     });
-    // renderPanelPart(document.querySelector<HTMLDivElement>('#panel')!);
     await setup();
     await run();
 } catch (e) {
-    console.error(e);
+    console.log(e);
 }

@@ -52,11 +52,11 @@
     "clean": "shx rm -fr dist *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building main examples:",
-    "build:worker:vite": "vite --config  vite.langium-worker.ts build",
-    "build:worker": "esbuild ../../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
-    "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker",
+    "build:worker:vite": "vite --config  vite.statemachine-worker.ts build",
+    "build:worker:statemachine": "esbuild ../../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
+    "build:worker:langium": "esbuild ./src/langium/langiumServerWorker.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/langiumServerWorker.js",
+    "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker:statemachine && npm run build:worker:langium",
     "start": "node --loader ts-node/esm src/server/main.ts",
-    "start:ext": "node --loader ts-node/esm src/server/main.ts --external",
-    "fetch:themes": "node resources/fetchThemes.mjs"
+    "start:ext": "node --loader ts-node/esm src/server/main.ts --external"
   }
 }
