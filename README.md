@@ -131,7 +131,11 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **client** example located in [./packages/examples/main/src/client](./packages/examples/main/src/client) contains the [client web app](./packages/examples/main/src/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- The **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/main.ts) and the [langauge server implementation running in a web worker](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). They communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
+- Langium grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
+
+- Statemachine DSL **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
+
+Both web worker examples communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
 
 - The **browser** example located in [./packages/examples/main/src/browser](./packages/examples/main/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/main/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
