@@ -137,10 +137,6 @@ try {
         enableQuickaccessService: true,
         enableOutputService: true,
         enableSearchService: true,
-        enableMarkersService: false,
-        // don't enable files and extensions services. They will be enabled automatically
-        enableFilesService: false,
-        enableExtensionsService: false,
         enableLanguageDetectionWorkerService: true,
         // This should demonstrate that you can chose to not use the built-in loading mechanism,
         // but do it manually, see below

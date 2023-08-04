@@ -23,7 +23,7 @@
     "langium": "~1.2.1",
     "langium-statemachine-dsl": "~1.2.0",
     "monaco-editor-workers": "0.40.0",
-    "monaco-languageclient": "6.3.0-next.1",
+    "monaco-languageclient": "6.3.0-next.2",
     "normalize-url": "~8.0.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",

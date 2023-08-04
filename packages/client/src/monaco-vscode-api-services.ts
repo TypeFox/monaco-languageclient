@@ -14,8 +14,6 @@ interface MonacoEnvironmentEnhanced extends Environment {
 }
 
 export type InitializeServiceConfig = {
-    enableFilesService?: boolean;
-    enableExtensionsService?: boolean;
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
     enableModelService?: boolean;
@@ -43,8 +41,6 @@ export type InitializeServiceConfig = {
     enableSearchService?: boolean;
     enableMarkersService?: boolean;
     enableAccessibilityService?: boolean;
-    enableEnvironmentService?: boolean;
-    enableLayoutService?: boolean;
     enableLanguageDetectionWorkerService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
@@ -75,11 +71,14 @@ export const initServices = async (config?: InitializeServiceConfig) => {
     (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
 
-type ModuleWithDefaultExport = {
+export type ModuleWithDefaultExport = {
     default: (x?: any) => editor.IEditorOverrideServices
 }
 
-const importAllServices = async (config?: InitializeServiceConfig) => {
+/**
+ * files, extension, environment and layout services are loaded automatically by monaco-vscode-api
+ */
+export const importAllServices = async (config?: InitializeServiceConfig) => {
     const serviceNames: string[] = [];
     const promises: Promise<ModuleWithDefaultExport>[] = [];
     const lc: InitializeServiceConfig = config ?? {};
@@ -90,12 +89,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         promises.push(promise);
     };
 
-    if (lc.enableFilesService === true) {
-        addService('files', import('vscode/service-override/files'));
-    }
-    if (lc.enableExtensionsService === true) {
-        addService('extensions', import('vscode/service-override/extensions'));
-    }
     if (lc.enableModelService === true) {
         addService('model', import('vscode/service-override/model'));
     }
@@ -157,12 +150,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableAccessibilityService === true) {
         addService('accessibility', import('vscode/service-override/accessibility'));
     }
-    if (lc.enableEnvironmentService === true) {
-        addService('environment', import('vscode/service-override/environment'));
-    }
-    if (lc.enableLayoutService === true) {
-        addService('layout', import('vscode/service-override/layout'));
-    }
     if (lc.enableLanguageDetectionWorkerService === true) {
         addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
     }
@@ -192,8 +179,6 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         mergeServices(userServices, overrideServices);
         reportServiceLoading(userServices, lc.debugLogging === true, 'user');
     }
-
-    // files service and extension service are loaded automatically by monaco-vscode-api
 
     // theme requires textmate
     if ((serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService')) &&
@@ -240,7 +225,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
                 services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
             }
         } else if (serviceName === 'quickaccess') {
-            if (lc.configureEditorOrViewsServiceConfig?.enableViewsService) {
+            if (lc.configureEditorOrViewsServiceConfig?.enableViewsService === true) {
                 const {
                     isEditorPartVisible
                 } = await import('vscode/service-override/views');
@@ -248,6 +233,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
                     isKeybindingConfigurationVisible: isEditorPartVisible,
                     shouldUseGlobalPicker: isEditorPartVisible
                 });
+                services = loadedImport.default();
             } else {
                 services = loadedImport.default();
             }

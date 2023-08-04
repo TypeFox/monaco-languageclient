@@ -116,7 +116,6 @@ const run = async () => {
 
 try {
     await initServices({
-        enableFilesService: true,
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
@@ -129,6 +128,7 @@ try {
         },
         enableKeybindingsService: true,
         enableLanguagesService: true,
+        enableQuickaccessService: true,
         debugLogging: true
     });
     await setup();
