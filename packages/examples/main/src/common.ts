@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
 import { editor, languages, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
@@ -80,7 +79,6 @@ export const createJsonEditor = async (config: {
 
     if (config.init === true) {
         await initServices({
-            enableFilesService: true,
             enableThemeService: true,
             enableTextmateService: true,
             enableModelService: true,
@@ -88,9 +86,11 @@ export const createJsonEditor = async (config: {
                 enableViewsService: false,
                 useDefaultOpenEditorFunction: true
             },
-            enableLanguagesService: true,
             enableKeybindingsService: true,
+            enableLanguagesService: true,
             enableQuickaccessService: true,
+            enableOutputService: true,
+            enableAccessibilityService: true,
             debugLogging: true
         });
     }

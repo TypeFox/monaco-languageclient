@@ -6,6 +6,5 @@ export default defineConfig({
         alias: {
             path: 'path-browserify'
         }
-    },
-    assetsInclude: ['**/*.wasm']
+    }
 });

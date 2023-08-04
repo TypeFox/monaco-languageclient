@@ -7,6 +7,9 @@
   },
   "references": [{
     "path": "../../client/tsconfig.src.json"
+  },
+  {
+    "path": "../../examples/main/tsconfig.src.json"
   }],
   "include": [
     "src/**/*.ts",

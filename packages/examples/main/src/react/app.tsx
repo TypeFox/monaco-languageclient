@@ -2,12 +2,9 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
+import { createJsonEditor, createUrl, createWebSocket } from '../common.js';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
-import { createJsonEditor, createUrl, createWebSocket } from '../common.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);

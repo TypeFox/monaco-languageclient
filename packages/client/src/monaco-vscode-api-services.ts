@@ -14,7 +14,6 @@ interface MonacoEnvironmentEnhanced extends Environment {
 }
 
 export type InitializeServiceConfig = {
-    enableFilesService?: boolean;
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
     enableModelService?: boolean;
@@ -41,6 +40,8 @@ export type InitializeServiceConfig = {
     }
     enableSearchService?: boolean;
     enableMarkersService?: boolean;
+    enableAccessibilityService?: boolean;
+    enableLanguageDetectionWorkerService?: boolean;
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
     logLevel?: LogLevel
@@ -70,24 +71,24 @@ export const initServices = async (config?: InitializeServiceConfig) => {
     (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
 
-type ModuleWithDefaultExport = {
+export type ModuleWithDefaultExport = {
     default: (x?: any) => editor.IEditorOverrideServices
 }
 
-const importAllServices = async (config?: InitializeServiceConfig) => {
-    const promises: Promise<ModuleWithDefaultExport>[] = [];
+/**
+ * files, extension, environment and layout services are loaded automatically by monaco-vscode-api
+ */
+export const importAllServices = async (config?: InitializeServiceConfig) => {
     const serviceNames: string[] = [];
+    const promises: Promise<ModuleWithDefaultExport>[] = [];
     const lc: InitializeServiceConfig = config ?? {};
     const userServices = lc.userServices ?? {};
 
     const addService = (name: string, promise: Promise<ModuleWithDefaultExport>) => {
-        promises.push(promise);
         serviceNames.push(name);
+        promises.push(promise);
     };
 
-    if (lc.enableFilesService === true) {
-        addService('files', import('vscode/service-override/files'));
-    }
     if (lc.enableModelService === true) {
         addService('model', import('vscode/service-override/model'));
     }
@@ -146,11 +147,21 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableMarkersService === true) {
         addService('markers', import('vscode/service-override/markers'));
     }
+    if (lc.enableAccessibilityService === true) {
+        addService('accessibility', import('vscode/service-override/accessibility'));
+    }
+    if (lc.enableLanguageDetectionWorkerService === true) {
+        addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
+    }
 
-    const reportServiceLoading = (origin: string, services: editor.IEditorOverrideServices, debugLogging: boolean) => {
+    const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean, origin?: string) => {
         for (const serviceName of Object.keys(services)) {
             if (debugLogging) {
-                console.log(`Loading ${origin} service: ${serviceName}`);
+                if (origin) {
+                    console.log(`Loading ${origin} service: ${serviceName}`);
+                } else {
+                    console.log(`Loading service: ${serviceName}`);
+                }
             }
         }
     };
@@ -166,12 +177,7 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
     const overrideServices: editor.IEditorOverrideServices = {};
     if (userServices) {
         mergeServices(userServices, overrideServices);
-        reportServiceLoading('user', userServices, lc.debugLogging === true);
-    }
-
-    // files service is required
-    if (!serviceNames.includes('files') && !Object.keys(overrideServices).includes('fileService')) {
-        throw new Error('"files" service was not configured, but it is mandatory. Please add it to the "initServices" config.');
+        reportServiceLoading(userServices, lc.debugLogging === true, 'user');
     }
 
     // theme requires textmate
@@ -185,6 +191,8 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         !(serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService'))) {
         throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
     }
+
+    // markers service requires views service
     if (serviceNames.includes('markers') &&
         !(serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService'))) {
         throw new Error('"markers" requires "views" service. Please add it to the "initServices" config.');
@@ -216,12 +224,25 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
             if (lc.configureTerminalServiceConfig?.backendImpl) {
                 services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
             }
+        } else if (serviceName === 'quickaccess') {
+            if (lc.configureEditorOrViewsServiceConfig?.enableViewsService === true) {
+                const {
+                    isEditorPartVisible
+                } = await import('vscode/service-override/views');
+                services = loadedImport.default({
+                    isKeybindingConfigurationVisible: isEditorPartVisible,
+                    shouldUseGlobalPicker: isEditorPartVisible
+                });
+                services = loadedImport.default();
+            } else {
+                services = loadedImport.default();
+            }
         } else {
             services = loadedImport.default();
         }
 
         mergeServices(services, overrideServices);
-        reportServiceLoading('user', services, lc.debugLogging === true);
+        reportServiceLoading(services, lc.debugLogging === true);
 
         count++;
     }

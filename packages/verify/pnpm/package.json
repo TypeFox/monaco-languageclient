@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-languageclient": "6.2.0",
-    "monaco-editor": "~0.39.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~1.79.2"
+    "monaco-languageclient": "6.3.0-next.2",
+    "monaco-editor": "~0.40.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~1.80.2"
   },
   "devDependencies": {
     "shx": "~0.3.4"
@@ -15,7 +15,7 @@
     "test:treemending": "monaco-treemending"
   },
   "volta": {
-    "node": "18.16.0",
+    "node": "18.17.0",
     "npm": "9.6.7"
   }
 }

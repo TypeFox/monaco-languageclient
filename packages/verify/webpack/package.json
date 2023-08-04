@@ -4,21 +4,22 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor-workers": "0.39.1",
-    "monaco-languageclient": "6.2.0",
+    "monaco-editor-workers": "0.40.0",
+    "monaco-languageclient": "6.3.0-next.2",
+    "examples-main": "../../examples/main",
     "vscode-ws-jsonrpc": "3.0.0",
     "normalize-url": "~8.0.0"
   },
   "devDependencies": {
-    "css-loader": "~6.7.3",
+    "css-loader": "~6.8.1",
     "source-map-loader": "~4.0.1",
-    "style-loader": "~3.3.2",
-    "ts-loader": "~9.4.2",
-    "webpack-cli": "~5.0.2",
+    "style-loader": "~3.3.3",
+    "ts-loader": "~9.4.4",
+    "webpack-cli": "~5.1.4",
     "http-server": "~14.1.1"
   },
   "volta": {
-    "node": "18.16.0",
+    "node": "18.17.0",
     "npm": "9.6.7"
   },
   "scripts": {
