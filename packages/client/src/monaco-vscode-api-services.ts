@@ -80,14 +80,14 @@ type ModuleWithDefaultExport = {
 }
 
 const importAllServices = async (config?: InitializeServiceConfig) => {
-    const promises: Promise<ModuleWithDefaultExport>[] = [];
     const serviceNames: string[] = [];
+    const promises: Promise<ModuleWithDefaultExport>[] = [];
     const lc: InitializeServiceConfig = config ?? {};
     const userServices = lc.userServices ?? {};
 
     const addService = (name: string, promise: Promise<ModuleWithDefaultExport>) => {
-        promises.push(promise);
         serviceNames.push(name);
+        promises.push(promise);
     };
 
     if (lc.enableFilesService === true) {
@@ -238,6 +238,18 @@ const importAllServices = async (config?: InitializeServiceConfig) => {
         } else if (serviceName === 'terminal') {
             if (lc.configureTerminalServiceConfig?.backendImpl) {
                 services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
+            }
+        } else if (serviceName === 'quickaccess') {
+            if (lc.configureEditorOrViewsServiceConfig?.enableViewsService) {
+                const {
+                    isEditorPartVisible
+                } = await import('vscode/service-override/views');
+                services = loadedImport.default({
+                    isKeybindingConfigurationVisible: isEditorPartVisible,
+                    shouldUseGlobalPicker: isEditorPartVisible
+                });
+            } else {
+                services = loadedImport.default();
             }
         } else {
             services = loadedImport.default();

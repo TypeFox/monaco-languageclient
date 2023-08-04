@@ -120,7 +120,7 @@ try {
         enableTextmateService: true,
         enableModelService: true,
         configureEditorOrViewsServiceConfig: {
-            enableViewsService: false,
+            enableViewsService: true,
             useDefaultOpenEditorFunction: true
         },
         configureConfigurationServiceConfig: {
