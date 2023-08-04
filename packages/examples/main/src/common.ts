@@ -83,8 +83,6 @@ export const createJsonEditor = async (config: {
             enableTextmateService: true,
             enableModelService: true,
             configureEditorOrViewsServiceConfig: {
-                enableViewsService: false,
-                useDefaultOpenEditorFunction: true
             },
             enableKeybindingsService: true,
             enableLanguagesService: true,

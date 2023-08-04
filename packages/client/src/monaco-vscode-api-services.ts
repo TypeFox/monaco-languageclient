@@ -18,8 +18,7 @@ export type InitializeServiceConfig = {
     enableNotificationService?: boolean;
     enableModelService?: boolean;
     configureEditorOrViewsServiceConfig?: {
-        enableViewsService: boolean;
-        useDefaultOpenEditorFunction: boolean;
+        enableViewsService?: boolean;
         openEditorFunc?: OpenEditor
     };
     configureConfigurationServiceConfig?: {
@@ -93,7 +92,7 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
         addService('model', import('vscode/service-override/model'));
     }
     if (lc.configureEditorOrViewsServiceConfig !== undefined) {
-        if (lc.configureEditorOrViewsServiceConfig.enableViewsService) {
+        if (lc.configureEditorOrViewsServiceConfig.enableViewsService === true) {
             addService('views', import('vscode/service-override/views'));
         } else {
             addService('editor', import('vscode/service-override/editor'));
@@ -206,14 +205,14 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
 
         let services: editor.IEditorOverrideServices = {};
         if (serviceName === 'editor' || serviceName === 'views') {
-            if (lc.configureEditorOrViewsServiceConfig!.useDefaultOpenEditorFunction) {
+            if (lc.configureEditorOrViewsServiceConfig?.openEditorFunc) {
+                services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
+            } else {
                 const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
                     console.log('Trying to open a model', model, options, sideBySide);
                     return undefined;
                 };
                 services = loadedImport.default(defaultOpenEditorFunc);
-            } else if (lc.configureEditorOrViewsServiceConfig?.openEditorFunc) {
-                services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
             }
         } else if (serviceName === 'configuration') {
             if (lc.configureConfigurationServiceConfig?.defaultWorkspaceUri) {

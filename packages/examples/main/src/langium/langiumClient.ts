@@ -120,8 +120,6 @@ try {
         enableTextmateService: true,
         enableModelService: true,
         configureEditorOrViewsServiceConfig: {
-            enableViewsService: false,
-            useDefaultOpenEditorFunction: true
         },
         configureConfigurationServiceConfig: {
             defaultWorkspaceUri: '/tmp'
