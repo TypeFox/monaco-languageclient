@@ -15,7 +15,6 @@ import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
 import { LogLevel } from 'vscode/services';
-// import { renderPanelPart } from 'vscode/service-override/views';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -146,7 +145,6 @@ try {
         debugLogging: true,
         logLevel: LogLevel.Info
     });
-    // renderPanelPart(document.querySelector<HTMLDivElement>('#panel')!);
     await setup();
     await run();
 } catch (e) {

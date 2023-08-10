@@ -121,7 +121,7 @@ const createEditor = async () => {
         validate();
     });
 
-    workspace.onDidOpenTextDocument((_event) => {
+    workspace.onDidChangeTextDocument((_event) => {
         mainVscodeDocument = workspace.textDocuments[0];
         validate();
     });
