@@ -70,14 +70,8 @@ export type ExampleJsonEditor = {
     modelRef: IReference<ITextFileEditorModel>;
 }
 
-export const createJsonEditor = async (config: {
-    htmlElement: HTMLElement,
-    content: string,
-    init: boolean
-}) => {
-    const languageId = 'json';
-
-    if (config.init === true) {
+export const performInit = async (vscodeApiInit: boolean) => {
+    if (vscodeApiInit === true) {
         await initServices({
             enableThemeService: true,
             enableTextmateService: true,
@@ -89,22 +83,27 @@ export const createJsonEditor = async (config: {
             enableQuickaccessService: true,
             enableOutputService: true,
             enableAccessibilityService: true,
-            debugLogging: true
+            debugLogging: false
+        });
+
+        // register the JSON language with Monaco
+        languages.register({
+            id: 'json',
+            extensions: ['.json', '.jsonc'],
+            aliases: ['JSON', 'json'],
+            mimetypes: ['application/json']
         });
     }
+};
 
-    // register the JSON language with Monaco
-    languages.register({
-        id: languageId,
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
-
+export const createJsonEditor = async (config: {
+    htmlElement: HTMLElement,
+    content: string
+}) => {
     // create the model
     const uri = Uri.parse('/tmp/model.json');
     const modelRef = await createModelReference(uri, config.content);
-    modelRef.object.setLanguageId(languageId);
+    modelRef.object.setLanguageId('json');
 
     // create monaco editor
     const editor = createConfiguredEditor(config.htmlElement, {
@@ -117,7 +116,6 @@ export const createJsonEditor = async (config: {
     });
 
     const result = {
-        languageId,
         editor,
         uri,
         modelRef
