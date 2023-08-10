@@ -17,6 +17,9 @@ export type InitializeServiceConfig = {
     enableDialogService?: boolean;
     enableNotificationService?: boolean;
     enableModelService?: boolean;
+    /**
+     * editor service is the default. If you want to use the views service, set enableViewsService to true.
+     */
     configureEditorOrViewsServiceConfig?: {
         enableViewsService?: boolean;
         openEditorFunc?: OpenEditor
@@ -179,21 +182,25 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
         reportServiceLoading(userServices, lc.debugLogging === true, 'user');
     }
 
+    const haveThemeService = serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService');
+    const haveTextmateService = serviceNames.includes('textmate') || Object.keys(overrideServices).includes('textMateTokenizationFeature');
+    const haveQuickaccessService = serviceNames.includes('quickaccess') || Object.keys(overrideServices).includes('quickInputService');
+    const haveKeybindingsService = serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService');
+    const haveMarkersService = serviceNames.includes('markers');
+    const haveViewsService = serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService');
+
     // theme requires textmate
-    if ((serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService')) &&
-        !(serviceNames.includes('textmate') || Object.keys(overrideServices).includes('textMateTokenizationFeature'))) {
+    if (haveThemeService && !haveTextmateService) {
         throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
     }
 
     // quickaccess requires keybindings
-    if ((serviceNames.includes('quickaccess') || Object.keys(overrideServices).includes('quickInputService')) &&
-        !(serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService'))) {
+    if (haveQuickaccessService && !haveKeybindingsService) {
         throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
     }
 
     // markers service requires views service
-    if (serviceNames.includes('markers') &&
-        !(serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService'))) {
+    if (haveMarkersService && !haveViewsService) {
         throw new Error('"markers" requires "views" service. Please add it to the "initServices" config.');
     }
 

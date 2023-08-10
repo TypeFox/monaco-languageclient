@@ -2,7 +2,7 @@
  * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { createJsonEditor, createUrl, createWebSocket } from '../common.js';
+import { createJsonEditor, createUrl, createWebSocket, performInit } from '../common.js';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
 
@@ -36,10 +36,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
         if (ref.current != null) {
             const start = async () => {
+                await performInit(true);
                 await createJsonEditor({
                     htmlElement: ref.current!,
-                    content: defaultCode,
-                    init
+                    content: defaultCode
                 });
                 if (init) {
                     init = false;

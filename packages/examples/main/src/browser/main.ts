@@ -6,7 +6,7 @@ import { languages, workspace, TextDocument as VsCodeTextDocument } from 'vscode
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { createDefaultJsonContent, createJsonEditor } from '../common.js';
+import { createDefaultJsonContent, createJsonEditor, performInit } from '../common.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
@@ -17,10 +17,16 @@ const protocolConverter = createProtocolConverter(undefined, true, true);
 const createEditor = async () => {
     let mainVscodeDocument: VsCodeTextDocument | undefined;
     const languageId = 'json';
+
+    await performInit(true);
+
+    workspace.onDidOpenTextDocument((_event) => {
+        mainVscodeDocument = workspace.textDocuments[0];
+    });
+
     const jsonEditor = await createJsonEditor({
         htmlElement: document.getElementById('container')!,
-        content: createDefaultJsonContent(),
-        init: true
+        content: createDefaultJsonContent()
     });
 
     const createDocument = (vscodeDocument: VsCodeTextDocument) => {
@@ -118,11 +124,6 @@ const createEditor = async () => {
     };
 
     jsonEditor.modelRef.object.textEditorModel!.onDidChangeContent(() => {
-        validate();
-    });
-
-    workspace.onDidOpenTextDocument((_event) => {
-        mainVscodeDocument = workspace.textDocuments[0];
         validate();
     });
 };
