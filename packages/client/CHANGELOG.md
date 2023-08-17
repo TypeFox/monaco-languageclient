@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.4.1] - 2023-08-17
+
+- `monaco-vscode-api` `1.81.1` [#523](https://github.com/TypeFox/monaco-languageclient/pull/523)
+  - Removed `enableQuickaccessService` as it is always loaded now as default
+  - Aligned naming of properties in `InitializeServiceConfig`
+
 ## [6.4.0] - 2023-08-10
 
 - Update to `monaco-editor` `0.41.0` and `monaco-vscode-api` `1.81.0` [#520](https://github.com/TypeFox/monaco-languageclient/pull/520)

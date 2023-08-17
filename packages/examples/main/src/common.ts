@@ -3,14 +3,11 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
-import { editor, languages, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor, languages, Uri } from 'monaco-editor';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
 import 'vscode/default-extensions/theme-defaults';
 import 'vscode/default-extensions/json';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
-import normalizeUrl from 'normalize-url';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 
@@ -37,10 +34,10 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
 
 export const createUrl = (hostname: string, port: number, path: string): string => {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
+    return `${protocol}://${hostname}:${port}${path}`;
 };
 
-export const createWebSocket = (url: string): WebSocket => {
+export const createWebSocketAndStartClient = (url: string): WebSocket => {
     const webSocket = new WebSocket(url);
     webSocket.onopen = () => {
         const socket = toSocket(webSocket);
@@ -60,7 +57,7 @@ export const createDefaultJsonContent = (): string => {
     return `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
-}`;
+} `;
 };
 
 export type ExampleJsonEditor = {
@@ -76,11 +73,10 @@ export const performInit = async (vscodeApiInit: boolean) => {
             enableThemeService: true,
             enableTextmateService: true,
             enableModelService: true,
-            configureEditorOrViewsServiceConfig: {
+            configureEditorOrViewsService: {
             },
             enableKeybindingsService: true,
             enableLanguagesService: true,
-            enableQuickaccessService: true,
             enableOutputService: true,
             enableAccessibilityService: true,
             debugLogging: false
