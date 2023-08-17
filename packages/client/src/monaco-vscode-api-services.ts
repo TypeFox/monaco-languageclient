@@ -8,6 +8,7 @@ import { ILogService, initialize as initializeMonacoService, LogLevel, Standalon
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
 import { ITerminalBackend, SimpleTerminalBackend } from 'vscode/service-override/terminal';
+import { IStorageProvider } from 'vscode/service-override/storage';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -20,11 +21,11 @@ export type InitializeServiceConfig = {
     /**
      * editor service is the default. If you want to use the views service, set enableViewsService to true.
      */
-    configureEditorOrViewsServiceConfig?: {
+    configureEditorOrViewsService?: {
         enableViewsService?: boolean;
         openEditorFunc?: OpenEditor
     };
-    configureConfigurationServiceConfig?: {
+    configureConfigurationService?: {
         defaultWorkspaceUri: string;
     };
     enableThemeService?: boolean;
@@ -35,15 +36,17 @@ export type InitializeServiceConfig = {
     enableDebugService?: boolean;
     enablePreferencesService?: boolean;
     enableSnippetsService?: boolean;
-    enableQuickaccessService?: boolean;
     enableOutputService?: boolean;
-    configureTerminalServiceConfig?: {
+    configureTerminalService?: {
         backendImpl: SimpleTerminalBackend | ITerminalBackend
     }
     enableSearchService?: boolean;
     enableMarkersService?: boolean;
     enableAccessibilityService?: boolean;
     enableLanguageDetectionWorkerService?: boolean;
+    configureStorageService?: {
+        provider: IStorageProvider
+    },
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
     logLevel?: LogLevel
@@ -78,7 +81,12 @@ export type ModuleWithDefaultExport = {
 }
 
 /**
- * files, extension, environment and layout services are loaded automatically by monaco-vscode-api
+ * monaco-vscode-api automatically loads the following services:
+ * - layout
+ * - environment
+ * - extension
+ * - files
+ * - quickAccess
  */
 export const importAllServices = async (config?: InitializeServiceConfig) => {
     const serviceNames: string[] = [];
@@ -94,14 +102,14 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableModelService === true) {
         addService('model', import('vscode/service-override/model'));
     }
-    if (lc.configureEditorOrViewsServiceConfig !== undefined) {
-        if (lc.configureEditorOrViewsServiceConfig.enableViewsService === true) {
+    if (lc.configureEditorOrViewsService !== undefined) {
+        if (lc.configureEditorOrViewsService.enableViewsService === true) {
             addService('views', import('vscode/service-override/views'));
         } else {
             addService('editor', import('vscode/service-override/editor'));
         }
     }
-    if (lc.configureConfigurationServiceConfig !== undefined) {
+    if (lc.configureConfigurationService !== undefined) {
         addService('configuration', import('vscode/service-override/configuration'));
     }
     if (lc.enableDialogService === true) {
@@ -134,13 +142,10 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableSnippetsService === true) {
         addService('snippets', import('vscode/service-override/snippets'));
     }
-    if (lc.enableQuickaccessService === true) {
-        addService('quickaccess', import('vscode/service-override/quickaccess'));
-    }
     if (lc.enableOutputService === true) {
         addService('output', import('vscode/service-override/output'));
     }
-    if (lc.configureTerminalServiceConfig !== undefined) {
+    if (lc.configureTerminalService !== undefined) {
         addService('terminal', import('vscode/service-override/terminal'));
     }
     if (lc.enableSearchService === true) {
@@ -151,6 +156,9 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     }
     if (lc.enableAccessibilityService === true) {
         addService('accessibility', import('vscode/service-override/accessibility'));
+    }
+    if (lc.enableLanguageDetectionWorkerService === true) {
+        addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
     }
     if (lc.enableLanguageDetectionWorkerService === true) {
         addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
@@ -184,19 +192,12 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
 
     const haveThemeService = serviceNames.includes('theme') || Object.keys(overrideServices).includes('themeService');
     const haveTextmateService = serviceNames.includes('textmate') || Object.keys(overrideServices).includes('textMateTokenizationFeature');
-    const haveQuickaccessService = serviceNames.includes('quickaccess') || Object.keys(overrideServices).includes('quickInputService');
-    const haveKeybindingsService = serviceNames.includes('keybindings') || Object.keys(overrideServices).includes('keybindingService');
     const haveMarkersService = serviceNames.includes('markers');
     const haveViewsService = serviceNames.includes('views') || Object.keys(overrideServices).includes('viewsService');
 
     // theme requires textmate
     if (haveThemeService && !haveTextmateService) {
         throw new Error('"theme" requires "textmate" service. Please add it to the "initServices" config.');
-    }
-
-    // quickaccess requires keybindings
-    if (haveQuickaccessService && !haveKeybindingsService) {
-        throw new Error('"quickaccess" requires "keybindings" service. Please add it to the "initServices" config.');
     }
 
     // markers service requires views service
@@ -212,8 +213,8 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
 
         let services: editor.IEditorOverrideServices = {};
         if (serviceName === 'editor' || serviceName === 'views') {
-            if (lc.configureEditorOrViewsServiceConfig?.openEditorFunc) {
-                services = loadedImport.default(lc.configureEditorOrViewsServiceConfig.openEditorFunc);
+            if (lc.configureEditorOrViewsService?.openEditorFunc) {
+                services = loadedImport.default(lc.configureEditorOrViewsService.openEditorFunc);
             } else {
                 const defaultOpenEditorFunc: OpenEditor = async (model, options, sideBySide) => {
                     console.log('Trying to open a model', model, options, sideBySide);
@@ -222,26 +223,17 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
                 services = loadedImport.default(defaultOpenEditorFunc);
             }
         } else if (serviceName === 'configuration') {
-            if (lc.configureConfigurationServiceConfig?.defaultWorkspaceUri) {
-                const uri = Uri.file(lc.configureConfigurationServiceConfig!.defaultWorkspaceUri);
+            if (lc.configureConfigurationService?.defaultWorkspaceUri) {
+                const uri = Uri.file(lc.configureConfigurationService!.defaultWorkspaceUri);
                 services = loadedImport.default(uri);
             }
         } else if (serviceName === 'terminal') {
-            if (lc.configureTerminalServiceConfig?.backendImpl) {
-                services = loadedImport.default(lc.configureTerminalServiceConfig.backendImpl);
+            if (lc.configureTerminalService?.backendImpl) {
+                services = loadedImport.default(lc.configureTerminalService.backendImpl);
             }
-        } else if (serviceName === 'quickaccess') {
-            if (lc.configureEditorOrViewsServiceConfig?.enableViewsService === true) {
-                const {
-                    isEditorPartVisible
-                } = await import('vscode/service-override/views');
-                services = loadedImport.default({
-                    isKeybindingConfigurationVisible: isEditorPartVisible,
-                    shouldUseGlobalPicker: isEditorPartVisible
-                });
-                services = loadedImport.default();
-            } else {
-                services = loadedImport.default();
+        } else if (serviceName === 'storage') {
+            if (lc.configureStorageService?.provider) {
+                services = loadedImport.default(lc.configureStorageService.provider);
             }
         } else {
             services = loadedImport.default();

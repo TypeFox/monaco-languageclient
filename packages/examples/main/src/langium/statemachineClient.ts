@@ -3,9 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import 'monaco-editor/esm/vs/editor/editor.all.js';
-import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js';
-import { editor, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor, Uri } from 'monaco-editor';
 
 import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
@@ -118,9 +116,10 @@ try {
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
-        configureEditorOrViewsServiceConfig: {
+        configureEditorOrViewsService: {
+            enableViewsService: true
         },
-        configureConfigurationServiceConfig: {
+        configureConfigurationService: {
             defaultWorkspaceUri: '/tmp'
         },
         enableKeybindingsService: true,
@@ -131,7 +130,6 @@ try {
         enableNotificationService: true,
         enablePreferencesService: true,
         enableSnippetsService: true,
-        enableQuickaccessService: true,
         enableOutputService: true,
         enableSearchService: true,
         enableLanguageDetectionWorkerService: true,

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocket, performInit } from 'examples-main';
+import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from 'examples-main';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('dist/client/workers', new URL('', window.location.href).href, false);
 
@@ -17,7 +17,7 @@ const start = async () => {
 
     // create the web socket
     const url = createUrl('localhost', 3000, '/sampleServer');
-    createWebSocket(url);
+    createWebSocketAndStartClient(url);
 };
 
 start();
