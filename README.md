@@ -33,6 +33,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
     - [pnpm](#pnpm)
+  - [Changelogs](#changelogs)
   - [Licenses](#licenses)
 
 ## Latest Important Project Changes
@@ -255,6 +256,12 @@ If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct depend
 ```json
 "vscode": "npm:@codingame/monaco-vscode-api@~1.81.1"
 ```
+
+## Changelogs
+
+CHANGELOG for `monaco-languageclient` is found [here](./packages/client/CHANGELOG.md)
+
+CHANGELOG for `vscode-ws-jsonrpc` is found [here](./packages/vscode-ws-jsonrpc/CHANGELOG.md)
 
 ## Licenses
 
