@@ -135,9 +135,9 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 - The **client** example located in [./packages/examples/main/src/client](./packages/examples/main/src/client) contains the [client web app](./packages/examples/main/src/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- Langium grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
+- [Langium](https://github.com/eclipse-langium/langium) grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
 
-- Statemachine DSL **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
+- Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
 
 Both web worker examples communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
 

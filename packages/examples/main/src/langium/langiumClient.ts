@@ -23,6 +23,7 @@ let textModelRef: IReference<ITextFileEditorModel>;
 
 const setup = async () => {
     console.log('Setting up Langium client configuration ...');
+    // define this client as vscode extension, required for textmate grammars
     const extension = {
         name: 'langium-client',
         publisher: 'monaco-languageclient-project',
@@ -39,11 +40,13 @@ const setup = async () => {
                 aliases: [
                     languageId
                 ],
+                // files are loaded below and bind below
                 configuration: './langium-configuration.json'
             }],
             grammars: [{
                 language: languageId,
                 scopeName: 'source.langium',
+                // files are loaded below and bind below
                 path: './langium-grammar.json'
             }]
         }
