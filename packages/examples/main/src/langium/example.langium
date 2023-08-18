@@ -208,7 +208,7 @@ FeatureName returns string:
 
 terminal ID: /\^?[_a-zA-Z][\w_]*/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
-terminal RegexLiteral returns string: /\/(?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+\//;
+terminal RegexLiteral returns string: /\/(?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+\/[a-z]*/;
 
 hidden terminal WS: /\s+/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;

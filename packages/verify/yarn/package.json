@@ -13,7 +13,7 @@
     "test:treemending": "monaco-treemending"
   },
   "volta": {
-    "node": "18.17.0",
+    "node": "18.17.1",
     "yarn": "1.22.19"
   }
 }

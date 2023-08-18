@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "express": "~4.18.2",
-    "langium": "~1.2.1",
-    "langium-statemachine-dsl": "~1.2.0",
+    "langium": "~2.0.0",
+    "langium-statemachine-dsl": "~2.0.0",
     "monaco-editor-workers": "~0.41.0",
     "monaco-languageclient": "~6.4.1",
     "react": "~18.2.0",
@@ -38,13 +38,13 @@
   "devDependencies": {
     "@types/ws": "~8.5.5",
     "@types/express": "~4.17.17",
-    "@types/react": "~18.2.15",
+    "@types/react": "~18.2.20",
     "@types/react-dom": "~18.2.7",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.3"
   },
   "volta": {
-    "node": "18.17.0",
+    "node": "18.17.1",
     "npm": "9.6.7"
   },
   "scripts": {
