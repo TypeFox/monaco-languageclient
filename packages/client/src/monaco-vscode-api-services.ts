@@ -44,8 +44,11 @@ export type InitializeServiceConfig = {
     enableMarkersService?: boolean;
     enableAccessibilityService?: boolean;
     enableLanguageDetectionWorkerService?: boolean;
+    /**
+     * If no provider is specified, the default BrowserStorageService is used.
+     */
     configureStorageService?: {
-        provider: IStorageProvider
+        provider?: IStorageProvider
     },
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
@@ -232,9 +235,7 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
                 services = loadedImport.default(lc.configureTerminalService.backendImpl);
             }
         } else if (serviceName === 'storage') {
-            if (lc.configureStorageService?.provider) {
-                services = loadedImport.default(lc.configureStorageService.provider);
-            }
+            services = loadedImport.default(lc.configureStorageService?.provider);
         } else {
             services = loadedImport.default();
         }
