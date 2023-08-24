@@ -12,7 +12,8 @@ export default defineConfig(() => {
                     langiumClient: resolve(__dirname, 'packages/examples/main/langium_client.html'),
                     statemachineClient: resolve(__dirname, 'packages/examples/main/statemachine_client.html'),
                     browser: resolve(__dirname, 'packages/examples/main/browser.html'),
-                    react: resolve(__dirname, 'packages/examples/main/react.html')
+                    react: resolve(__dirname, 'packages/examples/main/react.html'),
+                    python: resolve(__dirname, 'packages/examples/main/python.html')
                 }
             }
         },

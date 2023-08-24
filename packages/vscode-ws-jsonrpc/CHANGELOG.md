@@ -19,7 +19,7 @@ All notable changes to this npm module are documented in this file.
 
 - **BREAKING**: Transform to package of type module and switch to TypeScript ECMAScript Module Support in Node.js.
 - **BREAKING**: All cjs exports have been removed.
-- - Added verification examples for webpack and vite that shall ensure the libs work in dependent projects and the give you an idea how to use `monaco-languageclient` and `vscode-ws-jsonrpc` with common bundlers.
+- Added verification examples for webpack and vite that shall ensure the libs work in dependent projects and the give you an idea how to use `monaco-languageclient` and `vscode-ws-jsonrpc` with common bundlers.
 - Revised all READMEs
 
 ## 1.x.x BREAKING CHANGES

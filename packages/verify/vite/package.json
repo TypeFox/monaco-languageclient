@@ -7,7 +7,7 @@
     "monaco-editor-workers": "~0.41.0",
     "monaco-languageclient": "~6.4.4",
     "examples-main": "../../examples/main",
-    "vscode-ws-jsonrpc": "3.0.0"
+    "vscode-ws-jsonrpc": "~3.0.0"
   },
   "devDependencies": {
     "http-server": "~14.1.1"

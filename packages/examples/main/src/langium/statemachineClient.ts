@@ -21,6 +21,39 @@ buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/
 const languageId = 'statemachine';
 
 const setup = async () => {
+    // use this to demonstrate all possible services made available by the monaco-vscode-api
+    await initServices({
+        enableThemeService: true,
+        enableTextmateService: true,
+        enableModelService: true,
+        configureEditorOrViewsService: {
+            enableViewsService: true
+        },
+        configureConfigurationService: {
+            defaultWorkspaceUri: '/tmp'
+        },
+        enableKeybindingsService: true,
+        enableLanguagesService: true,
+        enableAudioCueService: true,
+        enableDebugService: true,
+        enableDialogService: true,
+        enableNotificationService: true,
+        enablePreferencesService: true,
+        enableSnippetsService: true,
+        enableOutputService: true,
+        enableSearchService: true,
+        enableLanguageDetectionWorkerService: true,
+        // This should demonstrate that you can chose to not use the built-in loading mechanism,
+        // but do it manually, see below
+        enableAccessibilityService: false,
+        userServices: {
+            // manually add the accessibility service
+            ...getAccessibilityServiceOverride()
+        },
+        debugLogging: true,
+        logLevel: LogLevel.Info
+    });
+
     console.log('Setting up Statemachine client configuration ...');
     const extension = {
         name: 'statemachine-client',
@@ -111,38 +144,6 @@ const run = async () => {
 };
 
 try {
-    // use this to demonstrate all possible services made available by the monaco-vscode-api
-    await initServices({
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableModelService: true,
-        configureEditorOrViewsService: {
-            enableViewsService: true
-        },
-        configureConfigurationService: {
-            defaultWorkspaceUri: '/tmp'
-        },
-        enableKeybindingsService: true,
-        enableLanguagesService: true,
-        enableAudioCueService: true,
-        enableDebugService: true,
-        enableDialogService: true,
-        enableNotificationService: true,
-        enablePreferencesService: true,
-        enableSnippetsService: true,
-        enableOutputService: true,
-        enableSearchService: true,
-        enableLanguageDetectionWorkerService: true,
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enableAccessibilityService: false,
-        userServices: {
-            // manually add the accessibility service
-            ...getAccessibilityServiceOverride()
-        },
-        debugLogging: true,
-        logLevel: LogLevel.Info
-    });
     await setup();
     await run();
 } catch (e) {
