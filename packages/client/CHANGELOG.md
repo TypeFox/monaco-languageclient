@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.4.4] - 2023-08-24
+
+- Update to `monaco-vscode-api` `1.81.5`
+
 ## [6.4.3] - 2023-08-22
 
 - Update to `monaco-vscode-api` `1.81.3`

@@ -79,6 +79,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
 | 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
 | 6.4.2         | 1.81.2  | 0.41.0 | Released 2023-08-19 |
 | 6.4.1         | 1.81.1  | 0.41.0 | Released 2023-08-18 |
