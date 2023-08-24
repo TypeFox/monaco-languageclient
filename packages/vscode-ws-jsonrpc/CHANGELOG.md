@@ -2,10 +2,6 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [3.0.1] - 2023-08-24
-
-- `createServerProcess` returns connection and the serverProcess
-
 ## [3.0.0] - 2023-04-04
 
 - **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) #[459](https://github.com/TypeFox/monaco-languageclient/pull/459)

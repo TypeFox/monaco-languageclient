@@ -30,7 +30,7 @@
     "request-light": "~0.7.0",
     "vscode-json-languageservice": "~5.3.5",
     "vscode-languageserver": "~8.1.0",
-    "vscode-ws-jsonrpc": "3.0.1",
+    "vscode-ws-jsonrpc": "~3.0.0",
     "ws": "~8.13.0"
   },
   "devDependencies": {

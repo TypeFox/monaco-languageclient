@@ -18,13 +18,13 @@ const serverName = 'PYRIGHT';
 const launchLanguageServer = (socket: IWebSocket) => {
     // start the language server as an external process
     const ls = resolve(getLocalDirectory(import.meta.url), '../../../../../node_modules/pyright/dist/pyright-langserver.js');
-    const serverProcess = createServerProcess(serverName, 'node', [ls, '--stdio']);
+    const serverConnection = createServerProcess(serverName, 'node', [ls, '--stdio']);
 
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
-    if (serverProcess?.connection) {
-        forward(socketConnection, serverProcess.connection, message => {
+    if (serverConnection) {
+        forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
                 console.log(`${serverName} Server received:`);
                 console.log(message);
