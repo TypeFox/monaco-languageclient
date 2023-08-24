@@ -137,16 +137,20 @@ const run = async () => {
     // create the web socket and configure to start the language client on open
     createWebSocket('ws://localhost:30000/pyright');
 
-    // always exectute the command with current language client
-    const execServerRestart = (...args: unknown[]) => {
-        languageClient.sendRequest('workspace/executeCommand', { command: 'pyright.restartserver', arguments: args });
+    const registerCommand = async (cmdName: string, handler: (...args: unknown[]) => void) => {
+        // commands sould not be there, but it demonstrates how to retrieve list of all external commands
+        const commands = await vscode.commands.getCommands(true);
+        if (!commands.includes(cmdName)) {
+            vscode.commands.registerCommand(cmdName, handler);
+        }
     };
-
-    // it should not be there, but it demonstrates how to retrieve list of all external commands
-    const commands = await vscode.commands.getCommands(true);
-    if (!commands.includes('pyright.restartserver')) {
-        vscode.commands.registerCommand('pyright.restartserver', execServerRestart);
-    }
+    // always exectute the command with current language client
+    await registerCommand('pyright.restartserver', (...args: unknown[]) => {
+        languageClient.sendRequest('workspace/executeCommand', { command: 'pyright.restartserver', arguments: args });
+    });
+    await registerCommand('pyright.organizeimports', (...args: unknown[]) => {
+        languageClient.sendRequest('workspace/executeCommand', { command: 'pyright.organizeimports', arguments: args });
+    });
 
     // use the file create before
     const modelRef = await createModelReference(monaco.Uri.file('/tmp/hello.py'));
