@@ -13,28 +13,29 @@ import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrp
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
 import { getLocalDirectory } from '../utils/fs-utils.js';
 
+const serverName = 'PYRIGHT';
+
 const launchLanguageServer = (socket: IWebSocket) => {
     // start the language server as an external process
-    const serverName = 'PYRIGHT';
     const ls = resolve(getLocalDirectory(import.meta.url), '../../../../../node_modules/pyright/dist/pyright-langserver.js');
-    const serverProcesses = createServerProcess(serverName, 'node', [ls, '--stdio']);
-    if (serverProcesses?.serverProcess?.stdout !== null) {
-        serverProcesses?.serverProcess?.stdout.on('data', data =>
-            console.log(`${serverName} Server: ${data}`)
-        );
-    }
+    const serverProcess = createServerProcess(serverName, 'node', [ls, '--stdio']);
 
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
-    if (serverProcesses?.connection) {
-        forward(socketConnection, serverProcesses.connection, message => {
+    if (serverProcess?.connection) {
+        forward(socketConnection, serverProcess.connection, message => {
             if (Message.isRequest(message)) {
+                console.log(`${serverName} Server received:`);
                 console.log(message);
                 if (message.method === InitializeRequest.type.method) {
                     const initializeParams = message.params as InitializeParams;
                     initializeParams.processId = process.pid;
                 }
+            }
+            if (Message.isResponse(message)) {
+                console.log(`${serverName} Server sent:`);
+                console.log(message);
             }
             return message;
         });
@@ -74,7 +75,6 @@ const run = () => {
                         }
                     }),
                     onMessage: cb => webSocket.on('message', (data) => {
-                        console.log(data.toString());
                         cb(data);
                     }),
                     onError: cb => webSocket.on('error', cb),
