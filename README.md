@@ -26,6 +26,10 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Verification](#verification)
     - [Pure bundler verification](#pure-bundler-verification)
   - [Example usage](#example-usage)
+    - [Vite dev server](#vite-dev-server)
+    - [Library code watch](#library-code-watch)
+    - [Server processes](#server-processes)
+    - [Verification examples](#verification-examples)
   - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
@@ -134,15 +138,21 @@ npm run build:example:main
 
 There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used :
 
-- The **server** example located in [./packages/examples/main/src/server](./packages/examples/main/src/server) runs a Node.js [Express app](./packages/examples/main/src/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process.
+- [JSON Language client and language server example](./packages/examples/main/src/json):
+  - The **json-server** runs a Node.js [Express app](./packages/examples/main/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
 
-- The **client** example located in [./packages/examples/main/src/client](./packages/examples/main/src/client) contains the [client web app](./packages/examples/main/src/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+  - The **json-client** contains the [client web app](./packages/examples/main/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- [Langium](https://github.com/eclipse-langium/langium) grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
+- [Python Language client and pyright language server example](./packages/examples/main/src/python):
+  - The **python-server** runs a Node.js [Express app](./packages/examples/main/src/python/server.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
 
-- Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
+  - The **python-client** contains the [client web app](./packages/examples/main/src/python/client.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-Both web worker examples communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **server/client** examples.
+- Langium examples:
+  - [Langium](https://github.com/eclipse-langium/langium) grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
+
+  - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
+  - Both web worker examples communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
 
 - The **browser** example located in [./packages/examples/main/src/browser](./packages/examples/main/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/main/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
@@ -150,7 +160,7 @@ Both web worker examples communicate via `vscode-languageserver-protocol/browser
 
 - The **angular-client** example is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
 
-**Hint:** Most client examples now share [common code](./packages/examples/main/src/common.ts) to reduce the amount of redundant code.
+**Important:** Apart from the **json-server** and **python-server** process all other will be server by the [Vite dev server](#vite-dev-server). Some examples share [common code](./packages/examples/main/src/common.ts) to reduce the amount of redundant code.
 
 ## Verification
 
@@ -165,6 +175,8 @@ Both web worker examples communicate via `vscode-languageserver-protocol/browser
 
 ## Example usage
 
+### Vite dev server
+
 Start the Vite dev server. It is assumed you ran the build as described in [Getting Started](#getting-started):
 
 ```shell
@@ -173,22 +185,33 @@ npm run dev
 
 Vite serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available.
 
+### Library code watch
+
 If you want to change the libries and see this reflected directly, then you need to run the watch command that compiles all TypeScript files form both libraries and the examples:
 
 ```shell
 npm run watch
 ```
 
-For the **client** or the **client-webpack** examples you need to ensure the **server** example is running:
+### Server processes
+
+For the **json-client** or the **client-webpack** examples you need to ensure the **json-server** example is running:
 
 ```shell
 # start the express server with the language server running in the same process.
-npm run start:example:server
-# alternative: start the express server with language server running in the external process.
-npm run start:example:server:ext
+npm run start:example:server:json
 ```
 
-For everything else Vite is sufficient. If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
+For the **python-client** example you need to ensure the **paython-server** example is running:
+
+```shell
+# start the express server with the language server running in an external node process.
+npm run start:example:server:python
+```
+
+### Verification examples
+
+If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
 
 ```shell
 # Serve the webpack verification example on http://localhost:8081

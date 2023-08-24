@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.0.1] - 2023-08-24
+
+- `createServerProcess` returns connection and the serverProcess
+
 ## [3.0.0] - 2023-04-04
 
 - **BREAKING CHANGE**: Do not reexport code of imported libraries (e.g. vscode-languageclient) #[459](https://github.com/TypeFox/monaco-languageclient/pull/459)
@@ -19,7 +23,7 @@ All notable changes to this npm module are documented in this file.
 
 - **BREAKING**: Transform to package of type module and switch to TypeScript ECMAScript Module Support in Node.js.
 - **BREAKING**: All cjs exports have been removed.
-- - Added verification examples for webpack and vite that shall ensure the libs work in dependent projects and the give you an idea how to use `monaco-languageclient` and `vscode-ws-jsonrpc` with common bundlers.
+- Added verification examples for webpack and vite that shall ensure the libs work in dependent projects and the give you an idea how to use `monaco-languageclient` and `vscode-ws-jsonrpc` with common bundlers.
 - Revised all READMEs
 
 ## 1.x.x BREAKING CHANGES

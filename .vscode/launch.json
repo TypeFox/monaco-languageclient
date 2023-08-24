@@ -5,27 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-          "name": "Launch Sample Server",
+          "name": "Launch JSON LS",
           "type": "node",
           "request": "launch",
-          "args": ["${workspaceRoot}/packages/examples/main/src/server/main.ts"],
+          "args": ["${workspaceRoot}/packages/examples/main/src/json/server/main.ts"],
           "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples/main",
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
-          "name": "Launch Sample Server (external)",
+          "name": "Launch Python LS",
           "type": "node",
           "request": "launch",
-          "args": ["${workspaceRoot}/packages/examples/main/src/server/main.ts", "--external"],
+          "args": ["${workspaceRoot}/packages/examples/main/src/python/server.ts"],
           "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples/main",
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
+          "name": "Chrome: monaco-languageclient",
           "type": "chrome",
           "request": "launch",
-          "name": "Launch Chrome against localhost",
           "url": "http://localhost:8080",
           "webRoot": "${workspaceFolder}"
         }

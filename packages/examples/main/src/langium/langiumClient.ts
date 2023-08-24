@@ -22,6 +22,27 @@ const languageId = 'langium';
 let textModelRef: IReference<ITextFileEditorModel>;
 
 const setup = async () => {
+    await initServices({
+        // required for default themes
+        enableThemeService: true,
+        // required for textmate grammars
+        enableTextmateService: true,
+        // required for text model handling (here: /workspace/example.langium)
+        enableModelService: true,
+        // use editor mode
+        configureEditorOrViewsService: {
+        },
+        // enable configuration services
+        configureConfigurationService: {
+            defaultWorkspaceUri: '/workspace'
+        },
+        // enable platform specific keybindings
+        enableKeybindingsService: true,
+        // enable language support
+        enableLanguagesService: true,
+        debugLogging: true
+    });
+
     console.log('Setting up Langium client configuration ...');
     // define this client as vscode extension, required for textmate grammars
     const extension = {
@@ -118,26 +139,6 @@ const run = async () => {
 };
 
 try {
-    await initServices({
-        // required for default themes
-        enableThemeService: true,
-        // required for textmate grammars
-        enableTextmateService: true,
-        // required for text model handling (here: /workspace/example.langium)
-        enableModelService: true,
-        // use editor mode
-        configureEditorOrViewsService: {
-        },
-        // enable configuration services
-        configureConfigurationService: {
-            defaultWorkspaceUri: '/workspace'
-        },
-        // enable platform specific keybindings
-        enableKeybindingsService: true,
-        // enable language support
-        enableLanguagesService: true,
-        debugLogging: true
-    });
     await setup();
     await run();
 } catch (e) {

@@ -7,9 +7,9 @@ import { IncomingMessage } from 'http';
 import { URL } from 'url';
 import { Socket } from 'net';
 import express from 'express';
-import { IWebSocket } from 'vscode-ws-jsonrpc';
-import { launch } from './json-server-launcher.js';
-import { getLocalDirectory } from './fs-utils.js';
+import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { start } from './json-server.js';
+import { getLocalDirectory } from '../../utils/fs-utils.js';
 
 process.on('uncaughtException', function(err: any) {
     console.error('Uncaught Exception: ', err.toString());
@@ -21,7 +21,8 @@ process.on('uncaughtException', function(err: any) {
 // create the express application
 const app = express();
 // server the static content, i.e. index.html
-app.use(express.static(getLocalDirectory()));
+const dir = getLocalDirectory(import.meta.url);
+app.use(express.static(dir));
 // start the server
 const server = app.listen(3000);
 // create the web socket
@@ -57,3 +58,11 @@ server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) =>
         });
     }
 });
+
+const launch = (socket: IWebSocket) => {
+    const reader = new WebSocketMessageReader(socket);
+    const writer = new WebSocketMessageWriter(socket);
+
+    // start the language server inside the current process
+    start(reader, writer);
+};

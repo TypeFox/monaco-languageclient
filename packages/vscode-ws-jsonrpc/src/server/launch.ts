@@ -12,7 +12,11 @@ import { IWebSocket, IWebSocketConnection } from '../socket/socket.js';
 import { WebSocketMessageReader } from '../socket/reader.js';
 import { WebSocketMessageWriter } from '../socket/writer.js';
 
-export function createServerProcess(serverName: string, command: string, args?: string[], options?: cp.SpawnOptions): IConnection | undefined {
+export function createServerProcess(serverName: string, command: string, args?: string[],
+    options?: cp.SpawnOptions): {
+        connection: IConnection | undefined,
+        serverProcess: cp.ChildProcess
+    } {
     const serverProcess = cp.spawn(command, args || [], options || {});
     serverProcess.on('error', error =>
         console.error(`Launching ${serverName} Server failed: ${error}`)
@@ -22,7 +26,10 @@ export function createServerProcess(serverName: string, command: string, args?: 
             console.error(`${serverName} Server: ${data}`)
         );
     }
-    return createProcessStreamConnection(serverProcess);
+    return {
+        connection: createProcessStreamConnection(serverProcess),
+        serverProcess
+    };
 }
 
 export function createWebSocketConnection(socket: IWebSocket): IWebSocketConnection {

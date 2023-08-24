@@ -24,7 +24,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         this.connectionProvider = connectionProvider;
     }
 
-    protected createMessageTransports(encoding: string): Promise<MessageTransports> {
+    protected override createMessageTransports(encoding: string): Promise<MessageTransports> {
         return this.connectionProvider.get(encoding);
     }
 
