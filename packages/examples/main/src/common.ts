@@ -31,10 +31,20 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
         }
     });
 };
+export const createUrl = (hostname: string, port: number, path: string, searchParams: Record<string, any> = {}, secure: boolean = location.protocol === 'https:'): string => {
+    const protocol = secure ? 'wss' : 'ws';
+    const url = new URL(`${protocol}://${hostname}:${port}${path}`);
 
-export const createUrl = (hostname: string, port: number, path: string): string => {
-    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return `${protocol}://${hostname}:${port}${path}`;
+    for (let [key, value] of Object.entries(searchParams)) {
+        if (value instanceof Array) {
+            value = value.join(',');
+        }
+        if (value) {
+            url.searchParams.set(key, value);
+        }
+    }
+
+    return url.toString();
 };
 
 export const createWebSocketAndStartClient = (url: string): WebSocket => {
