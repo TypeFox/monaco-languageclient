@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Environment, Uri } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor, Environment, Uri } from 'monaco-editor';
 import { ILogService, initialize as initializeMonacoService, LogLevel, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';

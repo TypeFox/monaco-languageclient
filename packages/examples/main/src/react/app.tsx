@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from '../common.js';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor } from 'monaco-editor';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
