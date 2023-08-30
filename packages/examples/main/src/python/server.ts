@@ -60,7 +60,22 @@ const run = () => {
     // create the web socket
     const wss = new WebSocketServer({
         noServer: true,
-        perMessageDeflate: false
+        perMessageDeflate: false,
+        clientTracking: true,
+        verifyClient: (
+            clientInfo: { origin: string; secure: boolean; req: IncomingMessage },
+            callback
+        ) => {
+            const parsedURL = new URL(`${clientInfo.origin}${clientInfo.req?.url ?? ''}`);
+            const authToken = parsedURL.searchParams.get('authorization');
+            if (authToken === 'UserAuth') {
+                // eslint-disable-next-line n/no-callback-literal
+                callback(true);
+            } else {
+                // eslint-disable-next-line n/no-callback-literal
+                callback(false);
+            }
+        }
     });
 
     server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {

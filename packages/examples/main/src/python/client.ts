@@ -19,6 +19,7 @@ import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from 'vscode/service-override/files';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
+import { createUrl } from '../common.js';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'python';
@@ -51,7 +52,7 @@ const createLanguageClient = (transports: MessageTransports): MonacoLanguageClie
                 error: () => ({ action: ErrorAction.Continue }),
                 closed: () => ({ action: CloseAction.DoNotRestart })
             },
-            // pyright requires a workspace folder to be presen, otherwise it will not work
+            // pyright requires a workspace folder to be present, otherwise it will not work
             workspaceFolder: {
                 index: 0,
                 name: 'workspace',
@@ -134,8 +135,13 @@ const run = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/tmp/hello.py'), 'print("Hello, World!")'));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    // create the web socket and configure to start the language client on open
-    createWebSocket('ws://localhost:30000/pyright');
+    // create the web socket and configure to start the language client on open, can add extra parameters to the url if needed.
+    createWebSocket(createUrl('localhost', 30000, '/pyright', {
+        // Used to parse an auth token or additional parameters such as import IDs to the language server
+        authorization: 'UserAuth'
+        // By commenting above line out and commenting below line in, connection to language server will be denied.
+        // authorization: 'FailedUserAuth'
+    }, false));
 
     const registerCommand = async (cmdName: string, handler: (...args: unknown[]) => void) => {
         // commands sould not be there, but it demonstrates how to retrieve list of all external commands
