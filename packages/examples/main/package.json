@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "6.4.5-next.1",
+  "version": "6.4.5",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",

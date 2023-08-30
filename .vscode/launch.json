@@ -23,7 +23,7 @@
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
-          "name": "Chrome: monaco-languageclient",
+          "name": "Chrome",
           "type": "chrome",
           "request": "launch",
           "url": "http://localhost:8080",
