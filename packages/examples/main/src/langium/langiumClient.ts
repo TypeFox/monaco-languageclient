@@ -21,7 +21,7 @@ buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/
 const languageId = 'langium';
 let textModelRef: IReference<ITextFileEditorModel>;
 
-const setup = async () => {
+export const setupLangiumClient = async () => {
     await initServices({
         // required for default themes
         enableThemeService: true,
@@ -96,9 +96,7 @@ const setup = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     textModelRef = await createModelReference(Uri.file('/workspace/example.langium'));
-};
 
-const run = async () => {
     createConfiguredEditor(document.getElementById('container')!, {
         model: textModelRef.object.textEditorModel
     });
@@ -138,9 +136,10 @@ const run = async () => {
     // any further language client / server interaction can't be defined as needed
 };
 
-try {
-    await setup();
-    await run();
-} catch (e) {
-    console.log(e);
-}
+export const startLangiumClient = async () => {
+    try {
+        await setupLangiumClient();
+    } catch (e) {
+        console.log(e);
+    }
+};

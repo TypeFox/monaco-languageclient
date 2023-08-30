@@ -8,61 +8,68 @@ import { URL } from 'url';
 import { Socket } from 'net';
 import express from 'express';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { start } from './json-server.js';
+import { createConnection } from 'vscode-languageserver/lib/node/main.js';
 import { getLocalDirectory } from '../../utils/fs-utils.js';
+import { JsonServer } from './json-server.js';
 
-process.on('uncaughtException', function(err: any) {
-    console.error('Uncaught Exception: ', err.toString());
-    if (err.stack) {
-        console.error(err.stack);
-    }
-});
-
-// create the express application
-const app = express();
-// server the static content, i.e. index.html
-const dir = getLocalDirectory(import.meta.url);
-app.use(express.static(dir));
-// start the server
-const server = app.listen(3000);
-// create the web socket
-const wss = new WebSocketServer({
-    noServer: true,
-    perMessageDeflate: false
-});
-server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
-    const baseURL = `http://${request.headers.host}/`;
-    const pathname = request.url ? new URL(request.url, baseURL).pathname : undefined;
-    if (pathname === '/sampleServer') {
-        wss.handleUpgrade(request, socket, head, webSocket => {
-            const socket: IWebSocket = {
-                send: content => webSocket.send(content, error => {
-                    if (error) {
-                        throw error;
-                    }
-                }),
-                onMessage: cb => webSocket.on('message', (data) => {
-                    console.log(data.toString());
-                    cb(data);
-                }),
-                onError: cb => webSocket.on('error', cb),
-                onClose: cb => webSocket.on('close', cb),
-                dispose: () => webSocket.close()
-            };
-            // launch the server when the web socket is opened
-            if (webSocket.readyState === webSocket.OPEN) {
-                launch(socket);
-            } else {
-                webSocket.on('open', () => launch(socket));
-            }
-        });
-    }
-});
-
-const launch = (socket: IWebSocket) => {
+/**
+ * start the language server inside the current process
+ */
+const launchLanguageServer = (socket: IWebSocket): JsonServer => {
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
+    const connection = createConnection(reader, writer);
+    const server = new JsonServer(connection);
+    server.start();
+    return server;
+};
 
-    // start the language server inside the current process
-    start(reader, writer);
+export const runJsonServer = () => {
+    process.on('uncaughtException', function(err: any) {
+        console.error('Uncaught Exception: ', err.toString());
+        if (err.stack) {
+            console.error(err.stack);
+        }
+    });
+
+    // create the express application
+    const app = express();
+    // server the static content, i.e. index.html
+    const dir = getLocalDirectory(import.meta.url);
+    app.use(express.static(dir));
+    // start the server
+    const server = app.listen(3000);
+    // create the web socket
+    const wss = new WebSocketServer({
+        noServer: true,
+        perMessageDeflate: false
+    });
+    server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
+        const baseURL = `http://${request.headers.host}/`;
+        const pathname = request.url ? new URL(request.url, baseURL).pathname : undefined;
+        if (pathname === '/sampleServer') {
+            wss.handleUpgrade(request, socket, head, webSocket => {
+                const socket: IWebSocket = {
+                    send: content => webSocket.send(content, error => {
+                        if (error) {
+                            throw error;
+                        }
+                    }),
+                    onMessage: cb => webSocket.on('message', (data) => {
+                        console.log(data.toString());
+                        cb(data);
+                    }),
+                    onError: cb => webSocket.on('error', cb),
+                    onClose: cb => webSocket.on('close', cb),
+                    dispose: () => webSocket.close()
+                };
+                // launch the server when the web socket is opened
+                if (webSocket.readyState === webSocket.OPEN) {
+                    launchLanguageServer(socket);
+                } else {
+                    webSocket.on('open', () => launchLanguageServer(socket));
+                }
+            });
+        }
+    });
 };

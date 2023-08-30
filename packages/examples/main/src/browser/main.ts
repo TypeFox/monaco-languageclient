@@ -7,14 +7,15 @@ import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { createDefaultJsonContent, createJsonEditor, performInit } from '../common.js';
-
+import 'vscode/default-extensions/theme-defaults';
+import 'vscode/default-extensions/json';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const codeConverter = createCodeConverter();
 const protocolConverter = createProtocolConverter(undefined, true, true);
 
-const createEditor = async () => {
+export const startBrowserEditor = async () => {
     let mainVscodeDocument: VsCodeTextDocument | undefined;
     const languageId = 'json';
 
@@ -127,5 +128,3 @@ const createEditor = async () => {
         validate();
     });
 };
-
-createEditor();

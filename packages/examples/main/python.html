@@ -10,7 +10,10 @@
 <body>
     <h2>Monaco Language Client Python Example</h2>
     <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
-    <script type="module" src="./src/python/client.ts"></script>
+    <script type="module">
+        import { startPythonClient } from "./src/python/client/main.ts";
+        startPythonClient();
+    </script>
 </body>
 
 </html>

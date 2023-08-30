@@ -11,13 +11,12 @@ import { resolve } from 'path';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
-import { getLocalDirectory } from '../utils/fs-utils.js';
+import { getLocalDirectory } from '../../utils/fs-utils.js';
 
-const serverName = 'PYRIGHT';
-
-const launchLanguageServer = (socket: IWebSocket) => {
+const launchLanguageServer = (socket: IWebSocket, baseDir: string, relativeDir: string) => {
+    const serverName = 'PYRIGHT';
     // start the language server as an external process
-    const ls = resolve(getLocalDirectory(import.meta.url), '../../../../../node_modules/pyright/dist/pyright-langserver.js');
+    const ls = resolve(baseDir, relativeDir);
     const serverConnection = createServerProcess(serverName, 'node', [ls, '--stdio']);
 
     const reader = new WebSocketMessageReader(socket);
@@ -42,7 +41,7 @@ const launchLanguageServer = (socket: IWebSocket) => {
     }
 };
 
-const run = () => {
+export const runPythonServer = (baseDir: string, relativeDir: string) => {
     process.on('uncaughtException', function(err: any) {
         console.error('Uncaught Exception: ', err.toString());
         if (err.stack) {
@@ -98,15 +97,13 @@ const run = () => {
                 };
                 // launch the server when the web socket is opened
                 if (webSocket.readyState === webSocket.OPEN) {
-                    launchLanguageServer(socket);
+                    launchLanguageServer(socket, baseDir, relativeDir);
                 } else {
                     webSocket.on('open', () => {
-                        launchLanguageServer(socket);
+                        launchLanguageServer(socket, baseDir, relativeDir);
                     });
                 }
             });
         }
     });
 };
-
-run();

@@ -17,8 +17,8 @@ import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from 'vscode/service-override/files';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-import { createUrl } from '../common.js';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+import { createUrl } from '../../common.js';
+buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'python';
 let languageClient: MonacoLanguageClient;
@@ -69,7 +69,7 @@ const createLanguageClient = (transports: MessageTransports): MonacoLanguageClie
     });
 };
 
-const run = async () => {
+export const startPythonClient = async () => {
     // init vscode-api
     await initServices({
         enableModelService: true,
@@ -166,5 +166,3 @@ const run = async () => {
         automaticLayout: true
     });
 };
-
-run();

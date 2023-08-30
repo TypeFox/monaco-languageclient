@@ -20,7 +20,7 @@ buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/
 
 const languageId = 'statemachine';
 
-const setup = async () => {
+export const setupStatemachineClient = async () => {
     // use this to demonstrate all possible services made available by the monaco-vscode-api
     await initServices({
         enableThemeService: true,
@@ -98,9 +98,7 @@ const setup = async () => {
     "editor.fontSize": 14,
     "workbench.colorTheme": "Default Dark Modern"
 }`);
-};
 
-const run = async () => {
     const exampleStatemachineUrl = new URL('./src/langium/example.statemachine', window.location.href).href;
     const editorText = await (await fetch(exampleStatemachineUrl)).text();
 
@@ -143,9 +141,10 @@ const run = async () => {
     reader.onClose(() => languageClient.stop());
 };
 
-try {
-    await setup();
-    await run();
-} catch (e) {
-    console.error(e);
-}
+export const startStatemachineClient = async () => {
+    try {
+        await setupStatemachineClient();
+    } catch (e) {
+        console.error(e);
+    }
+};

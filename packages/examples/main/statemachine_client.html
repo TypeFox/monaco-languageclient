@@ -10,7 +10,10 @@
 <body>
     <h2>Client & Statemachine DSL Web Worker Language Server Example</h2>
     <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
-    <script type="module" src="./src/langium/statemachineClient.ts"></script>
+    <script type="module">
+        import { startStatemachineClient } from "./src/langium/statemachineClient.ts";
+        startStatemachineClient();
+    </script>
 </body>
 
 </html>

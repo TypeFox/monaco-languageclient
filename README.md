@@ -83,6 +83,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
 | 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
 | 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
 | 6.4.2         | 1.81.2  | 0.41.0 | Released 2023-08-19 |
@@ -144,9 +145,9 @@ There are a couple of different examples that demonstrate how the `monaco-langua
   - The **json-client** contains the [client web app](./packages/examples/main/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - [Python Language client and pyright language server example](./packages/examples/main/src/python):
-  - The **python-server** runs a Node.js [Express app](./packages/examples/main/src/python/server.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
+  - The **python-server** runs a Node.js [Express app](./packages/examples/main/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
 
-  - The **python-client** contains the [client web app](./packages/examples/main/src/python/client.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+  - The **python-client** contains the [client web app](./packages/examples/main/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - Langium examples:
   - [Langium](https://github.com/eclipse-langium/langium) grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).

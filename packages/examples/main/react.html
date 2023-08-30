@@ -10,7 +10,10 @@
 <body>
     <h2>Monaco Language Client React Client Example</h2>
     <div id="root" />
-    <script type="module" src="./src/react/main.tsx"></script>
+    <script type="module">
+        import { startReactJsonClient } from "./src/react/main.tsx";
+        startReactJsonClient();
+    </script>
 </body>
 
 </html>

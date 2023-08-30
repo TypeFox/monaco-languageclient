@@ -1,34 +1,62 @@
 {
-  "name": "examples-main",
-  "version": "1.0.0",
-  "private": true,
+  "name": "monaco-languageclient-examples",
+  "version": "6.4.5-next.1",
+  "description": "Monaco Language client examples",
+  "author": {
+    "name": "TypeFox GmbH",
+    "url": "http://www.typefox.io"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/main/README.md",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypeFox/monaco-languageclient",
+    "directory": "packages/examples/main"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
   "type": "module",
-  "main": "./dist/common.js",
-  "module": "./dist/common.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "types": "./dist/common.d.ts",
-      "default": "./dist/common.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    },
+    "./langiumWorker": {
+      "types": "./dist/langium/langiumServerWorker.d.ts",
+      "default": "./dist/worker/langiumServerWorker.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
-        "dist/common.d.ts"
+        "dist/index"
+      ],
+      "node": [
+        "dist/node"
+      ],
+      "langiumWorker": [
+        "dist/langium/langiumServerWorker"
       ]
     }
   },
   "dependencies": {
     "express": "~4.18.2",
-    "langium": "~2.0.0",
+    "langium": "~2.0.1",
     "langium-statemachine-dsl": "~2.0.0",
     "monaco-editor-workers": "~0.41.0",
-    "monaco-languageclient": "~6.4.4",
+    "monaco-languageclient": "~6.4.5",
     "pyright": "~1.1.322",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "request-light": "~0.7.0",
-    "vscode-json-languageservice": "~5.3.5",
+    "vscode-json-languageservice": "~5.3.6",
     "vscode-languageserver": "~8.1.0",
     "vscode-ws-jsonrpc": "~3.0.0",
     "ws": "~8.13.0"
@@ -45,6 +73,15 @@
     "node": "18.17.1",
     "npm": "9.6.7"
   },
+  "files": [
+    "dist",
+    "src",
+    "*.html",
+    "*.ts",
+    "README.md",
+    "CHANGELOG.md",
+    "License.txt"
+  ],
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
@@ -53,7 +90,7 @@
     "build:worker:statemachine": "esbuild ../../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
     "build:worker:langium": "esbuild ./src/langium/langiumServerWorker.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/langiumServerWorker.js",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker:statemachine && npm run build:worker:langium",
-    "start:server:json": "node --loader ts-node/esm src/json/server/main.ts",
-    "start:server:python": "node --loader ts-node/esm src/python/server.ts"
+    "start:server:json": "node --loader ts-node/esm src/json/server/direct.ts",
+    "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts"
   }
 }

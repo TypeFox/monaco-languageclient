@@ -5,8 +5,8 @@
 import { readFile } from 'fs';
 import requestLight from 'request-light';
 import URI from 'vscode-uri';
-import { MessageReader, MessageWriter } from 'vscode-jsonrpc';
-import { _Connection, TextDocuments, DocumentSymbolParams, createConnection } from 'vscode-languageserver/lib/node/main.js';
+import { } from 'vscode-ws-jsonrpc';
+import { _Connection, TextDocuments, DocumentSymbolParams } from 'vscode-languageserver/lib/node/main.js';
 import {
     Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
@@ -14,13 +14,6 @@ import {
 import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, LanguageService, JSONDocument } from 'vscode-json-languageservice';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-
-export function start(reader: MessageReader, writer: MessageWriter): JsonServer {
-    const connection = createConnection(reader, writer);
-    const server = new JsonServer(connection);
-    server.start();
-    return server;
-}
 
 export class JsonServer {
     protected workspaceRoot: URI.URI | undefined;

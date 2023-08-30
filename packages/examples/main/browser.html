@@ -11,6 +11,9 @@
 <body>
 	<h2>Monaco Language Client Browser Sample</h2>
 	<div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
-	<script type="module" src="./src/browser/main.ts"></script>
+    <script type="module">
+        import { startBrowserEditor } from "./src/browser/main.ts";
+        startBrowserEditor();
+    </script>
 </body>
 </html>

@@ -6,14 +6,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ReactMonacoEditor } from './app.js';
 
-const defaultCode = `{
+export const startReactJsonClient = () => {
+    const defaultCode = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(<ReactMonacoEditor
-    defaultCode={defaultCode}
-    hostname={'localhost'}
-    path={'/sampleServer'}
-    port={3000} />);
+    const root = ReactDOM.createRoot(document.getElementById('root')!);
+    root.render(<ReactMonacoEditor
+        defaultCode={defaultCode}
+        hostname={'localhost'}
+        path={'/sampleServer'}
+        port={3000} />);
+};

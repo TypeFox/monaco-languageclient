@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from 'examples-main';
+import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from 'monaco-languageclient-examples';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('dist/client/workers', new URL('', window.location.href).href, false);
 

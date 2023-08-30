@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.4.5] - 2023-08-30
+
+- Use direct `monaco-editor` imports
+- Make examples publicly available
+
 ## [6.4.4] - 2023-08-24
 
 - Update to `monaco-vscode-api` `1.81.5`
