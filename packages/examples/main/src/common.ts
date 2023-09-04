@@ -67,7 +67,7 @@ export const createDefaultJsonContent = (): string => {
     return `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
-} `;
+}`;
 };
 
 export type ExampleJsonEditor = {
