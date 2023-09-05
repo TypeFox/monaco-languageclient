@@ -150,11 +150,8 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
   - The **python-client** contains the [client web app](./packages/examples/main/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- Langium examples:
-  - [Langium](https://github.com/eclipse-langium/langium) grammar language **langium-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/langiumClient.ts) and the [langauge server (web worker)](./packages/examples/main/src/langium/langiumServerWorker.ts).
-
-  - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts).
-  - Both web worker examples communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
+- Langium example:
+  - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). The web worker example communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
 
 - The **browser** example located in [./packages/examples/main/src/browser](./packages/examples/main/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/main/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
