@@ -5,7 +5,7 @@
 
 import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from '../../common.js';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 export const startJsonClient = async () => {
     // use the same common method to create a monaco editor for json

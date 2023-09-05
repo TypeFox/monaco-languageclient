@@ -1,17 +1,17 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "6.4.6-next.0",
+  "version": "6.4.6",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
     "url": "http://www.typefox.io"
   },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/main/README.md",
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/README.md",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TypeFox/monaco-languageclient",
-    "directory": "packages/examples/main"
+    "directory": "packages/examples"
   },
   "bugs": {
     "url": "https://github.com/TypeFox/monaco-languageclient/issues"
@@ -27,10 +27,6 @@
     "./node": {
       "types": "./dist/node.d.ts",
       "default": "./dist/node.js"
-    },
-    "./langiumWorker": {
-      "types": "./dist/langium/langiumServerWorker.d.ts",
-      "default": "./dist/worker/langiumServerWorker.js"
     }
   },
   "typesVersions": {
@@ -51,7 +47,7 @@
     "langium": "~2.0.1",
     "langium-statemachine-dsl": "~2.0.0",
     "monaco-editor-workers": "~0.41.0",
-    "monaco-languageclient": "6.4.6-next.0",
+    "monaco-languageclient": "~6.4.6",
     "pyright": "~1.1.322",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -87,9 +83,8 @@
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building main examples:",
     "build:worker:vite": "vite --config  vite.statemachine-worker.ts build",
-    "build:worker:statemachine": "esbuild ../../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
-    "build:worker:langium": "esbuild ./src/langium/langiumServerWorker.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/langiumServerWorker.js",
-    "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker:statemachine && npm run build:worker:langium",
+    "build:worker:statemachine": "esbuild ../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
+    "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker:statemachine",
     "start:server:json": "node --loader ts-node/esm src/json/server/direct.ts",
     "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts"
   }

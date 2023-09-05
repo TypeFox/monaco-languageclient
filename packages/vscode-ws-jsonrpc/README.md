@@ -4,8 +4,8 @@ NPM module to implement communication between a jsonrpc client and server over W
 
 See the following example code how to use this library or take a look of the `monaco-languageclient` and `vscode-ws-jsonrpc` examples here:
 
-- [client](/packages/examples/main/src/client)
-- [server](/packages/examples/main/src/server)
+- [client](/packages/examples/src/client)
+- [server](/packages/examples/src/server)
 
 ## Client side connection handling
 

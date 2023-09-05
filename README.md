@@ -83,7 +83,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
-| 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-0x |
+| 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
 | 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
 | 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
 | 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
@@ -133,33 +133,33 @@ npm run build:client
 # Build only vscode-ws-jsonrpc
 npm run build:vscode-ws-jsonrpc
 # Build main examples
-npm run build:example:main
+npm run build:examples:main
 ```
 
 ## Examples
 
 There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used :
 
-- [JSON Language client and language server example](./packages/examples/main/src/json):
-  - The **json-server** runs a Node.js [Express app](./packages/examples/main/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
+- [JSON Language client and language server example](./packages/examples/src/json):
+  - The **json-server** runs a Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
 
-  - The **json-client** contains the [client web app](./packages/examples/main/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+  - The **json-client** contains the [client web app](./packages/examples/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
-- [Python Language client and pyright language server example](./packages/examples/main/src/python):
-  - The **python-server** runs a Node.js [Express app](./packages/examples/main/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
+- [Python Language client and pyright language server example](./packages/examples/src/python):
+  - The **python-server** runs a Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
 
-  - The **python-client** contains the [client web app](./packages/examples/main/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+  - The **python-client** contains the [client web app](./packages/examples/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - Langium example:
-  - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/main/src/langium](./packages/examples/main/src/langium) contains both the [language client](./packages/examples/main/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). The web worker example communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
+  - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/src/langium](./packages/examples/src/langium) contains both the [language client](./packages/examples/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). The web worker example communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
 
-- The **browser** example located in [./packages/examples/main/src/browser](./packages/examples/main/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/main/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
+- The **browser** example located in [./packages/examples/src/browser](./packages/examples/src/browser) demonstrates how a [language service written in JavaScript](./packages/examples/src/browser/main.ts) can be used in a Monaco Editor contained in a simple HTML page. This example can now be considered legacy as the web worker option eases client side language server implementation and separation.
 
-- The **react-client** example located in [./packages/examples/main/src/react](./packages/examples/main/src/react) contains the [React client](./packages/examples/main/src/react/main.tsx). It does the same as the regular client example but inside a React Functional Component.
+- The **react-client** example located in [./packages/examples/src/react](./packages/examples/src/react) contains the [React client](./packages/examples/src/react/main.tsx). It does the same as the regular client example but inside a React Functional Component.
 
 - The **angular-client** example is now found in [its own repository](https://github.com/TypeFox/monaco-languageclient-ng-example.git)
 
-**Important:** Apart from the **json-server** and **python-server** process all other will be server by the [Vite dev server](#vite-dev-server). Some examples share [common code](./packages/examples/main/src/common.ts) to reduce the amount of redundant code.
+**Important:** Apart from the **json-server** and **python-server** process all other will be server by the [Vite dev server](#vite-dev-server). Some examples share [common code](./packages/examples/src/common.ts) to reduce the amount of redundant code.
 
 ## Verification
 

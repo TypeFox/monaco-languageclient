@@ -9,7 +9,7 @@
     "path": "../../client/tsconfig.src.json"
   },
   {
-    "path": "../../examples/main/tsconfig.src.json"
+    "path": "../../examples/tsconfig.src.json"
   }],
   "include": [
     "src/**/*.ts",

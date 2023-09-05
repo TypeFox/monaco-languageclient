@@ -7,7 +7,7 @@ import { editor } from 'monaco-editor';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 let init = true;
 

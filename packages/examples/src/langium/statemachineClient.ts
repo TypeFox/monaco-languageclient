@@ -16,7 +16,7 @@ import { LogLevel } from 'vscode/services';
 import 'vscode/default-extensions/theme-defaults';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'statemachine';
 
@@ -91,8 +91,8 @@ export const setupStatemachineClient = async () => {
     };
     const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
 
-    registerFileUrl('/statemachine-configuration.json', new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
-    registerFileUrl('/statemachine-grammar.json', new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);
+    registerFileUrl('/statemachine-configuration.json', new URL('../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
+    registerFileUrl('/statemachine-grammar.json', new URL('../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);
 
     updateUserConfiguration(`{
     "editor.fontSize": 14,

@@ -10,8 +10,8 @@ This package contains [all examples from the monaco-languageclient repository](h
 
 ## CHANGELOG
 
-All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/main/CHANGELOG.md).
+All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/CHANGELOG.md).
 
 ## License
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/main/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/License.txt)

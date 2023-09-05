@@ -85,11 +85,13 @@ export const performInit = async (vscodeApiInit: boolean) => {
             enableModelService: true,
             configureEditorOrViewsService: {
             },
+            configureConfigurationService: {
+                defaultWorkspaceUri: '/workspace'
+            },
             enableKeybindingsService: true,
             enableLanguagesService: true,
-            enableOutputService: true,
             enableAccessibilityService: true,
-            debugLogging: false
+            debugLogging: true
         });
 
         // register the JSON language with Monaco

@@ -10,7 +10,7 @@ import { createDefaultJsonContent, createJsonEditor, performInit } from '../comm
 import 'vscode/default-extensions/theme-defaults';
 import 'vscode/default-extensions/json';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const codeConverter = createCodeConverter();
 const protocolConverter = createProtocolConverter(undefined, true, true);

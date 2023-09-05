@@ -18,7 +18,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { createUrl } from '../../common.js';
-buildWorkerDefinition('../../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'python';
 let languageClient: MonacoLanguageClient;

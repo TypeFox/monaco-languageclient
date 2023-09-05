@@ -8,11 +8,11 @@ export default defineConfig(() => {
         build: {
             rollupOptions: {
                 input: {
-                    client: resolve(__dirname, 'packages/examples/main/client.html'),
-                    statemachineClient: resolve(__dirname, 'packages/examples/main/statemachine_client.html'),
-                    browser: resolve(__dirname, 'packages/examples/main/browser.html'),
-                    react: resolve(__dirname, 'packages/examples/main/react.html'),
-                    python: resolve(__dirname, 'packages/examples/main/python.html')
+                    client: resolve(__dirname, 'packages/examples/client.html'),
+                    statemachineClient: resolve(__dirname, 'packages/examples/statemachine_client.html'),
+                    browser: resolve(__dirname, 'packages/examples/browser.html'),
+                    react: resolve(__dirname, 'packages/examples/react.html'),
+                    python: resolve(__dirname, 'packages/examples/python.html')
                 }
             }
         },

@@ -6,7 +6,6 @@
 export * from './common.js';
 export * from './browser/main.js';
 export * from './json/client/main.js';
-export * from './langium/langiumClient.js';
 export * from './langium/statemachineClient.js';
 export * from './python/client/main.js';
 export * from './react/app.js';
