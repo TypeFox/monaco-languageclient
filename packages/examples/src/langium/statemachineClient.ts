@@ -9,7 +9,7 @@ import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { createConfiguredEditor } from 'vscode/monaco';
-import { ExtensionHostKind, registerExtension, IExtensionManifest } from 'vscode/extensions';
+import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
 import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
 import { LogLevel } from 'vscode/services';
@@ -55,7 +55,7 @@ export const setupStatemachineClient = async () => {
     });
 
     console.log('Setting up Statemachine client configuration ...');
-    const extension: IExtensionManifest = {
+    const extension = {
         name: 'statemachine-client',
         publisher: 'monaco-languageclient-project',
         version: '1.0.0',
