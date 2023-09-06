@@ -10,7 +10,7 @@ import 'vscode/default-extensions/python';
 import { updateUserConfiguration } from 'vscode/service-override/configuration';
 import { LogLevel } from 'vscode/services';
 import { createConfiguredEditor, createModelReference } from 'vscode/monaco';
-import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
+import { ExtensionHostKind, registerExtension, IExtensionManifest } from 'vscode/extensions';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
@@ -87,7 +87,7 @@ export const startPythonClient = async () => {
     // extension configuration derived from:
     // https://github.com/microsoft/pyright/blob/main/packages/vscode-pyright/package.json
     // only a minimum is required to get pyright working
-    const extension = {
+    const extension: IExtensionManifest = {
         name: 'python-client',
         publisher: 'monaco-languageclient-project',
         version: '1.0.0',

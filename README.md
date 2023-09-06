@@ -141,12 +141,12 @@ npm run build:examples:main
 There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used :
 
 - [JSON Language client and language server example](./packages/examples/src/json):
-  - The **json-server** runs a Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
+  - The **json-server** runs a Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:examples:server:json` to start the language server (see [Server processes](#server-processes)).
 
   - The **json-client** contains the [client web app](./packages/examples/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - [Python Language client and pyright language server example](./packages/examples/src/python):
-  - The **python-server** runs a Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
+  - The **python-server** runs a Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:examples:server:python` to start the language server (see [Server processes](#server-processes)).
 
   - The **python-client** contains the [client web app](./packages/examples/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
@@ -198,14 +198,14 @@ For the **json-client** or the **client-webpack** examples you need to ensure th
 
 ```shell
 # start the express server with the language server running in the same process.
-npm run start:example:server:json
+npm run start:examples:server:json
 ```
 
 For the **python-client** example you need to ensure the **paython-server** example is running:
 
 ```shell
 # start the express server with the language server running in an external node process.
-npm run start:example:server:python
+npm run start:examples:server:python
 ```
 
 ### Verification examples
