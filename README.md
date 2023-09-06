@@ -133,7 +133,7 @@ npm run build:client
 # Build only vscode-ws-jsonrpc
 npm run build:vscode-ws-jsonrpc
 # Build main examples
-npm run build:examples:main
+npm run build:examples
 ```
 
 ## Examples
