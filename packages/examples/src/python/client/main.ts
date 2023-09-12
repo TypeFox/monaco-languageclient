@@ -15,9 +15,10 @@ import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from 'vscode/service-override/files';
+import { URI } from 'vscode-uri';
+import { createUrl } from '../../common.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
-import { createUrl } from '../../common.js';
 buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const languageId = 'python';
@@ -76,7 +77,7 @@ export const startPythonClient = async () => {
         enableThemeService: true,
         enableTextmateService: true,
         configureConfigurationService: {
-            defaultWorkspaceUri: '/tmp'
+            defaultWorkspaceUri: URI.file('/tmp')
         },
         enableLanguagesService: true,
         enableKeybindingsService: true,
