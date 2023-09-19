@@ -18,6 +18,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [June 2022 (v2.0.0)](#june-2022-v200)
     - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Using monaco-languageclient](#using-monaco-languageclient)
+    - [Treemending](#treemending)
     - [Monaco-editor / monaco-vscode-api compatibility table](#monaco-editor--monaco-vscode-api-compatibility-table)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
@@ -71,15 +72,17 @@ The default and protected branch is now `main`.
 
 ## Using monaco-languageclient
 
+### Treemending
+
 ⚠️ **Starting with version 6.0.0** `monaco-languageclient` runs a postinstall script when you install the dependencies in your project. If you re-run `npm install` this script is not invoked again.
 
-**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking. See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
+**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 
 ### Monaco-editor / monaco-vscode-api compatibility table
 
 The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
 
-**Important:** Due to the `monaco-treemending` mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
+**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
@@ -279,7 +282,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--monaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@1.81.3"
+"vscode": "npm:@codingame/monaco-vscode-api@1.81.7"
 ```
 
 ## Changelogs
