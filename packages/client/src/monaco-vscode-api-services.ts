@@ -3,12 +3,15 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Environment, Uri } from 'monaco-editor';
+import { editor, Environment } from 'monaco-editor';
 import { ILogService, initialize as initializeMonacoService, LogLevel, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import type { OpenEditor } from 'vscode/service-override/editor';
 import { ITerminalBackend, SimpleTerminalBackend } from 'vscode/service-override/terminal';
 import { IStorageProvider } from 'vscode/service-override/storage';
+import { IAnyWorkspaceIdentifier } from 'vscode/service-override/configuration';
+import { IWorkbenchConstructionOptions } from 'vscode/service-override/environment';
+import { URI } from 'vscode-uri';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -26,7 +29,7 @@ export type InitializeServiceConfig = {
         openEditorFunc?: OpenEditor
     };
     configureConfigurationService?: {
-        defaultWorkspaceUri: string;
+        defaultWorkspaceUri: URI | IAnyWorkspaceIdentifier;
     };
     enableThemeService?: boolean;
     enableKeybindingsService?: boolean;
@@ -49,6 +52,14 @@ export type InitializeServiceConfig = {
      */
     configureStorageService?: {
         provider?: IStorageProvider
+    },
+    configureRemoteAgentService?: {
+        connectionToken?: Promise<string> | string;
+        resourceUriProvider?: ((uri: URI) => URI);
+    },
+    enableLifecycleService?: boolean,
+    configureEnvironmentService?: {
+        options: IWorkbenchConstructionOptions
     },
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
@@ -80,7 +91,7 @@ export const initServices = async (config?: InitializeServiceConfig) => {
 };
 
 export type ModuleWithDefaultExport = {
-    default: (x?: any) => editor.IEditorOverrideServices
+    default: (x?: any, y?: any) => editor.IEditorOverrideServices
 }
 
 /**
@@ -163,8 +174,17 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     if (lc.enableLanguageDetectionWorkerService === true) {
         addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
     }
-    if (lc.enableLanguageDetectionWorkerService === true) {
-        addService('languageDetectionWorker', import('vscode/service-override/languageDetectionWorker'));
+    if (lc.configureStorageService !== undefined) {
+        addService('storage', import('vscode/service-override/storage'));
+    }
+    if (lc.configureRemoteAgentService !== undefined) {
+        addService('remoteAgent', import('vscode/service-override/remoteAgent'));
+    }
+    if (lc.enableLifecycleService === true) {
+        addService('lifecycle', import('vscode/service-override/lifecycle'));
+    }
+    if (lc.configureEnvironmentService !== undefined) {
+        addService('environment', import('vscode/service-override/environment'));
     }
 
     const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean, origin?: string) => {
@@ -227,8 +247,7 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
             }
         } else if (serviceName === 'configuration') {
             if (lc.configureConfigurationService?.defaultWorkspaceUri) {
-                const uri = Uri.file(lc.configureConfigurationService!.defaultWorkspaceUri);
-                services = loadedImport.default(uri);
+                services = loadedImport.default(lc.configureConfigurationService!.defaultWorkspaceUri);
             }
         } else if (serviceName === 'terminal') {
             if (lc.configureTerminalService?.backendImpl) {
@@ -236,6 +255,12 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
             }
         } else if (serviceName === 'storage') {
             services = loadedImport.default(lc.configureStorageService?.provider);
+        } else if (serviceName === 'remoteAgent') {
+            services = loadedImport.default(lc.configureRemoteAgentService?.connectionToken, lc.configureRemoteAgentService?.resourceUriProvider);
+        } else if (serviceName === 'environment') {
+            if (lc.configureEnvironmentService?.options) {
+                services = loadedImport.default(lc.configureEnvironmentService?.options);
+            }
         } else {
             services = loadedImport.default();
         }

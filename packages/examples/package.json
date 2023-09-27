@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "6.4.6",
+  "version": "6.5.0-next.0",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -44,30 +44,30 @@
   },
   "dependencies": {
     "express": "~4.18.2",
-    "langium": "~2.0.1",
+    "langium": "~2.0.2",
     "langium-statemachine-dsl": "~2.0.0",
-    "monaco-editor-workers": "~0.41.0",
-    "monaco-languageclient": "~6.4.6",
-    "pyright": "~1.1.322",
+    "monaco-editor-workers": "~0.43.0",
+    "monaco-languageclient": "6.5.0-next.0",
+    "pyright": "~1.1.329",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "request-light": "~0.7.0",
     "vscode-json-languageservice": "~5.3.6",
     "vscode-languageserver": "~8.1.0",
     "vscode-ws-jsonrpc": "~3.0.0",
-    "ws": "~8.13.0"
+    "ws": "~8.14.2"
   },
   "devDependencies": {
-    "@types/ws": "~8.5.5",
-    "@types/express": "~4.17.17",
-    "@types/react": "~18.2.20",
-    "@types/react-dom": "~18.2.7",
+    "@types/ws": "~8.5.6",
+    "@types/express": "~4.17.18",
+    "@types/react": "~18.2.23",
+    "@types/react-dom": "~18.2.8",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.3"
   },
   "volta": {
-    "node": "18.17.1",
-    "npm": "9.6.7"
+    "node": "18.18.0",
+    "npm": "9.8.1"
   },
   "files": [
     "dist",

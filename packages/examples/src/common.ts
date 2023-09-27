@@ -10,6 +10,7 @@ import 'vscode/default-extensions/json';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import { URI } from 'vscode-uri';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -86,7 +87,7 @@ export const performInit = async (vscodeApiInit: boolean) => {
             configureEditorOrViewsService: {
             },
             configureConfigurationService: {
-                defaultWorkspaceUri: '/workspace'
+                defaultWorkspaceUri: URI.file('/workspace')
             },
             enableKeybindingsService: true,
             enableLanguagesService: true,
