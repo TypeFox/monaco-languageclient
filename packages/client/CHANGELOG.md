@@ -2,9 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [6.5.0] - 2023-09-2x
+## [6.5.0] - 2023-09-28
 
-- Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.0`
+- Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.2`
+- Only keep user services in`initServices`. It requires to specifically import and use services provided by  `monaco-vscode-api`
+  - languages and model services are always added by `monaco-languagclient`
 
 ## [6.4.6] - 2023-09-05
 

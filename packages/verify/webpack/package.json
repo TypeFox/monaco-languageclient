@@ -5,8 +5,8 @@
   "type": "module",
   "dependencies": {
     "monaco-editor-workers": "~0.43.0",
-    "monaco-languageclient": "6.5.0-next.0",
-    "monaco-languageclient-examples": "6.5.0-next.0",
+    "monaco-languageclient": "6.5.0-next.1",
+    "monaco-languageclient-examples": "6.5.0-next.1",
     "vscode-ws-jsonrpc": "~3.0.0"
   },
   "devDependencies": {
