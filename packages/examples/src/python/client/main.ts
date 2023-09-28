@@ -18,7 +18,7 @@ import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from 'vscode/service-override/files';
-import { URI } from 'vscode-uri';
+import { Uri } from 'vscode';
 import { createUrl } from '../../common.js';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -79,7 +79,7 @@ export const startPythonClient = async () => {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
-            ...getConfigurationServiceOverride(URI.file('/workspace')),
+            ...getConfigurationServiceOverride(Uri.file('/workspace')),
             ...getKeybindingsServiceOverride()
         },
         debugLogging: true,

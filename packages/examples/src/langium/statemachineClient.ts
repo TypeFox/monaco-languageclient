@@ -3,8 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor';
-
+import { editor } from 'monaco-editor';
 import { MonacoLanguageClient, initServices, useOpenEditorStub } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
@@ -17,7 +16,7 @@ import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-over
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { LogLevel } from 'vscode/services';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
-import { URI } from 'vscode-uri';
+import { Uri } from 'vscode';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
@@ -30,7 +29,7 @@ export const setupStatemachineClient = async () => {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
-            ...getConfigurationServiceOverride(URI.file('/workspace')),
+            ...getConfigurationServiceOverride(Uri.file('/workspace')),
             ...getEditorServiceOverride(useOpenEditorStub),
             ...getKeybindingsServiceOverride()
         },

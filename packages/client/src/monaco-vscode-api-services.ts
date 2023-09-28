@@ -45,6 +45,20 @@ export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySid
     return undefined;
 };
 
+export const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean) => {
+    for (const serviceName of Object.keys(services)) {
+        if (debugLogging) {
+            console.log(`Loading service: ${serviceName}`);
+        }
+    }
+};
+
+export const mergeServices = (services: editor.IEditorOverrideServices, overrideServices: editor.IEditorOverrideServices) => {
+    for (const [name, service] of Object.entries(services)) {
+        overrideServices[name] = service;
+    }
+};
+
 /**
  * monaco-vscode-api automatically loads the following services:
  *  - layout
@@ -62,18 +76,6 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     const lc: InitializeServiceConfig = config ?? {};
     const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
 
-    const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean) => {
-        for (const serviceName of Object.keys(services)) {
-            if (debugLogging) {
-                console.log(`Loading service: ${serviceName}`);
-            }
-        }
-    };
-    const mergeServices = (services: editor.IEditorOverrideServices, overrideServices: editor.IEditorOverrideServices) => {
-        for (const [name, service] of Object.entries(services)) {
-            overrideServices[name] = service;
-        }
-    };
     const mlcDefautServices = {
         ...getLanguagesServiceOverride(),
         ...getModelServiceOverride()

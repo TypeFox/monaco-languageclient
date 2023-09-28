@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, languages, Uri } from 'monaco-editor';
+import { editor, languages } from 'monaco-editor';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
@@ -14,7 +14,7 @@ import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-servic
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
-import { URI } from 'vscode-uri';
+import { Uri } from 'vscode';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -88,7 +88,7 @@ export const performInit = async (vscodeApiInit: boolean) => {
             userServices: {
                 ...getThemeServiceOverride(),
                 ...getTextmateServiceOverride(),
-                ...getConfigurationServiceOverride(URI.file('/workspace')),
+                ...getConfigurationServiceOverride(Uri.file('/workspace')),
                 ...getKeybindingsServiceOverride(),
             },
             debugLogging: true

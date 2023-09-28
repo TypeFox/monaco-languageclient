@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-languageclient": "6.5.0-next.1",
+    "monaco-languageclient": "~6.5.0",
     "monaco-editor": "~0.43.0",
     "vscode": "npm:@codingame/monaco-vscode-api@1.82.2"
   },
