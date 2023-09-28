@@ -12,8 +12,6 @@ import { createConfiguredEditor, createModelReference } from 'vscode/monaco';
 import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import getConfigurationServiceOverride, { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
-import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
@@ -60,7 +58,7 @@ const createLanguageClient = (transports: MessageTransports): MonacoLanguageClie
             workspaceFolder: {
                 index: 0,
                 name: 'workspace',
-                uri: monaco.Uri.parse('/tmp')
+                uri: monaco.Uri.parse('/workspace')
             },
             synchronize: {
                 fileEvents: [vscode.workspace.createFileSystemWatcher('**')]
@@ -81,9 +79,7 @@ export const startPythonClient = async () => {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
-            ...getConfigurationServiceOverride(URI.file('/tmp')),
-            ...getModelServiceOverride(),
-            ...getLanguagesServiceOverride(),
+            ...getConfigurationServiceOverride(URI.file('/workspace')),
             ...getKeybindingsServiceOverride()
         },
         debugLogging: true,
@@ -136,7 +132,7 @@ export const startPythonClient = async () => {
     }`);
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/tmp/hello.py'), 'print("Hello, World!")'));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/workspace/hello.py'), 'print("Hello, World!")'));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     // create the web socket and configure to start the language client on open, can add extra parameters to the url if needed.
@@ -163,7 +159,7 @@ export const startPythonClient = async () => {
     });
 
     // use the file create before
-    const modelRef = await createModelReference(monaco.Uri.file('/tmp/hello.py'));
+    const modelRef = await createModelReference(monaco.Uri.file('/workspace/hello.py'));
     modelRef.object.setLanguageId(languageId);
 
     // create monaco editor

@@ -7,15 +7,11 @@ import { editor, languages, Uri } from 'monaco-editor';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
-import getAccessibilityServiceOverride from '@codingame/monaco-vscode-accessibility-service-override';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
-import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import { initServices, useOpenEditorStub, MonacoLanguageClient } from 'monaco-languageclient';
+import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { URI } from 'vscode-uri';
@@ -93,11 +89,7 @@ export const performInit = async (vscodeApiInit: boolean) => {
                 ...getThemeServiceOverride(),
                 ...getTextmateServiceOverride(),
                 ...getConfigurationServiceOverride(URI.file('/workspace')),
-                ...getEditorServiceOverride(useOpenEditorStub),
-                ...getModelServiceOverride(),
-                ...getLanguagesServiceOverride(),
                 ...getKeybindingsServiceOverride(),
-                ...getAccessibilityServiceOverride()
             },
             debugLogging: true
         });
@@ -117,7 +109,7 @@ export const createJsonEditor = async (config: {
     content: string
 }) => {
     // create the model
-    const uri = Uri.parse('/tmp/model.json');
+    const uri = Uri.parse('/workspace/model.json');
     const modelRef = await createModelReference(uri, config.content);
     modelRef.object.setLanguageId('json');
 

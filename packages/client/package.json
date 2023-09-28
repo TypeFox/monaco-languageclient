@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TypeFox/monaco-languageclient",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
     "directory": "packages/client"
   },
   "bugs": {
@@ -50,6 +50,8 @@
   "dependencies": {
     "monaco-editor": "~0.43.0",
     "vscode": "npm:@codingame/monaco-vscode-api@1.82.0-next.0",
+    "@codingame/monaco-vscode-languages-service-override": "1.82.0-next.0",
+    "@codingame/monaco-vscode-model-service-override": "1.82.0-next.0",
     "vscode-jsonrpc": "~8.1.0",
     "vscode-languageclient": "~8.1.0"
   },

@@ -7,6 +7,8 @@ import { editor, Environment } from 'monaco-editor';
 import { ILogService, initialize, LogLevel, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
+import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
+import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 
 interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
@@ -45,29 +47,39 @@ export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySid
 
 /**
  * monaco-vscode-api automatically loads the following services:
- * - layout
- * - environment
- * - extension
- * - files
- * - quickAccess
+ *  - layout
+ *  - environment
+ *  - extension
+ *  - files
+ *  - quickAccess
+ *
+ * monaco-languageclient always adds the following services:
+ *   - languages
+ *   - model
  */
 export const importAllServices = async (config?: InitializeServiceConfig) => {
     const serviceNames: string[] = [];
     const lc: InitializeServiceConfig = config ?? {};
     const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
 
-    const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean, origin?: string) => {
+    const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean) => {
         for (const serviceName of Object.keys(services)) {
             if (debugLogging) {
-                if (origin) {
-                    console.log(`Loading ${origin} service: ${serviceName}`);
-                } else {
-                    console.log(`Loading service: ${serviceName}`);
-                }
+                console.log(`Loading service: ${serviceName}`);
             }
         }
     };
-    reportServiceLoading(userServices, lc.debugLogging === true, 'user');
+    const mergeServices = (services: editor.IEditorOverrideServices, overrideServices: editor.IEditorOverrideServices) => {
+        for (const [name, service] of Object.entries(services)) {
+            overrideServices[name] = service;
+        }
+    };
+    const mlcDefautServices = {
+        ...getLanguagesServiceOverride(),
+        ...getModelServiceOverride()
+    };
+    mergeServices(mlcDefautServices, userServices);
+    reportServiceLoading(userServices, lc.debugLogging === true);
 
     const haveThemeService = serviceNames.includes('theme') || Object.keys(userServices).includes('themeService');
     const haveTextmateService = serviceNames.includes('textmate') || Object.keys(userServices).includes('textMateTokenizationFeature');

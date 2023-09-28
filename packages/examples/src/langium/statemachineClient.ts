@@ -13,11 +13,8 @@ import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import getConfigurationServiceOverride, { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
-import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
 import { LogLevel } from 'vscode/services';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import { URI } from 'vscode-uri';
@@ -35,10 +32,7 @@ export const setupStatemachineClient = async () => {
             ...getTextmateServiceOverride(),
             ...getConfigurationServiceOverride(URI.file('/workspace')),
             ...getEditorServiceOverride(useOpenEditorStub),
-            ...getModelServiceOverride(),
-            ...getLanguagesServiceOverride(),
-            ...getKeybindingsServiceOverride(),
-            ...getAccessibilityServiceOverride()
+            ...getKeybindingsServiceOverride()
         },
         debugLogging: true,
         logLevel: LogLevel.Info
@@ -93,7 +87,7 @@ export const setupStatemachineClient = async () => {
     const editorText = await (await fetch(exampleStatemachineUrl)).text();
 
     const editorOptions = {
-        model: editor.createModel(editorText, languageId, Uri.parse('inmemory://example.statemachine')),
+        model: editor.createModel(editorText, languageId, Uri.parse('/workspace/example.statemachine')),
         automaticLayout: true
     };
     createConfiguredEditor(document.getElementById('container')!, editorOptions);
