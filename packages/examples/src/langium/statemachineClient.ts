@@ -3,17 +3,20 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor';
-
-import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
+import { editor } from 'monaco-editor';
+import { MonacoLanguageClient, initServices, useOpenEditorStub } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { createConfiguredEditor } from 'vscode/monaco';
 import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
-import { updateUserConfiguration } from 'vscode/service-override/configuration';
-import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
+import getConfigurationServiceOverride, { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { LogLevel } from 'vscode/services';
-import 'vscode/default-extensions/theme-defaults';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import { Uri } from 'vscode';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
@@ -23,32 +26,12 @@ const languageId = 'statemachine';
 export const setupStatemachineClient = async () => {
     // use this to demonstrate all possible services made available by the monaco-vscode-api
     await initServices({
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableModelService: true,
-        configureEditorOrViewsService: {
-            enableViewsService: true
-        },
-        configureConfigurationService: {
-            defaultWorkspaceUri: '/tmp'
-        },
-        enableKeybindingsService: true,
-        enableLanguagesService: true,
-        enableAudioCueService: true,
-        enableDebugService: true,
-        enableDialogService: true,
-        enableNotificationService: true,
-        enablePreferencesService: true,
-        enableSnippetsService: true,
-        enableOutputService: true,
-        enableSearchService: true,
-        enableLanguageDetectionWorkerService: true,
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enableAccessibilityService: false,
         userServices: {
-            // manually add the accessibility service
-            ...getAccessibilityServiceOverride()
+            ...getThemeServiceOverride(),
+            ...getTextmateServiceOverride(),
+            ...getConfigurationServiceOverride(Uri.file('/workspace')),
+            ...getEditorServiceOverride(useOpenEditorStub),
+            ...getKeybindingsServiceOverride()
         },
         debugLogging: true,
         logLevel: LogLevel.Info
@@ -89,7 +72,7 @@ export const setupStatemachineClient = async () => {
             }]
         }
     };
-    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
+    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess, {});
 
     registerFileUrl('/statemachine-configuration.json', new URL('../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
     registerFileUrl('/statemachine-grammar.json', new URL('../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);
@@ -103,7 +86,7 @@ export const setupStatemachineClient = async () => {
     const editorText = await (await fetch(exampleStatemachineUrl)).text();
 
     const editorOptions = {
-        model: editor.createModel(editorText, languageId, Uri.parse('inmemory://example.statemachine')),
+        model: editor.createModel(editorText, languageId, Uri.parse('/workspace/example.statemachine')),
         automaticLayout: true
     };
     createConfiguredEditor(document.getElementById('container')!, editorOptions);

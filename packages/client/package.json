@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "6.4.6",
+  "version": "6.5.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TypeFox/monaco-languageclient",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
     "directory": "packages/client"
   },
   "bugs": {
@@ -37,8 +37,8 @@
     "npm": ">=9.0.0"
   },
   "volta": {
-    "node": "18.17.1",
-    "npm": "9.6.7"
+    "node": "18.18.0",
+    "npm": "9.8.1"
   },
   "files": [
     "lib",
@@ -48,14 +48,16 @@
     "License.txt"
   ],
   "dependencies": {
-    "monaco-editor": "~0.41.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@1.81.7",
+    "monaco-editor": "~0.43.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@1.82.2",
+    "@codingame/monaco-vscode-languages-service-override": "1.82.2",
+    "@codingame/monaco-vscode-model-service-override": "1.82.2",
     "vscode-jsonrpc": "~8.1.0",
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
-    "monaco-editor": "~0.41.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@1.81.7"
+    "monaco-editor": "~0.43.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@1.82.2"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

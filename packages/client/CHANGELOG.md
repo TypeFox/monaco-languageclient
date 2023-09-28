@@ -2,9 +2,15 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.5.0] - 2023-09-28
+
+- Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.2`
+- Only keep user services in`initServices`. It requires to specifically import and use services provided by  `monaco-vscode-api`
+  - languages and model services are always added by `monaco-languagclient`
+
 ## [6.4.6] - 2023-09-05
 
-- Update to `monaco-vscode-api` `1.81.7`
+- Updated to `monaco-vscode-api` `1.81.7`
 
 ## [6.4.5] - 2023-08-30
 
@@ -13,16 +19,16 @@ All notable changes to this npm module are documented in this file.
 
 ## [6.4.4] - 2023-08-24
 
-- Update to `monaco-vscode-api` `1.81.5`
+- Updated to `monaco-vscode-api` `1.81.5`
 - Added python language client and language server (pyright) examples
 
 ## [6.4.3] - 2023-08-22
 
-- Update to `monaco-vscode-api` `1.81.3`
+- Updated to `monaco-vscode-api` `1.81.3`
 
 ## [6.4.2] - 2023-08-19
 
-- Update to `monaco-vscode-api` `1.81.2`
+- Updated to `monaco-vscode-api` `1.81.2`
 
 ## [6.4.1] - 2023-08-18
 
@@ -32,11 +38,11 @@ All notable changes to this npm module are documented in this file.
 
 ## [6.4.0] - 2023-08-10
 
-- Update to `monaco-editor` `0.41.0` and `monaco-vscode-api` `1.81.0` [#520](https://github.com/TypeFox/monaco-languageclient/pull/520)
+- Updated to `monaco-editor` `0.41.0` and `monaco-vscode-api` `1.81.0` [#520](https://github.com/TypeFox/monaco-languageclient/pull/520)
 
 ## [6.3.0] - 2023-08-04
 
-- Update to `monaco-editor` `0.40.0` and `monaco-vscode-api` `1.80.2` [#513](https://github.com/TypeFox/monaco-languageclient/pull/513)
+- Updated to `monaco-editor` `0.40.0` and `monaco-vscode-api` `1.80.2` [#513](https://github.com/TypeFox/monaco-languageclient/pull/513)
   - vscode api services have been cleaned-up and fully aligned with `monaco-vscode-api
 
 ## [6.2.0] - 2023-06-16

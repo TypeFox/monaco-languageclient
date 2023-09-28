@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TypeFox/monaco-languageclient",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
     "directory": "packages/vscode-ws-jsonrpc"
   },
   "bugs": {
@@ -51,8 +51,8 @@
     "npm": ">=8.0.0"
   },
   "volta": {
-    "node": "18.17.1",
-    "npm": "9.6.7"
+    "node": "18.18.0",
+    "npm": "9.8.1"
   },
   "files": [
     "lib",

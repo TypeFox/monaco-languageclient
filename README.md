@@ -12,6 +12,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
+    - [September 2023 (v6.5.0)](#september-2023-v650)
     - [May 2023 (v6.0.0)](#may-2023-v600)
     - [April 2023 (v5.0.0)](#april-2023-v500)
     - [September 2022 (v4.0.0)](#september-2022-v400)
@@ -42,6 +43,10 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Licenses](#licenses)
 
 ## Latest Important Project Changes
+
+### September 2023 (v6.5.0)
+
+Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.2`. `initServices` does no longer use dynamic imports. All services available from [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) or the own service must be passed to `userServices`. All examples have been adapted accordingly.
 
 ### May 2023 (v6.0.0)
 
@@ -86,6 +91,7 @@ The following table describes which version of **monaco-languageclient** and **m
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-28 |
 | 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
 | 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
 | 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
@@ -282,7 +288,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--monaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@1.81.7"
+"vscode": "npm:@codingame/monaco-vscode-api@1.82.2"
 ```
 
 ## Changelogs

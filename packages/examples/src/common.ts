@@ -3,13 +3,18 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, languages, Uri } from 'monaco-editor';
+import { editor, languages } from 'monaco-editor';
 import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
-import 'vscode/default-extensions/theme-defaults';
-import 'vscode/default-extensions/json';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import '@codingame/monaco-vscode-json-default-extension';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import { Uri } from 'vscode';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -80,17 +85,12 @@ export type ExampleJsonEditor = {
 export const performInit = async (vscodeApiInit: boolean) => {
     if (vscodeApiInit === true) {
         await initServices({
-            enableThemeService: true,
-            enableTextmateService: true,
-            enableModelService: true,
-            configureEditorOrViewsService: {
+            userServices: {
+                ...getThemeServiceOverride(),
+                ...getTextmateServiceOverride(),
+                ...getConfigurationServiceOverride(Uri.file('/workspace')),
+                ...getKeybindingsServiceOverride(),
             },
-            configureConfigurationService: {
-                defaultWorkspaceUri: '/workspace'
-            },
-            enableKeybindingsService: true,
-            enableLanguagesService: true,
-            enableAccessibilityService: true,
             debugLogging: true
         });
 
@@ -109,7 +109,7 @@ export const createJsonEditor = async (config: {
     content: string
 }) => {
     // create the model
-    const uri = Uri.parse('/tmp/model.json');
+    const uri = Uri.parse('/workspace/model.json');
     const modelRef = await createModelReference(uri, config.content);
     modelRef.object.setLanguageId('json');
 
