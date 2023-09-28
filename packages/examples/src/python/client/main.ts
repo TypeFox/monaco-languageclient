@@ -5,12 +5,17 @@
 
 import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
-import 'vscode/default-extensions/theme-defaults';
-import 'vscode/default-extensions/python';
-import { updateUserConfiguration } from 'vscode/service-override/configuration';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
 import { createConfiguredEditor, createModelReference } from 'vscode/monaco';
 import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
+import getConfigurationServiceOverride, { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
+import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
@@ -73,14 +78,14 @@ const createLanguageClient = (transports: MessageTransports): MonacoLanguageClie
 export const startPythonClient = async () => {
     // init vscode-api
     await initServices({
-        enableModelService: true,
-        enableThemeService: true,
-        enableTextmateService: true,
-        configureConfigurationService: {
-            defaultWorkspaceUri: URI.file('/tmp')
+        userServices: {
+            ...getThemeServiceOverride(),
+            ...getTextmateServiceOverride(),
+            ...getConfigurationServiceOverride(URI.file('/tmp')),
+            ...getModelServiceOverride(),
+            ...getLanguagesServiceOverride(),
+            ...getKeybindingsServiceOverride()
         },
-        enableLanguagesService: true,
-        enableKeybindingsService: true,
         debugLogging: true,
         logLevel: LogLevel.Debug
     });

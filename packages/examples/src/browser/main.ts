@@ -7,8 +7,8 @@ import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { createDefaultJsonContent, createJsonEditor, performInit } from '../common.js';
-import 'vscode/default-extensions/theme-defaults';
-import 'vscode/default-extensions/json';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import '@codingame/monaco-vscode-json-default-extension';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 

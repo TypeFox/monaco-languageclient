@@ -5,15 +5,21 @@
 
 import { editor, Uri } from 'monaco-editor';
 
-import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
+import { MonacoLanguageClient, initServices, useOpenEditorStub } from 'monaco-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { createConfiguredEditor } from 'vscode/monaco';
 import { ExtensionHostKind, registerExtension } from 'vscode/extensions';
-import { updateUserConfiguration } from 'vscode/service-override/configuration';
+import getConfigurationServiceOverride, { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
+import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import getAccessibilityServiceOverride from 'vscode/service-override/accessibility';
 import { LogLevel } from 'vscode/services';
-import 'vscode/default-extensions/theme-defaults';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import { URI } from 'vscode-uri';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
@@ -24,31 +30,14 @@ const languageId = 'statemachine';
 export const setupStatemachineClient = async () => {
     // use this to demonstrate all possible services made available by the monaco-vscode-api
     await initServices({
-        enableThemeService: true,
-        enableTextmateService: true,
-        enableModelService: true,
-        configureEditorOrViewsService: {
-            enableViewsService: true
-        },
-        configureConfigurationService: {
-            defaultWorkspaceUri: URI.file('/tmp')
-        },
-        enableKeybindingsService: true,
-        enableLanguagesService: true,
-        enableAudioCueService: true,
-        enableDebugService: true,
-        enableDialogService: true,
-        enableNotificationService: true,
-        enablePreferencesService: true,
-        enableSnippetsService: true,
-        enableOutputService: true,
-        enableSearchService: true,
-        enableLanguageDetectionWorkerService: true,
-        // This should demonstrate that you can chose to not use the built-in loading mechanism,
-        // but do it manually, see below
-        enableAccessibilityService: false,
         userServices: {
-            // manually add the accessibility service
+            ...getThemeServiceOverride(),
+            ...getTextmateServiceOverride(),
+            ...getConfigurationServiceOverride(URI.file('/workspace')),
+            ...getEditorServiceOverride(useOpenEditorStub),
+            ...getModelServiceOverride(),
+            ...getLanguagesServiceOverride(),
+            ...getKeybindingsServiceOverride(),
             ...getAccessibilityServiceOverride()
         },
         debugLogging: true,
