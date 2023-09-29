@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
-import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import { whenReady } from '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
 import { createConfiguredEditor, createModelReference } from 'vscode/monaco';
@@ -85,6 +85,10 @@ export const startPythonClient = async () => {
         debugLogging: true,
         logLevel: LogLevel.Debug
     });
+
+    console.log('Before ready themes');
+    await whenReady();
+    console.log('After ready themes');
 
     // extension configuration derived from:
     // https://github.com/microsoft/pyright/blob/main/packages/vscode-pyright/package.json

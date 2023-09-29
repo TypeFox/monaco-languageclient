@@ -43,10 +43,7 @@ const config = {
     },
     target: 'web',
     resolve: {
-        extensions: ['.ts', '.js', '.json', '.ttf'],
-        fallback: {
-            path: resolve(projectRoot, 'node_modules', 'path-browserify')
-        }
+        extensions: ['.ts', '.js', '.json', '.ttf']
     },
     mode: 'development',
     devtool: 'source-map'

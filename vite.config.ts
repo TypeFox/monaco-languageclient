@@ -7,6 +7,7 @@ import url from 'url';
 export default defineConfig(() => {
     const config = {
         build: {
+            target: 'esnext',
             rollupOptions: {
                 input: {
                     client: path.resolve(__dirname, 'packages/examples/client.html'),
@@ -21,8 +22,8 @@ export default defineConfig(() => {
             dedupe: ['monaco-editor', 'vscode']
         },
         server: {
-            port: 8080,
-            origin: 'http://localhost:8080'
+            origin: 'http://localhost:8080',
+            port: 8080
         },
         optimizeDeps: {
             esbuildOptions: {
