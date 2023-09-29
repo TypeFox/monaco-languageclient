@@ -36,6 +36,7 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
         }
     });
 };
+
 export const createUrl = (hostname: string, port: number, path: string, searchParams: Record<string, any> = {}, secure: boolean = location.protocol === 'https:'): string => {
     const protocol = secure ? 'wss' : 'ws';
     const url = new URL(`${protocol}://${hostname}:${port}${path}`);
@@ -89,7 +90,7 @@ export const performInit = async (vscodeApiInit: boolean) => {
                 ...getThemeServiceOverride(),
                 ...getTextmateServiceOverride(),
                 ...getConfigurationServiceOverride(Uri.file('/workspace')),
-                ...getKeybindingsServiceOverride(),
+                ...getKeybindingsServiceOverride()
             },
             debugLogging: true
         });
