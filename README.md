@@ -20,7 +20,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Using monaco-languageclient](#using-monaco-languageclient)
     - [Treemending](#treemending)
-    - [Monaco-editor / monaco-vscode-api compatibility table](#monaco-editor--monaco-vscode-api-compatibility-table)
+    - [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
@@ -36,6 +36,7 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Volta](#volta)
+    - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
     - [pnpm](#pnpm)
@@ -46,11 +47,11 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
 
 ### September 2023 (v6.5.0)
 
-Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.2`. `initServices` does no longer use dynamic imports. All services available from [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) or the own service must be passed to `userServices`. All examples have been adapted accordingly.
+Updated to `monaco-editor` `0.43.0` and `@codingame/monaco-vscode-api` `1.82.2`. `initServices` does no longer use dynamic imports. All services available from [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) or the own service must be passed to `userServices`. All examples have been adapted accordingly.
 
 ### May 2023 (v6.0.0)
 
-Updated to `monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configuration of services exposed by `monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
+Updated to `@codingame/monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configuration of services exposed by `@codingame/monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
 
 ### April 2023 (v5.0.0)
 
@@ -63,7 +64,7 @@ The `monaco-converter` has been removed.
 
 ### June 2022 (v2.0.0)
 
-[monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
+[@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
 
 We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
 
@@ -81,15 +82,15 @@ The default and protected branch is now `main`.
 
 ⚠️ **Starting with version 6.0.0** `monaco-languageclient` runs a postinstall script when you install the dependencies in your project. If you re-run `npm install` this script is not invoked again.
 
-**Why?** This is a change in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
+**Why?** This is a change in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
 
-### Monaco-editor / monaco-vscode-api compatibility table
+### Monaco-editor / @codingame/monaco-vscode-api compatibility table
 
-The following table describes which version of **monaco-languageclient** and **monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **monaco-vscode-api** was introduced for the first time.
+The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
 
-**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
+**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
 
-| monaco-languageclient | monaco-vscode-api | monaco-editor | comment |
+| monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
 | 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |
 | 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
@@ -178,8 +179,8 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 ### Pure bundler verification
 
-- [./packages/verify/pnpm](./packages/verify/pnpm) is not part of the npm workspace. It allows to test whether `pnpm install` works as expected and it allows to test `monaco-vscode-api` treemending via `pnpm run test:treemending`.
-- [./packages/verify/yarn](./packages/verify/yarn) is not part of the npm workspace. It allows to test whether `yarn install` works as expected and it allows to test `monaco-vscode-api` treemending via `yarn run test:treemending`.
+- [./packages/verify/pnpm](./packages/verify/pnpm) is not part of the npm workspace. It allows to test whether `pnpm install` works as expected and it allows to test `@codingame/monaco-vscode-api` treemending via `pnpm run test:treemending`.
+- [./packages/verify/yarn](./packages/verify/yarn) is not part of the npm workspace. It allows to test whether `yarn install` works as expected and it allows to test `@codingame/monaco-vscode-api` treemending via `yarn run test:treemending`.
 
 ## Example usage
 
@@ -236,13 +237,25 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 ### General
 
-If you use **monaco-languageclient** make sure you have a version of **monaco-editor** installed in your project that is compliant with **monaco-languageclient** and its peer dependency [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
+If you use **monaco-languageclient** make sure you have a version of **monaco-editor** installed in your project that is compliant with **monaco-languageclient** and its peer dependency [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
-Ensure **monaco-editor** and **monaco-languageclient** are imported before you do any **monaco-editor** intialization. This ensures `monaco` and `vscode` (from **monaco-vscode-api**) are imported beforehand. This is for example done like this in all examples contained in this repository.
+Ensure **monaco-editor** and **monaco-languageclient** are imported before you do any **monaco-editor** intialization. This ensures `monaco` and `vscode` (from **@codingame/monaco-vscode-api**) are imported beforehand. This is for example done like this in all examples contained in this repository.
 
 ### Volta
 
 There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
+
+### Vite dev server troubleshooting
+
+When you are using vite for development please be aware of [this recommendation](https://github.com/CodinGame/monaco-vscode-api#if-you-use-vite).
+
+Since version `1.82.0` of `@codingame/monaco-vscode-api` you need to add this your vite configuration:
+
+```javascript
+resolve: {
+  dedupe: ['monaco-editor', 'vscode']
+}
+```
 
 ### monaco-editor-core
 
@@ -270,8 +283,6 @@ If you use **monaco-editor** as dependency, but only want to have the content of
 import * as monaco from 'monaco-editor/esm/vs/editor/edcore.main.js';
 ```
 
-Especially, if you are using your own language server or define your own language it may be a good idea to only import the core of monaco-editor
-
 ### @monaco-editor/react
 
 Add the **monaco-editor** import at the top of your editor component file [source](https://github.com/suren-atoyan/monaco-react#use-monaco-editor-as-an-npm-package):
@@ -285,7 +296,7 @@ loader.config({ monaco });
 
 ### pnpm
 
-If you use pnpm, you have to add `vscode` / `monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--monaco-vscode-api-compatibility-table)), otherwise the installation will fail.
+If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
 "vscode": "npm:@codingame/monaco-vscode-api@1.82.2"
