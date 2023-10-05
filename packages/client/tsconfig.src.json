@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "declarationDir": "lib"
+    "declarationDir": "lib",
+    "skipLibCheck": true
   },
   "references": [{
     "path": "../vscode-ws-jsonrpc/tsconfig.src.json"

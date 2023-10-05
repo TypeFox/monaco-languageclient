@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "skipLibCheck": true
   },
   "types": [
     "react/next",

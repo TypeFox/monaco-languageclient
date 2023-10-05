@@ -5,13 +5,7 @@
     "moduleResolution": "Node16",
     "lib": [
       "ES2022",
-      "DOM",
-      "DOM.Iterable",
-      "WebWorker"
-    ],
-    "types": [
-      "vite/client",
-      "node"
+      "DOM"
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -29,8 +23,8 @@
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-     // Skip type checking of declaration files.
-    "skipLibCheck": true,
+    // Enable type checking of declaration files, skip in packages where needed
+    "skipLibCheck": false,
      // Disallow inconsistently-cased references to the same file
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
