@@ -37,6 +37,8 @@ Click [here](http://typefox.io/teaching-the-language-server-protocol-to-microsof
     - [General](#general)
     - [Volta](#volta)
     - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
+    - [Bad Polyfills](#bad-polyfills)
+      - [buffer](#buffer)
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
     - [pnpm](#pnpm)
@@ -255,6 +257,27 @@ If you see the problem *Assertion failed (There is already an extension with thi
 ```javascript
 resolve: {
   dedupe: ['monaco-editor', 'vscode']
+}
+```
+
+### Bad Polyfills
+
+#### buffer
+
+If you see an error similar to the one below:
+
+```yaml
+Uncaught Error: Unexpected non—whitespace character after JSON at position 2
+
+SyntaxError: Unexpected non—whitespace character after JSON at position 2
+    at JSON. parse («anonymous>)
+```
+
+It is very likely you have an old version of `buffer` interfering (see [#538](https://github.com/TypeFox/monaco-languageclient/issues/538) and [#546](https://github.com/TypeFox/monaco-languageclient/issues/546)). You can enforce a current version by adding a `resolution` as shown below to your projects' `package.json`.
+
+```yaml
+"resolutions": {
+  "buffer": "~6.0.3",
 }
 ```
 
