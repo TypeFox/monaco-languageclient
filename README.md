@@ -94,6 +94,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 6.5.2         | 1.82.4  | 0.43.0 | Released 2023-10-07 |
 | 6.5.1         | 1.82.3  | 0.43.0 | Released 2023-10-04 |
 | 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |
 | 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
@@ -323,7 +324,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.82.3 <1.83.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.82.4 <1.83.0"
 ```
 
 ## Changelogs

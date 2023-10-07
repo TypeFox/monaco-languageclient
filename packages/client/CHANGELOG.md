@@ -2,10 +2,14 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.5.2] - 2023-10-07
+
+- Updated to `monaco-vscode-api` `1.82.4`
+
 ## [6.5.1] - 2023-10-04
 
 - Issue with v6.5.0 (There is already an extension with this id error) on inputFactories [#546](https://github.com/TypeFox/monaco-languageclient/issues/546)
-  - Fixed dependency defintion of `@codingame/monaco-vscode-api`
+  - Fixed dependency defintion of `@codingame/monaco-vscode-api` and updated to `1.82.3`
 
 ## [6.5.0] - 2023-09-29
 
