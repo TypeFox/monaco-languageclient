@@ -62,6 +62,7 @@
     "request-light": "~0.7.0",
     "vscode-json-languageservice": "~5.3.6",
     "vscode-languageserver": "~8.1.0",
+    "vscode-uri": "~3.0.8",
     "vscode-ws-jsonrpc": "~3.0.0",
     "ws": "~8.14.2"
   },

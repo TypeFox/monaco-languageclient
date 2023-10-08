@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 import { readFile } from 'fs';
 import requestLight from 'request-light';
-import URI from 'vscode-uri';
-import { } from 'vscode-ws-jsonrpc';
+import * as URI from 'vscode-uri';
+import 'vscode-ws-jsonrpc';
 import { _Connection, TextDocuments, DocumentSymbolParams } from 'vscode-languageserver/lib/node/main.js';
 import {
     Diagnostic, Command, CompletionList, CompletionItem, Hover,
