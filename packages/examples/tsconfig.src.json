@@ -4,14 +4,13 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "WebWorker"
+    ],
     "skipLibCheck": true
   },
-  "types": [
-    "react/next",
-    "react-dom/next",
-    "vite/client",
-    "node"
-  ],
   "references": [{
     "path": "../client/tsconfig.src.json",
   },

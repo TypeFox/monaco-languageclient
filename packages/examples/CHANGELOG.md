@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.5.3] - 2023-10-1x
+
+- Updated to `monaco-languageclient@6.5.3`
+
 ## [6.5.2] - 2023-10-07
 
 - Updated to `monaco-languageclient@6.5.2`
