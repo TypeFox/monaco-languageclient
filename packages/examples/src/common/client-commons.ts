@@ -121,7 +121,8 @@ export const createJsonEditor = async (config: {
         lightbulb: {
             enabled: true
         },
-        automaticLayout: true
+        automaticLayout: true,
+        wordBasedSuggestions: false
     });
 
     const result = {

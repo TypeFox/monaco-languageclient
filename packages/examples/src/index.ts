@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './common.js';
+export * from './common/client-commons.js';
 export * from './browser/main.js';
 export * from './json/client/main.js';
 export * from './langium/statemachineClient.js';

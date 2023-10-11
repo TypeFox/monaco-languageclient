@@ -16,7 +16,7 @@ const start = async () => {
     });
 
     // create the web socket
-    const url = createUrl('localhost', 3000, '/sampleServer');
+    const url = createUrl('localhost', 30000, '/sampleServer');
     createWebSocketAndStartClient(url);
 };
 

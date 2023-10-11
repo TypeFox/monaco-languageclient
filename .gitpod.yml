@@ -1,5 +1,6 @@
 ports:
-  - port: 3000
+  - port: 30000
+  - port: 30001
   - port: 8080
 tasks:
   - before: bash scripts/auth.sh

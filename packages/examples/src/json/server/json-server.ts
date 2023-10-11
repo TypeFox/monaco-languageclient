@@ -6,7 +6,7 @@ import { readFile } from 'fs';
 import requestLight from 'request-light';
 import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
-import { _Connection, TextDocuments, DocumentSymbolParams } from 'vscode-languageserver/lib/node/main.js';
+import { createConnection, _Connection, TextDocuments, DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
 import {
     Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
@@ -256,3 +256,7 @@ export class JsonServer {
         return this.jsonService.parseJSONDocument(document);
     }
 }
+
+const connection = createConnection(ProposedFeatures.all);
+const ls = new JsonServer(connection);
+ls.start();
