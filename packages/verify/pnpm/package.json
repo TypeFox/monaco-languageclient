@@ -5,7 +5,7 @@
   "dependencies": {
     "monaco-languageclient": "~6.5.3-next.3",
     "monaco-editor": "~0.43.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5-next.1 <1.83.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5 <1.83.0"
   },
   "devDependencies": {
     "shx": "~0.3.4"

@@ -94,7 +94,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
-| 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-1x |
+| 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-11 |
 | 6.5.2         | 1.82.4  | 0.43.0 | Released 2023-10-07 |
 | 6.5.1         | 1.82.3  | 0.43.0 | Released 2023-10-04 |
 | 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |

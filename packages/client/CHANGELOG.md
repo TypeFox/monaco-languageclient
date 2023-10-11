@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [6.5.4] - 2023-10-1x
+## [6.5.3] - 2023-10-11
 
 - Updated to `monaco-vscode-api` `1.82.5`. Fixes requirung `"skipLibCheck": true` with previous versions of 1.82.
 

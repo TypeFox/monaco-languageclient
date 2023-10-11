@@ -49,15 +49,15 @@
   ],
   "dependencies": {
     "monaco-editor": "~0.43.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5-next.1 <1.83.0",
-    "@codingame/monaco-vscode-editor-service-override": "~1.82.5-next.1",
-    "@codingame/monaco-vscode-languages-service-override": "~1.82.5-next.1",
-    "@codingame/monaco-vscode-model-service-override": "~1.82.5-next.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5 <1.83.0",
+    "@codingame/monaco-vscode-editor-service-override": "~1.82.5",
+    "@codingame/monaco-vscode-languages-service-override": "~1.82.5",
+    "@codingame/monaco-vscode-model-service-override": "~1.82.5",
     "vscode-languageclient": "~8.1.0"
   },
   "peerDependencies": {
     "monaco-editor": "~0.43.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5-next.1 <1.83.0"
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.82.5 <1.83.0"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {
