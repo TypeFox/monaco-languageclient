@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "6.5.3-next.3",
+  "version": "6.5.3",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -56,7 +56,7 @@
     "langium": "~2.0.2",
     "langium-statemachine-dsl": "~2.0.0",
     "monaco-editor-workers": "~0.43.0",
-    "monaco-languageclient": "~6.5.3-next.3",
+    "monaco-languageclient": "~6.5.3",
     "pyright": "~1.1.330",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
