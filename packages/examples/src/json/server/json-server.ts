@@ -257,6 +257,9 @@ export class JsonServer {
     }
 }
 
-const connection = createConnection(ProposedFeatures.all);
-const ls = new JsonServer(connection);
-ls.start();
+const scriptExec = process.argv[2];
+if (scriptExec === '--stdio') {
+    const connection = createConnection(ProposedFeatures.all);
+    const ls = new JsonServer(connection);
+    ls.start();
+}

@@ -17,11 +17,11 @@ import { Message, InitializeRequest, InitializeParams } from 'vscode-languageser
 export const launchLanguageServer = (serverName: string, socket: IWebSocket, baseDir: string, relativeDir: string) => {
     // start the language server as an external process
     const ls = resolve(baseDir, relativeDir);
-    const serverConnection = createServerProcess(serverName, 'node', [ls, '--stdio']);
 
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
+    const serverConnection = createServerProcess(serverName, 'node', [ls, '--stdio']);
     if (serverConnection) {
         forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
