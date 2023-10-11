@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+export * from './common/server-commons.js';
 export * from './json/server/json-server.js';
 export * from './json/server/main.js';
 export * from './python/server/main.js';

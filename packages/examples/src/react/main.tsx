@@ -17,5 +17,5 @@ export const startReactJsonClient = () => {
         defaultCode={defaultCode}
         hostname={'localhost'}
         path={'/sampleServer'}
-        port={3000} />);
+        port={30000} />);
 };

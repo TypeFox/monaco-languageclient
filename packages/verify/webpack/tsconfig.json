@@ -3,8 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist",
-    "skipLibCheck": true
+    "declarationDir": "dist"
   },
   "references": [{
     "path": "../../client/tsconfig.src.json"

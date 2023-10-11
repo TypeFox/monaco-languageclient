@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from '../../common.js';
+import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from '../../common/client-commons.js';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
@@ -15,6 +15,6 @@ export const startJsonClient = async () => {
         content: createDefaultJsonContent()
     });
 
-    const url = createUrl('localhost', 3000, '/sampleServer');
+    const url = createUrl('localhost', 30000, '/sampleServer');
     createWebSocketAndStartClient(url);
 };

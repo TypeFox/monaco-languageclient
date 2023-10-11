@@ -6,7 +6,7 @@ import { languages, workspace, TextDocument as VsCodeTextDocument } from 'vscode
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { createDefaultJsonContent, createJsonEditor, performInit } from '../common.js';
+import { createDefaultJsonContent, createJsonEditor, performInit } from '../common/client-commons.js';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { buildWorkerDefinition } from 'monaco-editor-workers';

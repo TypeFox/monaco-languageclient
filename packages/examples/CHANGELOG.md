@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.5.3] - 2023-10-11
+
+- Updated to `monaco-languageclient@6.5.3`
+- Unify python and json language server. Extract common function.
+
 ## [6.5.2] - 2023-10-07
 
 - Updated to `monaco-languageclient@6.5.2`
