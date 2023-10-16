@@ -58,8 +58,8 @@ export const startBrowserEditor = async () => {
             return protocolConverter.asCompletionResult(completionList);
         },
 
-        resolveCompletionItem(item, _token) {
-            return jsonService.doResolve(codeConverter.asCompletionItem(item)).then(result => protocolConverter.asCompletionItem(result));
+        async resolveCompletionItem(item, _token) {
+            return await jsonService.doResolve(codeConverter.asCompletionItem(item)).then(result => protocolConverter.asCompletionItem(result));
         }
     });
 
@@ -80,10 +80,10 @@ export const startBrowserEditor = async () => {
     });
 
     languages.registerHoverProvider(languageId, {
-        provideHover(vscodeDocument, position, _token) {
+        async provideHover(vscodeDocument, position, _token) {
             const document = createDocument(vscodeDocument);
             const jsonDocument = jsonService.parseJSONDocument(document);
-            return jsonService.doHover(document, codeConverter.asPosition(position), jsonDocument).then((hover) => {
+            return await jsonService.doHover(document, codeConverter.asPosition(position), jsonDocument).then((hover) => {
                 return protocolConverter.asHover(hover)!;
             });
         }

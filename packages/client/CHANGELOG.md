@@ -2,9 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.6.0] - 2023-10-16
+
+- Updated to `monaco-editor` `0.44.0` and `monaco-vscode-api` `1.83.2`.
+
 ## [6.5.3] - 2023-10-11
 
-- Updated to `monaco-vscode-api` `1.82.5`. Fixes requirung `"skipLibCheck": true` with previous versions of 1.82.
+- Updated to `monaco-vscode-api` `1.82.5`. Fixes requirung `"skipLibCheck": true` with previous versions of 1.82.x.
 
 ## [6.5.2] - 2023-10-07
 
