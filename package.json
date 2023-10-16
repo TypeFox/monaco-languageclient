@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@types/vscode": "~1.82.0",
+    "@types/vscode": "~1.83.0",
     "@typescript-eslint/eslint-plugin": "~6.7.4",
     "@typescript-eslint/parser": "~6.7.4",
     "editorconfig": "~2.0.0",
@@ -17,8 +17,8 @@
     "vite": "~4.4.11"
   },
   "volta": {
-    "node": "18.18.0",
-    "npm": "9.8.1"
+    "node": "18.18.1",
+    "npm": "9.9.0"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
