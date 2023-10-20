@@ -27,8 +27,4 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     protected override createMessageTransports(encoding: string): Promise<MessageTransports> {
         return this.connectionProvider.get(encoding);
     }
-
-    protected override getLocale(): string {
-        return super.getLocale() || 'en-US';
-    }
 }

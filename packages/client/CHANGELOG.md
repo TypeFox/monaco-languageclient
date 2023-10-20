@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [6.6.1] - 2023-10-20
+
+- Updated to `monaco-vscode-api` `1.83.3` which adds l10n suppport.
+
 ## [6.6.0] - 2023-10-16
 
 - Updated to `monaco-editor` `0.44.0` and `monaco-vscode-api` `1.83.2`.

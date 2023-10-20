@@ -11,8 +11,10 @@
     <h2>Client & Statemachine DSL Web Worker Language Server Example</h2>
     <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { startStatemachineClient } from "./src/langium/statemachineClient.ts";
-        startStatemachineClient();
+        import { loadLocales } from "./src/langium/localeLoader.ts";
+        await loadLocales();
+        const { startStatemachineClient } = await import("./src/langium/statemachineClient.ts");
+        await startStatemachineClient();
     </script>
 </body>
 
