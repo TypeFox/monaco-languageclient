@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0",
     "monaco-editor-workers": "~0.44.0",
-    "monaco-languageclient": "~6.6.1",
-    "monaco-languageclient-examples": "~6.6.1",
+    "monaco-languageclient": "~6.6.2-next.1",
+    "monaco-languageclient-examples": "~6.6.2-next.1",
     "vscode-ws-jsonrpc": "~3.0.0"
   },
   "devDependencies": {
@@ -16,6 +17,12 @@
     "ts-loader": "~9.4.4",
     "webpack-cli": "~5.1.4",
     "http-server": "~14.1.1"
+  },
+  "overrides": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
   },
   "volta": {
     "node": "18.18.1",

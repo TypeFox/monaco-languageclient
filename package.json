@@ -16,6 +16,12 @@
     "typescript": "~5.2.2",
     "vite": "~4.4.11"
   },
+  "overrides": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
+  },
   "volta": {
     "node": "18.18.1",
     "npm": "9.9.0"

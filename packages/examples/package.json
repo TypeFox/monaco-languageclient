@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "6.6.1",
+  "version": "6.6.2-next.1",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -58,8 +58,9 @@
     "express": "~4.18.2",
     "langium": "~2.0.2",
     "langium-statemachine-dsl": "~2.0.0",
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0",
     "monaco-editor-workers": "~0.44.0",
-    "monaco-languageclient": "~6.6.1",
+    "monaco-languageclient": "~6.6.2-next.1",
     "pyright": "~1.1.330",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -79,6 +80,12 @@
     "@types/react-dom": "~18.2.9",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.3"
+  },
+  "overrides": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.3 <1.84.0"
   },
   "volta": {
     "node": "18.18.1",
