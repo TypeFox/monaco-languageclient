@@ -12,6 +12,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Latest Important Project Changes](#latest-important-project-changes)
+    - [October 2023 (v7.0.0)](#october-2023-v700)
     - [September 2023 (v6.5.0)](#september-2023-v650)
     - [May 2023 (v6.0.0)](#may-2023-v600)
     - [April 2023 (v5.0.0)](#april-2023-v500)
@@ -46,6 +47,10 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
   - [Licenses](#licenses)
 
 ## Latest Important Project Changes
+
+### October 2023 (v7.0.0)
+
+Revised the `treemending` approach. The postinstall step is removed. `monaco-languageclient` no longer patches and existing `monaco-editor` instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib have to enforce the correct editor by overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
 
 ### September 2023 (v6.5.0)
 
@@ -94,6 +99,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
 | :----         | :----   | :---   | :--- |
+| 7.0.0         | 1.83.4  | 0.44.0 | Released 2023-10-xy |
 | 6.6.1         | 1.83.3  | 0.44.0 | Released 2023-10-20 |
 | 6.6.0         | 1.83.2  | 0.44.0 | Released 2023-10-16 |
 | 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-11 |
@@ -327,7 +333,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.3 <1.84.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.4 <1.84.0"
 ```
 
 ## Changelogs
