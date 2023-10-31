@@ -11,17 +11,9 @@ Repository for [NPM module](https://www.npmjs.com/package/monaco-languageclient)
 Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) for a detail explanation how to connect the Monaco editor to your language server.
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
-  - [Latest Important Project Changes](#latest-important-project-changes)
-    - [October 2023 (v7.0.0)](#october-2023-v700)
-    - [September 2023 (v6.5.0)](#september-2023-v650)
-    - [May 2023 (v6.0.0)](#may-2023-v600)
-    - [April 2023 (v5.0.0)](#april-2023-v500)
-    - [September 2022 (v4.0.0)](#september-2022-v400)
-    - [June 2022 (v2.0.0)](#june-2022-v200)
-    - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Using monaco-languageclient](#using-monaco-languageclient)
-    - [Treemending](#treemending)
-    - [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)
+    - [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor)
+      - [Overrides instructions](#overrides-instructions)
   - [Getting started](#getting-started)
     - [Dev environments](#dev-environments)
     - [Scripts Overview](#scripts-overview)
@@ -33,7 +25,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [Library code watch](#library-code-watch)
     - [Server processes](#server-processes)
     - [Verification examples](#verification-examples)
-  - [VSCode integration](#vscode-integration)
+    - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Volta](#volta)
@@ -43,92 +35,42 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [monaco-editor-core](#monaco-editor-core)
     - [@monaco-editor/react](#monaco-editorreact)
     - [pnpm](#pnpm)
+  - [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)
+  - [Important Project Changes](#important-project-changes)
+    - [October 2023 (v7.0.0)](#october-2023-v700)
+    - [September 2023 (v6.5.0)](#september-2023-v650)
+    - [May 2023 (v6.0.0)](#may-2023-v600)
+    - [April 2023 (v5.0.0)](#april-2023-v500)
+    - [September 2022 (v4.0.0)](#september-2022-v400)
+    - [June 2022 (v2.0.0)](#june-2022-v200)
+    - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Changelogs](#changelogs)
   - [Licenses](#licenses)
 
-## Latest Important Project Changes
-
-### October 2023 (v7.0.0)
-
-Revised the `treemending` approach. The postinstall step is removed. `monaco-languageclient` no longer patches and existing `monaco-editor` instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib have to enforce the correct editor by overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
-
-### September 2023 (v6.5.0)
-
-Updated to `monaco-editor` `0.43.0` and `@codingame/monaco-vscode-api` `1.82.2`. `initServices` does no longer use dynamic imports. All services available from [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) or the own service must be passed to `userServices`. All examples have been adapted accordingly.
-
-### May 2023 (v6.0.0)
-
-Updated to `@codingame/monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configuration of services exposed by `@codingame/monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
-
-### April 2023 (v5.0.0)
-
-Both libraries no longer export code from other libraries (`vscode-jsonrpc`, `vscode-languageclient` and `vscode-languageserver-protocol`).
-
-### September 2022 (v4.0.0)
-
-All code has been transformed to esm and npm packages are now of type module. cjs bundles are no longer available.
-The `monaco-converter` has been removed.
-
-### June 2022 (v2.0.0)
-
-[@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
-
-We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
-
-### May 2022 (v1.0.0)
-
-From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
-
-As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification example](#verification) for the web client example using webpack.
-
-The default and protected branch is now `main`.
-
 ## Using monaco-languageclient
 
-### Treemending
+### NEW with v7: Treemended monaco-editor
 
-⚠️ **Starting with version 6.0.0** `monaco-languageclient` runs a postinstall script when you install the dependencies in your project. If you re-run `npm install` this script is not invoked again.
+Since version 2 (see [Important Project Changes](#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`.
 
-**Why?** This is a change in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) that adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why).
+Earlier in 2023 we started to treemend an existing `monaco-editor` dependency via a postinstall script. This adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why). But, this introduced multiple problems.
 
-### Monaco-editor / @codingame/monaco-vscode-api compatibility table
+#### Overrides instructions
 
-The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
+With v7 we decided to use readily treemended version if monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnmpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
 
-**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
+```yaml
+  "overrides": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
+  }
+```
 
-| monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
-| :----         | :----   | :---   | :--- |
-| 7.0.0         | 1.83.4  | 0.44.0 | Released 2023-10-xy |
-| 6.6.1         | 1.83.3  | 0.44.0 | Released 2023-10-20 |
-| 6.6.0         | 1.83.2  | 0.44.0 | Released 2023-10-16 |
-| 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-11 |
-| 6.5.2         | 1.82.4  | 0.43.0 | Released 2023-10-07 |
-| 6.5.1         | 1.82.3  | 0.43.0 | Released 2023-10-04 |
-| 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |
-| 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
-| 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
-| 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
-| 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
-| 6.4.2         | 1.81.2  | 0.41.0 | Released 2023-08-19 |
-| 6.4.1         | 1.81.1  | 0.41.0 | Released 2023-08-18 |
-| 6.4.0         | 1.81.0  | 0.41.0 | Released 2023-08-10 |
-| 6.3.0         | 1.80.2  | 0.40.0 | Released 2023-08-04 |
-| 6.2.0         | 1.79.3  | 0.39.0 | Released 2023-06-16 |
-| 6.1.0         | 1.79.1  | 0.38.0 | Released 2023-06-12 |
-| 6.0.3         | 1.78.8  | 0.37.1 | Released 2023-05-31 |
-| 6.0.2         | 1.78.6  | 0.37.1 | Released 2023-05-24 |
-| 6.0.1         | 1.78.6  | 0.37.1 | Released 2023-05-12 |
-| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
-| 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
-| 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
-| 4.0.3         | 1.69.13 | 0.34.1 |  |
-| 4.0.1         | 1.69.12 | 0.34.1 |  |
-| 4.0.0         | 1.69.10 | 0.34.0 |  |
-| 3.0.1         | 1.69.9  | 0.34.0 |  |
-| 3.0.0         | 1.69.0  | 0.34.0 |  |
-| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
-| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
+This means some extra-configuration work, but removes the need for any postinstall scripts which lead to multiple package manager problems. It is now also very clear what is used and needed. Please see [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for a complete overview.
 
 ## Getting started
 
@@ -242,7 +184,7 @@ npm run start:verify:webpack
 npm run start:verify:vite
 ```
 
-## VSCode integration
+### VSCode integration
 
 You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the server in different modes and the client.
 
@@ -250,9 +192,9 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 ### General
 
-If you use **monaco-languageclient** make sure you have a version of **monaco-editor** installed in your project that is compliant with **monaco-languageclient** and its peer dependency [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
+Again, if you use **monaco-languageclient** make sure you define matching [Overrides instructions](#overrides-instructions) in your local project to override any mismatching **monaco-editor** or **vscode** versions with you dependency tree.
 
-Ensure **monaco-editor** and **monaco-languageclient** are imported before you do any **monaco-editor** intialization. This ensures `monaco` and `vscode` (from **@codingame/monaco-vscode-api**) are imported beforehand. This is for example done like this in all examples contained in this repository.
+Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported before you do any **monaco-editor** or vscode-api intialization or start using it.
 
 ### Volta
 
@@ -333,8 +275,84 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.4 <1.84.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
 ```
+
+## Monaco-editor / @codingame/monaco-vscode-api compatibility table
+
+The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
+
+**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
+
+| monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
+| :----         | :----   | :---   | :--- |
+| 7.0.0         | 1.83.5  | 0.44.0 | Released 2023-11-xy |
+| 6.6.1         | 1.83.3  | 0.44.0 | Released 2023-10-20 |
+| 6.6.0         | 1.83.2  | 0.44.0 | Released 2023-10-16 |
+| 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-11 |
+| 6.5.2         | 1.82.4  | 0.43.0 | Released 2023-10-07 |
+| 6.5.1         | 1.82.3  | 0.43.0 | Released 2023-10-04 |
+| 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |
+| 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
+| 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
+| 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
+| 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
+| 6.4.2         | 1.81.2  | 0.41.0 | Released 2023-08-19 |
+| 6.4.1         | 1.81.1  | 0.41.0 | Released 2023-08-18 |
+| 6.4.0         | 1.81.0  | 0.41.0 | Released 2023-08-10 |
+| 6.3.0         | 1.80.2  | 0.40.0 | Released 2023-08-04 |
+| 6.2.0         | 1.79.3  | 0.39.0 | Released 2023-06-16 |
+| 6.1.0         | 1.79.1  | 0.38.0 | Released 2023-06-12 |
+| 6.0.3         | 1.78.8  | 0.37.1 | Released 2023-05-31 |
+| 6.0.2         | 1.78.6  | 0.37.1 | Released 2023-05-24 |
+| 6.0.1         | 1.78.6  | 0.37.1 | Released 2023-05-12 |
+| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
+| 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
+| 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
+| 4.0.3         | 1.69.13 | 0.34.1 |  |
+| 4.0.1         | 1.69.12 | 0.34.1 |  |
+| 4.0.0         | 1.69.10 | 0.34.0 |  |
+| 3.0.1         | 1.69.9  | 0.34.0 |  |
+| 3.0.0         | 1.69.0  | 0.34.0 |  |
+| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
+| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
+
+## Important Project Changes
+
+### October 2023 (v7.0.0)
+
+Revised the `treemending` approach. The postinstall step is removed. `monaco-languageclient` no longer patches and existing `monaco-editor` instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib have to enforce the correct editor by overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
+
+### September 2023 (v6.5.0)
+
+Updated to `monaco-editor` `0.43.0` and `@codingame/monaco-vscode-api` `1.82.2`. `initServices` does no longer use dynamic imports. All services available from [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) or the own service must be passed to `userServices`. All examples have been adapted accordingly.
+
+### May 2023 (v6.0.0)
+
+Updated to `@codingame/monaco-vscode-api` `1.78.5` and therefore retired `MonacoServices`. It is replaced by `initServices` that makes configuration of services exposed by `@codingame/monaco-vscode-api` handy and still allows the definition of own services as [outlined here](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) and these can be passed as `userServices` in `initServices`.
+
+### April 2023 (v5.0.0)
+
+Both libraries no longer export code from other libraries (`vscode-jsonrpc`, `vscode-languageclient` and `vscode-languageserver-protocol`).
+
+### September 2022 (v4.0.0)
+
+All code has been transformed to esm and npm packages are now of type module. cjs bundles are no longer available.
+The `monaco-converter` has been removed.
+
+### June 2022 (v2.0.0)
+
+[@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
+
+We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
+
+### May 2022 (v1.0.0)
+
+From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
+
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification example](#verification) for the web client example using webpack.
+
+The default and protected branch is now `main`.
 
 ## Changelogs
 
