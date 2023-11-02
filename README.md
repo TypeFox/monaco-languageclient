@@ -11,20 +11,18 @@ Repository for [NPM module](https://www.npmjs.com/package/monaco-languageclient)
 Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) for a detail explanation how to connect the Monaco editor to your language server.
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
+  - [Getting started](#getting-started)
   - [Using monaco-languageclient](#using-monaco-languageclient)
     - [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor)
       - [Overrides instructions](#overrides-instructions)
-  - [Getting started](#getting-started)
-    - [Dev environments](#dev-environments)
-    - [Scripts Overview](#scripts-overview)
-  - [Examples](#examples)
-  - [Verification](#verification)
-    - [Pure bundler verification](#pure-bundler-verification)
-  - [Example usage](#example-usage)
-    - [Vite dev server](#vite-dev-server)
-    - [Library code watch](#library-code-watch)
-    - [Server processes](#server-processes)
-    - [Verification examples](#verification-examples)
+    - [Using services and extra packages from @codingame/monaco-vscode-api](#using-services-and-extra-packages-from-codingamemonaco-vscode-api)
+  - [Examples Overview](#examples-overview)
+    - [Main Examples](#main-examples)
+    - [Verification Examples](#verification-examples)
+      - [Pure bundler verification](#pure-bundler-verification)
+    - [Example usage](#example-usage)
+      - [Server processes](#server-processes)
+      - [Verification Example Servers](#verification-example-servers)
     - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
@@ -46,6 +44,33 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Changelogs](#changelogs)
   - [Licenses](#licenses)
+
+## Getting started
+
+On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Or, use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
+Locally, from a terminal do:
+
+```bash
+git clone https://github.com/TypeFox/monaco-languageclient.git
+cd monaco-languageclient
+npm i
+# Cleans-up, compiles and builds everything
+npm run build
+```
+
+Start the Vite dev server. It serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available:
+
+```shell
+npm run dev
+```
+
+As this is a npm workspace the main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the childe packages like `npm run build:examples`.
+
+If you want to change the libries and see this reflected directly, then you need to run the watch command that compiles all TypeScript files form both libraries and the examples:
+
+```shell
+npm run watch
+```
 
 ## Using monaco-languageclient
 
@@ -80,38 +105,22 @@ With `overrides` or `resolutions` configured any child depndencies with a anothe
 
 This means some extra-configuration work, but removes the need for any postinstall scripts which lead to multiple package manager problems. It is now also very clear what is used and needed. Please see [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for a complete overview.
 
-## Getting started
+### Using services and extra packages from @codingame/monaco-vscode-api
 
-### Dev environments
+The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `` monaco-languageclient`` via the required `initServices` the folliwing services are always loaded:
 
-On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. From CLI in root of the project run:
+- *languages* and model *services* (always added by `monaco-languagclient`)
+- *layout*, *environment*, *extension*, *files* and *quickAccess* (always added by `monaco-vscode-api`)
 
-```bash
-git clone https://github.com/TypeFox/monaco-languageclient.git
-cd monaco-languageclient
-npm i
-# Cleans-up, compiles and builds everything
-npm run build
-```
+Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
-Or, use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
+Please check our examples in the [next chapter](#examples-overview) as they demonstrate the usage (jump-start: [python client](./packages/examples/src/python/client/main.ts) for services and default extension usage or [Langium Statemachine](./packages/examples/src/langium/statemachineClient.ts) / [Locale Loader](./packages/examples/src/langium/localeLoader.ts))
 
-### Scripts Overview
+## Examples Overview
 
-The main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the packages. See some examples:
+There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used.
 
-```bash
-# Build only monaco-languageclient
-npm run build:client
-# Build only vscode-ws-jsonrpc
-npm run build:vscode-ws-jsonrpc
-# Build main examples
-npm run build:examples
-```
-
-## Examples
-
-There are a couple of different examples that demonstrate how the `monaco-languageclient` can be used :
+### Main Examples
 
 - [JSON Language client and language server example](./packages/examples/src/json):
   - The **json-server** runs a Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
@@ -134,38 +143,20 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 **Important:** Apart from the **json-server** and **python-server** process all other will be server by the [Vite dev server](#vite-dev-server). Some examples share [common code](./packages/examples/src/common.ts) to reduce the amount of redundant code.
 
-## Verification
+### Verification Examples
 
 - The **webpack** verification example located in [./packages/verify/webpack](./packages/verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./packages/verify/webpack/webpack.config.js).
 
 - The **vite** verification example located in [./packages/verify/vite](./packages/verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required.
 
-### Pure bundler verification
+#### Pure bundler verification
 
 - [./packages/verify/pnpm](./packages/verify/pnpm) is not part of the npm workspace. It allows to test whether `pnpm install` works as expected and it allows to test `@codingame/monaco-vscode-api` treemending via `pnpm run test:treemending`.
 - [./packages/verify/yarn](./packages/verify/yarn) is not part of the npm workspace. It allows to test whether `yarn install` works as expected and it allows to test `@codingame/monaco-vscode-api` treemending via `yarn run test:treemending`.
 
-## Example usage
+### Example usage
 
-### Vite dev server
-
-Start the Vite dev server. It is assumed you ran the build as described in [Getting Started](#getting-started):
-
-```shell
-npm run dev
-```
-
-Vite serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available.
-
-### Library code watch
-
-If you want to change the libries and see this reflected directly, then you need to run the watch command that compiles all TypeScript files form both libraries and the examples:
-
-```shell
-npm run watch
-```
-
-### Server processes
+#### Server processes
 
 For the **json-client** or the **client-webpack** examples you need to ensure the **json-server** example is running:
 
@@ -181,7 +172,7 @@ For the **python-client** example you need to ensure the **paython-server** exam
 npm run start:example:server:python
 ```
 
-### Verification examples
+#### Verification Example Servers
 
 If you want to reach the verification examples from the vite dev server index page you need to run the following additional http-servers beforehand (this is also indicated on the page itself):
 
