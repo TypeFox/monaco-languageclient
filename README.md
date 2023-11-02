@@ -57,7 +57,7 @@ Earlier in 2023 we started to treemend an existing `monaco-editor` dependency vi
 
 #### Overrides instructions
 
-With v7 we decided to use readily treemended version if monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnmpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
+With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnmpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
 
 ```yaml
   "overrides": {
@@ -69,6 +69,14 @@ With v7 we decided to use readily treemended version if monaco-editor called [@c
     "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
   }
 ```
+
+In the following table you can see the effect ([Angular clinet example](https://github.com/TypeFox/monaco-languageclient-ng-example.git) was used to demonstrate it):
+
+| No overrides | With overrides |
+| :----         | :----   |
+| ![No overrides](./docs/images/no-overrides.png) | ![With overrides](./docs/images/with-overrides.png)  |
+
+With `overrides` or `resolutions` configured any child depndencies with a another `monaco-editor` version will chnaged to the one you enforce.
 
 This means some extra-configuration work, but removes the need for any postinstall scripts which lead to multiple package manager problems. It is now also very clear what is used and needed. Please see [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for a complete overview.
 
@@ -194,7 +202,7 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 Again, if you use **monaco-languageclient** make sure you define matching [Overrides instructions](#overrides-instructions) in your local project to override any mismatching **monaco-editor** or **vscode** versions with you dependency tree.
 
-Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported before you do any **monaco-editor** or vscode-api intialization or start using it.
+Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported before you do any **monaco-editor** or vscode-api intialization or start using it. Please check the [our python language client example](./packages/examples/src/python/client/main.ts) to see how it should be done.
 
 ### Volta
 
