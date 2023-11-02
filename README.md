@@ -16,6 +16,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor)
       - [Overrides instructions](#overrides-instructions)
     - [Using services and extra packages from @codingame/monaco-vscode-api](#using-services-and-extra-packages-from-codingamemonaco-vscode-api)
+      - [textmate and monarch](#textmate-and-monarch)
   - [Examples Overview](#examples-overview)
     - [Main Examples](#main-examples)
     - [Verification Examples](#verification-examples)
@@ -114,7 +115,18 @@ The bespoke projects not only supplies the api, but it provides 100+ packages wi
 
 Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
-Please check our examples in the [next chapter](#examples-overview) as they demonstrate the usage (jump-start: [python client](./packages/examples/src/python/client/main.ts) for services and default extension usage or [Langium Statemachine](./packages/examples/src/langium/statemachineClient.ts) / [Locale Loader](./packages/examples/src/langium/localeLoader.ts))
+Please check our examples [in the examples overview chapter](#examples-overview) as they demonstrate the usage (jump-start: [python client](./packages/examples/src/python/client/main.ts) for services and default extension usage or [Langium Statemachine](./packages/examples/src/langium/statemachineClient.ts) / [Locale Loader](./packages/examples/src/langium/localeLoader.ts))
+
+#### textmate and monarch
+
+If you use the `textmate` or `theme` services you are able to load textmate based grammars and theme definitions from vscode:
+
+```js
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
+```
+
+Once you those services you can no longer make use of monarch based grammars and themes.
 
 ## Examples Overview
 
