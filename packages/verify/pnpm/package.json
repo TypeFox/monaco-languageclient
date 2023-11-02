@@ -3,19 +3,22 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-languageclient": "~6.6.1",
-    "monaco-editor": "~0.44.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.3 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
+    "monaco-languageclient": "~7.0.0-next.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
   },
   "devDependencies": {
     "shx": "~0.3.4"
   },
+  "overrides": {
+    "monaco-editor": "$monaco-editor",
+    "vscode": "$vscode"
+  },
   "scripts": {
-    "clean": "shx rm -fr ./node_modules pnpm-lock.yaml",
-    "test:treemending": "monaco-treemending"
+    "clean": "shx rm -fr ./node_modules pnpm-lock.yaml"
   },
   "volta": {
-    "node": "18.18.1",
+    "node": "18.18.2",
     "npm": "9.9.0"
   }
 }

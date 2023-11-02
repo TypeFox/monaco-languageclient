@@ -2,6 +2,15 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.0.0] - 2023-11-0x
+
+- Updated to `monaco-languageclient@7.0.0`
+
+## [6.6.1] - 2023-10-20
+
+- Updated to `monaco-languageclient@6.6.1`
+- Allows to run the Statemachine example in four different languages.
+
 ## [6.6.0] - 2023-10-16
 
 - Updated to `monaco-languageclient@6.6.0`
