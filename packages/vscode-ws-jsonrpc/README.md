@@ -63,6 +63,10 @@ forward(socketConnection, serverConnection, message => {
 });
 ```
 
+## History
+
+For the history please see the [README](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#latest-important-project-changes) and [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/CHANGELOG.md).
+
 ## License
 
 [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/License.txt)

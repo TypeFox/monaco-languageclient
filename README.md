@@ -12,6 +12,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
 
 - [Monaco Language Client \& VSCode WebSocket Json RPC](#monaco-language-client--vscode-websocket-json-rpc)
   - [Getting started](#getting-started)
+    - [Vite dev server](#vite-dev-server)
   - [Using monaco-languageclient](#using-monaco-languageclient)
     - [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor)
       - [Overrides instructions](#overrides-instructions)
@@ -58,6 +59,8 @@ npm i
 # Cleans-up, compiles and builds everything
 npm run build
 ```
+
+### Vite dev server
 
 Start the Vite dev server. It serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available:
 
@@ -108,7 +111,7 @@ This means some extra-configuration work, but removes the need for any postinsta
 
 ### Using services and extra packages from @codingame/monaco-vscode-api
 
-The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `` monaco-languageclient`` via the required `initServices` the folliwing services are always loaded:
+The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `monaco-languageclient` via the required `initServices` the folliwing services are always loaded:
 
 - *languages* and model *services* (always added by `monaco-languagclient`)
 - *layout*, *environment*, *extension*, *files* and *quickAccess* (always added by `monaco-vscode-api`)
@@ -293,40 +296,40 @@ If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as di
 
 The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
 
-**Important:** Due to the [treemending](#treemending) mentioned above, it is mandatory you use the correct monaco-editor version. This is defined by peerDependency in [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api)
+**Important:** Please see the following table which `monaco-editor` or `@codingame/monaco-editor-treemended` (since v7) versions are required to be used you use the correct monaco-editor version.
 
-| monaco-languageclient | @codingame/monaco-vscode-api | monaco-editor | comment |
-| :----         | :----   | :---   | :--- |
-| 7.0.0         | 1.83.5  | 0.44.0 | Released 2023-11-xy |
-| 6.6.1         | 1.83.3  | 0.44.0 | Released 2023-10-20 |
-| 6.6.0         | 1.83.2  | 0.44.0 | Released 2023-10-16 |
-| 6.5.3         | 1.82.5  | 0.43.0 | Released 2023-10-11 |
-| 6.5.2         | 1.82.4  | 0.43.0 | Released 2023-10-07 |
-| 6.5.1         | 1.82.3  | 0.43.0 | Released 2023-10-04 |
-| 6.5.0         | 1.82.2  | 0.43.0 | Released 2023-09-29 |
-| 6.4.6         | 1.81.7  | 0.41.0 | Released 2023-09-05 |
-| 6.4.5         | 1.81.5  | 0.41.0 | Released 2023-08-30 |
-| 6.4.4         | 1.81.5  | 0.41.0 | Released 2023-08-24 |
-| 6.4.3         | 1.81.3  | 0.41.0 | Released 2023-08-22 |
-| 6.4.2         | 1.81.2  | 0.41.0 | Released 2023-08-19 |
-| 6.4.1         | 1.81.1  | 0.41.0 | Released 2023-08-18 |
-| 6.4.0         | 1.81.0  | 0.41.0 | Released 2023-08-10 |
-| 6.3.0         | 1.80.2  | 0.40.0 | Released 2023-08-04 |
-| 6.2.0         | 1.79.3  | 0.39.0 | Released 2023-06-16 |
-| 6.1.0         | 1.79.1  | 0.38.0 | Released 2023-06-12 |
-| 6.0.3         | 1.78.8  | 0.37.1 | Released 2023-05-31 |
-| 6.0.2         | 1.78.6  | 0.37.1 | Released 2023-05-24 |
-| 6.0.1         | 1.78.6  | 0.37.1 | Released 2023-05-12 |
-| 6.0.0         | 1.78.5  | 0.37.1 | Released 2023-05-04 |
-| 5.0.1         | 1.76.6  | 0.36.1 | Released 2023-04-05 |
-| 5.0.0         | 1.76.6  | 0.36.1 | Released 2023-04-04 |
-| 4.0.3         | 1.69.13 | 0.34.1 |  |
-| 4.0.1         | 1.69.12 | 0.34.1 |  |
-| 4.0.0         | 1.69.10 | 0.34.0 |  |
-| 3.0.1         | 1.69.9  | 0.34.0 |  |
-| 3.0.0         | 1.69.0  | 0.34.0 |  |
-| 2.1.0         | 1.67.20 | 0.33.0 | monaco-editor and vscode compatible again |
-| 2.0.0 - 2.0.2 | 1.68.4  | 0.33.0 | monaco-editor and vscode incompatible |
+| monaco-languageclient | monaco-vscode-api | monaco-editor-treemended | monaco-editor | release date | comment |
+| :----         | :----   | :---   | :--- | :--- | :--- |
+| 7.0.0         | 1.83.5  | 1.83.5 | 0.44.0 | 2023-11-02 | Introduction of `@codingame/monaco-editor-treemended` |
+| 6.6.1         | 1.83.3  | | 0.44.0 | 2023-10-20 | |
+| 6.6.0         | 1.83.2  | | 0.44.0 | 2023-10-16 | |
+| 6.5.3         | 1.82.5  | | 0.43.0 | 2023-10-11 | |
+| 6.5.2         | 1.82.4  | | 0.43.0 | 2023-10-07 | |
+| 6.5.1         | 1.82.3  | | 0.43.0 | 2023-10-04 | |
+| 6.5.0         | 1.82.2  | | 0.43.0 | 2023-09-29 | |
+| 6.4.6         | 1.81.7  | | 0.41.0 | 2023-09-05 | |
+| 6.4.5         | 1.81.5  | | 0.41.0 | 2023-08-30 | |
+| 6.4.4         | 1.81.5  | | 0.41.0 | 2023-08-24 | |
+| 6.4.3         | 1.81.3  | | 0.41.0 | 2023-08-22 | |
+| 6.4.2         | 1.81.2  | | 0.41.0 | 2023-08-19 | |
+| 6.4.1         | 1.81.1  | | 0.41.0 | 2023-08-18 | |
+| 6.4.0         | 1.81.0  | | 0.41.0 | 2023-08-10 | |
+| 6.3.0         | 1.80.2  | | 0.40.0 | 2023-08-04 | |
+| 6.2.0         | 1.79.3  | | 0.39.0 | 2023-06-16 | |
+| 6.1.0         | 1.79.1  | | 0.38.0 | 2023-06-12 | |
+| 6.0.3         | 1.78.8  | | 0.37.1 | 2023-05-31 | |
+| 6.0.2         | 1.78.6  | | 0.37.1 | 2023-05-24 | |
+| 6.0.1         | 1.78.6  | | 0.37.1 | 2023-05-12 | |
+| 6.0.0         | 1.78.5  | | 0.37.1 | 2023-05-04 | |
+| 5.0.1         | 1.76.6  | | 0.36.1 | 2023-04-05 | |
+| 5.0.0         | 1.76.6  | | 0.36.1 | 2023-04-04 | |
+| 4.0.3         | 1.69.13 | | 0.34.1 | | |
+| 4.0.1         | 1.69.12 | | 0.34.1 | | |
+| 4.0.0         | 1.69.10 | | 0.34.0 | | |
+| 3.0.1         | 1.69.9  | | 0.34.0 | | |
+| 3.0.0         | 1.69.0  | | 0.34.0 | | |
+| 2.1.0         | 1.67.20 | | 0.33.0 | | monaco-editor and vscode compatible again |
+| 2.0.0 - 2.0.2 | 1.68.4  | | 0.33.0 | | monaco-editor and vscode incompatible |
 
 ## Important Project Changes
 
@@ -361,7 +364,7 @@ We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** a
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
-As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification example](#verification) for the web client example using webpack.
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](#verification-examples) for the web client example using webpack.
 
 The default and protected branch is now `main`.
 

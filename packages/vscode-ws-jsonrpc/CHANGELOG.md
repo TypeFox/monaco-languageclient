@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [3.1.0] - 2023-11-0x
+## [3.1.0] - 2023-11-02
 
 - Updated to `vscode-jsonrpc@8.2.0`
 

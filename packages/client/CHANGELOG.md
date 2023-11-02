@@ -2,10 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [7.0.0] - 2023-11-0x
+## [7.0.0] - 2023-11-02
 
 - **BREAKING:** Changed the treemending approach:
   - The postinstall step is removed. `monaco-languageclient` no longer patches an existing `monaco-editor` instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib to enforce the correct `monaco-editor` with overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
+  - Please see the [following explanation](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#new-with-v7-treemended-monaco-editor)
 - Updated to `monaco-vscode-api` `1.83.5`.
 
 ## [6.6.1] - 2023-10-20

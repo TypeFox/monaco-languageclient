@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [7.0.0] - 2023-11-0x
+## [7.0.0] - 2023-11-02
 
-- Updated to `monaco-languageclient@7.0.0`
+- Updated to `monaco-languageclient@7.0.0` and `vscode-ws-jsonrpc@3.1.0`
+- **BREAKING:** Changed the treemending approach Package `@codingame/monaco-editor-treemended` is used instead of `monaco-editor`. Please see the [following explanation](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#new-with-v7-treemended-monaco-editor)
 
 ## [6.6.1] - 2023-10-20
 

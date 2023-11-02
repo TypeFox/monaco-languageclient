@@ -12,7 +12,7 @@ See [here](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md)
 
 ## History
 
-For the history please see the [README](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#latest-important-project-changes) and [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/CHANGELOG.md).
+For the history please see the [README](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#latest-important-project-changes) and [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/CHANGELOG.md).
 
 ## License
 
