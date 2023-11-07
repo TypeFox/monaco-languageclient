@@ -62,6 +62,7 @@ export class JsonServer {
                 }
             };
         });
+
         this.connection.onCodeAction(params =>
             this.codeAction(params)
         );
@@ -94,8 +95,25 @@ export class JsonServer {
         );
     }
 
-    start() {
+    async start() {
         this.connection.listen();
+
+        // Create a file after language server is started
+        setTimeout(async () => {
+            await this.connection.workspace.applyEdit({
+                edit: {
+                    documentChanges: [
+                        {
+                            kind: 'create',
+                            uri: '/workspace/tester.json',
+                            options: {
+                                overwrite: true
+                            }
+                        }
+                    ]
+                }
+            });
+        }, 2000);
     }
 
     protected getFoldingRanges(params: FoldingRangeParams): FoldingRange[] {

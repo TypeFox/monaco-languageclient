@@ -12,12 +12,13 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
-import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
+import { ApplyWorkspaceEditParams, CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import { CreateFile } from 'vscode-languageserver-types';
 import { Uri } from 'vscode';
 
 export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
-    return new MonacoLanguageClient({
+    const client = new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {
             // use a language id as a document selector
@@ -35,6 +36,24 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
             }
         }
     });
+
+    // intercept workspace create requests and create a new model for the editor
+    client.onRequest('workspace/applyEdit', async (params: ApplyWorkspaceEditParams) => {
+        const workspaceEdit = params.edit;
+        if (workspaceEdit.documentChanges) {
+            for (const dc of workspaceEdit.documentChanges) {
+                const cf = dc as CreateFile;
+                if (cf.kind === 'create') {
+                    console.log(cf);
+                    const uri = Uri.parse(cf.uri);
+                    const modelRef = await createModelReference(uri, '');
+                    modelRef.object.setLanguageId('json');
+                }
+            }
+        }
+    });
+
+    return client;
 };
 
 export const createUrl = (hostname: string, port: number, path: string, searchParams: Record<string, any> = {}, secure: boolean = location.protocol === 'https:'): string => {
