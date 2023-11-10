@@ -24,8 +24,7 @@ buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', 
 const languageId = 'statemachine';
 
 export const setupStatemachineClient = async () => {
-    // use this to demonstrate all possible services made available by the monaco-vscode-api
-    await initServices({
+    const serviceConfig = {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
@@ -35,7 +34,13 @@ export const setupStatemachineClient = async () => {
         },
         debugLogging: true,
         logLevel: LogLevel.Info
-    });
+    };
+    await initServices(serviceConfig);
+
+    // does not do harm
+    for (let i = 0; i < 3; i++) {
+        await initServices(serviceConfig);
+    }
 
     console.log('Setting up Statemachine client configuration ...');
     const extension = {
@@ -72,7 +77,7 @@ export const setupStatemachineClient = async () => {
             }]
         }
     };
-    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess, {});
+    const { registerFileUrl } = registerExtension(extension, ExtensionHostKind.LocalProcess);
 
     registerFileUrl('/statemachine-configuration.json', new URL('../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href).href);
     registerFileUrl('/statemachine-grammar.json', new URL('../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href).href);

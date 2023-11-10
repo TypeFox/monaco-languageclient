@@ -10,7 +10,7 @@ import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 
-interface MonacoEnvironmentEnhanced extends Environment {
+export interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
 }
 
@@ -25,19 +25,32 @@ export const wasVscodeApiInitialized = () => {
 };
 
 export const initServices = async (config?: InitializeServiceConfig) => {
-    await importAllServices(config);
-    if (config?.debugLogging === true) {
-        console.log('initialize completed successfully');
+    await initVscodeServices(config);
+    await initVscodeExtensions(config);
+};
+
+export const initVscodeServices = async (config?: InitializeServiceConfig) => {
+    if (!wasVscodeApiInitialized()) {
+        await importAllServices(config);
+        if (config?.debugLogging === true) {
+            console.log('Initialization of vscode services completed successfully.');
+        }
+        if (!window.MonacoEnvironment) {
+            window.MonacoEnvironment = {};
+        }
+        (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
+    } else {
+        if (config?.debugLogging === true) {
+            console.log('Initialization of vscode services can only performed once!');
+        }
     }
+};
+
+export const initVscodeExtensions = async (config?: InitializeServiceConfig) => {
     await initializeVscodeExtensions();
     if (config?.debugLogging === true) {
-        console.log('initializeVscodeExtensions completed successfully');
+        console.log('Initialization of vscode extensions completed successfully.');
     }
-
-    if (!window.MonacoEnvironment) {
-        window.MonacoEnvironment = {};
-    }
-    (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
 };
 
 export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide) => {

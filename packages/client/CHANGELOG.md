@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.0.1] - 2023-11-10
+
+- Split `initServices` into two functions `initVscodeServices` and `initVscodeExtensions`. extension init is no longer blocked by service init in case and service init will only performed once.
+
 ## [7.0.0] - 2023-11-02
 
 - **BREAKING:** Changed the treemending approach:
