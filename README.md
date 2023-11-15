@@ -90,12 +90,12 @@ With v7 we decided to use readily treemended version of monaco-editor called [@c
 
 ```yaml
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
   }
 ```
 
@@ -289,7 +289,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.5 <1.84.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table
@@ -300,6 +300,8 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor-treemended | monaco-editor | release date | comment |
 | :----         | :----   | :---   | :--- | :--- | :--- |
+| 7.0.2         | 1.83.7  | 1.83.7 | 0.44.0 | 2023-11-02 | |
+| 7.0.1         | 1.83.5  | 1.83.5 | 0.44.0 | 2023-11-10 | |
 | 7.0.0         | 1.83.5  | 1.83.5 | 0.44.0 | 2023-11-02 | Introduction of `@codingame/monaco-editor-treemended` |
 | 6.6.1         | 1.83.3  | | 0.44.0 | 2023-10-20 | |
 | 6.6.0         | 1.83.2  | | 0.44.0 | 2023-10-16 | |

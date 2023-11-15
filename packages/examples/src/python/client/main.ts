@@ -139,14 +139,6 @@ export const startPythonClient = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/workspace/hello.py'), 'print("Hello, World!")'));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    // create the web socket and configure to start the language client on open, can add extra parameters to the url if needed.
-    createWebSocket(createUrl('localhost', 30001, '/pyright', {
-        // Used to parse an auth token or additional parameters such as import IDs to the language server
-        authorization: 'UserAuth'
-        // By commenting above line out and commenting below line in, connection to language server will be denied.
-        // authorization: 'FailedUserAuth'
-    }, false));
-
     const registerCommand = async (cmdName: string, handler: (...args: unknown[]) => void) => {
         // commands sould not be there, but it demonstrates how to retrieve list of all external commands
         const commands = await vscode.commands.getCommands(true);
@@ -171,4 +163,12 @@ export const startPythonClient = async () => {
         model: modelRef.object.textEditorModel,
         automaticLayout: true
     });
+
+    // create the web socket and configure to start the language client on open, can add extra parameters to the url if needed.
+    createWebSocket(createUrl('localhost', 30001, '/pyright', {
+        // Used to parse an auth token or additional parameters such as import IDs to the language server
+        authorization: 'UserAuth'
+        // By commenting above line out and commenting below line in, connection to language server will be denied.
+        // authorization: 'FailedUserAuth'
+    }, false));
 };

@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0",
-    "monaco-languageclient": "~7.0.1"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
+    "monaco-languageclient": "~7.0.2"
   },
   "devDependencies": {
     "shx": "~0.3.4"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.5 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0"
   },
   "scripts": {
     "clean": "shx rm -fr ./node_modules yarn.lock",

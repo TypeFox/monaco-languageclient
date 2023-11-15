@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.0.2] - 2023-11-15
+
+- Updated to `monaco-vscode-api` `1.83.7`.
+
 ## [7.0.1] - 2023-11-10
 
 - Split `initServices` into two functions `initVscodeServices` and `initVscodeExtensions`. extension init is no longer blocked by service init in case and service init will only performed once.
