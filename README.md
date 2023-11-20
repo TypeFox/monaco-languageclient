@@ -111,7 +111,7 @@ This means some extra-configuration work, but removes the need for any postinsta
 
 ### Using services and extra packages from @codingame/monaco-vscode-api
 
-The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `monaco-languageclient` via the required `initServices` the folliwing services are always loaded:
+The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `monaco-languageclient` via the required `initServices` the following services are always loaded:
 
 - *languages* and model *services* (always added by `monaco-languagclient`)
 - *layout*, *environment*, *extension*, *files* and *quickAccess* (always added by `monaco-vscode-api`)
