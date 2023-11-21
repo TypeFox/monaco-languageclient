@@ -28,6 +28,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [VSCode integration](#vscode-integration)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
+    - [Dependency issues: monaco-editor / @codingame/monaco-editor-treemended](#dependency-issues-monaco-editor--codingamemonaco-editor-treemended)
     - [Volta](#volta)
     - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
     - [Bad Polyfills](#bad-polyfills)
@@ -99,7 +100,7 @@ With v7 we decided to use readily treemended version of monaco-editor called [@c
   }
 ```
 
-In the following table you can see the effect ([Angular clinet example](https://github.com/TypeFox/monaco-languageclient-ng-example.git) was used to demonstrate it):
+In the following table you can see the effect when using `npm list monaco-editor` (here the [angular client example](https://github.com/TypeFox/monaco-languageclient-ng-example.git) was used to demonstrate it):
 
 | No overrides | With overrides |
 | :----         | :----   |
@@ -209,6 +210,11 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 Again, if you use **monaco-languageclient** make sure you define matching [Overrides instructions](#overrides-instructions) in your local project to override any mismatching **monaco-editor** or **vscode** versions with you dependency tree.
 
 Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported before you do any **monaco-editor** or vscode-api intialization or start using it. Please check the [our python language client example](./packages/examples/src/python/client/main.ts) to see how it should be done.
+
+### Dependency issues: monaco-editor / @codingame/monaco-editor-treemended
+
+It is recommended to study this chapter first: [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor).
+If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely your `package-lock.json` or `node_modules` are dirty. Remove both and do a fresh `npm install`. Always `npm list monaco-editor` is very useful. If you see different or errornous versions, then this is an indicator something is wrong.
 
 ### Volta
 

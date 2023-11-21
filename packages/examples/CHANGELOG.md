@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.0.2] - 2023-11-15
+
+- Updated to `monaco-languageclient@7.0.2`.
+
 ## [7.0.1] - 2023-11-10
 
 - Updated to `monaco-languageclient@7.0.1`. Statemachine example uses init multiple times.
