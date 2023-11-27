@@ -4,8 +4,8 @@ All notable changes to this npm module are documented in this file.
 
 ## [7.1.0] - 2023-11-27
 
-- Updated to `monaco-languageclient@7.1.0`.
-  - Updated usage of configuration service to be in line with `monaco-vscode-api@1.83.12`.
+- Updated to `monaco-languageclient@7.1.0` and aligned the usage of the configuration service to `monaco-vscode-api@1.83.12`.
+  - BREAKING: If you want to use `getConfigurationServiceOverride` you need to provide a `workspaceConfig` along the `userServices` in `initServices`.
 
 ## [7.0.2] - 2023-11-15
 
