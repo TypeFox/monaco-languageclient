@@ -26,11 +26,13 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Server processes](#server-processes)
       - [Verification Example Servers](#verification-example-servers)
     - [VSCode integration](#vscode-integration)
+  - [Featured projects](#featured-projects)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
     - [Dependency issues: monaco-editor / @codingame/monaco-editor-treemended](#dependency-issues-monaco-editor--codingamemonaco-editor-treemended)
     - [Volta](#volta)
     - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
+    - [Serve all files required](#serve-all-files-required)
     - [Bad Polyfills](#bad-polyfills)
       - [buffer](#buffer)
     - [monaco-editor-core](#monaco-editor-core)
@@ -91,12 +93,12 @@ With v7 we decided to use readily treemended version of monaco-editor called [@c
 
 ```yaml
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.12 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.12 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0"
   }
 ```
 
@@ -203,6 +205,11 @@ npm run start:verify:vite
 
 You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the server in different modes and the client.
 
+## Featured projects
+
+- JSONA Editor: [Showcase](https://jsona.github.io/editor/schema) ([GitHub](https://github.com/jsona/editor))
+- monaco-editor-wrapper: [Showcase](https://langium.org/showcase/minilogo/) ([GitHub](https://github.com/TypeFox/monaco-components))
+
 ## Troubleshooting
 
 ### General
@@ -215,6 +222,8 @@ Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported 
 
 It is recommended to study this chapter first: [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor).
 If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely your `package-lock.json` or `node_modules` are dirty. Remove both and do a fresh `npm install`. Always `npm list monaco-editor` is very useful. If you see different or errornous versions, then this is an indicator something is wrong.
+
+Current observation is: When using npm overrides upgrading them seems to be problematic. Best practices seems to be to remove `package-lock.json` or `node_modules` and do a full re-installation with `npm i` afterwards.
 
 ### Volta
 
@@ -231,6 +240,10 @@ resolve: {
   dedupe: ['monaco-editor', 'vscode']
 }
 ```
+
+### Serve all files required
+
+ `@codingame/monaco-vscode-api` requires json and other files to be served. In your project's web-server configuration you have to ensure you don't prevent this.
 
 ### Bad Polyfills
 
@@ -295,7 +308,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table
@@ -306,6 +319,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | monaco-vscode-api | monaco-editor-treemended | monaco-editor | release date | comment |
 | :----         | :----   | :---   | :--- | :--- | :--- |
+| 7.1.0         | 1.83.12  | 1.83.12 | 0.44.0 | 2023-11-27 | |
 | 7.0.2         | 1.83.7  | 1.83.7 | 0.44.0 | 2023-11-02 | |
 | 7.0.1         | 1.83.5  | 1.83.5 | 0.44.0 | 2023-11-10 | |
 | 7.0.0         | 1.83.5  | 1.83.5 | 0.44.0 | 2023-11-02 | Introduction of `@codingame/monaco-editor-treemended` |

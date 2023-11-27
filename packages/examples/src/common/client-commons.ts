@@ -89,10 +89,21 @@ export const performInit = async (vscodeApiInit: boolean) => {
             userServices: {
                 ...getThemeServiceOverride(),
                 ...getTextmateServiceOverride(),
-                ...getConfigurationServiceOverride(Uri.file('/workspace')),
+                ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()
             },
-            debugLogging: true
+            debugLogging: true,
+            workspaceConfig: {
+                workspaceProvider: {
+                    trusted: true,
+                    workspace: {
+                        workspaceUri: Uri.file('/workspace')
+                    },
+                    async open() {
+                        return false;
+                    }
+                }
+            }
         });
 
         // register the JSON language with Monaco
