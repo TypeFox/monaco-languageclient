@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { editor, Environment } from 'monaco-editor';
-import { ILogService, initialize, LogLevel, StandaloneServices } from 'vscode/services';
+import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
@@ -17,7 +17,7 @@ export interface MonacoEnvironmentEnhanced extends Environment {
 export type InitializeServiceConfig = {
     userServices?: editor.IEditorOverrideServices;
     debugLogging?: boolean;
-    logLevel?: LogLevel
+    workspaceConfig?: IWorkbenchConstructionOptions;
 };
 
 export const wasVscodeApiInitialized = () => {
@@ -85,7 +85,6 @@ export const mergeServices = (services: editor.IEditorOverrideServices, override
  *   - model
  */
 export const importAllServices = async (config?: InitializeServiceConfig) => {
-    const serviceNames: string[] = [];
     const lc: InitializeServiceConfig = config ?? {};
     const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
 
@@ -96,23 +95,24 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     mergeServices(mlcDefautServices, userServices);
     reportServiceLoading(userServices, lc.debugLogging === true);
 
-    const haveThemeService = serviceNames.includes('theme') || Object.keys(userServices).includes('themeService');
-    const haveTextmateService = serviceNames.includes('textmate') || Object.keys(userServices).includes('textMateTokenizationFeature');
-    const haveMarkersService = serviceNames.includes('markers');
-    const haveViewsService = serviceNames.includes('views') || Object.keys(userServices).includes('viewsService');
+    const haveThemeService = Object.keys(userServices).includes('themeService');
+    const haveTextmateService = Object.keys(userServices).includes('textMateTokenizationFeature');
+    const haveMarkersService = Object.keys(userServices).includes('markersService');
+    const haveViewsService = Object.keys(userServices).includes('viewsService');
 
     // theme requires textmate
     if (haveThemeService && !haveTextmateService) {
-        throw new Error('"theme" requires "textmate" service. Please add it to the "userServices".');
+        throw new Error('"theme" service requires "textmate" service. Please add it to the "userServices".');
     }
 
     // markers service requires views service
     if (haveMarkersService && !haveViewsService) {
-        throw new Error('"markers" requires "views" service. Please add it to the "userServices".');
+        throw new Error('"markers" service requires "views" service. Please add it to the "userServices".');
     }
 
     await initialize(userServices);
-    if (lc.logLevel) {
-        StandaloneServices.get(ILogService).setLevel(lc.logLevel);
+    const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel;
+    if (logLevel) {
+        StandaloneServices.get(ILogService).setLevel(logLevel);
     }
 };

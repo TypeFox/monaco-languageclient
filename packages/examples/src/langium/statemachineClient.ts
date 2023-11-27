@@ -14,7 +14,6 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import { LogLevel } from 'vscode/services';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import { Uri } from 'vscode';
 
@@ -28,12 +27,22 @@ export const setupStatemachineClient = async () => {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
-            ...getConfigurationServiceOverride(Uri.file('/workspace')),
+            ...getConfigurationServiceOverride(),
             ...getEditorServiceOverride(useOpenEditorStub),
             ...getKeybindingsServiceOverride()
         },
         debugLogging: true,
-        logLevel: LogLevel.Info
+        workspaceConfig: {
+            workspaceProvider: {
+                trusted: true,
+                workspace: {
+                    workspaceUri: Uri.file('/workspace')
+                },
+                async open() {
+                    return false;
+                }
+            }
+        }
     };
     await initServices(serviceConfig);
 

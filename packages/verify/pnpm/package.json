@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": "true",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.7 <1.84.0",
-    "monaco-languageclient": "~7.0.2",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.7 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.12 <1.84.0",
+    "monaco-languageclient": "~7.1.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0"
   },
   "devDependencies": {
     "shx": "~0.3.4"

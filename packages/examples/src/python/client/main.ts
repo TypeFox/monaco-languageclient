@@ -79,11 +79,24 @@ export const startPythonClient = async () => {
         userServices: {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
-            ...getConfigurationServiceOverride(Uri.file('/workspace')),
+            ...getConfigurationServiceOverride(),
             ...getKeybindingsServiceOverride()
         },
         debugLogging: true,
-        logLevel: LogLevel.Debug
+        workspaceConfig: {
+            workspaceProvider: {
+                trusted: true,
+                workspace: {
+                    workspaceUri: Uri.file('/workspace')
+                },
+                async open() {
+                    return false;
+                }
+            },
+            developmentOptions: {
+                logLevel: LogLevel.Debug
+            }
+        }
     });
 
     console.log('Before ready themes');

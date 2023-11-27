@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.1.0] - 2023-11-27
+
+- Updated to `monaco-languageclient@7.1.0`.
+  - Updated usage of configuration service to be in line with `monaco-vscode-api@1.83.12`.
+
 ## [7.0.2] - 2023-11-15
 
 - Updated to `monaco-languageclient@7.0.2`.
