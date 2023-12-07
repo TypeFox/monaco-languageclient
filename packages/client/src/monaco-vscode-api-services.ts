@@ -5,7 +5,7 @@
 
 import { editor, Environment } from 'monaco-editor';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
-import { initialize as initializeVscodeExtensions } from 'vscode/extensions';
+import 'vscode/localExtensionHost';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
@@ -25,11 +25,6 @@ export const wasVscodeApiInitialized = () => {
 };
 
 export const initServices = async (config?: InitializeServiceConfig) => {
-    await initVscodeServices(config);
-    await initVscodeExtensions(config);
-};
-
-export const initVscodeServices = async (config?: InitializeServiceConfig) => {
     if (!wasVscodeApiInitialized()) {
         await importAllServices(config);
         if (config?.debugLogging === true) {
@@ -43,13 +38,6 @@ export const initVscodeServices = async (config?: InitializeServiceConfig) => {
         if (config?.debugLogging === true) {
             console.log('Initialization of vscode services can only performed once!');
         }
-    }
-};
-
-export const initVscodeExtensions = async (config?: InitializeServiceConfig) => {
-    await initializeVscodeExtensions();
-    if (config?.debugLogging === true) {
-        console.log('Initialization of vscode extensions completed successfully.');
     }
 };
 
