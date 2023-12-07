@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.12 <1.84.0",
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
     "monaco-editor-workers": "~0.44.0",
-    "monaco-languageclient": "~7.1.0",
-    "monaco-languageclient-examples": "~7.1.0",
+    "monaco-languageclient": "~7.2.0",
+    "monaco-languageclient-examples": "~7.2.0",
     "vscode-ws-jsonrpc": "~3.1.0"
   },
   "devDependencies": {
@@ -22,11 +22,11 @@
     "monaco-editor": "$monaco-editor"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.12 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0"
   },
   "volta": {
-    "node": "18.18.2",
-    "npm": "9.9.0"
+    "node": "20.10.0",
+    "npm": "10.2.3"
   },
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo",

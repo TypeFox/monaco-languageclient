@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.2.0] - 2023-12-07
+
+- Updated to `monaco-languageclient@7.2.0`.
+- Volta now uses Node 20 (current LTS).
+
 ## [7.1.0] - 2023-11-27
 
 - Updated to `monaco-languageclient@7.1.0` and aligned the usage of the configuration service to `monaco-vscode-api@1.83.12`.
