@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "7.2.0",
+  "version": "7.3.0-next.0",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -43,42 +43,42 @@
     }
   },
   "dependencies": {
-    "@codingame/monaco-vscode-configuration-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-editor-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-files-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-json-default-extension": "~1.83.16",
-    "@codingame/monaco-vscode-keybindings-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-python-default-extension": "~1.83.16",
-    "@codingame/monaco-vscode-textmate-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~1.83.16",
-    "@codingame/monaco-vscode-theme-service-override": "~1.83.16",
-    "@codingame/monaco-vscode-language-pack-de": "~1.83.16",
-    "@codingame/monaco-vscode-language-pack-es": "~1.83.16",
-    "@codingame/monaco-vscode-language-pack-fr": "~1.83.16",
+    "@codingame/monaco-vscode-configuration-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-editor-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-files-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-json-default-extension": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-keybindings-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-python-default-extension": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-textmate-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-theme-service-override": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-language-pack-de": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-language-pack-es": "~1.85.0-next.1",
+    "@codingame/monaco-vscode-language-pack-fr": "~1.85.0-next.1",
     "express": "~4.18.2",
     "langium": "~2.1.0",
     "langium-statemachine-dsl": "~2.1.0",
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0-next.1 <1.86.0",
     "monaco-editor-workers": "~0.44.0",
-    "monaco-languageclient": "~7.2.0",
+    "monaco-languageclient": "~7.3.0-next.0",
     "pyright": "~1.1.338",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "request-light": "~0.7.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.16 <1.84.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0-next.1 <1.86.0",
     "vscode-json-languageservice": "~5.3.7",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
     "vscode-ws-jsonrpc": "~3.1.0",
-    "ws": "~8.14.2"
+    "ws": "~8.15.0"
   },
   "devDependencies": {
-    "@types/ws": "~8.5.6",
     "@types/express": "~4.17.18",
     "@types/node": "~20.10.4",
     "@types/react": "~18.2.42",
     "@types/react-dom": "~18.2.17",
+    "@types/ws": "~8.5.10",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.5"
   },
@@ -87,8 +87,8 @@
     "vscode": "$vscode"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.83.16 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0-next.1 <1.86.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0-next.1 <1.86.0"
   },
   "volta": {
     "node": "20.10.0",
