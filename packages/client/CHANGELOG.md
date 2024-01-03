@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [7.3.0] - 2023-12-1x
+## [7.3.0] - 2024-01-03
 
 - Updated to `@codingame/monaco-vscode-api@1.85.0` and `@codingame/monaco-editor-treemende@1.85.0` / `monaco-editor@0.45.0`
 

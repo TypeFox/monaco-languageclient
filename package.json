@@ -17,12 +17,12 @@
     "vite": "~5.0.10"
   },
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0-next.2 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0-next.2 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0 <1.86.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0-next.2 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0-next.2 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0 <1.86.0"
   },
   "volta": {
     "node": "20.10.0",
