@@ -40,13 +40,6 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [pnpm](#pnpm)
   - [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)
   - [Important Project Changes](#important-project-changes)
-    - [October 2023 (v7.0.0)](#october-2023-v700)
-    - [September 2023 (v6.5.0)](#september-2023-v650)
-    - [May 2023 (v6.0.0)](#may-2023-v600)
-    - [April 2023 (v5.0.0)](#april-2023-v500)
-    - [September 2022 (v4.0.0)](#september-2022-v400)
-    - [June 2022 (v2.0.0)](#june-2022-v200)
-    - [May 2022 (v1.0.0)](#may-2022-v100)
   - [Changelogs](#changelogs)
   - [Licenses](#licenses)
 

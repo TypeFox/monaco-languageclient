@@ -1,3 +1,5 @@
+# Version information and project History
+
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table
 
 The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
@@ -73,6 +75,6 @@ We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** a
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
 
-As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](#verification-examples) for the web client example using webpack.
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](../README.md#verification-examples) for the web client example using webpack.
 
 The default and protected branch is now `main`.
