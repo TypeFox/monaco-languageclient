@@ -2,20 +2,24 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.3.0] - 2024-01-03
+
+- Updated to `@codingame/monaco-vscode-api@1.85.0` and `@codingame/monaco-editor-treemende@1.85.0` / `monaco-editor@0.45.0`
+
 ## [7.2.0] - 2023-12-07
 
-- Updated to `monaco-vscode-api@1.83.16`:
+- Updated to `@codingame/monaco-vscode-api@1.83.16`:
   - Local extension hosts is automatically started. `initVscodeExtensions` is removed again.
 - Volta now uses Node 20 (current LTS).
 
 ## [7.1.0] - 2023-11-27
 
-- Updated to `monaco-vscode-api@1.83.12`:
+- Updated to `@codingame/monaco-vscode-api@1.83.12`:
   - BREAKING: If you want to use `getConfigurationServiceOverride` you need to provide a `workspaceConfig` along the `userServices` in `initServices`.
 
 ## [7.0.2] - 2023-11-15
 
-- Updated to `monaco-vscode-api@1.83.7`.
+- Updated to `@codingame/monaco-vscode-api@1.83.7`.
 
 ## [7.0.1] - 2023-11-10
 

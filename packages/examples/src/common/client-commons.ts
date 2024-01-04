@@ -133,7 +133,7 @@ export const createJsonEditor = async (config: {
             enabled: true
         },
         automaticLayout: true,
-        wordBasedSuggestions: false
+        wordBasedSuggestions: 'off'
     });
 
     const result = {

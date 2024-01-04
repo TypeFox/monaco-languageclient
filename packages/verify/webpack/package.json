@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
-    "monaco-editor-workers": "~0.44.0",
-    "monaco-languageclient": "~7.2.0",
-    "monaco-languageclient-examples": "~7.2.0",
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0",
+    "monaco-editor-workers": "~0.45.0",
+    "monaco-languageclient": "~7.3.0",
+    "monaco-languageclient-examples": "~7.3.0",
     "vscode-ws-jsonrpc": "~3.1.0"
   },
   "devDependencies": {
     "css-loader": "~6.8.1",
-    "source-map-loader": "~4.0.1",
+    "source-map-loader": "~4.0.2",
     "style-loader": "~3.3.3",
     "ts-loader": "~9.5.0",
     "webpack-cli": "~5.1.4",
@@ -22,7 +22,7 @@
     "monaco-editor": "$monaco-editor"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0"
   },
   "volta": {
     "node": "20.10.0",
