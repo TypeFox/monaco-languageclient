@@ -4,11 +4,18 @@
  * ------------------------------------------------------------------------------------------ */
 import * as cp from 'child_process';
 import { ServerOptions } from 'ws';
+
+export enum LanguageCli {
+    /** https://nodejs.org/api/cli.html  */
+    node = 'node',
+    /** https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html */
+    java = 'java'
+}
 export interface LanguageServerRunConfig {
     serverName: string;
     pathName: string;
     serverPort: number;
-    runCommand: string; // 'node', 'java' , etc.
+    runCommand: LanguageCli;
     runCommandArgs: string[];
     wsServerOptions: ServerOptions,
     spawnOptions?: cp.SpawnOptions;

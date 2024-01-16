@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 import { runLanguageServer } from '../../common/language-server-runner.js';
 import { resolve } from 'path';
+import { LanguageCli } from '../../common/model.js';
 
 export const runJsonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);
@@ -11,7 +12,7 @@ export const runJsonServer = (baseDir: string, relativeDir: string) => {
         serverName: 'JSON',
         pathName: '/sampleServer',
         serverPort: 30000,
-        runCommand: 'node',
+        runCommand: LanguageCli.node,
         runCommandArgs: [
             processRunPath,
             '--stdio'

@@ -6,6 +6,7 @@
 import { resolve } from 'path';
 import { runLanguageServer } from '../../common/language-server-runner.js';
 import { IncomingMessage } from 'http';
+import { LanguageCli } from '../../common/model.js';
 
 export const runPythonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);
@@ -13,7 +14,7 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
         serverName: 'PYRIGHT',
         pathName: '/pyright',
         serverPort: 30001,
-        runCommand: 'node',
+        runCommand: LanguageCli.node,
         runCommandArgs: [
             processRunPath,
             '--stdio'
