@@ -3,22 +3,12 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as cp from 'child_process';
-import { ServerOptions, WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
 import { Server } from 'http';
 import express from 'express';
 import { getLocalDirectory } from '../utils/fs-utils.js';
 import { upgradeWsServer } from './server-commons.js';
-
-export interface LanguageServerRunConfig {
-    serverName: string;
-    pathName: string;
-    serverPort: number;
-    runCommand: string; // 'node', 'java' , etc.
-    runCommandArgs: string[];
-    wsServerOptions: ServerOptions,
-    spawnOptions?: cp.SpawnOptions;
-}
+import { LanguageServerRunConfig } from './model.js';
 
 export const runLanguageServer = (
     languageServerRunConfig: LanguageServerRunConfig
