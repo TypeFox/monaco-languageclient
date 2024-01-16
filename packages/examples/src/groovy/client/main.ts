@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import '@codingame/monaco-vscode-groovy-default-extension'; // this is for the syntax highlighting
-import { runLanguageClient } from '../../common/client-commons.js';
+import { runLanguageClient } from '../../common/language-client-runner.js';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { groovyConfig } from '../config.js';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);

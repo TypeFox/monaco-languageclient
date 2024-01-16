@@ -15,7 +15,6 @@ import { initServices, MonacoLanguageClient } from 'monaco-languageclient';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { Uri } from 'vscode';
-import { LanguageClientRunConfig } from './model.js';
 
 export const createLanguageClient = (transports: MessageTransports, languageId: string): MonacoLanguageClient => {
     return new MonacoLanguageClient({
@@ -167,21 +166,4 @@ export const createMonacoEditor = async (config: {
         modelRef
     } as ExampleJsonEditor;
     return Promise.resolve(result);
-};
-
-export const runLanguageClient = async (config : LanguageClientRunConfig) => {
-    const languageId = config.registerConfig.id;
-    await doInit(config.vscodeApiInit, config.registerConfig);
-    const editorDom = document.getElementById(config.htmlElementId);
-    if (editorDom) {
-        await createMonacoEditor({
-            htmlElement: editorDom,
-            content: config.defaultContent,
-            languageId
-        });
-    } else {
-        console.error(`no dom element for css id: ${config.htmlElementId}`);
-    }
-    const url = createUrl(config.clientUrl, config.serverPort, config.serverPath);
-    initWebSocketAndStartClient(url, languageId);
 };

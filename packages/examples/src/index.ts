@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 /* client side export only */
 export * from './common/client-commons.js';
+export * from './common/language-client-runner.js';
 export * from './browser/main.js';
 export * from './json/client/main.js';
 export * from './langium/statemachineClient.js';
