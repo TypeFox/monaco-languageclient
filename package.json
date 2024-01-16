@@ -46,6 +46,7 @@
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
     "start:example:server:json": "npm run start:server:json --workspace packages/examples",
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
+    "start:example:server:groovy": "npm run start:server:groovy --workspace packages/examples",
     "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
     "start:verify:vite": "npm run start --workspace packages/verify/vite",
     "release:prepare": "npm run reset:repo && npm ci && npm run lint && npm run build",

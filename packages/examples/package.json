@@ -49,6 +49,7 @@
     "@codingame/monaco-vscode-json-default-extension": "~1.85.0",
     "@codingame/monaco-vscode-keybindings-service-override": "~1.85.0",
     "@codingame/monaco-vscode-python-default-extension": "~1.85.0",
+    "@codingame/monaco-vscode-groovy-default-extension": "~1.85.0",
     "@codingame/monaco-vscode-textmate-service-override": "~1.85.0",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~1.85.0",
     "@codingame/monaco-vscode-theme-service-override": "~1.85.0",
@@ -111,6 +112,7 @@
     "build:worker:statemachine": "esbuild ../../node_modules/langium-statemachine-dsl/out/language-server/main-browser.js --bundle --tree-shaking=true --minify --format=iife --outfile=./dist/worker/statemachineServerWorker.js",
     "build": "npm run build:msg && npm run clean && npm run compile && npm run build:worker:statemachine",
     "start:server:json": "node --loader ts-node/esm src/json/server/direct.ts",
-    "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts"
+    "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts",
+    "start:server:groovy": "LANG_SERVER_JAR_PATH=groovy-language-server-all.jar node --watch --loader  ts-node/esm src/groovy/server/direct.ts"
   }
 }
