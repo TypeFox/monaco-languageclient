@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as cp from 'child_process';
+import { languages } from 'monaco-editor';
 import { ServerOptions } from 'ws';
 
 export enum LanguageCli {
@@ -19,4 +20,15 @@ export interface LanguageServerRunConfig {
     runCommandArgs: string[];
     wsServerOptions: ServerOptions,
     spawnOptions?: cp.SpawnOptions;
+}
+
+export interface LanguageClientRunConfig {
+    vscodeApiInit : boolean;
+    clientUrl: string;
+    serverPath: string;
+    serverPort: number;
+    registerConfig: languages.ILanguageExtensionPoint;
+    defaultContent: string;
+    /** CSS id selector */
+    htmlElementId: string;
 }
