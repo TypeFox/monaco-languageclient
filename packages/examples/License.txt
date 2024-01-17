@@ -1,4 +1,4 @@
-Copyright (c) 2018-2023 TypeFox GmbH (http://www.typefox.io)
+Copyright (c) 2018-2024 TypeFox GmbH (http://www.typefox.io)
 
 All rights reserved.
 

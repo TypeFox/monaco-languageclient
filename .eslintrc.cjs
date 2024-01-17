@@ -1,5 +1,4 @@
 const path = require('path');
-const headerDef = path.resolve(__dirname, './config/header.js');
 
 module.exports = {
     env: {
@@ -42,7 +41,12 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['warn', {
             argsIgnorePattern: '^_'
         }],
-        'header/header': [2, headerDef],
+        // Use MIT/Generated file header
+        "header/header": [
+            2,
+            "block",
+            { "pattern": "MIT License|DO NOT EDIT MANUALLY!" }
+        ],
         'dot-notation': 'off',
         '@typescript-eslint/dot-notation': ['error'],
         'space-before-function-paren': ['error', {
