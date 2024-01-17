@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { WebSocketServer } from 'ws';
@@ -10,7 +10,7 @@ import { getLocalDirectory } from '../../utils/fs-utils.js';
 import { upgradeWsServer } from '../../common/server-commons.js';
 
 export const runPythonServer = (baseDir: string, relativeDir: string) => {
-    process.on('uncaughtException', function(err: any) {
+    process.on('uncaughtException', (err: any) => {
         console.error('Uncaught Exception: ', err.toString());
         if (err.stack) {
             console.error(err.stack);
