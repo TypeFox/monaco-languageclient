@@ -11,3 +11,4 @@ export * from './langium/statemachineClient.js';
 export * from './python/client/main.js';
 export * from './react/app.js';
 export * from './react/main.js';
+export * from './model/client.js';

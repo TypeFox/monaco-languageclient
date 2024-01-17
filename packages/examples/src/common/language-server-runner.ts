@@ -8,7 +8,7 @@ import { Server } from 'http';
 import express from 'express';
 import { getLocalDirectory } from '../utils/fs-utils.js';
 import { upgradeWsServer } from './server-commons.js';
-import { LanguageServerRunConfig } from './model.js';
+import { LanguageServerRunConfig } from '../model/server.js';
 /** LSP server runner */
 export const runLanguageServer = (
     languageServerRunConfig: LanguageServerRunConfig

@@ -9,7 +9,7 @@ import { Socket } from 'net';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
-import { LanguageServerRunConfig } from './model.js';
+import { LanguageServerRunConfig } from '../model/server.js';
 
 /**
  * start the language server inside the current process

@@ -52,10 +52,6 @@ export const createUrl = (hostname: string, port: number, path: string, searchPa
 
     return url.toString();
 };
-/** backwards compatible wrapper for legacy version, only support json as languageId */
-export const createWebSocketAndStartClient = (url: string): WebSocket => {
-    return initWebSocketAndStartClient(url, 'json');
-};
 
 /** parameterized version , support all languageId */
 export const initWebSocketAndStartClient = (url: string, languageId: string): WebSocket => {
@@ -74,29 +70,12 @@ export const initWebSocketAndStartClient = (url: string, languageId: string): We
     return webSocket;
 };
 
-export const createDefaultJsonContent = (): string => {
-    return `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": "unix"
-}`;
-};
-
 export type ExampleJsonEditor = {
     languageId: string;
     editor: editor.IStandaloneCodeEditor;
     uri: Uri;
     modelRef: IReference<ITextFileEditorModel>;
 }
-
-/* backwards compatible wrapper for legacy version, for json lang only */
-export const performInit = async (vscodeApiInit: boolean) => {
-    doInit(vscodeApiInit, {
-        id: 'json',
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
-};
 
 /* parameterized version, support for any lang */
 export const doInit = async (vscodeApiInit: boolean, registerConfig: languages.ILanguageExtensionPoint) => {
@@ -125,17 +104,6 @@ export const doInit = async (vscodeApiInit: boolean, registerConfig: languages.I
         // register the JSON language with Monaco
         languages.register(registerConfig);
     }
-};
-
-export const createJsonEditor = async (config: {
-    htmlElement: HTMLElement,
-    content: string
-}) => {
-    return createMonacoEditor({
-        htmlElement: config.htmlElement,
-        content: config.content,
-        languageId: 'json'
-    });
 };
 
 /* parameterized version, support for any lang */

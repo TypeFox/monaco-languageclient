@@ -5,8 +5,8 @@
 /* server side export only */
 export * from './common/server-commons.js';
 export * from './common/language-server-runner.js';
-export * from './common/model.js';
 export * from './json/server/json-server.js';
 export * from './json/server/main.js';
 export * from './python/server/main.js';
 export * from './utils/fs-utils.js';
+export * from './model/server.js';
