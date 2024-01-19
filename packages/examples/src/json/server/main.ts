@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 import { runLanguageServer } from '../../common/language-server-runner.js';
 import { resolve } from 'path';
-import { LanguageName } from '../../model/shared.js';
+import { LanguageName } from '../../common/server-commons.js';
+
 
 export const runJsonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);

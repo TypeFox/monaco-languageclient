@@ -6,7 +6,7 @@
 import { resolve } from 'path';
 import { runLanguageServer } from '../../common/language-server-runner.js';
 import { IncomingMessage } from 'http';
-import { LanguageName } from '../../model/shared.js';
+import { LanguageName } from '../../common/server-commons.js';
 
 export const runPythonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);

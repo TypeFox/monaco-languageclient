@@ -16,6 +16,17 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { Uri } from 'vscode';
 
+export interface LanguageClientRunConfig {
+    vscodeApiInit : boolean;
+    clientUrl: string;
+    serverPath: string;
+    serverPort: number;
+    registerConfig: languages.ILanguageExtensionPoint;
+    defaultContent: string;
+    /** CSS id selector */
+    htmlElementId: string;
+}
+
 export const createLanguageClient = (transports: MessageTransports, languageId: string): MonacoLanguageClient => {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',

@@ -9,7 +9,25 @@ import { Socket } from 'net';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
-import { LanguageServerRunConfig } from '../model/server.js';
+import { ServerOptions } from 'ws';
+import * as cp from 'child_process';
+
+export enum LanguageName {
+    /** https://nodejs.org/api/cli.html  */
+    node = 'node',
+    /** https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html */
+    java = 'java'
+}
+
+export interface LanguageServerRunConfig {
+    serverName: string;
+    pathName: string;
+    serverPort: number;
+    runCommand: LanguageName | string;
+    runCommandArgs: string[];
+    wsServerOptions: ServerOptions,
+    spawnOptions?: cp.SpawnOptions;
+}
 
 /**
  * start the language server inside the current process

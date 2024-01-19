@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { LanguageClientRunConfig } from '../model/client.js';
-import { createMonacoEditor, createUrl, doInit, initWebSocketAndStartClient } from './client-commons.js';
+
+import { LanguageClientRunConfig, createMonacoEditor, createUrl, doInit, initWebSocketAndStartClient } from './client-commons.js';
 /** LSP client runner */
 export const runLanguageClient = async (config : LanguageClientRunConfig) => {
     const languageId = config.registerConfig.id;
