@@ -2,14 +2,13 @@
  * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, ServerOptions } from 'ws';
 import { IncomingMessage, Server } from 'http';
 import { URL } from 'url';
 import { Socket } from 'net';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
-import { ServerOptions } from 'ws';
 import * as cp from 'child_process';
 
 export enum LanguageName {
