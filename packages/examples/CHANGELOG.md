@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.4.0] - 2024-01-2x
+
+- Updated to `monaco-languageclient@7.4.0`
+- WIP: Move useful common code from examples to client
+
 ## [7.3.0] - 2023-01-04
 
 - Updated to `monaco-languageclient@7.3.0`.

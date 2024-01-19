@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [7.4.0] - 2024-01-2x
+
+- Updated to `@codingame/monaco-vscode-api@1.85.4`
+- WIP: Move useful common code from examples to client
+
 ## [7.3.0] - 2024-01-04
 
 - Updated to `@codingame/monaco-vscode-api@1.85.0` and `@codingame/monaco-editor-treemende@1.85.0` / `monaco-editor@0.45.0`
