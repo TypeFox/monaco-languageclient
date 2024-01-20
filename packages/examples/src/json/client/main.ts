@@ -33,7 +33,7 @@ export const createDefaultJsonContent = (): string => {
 
 /* backwards compatible wrapper for legacy version, for json lang only */
 export const performInit = async (vscodeApiInit: boolean) => {
-    doInit(vscodeApiInit, {
+    return doInit(vscodeApiInit, {
         id: 'json',
         extensions: ['.json', '.jsonc'],
         aliases: ['JSON', 'json'],
