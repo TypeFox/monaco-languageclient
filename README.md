@@ -82,7 +82,7 @@ Earlier in 2023 we started to treemend an existing `monaco-editor` dependency vi
 
 #### Overrides instructions
 
-With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnmpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
+With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
 
 ```yaml
   "overrides": {

@@ -16,12 +16,23 @@ import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclie
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { Uri } from 'vscode';
 
-export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
+export interface LanguageClientRunConfig {
+    vscodeApiInit : boolean;
+    clientUrl: string;
+    serverPath: string;
+    serverPort: number;
+    registerConfig: languages.ILanguageExtensionPoint;
+    defaultContent: string;
+    /** CSS id selector */
+    htmlElementId: string;
+}
+
+export const createLanguageClient = (transports: MessageTransports, languageId: string): MonacoLanguageClient => {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {
             // use a language id as a document selector
-            documentSelector: ['json'],
+            documentSelector: [languageId],
             // disable the default error handler
             errorHandler: {
                 error: () => ({ action: ErrorAction.Continue }),
@@ -53,7 +64,8 @@ export const createUrl = (hostname: string, port: number, path: string, searchPa
     return url.toString();
 };
 
-export const createWebSocketAndStartClient = (url: string): WebSocket => {
+/** parameterized version , support all languageId */
+export const initWebSocketAndStartClient = (url: string, languageId: string): WebSocket => {
     const webSocket = new WebSocket(url);
     webSocket.onopen = () => {
         const socket = toSocket(webSocket);
@@ -62,18 +74,11 @@ export const createWebSocketAndStartClient = (url: string): WebSocket => {
         const languageClient = createLanguageClient({
             reader,
             writer
-        });
+        }, languageId);
         languageClient.start();
         reader.onClose(() => languageClient.stop());
     };
     return webSocket;
-};
-
-export const createDefaultJsonContent = (): string => {
-    return `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": "unix"
-}`;
 };
 
 export type ExampleJsonEditor = {
@@ -83,7 +88,8 @@ export type ExampleJsonEditor = {
     modelRef: IReference<ITextFileEditorModel>;
 }
 
-export const performInit = async (vscodeApiInit: boolean) => {
+/* parameterized version, support for any lang */
+export const doInit = async (vscodeApiInit: boolean, registerConfig: languages.ILanguageExtensionPoint) => {
     if (vscodeApiInit === true) {
         await initServices({
             userServices: {
@@ -107,23 +113,20 @@ export const performInit = async (vscodeApiInit: boolean) => {
         });
 
         // register the JSON language with Monaco
-        languages.register({
-            id: 'json',
-            extensions: ['.json', '.jsonc'],
-            aliases: ['JSON', 'json'],
-            mimetypes: ['application/json']
-        });
+        languages.register(registerConfig);
     }
 };
 
-export const createJsonEditor = async (config: {
+/* parameterized version, support for any lang */
+export const createMonacoEditor = async (config: {
     htmlElement: HTMLElement,
-    content: string
+    content: string,
+    languageId : string
 }) => {
     // create the model
     const uri = Uri.parse('/workspace/model.json');
     const modelRef = await createModelReference(uri, config.content);
-    modelRef.object.setLanguageId('json');
+    modelRef.object.setLanguageId(config.languageId);
 
     // create monaco editor
     const editor = createConfiguredEditor(config.htmlElement, {

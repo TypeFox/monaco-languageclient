@@ -3,6 +3,9 @@
 - Contributions to catch up with latest versions of LSP and Monaco are always welcomed!
 - Contributions to propose a new example should be only accepted if an author is ready to become a maintainer and help with upgrading and testing it with latest versions of LSP and Monaco.
 
+## Pull Request 
+Please do not `git merge` main branch into a feature branch. Always `git rebase` a feature or bugfix branch to the latest main if you require changes from main.
+
 ## Maintaining
 
 The project is maintained by individuals using for its own purposes and being ready to help as it suites them.

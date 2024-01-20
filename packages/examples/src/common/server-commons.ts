@@ -2,26 +2,42 @@
  * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { resolve } from 'path';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, ServerOptions } from 'ws';
 import { IncomingMessage, Server } from 'http';
 import { URL } from 'url';
 import { Socket } from 'net';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
+import * as cp from 'child_process';
+
+export enum LanguageName {
+    /** https://nodejs.org/api/cli.html  */
+    node = 'node',
+    /** https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html */
+    java = 'java'
+}
+
+export interface LanguageServerRunConfig {
+    serverName: string;
+    pathName: string;
+    serverPort: number;
+    runCommand: LanguageName | string;
+    runCommandArgs: string[];
+    wsServerOptions: ServerOptions,
+    spawnOptions?: cp.SpawnOptions;
+}
 
 /**
  * start the language server inside the current process
  */
-export const launchLanguageServer = (serverName: string, socket: IWebSocket, baseDir: string, relativeDir: string) => {
+export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket: IWebSocket) => {
+    const { serverName, runCommand, runCommandArgs, spawnOptions } = runconfig;
     // start the language server as an external process
-    const ls = resolve(baseDir, relativeDir);
-
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
-    const serverConnection = createServerProcess(serverName, 'node', [ls, '--stdio']);
+    const serverConnection = createServerProcess(serverName, runCommand, runCommandArgs, spawnOptions);
     if (serverConnection) {
         forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
@@ -41,18 +57,15 @@ export const launchLanguageServer = (serverName: string, socket: IWebSocket, bas
     }
 };
 
-export const upgradeWsServer = (config: {
-    serverName: string,
-    pathName: string,
+export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
+    config : {
     server: Server,
-    wss: WebSocketServer,
-    baseDir: string,
-    relativeDir: string
+    wss: WebSocketServer
 }) => {
     config.server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
         const baseURL = `http://${request.headers.host}/`;
         const pathName = request.url ? new URL(request.url, baseURL).pathname : undefined;
-        if (pathName === config.pathName) {
+        if (pathName === runconfig.pathName) {
             config.wss.handleUpgrade(request, socket, head, webSocket => {
                 const socket: IWebSocket = {
                     send: content => webSocket.send(content, error => {
@@ -70,10 +83,10 @@ export const upgradeWsServer = (config: {
                 };
                 // launch the server when the web socket is opened
                 if (webSocket.readyState === webSocket.OPEN) {
-                    launchLanguageServer(config.serverName, socket, config.baseDir, config.relativeDir);
+                    launchLanguageServer(runconfig, socket);
                 } else {
                     webSocket.on('open', () => {
-                        launchLanguageServer(config.serverName, socket, config.baseDir, config.relativeDir);
+                        launchLanguageServer(runconfig, socket);
                     });
                 }
             });

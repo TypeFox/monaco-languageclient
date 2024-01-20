@@ -1,12 +1,12 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2018-2022 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from '../common/client-commons.js';
+import { createJsonEditor, createWebSocketAndStartClient, performInit } from '../json/client/main.js';
 import { editor } from 'monaco-editor';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
-
 import { buildWorkerDefinition } from 'monaco-editor-workers';
+import { createUrl } from '../index.js';
 buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 let init = true;
