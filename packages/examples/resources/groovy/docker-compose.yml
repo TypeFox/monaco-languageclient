@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  groovyls:
+    build:
+      dockerfile: ./packages/examples/resources/groovy/Dockerfile
+      context: ../../../..
+    environment:
+      - LANG_SERVER_JAR_PATH=/home/gradle/groovy-language-server/build/libs/groovy-language-server-all.jar
+    command: [
+      "bash", "-c", "npm i && npm run start:example:server:groovy"
+    ]
+    ports:
+      - 30002:30002
+    working_dir: /home/gradle/mlc
+    container_name: groovyls

@@ -24,6 +24,9 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Pure bundler verification](#pure-bundler-verification)
     - [Example usage](#example-usage)
       - [Server processes](#server-processes)
+        - [JSON Language Server](#json-language-server)
+        - [Pyright Language Server](#pyright-language-server)
+        - [Groovy Language Server](#groovy-language-server)
       - [Verification Example Servers](#verification-example-servers)
     - [VSCode integration](#vscode-integration)
   - [Featured projects](#featured-projects)
@@ -86,12 +89,12 @@ With v7 we decided to use readily treemended version of monaco-editor called [@c
 
 ```yaml
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.0 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
   }
 ```
 
@@ -134,14 +137,16 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 ### Main Examples
 
 - [JSON Language client and language server example](./packages/examples/src/json):
-  - The **json-server** runs a Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:json` to start the language server (see [Server processes](#server-processes)).
-
+  - The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
   - The **json-client** contains the [client web app](./packages/examples/src/json/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - [Python Language client and pyright language server example](./packages/examples/src/python):
-  - The **python-server** runs a Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application. The language server can be started as internal or external process. Use `npm run start:example:server:python` to start the language server (see [Server processes](#server-processes)).
-
+  - The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
   - The **python-client** contains the [client web app](./packages/examples/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
+
+- [Groovy Language client and language server example](./packages/examples/src/groovy):
+  - The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
+  - The **groovy-client** contains the [client web app](./packages/examples/src/python/client/main.ts) which connects to the language server therefore requires the node server app to be run in parallel.
 
 - Langium example:
   - Statemachine DSL (created with Langium) **statemachine-web-worker-language-server** example located in [./packages/examples/src/langium](./packages/examples/src/langium) contains both the [language client](./packages/examples/src/langium/statemachineClient.ts) and the [langauge server (web worker)](https://github.com/langium/langium/blob/main/examples/statemachine/src/language-server/main-browser.ts). The web worker example communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the **JSON examples** examples.
@@ -169,18 +174,46 @@ There are a couple of different examples that demonstrate how the `monaco-langua
 
 #### Server processes
 
-For the **json-client** or the **client-webpack** examples you need to ensure the **json-server** example is running:
+##### JSON Language Server
+
+For the **json-client**, **react-client** or the **client-webpack** examples you need to ensure the **json-server** example is running:
 
 ```shell
 # start the express server with the language server running in the same process.
 npm run start:example:server:json
 ```
 
-For the **python-client** example you need to ensure the **paython-server** example is running:
+##### Pyright Language Server
+
+For the **python-client** example you need to ensure the **python-server** example is running:
 
 ```shell
-# start the express server with the language server running in an external node process.
+# start the express server with the language server running as external node process.
 npm run start:example:server:python
+```
+
+##### Groovy Language Server
+
+For the **groovy-client** example you need to ensure the **groovy-server** example is running:
+
+**Preferred option**
+
+Use **docker-compose** which does not require any manual setup (Java/Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
+
+**Secondary option**
+
+**Preperation**: In another directory run (Requires Gradle 7 and OpenJDK 17):
+
+```shell
+git clone https://github.com/GroovyLanguageServer/groovy-language-server
+./gradlew build
+```
+
+Afterwards copy the jar file from from `groovy-language-server/build/libs/groovy-language-server-all.jar` to `packages/examples/resources/external/groovy`
+
+```shell
+# start the express server with the language server running as external Java process.
+npm run start:example:server:groovy
 ```
 
 #### Verification Example Servers
@@ -301,7 +334,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.85.0 <1.86.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table

@@ -7,10 +7,12 @@ import { resolve } from 'path';
 import { getLocalDirectory } from '../../utils/fs-utils.js';
 import { runGroovyLanguageServer } from './main.js';
 const baseDir = resolve(getLocalDirectory(import.meta.url));
-/**
- * git clone https://github.com/GroovyLanguageServer/groovy-language-server
- * then run `./gradlew build`
- * copy the jar file from `groovy-language-server/build/libs/groovy-language-server-all.jar` to `packages/examples/src/groovy/server`
- */
-const relativeDir = process.env.LANG_SERVER_JAR_PATH || '';
+
+const groovyJar = resolve(baseDir, '../../../resources/groovy/external/groovy-language-server-all.jar');
+const relativeDir = process.env.LANG_SERVER_JAR_PATH || groovyJar;
+console.log(`basedir: ${baseDir}`);
+console.log(`groovyJar: ${groovyJar}`);
+console.log(`LANG_SERVER_JAR_PATH: ${process.env.LANG_SERVER_JAR_PATH}`);
+console.log(`relativeDir: ${relativeDir}`);
+
 runGroovyLanguageServer(baseDir, relativeDir);
