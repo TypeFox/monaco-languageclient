@@ -30,10 +30,8 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
                 const parsedURL = new URL(`${clientInfo.origin}${clientInfo.req?.url ?? ''}`);
                 const authToken = parsedURL.searchParams.get('authorization');
                 if (authToken === 'UserAuth') {
-                    // eslint-disable-next-line n/no-callback-literal
                     callback(true);
                 } else {
-                    // eslint-disable-next-line n/no-callback-literal
                     callback(false);
                 }
             }

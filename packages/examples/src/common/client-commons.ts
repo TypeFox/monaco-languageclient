@@ -17,7 +17,7 @@ import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode
 import { Uri } from 'vscode';
 
 export interface LanguageClientRunConfig {
-    vscodeApiInit : boolean;
+    vscodeApiInit: boolean;
     clientUrl: string;
     serverPath: string;
     serverPort: number;
@@ -48,17 +48,18 @@ export const createLanguageClient = (transports: MessageTransports, languageId: 
     });
 };
 
-export const createUrl = (hostname: string, port: number, path: string, searchParams: Record<string, any> = {}, secure: boolean = location.protocol === 'https:'): string => {
+export const createUrl = (hostname: string, port: number, path: string, searchParams: Record<string, string | string[]> = {}, secure: boolean = location.protocol === 'https:'): string => {
     const protocol = secure ? 'wss' : 'ws';
     const url = new URL(`${protocol}://${hostname}:${port}${path}`);
 
-    for (let [key, value] of Object.entries(searchParams)) {
+    for (const [key, value] of Object.entries(searchParams)) {
+        let output: string |undefined;
         if (value instanceof Array) {
-            value = value.join(',');
+            output = value.join(',');
+        } else {
+            output = value?.toString();
         }
-        if (value) {
-            url.searchParams.set(key, value);
-        }
+        url.searchParams.set(key, output);
     }
 
     return url.toString();
@@ -121,7 +122,7 @@ export const doInit = async (vscodeApiInit: boolean, registerConfig: languages.I
 export const createMonacoEditor = async (config: {
     htmlElement: HTMLElement,
     content: string,
-    languageId : string
+    languageId: string
 }) => {
     // create the model
     const uri = Uri.parse('/workspace/model.json');

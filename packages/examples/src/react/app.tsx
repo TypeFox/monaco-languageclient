@@ -34,7 +34,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     useEffect(() => {
         const currentEditor = editorRef.current;
 
-        if (ref.current != null) {
+        if (ref.current !== null) {
             const start = async () => {
                 await performInit(true);
                 await createJsonEditor({

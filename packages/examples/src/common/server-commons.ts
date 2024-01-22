@@ -58,10 +58,10 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
 };
 
 export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
-    config : {
-    server: Server,
-    wss: WebSocketServer
-}) => {
+    config: {
+        server: Server,
+        wss: WebSocketServer
+    }) => {
     config.server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
         const baseURL = `http://${request.headers.host}/`;
         const pathName = request.url ? new URL(request.url, baseURL).pathname : undefined;
