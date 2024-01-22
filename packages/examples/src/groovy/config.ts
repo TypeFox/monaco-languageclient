@@ -3,6 +3,6 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 export const groovyConfig = {
-    port: 3002,
+    port: 30002,
     path: '/groovy'
 };

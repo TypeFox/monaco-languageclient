@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.4 <1.86.0",
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
     "monaco-editor-workers": "~0.45.0",
     "monaco-languageclient": "~7.3.0",
     "monaco-languageclient-examples": "~7.3.0",
@@ -22,7 +22,7 @@
     "monaco-editor": "$monaco-editor"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.4 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0"
   },
   "volta": {
     "node": "20.11.0",
