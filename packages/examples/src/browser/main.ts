@@ -9,8 +9,6 @@ import { createConverter as createProtocolConverter } from 'vscode-languageclien
 import { createDefaultJsonContent, createJsonEditor, performInit } from '../json/client/main.js';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
-import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 const codeConverter = createCodeConverter();
 const protocolConverter = createProtocolConverter(undefined, true, true);

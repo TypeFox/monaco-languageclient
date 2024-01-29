@@ -17,9 +17,6 @@ import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-servic
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import { Uri } from 'vscode';
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
-
 const languageId = 'statemachine';
 
 export const setupStatemachineClient = async () => {

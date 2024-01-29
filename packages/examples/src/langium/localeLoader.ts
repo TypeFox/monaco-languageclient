@@ -17,9 +17,9 @@ export const loadLocales = async () => {
         }
     };
 
-    if (locale != null) {
+    if (locale !== null) {
         const loader = localeLoader[locale];
-        if (loader != null) {
+        if (loader) {
             await loader();
         } else {
             console.error(`Unknown locale ${locale}`);

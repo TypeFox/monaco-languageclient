@@ -13,7 +13,7 @@ import { LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
 export const runLanguageServer = (
     languageServerRunConfig: LanguageServerRunConfig
 ) => {
-    process.on('uncaughtException', function(err: any) {
+    process.on('uncaughtException', function(err) {
         console.error('Uncaught Exception: ', err.toString());
         if (err.stack) {
             console.error(err.stack);
@@ -26,7 +26,7 @@ export const runLanguageServer = (
     const dir = getLocalDirectory(import.meta.url);
     app.use(express.static(dir));
     // start the http server
-    const httpServer : Server = app.listen(languageServerRunConfig.serverPort);
+    const httpServer: Server = app.listen(languageServerRunConfig.serverPort);
     const wss = new WebSocketServer(languageServerRunConfig.wsServerOptions);
     // create the web socket
     upgradeWsServer(languageServerRunConfig, {

@@ -16,8 +16,8 @@ import { getLanguageService, LanguageService, JSONDocument } from 'vscode-json-l
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export class JsonServer {
+    protected readonly connection: _Connection;
     protected workspaceRoot: URI.URI | undefined;
-
     protected readonly documents = new TextDocuments(TextDocument);
 
     protected readonly jsonService: LanguageService = getLanguageService({
@@ -26,7 +26,8 @@ export class JsonServer {
 
     protected readonly pendingValidationRequests = new Map<string, NodeJS.Timeout>();
 
-    constructor(protected readonly connection: _Connection) {
+    constructor(connection: _Connection) {
+        this.connection = connection;
         this.documents.listen(this.connection);
         this.documents.onDidChangeContent(change =>
             this.validate(change.document)
@@ -154,6 +155,7 @@ export class JsonServer {
         return this.jsonService.findDocumentSymbols(document, jsonDocument);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected executeCommand(params: ExecuteCommandParams): any {
         if (params.command === 'json.documentUpper' && params.arguments) {
             const versionedTextDocumentIdentifier = params.arguments[0];

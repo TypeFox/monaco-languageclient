@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 import '@codingame/monaco-vscode-groovy-default-extension'; // this is for the syntax highlighting
 import { runLanguageClient } from '../../common/language-client-runner.js';
-import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { groovyConfig } from '../config.js';
-buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
+
 export const startGroovyClient = async () => {
     const languageId = 'groovy';
     runLanguageClient(

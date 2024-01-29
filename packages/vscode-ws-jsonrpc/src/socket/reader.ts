@@ -8,12 +8,15 @@ import { DataCallback, AbstractMessageReader, MessageReader } from 'vscode-jsonr
 import { IWebSocket } from './socket.js';
 
 export class WebSocketMessageReader extends AbstractMessageReader implements MessageReader {
+    protected readonly socket: IWebSocket;
     protected state: 'initial' | 'listening' | 'closed' = 'initial';
     protected callback: DataCallback | undefined;
-    protected readonly events: { message?: any, error?: any }[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protected readonly events: Array<{ message?: any, error?: any }> = [];
 
-    constructor(protected readonly socket: IWebSocket) {
+    constructor(socket: IWebSocket) {
         super();
+        this.socket = socket;
         this.socket.onMessage(message =>
             this.readMessage(message)
         );
@@ -56,6 +59,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected readMessage(message: any): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, { message });
@@ -66,6 +70,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
             } catch (err) {
                 const error: Error = {
                     name: '' + 400,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     message: `Error during message parsing, reason = ${typeof err === 'object' ? (err as any).message : 'unknown'}`
                 };
                 this.fireError(error);
@@ -73,6 +78,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected override fireError(error: any): void {
         if (this.state === 'initial') {
             this.events.splice(0, 0, { error });

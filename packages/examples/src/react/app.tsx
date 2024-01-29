@@ -5,9 +5,7 @@
 import { createJsonEditor, createWebSocketAndStartClient, performInit } from '../json/client/main.js';
 import { editor } from 'monaco-editor';
 import React, { createRef, useEffect, useMemo, useRef } from 'react';
-import { buildWorkerDefinition } from 'monaco-editor-workers';
 import { createUrl } from '../index.js';
-buildWorkerDefinition('../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
 
 let init = true;
 
@@ -34,7 +32,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     useEffect(() => {
         const currentEditor = editorRef.current;
 
-        if (ref.current != null) {
+        if (ref.current !== null) {
             const start = async () => {
                 await performInit(true);
                 await createJsonEditor({

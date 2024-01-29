@@ -4,9 +4,9 @@
 
 The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
 
-| monaco-languageclient | monaco-vscode-api | monaco-editor-treemended | monaco-editor | release date | comment |
+| monaco-languageclient | monaco-vscode-api | monaco-vscode-editor-api | monaco-editor | release date | comment |
 | :----         | :----   | :---   | :--- | :--- | :--- |
-| 7.4.0         | 1.85.5  | 1.85.5 | 0.45.0 | 2024-01-2x | |
+| 8.0.0         | 2.0.0  | 2.0.0 | 0.45.0 | 2024-02-0x | `@codingame/monaco-vscode-editor-api` replaces `@codingame/monaco-editor-treemended` |
 | 7.3.0         | 1.85.0  | 1.85.0 | 0.45.0 | 2024-01-04 | |
 | 7.2.0         | 1.83.16  | 1.83.16 | 0.44.0 | 2023-12-07 | |
 | 7.1.0         | 1.83.12  | 1.83.12 | 0.44.0 | 2023-11-27 | |
@@ -44,6 +44,10 @@ The following table describes which version of **monaco-languageclient** and **@
 | 2.0.0 - 2.0.2 | 1.68.4  | | 0.33.0 | | monaco-editor and vscode incompatible |
 
 ## Important Project Changes
+
+### Febuary 2024 (v8.0.0)
+
+`@codingame/monaco-editor-treemended` is replaced by self-standing `@codingame/monaco-vscode-editor-api`.
 
 ### October 2023 (v7.0.0)
 

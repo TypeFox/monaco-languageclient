@@ -9,9 +9,11 @@ import { IWebSocket } from './socket.js';
 
 export class WebSocketMessageWriter extends AbstractMessageWriter implements MessageWriter {
     protected errorCount = 0;
+    protected readonly socket: IWebSocket;
 
-    constructor(protected readonly socket: IWebSocket) {
+    constructor(socket: IWebSocket) {
         super();
+        this.socket = socket;
     }
 
     end(): void {
