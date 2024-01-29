@@ -1,0 +1,80 @@
+{
+  "name": "@typefox/monaco-editor-react",
+  "version": "3.0.0-next.0",
+  "license": "MIT",
+  "description": "React component for Monaco-Editor and Monaco Languageclient",
+  "keywords": [
+    "monaco-editor",
+    "monaco-languageclient",
+    "typescript",
+    "react"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bundle": {
+      "types": "./dist/index.d.ts",
+      "default": "./bundle/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/index"
+      ],
+      "bundle": [
+        "dist/index"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "bundle",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
+    "compile": " tsc --build tsconfig.src.json",
+    "build:bundle": "vite --config vite.bundle.config.ts build",
+    "build": "npm run clean && npm run compile && npm run build:bundle"
+  },
+  "volta": {
+    "node": "20.11.0",
+    "npm": "10.2.4"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-api": "~2.2.1",
+    "@codingame/monaco-vscode-editor-api": "~2.2.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1",
+    "monaco-editor-wrapper": "~4.0.0-next.0",
+    "react": "~18.2.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1"
+  },
+  "peerDependencies": {
+    "monaco-editor-wrapper": "~4.0.0-next.0"
+  },
+  "overrides": {
+    "monaco-editor": "$@codingame/monaco-vscode-editor-api"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
+    "directory": "packages/monaco-editor-react"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md",
+  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
+  "author": {
+    "name": "TypeFox",
+    "url": "https://www.typefox.io"
+  }
+}

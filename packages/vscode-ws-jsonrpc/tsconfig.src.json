@@ -3,7 +3,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "declarationDir": "lib"
+    "declarationDir": "lib",
+    // no types definitions are required to undertand dependent code
+    "types": []
   },
   "include": [
     "src/**/*.ts",

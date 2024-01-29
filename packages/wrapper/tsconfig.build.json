@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./build/src",
+    "noEmit": true,
+    // all other types are not needed here
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "build/src/**/*.mts"
+  ]
+}

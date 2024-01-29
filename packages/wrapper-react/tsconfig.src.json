@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist",
+    "types": [
+      "vscode"
+    ]
+  },
+  "references": [{
+    "path": "../wrapper/tsconfig.src.json"
+  }],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}

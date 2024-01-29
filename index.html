@@ -16,22 +16,47 @@
     <div style="padding: 5px">
         <h2>Examples</h2>
 
+        Please run <b><code>npm run build</code></b> if you haven't done it already.
+
+        <h2>Monaco Editor Wrapper</h2>
+
         <h3>JSON language client and language server</h3>
+
         Please execute <b><code>npm run start:example:server:json</code></b> beforehand:<br>
-        <a href="packages/examples/client.html">Client for Node.js Language Server</a>
+        <a href="./packages/examples/wrapper_ws.html">Language Client & Web Socket Language Server example</a>
+        <br>
+
+        <h3>Langium language clients and language servers</h3>
+
+        <a href="./packages/examples/wrapper_langium.html">Langium Grammar DSL Language Client & Language Server (Worker)</a>
+        <br>
+        <a href="./packages/examples/wrapper_statemachine.html">Langium Statemachine Client & Language Server (Worker)</a>
+        <br>
+        Localizations: <a href="./packages/examples/wrapper_statemachine.html?locale=de">German</a> <a href="./packages/examples/wrapper_statemachine.html?locale=fr">French</a> and <a href="./packages/examples/wrapper_statemachine.html?locale=es">Spanish</a><br>
+
         <h3>Python language client and language server</h3>
         Please execute <b><code>npm run start:example:server:python</code></b> beforehand:<br>
-        <a href="packages/examples/python.html">Client for Python Pyright Language Server</a>
+        <a href="./packages/examples/python.html">Client for Python Pyright Language Server</a><br>
+
         <h3>Groovy language client and language server</h3>
         Requires docker. Please execute <b><code>docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d</code></b> beforehand:<br>
-        <a href="packages/examples/groovy.html">Client for Groovy Language Server</a>
-        <h3>Langium client and language server</h3>
-        <a href="packages/examples/statemachine_client.html">Client & Statemachine LS (Web Worker)</a><br>
-        Localizations: <a href="packages/examples/statemachine_client.html?locale=de">German</a> <a href="packages/examples/statemachine_client.html?locale=fr">French</a> and <a href="packages/examples/statemachine_client.html?locale=es">Spanish</a><br>
-        <h3>Other examples</h3>
+        <a href="./packages/examples/groovy.html">Client for Groovy Language Server</a>
+
+        <h2>Monaco Editor React</h2>
+        <a href="./packages/examples/react_statemachine.html">Langium Statemachine Client & Language Server (Worker)</a>
+        <br>
+        <br>
+        Please execute  <b><code>npm run start:example:server:python</code></b> beforehand:<br>
+        <a href="./packages/examples/react_python.html">Python Language Client & Language Server</a>
+        <br>
+
+        <h3>Other Examples</h3>
         <a href="packages/examples/browser.html">Browser Example</a>
-        <br><br>
-        <a href="packages/examples/react.html">React Client Example</a>
+        <br>
+        <a href="./packages/examples/wrapper_ts.html">TypeScript Editor Worker</a>
+        <br>
+        <a href="./packages/examples/wrapper_adv.html">Multiple Editors</a>
+        <br>
 
         <h2>Verification</h2>
         <h3>Webpack</h3>

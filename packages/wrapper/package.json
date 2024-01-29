@@ -1,0 +1,95 @@
+{
+  "name": "monaco-editor-wrapper",
+  "version": "4.0.0-next.0",
+  "license": "MIT",
+  "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
+  "keywords": [
+    "monaco-editor",
+    "monaco-languageclient",
+    "typescript",
+    "vscode"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bundle": {
+      "types": "./dist/index.d.ts",
+      "default": "./bundle/index.js"
+    },
+    "./styles": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/index"
+      ],
+      "bundle": [
+        "dist/index"
+      ],
+      "styles": [
+        "styles/index"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "bundle",
+    "src",
+    "styles",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
+    "process:assets": "vite-node ./build/src/buildAssets.mts",
+    "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
+    "bundle": "vite --config vite.bundle.config.ts build && npm run process:assets",
+    "build": "npm run clean && npm run compile && npm run bundle"
+  },
+  "volta": {
+    "node": "20.11.0",
+    "npm": "10.2.4"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-configuration-service-override": "~2.2.1",
+    "@codingame/monaco-vscode-editor-service-override": "~2.2.1",
+    "@codingame/monaco-vscode-textmate-service-override": "~2.2.1",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~2.2.1",
+    "@codingame/monaco-vscode-theme-service-override": "~2.2.1",
+    "@codingame/monaco-vscode-api": "~2.2.1",
+    "@codingame/monaco-vscode-editor-api": "~2.2.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1",
+    "monaco-languageclient": "~8.0.0-next.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1",
+    "vscode-languageclient": "~9.0.1",
+    "vscode-languageserver-protocol": "~3.17.5"
+  },
+  "peerDependencies": {
+    "monaco-languageclient": "~8.0.0-next.0"
+  },
+  "overrides": {
+    "monaco-editor": "$@codingame/monaco-vscode-editor-api"
+  },
+  "resolutions": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
+    "directory": "packages/wrapper"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/README.md",
+  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
+  "author": {
+    "name": "TypeFox",
+    "url": "https://www.typefox.io"
+  }
+}

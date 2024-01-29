@@ -1,8 +1,5 @@
-.DS_Store
-*.log
-
-node_modules
-lib
+bundle
 dist
-
+lib
+node_modules
 *.tsbuildinfo

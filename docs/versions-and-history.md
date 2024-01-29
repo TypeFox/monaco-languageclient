@@ -6,7 +6,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | monaco-vscode-api | monaco-vscode-editor-api | monaco-editor | release date | comment |
 | :----         | :----   | :---   | :--- | :--- | :--- |
-| 8.0.0         | 2.0.0  | 2.0.0 | 0.45.0 | 2024-02-0x | `@codingame/monaco-vscode-editor-api` replaces `@codingame/monaco-editor-treemended` |
+| 8.0.0         | 2.0.1  | 2.0.1 | 0.45.0 | 2024-02-0x | `@codingame/monaco-vscode-editor-api` replaces `@codingame/monaco-editor-treemended` |
 | 7.3.0         | 1.85.0  | 1.85.0 | 0.45.0 | 2024-01-04 | |
 | 7.2.0         | 1.83.16  | 1.83.16 | 0.44.0 | 2023-12-07 | |
 | 7.1.0         | 1.83.12  | 1.83.12 | 0.44.0 | 2023-11-27 | |

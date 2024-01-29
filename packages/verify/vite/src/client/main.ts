@@ -3,19 +3,20 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from 'monaco-languageclient-examples';
+// import { createDefaultJsonContent, createJsonEditor, createUrl, createWebSocketAndStartClient, performInit } from 'monaco-languageclient-examples';
 
 const start = async () => {
-    // use the same common method to create a monaco editor for json
-    await performInit(true);
-    await createJsonEditor({
-        htmlElement: document.getElementById('container')!,
-        content: createDefaultJsonContent()
-    });
+    console.log('TODO: Fix me!');
+    // // use the same common method to create a monaco editor for json
+    // await performInit(true);
+    // await createJsonEditor({
+    //     htmlElement: document.getElementById('container')!,
+    //     content: createDefaultJsonContent()
+    // });
 
-    // create the web socket
-    const url = createUrl('localhost', 30000, '/sampleServer');
-    createWebSocketAndStartClient(url);
+    // // create the web socket
+    // const url = createUrl('localhost', 30000, '/sampleServer');
+    // createWebSocketAndStartClient(url);
 };
 
 start();

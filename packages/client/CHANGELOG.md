@@ -2,11 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.0] - 2024-02-0x
+## [8.0.0] - 2024-03-0x
 
-- Updated to `@codingame/monaco-vscode-api@2.0.0`. This ensures amoung other things proper sematic versioning
+- WIP: Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+- Updated to `@codingame/monaco-vscode-api@2.0.1`. This ensures amoung other things proper sematic versioning
   - Details
-- WIP: Repository now includes `@typefox/monaco-vscode-editor-wrapper` and `@typefox/monaco-vscode-editor-react` . They succeed npm packages  `` and `` respectively `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
 
 ## [7.3.0] - 2024-01-04
 
