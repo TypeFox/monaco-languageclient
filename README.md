@@ -77,6 +77,8 @@ npm run watch
 
 ## Using monaco-languageclient
 
+TODO: Section needs to be overhauled
+
 ### NEW with v7: Treemended monaco-editor
 
 Since version 2 (see [Important Project Changes](#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`.
@@ -85,16 +87,14 @@ Earlier in 2023 we started to treemend an existing `monaco-editor` dependency vi
 
 #### Overrides instructions
 
-With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-editor-treemended](https://www.npmjs.com/package/@codingame/monaco-editor-treemended), but this requires to add `overrides` (npm/pnpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
+With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-vscode-editor-api), but this requires to add `overrides` (npm/pnpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
 
 ```yaml
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
   }
 ```
 
@@ -246,6 +246,8 @@ Ensure **monaco-editor**, **vscode** and **monaco-languageclient** are imported 
 
 ### Dependency issues: monaco-editor / @codingame/monaco-editor-treemended
 
+TODO: This section needs to be overhauled
+
 It is recommended to study this chapter first: [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor).
 If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely your `package-lock.json` or `node_modules` are dirty. Remove both and do a fresh `npm install`. Always `npm list monaco-editor` is very useful. If you see different or errornous versions, then this is an indicator something is wrong.
 
@@ -334,7 +336,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@>=1.85.5 <1.86.0"
+"vscode": "npm:@codingame/monaco-vscode-api@>=2.0.0 <2.1.0"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table

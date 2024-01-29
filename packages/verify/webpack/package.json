@@ -4,10 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0",
-    "monaco-editor-workers": "~0.45.0",
-    "monaco-languageclient": "~7.3.0",
-    "monaco-languageclient-examples": "~7.3.0",
+    "@codingame/monaco-vscode-api": "~2.0.0",
+    "@codingame/monaco-vscode-editor-api": "~2.0.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0",
+    "monaco-languageclient": "~8.0.0-next.0",
+    "monaco-languageclient-examples": "~8.0.0-next.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@>=2.0.0 <2.1.0",
     "vscode-ws-jsonrpc": "~3.1.0"
   },
   "devDependencies": {
@@ -19,10 +21,10 @@
     "http-server": "~14.1.1"
   },
   "overrides": {
-    "monaco-editor": "$monaco-editor"
+    "monaco-editor": "$@codingame/monaco-vscode-editor-api"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.85.5 <1.86.0"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
   },
   "volta": {
     "node": "20.11.0",
@@ -30,9 +32,8 @@
   },
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo",
-    "copy:monacoworkers": "shx mkdir -p dist/client/workers && shx cp -r ../../../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist/client/workers",
     "build:msg": "echo Building client-webpack example:",
-    "build": "npm run build:msg && npm run clean && webpack && npm run copy:monacoworkers",
+    "build": "npm run build:msg && npm run clean && webpack",
     "start": "http-server --port 8081 ./"
   }
 }

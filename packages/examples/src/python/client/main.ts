@@ -21,9 +21,6 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import { Uri } from 'vscode';
 import { createUrl } from '../../common/client-commons.js';
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../../../node_modules/monaco-editor-workers/dist/workers/', new URL('', window.location.href).href, false);
-
 const languageId = 'python';
 let languageClient: MonacoLanguageClient;
 
