@@ -53,10 +53,18 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
         return {
             dispose: () => {
                 if (this.callback === callback) {
+                    this.state = 'initial';
                     this.callback = undefined;
                 }
             }
         };
+    }
+
+    override dispose() {
+        super.dispose();
+        this.state = 'initial';
+        this.callback = undefined;
+        this.events.splice(0, this.events.length);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
