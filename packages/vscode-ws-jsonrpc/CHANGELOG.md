@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.2.0] - 2024-02-19
+
+- Implement dispose method on WebSocketMessageReader [#602](https://github.com/TypeFox/monaco-languageclient/pull/602)
+- Adjusted code to updated linting configuration
+
 ## [3.1.0] - 2023-11-02
 
 - Updated to `vscode-jsonrpc@8.2.0`

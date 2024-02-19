@@ -72,7 +72,7 @@
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
-    "vscode-ws-jsonrpc": "~3.1.0",
+    "vscode-ws-jsonrpc": "~3.2.0",
     "ws": "~8.16.0"
   },
   "devDependencies": {
