@@ -5,7 +5,7 @@
 
 import { EmptyFileSystem, startLanguageServer } from 'langium';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
-import { createStatemachineServices } from 'langium-statemachine-dsl/out/language-server/statemachine-module.js';
+import { createStatemachineServices } from '../ls/statemachine-module.js';
 
 export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: string) => {
     console.log(`Starting ${name}...`);

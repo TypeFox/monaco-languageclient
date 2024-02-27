@@ -61,7 +61,7 @@ export const run = async () => {
 
 export const loadStatemachinWorkerRegular = () => {
     // Language Server preparation
-    const workerUrl = new URL('./src/langium/worker/statemachine-server.ts', window.location.href);
+    const workerUrl = new URL('./src/langium/statemachine/worker/statemachine-server.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
 
     return new Worker(workerUrl, {
@@ -72,7 +72,7 @@ export const loadStatemachinWorkerRegular = () => {
 
 export const loadStatemachinWorkerPort = () => {
     // Language Server preparation
-    const workerUrl = new URL('./src/langium/worker/statemachine-server-port.ts', window.location.href);
+    const workerUrl = new URL('./src/langium/statemachine/worker/statemachine-server-port.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
 
     return new Worker(workerUrl, {

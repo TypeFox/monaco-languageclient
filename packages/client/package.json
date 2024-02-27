@@ -60,7 +60,6 @@
   "peerDependencies": {
     "@codingame/monaco-vscode-api": "~2.2.1",
     "@codingame/monaco-vscode-editor-api": "~2.2.1",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1",
     "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1"
   },
   "peerDependenciesMeta": {

@@ -70,13 +70,14 @@
     "monaco-languageclient": "~8.0.0-next.0",
     "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1",
     "vscode-languageclient": "~9.0.1",
-    "vscode-languageserver-protocol": "~3.17.5"
+    "vscode-languageserver-protocol": "~3.17.5",
+    "vscode-ws-jsonrpc": "~3.3.0-next.0"
   },
   "peerDependencies": {
     "monaco-languageclient": "~8.0.0-next.0"
   },
   "overrides": {
-    "monaco-editor": "$@codingame/monaco-vscode-editor-api"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
   },
   "resolutions": {
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"

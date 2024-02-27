@@ -7,14 +7,14 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { useOpenEditorStub } from 'monaco-languageclient';
 import { UserConfig } from 'monaco-editor-wrapper';
-import { getTextContent } from '../../common/example-apps-common.js';
+import { getTextContent } from '../../../common/example-apps-common.js';
 
 export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: MessagePort): Promise<UserConfig> => {
-    const code = await getTextContent(new URL('./src/langium/content/example.statemachine', window.location.href));
+    const code = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
 
     const extensionFilesOrContents = new Map<string, string | URL>();
-    const statemachineLanguageConfig = new URL('../../../node_modules/langium-statemachine-dsl/language-configuration.json', window.location.href);
-    const responseStatemachineTm = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href);
+    const statemachineLanguageConfig = new URL('./src/langium/statemachine/config/language-configuration.json', window.location.href);
+    const responseStatemachineTm = new URL('./src/langium/statemachine/syntaxes/statemachine.tmLanguage.json', window.location.href);
     extensionFilesOrContents.set('/statemachine-configuration.json', statemachineLanguageConfig);
     extensionFilesOrContents.set('/statemachine-grammar.json', responseStatemachineTm);
 
@@ -59,7 +59,8 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
                 userConfiguration: {
                     json: JSON.stringify({
                         'workbench.colorTheme': 'Default Dark Modern',
-                        'editor.guides.bracketPairsHorizontal': 'active'
+                        'editor.guides.bracketPairsHorizontal': 'active',
+                        'editor.wordBasedSuggestions': 'off'
                     })
                 }
             }

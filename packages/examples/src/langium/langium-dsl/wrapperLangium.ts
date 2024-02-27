@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { setupLangiumClientExtended } from './config/wrapperLangiumExtended.js';
-import { setupLangiumClientClassic } from './config/wrapperLangiumClassic.js';
+import { setupLangiumClientExtended } from './config/extendedConfig.js';
+import { setupLangiumClientClassic } from './config/classicConfig.js';
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;
@@ -77,7 +77,7 @@ export const disposeEditor = async () => {
 
 export const loadLangiumWorker = () => {
     // Language Server preparation
-    const workerUrl = new URL('./src/langium/worker/langium-server.ts', window.location.href);
+    const workerUrl = new URL('./src/langium/langium-dsl/worker/langium-server.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
 
     return new Worker(workerUrl, {

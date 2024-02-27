@@ -12,6 +12,9 @@
   "devDependencies": {
     "shx": "~0.3.4"
   },
+  "overrides": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+  },
   "resolutions": {
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
   },

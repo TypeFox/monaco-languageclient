@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
-import { loadStatemachinWorkerRegular } from './wrapperStatemachine.js';
+import { loadStatemachinWorkerRegular } from './main.js';
 
 const startEditor = async () => {
     const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachinWorkerRegular());

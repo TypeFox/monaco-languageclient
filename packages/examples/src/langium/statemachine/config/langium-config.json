@@ -1,0 +1,16 @@
+{
+  "projectName": "Statemachine",
+  "out": "../ls/generated",
+  "languages": [
+    {
+      "id": "statemachine",
+      "grammar": "../ls/statemachine.langium",
+      "fileExtensions": [
+        ".statemachine"
+      ],
+      "textMate": {
+        "out": "../syntaxes/statemachine.tmLanguage.json"
+      }
+    }
+  ]
+}

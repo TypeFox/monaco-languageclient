@@ -90,7 +90,9 @@ export const createUserConfig = (code: string): UserConfig => {
                     }
                 }],
                 userConfiguration: {
-                    json: JSON.stringify({ 'workbench.colorTheme': 'Default Dark Modern' })
+                    json: JSON.stringify({
+                        'workbench.colorTheme': 'Default Dark Modern'
+                    })
                 },
                 useDiffEditor: false,
                 code
