@@ -4,8 +4,10 @@
  * terms of the MIT License, which is available in the project root.
  ******************************************************************************/
 
-import type { DefaultSharedModuleContext, LangiumServices, LangiumSharedServices, Module, PartialLangiumServices } from 'langium';
-import { createDefaultModule, createDefaultSharedModule, inject } from 'langium';
+import type { Module } from 'langium';
+import type { DefaultSharedModuleContext, LangiumServices, LangiumSharedServices, PartialLangiumServices } from 'langium/lsp';
+import { inject } from 'langium';
+import { createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
 import { StatemachineGeneratedModule, StatemachineGeneratedSharedModule } from './generated/module.js';
 import { registerValidationChecks, StatemachineValidator } from './statemachine-validator.js';
 

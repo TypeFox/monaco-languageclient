@@ -3,8 +3,8 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@types/node": "~20.11.20",
-    "@types/react": "~18.2.59",
+    "@types/node": "~20.11.21",
+    "@types/react": "~18.2.60",
     "@types/react-dom": "~18.2.19",
     "@types/shelljs": "~0.8.15",
     "@types/vscode": "~1.86.0",

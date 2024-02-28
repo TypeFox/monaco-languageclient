@@ -1,4 +1,4 @@
-{
+ {
   "compilerOptions": {
     "target": "ES2022",
     "module": "Node16",
@@ -35,8 +35,8 @@
     "**/test/**/*.ts",
     "**/src/**/*.tsx",
     "**/test/**/*.tsx",
-    "**/packages/*/*/*.ts",
-    "**/packages/*/*/*.js",
+    "**/packages/*/*.ts",
+    "**/packages/*/*.js",
     "**/resources/**/*.mts",
     "**/resources/**/*.mjs",
     "*.ts"

@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "4.0.0-next.0",
+  "version": "4.0.0-next.1",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -59,28 +59,28 @@
     "npm": "10.2.4"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-configuration-service-override": "~2.2.1",
-    "@codingame/monaco-vscode-editor-service-override": "~2.2.1",
-    "@codingame/monaco-vscode-textmate-service-override": "~2.2.1",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~2.2.1",
-    "@codingame/monaco-vscode-theme-service-override": "~2.2.1",
-    "@codingame/monaco-vscode-api": "~2.2.1",
-    "@codingame/monaco-vscode-editor-api": "~2.2.1",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1",
-    "monaco-languageclient": "~8.0.0-next.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1",
+    "@codingame/monaco-vscode-configuration-service-override": "~2.2.2",
+    "@codingame/monaco-vscode-editor-service-override": "~2.2.2",
+    "@codingame/monaco-vscode-textmate-service-override": "~2.2.2",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~2.2.2",
+    "@codingame/monaco-vscode-theme-service-override": "~2.2.2",
+    "@codingame/monaco-vscode-api": "~2.2.2",
+    "@codingame/monaco-vscode-editor-api": "~2.2.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2",
+    "monaco-languageclient": "~8.0.0-next.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.2",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
-    "vscode-ws-jsonrpc": "~3.3.0-next.0"
+    "vscode-ws-jsonrpc": "~3.3.0-next.1"
   },
   "peerDependencies": {
-    "monaco-languageclient": "~8.0.0-next.0"
+    "monaco-languageclient": "~8.0.0-next.1"
   },
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
   },
   "repository": {
     "type": "git",

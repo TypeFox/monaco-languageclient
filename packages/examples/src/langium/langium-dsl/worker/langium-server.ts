@@ -3,7 +3,9 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { DefaultSharedModuleContext, EmptyFileSystem, createLangiumGrammarServices, startLanguageServer } from 'langium';
+import { EmptyFileSystem } from 'langium';
+import { DefaultSharedModuleContext, startLanguageServer } from 'langium/lsp';
+import { createLangiumGrammarServices } from 'langium/grammar';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
 
 /* browser specific setup code */

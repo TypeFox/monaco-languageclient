@@ -75,8 +75,6 @@ try {
     document.querySelector('#button-dispose')?.addEventListener('click', async () => {
         codeMain = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
     });
-
-    startEditor(userConfig, htmlElement, codeMain, codeOrg);
 } catch (e) {
     console.error(e);
 }

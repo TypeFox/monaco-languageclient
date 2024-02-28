@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~2.2.1",
-    "@codingame/monaco-vscode-editor-api": "~2.2.1",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1",
-    "monaco-languageclient": "~8.0.0-next.0",
-    "monaco-languageclient-examples": "~8.0.0-next.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.1",
-    "vscode-ws-jsonrpc": "~3.3.0-next.0"
+    "@codingame/monaco-vscode-api": "~2.2.2",
+    "@codingame/monaco-vscode-editor-api": "~2.2.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2",
+    "monaco-languageclient": "~8.0.0-next.1",
+    "monaco-languageclient-examples": "~8.0.0-next.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.2",
+    "vscode-ws-jsonrpc": "~3.3.0-next.1"
   },
   "devDependencies": {
     "css-loader": "~6.10.0",
@@ -24,7 +24,7 @@
     "monaco-editor": "$@codingame/monaco-vscode-editor-api"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
   },
   "volta": {
     "node": "20.11.0",

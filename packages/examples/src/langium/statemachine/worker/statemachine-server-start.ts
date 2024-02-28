@@ -3,7 +3,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { EmptyFileSystem, startLanguageServer } from 'langium';
+import { EmptyFileSystem } from 'langium';
+import { startLanguageServer } from 'langium/lsp';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
 import { createStatemachineServices } from '../ls/statemachine-module.js';
 
