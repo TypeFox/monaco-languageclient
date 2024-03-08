@@ -5,7 +5,7 @@
 
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { useOpenEditorStub } from 'monaco-languageclient';
+import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { getTextContent } from '../../../common/example-apps-common.js';
 

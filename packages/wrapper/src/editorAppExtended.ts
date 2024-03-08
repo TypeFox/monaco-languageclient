@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type * as vscode from 'vscode';
-import { IDisposable, editor } from 'monaco-editor';
+import { IDisposable, editor } from '@codingame/monaco-vscode-editor-api';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import { whenReady as whenReadyTheme } from '@codingame/monaco-vscode-theme-defaults-default-extension';

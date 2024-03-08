@@ -91,10 +91,10 @@ With v7 we decided to use readily treemended version of monaco-editor called [@c
 
 ```yaml
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.0.0"
   },
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.0.0"
   }
 ```
 
@@ -336,7 +336,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@~2.2.2"
+"vscode": "npm:@codingame/monaco-vscode-api@~3.0.0"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table

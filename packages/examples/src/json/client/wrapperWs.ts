@@ -5,9 +5,14 @@
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
-import { whenReady as whenReadyJson } from '@codingame/monaco-vscode-json-default-extension';
+import  '@codingame/monaco-vscode-json-default-extension';
 import { disposeEditor, startEditor, swapEditors } from '../../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 const languageId = 'json';
 let codeMain = `{
@@ -33,8 +38,6 @@ const userConfig: UserConfig = {
             code: codeMain,
             useDiffEditor: false,
             codeOriginal: codeOrg,
-            // Ensure all required extensions are loaded before setting up the language extension
-            awaitExtensionReadiness: [whenReadyJson],
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',

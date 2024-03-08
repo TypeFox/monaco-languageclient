@@ -4,12 +4,19 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-typescript-basics-default-extension';
-import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+// import '@codingame/monaco-vscode-typescript-basics-default-extension';
+// import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import '@codingame/monaco-vscode-editor-api/esm/vs/basic-languages/typescript/typescript.contribution.js';
+import '@codingame/monaco-vscode-editor-api/esm/vs/language/typescript/monaco.contribution.js';
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 const codeUri = '/workspace/hello.ts';
 let code = `function sayHello(): string {
@@ -46,7 +53,7 @@ const userConfig: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'extended',
+            $type: 'classic',
             languageId: 'typescript',
             code,
             codeUri: codeUri,

@@ -9,6 +9,11 @@ import '@codingame/monaco-vscode-python-default-extension';
 import { disposeEditor, startEditor } from '../../common/example-apps-common.js';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { createUserConfig } from './config.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 export const startPythonClient = () => {
     const code = 'print("Hello, World!")';

@@ -9,6 +9,11 @@ import '@codingame/monaco-vscode-groovy-default-extension';
 import { disposeEditor, startEditor } from '../../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 const languageId = 'groovy';
 const code = `package test.org;

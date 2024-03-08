@@ -3,16 +3,12 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Environment } from 'monaco-editor';
+import { editor } from '@codingame/monaco-vscode-editor-api';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import 'vscode/localExtensionHost';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
-import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
-
-export interface MonacoEnvironmentEnhanced extends Environment {
-    vscodeApiInitialised: boolean;
-}
+import { MonacoEnvironmentEnhanced } from '../workerFactory.js';
+import { supplyRequiredServices } from 'monaco-languageclient';
 
 export type InitializeServiceConfig = {
     userServices?: editor.IEditorOverrideServices;
@@ -67,7 +63,6 @@ export const mergeServices = (services: editor.IEditorOverrideServices, override
  *  - extension
  *  - files
  *  - quickAccess
- *
  * monaco-languageclient always adds the following services:
  *   - languages
  *   - model
@@ -76,11 +71,8 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     const lc: InitializeServiceConfig = config ?? {};
     const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
 
-    const mlcDefautServices = {
-        ...getLanguagesServiceOverride(),
-        ...getModelServiceOverride()
-    };
-    mergeServices(mlcDefautServices, userServices);
+    const lcRequiredServices = supplyRequiredServices();
+    mergeServices(lcRequiredServices, userServices);
     reportServiceLoading(userServices, lc.debugLogging === true);
 
     const haveThemeService = Object.keys(userServices).includes('themeService');

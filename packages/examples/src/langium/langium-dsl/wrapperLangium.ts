@@ -6,6 +6,11 @@
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;

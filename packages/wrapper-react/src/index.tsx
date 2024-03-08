@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { EditorAppClassic, EditorAppExtended, MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-editor-wrapper';
-import { IDisposable } from 'monaco-editor';
+import { IDisposable } from '@codingame/monaco-vscode-editor-api';
 import * as vscode from 'vscode';
 import React, { CSSProperties } from 'react';
 

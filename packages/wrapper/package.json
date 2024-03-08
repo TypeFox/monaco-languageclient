@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "4.0.0-next.1",
+  "version": "4.0.0-next.2",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -17,13 +17,47 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./vscode/services": {
+      "types": "./dist/vscode/services.d.ts",
+      "default": "./dist/vscode/services.js"
+    },
+    "./workerFactory": {
+      "types": "./dist/workerFactory.d.ts",
+      "default": "./dist/workerFactory.js"
+    },
+    "./workers/module/editor": {
+      "default": "./dist/workers/editorWorker-es.js"
+    },
+    "./workers/module/ts": {
+      "default": "./dist/workers/tsWorker-es.js"
+    },
+    "./workers/module/html": {
+      "default": "./dist/workers/htmlWorker-es.js"
+    },
+    "./workers/module/css": {
+      "default": "./dist/workers/cssWorker-es.js"
+    },
+    "./workers/module/json": {
+      "default": "./dist/workers/jsonWorker-es.js"
+    },
+    "./workers/classic/editor": {
+      "default": "./dist/workers/editorWorker-iife.js"
+    },
+    "./workers/classic/ts": {
+      "default": "./dist/workers/tsWorker-iife.js"
+    },
+    "./workers/classic/html": {
+      "default": "./dist/workers/htmlWorker-iife.js"
+    },
+    "./workers/classic/css": {
+      "default": "./dist/workers/cssWorker-iife.js"
+    },
+    "./workers/classic/json": {
+      "default": "./dist/workers/jsonWorker-iife.js"
+    },
     "./bundle": {
       "types": "./dist/index.d.ts",
       "default": "./bundle/index.js"
-    },
-    "./styles": {
-      "types": "./styles/index.d.ts",
-      "default": "./styles/index.js"
     }
   },
   "typesVersions": {
@@ -31,11 +65,14 @@
       ".": [
         "dist/index"
       ],
+      "vscode/services": [
+        "dist/vscode/services"
+      ],
+      "workerFactory": [
+        "dist/workerFactory"
+      ],
       "bundle": [
         "dist/index"
-      ],
-      "styles": [
-        "styles/index"
       ]
     }
   },
@@ -43,44 +80,63 @@
     "dist",
     "bundle",
     "src",
-    "styles",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
     "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
-    "process:assets": "vite-node ./build/src/buildAssets.mts",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
-    "bundle": "vite --config vite.bundle.config.ts build && npm run process:assets",
-    "build": "npm run clean && npm run compile && npm run bundle"
+    "bundle": "vite --config vite.bundle.config.ts build",
+    "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
+    "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",
+    "build:worker:html": "vite -c ./build/vite.htmlWorker.ts build",
+    "build:worker:css": "vite -c ./build/vite.cssWorker.ts build",
+    "build:worker:json": "vite -c ./build/vite.jsonWorker.ts build",
+    "build:workers:vite": "npm run build:worker:editor && npm run build:worker:ts && npm run build:worker:html && npm run build:worker:css && npm run build:worker:json",
+    "build:workers:esbuild": "vite-node ./build/buildAllWorkers.mts",
+    "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite && npm run bundle"
   },
   "volta": {
-    "node": "20.11.0",
+    "node": "20.11.1",
     "npm": "10.2.4"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-configuration-service-override": "~2.2.2",
-    "@codingame/monaco-vscode-editor-service-override": "~2.2.2",
-    "@codingame/monaco-vscode-textmate-service-override": "~2.2.2",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~2.2.2",
-    "@codingame/monaco-vscode-theme-service-override": "~2.2.2",
-    "@codingame/monaco-vscode-api": "~2.2.2",
-    "@codingame/monaco-vscode-editor-api": "~2.2.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2",
-    "monaco-languageclient": "~8.0.0-next.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~2.2.2",
+    "@codingame/monaco-vscode-configuration-service-override": "~3.0.0",
+    "@codingame/monaco-vscode-editor-service-override": "~3.0.0",
+    "@codingame/monaco-vscode-textmate-service-override": "~3.0.0",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~3.0.0",
+    "@codingame/monaco-vscode-theme-service-override": "~3.0.0",
+    "@codingame/monaco-vscode-api": "~3.0.0",
+    "@codingame/monaco-vscode-editor-api": "~3.0.0",
+    "esbuild": "~0.20.1",
+    "monaco-languageclient": "~8.0.0-next.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.0.0",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
-    "vscode-ws-jsonrpc": "~3.3.0-next.1"
+    "vscode-ws-jsonrpc": "~3.3.0-next.2"
+  },
+  "devDependencies": {
+    "monaco-editor-ms": "npm:monaco-editor@~0.46.0"
   },
   "peerDependencies": {
-    "monaco-languageclient": "~8.0.0-next.1"
+    "@codingame/monaco-vscode-api": "~3.0.0",
+    "@codingame/monaco-vscode-editor-api": "~3.0.0",
+    "monaco-languageclient": "~8.0.0-next.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.0.0"
   },
-  "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
-  },
-  "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~2.2.2"
+  "peerDependenciesMeta": {
+    "@codingame/monaco-vscode-api": {
+      "optional": false
+    },
+    "@codingame/monaco-vscode-editor-api": {
+      "optional": false
+    },
+    "monaco-languageclient": {
+      "optional": false
+    },
+    "vscode": {
+      "optional": false
+    }
   },
   "repository": {
     "type": "git",

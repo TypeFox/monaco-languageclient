@@ -6,6 +6,11 @@
 import * as vscode from 'vscode';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();

@@ -3,9 +3,10 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor';
+import { editor, Uri } from '@codingame/monaco-vscode-editor-api';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import { InitializeServiceConfig, MonacoLanguageClient, mergeServices } from 'monaco-languageclient';
+import { MonacoLanguageClient } from 'monaco-languageclient';
+import { mergeServices, InitializeServiceConfig } from './vscode/services.js';
 import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { ModelUpdate } from './editorAppBase.js';

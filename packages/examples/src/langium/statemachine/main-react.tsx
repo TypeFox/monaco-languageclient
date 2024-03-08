@@ -8,6 +8,11 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachinWorkerRegular } from './main.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 const startEditor = async () => {
     const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachinWorkerRegular());

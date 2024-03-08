@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { whenReady as whenReadyPython } from '@codingame/monaco-vscode-python-default-extension';
+import '@codingame/monaco-vscode-python-default-extension';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 
@@ -55,7 +55,6 @@ export const createUserConfig = (code: string): UserConfig => {
                 $type: 'extended',
                 languageId: 'python',
                 codeUri: '/workspace/python.py',
-                awaitExtensionReadiness: [whenReadyPython],
                 extensions: [{
                     config: {
                         name: 'python-client',
@@ -71,21 +70,6 @@ export const createUserConfig = (code: string): UserConfig => {
                                 aliases: ['python'],
                                 mimetypes: ['application/python'],
                             }],
-                            commands: [{
-                                command: 'pyright.restartserver',
-                                title: 'Pyright: Restart Server',
-                                category: 'Pyright'
-                            },
-                            {
-                                command: 'pyright.organizeimports',
-                                title: 'Pyright: Organize Imports',
-                                category: 'Pyright'
-                            }],
-                            keybindings: [{
-                                key: 'ctrl+k',
-                                command: 'pyright.restartserver',
-                                when: 'editorTextFocus'
-                            }]
                         }
                     }
                 }],

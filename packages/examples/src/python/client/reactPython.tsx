@@ -7,6 +7,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+useWorkerFactory({
+    basePath: '../../../node_modules'
+});
 
 /**
  * Code is intentionally incorrect - language server will pick this up on connection and highlight the error

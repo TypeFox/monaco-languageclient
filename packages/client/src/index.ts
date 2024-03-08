@@ -3,7 +3,42 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export type { IConnectionProvider, MonacoLanguageClientOptions } from './monaco-language-client.js';
-export * from './monaco-language-client.js';
-export type { InitializeServiceConfig, MonacoEnvironmentEnhanced } from './monaco-vscode-api-services.js';
-export * from './monaco-vscode-api-services.js';
+import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
+import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/lib/common/client.js';
+
+export interface IConnectionProvider {
+    get(encoding: string): Promise<MessageTransports>;
+}
+
+export type MonacoLanguageClientOptions = {
+    name: string;
+    id?: string;
+    clientOptions: LanguageClientOptions;
+    connectionProvider: IConnectionProvider;
+}
+
+export class MonacoLanguageClient extends BaseLanguageClient {
+    protected readonly connectionProvider: IConnectionProvider;
+
+    constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClientOptions) {
+        super(id || name.toLowerCase(), name, clientOptions);
+        this.connectionProvider = connectionProvider;
+    }
+
+    protected override createMessageTransports(encoding: string): Promise<MessageTransports> {
+        return this.connectionProvider.get(encoding);
+    }
+}
+
+/**
+ * monaco-languageclient requires the following services in addition to the default services monaco-vscode-api provides:
+ *   - languages
+ *   - model
+ */
+export const supplyRequiredServices = () => {
+    return {
+        ...getLanguagesServiceOverride(),
+        ...getModelServiceOverride()
+    };
+};
