@@ -12,7 +12,7 @@ const config = defineConfig({
             entry: path.resolve(__dirname, '../../../node_modules/monaco-editor-ms/esm/vs/language/typescript/ts.worker.js'),
             name: 'tsWorker',
             fileName: (format) => `workers/tsWorker-${format}.js`,
-            formats: ['iife', 'es']
+            formats: ['es']
         },
         outDir: 'dist',
         emptyOutDir: false

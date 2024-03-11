@@ -4,7 +4,6 @@ import { Environment } from '@codingame/monaco-vscode-editor-api';
 export type WorkerOverrides = {
     rootPath?: string| URL;
     basePath?: string| URL;
-    options?: WorkerOptions;
     workerLoaders?: Partial<Record<string, CrossOriginWorkerDefintion>>;
     ignoreDefaultMapping?: boolean;
 }
@@ -26,100 +25,83 @@ export interface MonacoEnvironmentEnhanced extends Environment {
  * The workaround used by vscode is to start a worker on a blob url containing a short script calling 'importScripts'
  * importScripts accepts to load the code inside the blob worker
  */
-class CrossOriginWorkerDefintion {
-    config: CrossOriginWorkerConfig;
+export class CrossOriginWorkerDefintion {
+    config: CrossOriginWorkerConfig | undefined;
     fullUrl: string;
-    worker: Worker;
+    worker: Worker | undefined;
 
-    constructor(config: CrossOriginWorkerConfig) {
-        this.config = config;
+    constructor(configOrWorker: CrossOriginWorkerConfig | Worker) {
+        if (Object.hasOwn(configOrWorker, 'workerFile')) {
+            this.config = configOrWorker as CrossOriginWorkerConfig;
+        } else {
+            this.worker = configOrWorker as Worker;
+        }
     }
 
-    createWorker() {
-        let workerFile = this.config.workerFile;
-        if (this.config.basePath) {
-            workerFile = `${this.config.basePath}/${this.config.workerFile}`;
+    createWorker(workerOverrides?: WorkerOverrides) {
+        if (!this.worker) {
+            if (this.config) {
+                if (workerOverrides?.rootPath) {
+                    this.config.rootPath = workerOverrides.rootPath;
+                }
+                if (workerOverrides?.basePath) {
+                    this.config.basePath = workerOverrides.basePath;
+                }
+                let workerFile = this.config.workerFile;
+                if (this.config.basePath) {
+                    workerFile = `${this.config.basePath}/${this.config.workerFile}`;
+                }
+                this.fullUrl = new URL(workerFile, this.config.rootPath).href;
+                console.log(`Creating worker: ${this.fullUrl}`);
+
+                const js = this.config.options?.type === 'module' ? `import '${this.fullUrl}';` : `importScripts('${this.fullUrl}');`;
+                const blob = new Blob([js], { type: 'application/javascript' });
+
+                this.worker = new Worker(URL.createObjectURL(blob), this.config.options);
+            } else {
+                throw new Error('No worker or config provided');
+            }
+        } else {
+            console.log('Using provided worker');
         }
-        this.fullUrl = new URL(workerFile, this.config.rootPath).href;
-        console.log(`Creating worker: ${this.fullUrl}`);
-
-        const js = this.config.options?.type === 'module' ? `import '${this.fullUrl}';` : `importScripts('${this.fullUrl}');`;
-        const blob = new Blob([js], { type: 'application/javascript' });
-
-        this.worker = new Worker(URL.createObjectURL(blob), this.config.options);
         return this.worker;
     }
 }
 
 export const defaultWorkerLoaders: Partial<Record<string, CrossOriginWorkerDefintion>> = {
-    editorWorkerModule: new CrossOriginWorkerDefintion({
+    editorWorker: new CrossOriginWorkerDefintion({
         rootPath: import.meta.url,
         workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js',
         options: {
             type: 'module'
         }
     }),
-    editorWorkerClassic: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-iife.js',
-        options: {
-            type: 'classic'
-        }
-    }),
-    tsWorkerModule: new CrossOriginWorkerDefintion({
+    tsWorker: new CrossOriginWorkerDefintion({
         rootPath: import.meta.url,
         workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js',
         options: {
             type: 'module'
         }
     }),
-    tsWorkerClassic: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-iife.js',
-        options: {
-            type: 'classic'
-        }
-    }),
-    htmlWorkerModule: new CrossOriginWorkerDefintion({
+    htmlWorker: new CrossOriginWorkerDefintion({
         rootPath: import.meta.url,
         workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js',
         options: {
             type: 'module'
         }
     }),
-    htmlWorkerClassic: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-iife.js',
-        options: {
-            type: 'classic'
-        }
-    }),
-    cssWorkerModule: new CrossOriginWorkerDefintion({
+    cssWorker: new CrossOriginWorkerDefintion({
         rootPath: import.meta.url,
         workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js',
         options: {
             type: 'module'
         }
     }),
-    cssWorkerClassic: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-iife.js',
-        options: {
-            type: 'classic'
-        }
-    }),
-    jsonWorkerModule: new CrossOriginWorkerDefintion({
+    jsonWorker: new CrossOriginWorkerDefintion({
         rootPath: import.meta.url,
         workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js',
         options: {
             type: 'module'
-        }
-    }),
-    jsonWorkerClassic: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-iife.js',
-        options: {
-            type: 'classic'
         }
     })
 };
@@ -144,30 +126,28 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
         console.log(`getWorker: moduleId: ${moduleId} label: ${label}`);
 
         let selector = label;
-
         if (!ignoreDefaultMapping) {
-            const useClassicWorkers = workerOverrides?.options?.type === 'classic';
             switch (selector) {
                 case 'editor':
                 case 'editorWorkerService':
-                    selector = useClassicWorkers ? 'editorWorkerClassic' : 'editorWorkerModule';
+                    selector = 'editorWorker';
                     break;
                 case 'typescript':
                 case 'javascript':
-                    selector = useClassicWorkers ? 'tsWorkerClassic' : 'tsWorkerModule';
+                    selector = 'tsWorker';
                     break;
                 case 'html':
                 case 'handlebars':
                 case 'razor':
-                    selector = useClassicWorkers ? 'htmlWorkerClassic' : 'htmlWorkerModule';
+                    selector = 'htmlWorker';
                     break;
                 case 'css':
                 case 'scss':
                 case 'less':
-                    selector = useClassicWorkers ? 'cssWorkerClassic' : 'cssWorkerModule';
+                    selector = 'cssWorker';
                     break;
                 case 'json':
-                    selector = useClassicWorkers ? 'jsonWorkerClassic' : 'jsonWorkerModule';
+                    selector = 'jsonWorker';
                     break;
                 default:
                     break;
@@ -175,21 +155,11 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
         }
 
         const workerFactory = workerLoaders[selector];
-        if (workerFactory !== undefined && workerFactory !== null) {
-            // override paths
-            if (workerOverrides?.rootPath) {
-                workerFactory.config.rootPath = workerOverrides.rootPath;
-            }
-            if (workerOverrides?.basePath) {
-                workerFactory.config.basePath = workerOverrides.basePath;
-            }
-            if (workerOverrides?.options) {
-                workerFactory.config.options = workerOverrides.options;
-            }
-            return workerFactory.createWorker();
-        } else {
+        const worker = workerFactory?.createWorker(workerOverrides);
+        if (!worker) {
             throw new Error(`Unimplemented worker ${label} (${moduleId})`);
         }
+        return worker;
     };
 
     monEnv.getWorker = getWorker;

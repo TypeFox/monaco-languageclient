@@ -1,0 +1,29 @@
+{
+  "name": "mlc-verify-pnpm",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@codingame/monaco-vscode-api": "~3.0.0",
+    "@codingame/monaco-vscode-editor-api": "~3.0.0",
+    "monaco-editor-wrapper": "../../packages/wrapper",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.0.0"
+  },
+  "devDependencies": {
+    "http-server": "~14.1.1",
+    "shx": "~0.3.4",
+    "vite": "~5.1.6"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.2.4"
+  },
+  "scripts": {
+    "prepare": "pnpm run build && pnpm run start",
+    "clean": "shx rm -fr dist",
+    "build:msg": "echo Building pnpm/vite example:",
+    "build": "pnpm run build:msg && pnpm run clean && vite build",
+    "start": "http-server ./dist --port 8083"
+  }
+}

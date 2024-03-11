@@ -12,25 +12,23 @@ const __dirname = dirname(__filename);
 const config = {
     entry: resolve(__dirname, 'src', 'client', 'main.ts'),
     module: {
-        rules: [{
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
-        },
-        {
-            test: /\.ts?$/,
-            use: ['ts-loader']
-        },
-        {
-            test: /\.js$/,
-            enforce: 'pre',
-            use: ['source-map-loader'],
-            // These modules seems to have broken sourcemaps, exclude them to prevent an error flood in the logs
-            exclude: [/vscode-jsonrpc/, /vscode-languageclient/, /vscode-languageserver/, /vscode-languageserver-protocol/]
-        },
-        {
-            test: /\.(mp3|wasm)$/i,
-            type: 'asset/resource'
-        }]
+        rules: [
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.ts?$/,
+                use: ['ts-loader']
+            },
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader'],
+                // These modules seems to have broken sourcemaps, exclude them to prevent an error flood in the logs
+                exclude: [/vscode-jsonrpc/, /vscode-languageclient/, /vscode-languageserver/, /vscode-languageserver-protocol/]
+            }
+        ]
     },
     experiments: {
         outputModule: true

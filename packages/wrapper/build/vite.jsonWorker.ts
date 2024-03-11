@@ -12,7 +12,7 @@ const config = defineConfig({
             entry: path.resolve(__dirname, '../../../node_modules/monaco-editor-ms/esm/vs/language/json/json.worker.js'),
             name: 'jsonWorker',
             fileName: (format) => `workers/jsonWorker-${format}.js`,
-            formats: ['iife', 'es']
+            formats: ['es']
         },
         outDir: 'dist',
         emptyOutDir: false

@@ -12,7 +12,10 @@
     <button type="button" id="button-swap">Swap Diff</button>
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 80vh;"></div>
-    <script type="module" src="./src/json/client/wrapperWs.ts"></script>
+    <script type="module">
+        import { executeJsonClient } from './src/json/client/wrapperWs.ts';
+        executeJsonClient();
+    </script>
 </body>
 
 </html>

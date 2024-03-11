@@ -12,7 +12,7 @@ const config = defineConfig({
             entry: path.resolve(__dirname, '../../../node_modules/@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js'),
             name: 'editorWorker',
             fileName: (format) => `workers/editorWorker-${format}.js`,
-            formats: ['iife', 'es']
+            formats: ['es']
         },
         outDir: 'dist',
         emptyOutDir: false

@@ -4,8 +4,5 @@
  * ------------------------------------------------------------------------------------------ */
 
 /* client side export only */
-// temporary disabled
-// export * from './browser/main.js';
-export * from './python/client/config.js';
-export * from './python/client/main.js';
-export * from './python/client/reactPython.js';
+export * from './common/example-apps-common.js';
+

@@ -6,44 +6,12 @@
 import { bundleWorker } from './buildWorker.mjs';
 import { Format } from 'esbuild';
 
-// iife script workers
-let format = 'iife' as Format;
+// build only ecma script workers
+const format = 'esm' as Format;
 const promises = [] as Array<Promise<void>>;
 promises.push(bundleWorker(
     format,
     '../../node_modules/@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js',
-    './dist/workers-esbuild/editorWorker-iife.js'
-));
-
-promises.push(bundleWorker(
-    format,
-    '../../node_modules/@codingame/monaco-vscode-editor-api/esm/vs/language/typescript/ts.worker.js',
-    './dist/workers-esbuild/tsWorker-iife.js'
-));
-
-promises.push(bundleWorker(
-    format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/html/html.worker.js',
-    './dist/workers-esbuild/htmlWorker-iife.js'
-));
-
-promises.push(bundleWorker(
-    format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/css/css.worker.js',
-    './dist/workers-esbuild/cssWorker-iife.js'
-));
-
-promises.push(bundleWorker(
-    format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/json/json.worker.js',
-    './dist/workers-esbuild/jsonWorker-iife.js'
-));
-
-// ecma script workers
-format = 'esm';
-promises.push(bundleWorker(
-    format,
-    '../../node_modules/monaco-editor-ms/esm/vs/editor/editor.worker.js',
     './dist/workers-esbuild/editorWorker-es.js'
 ));
 

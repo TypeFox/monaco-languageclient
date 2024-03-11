@@ -27,6 +27,14 @@
     "./node": {
       "types": "./dist/node.d.ts",
       "default": "./dist/node.js"
+    },
+    "./json-client": {
+      "types": "./dist/json/client/wrapperWs.d.ts",
+      "default": "./dist/json/client/wrapperWs.js"
+    },
+    "./python-client": {
+      "types": "./dist/python/client/main.d.ts",
+      "default": "./dist/python/client/main.js"
     }
   },
   "typesVersions": {
@@ -37,8 +45,11 @@
       "node": [
         "dist/node"
       ],
-      "langiumWorker": [
-        "dist/langium/langiumServerWorker"
+      "json-client": [
+        "dist/json/client/wrapperWs"
+      ],
+      "python-client": [
+        "dist/python/client/main"
       ]
     }
   },
