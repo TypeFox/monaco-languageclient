@@ -48,14 +48,14 @@
     "License.txt"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-languages-service-override": "~3.1.0",
-    "@codingame/monaco-vscode-model-service-override": "~3.1.0",
+    "@codingame/monaco-vscode-languages-service-override": "~3.1.1",
+    "@codingame/monaco-vscode-model-service-override": "~3.1.1",
     "vscode-languageclient": "~9.0.1"
   },
   "peerDependencies": {
-    "@codingame/monaco-vscode-api": "~3.1.0",
-    "@codingame/monaco-vscode-editor-api": "~3.1.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.0"
+    "@codingame/monaco-vscode-api": "~3.1.1",
+    "@codingame/monaco-vscode-editor-api": "~3.1.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.1"
   },
   "peerDependenciesMeta": {
     "@codingame/monaco-vscode-api": {

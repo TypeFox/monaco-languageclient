@@ -3,24 +3,16 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from '@codingame/monaco-vscode-editor-api';
 import * as vscode from 'vscode';
-import { createConfiguredEditor, createModelReference, IReference, ITextFileEditorModel } from 'vscode/monaco';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { initServices } from 'monaco-editor-wrapper/vscode/services';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
-import { createUrl } from 'monaco-editor-wrapper';
-import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { Uri } from '@codingame/monaco-vscode-editor-api';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -28,177 +20,48 @@ export const configureMonacoWorkers = () => {
     });
 };
 
-const codeConverter = createCodeConverter();
-const protocolConverter = createProtocolConverter(undefined, true, true);
+export const runBrowserEditor = async () => {
+    const codeConverter = createCodeConverter();
+    const protocolConverter = createProtocolConverter(undefined, true, true);
 
-export const startJsonClient = async () => {
-    // use the same common method to create a monaco editor for json
-    await performInit(true);
-    await createJsonEditor({
-        htmlElement: document.getElementById('container')!,
-        content: createDefaultJsonContent()
-    });
-
-    const url = createUrl({
-        $type: 'WebSocket',
-        secured: false,
-        host: 'localhost',
-        port: 30000,
-        path: '/sampleServer'
-    });
-    createWebSocketAndStartClient(url);
-};
-
-export const createLanguageClient = (transports: MessageTransports, languageId: string): MonacoLanguageClient => {
-    return new MonacoLanguageClient({
-        name: 'Sample Language Client',
-        clientOptions: {
-            // use a language id as a document selector
-            documentSelector: [languageId],
-            // disable the default error handler
-            errorHandler: {
-                error: () => ({ action: ErrorAction.Continue }),
-                closed: () => ({ action: CloseAction.DoNotRestart })
-            }
-        },
-        // create a language client connection from the JSON RPC connection on demand
-        connectionProvider: {
-            get: () => {
-                return Promise.resolve(transports);
-            }
-        }
-    });
-};
-
-/** parameterized version , support all languageId */
-export const initWebSocketAndStartClient = (url: string, languageId: string): WebSocket => {
-    const webSocket = new WebSocket(url);
-    webSocket.onopen = () => {
-        const socket = toSocket(webSocket);
-        const reader = new WebSocketMessageReader(socket);
-        const writer = new WebSocketMessageWriter(socket);
-        const languageClient = createLanguageClient({
-            reader,
-            writer
-        }, languageId);
-        languageClient.start();
-        reader.onClose(() => languageClient.stop());
-    };
-    return webSocket;
-};
-
-/** backwards compatible wrapper for legacy version, only support json as languageId */
-export const createWebSocketAndStartClient = (url: string): WebSocket => {
-    return initWebSocketAndStartClient(url, 'json');
-};
-
-export const createDefaultJsonContent = (): string => {
-    return `{
+    let mainVscodeDocument: vscode.TextDocument | undefined;
+    const htmlElement = document.getElementById('monaco-editor-root');
+    const languageId = 'json';
+    const code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-};
+    const codeUri = '/workspace/model.json';
 
-/* backwards compatible wrapper for legacy version, for json lang only */
-export const performInit = async (vscodeApiInit: boolean) => {
-    return doInit(vscodeApiInit, {
-        id: 'json',
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
-};
-
-export type ExampleJsonEditor = {
-    languageId: string;
-    editor: monaco.editor.IStandaloneCodeEditor;
-    uri: vscode.Uri;
-    modelRef: IReference<ITextFileEditorModel>;
-}
-
-/* parameterized version, support for any lang */
-export const doInit = async (vscodeApiInit: boolean, registerConfig: monaco.languages.ILanguageExtensionPoint) => {
-    if (vscodeApiInit === true) {
-        await initServices({
-            userServices: {
-                ...getThemeServiceOverride(),
-                ...getTextmateServiceOverride(),
-                ...getConfigurationServiceOverride(),
-                ...getKeybindingsServiceOverride()
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const jsonClientUserConfig: UserConfig = {
+        wrapperConfig: {
+            serviceConfig: {
+                userServices: {
+                    ...getKeybindingsServiceOverride(),
+                },
+                debugLogging: true
             },
-            debugLogging: true,
-            workspaceConfig: {
-                workspaceProvider: {
-                    trusted: true,
-                    workspace: {
-                        workspaceUri: vscode.Uri.file('/workspace')
-                    },
-                    async open() {
-                        return false;
-                    }
+            editorAppConfig: {
+                $type: 'extended',
+                languageId: 'json',
+                code,
+                codeUri,
+                useDiffEditor: false,
+                userConfiguration: {
+                    json: JSON.stringify({
+                        'workbench.colorTheme': 'Default Dark Modern',
+                        'editor.guides.bracketPairsHorizontal': 'active',
+                        'editor.lightbulb.enabled': 'On'
+                    })
                 }
             }
-        });
-
-        // register the JSON language with Monaco
-        monaco.languages.register(registerConfig);
-    }
-};
-
-/* parameterized version, support for any lang */
-export const createMonacoEditor = async (config: {
-    htmlElement: HTMLElement,
-    content: string,
-    languageId: string
-}) => {
-    // create the model
-    const uri = vscode.Uri.parse('/workspace/model.json');
-    const modelRef = await createModelReference(uri, config.content);
-    modelRef.object.setLanguageId(config.languageId);
-
-    // create monaco editor
-    const editor = createConfiguredEditor(config.htmlElement, {
-        model: modelRef.object.textEditorModel,
-        glyphMargin: true,
-        lightbulb: {
-            enabled: monaco.editor.ShowLightbulbIconMode.On
-        },
-        automaticLayout: true,
-        wordBasedSuggestions: 'off'
-    });
-
-    const result = {
-        editor,
-        uri,
-        modelRef
-    } as ExampleJsonEditor;
-    return Promise.resolve(result);
-};
-
-export const createJsonEditor = async (config: {
-    htmlElement: HTMLElement,
-    content: string
-}) => {
-    return createMonacoEditor({
-        htmlElement: config.htmlElement,
-        content: config.content,
-        languageId: 'json'
-    });
-};
-
-export const runBrowserEditor = async () => {
-    let mainVscodeDocument: vscode.TextDocument | undefined;
-    const languageId = 'json';
-
-    await performInit(true);
+        }
+    };
+    await wrapper.init(jsonClientUserConfig);
 
     vscode.workspace.onDidOpenTextDocument((_event) => {
-        mainVscodeDocument = vscode.workspace.textDocuments[0];
-    });
-
-    const jsonEditor = await createJsonEditor({
-        htmlElement: document.getElementById('container')!,
-        content: createDefaultJsonContent()
+        mainVscodeDocument = _event;
     });
 
     const createDocument = (vscodeDocument: vscode.TextDocument) => {
@@ -287,7 +150,7 @@ export const runBrowserEditor = async () => {
 
         jsonService.doValidation(document, jsonDocument).then(async (pDiagnostics) => {
             const diagnostics = await protocolConverter.asDiagnostics(pDiagnostics);
-            diagnosticCollection.set(jsonEditor.uri, diagnostics);
+            diagnosticCollection.set(Uri.parse(codeUri), diagnostics);
         });
     };
 
@@ -295,7 +158,9 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    jsonEditor.modelRef.object.textEditorModel!.onDidChangeContent(() => {
+    await wrapper.start(htmlElement);
+
+    wrapper.getModel()?.onDidChangeContent(() => {
         validate();
     });
 };

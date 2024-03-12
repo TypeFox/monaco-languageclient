@@ -12,9 +12,8 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 40vh;"></div>
     <div id="monaco-editor-root2" style="height: 40vh;"></div>
+    <script type="module" src="./src/utils/localeLoader.ts"></script>
     <script type="module">
-        import { loadLocales } from "./src/utils/localeLoader.ts";
-        await loadLocales();
         import { configureMonacoWorkers, runStatemachineWrapper } from './src/langium/statemachine/main.ts';
 
         configureMonacoWorkers();
