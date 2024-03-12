@@ -4,14 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-typescript-basics-default-extension';
-import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import '@codingame/monaco-vscode-javascript-default-extension';
+// import '@codingame/monaco-vscode-typescript-basics-default-extension';
+// import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { EditorAppConfigClassic, LanguageClientError, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
 
 const wrapper42 = new MonacoEditorLanguageClientWrapper();
 const wrapper43 = new MonacoEditorLanguageClientWrapper();
@@ -27,7 +24,7 @@ const wrapper42Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'classic',
+            $type: 'extended',
             languageId: 'text/plain',
             useDiffEditor: true,
             codeOriginal: `This line is equal.
@@ -62,7 +59,7 @@ const wrapper43Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'classic',
+            $type: 'extended',
             languageId: 'text/plain',
             useDiffEditor: true,
             codeOriginal: 'This line is equal.\nThis number is different 3022.\nMisspelled!Same again.',
@@ -87,20 +84,26 @@ const wrapper44Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'classic',
+            $type: 'extended',
             languageId: 'javascript',
             useDiffEditor: false,
-            theme: 'vs-dark',
             code: `function logMe() {
     console.log('Hello monaco-editor-wrapper!');
 };`,
             editorOptions: {
                 minimap: {
                     enabled: true
-                }
+                },
+                theme: 'vs-dark'
             }
         }
     }
+};
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
 };
 
 const startWrapper42 = async () => {
@@ -171,21 +174,22 @@ const sleepTwo = (milliseconds: number) => {
     }, milliseconds);
 };
 
-try {
-    await startWrapper43();
-    await startWrapper44();
+export const runAdvancedExample = async () => {
     try {
-        await startWrapper42();
+        await startWrapper43();
+        await startWrapper44();
+        try {
+            await startWrapper42();
+        } catch (e) {
+            console.log(`Catched expected connection error: ${(e as LanguageClientError).message}`);
+        }
+
+        // change the editors config, content or swap normal and diff editors after five seconds
+        sleepOne(5000);
+
+        // change last editor to regular mode
+        sleepTwo(10000);
     } catch (e) {
-        console.log(`Catched expected connection error: ${(e as LanguageClientError).message}`);
+        console.error(e);
     }
-
-    // change the editors config, content or swap normal and diff editors after five seconds
-    sleepOne(5000);
-
-    // change last editor to regular mode
-    sleepTwo(10000);
-} catch (e) {
-    console.error(e);
-}
-
+};

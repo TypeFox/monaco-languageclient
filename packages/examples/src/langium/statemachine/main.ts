@@ -8,12 +8,14 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
-
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
 const startEditor = async () => {
     if (wrapper.isStarted() && wrapper2.isStarted()) {
@@ -55,7 +57,7 @@ const disposeEditor = async () => {
     console.log(wrapper2.reportStatus().join('\n'));
 };
 
-export const run = async () => {
+export const runStatemachineWrapper = async () => {
     try {
         document.querySelector('#button-start')?.addEventListener('click', startEditor);
         document.querySelector('#button-dispose')?.addEventListener('click', disposeEditor);

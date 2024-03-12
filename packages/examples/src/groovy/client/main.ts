@@ -11,11 +11,12 @@ import { UserConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
-const languageId = 'groovy';
 const code = `package test.org;
 import java.io.File ;
 File file = new File("E:/Example.txt");
@@ -31,7 +32,7 @@ const userConfig: UserConfig = {
         },
         editorAppConfig: {
             $type: 'extended',
-            languageId: languageId,
+            languageId: 'groovy',
             code,
             useDiffEditor: false,
             userConfiguration: {
@@ -50,7 +51,7 @@ const userConfig: UserConfig = {
     }
 };
 
-export const startGroovyClient = () => {
+export const runGroovyClient = () => {
     try {
         const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', () => {

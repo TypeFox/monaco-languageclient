@@ -11,11 +11,13 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
-export const startPythonClient = () => {
+export const runPythonWrapper = () => {
     const code = 'print("Hello, World!")';
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/workspace/hello.py'), code));

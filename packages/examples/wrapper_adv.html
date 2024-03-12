@@ -20,7 +20,12 @@
     </div>
     <div style="height: 33vh;" id="monaco-editor-root-44">
     </div>
-    <script type="module" src="./src/ts/wrapperAdvanced.ts"></script>
+    <script type="module">
+        import { configureMonacoWorkers, runAdvancedExample } from './src/ts/wrapperAdvanced.ts';
+
+        configureMonacoWorkers();
+        runAdvancedExample();
+    </script>
 </body>
 
 </html>

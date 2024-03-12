@@ -9,7 +9,12 @@
 
     <body>
         <div id="root"></div>
-        <script type="module" src="./src/python/client/reactPython.tsx"></script>
+        <script type="module">
+            import { configureMonacoWorkers, runPythonReact } from './src/python/client/reactPython.tsx';
+
+            configureMonacoWorkers();
+            runPythonReact();
+        </script>
     </body>
 
 </html>

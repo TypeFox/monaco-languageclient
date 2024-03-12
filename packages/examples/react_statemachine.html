@@ -9,7 +9,12 @@
 
 <body>
     <div id="root"></div>
-    <script type="module" src="./src/langium/statemachine/main-react.tsx"></script>
+    <script type="module">
+        import { configureMonacoWorkers, runStatemachineReact } from './src/langium/statemachine/main-react.tsx';
+
+        configureMonacoWorkers();
+        runStatemachineReact();
+    </script>
 </body>
 
 </html>

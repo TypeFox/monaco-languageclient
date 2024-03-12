@@ -9,28 +9,32 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
-
-/**
- * Code is intentionally incorrect - language server will pick this up on connection and highlight the error
- */
-const code = `def main():
-    return pass`;
-
-const onTextChanged = (text: string, isDirty: boolean) => {
-    console.log(`Dirty? ${isDirty} Content: ${text}`);
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
 };
 
-const comp = <MonacoEditorReactComp
-    userConfig={createUserConfig(code)}
-    style={{
-        'paddingTop': '5px',
-        'height': '80vh'
-    }}
-    onTextChanged={onTextChanged}
-/>;
+export const runPythonReact = () => {
+    /**
+     * Code is intentionally incorrect - language server will pick this up on connection and highlight the error
+     */
+    const code = `def main():
+        return pass`;
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(comp);
+    const onTextChanged = (text: string, isDirty: boolean) => {
+        console.log(`Dirty? ${isDirty} Content: ${text}`);
+    };
+
+    const comp = <MonacoEditorReactComp
+        userConfig={createUserConfig(code)}
+        style={{
+            'paddingTop': '5px',
+            'height': '80vh'
+        }}
+        onTextChanged={onTextChanged}
+    />;
+
+    const root = ReactDOM.createRoot(document.getElementById('root')!);
+    root.render(comp);
+};

@@ -72,7 +72,7 @@ export const jsonClientUserConfig: UserConfig = {
     }
 };
 
-export const executeJsonClient = () => {
+export const runJsonWrapper = () => {
     try {
         const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', () => {

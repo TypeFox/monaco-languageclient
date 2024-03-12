@@ -10,26 +10,26 @@ import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js
 import { loadStatemachinWorkerRegular } from './main.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
-
-const startEditor = async () => {
-    const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachinWorkerRegular());
-    const comp = <MonacoEditorReactComp
-        userConfig={langiumGlobalConfig}
-        style={{
-            'paddingTop': '5px',
-            'height': '80vh'
-        }}
-    />;
-
-    const root = ReactDOM.createRoot(document.getElementById('root')!);
-    root.render(comp);
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
 };
 
-try {
-    startEditor();
-} catch (e) {
-    console.error(e);
-}
+export const runStatemachineReact = async () => {
+    try {
+        const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachinWorkerRegular());
+        const comp = <MonacoEditorReactComp
+            userConfig={langiumGlobalConfig}
+            style={{
+                'paddingTop': '5px',
+                'height': '80vh'
+            }}
+        />;
+
+        const root = ReactDOM.createRoot(document.getElementById('root')!);
+        root.render(comp);
+    } catch (e) {
+        console.error(e);
+    }
+};

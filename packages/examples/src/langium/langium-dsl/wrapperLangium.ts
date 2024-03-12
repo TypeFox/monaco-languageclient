@@ -8,15 +8,17 @@ import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
-
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;
-
 const htmlElement = document.getElementById('monaco-editor-root');
-export const run = async () => {
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
+
+export const runLangiumDslWrapper = async () => {
     try {
         document.querySelector('#button-start-classic')?.addEventListener('click', startLangiumClientClassic);
         document.querySelector('#button-start-extended')?.addEventListener('click', startLangiumClientExtended);

@@ -22,9 +22,11 @@ import { createUrl } from 'monaco-editor-wrapper';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
 const codeConverter = createCodeConverter();
 const protocolConverter = createProtocolConverter(undefined, true, true);
@@ -184,7 +186,7 @@ export const createJsonEditor = async (config: {
     });
 };
 
-export const startBrowserEditor = async () => {
+export const runBrowserEditor = async () => {
     let mainVscodeDocument: vscode.TextDocument | undefined;
     const languageId = 'json';
 

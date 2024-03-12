@@ -13,8 +13,10 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { startPythonClient } from "./src/python/client/main.ts";
-        startPythonClient();
+        import { configureMonacoWorkers, runPythonWrapper } from "./src/python/client/main.ts";
+
+        configureMonacoWorkers();
+        runPythonWrapper();
     </script>
 </body>
 

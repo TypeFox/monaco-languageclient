@@ -7,18 +7,20 @@ import * as vscode from 'vscode';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
-import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+// import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 // import '@codingame/monaco-vscode-editor-api/esm/vs/basic-languages/typescript/typescript.contribution.js';
 // import '@codingame/monaco-vscode-editor-api/esm/vs/language/typescript/monaco.contribution.js';
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-useWorkerFactory({
-    basePath: '../../../node_modules'
-});
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
-export const executeTsWrapper = async () => {
+export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';
     let code = `function sayHello(): string {
     return "Hello";
@@ -97,8 +99,6 @@ export const executeTsWrapper = async () => {
                 codeOriginal = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
             }
         });
-
-        await startEditor(userConfig, htmlElement, code, codeOriginal);
 
         vscode.commands.getCommands().then((x) => {
             console.log(`Found ${x.length} commands`);
