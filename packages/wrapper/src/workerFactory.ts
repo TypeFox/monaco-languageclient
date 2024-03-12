@@ -1,14 +1,19 @@
-/* eslint-disable header/header */
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
 import { Environment } from '@codingame/monaco-vscode-editor-api';
 
 export type WorkerOverrides = {
     rootPath?: string| URL;
     basePath?: string| URL;
-    workerLoaders?: Partial<Record<string, CrossOriginWorkerDefintion>>;
-    ignoreDefaultMapping?: boolean;
+    workerLoaders?: Partial<Record<string, WorkerConfigSupplier | WorkerLoader>>;
+    ignoreMapping?: boolean;
+    userDefinedMapping?: (label: string) => string;
 }
 
-export type CrossOriginWorkerConfig = {
+export type WorkerConfig = {
     rootPath: string| URL;
     basePath?: string| URL;
     workerFile: string| URL;
@@ -20,90 +25,64 @@ export interface MonacoEnvironmentEnhanced extends Environment {
     vscodeApiInitialised: boolean;
 }
 
+export type WorkerConfigSupplier = () => WorkerConfig;
+export type WorkerLoader = () => Worker
+
+export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier | WorkerLoader>> = {
+    editorWorker: () => {
+        return {
+            rootPath: import.meta.url,
+            workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js'
+        };
+    },
+    tsWorker: () => {
+        return {
+            rootPath: import.meta.url,
+            workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js'
+        };
+    },
+    htmlWorker: () => {
+        return {
+            rootPath: import.meta.url,
+            workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js'
+        };
+    },
+    cssWorker: () => {
+        return {
+            rootPath: import.meta.url,
+            workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js'
+        };
+    },
+    jsonWorker:  () => {
+        return {
+            rootPath: import.meta.url,
+            workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js'
+        };
+    }
+};
 /**
  * Cross origin workers don't work
  * The workaround used by vscode is to start a worker on a blob url containing a short script calling 'importScripts'
  * importScripts accepts to load the code inside the blob worker
  */
-export class CrossOriginWorkerDefintion {
-    config: CrossOriginWorkerConfig | undefined;
-    fullUrl: string;
-    worker: Worker | undefined;
-
-    constructor(configOrWorker: CrossOriginWorkerConfig | Worker) {
-        if (Object.hasOwn(configOrWorker, 'workerFile')) {
-            this.config = configOrWorker as CrossOriginWorkerConfig;
-        } else {
-            this.worker = configOrWorker as Worker;
-        }
+export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverrides): Worker => {
+    if (workerOverrides?.rootPath) {
+        config.rootPath = workerOverrides.rootPath;
     }
-
-    createWorker(workerOverrides?: WorkerOverrides) {
-        if (!this.worker) {
-            if (this.config) {
-                if (workerOverrides?.rootPath) {
-                    this.config.rootPath = workerOverrides.rootPath;
-                }
-                if (workerOverrides?.basePath) {
-                    this.config.basePath = workerOverrides.basePath;
-                }
-                let workerFile = this.config.workerFile;
-                if (this.config.basePath) {
-                    workerFile = `${this.config.basePath}/${this.config.workerFile}`;
-                }
-                this.fullUrl = new URL(workerFile, this.config.rootPath).href;
-                console.log(`Creating worker: ${this.fullUrl}`);
-
-                const js = this.config.options?.type === 'module' ? `import '${this.fullUrl}';` : `importScripts('${this.fullUrl}');`;
-                const blob = new Blob([js], { type: 'application/javascript' });
-
-                this.worker = new Worker(URL.createObjectURL(blob), this.config.options);
-            } else {
-                throw new Error('No worker or config provided');
-            }
-        } else {
-            console.log('Using provided worker');
-        }
-        return this.worker;
+    if (workerOverrides?.basePath) {
+        config.basePath = workerOverrides.basePath;
     }
-}
+    let workerFile = config.workerFile;
+    if (config.basePath) {
+        workerFile = `${config.basePath}/${config.workerFile}`;
+    }
+    const fullUrl = new URL(workerFile, config.rootPath).href;
+    console.log(`Creating worker: ${fullUrl}`);
 
-export const defaultWorkerLoaders: Partial<Record<string, CrossOriginWorkerDefintion>> = {
-    editorWorker: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js',
-        options: {
-            type: 'module'
-        }
-    }),
-    tsWorker: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js',
-        options: {
-            type: 'module'
-        }
-    }),
-    htmlWorker: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js',
-        options: {
-            type: 'module'
-        }
-    }),
-    cssWorker: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js',
-        options: {
-            type: 'module'
-        }
-    }),
-    jsonWorker: new CrossOriginWorkerDefintion({
-        rootPath: import.meta.url,
-        workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js',
-        options: {
-            type: 'module'
-        }
-    })
+    const js = config.options?.type === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
+    const blob = new Blob([js], { type: 'application/javascript' });
+
+    return new Worker(URL.createObjectURL(blob), config.options);
 };
 
 export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
@@ -114,54 +93,63 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
     const monEnv = monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
     monEnv.workerOverrides = workerOverrides;
 
-    // if you choose to ignore the default mapping only the
-    // workerLoaders passed with workerOverrides are used
-    const ignoreDefaultMapping = workerOverrides?.ignoreDefaultMapping === true;
-    const workerLoaders = ignoreDefaultMapping ? {
-        ...workerOverrides?.workerLoaders
-    } : {
-        ...defaultWorkerLoaders, ...workerOverrides?.workerLoaders
-    };
     const getWorker = (moduleId: string, label: string ) => {
         console.log(`getWorker: moduleId: ${moduleId} label: ${label}`);
 
         let selector = label;
-        if (!ignoreDefaultMapping) {
-            switch (selector) {
-                case 'editor':
-                case 'editorWorkerService':
-                    selector = 'editorWorker';
-                    break;
-                case 'typescript':
-                case 'javascript':
-                    selector = 'tsWorker';
-                    break;
-                case 'html':
-                case 'handlebars':
-                case 'razor':
-                    selector = 'htmlWorker';
-                    break;
-                case 'css':
-                case 'scss':
-                case 'less':
-                    selector = 'cssWorker';
-                    break;
-                case 'json':
-                    selector = 'jsonWorker';
-                    break;
-                default:
-                    break;
+        let workerLoaders;
+
+        // if you choose to ignore the default mapping only the
+        // workerLoaders passed with workerOverrides are used
+        if (workerOverrides?.ignoreMapping === true) {
+            workerLoaders = {
+                ...workerOverrides?.workerLoaders
+            };
+        } else {
+            workerLoaders = {
+                ...defaultWorkerLoaders, ...workerOverrides?.workerLoaders
+            };
+
+            let mappingFunc = useDefaultWorkerMapping;
+            if (workerOverrides?.userDefinedMapping) {
+                mappingFunc = workerOverrides?.userDefinedMapping;
+            }
+            selector = mappingFunc(label);
+        }
+
+        const workerOrConfig = workerLoaders[selector];
+        if (workerOrConfig) {
+            const invoked = workerOrConfig();
+            if (Object.hasOwn(invoked, 'workerFile')) {
+                return buildWorker(invoked as WorkerConfig, workerOverrides);
+            } else {
+                return invoked as Worker;
             }
         }
-
-        const workerFactory = workerLoaders[selector];
-        const worker = workerFactory?.createWorker(workerOverrides);
-        if (!worker) {
-            throw new Error(`Unimplemented worker ${label} (${moduleId})`);
-        }
-        return worker;
+        throw new Error(`Unimplemented worker ${label} (${moduleId})`);
     };
-
     monEnv.getWorker = getWorker;
 };
 
+export const useDefaultWorkerMapping = (label: string) => {
+    switch (label) {
+        case 'editor':
+        case 'editorWorkerService':
+            return 'editorWorker';
+        case 'typescript':
+        case 'javascript':
+            return 'tsWorker';
+        case 'html':
+        case 'handlebars':
+        case 'razor':
+            return 'htmlWorker';
+        case 'css':
+        case 'scss':
+        case 'less':
+            return 'cssWorker';
+        case 'json':
+            return 'jsonWorker';
+        default:
+            return label;
+    }
+};

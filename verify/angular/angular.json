@@ -35,7 +35,11 @@
             "allowedCommonJsDependencies": [
               "vscode-jsonrpc",
               "vscode-languageclient",
-              "vscode-languageserver-protocol"
+              "vscode-languageserver-protocol",
+              "vscode-semver",
+              "vscode-oniguruma",
+              "vscode-textmate",
+              "vscode-marked"
             ]
           },
           "configurations": {

@@ -8,26 +8,25 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import  '@codingame/monaco-vscode-json-default-extension';
 import { disposeEditor, startEditor, swapEditors } from '../../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory, CrossOriginWorkerDefintion } from 'monaco-editor-wrapper/workerFactory';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-// override the worker factory with your own direct definition
-useWorkerFactory({
-    ignoreDefaultMapping: true,
-    workerLoaders: {
-        editorWorkerService: new CrossOriginWorkerDefintion(
-            new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
-        )
-    }
-});
+export const configureMonacoWorkers = () => {
+    // override the worker factory with your own direct definition
+    useWorkerFactory({
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
+        }
+    });
+};
 
-const languageId = 'json';
 let codeMain = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": {"value": "windows"}
+"$schema": "http://json.schemastore.org/coffeelint",
+"line_endings": {"value": "windows"}
 }`;
 const codeOrg = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": {"value": "unix"}
+"$schema": "http://json.schemastore.org/coffeelint",
+"line_endings": {"value": "unix"}
 }`;
 
 export const jsonClientUserConfig: UserConfig = {
@@ -40,7 +39,7 @@ export const jsonClientUserConfig: UserConfig = {
         },
         editorAppConfig: {
             $type: 'extended',
-            languageId: languageId,
+            languageId: 'json',
             code: codeMain,
             useDiffEditor: false,
             codeOriginal: codeOrg,

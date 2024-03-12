@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~3.0.0",
-    "@codingame/monaco-vscode-editor-api": "~3.0.0",
-    "monaco-editor-wrapper": "../../packages/wrapper",
-    "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-api@~3.0.0"
+    "@codingame/monaco-vscode-api": "~3.1.0",
+    "@codingame/monaco-vscode-editor-api": "~3.1.0",
+    "@typefox/monaco-editor-react": "3.0.0-next.3",
+    "monaco-editor-wrapper": "4.0.0-next.3",
+    "monaco-languageclient-examples": "8.0.0-next.3",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.0",
+    "vscode-ws-jsonrpc": "~3.3.0-next.3"
   },
   "devDependencies": {
     "http-server": "~14.1.1",
@@ -20,7 +22,8 @@
     "yarn": "1.22.22"
   },
   "scripts": {
-    "prepare": "yarn run build && yarn run start",
+    "verify": "yarn install && yarn run build && yarn run start",
+    "verify:ci": "yarn install && yarn run build",
     "clean": "shx rm -fr dist",
     "build:msg": "echo Building yarn/vite example:",
     "build": "yarn run build:msg && yarn run clean && vite build",

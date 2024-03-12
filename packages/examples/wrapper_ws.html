@@ -13,7 +13,9 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 80vh;"></div>
     <script type="module">
-        import { executeJsonClient } from './src/json/client/wrapperWs.ts';
+        import { executeJsonClient, configureMonacoWorkers } from './src/json/client/wrapperWs.ts';
+
+        configureMonacoWorkers();
         executeJsonClient();
     </script>
 </body>

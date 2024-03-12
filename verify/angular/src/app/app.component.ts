@@ -4,15 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { AfterViewInit, Component } from '@angular/core';
-// import { buildWorkerDefinition } from 'monaco-editor-workers';
-// buildWorkerDefinition('./assets/monaco-editor-workers/workers', window.location.href + '../..', false);
 import { startEditor } from 'monaco-languageclient-examples';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { jsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
+
 useWorkerFactory({
     rootPath: window.location.href + '../..',
     basePath: '../assets',
 });
-import { jsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 
 const codeMain = `{
     "$schema": "http://json.schemastore.org/coffeelint",

@@ -13,7 +13,10 @@
     <button type="button" id="button-swap">Swap Diff</button>
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 80vh;"></div>
-    <script type="module" src="./src/ts/wrapperTs.ts"></script>
+    <script type="module">
+        import { executeTsWrapper } from './src/ts/wrapperTs.ts';
+        executeTsWrapper();
+    </script>
 </body>
 
 </html>
