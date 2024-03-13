@@ -14,6 +14,8 @@ export type MonacoEditorProps = {
     userConfig: UserConfig,
     onTextChanged?: (text: string, isDirty: boolean) => void;
     onLoad?: () => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError?: (e: any) => void;
 }
 
 export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorProps> extends React.Component<T> {
@@ -140,12 +142,22 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         const {
             className,
             onLoad,
+            onError,
         } = this.props;
 
         if (this.containerElement) {
             this.containerElement.className = className ?? '';
 
-            await this.wrapper.start(this.containerElement);
+            // exceptions are forwarded to onError callback or the exception is thrown
+            try {
+                await this.wrapper.start(this.containerElement);
+            } catch (e) {
+                if (onError) {
+                    onError(e);
+                } else {
+                    throw e;
+                }
+            }
             this.started();
             this.isRestarting = undefined;
 

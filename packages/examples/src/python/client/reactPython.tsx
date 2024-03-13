@@ -33,6 +33,12 @@ export const runPythonReact = () => {
             'height': '80vh'
         }}
         onTextChanged={onTextChanged}
+        onLoad={() => {
+            console.log('Loaded');
+        }}
+        onError={(e) => {
+            console.error(e);
+        }}
     />;
 
     const root = ReactDOM.createRoot(document.getElementById('root')!);
