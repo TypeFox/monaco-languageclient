@@ -6,10 +6,16 @@
 import * as vscode from 'vscode';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-typescript-basics-default-extension';
+
+// only works if wrapper is configured in extended mode
+// import '@codingame/monaco-vscode-theme-defaults-default-extension';
+// import '@codingame/monaco-vscode-typescript-basics-default-extension';
 // import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+
+// basic-languages and language only exists if manually copied there
 // import '@codingame/monaco-vscode-editor-api/esm/vs/basic-languages/typescript/typescript.contribution.js';
 // import '@codingame/monaco-vscode-editor-api/esm/vs/language/typescript/monaco.contribution.js';
+
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
@@ -56,7 +62,7 @@ export const runTsWrapper = async () => {
                 debugLogging: true
             },
             editorAppConfig: {
-                $type: 'extended',
+                $type: 'classic',
                 languageId: 'typescript',
                 code,
                 codeUri: codeUri,
@@ -71,8 +77,17 @@ export const runTsWrapper = async () => {
     try {
         const wrapper = getWrapper();
         const htmlElement = document.getElementById('monaco-editor-root');
-        document.querySelector('#button-start')?.addEventListener('click', () => {
-            startEditor(userConfig, htmlElement, code, codeOriginal);
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            await startEditor(userConfig, htmlElement, code, codeOriginal);
+
+            vscode.commands.getCommands().then((x) => {
+                console.log(`Found ${x.length} commands`);
+                const finding = x.find((elem) => elem === 'actions.find');
+                console.log(`Found command: ${finding}`);
+            });
+
+            wrapper.getEditor()?.focus();
+            await vscode.commands.executeCommand('actions.find');
         });
         document.querySelector('#button-swap')?.addEventListener('click', () => {
             swapEditors(userConfig, htmlElement, code, codeOriginal);
@@ -99,15 +114,6 @@ export const runTsWrapper = async () => {
                 codeOriginal = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
             }
         });
-
-        vscode.commands.getCommands().then((x) => {
-            console.log(`Found ${x.length} commands`);
-            const finding = x.find((elem) => elem === 'actions.find');
-            console.log(`Found command: ${finding}`);
-        });
-
-        wrapper.getEditor()?.focus();
-        await vscode.commands.executeCommand('actions.find');
     } catch (e) {
         console.error(e);
     }
