@@ -5,9 +5,6 @@
 
 import type * as vscode from 'vscode';
 import { IDisposable, editor } from '@codingame/monaco-vscode-editor-api';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import { whenReady as whenReadyTheme } from '@codingame/monaco-vscode-theme-defaults-default-extension';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { UserConfig } from './wrapper.js';
@@ -70,7 +67,9 @@ export class EditorAppExtended extends EditorAppBase {
         return this.extensionRegisterResults.get(extensionName);
     }
 
-    override specifyServices(): editor.IEditorOverrideServices {
+    override async specifyServices(): Promise<editor.IEditorOverrideServices> {
+        const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
+        const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
         return {
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride()
@@ -80,6 +79,7 @@ export class EditorAppExtended extends EditorAppBase {
     override async init() {
         // await all extensions that should be ready beforehand
         // always await theme extension
+        const whenReadyTheme = (await import('@codingame/monaco-vscode-theme-defaults-default-extension')).whenReady;
         const awaitReadiness = (this.config.awaitExtensionReadiness ?? []).concat(whenReadyTheme);
         await this.awaitReadiness(awaitReadiness);
 

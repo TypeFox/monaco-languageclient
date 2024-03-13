@@ -249,7 +249,7 @@ export abstract class EditorAppBase {
     }
 
     abstract init(): Promise<void>;
-    abstract specifyServices(): editor.IEditorOverrideServices;
+    abstract specifyServices(): Promise<editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;
     abstract disposeApp(): void;
     abstract isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean;

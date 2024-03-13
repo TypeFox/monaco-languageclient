@@ -3,8 +3,6 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
-import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/lib/common/client.js';
 
 export interface IConnectionProvider {
@@ -36,7 +34,9 @@ export class MonacoLanguageClient extends BaseLanguageClient {
  *   - languages
  *   - model
  */
-export const supplyRequiredServices = () => {
+export const supplyRequiredServices = async () => {
+    const getLanguagesServiceOverride = (await import('@codingame/monaco-vscode-languages-service-override')).default;
+    const getModelServiceOverride = (await import('@codingame/monaco-vscode-model-service-override')).default;
     return {
         ...getLanguagesServiceOverride(),
         ...getModelServiceOverride()

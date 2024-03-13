@@ -62,7 +62,7 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         // editorApps init their own service thats why they have to be created first
-        this.configureServices(serviceConfig);
+        await this.configureServices(serviceConfig);
 
         this.languageClientWrapper = new LanguageClientWrapper();
         await this.languageClientWrapper.init({
@@ -78,7 +78,7 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Child classes are allow to override the services configuration implementation.
      */
-    protected configureServices(serviceConfig: InitializeServiceConfig) {
+    protected async configureServices(serviceConfig: InitializeServiceConfig) {
         // always set required services if not configured
         serviceConfig.userServices = serviceConfig.userServices ?? {};
         const configureService = serviceConfig.userServices.configurationService ?? undefined;
@@ -108,7 +108,8 @@ export class MonacoEditorLanguageClientWrapper {
                 }
             };
         }
-        mergeServices(this.editorApp?.specifyServices() ?? {}, serviceConfig.userServices);
+        const specificServices = await this.editorApp?.specifyServices();
+        mergeServices(specificServices ?? {}, serviceConfig.userServices);
 
         // overrule debug log flag
         serviceConfig.debugLogging = this.logger.isEnabled() && (serviceConfig.debugLogging || this.logger.isDebugEnabled());

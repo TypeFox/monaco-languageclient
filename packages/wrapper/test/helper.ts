@@ -32,10 +32,10 @@ export const createEditorAppConfig = (type: EditorAppType) => {
     };
 };
 
-export const updateExtendedAppPrototyp = () => {
-    EditorAppExtended.prototype.specifyServices = () => {
+export const updateExtendedAppPrototyp = async () => {
+    EditorAppExtended.prototype.specifyServices = async () => {
         console.log('Using overriden EditorAppExtended.prototype.specifyServices');
-        return {};
+        return Promise.resolve({});
     };
 };
 

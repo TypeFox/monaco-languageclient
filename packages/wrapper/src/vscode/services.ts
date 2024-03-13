@@ -71,7 +71,7 @@ export const importAllServices = async (config?: InitializeServiceConfig) => {
     const lc: InitializeServiceConfig = config ?? {};
     const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
 
-    const lcRequiredServices = supplyRequiredServices();
+    const lcRequiredServices = await supplyRequiredServices();
     mergeServices(lcRequiredServices, userServices);
     reportServiceLoading(userServices, lc.debugLogging === true);
 

@@ -40,8 +40,8 @@ export class EditorAppClassic extends EditorAppBase {
         return this.config;
     }
 
-    override specifyServices(): editor.IEditorOverrideServices {
-        return {};
+    override async specifyServices(): Promise<editor.IEditorOverrideServices> {
+        return Promise.resolve({});
     }
 
     async init() {
