@@ -3,10 +3,9 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from '@codingame/monaco-vscode-editor-api';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
+import { editor } from '@codingame/monaco-vscode-editor-api';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { mergeServices, InitializeServiceConfig } from './vscode/services.js';
+import { InitializeServiceConfig, initServices, configureServices } from './vscode/services.js';
 import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { ModelUpdate } from './editorAppBase.js';
@@ -54,7 +53,7 @@ export class MonacoEditorLanguageClientWrapper {
 
         this.id = userConfig.id ?? Math.floor(Math.random() * 101).toString();
         this.logger = new Logger(userConfig.loggerConfig);
-        const serviceConfig: InitializeServiceConfig = userConfig.wrapperConfig.serviceConfig ?? {};
+
         if (userConfig.wrapperConfig.editorAppConfig.$type === 'classic') {
             this.editorApp = new EditorAppClassic(this.id, userConfig, this.logger);
         } else {
@@ -62,57 +61,18 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         // editorApps init their own service thats why they have to be created first
-        await this.configureServices(serviceConfig);
+        const specificServices = await this.editorApp?.specifyServices();
+        const serviceConfig = await configureServices(userConfig.wrapperConfig.serviceConfig, specificServices, this.logger);
+        await initServices(serviceConfig, `monaco-editor (${this.id})`);
 
         this.languageClientWrapper = new LanguageClientWrapper();
         await this.languageClientWrapper.init({
             languageId: this.editorApp.getConfig().languageId,
-            serviceConfig,
             languageClientConfig: userConfig.languageClientConfig,
             logger: this.logger
         });
 
         this.initDone = true;
-    }
-
-    /**
-     * Child classes are allow to override the services configuration implementation.
-     */
-    protected async configureServices(serviceConfig: InitializeServiceConfig) {
-        // always set required services if not configured
-        serviceConfig.userServices = serviceConfig.userServices ?? {};
-        const configureService = serviceConfig.userServices.configurationService ?? undefined;
-        const workspaceConfig = serviceConfig.workspaceConfig ?? undefined;
-
-        if (!configureService) {
-            const mlcDefautServices = {
-                ...getConfigurationServiceOverride()
-            };
-            mergeServices(mlcDefautServices, serviceConfig.userServices);
-
-            if (workspaceConfig) {
-                throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
-            }
-        }
-        // adding the default workspace config if not provided
-        if (!workspaceConfig) {
-            serviceConfig.workspaceConfig = {
-                workspaceProvider: {
-                    trusted: true,
-                    workspace: {
-                        workspaceUri: Uri.file('/workspace')
-                    },
-                    async open() {
-                        return false;
-                    }
-                }
-            };
-        }
-        const specificServices = await this.editorApp?.specifyServices();
-        mergeServices(specificServices ?? {}, serviceConfig.userServices);
-
-        // overrule debug log flag
-        serviceConfig.debugLogging = this.logger.isEnabled() && (serviceConfig.debugLogging || this.logger.isDebugEnabled());
     }
 
     /**

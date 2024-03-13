@@ -22,6 +22,7 @@ export type WorkerConfig = {
 
 export interface MonacoEnvironmentEnhanced extends Environment {
     workerOverrides?: WorkerOverrides;
+    vscodeInitialising: boolean;
     vscodeApiInitialised: boolean;
 }
 

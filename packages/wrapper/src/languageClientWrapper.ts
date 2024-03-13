@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MonacoLanguageClient, IConnectionProvider } from 'monaco-languageclient';
-import { initServices, InitializeServiceConfig } from './vscode/services.js';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/lib/common/client.js';
@@ -35,7 +34,6 @@ export class LanguageClientWrapper {
 
     async init(config: {
         languageId: string,
-        serviceConfig?: InitializeServiceConfig,
         languageClientConfig?: LanguageClientConfig,
         logger?: Logger
     }) {
@@ -45,8 +43,6 @@ export class LanguageClientWrapper {
             this.name = this.languageClientConfig.options.name ?? 'unnamed';
         }
         this.logger = config.logger;
-
-        await initServices(config.serviceConfig);
     }
 
     haveLanguageClient(): boolean {

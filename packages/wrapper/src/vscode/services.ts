@@ -3,12 +3,13 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor } from '@codingame/monaco-vscode-editor-api';
+import { editor, Uri } from '@codingame/monaco-vscode-editor-api';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import 'vscode/localExtensionHost';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { MonacoEnvironmentEnhanced } from '../workerFactory.js';
 import { supplyRequiredServices } from 'monaco-languageclient';
+import { Logger } from '../logger.js';
 
 export type InitializeServiceConfig = {
     userServices?: editor.IEditorOverrideServices;
@@ -16,23 +17,76 @@ export type InitializeServiceConfig = {
     workspaceConfig?: IWorkbenchConstructionOptions;
 };
 
-export const wasVscodeApiInitialized = () => {
-    return (window.MonacoEnvironment as MonacoEnvironmentEnhanced)?.vscodeApiInitialised === true;
+/**
+     * Child classes are allow to override the services configuration implementation.
+     */
+export const configureServices = async (input?: InitializeServiceConfig, specificServices?: editor.IEditorOverrideServices, logger?: Logger): Promise<InitializeServiceConfig> => {
+    const serviceConfig = input ?? {};
+    // configure log level
+    serviceConfig.debugLogging = logger?.isEnabled() === true && (serviceConfig.debugLogging === true || logger?.isDebugEnabled() === true);
+
+    // always set required services if not configured
+    serviceConfig.userServices = serviceConfig.userServices ?? {};
+    const configureService = serviceConfig.userServices.configurationService ?? undefined;
+    const workspaceConfig = serviceConfig.workspaceConfig ?? undefined;
+
+    if (!configureService) {
+        const getConfigurationServiceOverride = (await import('@codingame/monaco-vscode-configuration-service-override')).default;
+        const mlcDefautServices = {
+            ...getConfigurationServiceOverride()
+        };
+        mergeServices(mlcDefautServices, serviceConfig.userServices);
+
+        if (workspaceConfig) {
+            throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
+        }
+    }
+    // adding the default workspace config if not provided
+    if (!workspaceConfig) {
+        serviceConfig.workspaceConfig = {
+            workspaceProvider: {
+                trusted: true,
+                workspace: {
+                    workspaceUri: Uri.file('/workspace')
+                },
+                async open() {
+                    return false;
+                }
+            }
+        };
+    }
+    mergeServices(specificServices ?? {}, serviceConfig.userServices);
+
+    return serviceConfig;
 };
 
-export const initServices = async (config?: InitializeServiceConfig) => {
-    if (!wasVscodeApiInitialized()) {
-        await importAllServices(config);
-        if (config?.debugLogging === true) {
-            console.log('Initialization of vscode services completed successfully.');
-        }
-        if (!window.MonacoEnvironment) {
-            window.MonacoEnvironment = {};
-        }
-        (window.MonacoEnvironment as MonacoEnvironmentEnhanced).vscodeApiInitialised = true;
-    } else {
-        if (config?.debugLogging === true) {
-            console.log('Initialization of vscode services can only performed once!');
+export const initServices = async (config?: InitializeServiceConfig, caller?: string) => {
+    if (!window.MonacoEnvironment) {
+        window.MonacoEnvironment = {};
+    }
+    const envEnhanced = (window.MonacoEnvironment as MonacoEnvironmentEnhanced);
+    if (envEnhanced.vscodeApiInitialised === undefined) {
+        envEnhanced.vscodeApiInitialised = false;
+    }
+    if (envEnhanced.vscodeInitialising === undefined) {
+        envEnhanced.vscodeInitialising = false;
+    }
+
+    if (!envEnhanced.vscodeInitialising) {
+        if (envEnhanced.vscodeApiInitialised) {
+            if (config?.debugLogging === true) {
+                console.log('Initialization of vscode services can only performed once!');
+            }
+        } else {
+            envEnhanced.vscodeInitialising = true;
+            if (config?.debugLogging === true) {
+                console.log(`Initializing vscode services. Caller: ${caller ?? 'unknown'}`);
+            }
+            await importAllServices(config);
+            if (config?.debugLogging === true) {
+                console.log('Initialization of vscode services completed successfully.');
+            }
+            envEnhanced.vscodeApiInitialised = true;
         }
     }
 };
