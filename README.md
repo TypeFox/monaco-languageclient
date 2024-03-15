@@ -6,7 +6,13 @@
 [![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 [![NPM Download](https://img.shields.io/npm/dt/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
 
-Repository for [NPM module](https://www.npmjs.com/package/monaco-languageclient) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/) and [NPM module](https://www.npmjs.com/package/vscode-ws-jsonrpc) which implements communication between a jsonrpc client and server over WebSocket.
+This repository now multiple npm packages under under roof:
+
+- [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
+- [vscode-ws-jsonrpc](https://www.npmjs.com/package/vscode-ws-jsonrpc) which implements communication between a jsonrpc client and server over WebSocket.
+- [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) for building monaco editor application driven by configuration
+- [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) puts a react cloack over `monaco-editor-wrapper`
+- [monaco-languageclient-examples](https://www.npmjs.com/package/monaco-languageclient-examples) provides the examples which allows to use them externally.
 
 Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) for a detail explanation how to connect the Monaco editor to your language server.
 
@@ -14,8 +20,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
   - [Getting started](#getting-started)
     - [Vite dev server](#vite-dev-server)
   - [Using monaco-languageclient](#using-monaco-languageclient)
-    - [NEW with v7: Treemended monaco-editor](#new-with-v7-treemended-monaco-editor)
-      - [Overrides instructions](#overrides-instructions)
+    - [NEW with v8: Own monaco-editor-api package](#new-with-v8-own-monaco-editor-api-package)
     - [Using services and extra packages from @codingame/monaco-vscode-api](#using-services-and-extra-packages-from-codingamemonaco-vscode-api)
       - [textmate and monarch](#textmate-and-monarch)
   - [Examples Overview](#examples-overview)
@@ -61,10 +66,12 @@ npm run build
 
 ### Vite dev server
 
-Start the Vite dev server. It serves all client code at [localhost](http://localhost:8080). You can go to the [index.html](http://localhost:8080/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available:
+Start the Vite dev server. It serves all client code at [localhost](http://localhost:20001). You can go to the [index.html](http://localhost:20001/index.html) and navigate to all client examples from there. You can edit the client example code directly (TypeScript) and Vite ensures it automatically made available:
 
 ```shell
 npm run dev
+# OR: this clears the cache and has debug output
+npm run dev:debug
 ```
 
 As this is a npm workspace the main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the childe packages like `npm run build:examples`.
@@ -77,36 +84,10 @@ npm run watch
 
 ## Using monaco-languageclient
 
-TODO: Section needs to be overhauled
+### NEW with v8: Own monaco-editor-api package
 
-### NEW with v7: Treemended monaco-editor
-
-Since version 2 (see [Important Project Changes](#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`.
-
-Earlier in 2023 we started to treemend an existing `monaco-editor` dependency via a postinstall script. This adds back monaco-editor code that was removed during bundling/threeshaking (*treemending*). See the detailed explanation [here](https://github.com/CodinGame/monaco-vscode-api#why). But, this introduced multiple problems.
-
-#### Overrides instructions
-
-With v7 we decided to use readily treemended version of monaco-editor called [@codingame/monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-vscode-editor-api), but this requires to add `overrides` (npm/pnpm) and `resolutions` (yarn) in your project. Setting these ensures that all dependencies to `monaco-editor` and `vscode` are aligned:
-
-```yaml
-  "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.1"
-  },
-  "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.1"
-  }
-```
-
-In the following table you can see the effect when using `npm list monaco-editor` (here the [angular client example](https://github.com/TypeFox/monaco-languageclient-ng-example.git) was used to demonstrate it):
-
-| No overrides | With overrides |
-| :----         | :----   |
-| ![No overrides](./docs/images/no-overrides.png) | ![With overrides](./docs/images/with-overrides.png)  |
-
-With `overrides` or `resolutions` configured any child depndencies with a another `monaco-editor` version will chnaged to the one you enforce.
-
-This means some extra-configuration work, but removes the need for any postinstall scripts which lead to multiple package manager problems. It is now also very clear what is used and needed. Please see [Monaco-editor / @codingame/monaco-vscode-api compatibility table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for a complete overview.
+Since version 2 (see [Important Project Changes](#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`. With v6 and v7 we "treemend" used a "treemended" version of `monaco-editor` which brought back monaco-editor code that was removed during bundling/threeshaking (*treemending*). This left users with the need to define overrides / resolution which was problematic.
+Therefore [monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-editor-wrapper) is now used and installed as an alias to monaco-editor because it provides the same api as the official monaco-editor.
 
 ### Using services and extra packages from @codingame/monaco-vscode-api
 
@@ -117,7 +98,7 @@ The bespoke projects not only supplies the api, but it provides 100+ packages wi
 
 Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
-Please check our examples [in the examples overview chapter](#examples-overview) as they demonstrate the usage (jump-start: [python client](./packages/examples/src/python/client/main.ts) for services and default extension usage or [Langium Statemachine](./packages/examples/src/langium/statemachineClient.ts) / [Locale Loader](./packages/examples/src/langium/localeLoader.ts))
+Please check our examples [in the examples overview chapter](#examples-overview) as they demonstrate the usage (jump-start: [python client](./packages/examples/src/python/client/main.ts) for services and default extension usage or [Langium Statemachine](./packages/examples/src/langium/statemachine/main.ts) / [Locale Loader](./packages/examples/src/utils/localeLoader.ts))
 
 #### textmate and monarch
 
@@ -336,12 +317,12 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (see the [following table](#monaco-editor--codingamemonaco-vscode-api-compatibility-table)), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@~3.1.1"
+"vscode": "npm:@codingame/monaco-vscode-api@~3.1.2"
 ```
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table
 
-[This information has been moved here](./docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
+Please see [Version information and project History](./docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for a complete overview.
 
 ## Important Project Changes
 

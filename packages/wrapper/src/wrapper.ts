@@ -3,14 +3,15 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor } from '@codingame/monaco-vscode-editor-api';
+import { editor } from 'monaco-editor';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { InitializeServiceConfig, initServices, configureServices } from './vscode/services.js';
+import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { ModelUpdate } from './editorAppBase.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 import { Logger, LoggerConfig } from './logger.js';
+import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
 
 export type WrapperConfig = {
     serviceConfig?: InitializeServiceConfig;
@@ -63,7 +64,7 @@ export class MonacoEditorLanguageClientWrapper {
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp?.specifyServices();
         const serviceConfig = await configureServices(userConfig.wrapperConfig.serviceConfig, specificServices, this.logger);
-        await initServices(serviceConfig, `monaco-editor (${this.id})`);
+        await initServices(serviceConfig, `monaco-editor (${this.id})`, checkServiceConsistency);
 
         this.languageClientWrapper = new LanguageClientWrapper();
         await this.languageClientWrapper.init({

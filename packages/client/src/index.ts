@@ -28,17 +28,3 @@ export class MonacoLanguageClient extends BaseLanguageClient {
         return this.connectionProvider.get(encoding);
     }
 }
-
-/**
- * monaco-languageclient requires the following services in addition to the default services monaco-vscode-api provides:
- *   - languages
- *   - model
- */
-export const supplyRequiredServices = async () => {
-    const getLanguagesServiceOverride = (await import('@codingame/monaco-vscode-languages-service-override')).default;
-    const getModelServiceOverride = (await import('@codingame/monaco-vscode-model-service-override')).default;
-    return {
-        ...getLanguagesServiceOverride(),
-        ...getModelServiceOverride()
-    };
-};

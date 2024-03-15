@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { ModelUpdate, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
-import { languages } from '@codingame/monaco-vscode-editor-api';
+import { languages } from 'monaco-editor';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 

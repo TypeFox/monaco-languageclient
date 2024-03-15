@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type * as vscode from 'vscode';
-import { IDisposable, editor } from '@codingame/monaco-vscode-editor-api';
+import { IDisposable, editor } from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { UserConfig } from './wrapper.js';

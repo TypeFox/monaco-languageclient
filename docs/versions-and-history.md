@@ -2,11 +2,11 @@
 
 ## Monaco-editor / @codingame/monaco-vscode-api compatibility table
 
-The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
+The following table describes which version of **monaco-languageclient** and **@codingame/monaco-vscode-api** are compatible with a specific version of **monaco-editor** and **vscode**. The listing starts with version 2.0.0 because **@codingame/monaco-vscode-api** was introduced for the first time.
 
-| monaco-languageclient | monaco-vscode-api | monaco-vscode-editor-api | monaco-editor | release date | comment |
+| monaco-languageclient | monaco-vscode-api / editor-api | vscode | monaco-editor | release date | comment |
 | :----         | :----   | :---   | :--- | :--- | :--- |
-| 8.0.0         | 2.0.1  | 2.0.1 | 0.45.0 | 2024-02-0x | `@codingame/monaco-vscode-editor-api` replaces `@codingame/monaco-editor-treemended` |
+| 8.0.0         | 3.1.2  | 1.87.2 | 0.47.0 | 2024-03-1x | `@codingame/monaco-vscode-editor-api` replaces<br>`@codingame/monaco-editor-treemended`<br>`@codingame/monaco-vscode-api` implements its own versioning scheme |
 | 7.3.0         | 1.85.0  | 1.85.0 | 0.45.0 | 2024-01-04 | |
 | 7.2.0         | 1.83.16  | 1.83.16 | 0.44.0 | 2023-12-07 | |
 | 7.1.0         | 1.83.12  | 1.83.12 | 0.44.0 | 2023-11-27 | |
@@ -45,9 +45,9 @@ The following table describes which version of **monaco-languageclient** and **@
 
 ## Important Project Changes
 
-### Febuary 2024 (v8.0.0)
+### March 2024 (v8.0.0)
 
-`@codingame/monaco-editor-treemended` is replaced by self-standing `@codingame/monaco-vscode-editor-api`.
+`@codingame/monaco-editor-treemended` is replaced by self-standing `@codingame/monaco-vscode-editor-api`. All service and editor related functions have been moved from `monaco-languageclient` to `monaco-editor-wrapper` which has been moved into this repository.
 
 ### October 2023 (v7.0.0)
 

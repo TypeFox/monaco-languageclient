@@ -12,7 +12,7 @@ import { createConverter as createCodeConverter } from 'vscode-languageclient/li
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { Uri } from '@codingame/monaco-vscode-editor-api';
+import { Uri } from 'monaco-editor';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({

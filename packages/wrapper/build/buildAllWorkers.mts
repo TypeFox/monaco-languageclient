@@ -11,7 +11,7 @@ const format = 'esm' as Format;
 const promises = [] as Array<Promise<void>>;
 promises.push(bundleWorker(
     format,
-    '../../node_modules/@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js',
+    '../../node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
     './dist/workers-esbuild/editorWorker-es.js'
 ));
 

@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
-import { loadStatemachinWorkerRegular } from './main.js';
+import { loadStatemachineWorkerRegular } from './main.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -18,7 +18,7 @@ export const configureMonacoWorkers = () => {
 
 export const runStatemachineReact = async () => {
     try {
-        const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachinWorkerRegular());
+        const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachineWorkerRegular());
         const comp = <MonacoEditorReactComp
             userConfig={langiumGlobalConfig}
             style={{

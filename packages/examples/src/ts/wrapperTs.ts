@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import * as monaco from 'monaco-editor';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 
 // only works if wrapper is configured in extended mode
@@ -13,8 +13,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 
 // basic-languages and language only exists if manually copied there
-// import '@codingame/monaco-vscode-editor-api/esm/vs/basic-languages/typescript/typescript.contribution.js';
-// import '@codingame/monaco-vscode-editor-api/esm/vs/language/typescript/monaco.contribution.js';
+// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+// import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';

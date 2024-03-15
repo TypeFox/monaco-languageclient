@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, languages } from '@codingame/monaco-vscode-editor-api';
+import { editor, languages } from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { UserConfig } from './wrapper.js';
 import { Logger } from './logger.js';

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Environment } from '@codingame/monaco-vscode-editor-api';
+import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
 
 export type WorkerOverrides = {
     rootPath?: string| URL;
@@ -18,12 +18,6 @@ export type WorkerConfig = {
     basePath?: string| URL;
     workerFile: string| URL;
     options?: WorkerOptions;
-}
-
-export interface MonacoEnvironmentEnhanced extends Environment {
-    workerOverrides?: WorkerOverrides;
-    vscodeInitialising: boolean;
-    vscodeApiInitialised: boolean;
 }
 
 export type WorkerConfigSupplier = () => WorkerConfig;
@@ -87,12 +81,7 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
 };
 
 export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
-    const monWin = (self as Window);
-    if (!monWin.MonacoEnvironment) {
-        monWin.MonacoEnvironment = {};
-    }
-    const monEnv = monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
-    monEnv.workerOverrides = workerOverrides;
+    const envEnhanced = initEnhancedMonacoEnvironment();
 
     const getWorker = (moduleId: string, label: string ) => {
         console.log(`getWorker: moduleId: ${moduleId} label: ${label}`);
@@ -129,7 +118,7 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
         }
         throw new Error(`Unimplemented worker ${label} (${moduleId})`);
     };
-    monEnv.getWorker = getWorker;
+    envEnhanced.getWorker = getWorker;
 };
 
 export const useDefaultWorkerMapping = (label: string) => {

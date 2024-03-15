@@ -15,18 +15,18 @@ export const configureMonacoWorkers = () => {
     useWorkerFactory({
         ignoreMapping: true,
         workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
         }
     });
 };
 
 let codeMain = `{
-"$schema": "http://json.schemastore.org/coffeelint",
-"line_endings": {"value": "windows"}
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": {"value": "windows"}
 }`;
 const codeOrg = `{
-"$schema": "http://json.schemastore.org/coffeelint",
-"line_endings": {"value": "unix"}
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": {"value": "unix"}
 }`;
 
 export const jsonClientUserConfig: UserConfig = {

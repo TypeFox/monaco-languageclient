@@ -24,7 +24,7 @@ const startEditor = async () => {
     }
 
     // init first worker regularly
-    const stateMachineWorkerRegular = loadStatemachinWorkerRegular();
+    const stateMachineWorkerRegular = loadStatemachineWorkerRegular();
     const langiumGlobalConfig = await createLangiumGlobalConfig(stateMachineWorkerRegular);
     await wrapper.initAndStart(langiumGlobalConfig, document.getElementById('monaco-editor-root'));
 
@@ -66,7 +66,7 @@ export const runStatemachineWrapper = async () => {
     }
 };
 
-export const loadStatemachinWorkerRegular = () => {
+export const loadStatemachineWorkerRegular = () => {
     // Language Server preparation
     const workerUrl = new URL('./src/langium/statemachine/worker/statemachine-server.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
