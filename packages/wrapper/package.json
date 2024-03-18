@@ -80,13 +80,14 @@
     "dist",
     "bundle",
     "src",
-    "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "scripts": {
     "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
-    "bundle": "vite --config vite.bundle.config.ts build",
+    "build:bundle": "vite --config vite.bundle.config.ts build",
     "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
     "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",
     "build:worker:html": "vite -c ./build/vite.htmlWorker.ts build",
@@ -94,7 +95,7 @@
     "build:worker:json": "vite -c ./build/vite.jsonWorker.ts build",
     "build:workers:vite": "npm run build:worker:editor && npm run build:worker:ts && npm run build:worker:html && npm run build:worker:css && npm run build:worker:json",
     "build:workers:esbuild": "vite-node ./build/buildAllWorkers.mts",
-    "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite && npm run bundle"
+    "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite && npm run build:bundle"
   },
   "volta": {
     "node": "20.11.1",

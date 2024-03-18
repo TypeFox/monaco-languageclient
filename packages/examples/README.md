@@ -12,6 +12,14 @@ This package contains [all examples from the monaco-languageclient repository](h
 
 All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/CHANGELOG.md).
 
+## Getting Started
+
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+
+## Usage
+
+Needs to be added.
+
 ## License
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/LICENSE)

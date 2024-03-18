@@ -47,7 +47,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 ### March 2024 (v8.0.0)
 
-`@codingame/monaco-editor-treemended` is replaced by self-standing `@codingame/monaco-vscode-editor-api`. All service and editor related functions have been moved from `monaco-languageclient` to `monaco-editor-wrapper` which has been moved into this repository.
+`@codingame/monaco-editor-treemended` is replaced by self-standing `@codingame/monaco-vscode-editor-api`. `monaco-editor-wrapper` and `@typefox/monaco-editor-react` have been moved into this repository.
 
 ### October 2023 (v7.0.0)
 

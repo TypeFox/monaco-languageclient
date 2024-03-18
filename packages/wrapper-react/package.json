@@ -36,8 +36,9 @@
     "dist",
     "bundle",
     "src",
-    "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "scripts": {
     "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",

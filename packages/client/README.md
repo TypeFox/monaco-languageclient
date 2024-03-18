@@ -8,12 +8,45 @@
 
 Module to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
 
+## CHANGELOG
+
+All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/CHANGELOG.md).
+
+## Getting Started
+
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+
+## Usage
+
+### NEW with v8: Own monaco-vscode-editor-api package
+
+Since version 2 (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`. With v6 and v7 we "treemend" used a "treemended" version of `monaco-editor` which brought back monaco-editor code that was removed during bundling/threeshaking (*treemending*). This left users with the need to define overrides / resolution which was problematic.
+Therefore [monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-editor-wrapper) is now used and installed as an alias to `monaco-editor` because it provides the same api as the official monaco-editor.
+
+### Using services and extra packages from @codingame/monaco-vscode-api
+
+The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `monaco-languageclient` via the required `initServices` the following services are always loaded:
+
+- *languages* and model *services* (always added by `monaco-languagclient`)
+- *layout*, *environment*, *extension*, *files* and *quickAccess* (always added by `monaco-vscode-api`)
+
+Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
+
+Please check our examples [in the examples overview chapter](https://github.com/TypeFox/monaco-languageclient/tree/main?tab=readme-ov-file#examples-overview) as they demonstrate the usage.
+
+#### textmate and monarch
+
+If you use the `textmate` or `theme` services you are able to load textmate based grammars and theme definitions from vscode:
+
+```js
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
+```
+
+Once you those services you can no longer make use of monarch based grammars and themes.
+
 See [here](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md) for a detailed documentation.
-
-## History
-
-For the history please see the [README](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#latest-important-project-changes) and [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/CHANGELOG.md).
 
 ## License
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/LICENSE)

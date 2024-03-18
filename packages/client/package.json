@@ -52,7 +52,7 @@
     "src",
     "README.md",
     "CHANGELOG.md",
-    "License.txt"
+    "LICENSE"
   ],
   "dependencies": {
     "@codingame/monaco-vscode-languages-service-override": "~3.1.2",

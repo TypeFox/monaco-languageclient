@@ -2,18 +2,13 @@
 
 This packages provides a wrapped `monaco-editor` with or without language support (main package export). The `monaco-languageclient` can be activated to connect to a language server either via jsonrpc over a websocket to an external server process or via language server protocol for browser where the language server runs in a web worker.
 
+## CHANGELOG
+
+All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/CHANGELOG.md).
+
 ## Getting Started
 
-We recommend using [Volta](https://volta.sh/) to ensure your node & npm are on known good versions.
-
-If you have node.js LTS available, then from the root of the project run:
-
-```bash
-npm i
-npm run build
-```
-
-This will clean, compile and build a bundle of the `monaco-editor-wrapper`, which you can reference in your own projects. For examples, you can see the top-level [README](../../README.md#getting-started) with details on running a local dev instance.
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
 
 ## Configuration
 
@@ -53,23 +48,18 @@ Monarch grammars and themes can only be used in **classic** mode and textmate gr
 Monaco Editor with TypeScript language support in web worker and relying on classic mode:
 
 ```ts
+import '@codingame/monaco-vscode-python-default-extension';
 import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
-import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
-import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
 // no top-level await
 const run = async () => {
   const wrapper = new MonacoEditorLanguageClientWrapper();
-  const code: `function sayHello(): string {
-  return "Hello";
-};`,
   const userConfig = {
     wrapperConfig: {
       editorAppConfig: {
-        $type: 'classic',
-        languageId: 'typescript',
-        code,
-        useDiffEditor: false,
+        $type: 'extendend',
+        languageId: 'python',
+        code: 'print("Hello, World!")'
       }
     }
   };
@@ -79,12 +69,18 @@ const run = async () => {
 }
 ```
 
+### Bundled Usage
+
+For special cases you might want the component to be processed in advance. For these cases we provide a pre-bundled version that you can reference instead, built using `npm run build:bundle`. This can be helpful if you're working within some other framework besides React (Hugo for example).
+
+```ts
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper/bundle';
+```
+
 ## Examples
 
-These are the examples specifically for `monaco-editor-wrapper` you find in the repository:
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
 
-- TypeScript editor worker using classic mode, [see](../examples/wrapper_ts.html)
-- Language client & web socket language server example using extended mode [see](../examples/wrapper_ws.html) It requires the json language server to run. Use `start:server:json` from [here](../examples/package.json)
-- Multiple editors using classic mode [see](../examples/wrapper_adv.html)
-- Langium statemachine language client and web worker based language server using extended mode [see](../examples/wrapper_statemachine.html)
-- Langium grammar language client and web worker based language server allowing to choose classic or extended mode [see](../examples/wrapper_langium.html)
+## License
+
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/LICENSE)

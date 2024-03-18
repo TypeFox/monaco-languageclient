@@ -1,44 +1,33 @@
 # React component for Monaco-Editor and Monaco Languageclient
 
-This packages provides a React component that it based on the [monaco-editor-wrapper](../monaco-editor-wrapper/). It behaves in nearly the same way as the monaco editor, with the primary difference being that you interact with it through a React component.
+This packages provides a React component that it based on the [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper). It behaves nearly the same way as the monaco editor, with the primary difference being that you interact with it through a React component.
 
 The [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) can be activated to connect to a language server either via jsonrpc over a websocket to an exernal server process, or via the Language Server Protocol for the browser where the language server runs in a web worker.
 
+## CHANGELOG
+
+All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/CHANGELOG.md).
+
 ## Getting Started
 
-We recommend using [Volta](https://volta.sh/) to ensure your node & npm are on known good versions.
-
-If you have node.js LTS available, then from the root of the project run:
-
-```bash
-npm i
-npm run build
-```
-
-This will clean, compile and build a bundle of the monaco-editor-react component, which you can reference in your own projects.
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
 
 ## Usage
 
 You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same `UserConfig` approach which is then applied to `monaco-editor-wrapper`.
 
 ```typescript
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import '@codingame/monaco-vscode-python-default-extension';
 import { UserConfig } from 'monaco-editor-wrapper';
-
-import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
-import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 
 const userConfig: UserConfig = {
   htmlElement: document.getElementById('monaco-editor-root') as HTMLElement,
   wrapperConfig: {
     editorAppConfig: {
-      $type: 'classic',
-      languageId: 'typescript',
-      code: `function sayHello(): string {
-    return "Hello";
-};`,
-      useDiffEditor: false,
-      theme: 'vs-dark'
+      $type: 'extendend',
+      languageId: 'python',
+      code: 'print("Hello, World!")'
     }
   }
 };
@@ -60,15 +49,7 @@ For special cases you might want the component to be processed in advance. For t
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react/bundle';
 ```
 
-## Examples
-
-These are the examples specifically for `@typefox/monaco-editor-react` that you can find in the repository:
-
-- TypeScript editor worker using classic configuration [see](../examples/react_ts.html)
-- Langium statemachine language client and web worker based language server using the exact same user configuration as [wrapper statemachine](../examples/wrapper_statemachine.html), [see](../examples/react_statemachine.html)
-- Langium grammar language client and web worker based language server using vscode-api configuration [see](../examples/react_langium.html)
-
-## Invoking Custom Commands
+### Invoking Custom Commands
 
 *An experimental feature.*
 
@@ -99,3 +80,11 @@ this.myRef.current.executeCommand('myCustomCommand', args...);
 ```
 
 This will return an instance of `Thenable`, which should contain the returned data of executing your custom command. As you can imagine, this is incredibly helpful for getting internal access for specific language handling, but without needing details about the internals of your language server to do it.
+
+## Examples
+
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
+
+## License
+
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/LICENSE)

@@ -106,7 +106,7 @@
     "*.ts",
     "README.md",
     "CHANGELOG.md",
-    "License.txt"
+    "LICENSE"
   ],
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo",

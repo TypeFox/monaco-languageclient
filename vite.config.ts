@@ -34,7 +34,7 @@ export default defineConfig(() => {
         },
         resolve: {
             // not needed here, see https://github.com/TypeFox/monaco-languageclient#vite-dev-server-troubleshooting
-            // dedupe: ['monaco-editor', 'vscode']
+            // dedupe: ['vscode']
         },
         server: {
             origin: 'http://localhost:20001',

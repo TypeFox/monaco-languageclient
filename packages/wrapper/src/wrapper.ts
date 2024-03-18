@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
 import { editor } from 'monaco-editor';
@@ -46,8 +46,9 @@ export class MonacoEditorLanguageClientWrapper {
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
-        if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor && !userConfig.wrapperConfig.editorAppConfig.codeOriginal) {
-            throw new Error('Use diff editor was used without a valid config.');
+        const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
+        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeOriginal) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.code} codeOriginal: ${editorAppConfig.codeOriginal}`);
         }
         // Always dispose old instances before start
         this.editorApp?.disposeApp();
@@ -55,7 +56,7 @@ export class MonacoEditorLanguageClientWrapper {
         this.id = userConfig.id ?? Math.floor(Math.random() * 101).toString();
         this.logger = new Logger(userConfig.loggerConfig);
 
-        if (userConfig.wrapperConfig.editorAppConfig.$type === 'classic') {
+        if (editorAppConfig.$type === 'classic') {
             this.editorApp = new EditorAppClassic(this.id, userConfig, this.logger);
         } else {
             this.editorApp = new EditorAppExtended(this.id, userConfig, this.logger);
