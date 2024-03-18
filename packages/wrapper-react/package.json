@@ -1,0 +1,78 @@
+{
+  "name": "@typefox/monaco-editor-react",
+  "version": "3.0.0-next.6",
+  "license": "MIT",
+  "description": "React component for Monaco-Editor and Monaco Languageclient",
+  "keywords": [
+    "monaco-editor",
+    "monaco-languageclient",
+    "typescript",
+    "react"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bundle": {
+      "types": "./dist/index.d.ts",
+      "default": "./bundle/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/index"
+      ],
+      "bundle": [
+        "dist/index"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "bundle",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
+    "compile": " tsc --build tsconfig.src.json",
+    "build:bundle": "vite --config vite.bundle.config.ts build",
+    "build": "npm run clean && npm run compile && npm run build:bundle"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.2.4"
+  },
+  "dependencies": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "monaco-editor-wrapper": "~4.0.0-next.6",
+    "react": "~18.2.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2"
+  },
+  "peerDependencies": {
+    "monaco-editor-wrapper": "~4.0.0-next.6"
+  },
+  "peerDependenciesMeta": {
+    "monaco-editor-wrapper": {
+      "optional": false
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
+    "directory": "packages/monaco-editor-react"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md",
+  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
+  "author": {
+    "name": "TypeFox",
+    "url": "https://www.typefox.io"
+  }
+}

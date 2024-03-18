@@ -2,11 +2,14 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.0] - 2024-02-0x
+## [8.0.0] - 2024-03-1x
 
-- Updated to `@codingame/monaco-vscode-api@2.0.0`. This ensures amoung other things proper sematic versioning
-  - Details
-- WIP: Repository now includes `@typefox/monaco-vscode-editor-wrapper` and `@typefox/monaco-vscode-editor-react` . They succeed npm packages  `` and `` respectively `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+- Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+- Aligned LICENSE usage throughout the repository
+- Introduce new exports `vscode/services` where you find all mandatory functions related to `@codingame/monaco-vscode-api` service initialization
+- Updated to `@codingame/monaco-vscode-api@3.1.2` and `@codingame/monaco-vscode-editor-api@3.1.2`
+  - Proper sematic versioning, versions are now idenpendent of VSCode versioning scheme, but compatibility table is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
+  - `@codingame/monaco-vscode-editor-api` is now the alias for `monaco-editor` It provides the full editor's full api and hereby removes the need for a treemended version.
 
 ## [7.3.0] - 2024-01-04
 

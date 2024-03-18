@@ -1,0 +1,35 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
+import { loadStatemachineWorkerRegular } from './main.js';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
+
+export const runStatemachineReact = async () => {
+    try {
+        const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachineWorkerRegular());
+        const comp = <MonacoEditorReactComp
+            userConfig={langiumGlobalConfig}
+            style={{
+                'paddingTop': '5px',
+                'height': '80vh'
+            }}
+        />;
+
+        const root = ReactDOM.createRoot(document.getElementById('root')!);
+        root.render(comp);
+    } catch (e) {
+        console.error(e);
+    }
+};

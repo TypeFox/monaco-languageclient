@@ -2,9 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.0] - 2024-02-0x
+## [8.0.0] - 2024-03-1x
 
-- Updated to `monaco-languageclient@8.0.0`
+- Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+  - Unified examples. Make use of `monaco-editor-wrapper` or `@typefox/monaco-editor-react` in all client applications
+- Aligned LICENSE usage throughout the repository
+- Updated to `monaco-languageclient@8.0.0`, `vscode-ws-jsonrpc@3.3.0`, `monaco-editor-wrapper@4.0.0` and `@typefox/monaco-editor-react@3.0.0`
 - feat: add LanguageServerRunConfig and groovy example [#591](https://github.com/TypeFox/monaco-languageclient/pull/591)
 
 ## [7.3.0] - 2023-01-04
@@ -63,7 +66,7 @@ All notable changes to this npm module are documented in this file.
 ## [6.4.6] - 2023-09-05
 
 - Move examples from `packages/examples/main` to `packages/examples`
-- Moved langium grammer langugae client and server to [monaco-components](https://github.com/TypeFox/monaco-components)
+- Moved langium grammer language client and server to [monaco-components](https://github.com/TypeFox/monaco-components)
 
 ## [6.4.5] - 2023-08-30
 

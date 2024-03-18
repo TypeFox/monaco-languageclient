@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "8.0.0-next.0",
+  "version": "8.0.0-next.6",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -23,12 +23,19 @@
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
+    },
+    "./vscode/services": {
+      "types": "./lib/vscode/services.d.ts",
+      "default": "./lib/vscode/services.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "lib/index.d.ts"
+      ],
+      "vscode/services": [
+        "lib/vscode/services"
       ]
     }
   },
@@ -37,7 +44,7 @@
     "npm": ">=9.0.0"
   },
   "volta": {
-    "node": "20.11.0",
+    "node": "20.11.1",
     "npm": "10.2.4"
   },
   "files": [
@@ -45,42 +52,26 @@
     "src",
     "README.md",
     "CHANGELOG.md",
-    "License.txt"
+    "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-editor-service-override": "~2.0.0",
-    "@codingame/monaco-vscode-languages-service-override": "~2.0.0",
-    "@codingame/monaco-vscode-model-service-override": "~2.0.0",
-    "@codingame/monaco-vscode-api": "~2.0.0",
-    "@codingame/monaco-vscode-editor-api": "~2.0.0",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=2.0.0 <2.1.0",
+    "@codingame/monaco-vscode-languages-service-override": "~3.1.2",
+    "@codingame/monaco-vscode-model-service-override": "~3.1.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2",
     "vscode-languageclient": "~9.0.1"
   },
   "peerDependencies": {
-    "@codingame/monaco-vscode-api": "~2.0.0",
-    "@codingame/monaco-vscode-editor-api": "~2.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@>=2.0.0 <2.1.0"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2"
   },
   "peerDependenciesMeta": {
-    "@codingame/monaco-vscode-api": {
-      "optional": false
-    },
-    "@codingame/monaco-vscode-editor-api": {
-      "optional": false
-    },
     "monaco-editor": {
       "optional": false
     },
     "vscode": {
       "optional": false
     }
-  },
-  "overrides": {
-    "monaco-editor": "$@codingame/monaco-vscode-editor-api"
-  },
-  "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
   },
   "scripts": {
     "clean": "shx rm -fr lib *.tsbuildinfo",

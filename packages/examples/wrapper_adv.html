@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Editor Languageclient Component</title>
+    <style>
+        @font-face {
+            font-family: 'codicon';
+            src: url('./dist/assets/codicon.ttf') format('truetype');
+        }
+    </style>
+</head>
+
+<body>
+    <div style="height: 33vh;" id="monaco-editor-root-42">
+    </div>
+    <div style="height: 33vh;" id="monaco-editor-root-43">
+    </div>
+    <div style="height: 33vh;" id="monaco-editor-root-44">
+    </div>
+    <script type="module">
+        import { configureMonacoWorkers, runAdvancedExample } from './src/ts/wrapperAdvanced.ts';
+
+        configureMonacoWorkers();
+        runAdvancedExample();
+    </script>
+</body>
+
+</html>

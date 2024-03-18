@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Editor Wrapper Langium Web Worker Language Server Example</title>
+</head>
+
+<body>
+    <button type="button" id="button-start">Start</button>
+    <button type="button" id="button-dispose">Dispose</button>
+    <div id="monaco-editor-root" style="height: 40vh;"></div>
+    <div id="monaco-editor-root2" style="height: 40vh;"></div>
+    <script type="module" src="./src/utils/localeLoader.ts"></script>
+    <script type="module">
+        import { configureMonacoWorkers, runStatemachineWrapper } from './src/langium/statemachine/main.ts';
+
+        configureMonacoWorkers();
+        runStatemachineWrapper();
+    </script>
+</body>
+
+</html>

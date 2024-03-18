@@ -3,26 +3,29 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@types/vscode": "~1.85.0",
-    "@typescript-eslint/eslint-plugin": "~6.19.1",
-    "@typescript-eslint/parser": "~6.19.1",
+    "@types/node": "~20.11.28",
+    "@types/react": "~18.2.66",
+    "@types/react-dom": "~18.2.22",
+    "@types/shelljs": "~0.8.15",
+    "@types/vscode": "~1.87.0",
+    "@typescript-eslint/eslint-plugin": "~7.2.0",
+    "@typescript-eslint/parser": "~7.2.0",
+    "@vitest/browser": "~1.4.0",
     "editorconfig": "~2.0.0",
-    "eslint": "~8.56.0",
+    "eslint": "~8.57.0",
     "eslint-plugin-header": "~3.1.1",
     "eslint-plugin-import": "~2.29.1",
-    "eslint-plugin-unused-imports": "~3.0.0",
+    "eslint-plugin-unused-imports": "~3.1.0",
+    "http-server": "~14.1.1",
+    "shelljs": "~0.8.5",
     "shx": "~0.3.4",
-    "typescript": "~5.3.3",
-    "vite": "~5.0.12"
-  },
-  "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
-  },
-  "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@>=2.0.0 <2.1.0"
+    "typescript": "~5.4.2",
+    "vite": "~5.1.6",
+    "vitest": "~1.4.0",
+    "webdriverio": "~8.33.1"
   },
   "volta": {
-    "node": "20.11.0",
+    "node": "20.11.1",
     "npm": "10.2.4"
   },
   "scripts": {
@@ -41,19 +44,20 @@
     "build:examples": "npm run build --workspace packages/examples",
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
+    "start:http": "npm run start:http --workspace packages/examples",
     "start:example:server:json": "npm run start:server:json --workspace packages/examples",
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "start:example:server:groovy": "npm run start:server:groovy --workspace packages/examples",
-    "start:verify:webpack": "npm run start --workspace packages/verify/webpack",
-    "start:verify:vite": "npm run start --workspace packages/verify/vite",
-    "release:prepare": "npm run reset:repo && npm ci && npm run lint && npm run build",
-    "reset:repo": "git clean -f -X -d"
+    "release:prepare": "npm run reset:repo && npm ci && npm run lint && npm run build && npm run test:run",
+    "reset:repo": "git clean -f -X -d",
+    "test": "node --experimental-import-meta-resolve ./node_modules/vitest/vitest.mjs -c vite.config.ts",
+    "test:run": "node --experimental-import-meta-resolve ./node_modules/vitest/vitest.mjs -c vite.config.ts --run"
   },
   "workspaces": [
     "packages/client",
     "packages/vscode-ws-jsonrpc",
-    "packages/examples",
-    "packages/verify/webpack",
-    "packages/verify/vite"
+    "packages/wrapper",
+    "packages/wrapper-react",
+    "packages/examples"
   ]
 }

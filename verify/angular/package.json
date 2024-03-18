@@ -1,0 +1,43 @@
+{
+  "name": "mlc-verify-angular",
+  "version": "0.0.0",
+  "private": "true",
+  "type": "module",
+  "scripts": {
+    "verify": "npm install && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
+    "build:msg": "echo Building angular-client example:",
+    "build": "npm run build:msg && npm run clean && ng build",
+    "start": "npm run clean && ng serve",
+    "watch": "npm run clean && ng build --watch --configuration development",
+    "reset:repo": "git clean -f -X -d"
+  },
+  "dependencies": {
+    "@angular/compiler": "~17.2.4",
+    "@angular/core": "~17.2.4",
+    "@angular/platform-browser": "~17.2.4",
+    "@angular/platform-browser-dynamic": "~17.2.4",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "monaco-editor-wrapper": "../../packages/wrapper",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2",
+    "rxjs": "~7.8.1",
+    "zone.js": "~0.14.4"
+  },
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "~17.0.1",
+    "@angular-devkit/build-angular": "~17.2.3",
+    "@angular/cli": "~17.2.3",
+    "@angular/compiler-cli": "~17.2.4",
+    "@types/node": "~20.11.25",
+    "@types/vscode": "~1.87.0",
+    "css-loader": "~6.10.0",
+    "shx": "~0.3.4",
+    "style-loader": "~3.3.4"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.2.4"
+  }
+}

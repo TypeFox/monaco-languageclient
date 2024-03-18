@@ -10,10 +10,12 @@
 
 <body>
 	<h2>Monaco Language Client Browser Sample</h2>
-	<div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { startBrowserEditor } from "./src/browser/main.ts";
-        startBrowserEditor();
+        import { configureMonacoWorkers, runBrowserEditor } from "./src/browser/main.ts";
+
+        configureMonacoWorkers();
+        runBrowserEditor();
     </script>
 </body>
 </html>

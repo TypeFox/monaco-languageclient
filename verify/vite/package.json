@@ -1,0 +1,29 @@
+{
+  "name": "example-client-vite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "monaco-editor-wrapper": "../../packages/wrapper",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2"
+  },
+  "devDependencies": {
+    "http-server": "~14.1.1",
+    "shx": "~0.3.4",
+    "vite": "~5.1.6"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.2.4"
+  },
+  "scripts": {
+    "verify": "npm install && npm run build && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist",
+    "build:msg": "echo Building client-vite example:",
+    "build": "npm run build:msg && npm run clean && vite build",
+    "start": "http-server ./dist --port 8082"
+  }
+}

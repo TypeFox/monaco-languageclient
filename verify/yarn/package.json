@@ -1,0 +1,31 @@
+{
+  "name": "mlc-verify-yarn",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@typefox/monaco-editor-react": "3.0.0-next.6",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
+    "monaco-editor-wrapper": "4.0.0-next.6",
+    "monaco-languageclient-examples": "8.0.0-next.6",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.1.2",
+    "vscode-ws-jsonrpc": "~3.3.0-next.6"
+  },
+  "devDependencies": {
+    "http-server": "~14.1.1",
+    "shx": "~0.3.4",
+    "vite": "~5.1.6"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "yarn": "1.22.22"
+  },
+  "scripts": {
+    "verify": "yarn install && yarn run build && yarn run start",
+    "verify:ci": "yarn install && yarn run build",
+    "clean": "shx rm -fr dist",
+    "build:msg": "echo Building yarn/vite example:",
+    "build": "yarn run build:msg && yarn run clean && vite build",
+    "start": "http-server ./dist --port 8084"
+  }
+}

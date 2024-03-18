@@ -1,34 +1,70 @@
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { languages, workspace, TextDocument as VsCodeTextDocument } from 'vscode';
+
+import * as vscode from 'vscode';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { createDefaultJsonContent, createJsonEditor, performInit } from '../json/client/main.js';
-import '@codingame/monaco-vscode-theme-defaults-default-extension';
-import '@codingame/monaco-vscode-json-default-extension';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { Uri } from 'monaco-editor';
 
-const codeConverter = createCodeConverter();
-const protocolConverter = createProtocolConverter(undefined, true, true);
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
-export const startBrowserEditor = async () => {
-    let mainVscodeDocument: VsCodeTextDocument | undefined;
+export const runBrowserEditor = async () => {
+    const codeConverter = createCodeConverter();
+    const protocolConverter = createProtocolConverter(undefined, true, true);
+
+    let mainVscodeDocument: vscode.TextDocument | undefined;
+    const htmlElement = document.getElementById('monaco-editor-root');
     const languageId = 'json';
+    const code = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
+}`;
+    const codeUri = '/workspace/model.json';
 
-    await performInit(true);
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const jsonClientUserConfig: UserConfig = {
+        wrapperConfig: {
+            serviceConfig: {
+                userServices: {
+                    ...getKeybindingsServiceOverride(),
+                },
+                debugLogging: true
+            },
+            editorAppConfig: {
+                $type: 'extended',
+                languageId: 'json',
+                code,
+                codeUri,
+                useDiffEditor: false,
+                userConfiguration: {
+                    json: JSON.stringify({
+                        'workbench.colorTheme': 'Default Dark Modern',
+                        'editor.guides.bracketPairsHorizontal': 'active',
+                        'editor.lightbulb.enabled': 'On'
+                    })
+                }
+            }
+        }
+    };
+    await wrapper.init(jsonClientUserConfig);
 
-    workspace.onDidOpenTextDocument((_event) => {
-        mainVscodeDocument = workspace.textDocuments[0];
+    vscode.workspace.onDidOpenTextDocument((_event) => {
+        mainVscodeDocument = _event;
     });
 
-    const jsonEditor = await createJsonEditor({
-        htmlElement: document.getElementById('container')!,
-        content: createDefaultJsonContent()
-    });
-
-    const createDocument = (vscodeDocument: VsCodeTextDocument) => {
+    const createDocument = (vscodeDocument: vscode.TextDocument) => {
         return TextDocument.create(vscodeDocument.uri.toString(), vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
     };
 
@@ -48,7 +84,7 @@ export const startBrowserEditor = async () => {
     });
     const pendingValidationRequests = new Map<string, number>();
 
-    languages.registerCompletionItemProvider(languageId, {
+    vscode.languages.registerCompletionItemProvider(languageId, {
         async provideCompletionItems(vscodeDocument, position, _token, _context) {
             const document = createDocument(vscodeDocument);
             const jsonDocument = jsonService.parseJSONDocument(document);
@@ -61,7 +97,7 @@ export const startBrowserEditor = async () => {
         }
     });
 
-    languages.registerDocumentRangeFormattingEditProvider(languageId, {
+    vscode.languages.registerDocumentRangeFormattingEditProvider(languageId, {
         provideDocumentRangeFormattingEdits(vscodeDocument, range, options, _token) {
             const document = createDocument(vscodeDocument);
             const edits = jsonService.format(document, codeConverter.asRange(range), codeConverter.asFormattingOptions(options, {}));
@@ -69,7 +105,7 @@ export const startBrowserEditor = async () => {
         }
     });
 
-    languages.registerDocumentSymbolProvider(languageId, {
+    vscode.languages.registerDocumentSymbolProvider(languageId, {
         provideDocumentSymbols(vscodeDocument, _token) {
             const document = createDocument(vscodeDocument);
             const jsonDocument = jsonService.parseJSONDocument(document);
@@ -77,7 +113,7 @@ export const startBrowserEditor = async () => {
         }
     });
 
-    languages.registerHoverProvider(languageId, {
+    vscode.languages.registerHoverProvider(languageId, {
         async provideHover(vscodeDocument, position, _token) {
             const document = createDocument(vscodeDocument);
             const jsonDocument = jsonService.parseJSONDocument(document);
@@ -104,7 +140,7 @@ export const startBrowserEditor = async () => {
         }
     };
 
-    const diagnosticCollection = languages.createDiagnosticCollection('json');
+    const diagnosticCollection = vscode.languages.createDiagnosticCollection('json');
     const doValidate = (document: TextDocument) => {
         if (document.getText().length === 0) {
             cleanDiagnostics();
@@ -114,7 +150,7 @@ export const startBrowserEditor = async () => {
 
         jsonService.doValidation(document, jsonDocument).then(async (pDiagnostics) => {
             const diagnostics = await protocolConverter.asDiagnostics(pDiagnostics);
-            diagnosticCollection.set(jsonEditor.uri, diagnostics);
+            diagnosticCollection.set(Uri.parse(codeUri), diagnostics);
         });
     };
 
@@ -122,7 +158,9 @@ export const startBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    jsonEditor.modelRef.object.textEditorModel!.onDidChangeContent(() => {
+    await wrapper.start(htmlElement);
+
+    wrapper.getModel()?.onDidChangeContent(() => {
         validate();
     });
 };

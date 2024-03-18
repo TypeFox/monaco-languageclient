@@ -2,12 +2,17 @@
 
 NPM module to implement communication between a jsonrpc client and server over WebSocket.
 
-See the following example code how to use this library or take a look of the `monaco-languageclient` and `vscode-ws-jsonrpc` examples here:
+## CHANGELOG
 
-- [client](/packages/examples/src/client)
-- [server](/packages/examples/src/server)
+All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/CHANGELOG.md).
 
-## Client side connection handling
+## Getting Started
+
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+
+## Usage
+
+### Client side connection handling
 
 ```ts
 import { MessageConnection, NotificationType } from 'vscode-jsonrpc';
@@ -24,7 +29,7 @@ listen({
 });
 ```
 
-## Server side connection handling
+### Server side connection handling
 
 ```ts
 import { createWebSocketConnection, ConsoleLogger, IWebSocket } from 'vscode-ws-jsonrpc';
@@ -41,7 +46,7 @@ connection.onNotification(notification, (param: string) => {
 connection.listen();
 ```
 
-## Server side connection forwarding
+### Server side connection forwarding
 
 ```ts
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
@@ -63,10 +68,10 @@ forward(socketConnection, serverConnection, message => {
 });
 ```
 
-## History
+### Further examples
 
-For the history please see the [README](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md#latest-important-project-changes) and [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/CHANGELOG.md).
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
 
 ## License
 
-[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/License.txt)
+[MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/LICENSE)
