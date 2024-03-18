@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.3.0] - 2024-03-1x
+
+- Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+- Aligned LICENSE usage throughout the repository
+- No direct code changes
+
 ## [3.2.0] - 2024-02-19
 
 - Implement dispose method on WebSocketMessageReader [#602](https://github.com/TypeFox/monaco-languageclient/pull/602)

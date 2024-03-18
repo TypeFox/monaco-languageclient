@@ -5,6 +5,10 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 ## [3.0.0] - 2024-03-0x
 
 - Moved code to [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) repository.
+- Vite & monaco-editor-workers [monaco-components #67](https://github.com/TypeFox/monaco-components/issues/67)
+- Selective applicance of wrappers css [monaco-components #65](https://github.com/TypeFox/monaco-components/issues/65)
+- Having the component twice on a page [monaco-components #64](https://github.com/TypeFox/monaco-components/issues/64)
+- [Monaco Editor React Component] unavailable language server throws unhandled error [monaco-components #62](https://github.com/TypeFox/monaco-components/issues/62)
 
 ## [2.6.0] - 2024-01-04
 

@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "8.0.0-next.5",
+  "version": "8.0.0-next.6",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -70,12 +70,12 @@
     "@codingame/monaco-vscode-language-pack-de": "~3.1.2",
     "@codingame/monaco-vscode-language-pack-es": "~3.1.2",
     "@codingame/monaco-vscode-language-pack-fr": "~3.1.2",
-    "@typefox/monaco-editor-react": "~3.0.0-next.5",
+    "@typefox/monaco-editor-react": "~3.0.0-next.6",
     "express": "~4.18.3",
     "langium": "3.0.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.1.2",
-    "monaco-editor-wrapper": "~4.0.0-next.5",
-    "monaco-languageclient": "~8.0.0-next.5",
+    "monaco-editor-wrapper": "~4.0.0-next.6",
+    "monaco-languageclient": "~8.0.0-next.6",
     "pyright": "~1.1.354",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
@@ -85,7 +85,7 @@
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
-    "vscode-ws-jsonrpc": "~3.3.0-next.5",
+    "vscode-ws-jsonrpc": "~3.3.0-next.6",
     "ws": "~8.16.0"
   },
   "devDependencies": {

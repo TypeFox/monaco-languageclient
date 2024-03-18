@@ -2,9 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.0] - 2024-02-0x
+## [8.0.0] - 2024-03-1x
 
-- Updated to `monaco-languageclient@8.0.0`
+- Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
+  - Unified examples. Make use of `monaco-editor-wrapper` or `@typefox/monaco-editor-react` in all client applications
+- Aligned LICENSE usage throughout the repository
+- Updated to `monaco-languageclient@8.0.0`, `vscode-ws-jsonrpc@3.3.0`, `monaco-editor-wrapper@4.0.0` and `@typefox/monaco-editor-react@3.0.0`
 - feat: add LanguageServerRunConfig and groovy example [#591](https://github.com/TypeFox/monaco-languageclient/pull/591)
 
 ## [7.3.0] - 2023-01-04

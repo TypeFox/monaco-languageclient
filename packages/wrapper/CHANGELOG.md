@@ -5,6 +5,14 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 ## [4.0.0] - 2024-03-0x
 
 - Moved code to [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) repository.
+- Aligned LICENSE usage throughout the repository
+- Introduce new export `vscode/services`
+  - Extends functions `monaco-languageclient/vscode/services` provides
+- Introduce new export `workerFactory`
+  - Replaces `monaco-editor-workers` and allows to fully override the default definiton
+- Vite & monaco-editor-workers [monaco-components #67](https://github.com/TypeFox/monaco-components/issues/67)
+- Selective applicance of wrappers css [monaco-components #65](https://github.com/TypeFox/monaco-components/issues/65)
+- Having the component twice on a page [monaco-components #64](https://github.com/TypeFox/monaco-components/issues/64)
 
 ## [3.6.0] - 2024-01-04
 
