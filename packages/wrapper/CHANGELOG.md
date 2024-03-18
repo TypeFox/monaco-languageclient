@@ -2,7 +2,7 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [4.0.0] - 2024-03-0x
+## [4.0.0] - 2024-03-18
 
 - Moved code to [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) repository.
 - Aligned LICENSE usage throughout the repository

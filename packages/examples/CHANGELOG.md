@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.0] - 2024-03-1x
+## [8.0.0] - 2024-03-18
 
 - Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
   - Unified examples. Make use of `monaco-editor-wrapper` or `@typefox/monaco-editor-react` in all client applications
