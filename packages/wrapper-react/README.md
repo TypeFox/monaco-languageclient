@@ -83,7 +83,7 @@ This will return an instance of `Thenable`, which should contain the returned da
 
 ## Examples
 
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 

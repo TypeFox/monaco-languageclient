@@ -27,46 +27,31 @@ export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier |
     editorWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js',
-            options: {
-                type: 'module'
-            }
+            workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js'
         };
     },
     tsWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js',
-            options: {
-                type: 'module'
-            }
+            workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js'
         };
     },
     htmlWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js',
-            options: {
-                type: 'module'
-            }
+            workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js'
         };
     },
     cssWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js',
-            options: {
-                type: 'module'
-            }
+            workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js'
         };
     },
     jsonWorker:  () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js',
-            options: {
-                type: 'module'
-            }
+            workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js'
         };
     }
 };
@@ -89,7 +74,9 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
     const fullUrl = new URL(workerFile, config.rootPath).href;
     console.log(`Creating worker: ${fullUrl}`);
 
-    const js = config.options?.type === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
+    // default to 'module' if not specified
+    const workerType = config.options?.type ?? 'module';
+    const js = workerType === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
     const blob = new Blob([js], { type: 'application/javascript' });
 
     return new Worker(URL.createObjectURL(blob), config.options);

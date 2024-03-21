@@ -32,8 +32,6 @@ The bespoke projects not only supplies the api, but it provides 100+ packages wi
 
 Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
 
-Please check our examples [in the examples overview chapter](https://github.com/TypeFox/monaco-languageclient/tree/main?tab=readme-ov-file#examples-overview) as they demonstrate the usage.
-
 #### textmate and monarch
 
 If you use the `textmate` or `theme` services you are able to load textmate based grammars and theme definitions from vscode:
@@ -45,7 +43,9 @@ import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-servic
 
 Once you those services you can no longer make use of monarch based grammars and themes.
 
-See [here](https://github.com/TypeFox/monaco-languageclient/blob/main/README.md) for a detailed documentation.
+## Examples
+
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 
