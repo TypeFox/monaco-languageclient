@@ -12,9 +12,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // import '@codingame/monaco-vscode-typescript-basics-default-extension';
 // import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 
-// basic-languages and language only exists if manually copied there
-// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
-// import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
+import '@codingame/monaco-vscode-standalone-languages';
+import '@codingame/monaco-vscode-standalone-typescript-language-features';
 
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
@@ -22,7 +21,11 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            typescript: () => new Worker(new URL('@codingame/monaco-vscode-standalone-typescript-language-features/worker', import.meta.url), { type: 'module' })
+        }
     });
 };
 

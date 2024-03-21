@@ -27,31 +27,46 @@ export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier |
     editorWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js'
+            workerFile: 'monaco-editor-wrapper/dist/workers/editorWorker-es.js',
+            options: {
+                type: 'module'
+            }
         };
     },
     tsWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js'
+            workerFile: 'monaco-editor-wrapper/dist/workers/tsWorker-es.js',
+            options: {
+                type: 'module'
+            }
         };
     },
     htmlWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js'
+            workerFile: 'monaco-editor-wrapper/dist/workers/htmlWorker-es.js',
+            options: {
+                type: 'module'
+            }
         };
     },
     cssWorker: () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js'
+            workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js',
+            options: {
+                type: 'module'
+            }
         };
     },
     jsonWorker:  () => {
         return {
             rootPath: import.meta.url,
-            workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js'
+            workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js',
+            options: {
+                type: 'module'
+            }
         };
     }
 };
