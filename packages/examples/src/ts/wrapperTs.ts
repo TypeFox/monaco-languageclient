@@ -1,20 +1,14 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-
-// only works if wrapper is configured in extended mode
-// import '@codingame/monaco-vscode-theme-defaults-default-extension';
-// import '@codingame/monaco-vscode-typescript-basics-default-extension';
-// import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-
-import '@codingame/monaco-vscode-standalone-languages';
-import '@codingame/monaco-vscode-standalone-typescript-language-features';
-
+import '@codingame/monaco-vscode-theme-defaults-default-extension';
+import '@codingame/monaco-vscode-typescript-basics-default-extension';
+import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
@@ -24,7 +18,6 @@ export const configureMonacoWorkers = () => {
         ignoreMapping: true,
         workerLoaders: {
             editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-            typescript: () => new Worker(new URL('@codingame/monaco-vscode-standalone-typescript-language-features/worker', import.meta.url), { type: 'module' })
         }
     });
 };
@@ -62,10 +55,11 @@ export const runTsWrapper = async () => {
                 userServices: {
                     ...getKeybindingsServiceOverride()
                 },
+                enableExtHostWorker: true,
                 debugLogging: true
             },
             editorAppConfig: {
-                $type: 'classic',
+                $type: 'extended',
                 languageId: 'typescript',
                 code,
                 codeUri: codeUri,

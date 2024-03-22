@@ -1,22 +1,28 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor';
-import 'vscode/localExtensionHost';
+import * as vscode from 'vscode';
+import * as monaco from 'monaco-editor';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
 import { Logger } from '../logger.js';
 
+export type VscodeServicesConfig = {
+    serviceConfig?: InitializeServiceConfig;
+    specificServices?: monaco.editor.IEditorOverrideServices;
+    logger?: Logger;
+};
+
 /**
  * Child classes are allow to override the services configuration implementation.
  */
-export const configureServices = async (input?: InitializeServiceConfig, specificServices?: editor.IEditorOverrideServices, logger?: Logger): Promise<InitializeServiceConfig> => {
-    const serviceConfig = input ?? {};
+export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
+    const serviceConfig = config.serviceConfig ?? {};
     // configure log level
-    serviceConfig.debugLogging = logger?.isEnabled() === true && (serviceConfig.debugLogging === true || logger?.isDebugEnabled() === true);
+    serviceConfig.debugLogging = config.logger?.isEnabled() === true && (serviceConfig.debugLogging === true || config.logger?.isDebugEnabled() === true);
 
     // always set required services if not configured
     serviceConfig.userServices = serviceConfig.userServices ?? {};
@@ -33,13 +39,14 @@ export const configureServices = async (input?: InitializeServiceConfig, specifi
             throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
         }
     }
+
     // adding the default workspace config if not provided
     if (!workspaceConfig) {
         serviceConfig.workspaceConfig = {
             workspaceProvider: {
                 trusted: true,
                 workspace: {
-                    workspaceUri: Uri.file('/workspace')
+                    workspaceUri: vscode.Uri.file('/workspace')
                 },
                 async open() {
                     return false;
@@ -47,7 +54,7 @@ export const configureServices = async (input?: InitializeServiceConfig, specifi
             }
         };
     }
-    mergeServices(specificServices ?? {}, serviceConfig.userServices);
+    mergeServices(config.specificServices ?? {}, serviceConfig.userServices);
 
     return serviceConfig;
 };
@@ -57,7 +64,7 @@ export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySid
     return undefined;
 };
 
-export const checkServiceConsistency = (userServices?: editor.IEditorOverrideServices) => {
+export const checkServiceConsistency = (userServices?: monaco.editor.IEditorOverrideServices) => {
     const haveThemeService = Object.keys(userServices ?? {}).includes('themeService');
     const haveTextmateService = Object.keys(userServices ?? {}).includes('textMateTokenizationFeature');
     const haveMarkersService = Object.keys(userServices ?? {}).includes('markersService');

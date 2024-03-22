@@ -51,16 +51,16 @@
     "npm": "10.2.4"
   },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.2",
     "monaco-editor-wrapper": "~4.0.1",
     "react": "~18.2.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.1"
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.2"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.2",
     "monaco-editor-wrapper": "~4.0.1",
     "react": "~18.2.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.1"
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.2"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

@@ -3,7 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './socket.js';
-export * from './reader.js';
-export * from './writer.js';
-export * from './connection.js';
+export class FakeWorker {
+    url: string | URL;
+    options?: WorkerOptions;
+
+    constructor(url: string | URL, options?: WorkerOptions) {
+        this.url = url;
+        this.options = options;
+    }
+}

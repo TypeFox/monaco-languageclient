@@ -1,8 +1,7 @@
-/******************************************************************************
- * Copyright 2021 TypeFox GmbH
- * This program and the accompanying materials are made available under the
- * terms of the MIT License, which is available in the project root.
- ******************************************************************************/
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
 import type { State, Statemachine, StatemachineAstType, Event } from './generated/ast.js';

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox GmbH (http://www.typefox.io). All rights reserved.
+ * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
@@ -75,11 +75,14 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
     console.log(`Creating worker: ${fullUrl}`);
 
     // default to 'module' if not specified
-    const workerType = config.options?.type ?? 'module';
-    const js = workerType === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
+    const workerOptions = config.options ?? {};
+    if (!workerOptions.type) {
+        workerOptions.type = 'module';
+    }
+    const js = workerOptions.type === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
     const blob = new Blob([js], { type: 'application/javascript' });
 
-    return new Worker(URL.createObjectURL(blob), config.options);
+    return new Worker(URL.createObjectURL(blob), workerOptions);
 };
 
 export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {

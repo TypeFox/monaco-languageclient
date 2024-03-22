@@ -39,7 +39,8 @@
     "**/packages/*/*.js",
     "**/resources/**/*.mts",
     "**/resources/**/*.mjs",
-    "*.ts"
+    "*.js",
+    "*.ts",
   ],
   "exclude": [
     "dist/**/*",

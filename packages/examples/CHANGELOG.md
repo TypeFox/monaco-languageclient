@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.1] - 2024-03-21
+## [8.0.1] - 2024-03-22
 
 - TypeScript based examples now make use of `@codingame/monaco-vscode-standalone` packages
 
