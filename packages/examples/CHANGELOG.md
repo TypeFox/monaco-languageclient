@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.1] - 2024-03-22
+## [8.1.0] - 2024-03-22
 
-- TypeScript based examples now make use of `@codingame/monaco-vscode-standalone` packages
+- Single Editor TypeScript example now make used of extHostWorker
+- Multiple editor TypeScript example now make use of `@codingame/monaco-vscode-standalone` packages
 
 ## [8.0.0] - 2024-03-18
 
