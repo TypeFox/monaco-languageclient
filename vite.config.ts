@@ -1,4 +1,8 @@
-/* eslint-disable header/header */
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
 import { defineConfig } from 'vite';
 import * as path from 'path';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
