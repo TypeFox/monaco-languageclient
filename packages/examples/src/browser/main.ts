@@ -12,7 +12,6 @@ import { createConverter as createCodeConverter } from 'vscode-languageclient/li
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { Uri } from 'monaco-editor';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -150,7 +149,7 @@ export const runBrowserEditor = async () => {
 
         jsonService.doValidation(document, jsonDocument).then(async (pDiagnostics) => {
             const diagnostics = await protocolConverter.asDiagnostics(pDiagnostics);
-            diagnosticCollection.set(Uri.parse(codeUri), diagnostics);
+            diagnosticCollection.set(vscode.Uri.parse(codeUri), diagnostics);
         });
     };
 

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type * as vscode from 'vscode';
-import { IDisposable, editor } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { UserConfig } from './wrapper.js';
@@ -33,7 +33,7 @@ export type RegisterExtensionResult = {
 }
 
 interface RegisterLocalExtensionResult extends RegisterExtensionResult {
-    registerFileUrl: (path: string, url: string) => IDisposable;
+    registerFileUrl: (path: string, url: string) => monaco.IDisposable;
 }
 
 export type RegisterLocalProcessExtensionResult = RegisterLocalExtensionResult & {
@@ -67,7 +67,7 @@ export class EditorAppExtended extends EditorAppBase {
         return this.extensionRegisterResults.get(extensionName);
     }
 
-    override async specifyServices(): Promise<editor.IEditorOverrideServices> {
+    override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
         const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
         const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
         return {

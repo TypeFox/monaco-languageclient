@@ -2,20 +2,21 @@
 <html>
 
 <head>
-    <title>Monaco Language Client Browser Example</title>
+    <title>Monaco Language Client Bare Example</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
-	<h2>Monaco Language Client Browser Example</h2>
+	<h2>Monaco Language Client Bare Example</h2>
 	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers, runBrowserEditor } from "./src/browser/main.ts";
+        import { configureMonacoWorkers, runClient } from "./src/bare/client.ts";
 
         configureMonacoWorkers();
-        runBrowserEditor();
+        runClient();
     </script>
 </body>
 </html>

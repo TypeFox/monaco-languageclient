@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
@@ -121,11 +121,11 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp;
     }
 
-    getEditor(): editor.IStandaloneCodeEditor | undefined {
+    getEditor(): monaco.editor.IStandaloneCodeEditor | undefined {
         return this.editorApp?.getEditor();
     }
 
-    getDiffEditor(): editor.IStandaloneDiffEditor | undefined {
+    getDiffEditor(): monaco.editor.IStandaloneDiffEditor | undefined {
         return this.editorApp?.getDiffEditor();
     }
 
@@ -137,7 +137,7 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getLanguageClient();
     }
 
-    getModel(original?: boolean): editor.ITextModel | undefined {
+    getModel(original?: boolean): monaco.editor.ITextModel | undefined {
         return this.editorApp?.getModel(original);
     }
 

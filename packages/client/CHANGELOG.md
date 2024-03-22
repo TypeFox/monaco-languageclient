@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.0.1] - 2024-03-21
+## [8.0.1] - 2024-03-22
 
 - Updated to version `3.2.1` of `@codingame/monaco-vscode` packages
+- Moved import of 'vscode/localExtensionHost' from the wrapper here to fix independent init
 
 ## [8.0.0] - 2024-03-18
 

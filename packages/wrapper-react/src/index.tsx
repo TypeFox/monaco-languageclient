@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { EditorAppClassic, EditorAppExtended, MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-editor-wrapper';
-import { IDisposable } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
 import React, { CSSProperties } from 'react';
 
@@ -22,7 +22,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private containerElement?: HTMLDivElement;
-    private _subscription: IDisposable | null = null;
+    private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
     private started: (value: void | PromiseLike<void>) => void;
 

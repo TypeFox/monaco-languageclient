@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { ModelUpdate, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
-import { languages } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 
@@ -77,7 +77,7 @@ const toggleSwapDiffButton = (enabled: boolean) => {
 };
 
 const logEditorInfo = (userConfig: UserConfig) => {
-    console.log(`# of configured languages: ${languages.getLanguages().length}`);
+    console.log(`# of configured languages: ${monaco.languages.getLanguages().length}`);
     console.log(`Main code: ${wrapper.getModel(true)?.getValue() ?? ''}`);
     if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor) {
         console.log(`Modified code: ${wrapper.getModel()!.getValue()}`);

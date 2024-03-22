@@ -3,8 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Uri } from 'monaco-editor';
-import { createConfiguredEditor, createConfiguredDiffEditor, createModelReference, ITextFileEditorModel } from 'vscode/monaco';
+import * as vscode from 'vscode';
+import * as monaco from 'monaco-editor';
+import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
@@ -25,8 +26,8 @@ export type EditorAppConfigBase = ModelUpdate & {
     readOnly?: boolean;
     awaitExtensionReadiness?: Array<() => Promise<void>>;
     overrideAutomaticLayout?: boolean;
-    editorOptions?: editor.IStandaloneEditorConstructionOptions;
-    diffEditorOptions?: editor.IStandaloneDiffEditorConstructionOptions;
+    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
+    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
 }
 
 export enum ModelUpdateType {
@@ -46,8 +47,8 @@ export abstract class EditorAppBase {
 
     private id: string;
 
-    private editor: editor.IStandaloneCodeEditor | undefined;
-    private diffEditor: editor.IStandaloneDiffEditor | undefined;
+    private editor: monaco.editor.IStandaloneCodeEditor | undefined;
+    private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
 
     private modelRef: IReference<ITextFileEditorModel> | undefined;
     private modelOriginalRef: IReference<ITextFileEditorModel> | undefined;
@@ -85,20 +86,20 @@ export abstract class EditorAppBase {
         return this.editor !== undefined || this.diffEditor !== undefined;
     }
 
-    getEditor(): editor.IStandaloneCodeEditor | undefined {
+    getEditor(): monaco.editor.IStandaloneCodeEditor | undefined {
         return this.editor;
     }
 
-    getDiffEditor(): editor.IStandaloneDiffEditor | undefined {
+    getDiffEditor(): monaco.editor.IStandaloneDiffEditor | undefined {
         return this.diffEditor;
     }
 
     async createEditors(container: HTMLElement): Promise<void> {
         if (this.getConfig().useDiffEditor) {
-            this.diffEditor = createConfiguredDiffEditor(container, this.getConfig().diffEditorOptions);
+            this.diffEditor = monaco.editor.createDiffEditor(container, this.getConfig().diffEditorOptions);
             await this.updateDiffEditorModel();
         } else {
-            this.editor = createConfiguredEditor(container, this.getConfig().editorOptions);
+            this.editor = monaco.editor.create(container, this.getConfig().editorOptions);
             await this.updateEditorModel();
         }
     }
@@ -120,7 +121,7 @@ export abstract class EditorAppBase {
         }
     }
 
-    getModel(original?: boolean): editor.ITextModel | undefined {
+    getModel(original?: boolean): monaco.editor.ITextModel | undefined {
         if (this.getConfig().useDiffEditor) {
             return ((original === true) ? this.modelOriginalRef?.object.textEditorModel : this.modelRef?.object.textEditorModel) ?? undefined;
         } else {
@@ -154,7 +155,7 @@ export abstract class EditorAppBase {
         const config = this.getConfig();
         this.modelRef?.dispose();
 
-        const uri: Uri = this.getEditorUri('code');
+        const uri: vscode.Uri = this.getEditorUri('code');
         this.modelRef = await createModelReference(uri, config.code) as unknown as IReference<ITextFileEditorModel>;
         this.modelRef.object.setLanguageId(config.languageId);
         if (this.editor) {
@@ -178,8 +179,8 @@ export abstract class EditorAppBase {
         this.modelRef?.dispose();
         this.modelOriginalRef?.dispose();
 
-        const uri: Uri = this.getEditorUri('code');
-        const uriOriginal: Uri = this.getEditorUri('codeOriginal');
+        const uri: vscode.Uri = this.getEditorUri('code');
+        const uriOriginal: vscode.Uri = this.getEditorUri('codeOriginal');
 
         const promises = [];
         promises.push(createModelReference(uri, config.code));
@@ -212,9 +213,9 @@ export abstract class EditorAppBase {
         const config = this.getConfig();
         const uri = uriType === 'code' ? config.codeUri : config.codeOriginalUri;
         if (uri) {
-            return Uri.parse(uri);
+            return vscode.Uri.parse(uri);
         } else {
-            return Uri.parse(`/workspace/model${uriType === 'codeOriginal' ? 'Original' : ''}${this.id}.${config.languageId}`);
+            return vscode.Uri.parse(`/workspace/model${uriType === 'codeOriginal' ? 'Original' : ''}${this.id}.${config.languageId}`);
         }
     }
 
@@ -237,7 +238,7 @@ export abstract class EditorAppBase {
         return Promise.resolve();
     }
 
-    updateMonacoEditorOptions(options: editor.IEditorOptions & editor.IGlobalEditorOptions) {
+    updateMonacoEditorOptions(options: monaco.editor.IEditorOptions & monaco.editor.IGlobalEditorOptions) {
         this.getEditor()?.updateOptions(options);
     }
 
@@ -249,7 +250,7 @@ export abstract class EditorAppBase {
     }
 
     abstract init(): Promise<void>;
-    abstract specifyServices(): Promise<editor.IEditorOverrideServices>;
+    abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;
     abstract disposeApp(): void;
     abstract isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean;

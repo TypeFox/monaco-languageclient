@@ -3,17 +3,17 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, languages } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { UserConfig } from './wrapper.js';
 import { Logger } from './logger.js';
 
 export type EditorAppConfigClassic = EditorAppConfigBase & {
     $type: 'classic';
-    theme?: editor.BuiltinTheme | string;
-    languageExtensionConfig?: languages.ILanguageExtensionPoint;
-    languageDef?: languages.IMonarchLanguage;
-    themeData?: editor.IStandaloneThemeData;
+    theme?: monaco.editor.BuiltinTheme | string;
+    languageExtensionConfig?: monaco.languages.ILanguageExtensionPoint;
+    languageDef?: monaco.languages.IMonarchLanguage;
+    themeData?: monaco.editor.IStandaloneThemeData;
 };
 
 /**
@@ -40,7 +40,7 @@ export class EditorAppClassic extends EditorAppBase {
         return this.config;
     }
 
-    override async specifyServices(): Promise<editor.IEditorOverrideServices> {
+    override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
         return Promise.resolve({});
     }
 
@@ -51,13 +51,13 @@ export class EditorAppClassic extends EditorAppBase {
         // register own language first
         const extLang = this.config.languageExtensionConfig;
         if (extLang) {
-            languages.register(extLang);
+            monaco.languages.register(extLang);
         }
 
-        const languageRegistered = languages.getLanguages().filter(x => x.id === this.config.languageId);
+        const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === this.config.languageId);
         if (languageRegistered.length === 0) {
             // this is only meaningful for languages supported by monaco out of the box
-            languages.register({
+            monaco.languages.register({
                 id: this.config.languageId
             });
         }
@@ -65,13 +65,13 @@ export class EditorAppClassic extends EditorAppBase {
         // apply monarch definitions
         const tokenProvider = this.config.languageDef;
         if (tokenProvider) {
-            languages.setMonarchTokensProvider(this.config.languageId, tokenProvider);
+            monaco.languages.setMonarchTokensProvider(this.config.languageId, tokenProvider);
         }
         const themeData = this.config.themeData;
         if (themeData) {
-            editor.defineTheme(this.config.theme!, themeData);
+            monaco.editor.defineTheme(this.config.theme!, themeData);
         }
-        editor.setTheme(this.config.theme!);
+        monaco.editor.setTheme(this.config.theme!);
 
         if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
             // use updateConfiguration here as otherwise semantic highlighting will not work

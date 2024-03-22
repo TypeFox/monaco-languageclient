@@ -3,18 +3,19 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { editor, Environment } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
+import 'vscode/localExtensionHost';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 
-export interface MonacoEnvironmentEnhanced extends Environment {
+export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
     vscodeApiInitialised?: boolean;
 }
 
 export type InitializeServiceConfig = {
-    userServices?: editor.IEditorOverrideServices;
+    userServices?: monaco.editor.IEditorOverrideServices;
     debugLogging?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
 };
@@ -42,7 +43,7 @@ export const supplyRequiredServices = async () => {
     };
 };
 
-export const reportServiceLoading = (services: editor.IEditorOverrideServices, debugLogging: boolean) => {
+export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, debugLogging: boolean) => {
     for (const serviceName of Object.keys(services)) {
         if (debugLogging) {
             console.log(`Loading service: ${serviceName}`);
@@ -50,7 +51,7 @@ export const reportServiceLoading = (services: editor.IEditorOverrideServices, d
     }
 };
 
-export const mergeServices = (services: editor.IEditorOverrideServices, overrideServices: editor.IEditorOverrideServices) => {
+export const mergeServices = (services: monaco.editor.IEditorOverrideServices, overrideServices: monaco.editor.IEditorOverrideServices) => {
     for (const [name, service] of Object.entries(services)) {
         overrideServices[name] = service;
     }
@@ -91,7 +92,7 @@ export const initServices = async (config?: InitializeServiceConfig, caller?: st
  */
 export const importAllServices = async (config?: InitializeServiceConfig, performChecks?: () => boolean) => {
     const lc: InitializeServiceConfig = config ?? {};
-    const userServices: editor.IEditorOverrideServices = lc.userServices ?? {};
+    const userServices: monaco.editor.IEditorOverrideServices = lc.userServices ?? {};
 
     const lcRequiredServices = await supplyRequiredServices();
     mergeServices(lcRequiredServices, userServices);

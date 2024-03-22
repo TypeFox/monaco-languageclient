@@ -10,6 +10,7 @@ export default defineConfig(() => {
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
+                    bare: path.resolve(__dirname, 'packages/examples/bare.html'),
                     wrapperWebSocket: path.resolve(__dirname, 'packages/examples/wrapper_ws.html'),
                     // integrate locale from old example
                     wrapperStatemachine: path.resolve(__dirname, 'packages/examples/wrapper_statemachine.html'),
