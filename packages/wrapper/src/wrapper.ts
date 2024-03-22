@@ -64,7 +64,11 @@ export class MonacoEditorLanguageClientWrapper {
 
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp?.specifyServices();
-        const serviceConfig = await configureServices(userConfig.wrapperConfig.serviceConfig, specificServices, this.logger);
+        const serviceConfig = await configureServices({
+            serviceConfig: userConfig.wrapperConfig.serviceConfig,
+            specificServices,
+            logger: this.logger
+        });
         await initServices(serviceConfig, `monaco-editor (${this.id})`, checkServiceConsistency);
 
         this.languageClientWrapper = new LanguageClientWrapper();

@@ -6,8 +6,10 @@
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
+import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import { FakeWorker as Worker } from './fakeWorker.js';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -16,6 +18,7 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
 
 export type InitializeServiceConfig = {
     userServices?: monaco.editor.IEditorOverrideServices;
+    enableExtHostWorker?: boolean;
     debugLogging?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
 };
@@ -95,7 +98,9 @@ export const importAllServices = async (config?: InitializeServiceConfig, perfor
     const userServices: monaco.editor.IEditorOverrideServices = lc.userServices ?? {};
 
     const lcRequiredServices = await supplyRequiredServices();
+
     mergeServices(lcRequiredServices, userServices);
+    await configureExtHostWorker(config?.enableExtHostWorker === true, userServices);
     reportServiceLoading(userServices, lc.debugLogging === true);
 
     if (performChecks === undefined || performChecks()) {
@@ -104,5 +109,25 @@ export const importAllServices = async (config?: InitializeServiceConfig, perfor
         if (logLevel) {
             StandaloneServices.get(ILogService).setLevel(logLevel);
         }
+    }
+};
+
+/**
+ * Enable ext host to run in a worker
+ */
+export const configureExtHostWorker = async (enableExtHostWorker: boolean, userServices: monaco.editor.IEditorOverrideServices) => {
+    if (enableExtHostWorker) {
+        const fakeWorker = new Worker(new URL('vscode/workers/extensionHost.worker', import.meta.url), { type: 'module' });
+        const workerConfig: WorkerConfig = {
+            url: fakeWorker.url.toString(),
+            options: fakeWorker.options
+        };
+
+        // import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
+        const getExtensionServiceOverride = (await import('@codingame/monaco-vscode-extensions-service-override')).default;
+        const extHostServices = {
+            ...getExtensionServiceOverride(workerConfig),
+        };
+        mergeServices(extHostServices, userServices);
     }
 };

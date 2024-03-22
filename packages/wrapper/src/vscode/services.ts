@@ -10,13 +10,19 @@ import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
 import { Logger } from '../logger.js';
 
+export type VscodeServicesConfig = {
+    serviceConfig?: InitializeServiceConfig;
+    specificServices?: monaco.editor.IEditorOverrideServices;
+    logger?: Logger;
+};
+
 /**
  * Child classes are allow to override the services configuration implementation.
  */
-export const configureServices = async (input?: InitializeServiceConfig, specificServices?: monaco.editor.IEditorOverrideServices, logger?: Logger): Promise<InitializeServiceConfig> => {
-    const serviceConfig = input ?? {};
+export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
+    const serviceConfig = config.serviceConfig ?? {};
     // configure log level
-    serviceConfig.debugLogging = logger?.isEnabled() === true && (serviceConfig.debugLogging === true || logger?.isDebugEnabled() === true);
+    serviceConfig.debugLogging = config.logger?.isEnabled() === true && (serviceConfig.debugLogging === true || config.logger?.isDebugEnabled() === true);
 
     // always set required services if not configured
     serviceConfig.userServices = serviceConfig.userServices ?? {};
@@ -33,6 +39,7 @@ export const configureServices = async (input?: InitializeServiceConfig, specifi
             throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
         }
     }
+
     // adding the default workspace config if not provided
     if (!workspaceConfig) {
         serviceConfig.workspaceConfig = {
@@ -47,7 +54,7 @@ export const configureServices = async (input?: InitializeServiceConfig, specifi
             }
         };
     }
-    mergeServices(specificServices ?? {}, serviceConfig.userServices);
+    mergeServices(config.specificServices ?? {}, serviceConfig.userServices);
 
     return serviceConfig;
 };
