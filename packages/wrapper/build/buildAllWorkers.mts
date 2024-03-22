@@ -17,25 +17,25 @@ promises.push(bundleWorker(
 
 promises.push(bundleWorker(
     format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/typescript/ts.worker.js',
+    '../../node_modules/@codingame/monaco-vscode-standalone-typescript-language-features/worker.js',
     './dist/workers-esbuild/tsWorker-es.js'
 ));
 
 promises.push(bundleWorker(
     format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/html/html.worker.js',
+    '../../node_modules/@codingame/monaco-vscode-standalone-html-language-features/worker.js',
     './dist/workers-esbuild/htmlWorker-es.js'
 ));
 
 promises.push(bundleWorker(
     format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/css/css.worker.js',
+    '../../node_modules/@codingame/monaco-vscode-standalone-css-language-features/worker.js',
     './dist/workers-esbuild/cssWorker-es.js'
 ));
 
 promises.push(bundleWorker(
     format,
-    '../../node_modules/monaco-editor-ms/esm/vs/language/json/json.worker.js',
+    '../../node_modules/@codingame/monaco-vscode-standalone-json-language-features/worker.js',
     './dist/workers-esbuild/jsonWorker-es.js'
 ));
 

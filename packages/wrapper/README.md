@@ -79,7 +79,7 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper/bundle'
 
 ## Examples
 
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 

@@ -8,8 +8,8 @@
     "@types/react-dom": "~18.2.22",
     "@types/shelljs": "~0.8.15",
     "@types/vscode": "~1.87.0",
-    "@typescript-eslint/eslint-plugin": "~7.2.0",
-    "@typescript-eslint/parser": "~7.2.0",
+    "@typescript-eslint/eslint-plugin": "~7.3.1",
+    "@typescript-eslint/parser": "~7.3.1",
     "@vitest/browser": "~1.4.0",
     "editorconfig": "~2.0.0",
     "eslint": "~8.57.0",
@@ -20,9 +20,9 @@
     "shelljs": "~0.8.5",
     "shx": "~0.3.4",
     "typescript": "~5.4.2",
-    "vite": "~5.1.6",
+    "vite": "~5.2.2",
     "vitest": "~1.4.0",
-    "webdriverio": "~8.33.1"
+    "webdriverio": "~8.35.1"
   },
   "volta": {
     "node": "20.11.1",

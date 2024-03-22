@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 const config = defineConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, '../../../node_modules/monaco-editor-ms/esm/vs/language/typescript/ts.worker.js'),
+            entry: path.resolve(__dirname, '../../../node_modules/@codingame/monaco-vscode-standalone-typescript-language-features/worker.js'),
             name: 'tsWorker',
             fileName: (format) => `workers/tsWorker-${format}.js`,
             formats: ['es']

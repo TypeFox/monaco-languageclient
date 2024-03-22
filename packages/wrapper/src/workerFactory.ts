@@ -74,7 +74,9 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
     const fullUrl = new URL(workerFile, config.rootPath).href;
     console.log(`Creating worker: ${fullUrl}`);
 
-    const js = config.options?.type === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
+    // default to 'module' if not specified
+    const workerType = config.options?.type ?? 'module';
+    const js = workerType === 'module' ? `import '${fullUrl}';` : `importScripts('${fullUrl}');`;
     const blob = new Blob([js], { type: 'application/javascript' });
 
     return new Worker(URL.createObjectURL(blob), config.options);

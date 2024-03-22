@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.0.1] - 2024-03-21
+
+- TypeScript based examples now make use of `@codingame/monaco-vscode-standalone` packages
+
 ## [8.0.0] - 2024-03-18
 
 - Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`

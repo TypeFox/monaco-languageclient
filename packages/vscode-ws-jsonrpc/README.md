@@ -68,9 +68,9 @@ forward(socketConnection, serverConnection, message => {
 });
 ```
 
-### Further examples
+## Examples
 
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#getting-started>) in the main repository.
+For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 

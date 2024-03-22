@@ -4,11 +4,16 @@
  * ------------------------------------------------------------------------------------------ */
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-javascript-default-extension';
-// import '@codingame/monaco-vscode-typescript-basics-default-extension';
-// import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import '@codingame/monaco-vscode-standalone-languages';
+import '@codingame/monaco-vscode-standalone-typescript-language-features';
 import { EditorAppConfigClassic, LanguageClientError, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        basePath: '../../../node_modules'
+    });
+};
 
 const wrapper42 = new MonacoEditorLanguageClientWrapper();
 const wrapper43 = new MonacoEditorLanguageClientWrapper();
@@ -24,7 +29,7 @@ const wrapper42Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'extended',
+            $type: 'classic',
             languageId: 'text/plain',
             useDiffEditor: true,
             codeOriginal: `This line is equal.
@@ -59,7 +64,7 @@ const wrapper43Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'extended',
+            $type: 'classic',
             languageId: 'text/plain',
             useDiffEditor: true,
             codeOriginal: 'This line is equal.\nThis number is different 3022.\nMisspelled!Same again.',
@@ -84,7 +89,7 @@ const wrapper44Config: UserConfig = {
             debugLogging: true
         },
         editorAppConfig: {
-            $type: 'extended',
+            $type: 'classic',
             languageId: 'javascript',
             useDiffEditor: false,
             code: `function logMe() {
@@ -98,12 +103,6 @@ const wrapper44Config: UserConfig = {
             }
         }
     }
-};
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        basePath: '../../../node_modules'
-    });
 };
 
 const startWrapper42 = async () => {

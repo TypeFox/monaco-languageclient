@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 const config = defineConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, '../../../node_modules/monaco-editor-ms/esm/vs/language/json/json.worker.js'),
+            entry: path.resolve(__dirname, '../../../node_modules/@codingame/monaco-vscode-standalone-json-language-features/worker.js'),
             name: 'jsonWorker',
             fileName: (format) => `workers/jsonWorker-${format}.js`,
             formats: ['es']
