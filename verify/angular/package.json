@@ -9,7 +9,9 @@
     "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
     "build:msg": "echo Building angular-client example:",
     "build": "npm run build:msg && npm run clean && ng build",
+    "build:production": "npm run build:msg && npm run clean && ng build --configuration production",
     "start": "npm run clean && ng serve",
+    "start:production": "npm run clean && ng serve --configuration production",
     "watch": "npm run clean && ng build --watch --configuration development",
     "reset:repo": "git clean -f -X -d"
   },

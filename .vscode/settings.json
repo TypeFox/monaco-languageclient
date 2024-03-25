@@ -12,13 +12,12 @@
   "eslint.codeAction.showDocumentation": {
     "enable": true
   },
-  "eslint.format.enable": true,
+  "eslint.format.enable": false,
   "eslint.validate": [
     "javascript",
     "typescript"
   ],
   "[json]": {
-    "editor.formatOnSave": true,
     "editor.defaultFormatter": "vscode.json-language-features"
   }
 }
