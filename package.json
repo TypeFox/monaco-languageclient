@@ -3,13 +3,13 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@types/node": "~20.11.28",
-    "@types/react": "~18.2.66",
-    "@types/react-dom": "~18.2.22",
+    "@types/node": "~20.12.3",
+    "@types/react": "~18.2.74",
+    "@types/react-dom": "~18.2.23",
     "@types/shelljs": "~0.8.15",
     "@types/vscode": "~1.87.0",
-    "@typescript-eslint/eslint-plugin": "~7.3.1",
-    "@typescript-eslint/parser": "~7.3.1",
+    "@typescript-eslint/eslint-plugin": "~7.5.0",
+    "@typescript-eslint/parser": "~7.5.0",
     "@vitest/browser": "~1.4.0",
     "editorconfig": "~2.0.0",
     "eslint": "~8.57.0",
@@ -20,13 +20,13 @@
     "shelljs": "~0.8.5",
     "shx": "~0.3.4",
     "typescript": "~5.4.2",
-    "vite": "~5.2.2",
+    "vite": "~5.2.7",
     "vitest": "~1.4.0",
     "webdriverio": "~8.35.1"
   },
   "volta": {
-    "node": "20.11.1",
-    "npm": "10.2.4"
+    "node": "20.12.0",
+    "npm": "10.5.0"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",

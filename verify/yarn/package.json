@@ -5,10 +5,10 @@
   "type": "module",
   "dependencies": {
     "@typefox/monaco-editor-react": "3.0.0",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.3",
     "monaco-editor-wrapper": "4.0.0",
     "monaco-languageclient-examples": "8.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.3",
     "vscode-ws-jsonrpc": "~3.3.0"
   },
   "devDependencies": {
@@ -17,7 +17,7 @@
     "vite": "~5.1.6"
   },
   "volta": {
-    "node": "20.11.1",
+    "node": "20.12.0",
     "yarn": "1.22.22"
   },
   "scripts": {

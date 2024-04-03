@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [4.0.2] - 2024-04-03
+
+- Updated to `monaco-languageclient@8.1.1`
+
 ## [4.0.1] - 2024-03-22
 
 - `workerFactory` now uses `@codingame/monaco-vscode-standalone` packages available since `3.2.0` to build the workers. Therefore it is now independent of the MS package.

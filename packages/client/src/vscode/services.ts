@@ -123,7 +123,6 @@ export const configureExtHostWorker = async (enableExtHostWorker: boolean, userS
             options: fakeWorker.options
         };
 
-        // import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
         const getExtensionServiceOverride = (await import('@codingame/monaco-vscode-extensions-service-override')).default;
         const extHostServices = {
             ...getExtensionServiceOverride(workerConfig),

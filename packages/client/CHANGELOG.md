@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.1.1] - 2024-04-03
+
+- Updated to version `3.2.3` of `@codingame/monaco-vscode` packages
+- Added missing dependency `@codingame/monaco-vscode-extensions-service-override`
+
 ## [8.1.0] - 2024-03-22
 
 - Updated to version `3.2.1` of `@codingame/monaco-vscode` packages

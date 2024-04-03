@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.1.1] - 2023-04-03
+
+- Updated to `monaco-languageclient@8.1.1`.
+
 ## [8.1.0] - 2024-03-22
 
 - Single Editor TypeScript example now make used of extHostWorker
