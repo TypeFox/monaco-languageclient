@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [4.1.0] - 2024-04-10
+
+- Updated to `monaco-languageclient@8.2.0`
+
 ## [4.0.2] - 2024-04-03
 
 - Updated to `monaco-languageclient@8.1.1`

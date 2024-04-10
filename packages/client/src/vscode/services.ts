@@ -7,8 +7,10 @@ import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
+import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
 import { FakeWorker as Worker } from './fakeWorker.js';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
@@ -123,10 +125,73 @@ export const configureExtHostWorker = async (enableExtHostWorker: boolean, userS
             options: fakeWorker.options
         };
 
-        const getExtensionServiceOverride = (await import('@codingame/monaco-vscode-extensions-service-override')).default;
         const extHostServices = {
             ...getExtensionServiceOverride(workerConfig),
         };
         mergeServices(extHostServices, userServices);
     }
+};
+
+export const createDefaultLocaleConfiguration = (): LocalizationOptions => {
+    return {
+        async clearLocale() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('locale');
+            window.history.pushState(null, '', url.toString());
+        },
+        async setLocale(id: string) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('locale', id);
+            window.history.pushState(null, '', url.toString());
+        },
+        availableLanguages: [{
+            locale: 'en',
+            languageName: 'English'
+        }, {
+            locale: 'cs',
+            languageName: 'Czech'
+        }, {
+            locale: 'de',
+            languageName: 'German'
+        }, {
+            locale: 'es',
+            languageName: 'Spanish'
+        }, {
+            locale: 'fr',
+            languageName: 'French'
+        }, {
+            locale: 'it',
+            languageName: 'Italian'
+        }, {
+            locale: 'ja',
+            languageName: 'Japanese'
+        }, {
+            locale: 'ko',
+            languageName: 'Korean'
+        }, {
+            locale: 'pl',
+            languageName: 'Polish'
+        }, {
+            locale: 'pt-br',
+            languageName: 'Portuguese (Brazil)'
+        }, {
+            locale: 'qps-ploc',
+            languageName: 'Pseudo Language'
+        }, {
+            locale: 'ru',
+            languageName: 'Russian'
+        }, {
+            locale: 'tr',
+            languageName: 'Turkish'
+        }, {
+            locale: 'zh-hans',
+            languageName: 'Chinese (Simplified)'
+        }, {
+            locale: 'zh-hant',
+            languageName: 'Chinese (Traditional)'
+        }, {
+            locale: 'en',
+            languageName: 'English'
+        }]
+    };
 };

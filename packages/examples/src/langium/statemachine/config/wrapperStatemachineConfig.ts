@@ -5,6 +5,9 @@
 
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
+import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { getTextContent } from '../../../common/example-apps-common.js';
@@ -23,7 +26,9 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
             serviceConfig: {
                 userServices: {
                     ...getEditorServiceOverride(useOpenEditorStub),
-                    ...getKeybindingsServiceOverride()
+                    ...getKeybindingsServiceOverride(),
+                    ...getLifecycleServiceOverride(),
+                    ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
                 },
                 debugLogging: true
             },

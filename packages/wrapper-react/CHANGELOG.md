@@ -2,6 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [3.1.0] - 2024-04-10
+
+- Updated to `monaco-editor-wrapper@4.1.0`
+- [MonacoEditorReactComp] onLoad() should expose editor refrence [#612](https://github.com/TypeFox/monaco-languageclient/issues/612)
+
 ## [3.0.2] - 2024-04-03
 
 - Updated to `monaco-editor-wrapper@4.0.2`

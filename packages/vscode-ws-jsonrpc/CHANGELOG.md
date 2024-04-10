@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.3.1] - 2024-04-10
+
+- Correction of README and unification of copyright statements.
+
 ## [3.3.0] - 2024-03-18
 
 - Repository now includes `monaco-editor-wrapper` and `@typefox/monaco-editor-react`
