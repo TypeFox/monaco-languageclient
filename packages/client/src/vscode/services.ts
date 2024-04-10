@@ -7,6 +7,7 @@ import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
 import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
+import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import { FakeWorker as Worker } from './fakeWorker.js';
@@ -123,7 +124,6 @@ export const configureExtHostWorker = async (enableExtHostWorker: boolean, userS
             options: fakeWorker.options
         };
 
-        const getExtensionServiceOverride = (await import('@codingame/monaco-vscode-extensions-service-override')).default;
         const extHostServices = {
             ...getExtensionServiceOverride(workerConfig),
         };

@@ -18,10 +18,10 @@ This is npm package is part of the <https://github.com/TypeFox/monaco-languagecl
 
 ## Usage
 
-### NEW with v8: Own monaco-vscode-editor-api package
+### NEW with v8: Use monaco-vscode-editor-api package instead of monaco-editor
 
-Since version 2 (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the vscode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`. With v6 and v7 we "treemend" used a "treemended" version of `monaco-editor` which brought back monaco-editor code that was removed during bundling/threeshaking (*treemending*). This left users with the need to define overrides / resolution which was problematic.
-Therefore [monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-editor-wrapper) is now used and installed as an alias to `monaco-editor` because it provides the same api as the official monaco-editor.
+Since version 2 (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the VSCode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`. With v6 and v7 we used a *treemended* version of `monaco-editor` which brought back monaco-editor code that was removed during bundling/threeshaking. This left users with the need to define overrides / resolution which was problematic.
+Therefore [monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-vscode-editor-api) is now used and installed as an alias to `monaco-editor` because it provides the same api as the official monaco-editor, but no longer has the drawbacks of the *treemended* version.
 
 ### Using services and extra packages from @codingame/monaco-vscode-api
 
