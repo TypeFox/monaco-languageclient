@@ -13,7 +13,7 @@ export type MonacoEditorProps = {
     className?: string;
     userConfig: UserConfig,
     onTextChanged?: (text: string, isDirty: boolean) => void;
-    onLoad?: () => void;
+    onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: (e: any) => void;
 }
@@ -162,7 +162,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             this.isRestarting = undefined;
 
             // once awaiting isStarting is done onLoad is called if available
-            onLoad?.();
+            onLoad?.(this.wrapper);
 
             this.handleOnTextChanged();
         }
