@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -33,8 +34,8 @@ export const runPythonReact = () => {
             'height': '80vh'
         }}
         onTextChanged={onTextChanged}
-        onLoad={() => {
-            console.log('Loaded');
+        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
+            console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
         }}
         onError={(e) => {
             console.error(e);

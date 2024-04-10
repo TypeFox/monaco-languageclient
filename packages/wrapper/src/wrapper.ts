@@ -160,8 +160,8 @@ export class MonacoEditorLanguageClientWrapper {
     public reportStatus() {
         const status: string[] = [];
         status.push('Wrapper status:');
-        status.push(`Editor: ${this.editorApp?.getEditor()}`);
-        status.push(`DiffEditor: ${this.editorApp?.getDiffEditor()}`);
+        status.push(`Editor: ${this.editorApp?.getEditor()?.getId()}`);
+        status.push(`DiffEditor: ${this.editorApp?.getDiffEditor()?.getId()}`);
         return status;
     }
 
