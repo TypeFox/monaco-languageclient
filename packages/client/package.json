@@ -57,6 +57,7 @@
   "dependencies": {
     "@codingame/monaco-vscode-extensions-service-override": "~4.1.2",
     "@codingame/monaco-vscode-languages-service-override": "~4.1.2",
+    "@codingame/monaco-vscode-localization-service-override": "~4.1.2",
     "@codingame/monaco-vscode-model-service-override": "~4.1.2",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.1.2",
     "vscode": "npm:@codingame/monaco-vscode-api@~4.1.2",

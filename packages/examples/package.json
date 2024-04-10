@@ -59,6 +59,7 @@
     "@codingame/monaco-vscode-files-service-override": "~4.1.2",
     "@codingame/monaco-vscode-groovy-default-extension": "~4.1.2",
     "@codingame/monaco-vscode-keybindings-service-override": "~4.1.2",
+    "@codingame/monaco-vscode-lifecycle-service-override": "~4.1.2",
     "@codingame/monaco-vscode-localization-service-override": "~4.1.2",
     "@codingame/monaco-vscode-javascript-default-extension": "~4.1.2",
     "@codingame/monaco-vscode-json-default-extension": "~4.1.2",
