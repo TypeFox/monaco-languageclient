@@ -14,6 +14,10 @@ export class Logger {
     private debugEnabled: boolean;
 
     constructor(config?: LoggerConfig) {
+        this.updateConfig(config);
+    }
+
+    updateConfig(config?: LoggerConfig) {
         this.enabled = !config ? true : config!.enabled === true;
         this.debugEnabled = this.enabled && config?.debugEnabled === true;
     }

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { EditorAppClassic, EditorAppExtended, MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-editor-wrapper';
+import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
 import React, { CSSProperties } from 'react';
@@ -28,20 +28,19 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
     constructor(props: T) {
         super(props);
-        this.containerElement = undefined;
+        const { userConfig } = this.props;
+        this.wrapper.getLogger().updateConfig(userConfig.loggerConfig);
     }
 
     override async componentDidMount() {
-        await this.handleReinit();
-    }
-
-    protected async handleReinit() {
-        await this.destroyMonaco();
-        await this.initMonaco();
-        await this.startMonaco();
+        this.wrapper.getLogger().debug('Called: componentDidMount');
+        if (!this.isRestarting) {
+            await this.handleReinit();
+        }
     }
 
     override async componentDidUpdate(prevProps: T) {
+        this.wrapper.getLogger().debug('Called: componentDidUpdate');
         const { userConfig } = this.props;
         const { wrapper } = this;
 
@@ -63,54 +62,50 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         }
     }
 
-    protected isReInitRequired(prevProps: T) {
-        const { className, userConfig } = this.props;
-        const { wrapper } = this;
-
-        if (prevProps.className !== className && this.containerElement) {
-            this.containerElement.className = className ?? '';
-        }
-
-        let mustReInit = false;
-        const config = userConfig.wrapperConfig.editorAppConfig;
-        const prevConfig = prevProps.userConfig.wrapperConfig.editorAppConfig;
-        const prevWorkerOptions = prevProps.userConfig.languageClientConfig?.options;
-        const currentWorkerOptions = userConfig.languageClientConfig?.options;
-        const prevIsWorker = (prevWorkerOptions?.$type === 'WorkerDirect');
-        const currentIsWorker = (currentWorkerOptions?.$type === 'WorkerDirect');
-        const prevIsWorkerConfig = (prevWorkerOptions?.$type === 'WorkerConfig');
-        const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
-
-        // check if both are configs and the workers are both undefined
-        if (prevIsWorkerConfig && prevIsWorker === undefined && currentIsWorkerConfig && currentIsWorker === undefined) {
-            mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
-            // check if both are workers and configs are both undefined
-        } else if (prevIsWorkerConfig === undefined && prevIsWorker && currentIsWorkerConfig === undefined && currentIsWorker) {
-            mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
-            // previous was worker and current config is not or the other way around
-        } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {
-            mustReInit = true;
-        }
-
-        if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-            mustReInit = (wrapper?.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
-        } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
-            mustReInit = (wrapper?.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
-        }
-
-        return mustReInit;
-    }
-
     override componentWillUnmount() {
+        this.wrapper.getLogger().debug('Called: componentWillUnmount');
         this.destroyMonaco();
     }
 
     protected assignRef = (component: HTMLDivElement) => {
+        this.wrapper.getLogger().debug('Called: assignRef');
         this.containerElement = component;
     };
 
+    override render() {
+        this.wrapper.getLogger().debug('Called: render');
+        return (
+            <div
+                ref={this.assignRef}
+                style={this.props.style}
+                className={this.props.className}
+            />
+        );
+    }
+
+    protected async handleReinit() {
+        // block everything unti until (re)-start is complete
+        this.isRestarting = new Promise<void>((resolve) => {
+            this.started = resolve;
+        });
+
+        await this.destroyMonaco();
+        await this.initMonaco();
+        await this.startMonaco();
+    }
+
+    protected isReInitRequired(prevProps: T) {
+        const { className, userConfig } = this.props;
+        let mustReInit = false;
+        if (prevProps.className !== className && this.containerElement) {
+            this.containerElement.className = className ?? '';
+            mustReInit = true;
+        }
+        return mustReInit || this.wrapper.isReInitRequired(userConfig, prevProps.userConfig);
+    }
+
     protected async destroyMonaco(): Promise<void> {
-        if (this.wrapper) {
+        if (this.wrapper.isInitDone()) {
             if (this.isRestarting) {
                 await this.isRestarting;
             }
@@ -131,10 +126,6 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             userConfig
         } = this.props;
 
-        // block "destroyMonaco" until start is complete
-        this.isRestarting = new Promise<void>((resolve) => {
-            this.started = resolve;
-        });
         await this.wrapper.init(userConfig);
     }
 
@@ -151,20 +142,20 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             // exceptions are forwarded to onError callback or the exception is thrown
             try {
                 await this.wrapper.start(this.containerElement);
+
+                // once awaiting start is done onLoad is called if available
+                onLoad?.(this.wrapper);
+                this.handleOnTextChanged();
             } catch (e) {
                 if (onError) {
                     onError(e);
                 } else {
                     throw e;
                 }
+            } finally {
+                this.started();
+                this.isRestarting = undefined;
             }
-            this.started();
-            this.isRestarting = undefined;
-
-            // once awaiting isStarting is done onLoad is called if available
-            onLoad?.(this.wrapper);
-
-            this.handleOnTextChanged();
         }
     }
 
@@ -173,6 +164,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             userConfig,
             onTextChanged
         } = this.props;
+
         if (!onTextChanged) return;
 
         const model = this.wrapper.getModel();
@@ -190,31 +182,17 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         }
     }
 
-    updateLayout(): void {
-        this.wrapper.updateLayout();
-    }
-
     getEditorWrapper() {
         return this.wrapper;
     }
 
     /**
-     * Executes a custom LSP command by name with args, and returns the result
+     * Executes a custom VSCode/LSP command by name with args, and returns the result
      * @param cmd Command to execute
      * @param args Arguments to pass along with this command
      * @returns The result of executing this command in the language server
      */
     executeCommand(cmd: string, ...args: unknown[]): Thenable<unknown> {
         return vscode.commands.executeCommand(cmd, ...args);
-    }
-
-    override render() {
-        return (
-            <div
-                ref={this.assignRef}
-                style={this.props.style}
-                className={this.props.className}
-            />
-        );
     }
 }

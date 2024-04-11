@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
@@ -27,21 +27,21 @@ export const runPythonReact = () => {
         console.log(`Dirty? ${isDirty} Content: ${text}`);
     };
 
-    const comp = <MonacoEditorReactComp
-        userConfig={createUserConfig(code)}
-        style={{
-            'paddingTop': '5px',
-            'height': '80vh'
-        }}
-        onTextChanged={onTextChanged}
-        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-            console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
-        }}
-        onError={(e) => {
-            console.error(e);
-        }}
-    />;
-
-    const root = ReactDOM.createRoot(document.getElementById('root')!);
-    root.render(comp);
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+        <StrictMode>
+            <MonacoEditorReactComp
+                userConfig={createUserConfig(code)}
+                style={{
+                    'paddingTop': '5px',
+                    'height': '80vh'
+                }}
+                onTextChanged={onTextChanged}
+                onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
+                    console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
+                }}
+                onError={(e) => {
+                    console.error(e);
+                }}
+            />
+        </StrictMode>);
 };

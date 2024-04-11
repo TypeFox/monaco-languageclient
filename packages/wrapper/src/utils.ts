@@ -25,7 +25,7 @@ export const createUrl = (config: WebSocketConfigOptions | WebSocketConfigOption
         if (options.path) {
             buildUrl += `/${options.path}`;
         }
-        if (options.extraParams){
+        if (options.extraParams) {
             const url = new URL(buildUrl);
 
             for (const [key, value] of Object.entries(options.extraParams)) {

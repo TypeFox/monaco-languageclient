@@ -81,6 +81,10 @@ export const createUserConfig = (code: string): UserConfig => {
                 useDiffEditor: false,
                 code
             }
+        },
+        loggerConfig: {
+            enabled: true,
+            debugEnabled: true
         }
     };
 };
