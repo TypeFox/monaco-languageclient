@@ -58,7 +58,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
     });
 
-    test('Test if ', async () => {
+    test('Verify if configuration changes make re-init necessary', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfigClassic = createBaseConfig('classic');
