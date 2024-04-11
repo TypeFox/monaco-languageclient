@@ -57,4 +57,20 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             await wrapper.initAndStart(config, document.getElementById('monaco-editor-root'));
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
     });
+
+    test('Verify if configuration changes make re-init necessary', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfigClassic = createBaseConfig('classic');
+        wrapper.init(userConfigClassic);
+        expect(wrapper.isReInitRequired(userConfigClassic, userConfigClassic)).toBeFalsy();
+
+        const userConfigExtended = createBaseConfig('extended');
+        expect(wrapper.isReInitRequired(userConfigClassic, userConfigExtended)).toBeTruthy();
+
+        const userConfigClassicNew = createBaseConfig('classic');
+        userConfigClassicNew.wrapperConfig.editorAppConfig.useDiffEditor = true;
+
+        expect(wrapper.isReInitRequired(userConfigClassicNew, userConfigClassic)).toBeTruthy();
+    });
 });

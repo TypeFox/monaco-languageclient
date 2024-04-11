@@ -115,7 +115,18 @@ export class EditorAppExtended extends EditorAppBase {
         if (includeModelData) {
             different = isModelUpdateRequired(orgConfig, config) !== ModelUpdateType.NONE;
         }
-        const propsExtended = ['useDiffEditor', 'domReadOnly', 'readOnly', 'awaitExtensionReadiness', 'overrideAutomaticLayout', 'editorOptions', 'diffEditorOptions', 'userConfiguration', 'extensions'];
+        const propsExtended = [
+            // model required changes are not taken into account in this list
+            'useDiffEditor',
+            'domReadOnly',
+            'readOnly',
+            'awaitExtensionReadiness',
+            'overrideAutomaticLayout',
+            'editorOptions',
+            'diffEditorOptions',
+            'extensions',
+            'userConfiguration'
+        ];
         type ExtendedKeys = keyof typeof orgConfig;
         const propCompareExtended = (name: string) => {
             return !isEqual(orgConfig[name as ExtendedKeys], config[name as ExtendedKeys]);

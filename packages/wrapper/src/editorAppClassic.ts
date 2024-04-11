@@ -94,7 +94,20 @@ export class EditorAppClassic extends EditorAppBase {
             different = isModelUpdateRequired(orgConfig, config) !== ModelUpdateType.NONE;
         }
         type ClassicKeys = keyof typeof orgConfig;
-        const propsClassic = ['useDiffEditor', 'domReadOnly', 'readOnly', 'awaitExtensionReadiness', 'overrideAutomaticLayout', 'editorOptions', 'diffEditorOptions', 'languageDef', 'languageExtensionConfig', 'theme', 'themeData'];
+        const propsClassic = [
+            // model required changes are not taken into account in this list
+            'useDiffEditor',
+            'domReadOnly',
+            'readOnly',
+            'awaitExtensionReadiness',
+            'overrideAutomaticLayout',
+            'editorOptions',
+            'diffEditorOptions',
+            'theme',
+            'languageDef',
+            'languageExtensionConfig',
+            'themeData'
+        ];
         const propCompareClassic = (name: string) => {
             return !isEqual(orgConfig[name as ClassicKeys], config[name as ClassicKeys]);
         };

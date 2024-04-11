@@ -12,6 +12,7 @@ import { ModelUpdate } from './editorAppBase.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 import { Logger, LoggerConfig } from './logger.js';
 import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 
 export type WrapperConfig = {
     serviceConfig?: InitializeServiceConfig;
@@ -33,10 +34,9 @@ export type UserConfig = {
 export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
-
     private editorApp: EditorAppClassic | EditorAppExtended | undefined;
     private languageClientWrapper?: LanguageClientWrapper;
-    private logger: Logger;
+    private logger: Logger = new Logger();
     private initDone = false;
 
     /**
@@ -46,15 +46,16 @@ export class MonacoEditorLanguageClientWrapper {
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
+
         const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
         if (editorAppConfig.useDiffEditor && !editorAppConfig.codeOriginal) {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.code} codeOriginal: ${editorAppConfig.codeOriginal}`);
         }
+
         // Always dispose old instances before start
         this.editorApp?.disposeApp();
-
         this.id = userConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger = new Logger(userConfig.loggerConfig);
+        this.logger.updateConfig(userConfig.loggerConfig);
 
         if (editorAppConfig.$type === 'classic') {
             this.editorApp = new EditorAppClassic(this.id, userConfig, this.logger);
@@ -109,6 +110,10 @@ export class MonacoEditorLanguageClientWrapper {
         }
     }
 
+    public isInitDone() {
+        return this.initDone;
+    }
+
     isStarted(): boolean {
         // fast-fail
         if (!this.editorApp?.haveEditor()) {
@@ -119,6 +124,10 @@ export class MonacoEditorLanguageClientWrapper {
             return this.languageClientWrapper.isStarted();
         }
         return true;
+    }
+
+    getLogger(): Logger {
+        return this.logger;
     }
 
     getMonacoEditorApp() {
@@ -184,6 +193,39 @@ export class MonacoEditorLanguageClientWrapper {
 
     updateLayout() {
         this.editorApp?.updateLayout();
+    }
+
+    isReInitRequired(userConfig: UserConfig, previousUserConfig: UserConfig): boolean {
+        let mustReInit = false;
+        const config = userConfig.wrapperConfig.editorAppConfig;
+        const prevConfig = previousUserConfig.wrapperConfig.editorAppConfig;
+        const prevWorkerOptions = previousUserConfig.languageClientConfig?.options;
+        const currentWorkerOptions = userConfig.languageClientConfig?.options;
+        const prevIsWorker = (prevWorkerOptions?.$type === 'WorkerDirect');
+        const currentIsWorker = (currentWorkerOptions?.$type === 'WorkerDirect');
+        const prevIsWorkerConfig = (prevWorkerOptions?.$type === 'WorkerConfig');
+        const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
+
+        // check if both are configs and the workers are both undefined
+        if (prevIsWorkerConfig && prevIsWorker === undefined && currentIsWorkerConfig && currentIsWorker === undefined) {
+            mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
+            // check if both are workers and configs are both undefined
+        } else if (prevIsWorkerConfig === undefined && prevIsWorker && currentIsWorkerConfig === undefined && currentIsWorker) {
+            mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
+            // previous was worker and current config is not or the other way around
+        } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {
+            mustReInit = true;
+        }
+
+        if (prevConfig.$type !== config.$type) {
+            mustReInit = true;
+        } else if (prevConfig.$type === 'classic' && config.$type === 'classic') {
+            mustReInit = (this.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
+        } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
+            mustReInit = (this.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
+        }
+
+        return mustReInit;
     }
 
 }
