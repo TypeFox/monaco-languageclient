@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "4.1.0",
+  "version": "4.2.0-next.0",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [

@@ -3,9 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
+import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import React, { CSSProperties } from 'react';
 
 export type MonacoEditorProps = {
