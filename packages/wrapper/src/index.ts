@@ -64,14 +64,6 @@ import {
     MonacoEditorLanguageClientWrapper,
 } from './wrapper.js';
 
-import type {
-    LoggerConfig
-} from './logger.js';
-
-import {
-    Logger
-} from './logger.js';
-
 export type {
     WrapperConfig,
     EditorAppConfigBase,
@@ -91,8 +83,7 @@ export type {
     LanguageClientConfig,
     LanguageClientError,
     UserConfig,
-    ModelUpdate,
-    LoggerConfig
+    ModelUpdate
 };
 
 export {
@@ -104,8 +95,7 @@ export {
     isEqual,
     ModelUpdateType,
     EditorAppClassic,
-    EditorAppExtended,
-    Logger
+    EditorAppExtended
 };
 
 export * from './utils.js';

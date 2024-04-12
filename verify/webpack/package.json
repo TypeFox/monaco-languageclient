@@ -4,22 +4,22 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.1.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.2.1",
     "monaco-editor-wrapper": "../../packages/wrapper",
     "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-api@~4.1.2"
+    "vscode": "npm:@codingame/monaco-vscode-api@~4.2.1"
   },
   "devDependencies": {
-    "css-loader": "~6.10.0",
+    "css-loader": "~7.1.1",
     "http-server": "~14.1.1",
     "shx": "~0.3.4",
     "source-map-loader": "~5.0.0",
-    "style-loader": "~3.3.4",
+    "style-loader": "~4.0.0",
     "ts-loader": "~9.5.0",
     "webpack-cli": "~5.1.4"
   },
   "volta": {
-    "node": "20.12.0",
+    "node": "20.12.2",
     "npm": "10.5.0"
   },
   "scripts": {

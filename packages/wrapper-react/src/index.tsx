@@ -5,8 +5,9 @@
 
 import * as monaco from 'monaco-editor';
 import * as vscode from 'vscode';
-import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import React, { CSSProperties } from 'react';
+import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { Logger } from 'monaco-languageclient/tools';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
@@ -21,6 +22,7 @@ export type MonacoEditorProps = {
 export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorProps> extends React.Component<T> {
 
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
+    private logger: Logger = new Logger();
     private containerElement?: HTMLDivElement;
     private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
@@ -29,18 +31,18 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
     constructor(props: T) {
         super(props);
         const { userConfig } = this.props;
-        this.wrapper.getLogger().updateConfig(userConfig.loggerConfig);
+        this.logger.updateConfig(userConfig.loggerConfig);
     }
 
     override async componentDidMount() {
-        this.wrapper.getLogger().debug('Called: componentDidMount');
+        this.logger.debug('Called: componentDidMount');
         if (!this.isRestarting) {
             await this.handleReinit();
         }
     }
 
     override async componentDidUpdate(prevProps: T) {
-        this.wrapper.getLogger().debug('Called: componentDidUpdate');
+        this.logger.debug('Called: componentDidUpdate');
         const { userConfig } = this.props;
         const { wrapper } = this;
 
@@ -63,17 +65,17 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
     }
 
     override componentWillUnmount() {
-        this.wrapper.getLogger().debug('Called: componentWillUnmount');
+        this.logger.debug('Called: componentWillUnmount');
         this.destroyMonaco();
     }
 
     protected assignRef = (component: HTMLDivElement) => {
-        this.wrapper.getLogger().debug('Called: assignRef');
+        this.logger.debug('Called: assignRef');
         this.containerElement = component;
     };
 
     override render() {
-        this.wrapper.getLogger().debug('Called: render');
+        this.logger.debug('Called: render');
         return (
             <div
                 ref={this.assignRef}
