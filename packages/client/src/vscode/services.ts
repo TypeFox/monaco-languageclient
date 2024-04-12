@@ -12,6 +12,7 @@ import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-serv
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
 import { FakeWorker as Worker } from './fakeWorker.js';
+import { Logger } from '../tools/index.js';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -48,11 +49,9 @@ export const supplyRequiredServices = async () => {
     };
 };
 
-export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, debugLogging: boolean) => {
+export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, logger?: Logger) => {
     for (const serviceName of Object.keys(services)) {
-        if (debugLogging) {
-            console.log(`Loading service: ${serviceName}`);
-        }
+        logger?.debug(`Loading service: ${serviceName}`);
     }
 };
 
@@ -62,23 +61,34 @@ export const mergeServices = (services: monaco.editor.IEditorOverrideServices, o
     }
 };
 
-export const initServices = async (config?: InitializeServiceConfig, caller?: string, performChecks?: () => boolean) => {
+export type InitServicesInstruction = {
+    serviceConfig?: InitializeServiceConfig;
+    caller?: string;
+    performChecks?: () => boolean;
+    logger?: Logger;
+};
+
+export const initServices = async (instruction: InitServicesInstruction) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
+
+    // in case debugLogging is set and for whatever reason no logger is passed a proper one is created
+    if (instruction.serviceConfig?.debugLogging === true && !instruction.logger) {
+        instruction.logger = new Logger({
+            enabled: true,
+            debugEnabled: true
+        });
+    }
 
     if (!envEnhanced.vscodeInitialising) {
         if (envEnhanced.vscodeApiInitialised) {
-            if (config?.debugLogging === true) {
-                console.log('Initialization of vscode services can only performed once!');
-            }
+            instruction.logger?.debug('Initialization of vscode services can only performed once!');
         } else {
             envEnhanced.vscodeInitialising = true;
-            if (config?.debugLogging === true) {
-                console.log(`Initializing vscode services. Caller: ${caller ?? 'unknown'}`);
-            }
-            await importAllServices(config, performChecks);
-            if (config?.debugLogging === true) {
-                console.log('Initialization of vscode services completed successfully.');
-            }
+            instruction.logger?.debug(`Initializing vscode services. Caller: ${instruction.caller ?? 'unknown'}`);
+
+            await importAllServices(instruction);
+            instruction.logger?.debug('Initialization of vscode services completed successfully.');
+
             envEnhanced.vscodeApiInitialised = true;
         }
     }
@@ -95,17 +105,18 @@ export const initServices = async (config?: InitializeServiceConfig, caller?: st
  *   - languages
  *   - model
  */
-export const importAllServices = async (config?: InitializeServiceConfig, performChecks?: () => boolean) => {
-    const lc: InitializeServiceConfig = config ?? {};
+export const importAllServices = async (instruction: InitServicesInstruction) => {
+    const lc: InitializeServiceConfig = instruction.serviceConfig ?? {};
     const userServices: monaco.editor.IEditorOverrideServices = lc.userServices ?? {};
 
     const lcRequiredServices = await supplyRequiredServices();
 
     mergeServices(lcRequiredServices, userServices);
-    await configureExtHostWorker(config?.enableExtHostWorker === true, userServices);
-    reportServiceLoading(userServices, lc.debugLogging === true);
+    await configureExtHostWorker(instruction.serviceConfig?.enableExtHostWorker === true, userServices);
 
-    if (performChecks === undefined || performChecks()) {
+    reportServiceLoading(userServices, instruction.logger);
+
+    if (instruction.performChecks === undefined || instruction.performChecks()) {
         await initialize(userServices);
         const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel;
         if (logLevel) {

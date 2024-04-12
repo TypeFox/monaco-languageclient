@@ -71,7 +71,12 @@ export class MonacoEditorLanguageClientWrapper {
             specificServices,
             logger: this.logger
         });
-        await initServices(serviceConfig, `monaco-editor (${this.id})`, checkServiceConsistency);
+        await initServices({
+            serviceConfig,
+            caller: `monaco-editor (${this.id})`,
+            performChecks: checkServiceConsistency,
+            logger: this.logger
+        });
 
         this.languageClientWrapper = new LanguageClientWrapper();
         await this.languageClientWrapper.init({

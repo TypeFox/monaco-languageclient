@@ -23,11 +23,13 @@ export const configureMonacoWorkers = () => {
 };
 export const runClient = async () => {
     await initServices({
-        userServices: {
-            ...getThemeServiceOverride(),
-            ...getTextmateServiceOverride(),
-        },
-        debugLogging: true,
+        serviceConfig: {
+            userServices: {
+                ...getThemeServiceOverride(),
+                ...getTextmateServiceOverride(),
+            },
+            debugLogging: true,
+        }
     });
 
     // register the JSON language with Monaco
