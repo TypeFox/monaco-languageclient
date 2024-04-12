@@ -3,12 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { getTextContent } from '../../../common/example-apps-common.js';
 
@@ -25,7 +23,6 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
         wrapperConfig: {
             serviceConfig: {
                 userServices: {
-                    ...getEditorServiceOverride(useOpenEditorStub),
                     ...getKeybindingsServiceOverride(),
                     ...getLifecycleServiceOverride(),
                     ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),

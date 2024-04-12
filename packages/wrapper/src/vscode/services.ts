@@ -8,7 +8,7 @@ import * as monaco from 'monaco-editor';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
-import { Logger } from '../logger.js';
+import { Logger } from 'monaco-languageclient/tools';
 
 export type VscodeServicesConfig = {
     serviceConfig?: InitializeServiceConfig;

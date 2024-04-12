@@ -5,13 +5,14 @@
 
 import * as monaco from 'monaco-editor';
 import { MonacoLanguageClient } from 'monaco-languageclient';
+import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { Logger } from 'monaco-languageclient/tools';
+import type { LoggerConfig } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { ModelUpdate } from './editorAppBase.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
-import { Logger, LoggerConfig } from './logger.js';
-import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 
 export type WrapperConfig = {
@@ -70,7 +71,12 @@ export class MonacoEditorLanguageClientWrapper {
             specificServices,
             logger: this.logger
         });
-        await initServices(serviceConfig, `monaco-editor (${this.id})`, checkServiceConsistency);
+        await initServices({
+            serviceConfig,
+            caller: `monaco-editor (${this.id})`,
+            performChecks: checkServiceConsistency,
+            logger: this.logger
+        });
 
         this.languageClientWrapper = new LanguageClientWrapper();
         await this.languageClientWrapper.init({
@@ -124,10 +130,6 @@ export class MonacoEditorLanguageClientWrapper {
             return this.languageClientWrapper.isStarted();
         }
         return true;
-    }
-
-    getLogger(): Logger {
-        return this.logger;
     }
 
     getMonacoEditorApp() {

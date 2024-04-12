@@ -6,7 +6,8 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | monaco-editor-wrapper | monaco-editor-react | monaco-vscode-api / editor-api | vscode | monaco-editor | release date | comment |
 | :---- | :---- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 8.2.0         | 4.1.0 | 3.1.0 | 4.1.0  | 1.88.0 | 0.47.0 | 2024-04-09 | |
+| 8.3.0         | 4.2.0 | 3.2.0 | 4.2.1  | 1.88.1 | 0.47.0 | 2024-04-12 | |
+| 8.2.0         | 4.1.0 | 3.1.0 | 4.1.2  | 1.88.0 | 0.47.0 | 2024-04-10 | |
 | 8.1.1         | 4.0.2 | 3.0.2 | 3.2.3  | 1.87.2 | 0.47.0 | 2024-04-03 | |
 | 8.1.0         | 4.0.1 | 3.0.1 | 3.2.1  | 1.87.2 | 0.47.0 | 2024-03-22 | |
 | 8.0.0         | 4.0.0 | 3.0.0 | 3.1.2  | 1.87.2 | 0.47.0 | 2024-03-18 | `@codingame/monaco-vscode-api` implements its own versioning scheme<br>`@codingame/monaco-vscode-editor-api` replaces<br>`@codingame/monaco-editor-treemended`<br>Added `monaco-editor-wrapper` and `@typefox/monaco-editor-react` to the table |

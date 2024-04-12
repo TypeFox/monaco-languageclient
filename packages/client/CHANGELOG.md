@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.3.0] - 2024-04-10
+
+- Updated to version `4.2.1` of `@codingame/monaco-vscode` packages
+- Introduce new export `tools` exposing the `Logger` migrated here from `monaco-editor-wrapper`
+
 ## [8.2.0] - 2024-04-10
 
 - Updated to version `4.1.2` of `@codingame/monaco-vscode` packages

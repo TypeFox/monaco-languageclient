@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { Logger } from 'monaco-editor-wrapper';
+import { Logger } from 'monaco-languageclient/tools';
 
 describe('Logger', () => {
 
