@@ -4,7 +4,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [3.2.0] - 2024-04-12
 
-- Updated to `monaco-editor-wrapper@4.2.0` and `monaco-languageclient@8.3.0`
+- Updated to `monaco-editor-wrapper@4.2.0`, `monaco-languageclient@8.3.0` and version `4.2.1` of `@codingame/monaco-vscode` packages
 - @typefox/monaco-editor-react works in strict mode [#634](https://github.com/TypeFox/monaco-languageclient/pull/634)
 - Using own `Logger` instance where implementation is provided by `monaco-languageclient`
 

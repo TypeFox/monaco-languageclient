@@ -4,7 +4,7 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 
 ## [4.2.0] - 2024-04-12
 
-- Updated to `monaco-languageclient@8.3.0`
+- Updated to `monaco-languageclient@8.3.0` and version `4.2.1` of `@codingame/monaco-vscode` packages
 - @typefox/monaco-editor-react works in strict mode [#634](https://github.com/TypeFox/monaco-languageclient/pull/634)
   - Moved wrapper related functions to `isReInitRequired` and introduced a new unit test
 
