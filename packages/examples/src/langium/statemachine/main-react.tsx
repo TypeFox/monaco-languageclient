@@ -27,8 +27,8 @@ export const runStatemachineReact = async () => {
             }}
         />;
 
-        const root = ReactDOM.createRoot(document.getElementById('root')!);
-        root.render(comp);
+        const htmlElement = document.getElementById('root');
+        ReactDOM.createRoot(htmlElement!).render(comp);
     } catch (e) {
         console.error(e);
     }

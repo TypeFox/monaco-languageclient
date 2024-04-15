@@ -17,12 +17,13 @@ This is npm package is part of the <https://github.com/TypeFox/monaco-languagecl
 You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same `UserConfig` approach which is then applied to `monaco-editor-wrapper`.
 
 ```typescript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import '@codingame/monaco-vscode-python-default-extension';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 
 const userConfig: UserConfig = {
-  htmlElement: document.getElementById('monaco-editor-root') as HTMLElement,
   wrapperConfig: {
     editorAppConfig: {
       $type: 'extendend',
@@ -32,6 +33,7 @@ const userConfig: UserConfig = {
   }
 };
 
+const htmlElement = document.getElementById('monaco-editor-root') as HTMLElement;
 const comp = <MonacoEditorReactComp
     userConfig={userConfig}
     style={{
@@ -39,6 +41,8 @@ const comp = <MonacoEditorReactComp
         'height': '80vh'
     }}
 />;
+ReactDOM.createRoot(htmlElement!).render(comp);
+
 ```
 
 ### Bundled Usage

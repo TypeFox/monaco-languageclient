@@ -27,21 +27,20 @@ export const runPythonReact = () => {
         console.log(`Dirty? ${isDirty} Content: ${text}`);
     };
 
-    ReactDOM.createRoot(document.getElementById('root')!).render(
-        <StrictMode>
-            <MonacoEditorReactComp
-                userConfig={createUserConfig(code)}
-                style={{
-                    'paddingTop': '5px',
-                    'height': '80vh'
-                }}
-                onTextChanged={onTextChanged}
-                onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-                    console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
-                }}
-                onError={(e) => {
-                    console.error(e);
-                }}
-            />
-        </StrictMode>);
+    const htmlElement = document.getElementById('root');
+    const comp = <MonacoEditorReactComp
+        userConfig={createUserConfig(code)}
+        style={{
+            'paddingTop': '5px',
+            'height': '80vh'
+        }}
+        onTextChanged={onTextChanged}
+        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
+            console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
+        }}
+        onError={(e) => {
+            console.error(e);
+        }}
+    />;
+    ReactDOM.createRoot(htmlElement!).render(<StrictMode>{comp}</StrictMode>);
 };
