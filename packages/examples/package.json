@@ -124,10 +124,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -fr dist *.tsbuildinfo",
+    "clean": "shx rm -fr dist *.tsbuildinfo resources/vsix",
     "compile": "tsc --build tsconfig.src.json",
+    "resources:download": "vite-node ./build/downloadResources.mts",
     "build:msg": "echo Building main examples:",
-    "build": "npm run build:msg && npm run clean && npm run compile",
+    "build": "npm run build:msg && npm run clean && npm run resources:download && npm run compile",
     "start:server:json": "node --loader ts-node/esm src/json/server/direct.ts",
     "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts",
     "start:server:groovy": "node --watch --loader  ts-node/esm src/groovy/server/direct.ts",
