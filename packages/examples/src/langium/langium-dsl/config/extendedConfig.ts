@@ -5,6 +5,7 @@
 
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import '../../../../resources/vsix/GitHub.github-vscode-theme-6.3.4.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { getTextContent } from '../../../common/example-apps-common.js';
@@ -61,7 +62,7 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
                 }],
                 userConfiguration: {
                     json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern',
+                        'workbench.colorTheme': 'GitHub Dark High Contrast',
                         'editor.guides.bracketPairsHorizontal': 'active',
                         'editor.wordBasedSuggestions': 'off'
                     })

@@ -10,6 +10,7 @@
         { "path": "./packages/wrapper/tsconfig.build.json" },
         { "path": "./packages/wrapper/tsconfig.test.json" },
         { "path": "./packages/wrapper-react/tsconfig.src.json" },
-        { "path": "./packages/examples/tsconfig.src.json" }
+        { "path": "./packages/examples/tsconfig.src.json" },
+        { "path": "./packages/examples/tsconfig.build.json" }
     ]
  }

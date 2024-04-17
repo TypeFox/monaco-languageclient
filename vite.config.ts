@@ -6,6 +6,8 @@
 import { defineConfig } from 'vite';
 import * as path from 'path';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
+import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
+import plugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 
 export default defineConfig(() => {
     const config = {
@@ -53,6 +55,9 @@ export default defineConfig(() => {
                 ]
             }
         },
+        plugins: [
+            vsixPlugin()
+        ],
         define: {
             rootDirectory: JSON.stringify(__dirname)
         },
