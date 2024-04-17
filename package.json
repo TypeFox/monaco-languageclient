@@ -3,15 +3,15 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "~4.3.1",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "~4.3.2",
     "@rollup/pluginutils": "~5.1.0",
     "@types/node": "~20.12.6",
-    "@types/react": "~18.2.77",
+    "@types/react": "~18.2.79",
     "@types/react-dom": "~18.2.25",
     "@types/shelljs": "~0.8.15",
     "@types/vscode": "~1.88.0",
-    "@typescript-eslint/eslint-plugin": "~7.6.0",
-    "@typescript-eslint/parser": "~7.6.0",
+    "@typescript-eslint/eslint-plugin": "~7.7.0",
+    "@typescript-eslint/parser": "~7.7.0",
     "@vitest/browser": "~1.5.0",
     "editorconfig": "~2.0.0",
     "eslint": "~8.57.0",
@@ -22,9 +22,9 @@
     "shelljs": "~0.8.5",
     "shx": "~0.3.4",
     "typescript": "~5.4.5",
-    "vite": "~5.2.8",
+    "vite": "~5.2.9",
     "vitest": "~1.5.0",
-    "webdriverio": "~8.35.1"
+    "webdriverio": "~8.36.0"
   },
   "volta": {
     "node": "20.12.2",

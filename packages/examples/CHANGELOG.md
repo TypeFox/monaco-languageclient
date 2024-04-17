@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [next] - 2024-04-xy
+## [8.3.1] - 2024-04-17
 
 - Added `@codingame/monaco-vscode-rollup-vsix-plugin` and make Langium example with extended editor use github themes
+- Updated to `monaco-languageclient@8.3.1`, `monaco-editor-wrapper@4.2.1` and `@typefox/monaco-editor-react@3.2.1`. Updated all `@codingame/monaco-vscode` packages to `4.3.2`.
 
 ## [8.3.0] - 2024-04-12
 
