@@ -43,9 +43,10 @@ Same again.`
         }
     },
     languageClientConfig: {
+        languageId: 'json',
+        name: 'wrapper42 language client',
         options: {
             $type: 'WebSocket',
-            name: 'wrapper42 language client',
             host: 'localhost',
             port: 30000,
             path: 'sampleServer',

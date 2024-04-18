@@ -46,9 +46,18 @@ export const updateExtendedAppPrototyp = async () => {
  * Error: Unable to load extension-file://vscode.theme-defaults/themes/light_modern.json:
  * Unable to read file 'extension-file://vscode.theme-defaults/themes/light_modern.json' (TypeError: Failed to fetch)
  */
-export const createWrapper = async (userConfig: UserConfig) => {
+export const createAndInitWrapper = async (userConfig: UserConfig) => {
     updateExtendedAppPrototyp();
     const wrapper = new MonacoEditorLanguageClientWrapper();
     await wrapper.init(userConfig);
     return wrapper;
+};
+
+/**
+ * Helper to generate a quick worker from a function blob
+ */
+export const createWorkerFromFunction = (fn: () => void): Worker => {
+    return new Worker(URL.createObjectURL(
+        new Blob([`(${fn.toString()})()`], { type: 'application/javascript' })
+    ));
 };

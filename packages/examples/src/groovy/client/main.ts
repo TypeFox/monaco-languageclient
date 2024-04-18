@@ -44,6 +44,7 @@ const userConfig: UserConfig = {
         }
     },
     languageClientConfig: {
+        languageId: 'groovy',
         options: {
             $type: 'WebSocketUrl',
             url: `ws://localhost:${groovyConfig.port}${groovyConfig.path}`

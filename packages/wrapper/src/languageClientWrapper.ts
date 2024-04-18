@@ -12,7 +12,9 @@ import { createUrl } from './utils.js';
 import { WebSocketConfigOptions, WebSocketConfigOptionsUrl, WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 
 export type LanguageClientConfig = {
+    languageId: string;
     options: WebSocketConfigOptions | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect;
+    name?: string;
     clientOptions?: LanguageClientOptions;
     connectionProvider?: IConnectionProvider;
 }
@@ -28,20 +30,15 @@ export class LanguageClientWrapper {
     private languageClientConfig?: LanguageClientConfig;
     private worker?: Worker;
     private port: MessagePort;
-    private languageId: string;
     private name?: string;
     private logger: Logger | undefined;
 
     async init(config: {
-        languageId: string,
-        languageClientConfig?: LanguageClientConfig,
+        languageClientConfig: LanguageClientConfig,
         logger?: Logger
     }) {
-        this.languageId = config.languageId;
-        if (config.languageClientConfig) {
-            this.languageClientConfig = config.languageClientConfig;
-            this.name = this.languageClientConfig.options.name ?? 'unnamed';
-        }
+        this.languageClientConfig = config.languageClientConfig;
+        this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
     }
 
@@ -135,7 +132,7 @@ export class LanguageClientWrapper {
                         const workerConfig = lcConfig as WorkerConfigOptions;
                         this.worker = new Worker(new URL(workerConfig.url, import.meta.url).href, {
                             type: workerConfig.type,
-                            name: workerConfig.name
+                            name: workerConfig.workerName
                         });
 
                         this.worker.onerror = (ev) => {
@@ -201,12 +198,13 @@ export class LanguageClientWrapper {
     }
 
     private createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
+        const languageId = this.languageClientConfig?.languageId ?? 'unknown';
         const mlcConfig = {
-            name: this.languageClientConfig?.options.name ?? 'Monaco Wrapper Language Client',
+            name: this.languageClientConfig?.name ?? 'Monaco Wrapper Language Client',
 
             // allow to fully override the clientOptions
             clientOptions: this.languageClientConfig?.clientOptions ?? {
-                documentSelector: [this.languageId!],
+                documentSelector: [languageId],
                 // disable the default error handler
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
@@ -220,8 +218,9 @@ export class LanguageClientWrapper {
                 }
             }
         };
-        if (!mlcConfig.clientOptions.documentSelector?.includes(this.languageId)) {
-            throw new Error(`languageClientWrapper (${this.name}): The language id '${this.languageId}' is not included in the document selector.`);
+
+        if (!mlcConfig.clientOptions.documentSelector?.includes(languageId)) {
+            throw new Error(`languageClientWrapper (${this.name}): The language id '${languageId}' is not included in the document selector.`);
         }
 
         return new MonacoLanguageClient(mlcConfig);

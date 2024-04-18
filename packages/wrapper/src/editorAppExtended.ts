@@ -8,7 +8,7 @@ import * as monaco from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
-import { UserConfig } from './wrapper.js';
+import { UserConfig } from './userConfig.js';
 import { verifyUrlorCreateDataUrl } from './utils.js';
 
 export type ExtensionConfig = {

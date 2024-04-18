@@ -5,27 +5,15 @@
 
 import * as monaco from 'monaco-editor';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { initServices } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
-import type { LoggerConfig } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
-import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
-import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
+import { EditorAppExtended } from './editorAppExtended.js';
+import { EditorAppClassic } from './editorAppClassic.js';
 import { ModelUpdate } from './editorAppBase.js';
-import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+import { LanguageClientWrapper } from './languageClientWrapper.js';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
-
-export type WrapperConfig = {
-    serviceConfig?: InitializeServiceConfig;
-    editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
-};
-
-export type UserConfig = {
-    id?: string;
-    loggerConfig?: LoggerConfig;
-    wrapperConfig: WrapperConfig;
-    languageClientConfig?: LanguageClientConfig;
-}
+import { UserConfig } from './userConfig.js';
 
 /**
  * This class is responsible for the overall ochestration.
@@ -78,12 +66,13 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
-        this.languageClientWrapper = new LanguageClientWrapper();
-        await this.languageClientWrapper.init({
-            languageId: this.editorApp.getConfig().languageId,
-            languageClientConfig: userConfig.languageClientConfig,
-            logger: this.logger
-        });
+        if (userConfig.languageClientConfig) {
+            this.languageClientWrapper = new LanguageClientWrapper();
+            await this.languageClientWrapper.init({
+                languageClientConfig: userConfig.languageClientConfig,
+                logger: this.logger
+            });
+        }
 
         this.initDone = true;
     }
@@ -130,6 +119,10 @@ export class MonacoEditorLanguageClientWrapper {
             return this.languageClientWrapper.isStarted();
         }
         return true;
+    }
+
+    haveLanguageClient(): boolean {
+        return this.languageClientWrapper !== undefined;
     }
 
     getMonacoEditorApp() {

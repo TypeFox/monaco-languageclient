@@ -58,7 +58,7 @@ import {
 import type {
     UserConfig,
     WrapperConfig
-} from './wrapper.js';
+} from './userConfig.js';
 
 import {
     MonacoEditorLanguageClientWrapper,

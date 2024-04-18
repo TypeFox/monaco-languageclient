@@ -6,7 +6,7 @@
 import * as monaco from 'monaco-editor';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
-import { UserConfig } from './wrapper.js';
+import { UserConfig } from './userConfig.js';
 
 export type EditorAppConfigClassic = EditorAppConfigBase & {
     $type: 'classic';

@@ -68,6 +68,7 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
             }
         },
         languageClientConfig: {
+            languageId: 'statemachine',
             options: {
                 $type: 'WorkerDirect',
                 worker,

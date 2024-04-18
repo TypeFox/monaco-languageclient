@@ -11,6 +11,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
     test('New wrapper has undefined editor', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
+        expect(wrapper.haveLanguageClient()).toBeFalsy();
         expect(wrapper.getEditor()).toBeUndefined();
     });
 

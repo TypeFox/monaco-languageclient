@@ -5,7 +5,7 @@
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
-import  '@codingame/monaco-vscode-json-default-extension';
+import '@codingame/monaco-vscode-json-default-extension';
 import { disposeEditor, startEditor, swapEditors } from '../../common/example-apps-common.js';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
@@ -53,6 +53,7 @@ export const jsonClientUserConfig: UserConfig = {
         }
     },
     languageClientConfig: {
+        languageId: 'json',
         options: {
             $type: 'WebSocketUrl',
             url: 'ws://localhost:30000/sampleServer',

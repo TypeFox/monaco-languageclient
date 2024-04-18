@@ -14,8 +14,9 @@ import { MonacoLanguageClient } from 'monaco-languageclient';
 export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
     return {
         languageClientConfig: {
+            languageId: 'python',
+            name: 'Python Language Server Example',
             options: {
-                name: 'Python Language Server Example',
                 $type: 'WebSocket',
                 host: 'localhost',
                 port: 30001,
