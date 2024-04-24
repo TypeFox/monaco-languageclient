@@ -91,12 +91,12 @@
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.3.2",
     "monaco-editor-wrapper": "~4.2.1",
     "monaco-languageclient": "~8.3.1",
-    "pyright": "~1.1.359",
+    "pyright": "~1.1.360",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "request-light": "~0.7.0",
     "vscode": "npm:@codingame/monaco-vscode-api@~4.3.2",
-    "vscode-json-languageservice": "~5.3.10",
+    "vscode-json-languageservice": "~5.3.11",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
@@ -106,7 +106,7 @@
   "devDependencies": {
     "@types/express": "~4.17.21",
     "@types/ws": "~8.5.10",
-    "langium-cli": "3.0.1",
+    "langium-cli": "3.0.3",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.5"
   },

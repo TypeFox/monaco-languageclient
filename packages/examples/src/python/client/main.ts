@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-python-default-extension';
-import { disposeEditor, startEditor } from '../../common/example-apps-common.js';
+import { disposeEditor, getTextContent, getWrapper } from '../../common/example-apps-common.js';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
@@ -18,25 +18,35 @@ export const configureMonacoWorkers = () => {
 };
 
 export const runPythonWrapper = async () => {
-    const code = 'print("Hello, World!")';
+    const helloPyCode = await getTextContent(new URL('./src/python/client/hello.py', window.location.href));
+    const hello2PyCode = await getTextContent(new URL('./src/python/client/hello2.py', window.location.href));
+
+    const helloPyUri = vscode.Uri.file('/workspace/hello.py');
+    const hello2PyUri = vscode.Uri.file('/workspace/hello2.py');
+
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/workspace/hello.py'), code));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(helloPyUri, helloPyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(hello2PyUri, hello2PyCode));
+
     registerFileSystemOverlay(1, fileSystemProvider);
 
     try {
-        const userConfig = createUserConfig(code);
+        const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
         const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await startEditor(userConfig, htmlElement, code);
+            const wrapper = getWrapper();
 
-            // open a test file, the languageserver will pick it up
-            const testUri = vscode.Uri.file('/workspace/test.py');
-            fileSystemProvider.registerFile(new RegisteredMemoryFile(testUri, `const hello = "Hello World";
-console.log(hello);
-`
-            ));
-            const testPy = await vscode.workspace.openTextDocument(testUri);
-            console.log(testPy.getText());
+            if (wrapper.isStarted()) {
+                console.warn('Editor was already started!');
+            } else {
+                await wrapper.init(userConfig);
+
+                // open files, so the LS can pick it up
+                await vscode.workspace.openTextDocument(hello2PyUri);
+                await vscode.workspace.openTextDocument(helloPyUri);
+
+                await wrapper.start(htmlElement);
+            }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);

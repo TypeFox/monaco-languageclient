@@ -4,12 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
+import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { UserConfig } from 'monaco-editor-wrapper';
+import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 
-export const createUserConfig = (code: string): UserConfig => {
+export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
     return {
         languageClientConfig: {
             options: {
@@ -40,13 +42,14 @@ export const createUserConfig = (code: string): UserConfig => {
                 workspaceFolder: {
                     index: 0,
                     name: 'workspace',
-                    uri: vscode.Uri.parse('/workspace/')
+                    uri: vscode.Uri.parse(workspaceRoot)
                 },
             },
         },
         wrapperConfig: {
             serviceConfig: {
                 userServices: {
+                    ...getEditorServiceOverride(useOpenEditorStub),
                     ...getKeybindingsServiceOverride()
                 },
                 debugLogging: true
@@ -54,7 +57,8 @@ export const createUserConfig = (code: string): UserConfig => {
             editorAppConfig: {
                 $type: 'extended',
                 languageId: 'python',
-                codeUri: '/workspace/python.py',
+                code,
+                codeUri,
                 extensions: [{
                     config: {
                         name: 'python-client',
@@ -78,8 +82,7 @@ export const createUserConfig = (code: string): UserConfig => {
                         'workbench.colorTheme': 'Default Dark Modern'
                     })
                 },
-                useDiffEditor: false,
-                code
+                useDiffEditor: false
             }
         },
         loggerConfig: {
