@@ -17,7 +17,7 @@ export const configureMonacoWorkers = () => {
     });
 };
 
-export const runPythonWrapper = () => {
+export const runPythonWrapper = async () => {
     const code = 'print("Hello, World!")';
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/workspace/hello.py'), code));
@@ -28,6 +28,15 @@ export const runPythonWrapper = () => {
         const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             await startEditor(userConfig, htmlElement, code);
+
+            // open a test file, the languageserver will pick it up
+            const testUri = vscode.Uri.file('/workspace/test.py');
+            fileSystemProvider.registerFile(new RegisteredMemoryFile(testUri, `const hello = "Hello World";
+console.log(hello);
+`
+            ));
+            const testPy = await vscode.workspace.openTextDocument(testUri);
+            console.log(testPy.getText());
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
