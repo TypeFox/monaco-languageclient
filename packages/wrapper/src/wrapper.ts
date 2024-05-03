@@ -4,13 +4,15 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { ITextFileEditorModel } from 'vscode/monaco';
+import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic } from './editorAppClassic.js';
-import { CodeResources } from './editorAppBase.js';
+import { CodeResources, ModelRefs } from './editorAppBase.js';
 import { LanguageClientWrapper } from './languageClientWrapper.js';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 import { UserConfig } from './userConfig.js';
@@ -145,20 +147,24 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getLanguageClient();
     }
 
-    getModel(original?: boolean): monaco.editor.ITextModel | undefined {
-        return this.editorApp?.getModel(original);
+    getTextModel(original?: boolean): monaco.editor.ITextModel | undefined {
+        return this.editorApp?.getTextModel(original);
+    }
+
+    getModelRefs(): ModelRefs | undefined {
+        return this.editorApp?.getModelRefs();
     }
 
     getWorker(): Worker | undefined {
         return this.languageClientWrapper?.getWorker();
     }
 
-    async updateModel(codeResources: CodeResources): Promise<void> {
-        await this.editorApp?.updateModel(codeResources);
+    async updateCodeResources(codeResources: CodeResources): Promise<void> {
+        return this.editorApp?.updateCodeResources(codeResources);
     }
 
-    async updateDiffModel(codeResources: CodeResources): Promise<void> {
-        await this.editorApp?.updateDiffModel(codeResources);
+    async updateEditorModels(main: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
+        return this.editorApp?.updateEditorModels(main, original);
     }
 
     public reportStatus() {

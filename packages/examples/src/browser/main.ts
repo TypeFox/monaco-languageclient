@@ -162,7 +162,7 @@ export const runBrowserEditor = async () => {
 
     await wrapper.start(htmlElement);
 
-    wrapper.getModel()?.onDidChangeContent(() => {
+    wrapper.getTextModel()?.onDidChangeContent(() => {
         validate();
     });
 };

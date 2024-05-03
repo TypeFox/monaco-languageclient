@@ -157,7 +157,7 @@ const sleepOne = (milliseconds: number) => {
         appConfig42.useDiffEditor = false;
         const w42Start = wrapper42.initAndStart(wrapper42Config, document.getElementById('monaco-editor-root-42'));
 
-        const w43Start = wrapper43.updateDiffModel({
+        const w43Start = await wrapper43.updateCodeResources({
             main: {
                 text: 'text 5678',
                 fileExt: 'txt'

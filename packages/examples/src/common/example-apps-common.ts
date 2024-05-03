@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { CodeResources, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import * as monaco from 'monaco-editor';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -20,14 +20,6 @@ export const startEditor = async (userConfig: UserConfig, htmlElement: HTMLEleme
 
 export const getWrapper = () => {
     return wrapper;
-};
-
-export const updateModel = async (codeResources: CodeResources) => {
-    if (wrapper.getMonacoEditorApp()?.getConfig().useDiffEditor) {
-        await wrapper.updateDiffModel(codeResources);
-    } else {
-        await wrapper.updateModel(codeResources);
-    }
 };
 
 export const swapEditors = async (userConfig: UserConfig, htmlElement: HTMLElement | null, code: string, codeOriginal?: string) => {
@@ -64,9 +56,9 @@ const configureCodeEditors = (userConfig: UserConfig, code: string, codeOriginal
 
 const saveMainCode = (saveFromDiff: boolean) => {
     if (saveFromDiff) {
-        return wrapper.getModel(true)!.getValue();
+        return wrapper.getTextModel(true)!.getValue();
     } else {
-        return wrapper.getModel()!.getValue();
+        return wrapper.getTextModel()!.getValue();
     }
 };
 
@@ -79,9 +71,9 @@ const toggleSwapDiffButton = (enabled: boolean) => {
 
 const logEditorInfo = (userConfig: UserConfig) => {
     console.log(`# of configured languages: ${monaco.languages.getLanguages().length}`);
-    console.log(`Main code: ${wrapper.getModel(true)?.getValue() ?? ''}`);
+    console.log(`Main code: ${wrapper.getTextModel(true)?.getValue() ?? ''}`);
     if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor) {
-        console.log(`Modified code: ${wrapper.getModel()!.getValue()}`);
+        console.log(`Modified code: ${wrapper.getTextModel()!.getValue()}`);
     }
 };
 

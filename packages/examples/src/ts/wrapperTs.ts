@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
+import { disposeEditor, getWrapper, startEditor, swapEditors } from '../common/example-apps-common.js';
 import { CodePlusUri, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
@@ -98,17 +98,25 @@ export const runTsWrapper = async () => {
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
             const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
             if ((codeResources?.main as CodePlusUri).uri === codeUri) {
-                updateModel({
+                wrapper.updateCodeResources({
                     main: {
                         text: codeOriginal,
                         uri: codeOriginalUri
+                    },
+                    original: {
+                        text: code,
+                        uri: codeUri
                     }
                 });
             } else {
-                updateModel({
+                wrapper.updateCodeResources({
                     main: {
                         text: code,
                         uri: codeUri
+                    },
+                    original: {
+                        text: codeOriginal,
+                        uri: codeOriginalUri
                     }
                 });
             }

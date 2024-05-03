@@ -52,7 +52,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             await this.handleReinit();
         } else {
             // the function now ensure a model update is only required if something else than the code changed
-            this.wrapper.updateModel(userConfig.wrapperConfig.editorAppConfig.codeResources);
+            this.wrapper.updateCodeResources(userConfig.wrapperConfig.editorAppConfig.codeResources);
 
             const config = userConfig.wrapperConfig.editorAppConfig;
             const prevConfig = prevProps.userConfig.wrapperConfig.editorAppConfig;
@@ -169,7 +169,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
         if (!onTextChanged) return;
 
-        const model = this.wrapper.getModel();
+        const model = this.wrapper.getTextModel();
         if (model) {
             const verifyModelContent = () => {
                 const modelText = model.getValue();

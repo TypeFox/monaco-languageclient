@@ -46,14 +46,11 @@ export const verifyUrlorCreateDataUrl = (input: string | URL) => {
     return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
 };
 
-export const getEditorUri = (id: string, diffCode: boolean, code?: CodePlusUri | CodePlusFileExt, basePath?: string) => {
-    if (!code) {
-        throw new Error('The provided code definition is undefined.');
-    }
+export const getEditorUri = (id: string, original: boolean, code: CodePlusUri | CodePlusFileExt, basePath?: string) => {
     if (Object.hasOwn(code, 'uri')) {
         return vscode.Uri.parse((code as CodePlusUri).uri);
     } else {
-        return vscode.Uri.parse(`${basePath ?? '/workspace'}/model${diffCode ? 'Original' : ''}${id}.${(code as CodePlusFileExt).fileExt}`);
+        return vscode.Uri.parse(`${basePath ?? '/workspace'}/model${original ? 'Original' : ''}${id}.${(code as CodePlusFileExt).fileExt}`);
     }
 };
 
