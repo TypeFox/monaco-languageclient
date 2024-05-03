@@ -30,7 +30,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
         const appConfig = app.getConfig();
         expect(appConfig.overrideAutomaticLayout).toBeTruthy();
-        expect(appConfig.theme).toBe('vs-light');
     });
 
     test('No HTML in Userconfig', async () => {

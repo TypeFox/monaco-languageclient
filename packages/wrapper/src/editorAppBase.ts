@@ -8,19 +8,32 @@ import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
+import { Logger } from 'monaco-languageclient/tools';
 
-export type ModelUpdate = {
-    languageId: string;
-    code?: string;
-    codeUri?: string;
-    codeOriginal?: string;
-    codeOriginalUri?: string;
+export type CodeContent = {
+    text: string;
+    enforceLanguageId?: string;
+}
+
+export type CodePlusUri = CodeContent & {
+    uri: string;
+}
+
+export type CodePlusFileExt = CodeContent & {
+    fileExt: string;
+}
+
+export type CodeResources = {
+    main?: CodePlusUri | CodePlusFileExt;
+    original?: CodePlusUri | CodePlusFileExt;
 }
 
 export type EditorAppType = 'extended' | 'classic';
 
-export type EditorAppConfigBase = ModelUpdate & {
+export type EditorAppConfigBase = {
     $type: EditorAppType;
+    codeResources: CodeResources;
     useDiffEditor: boolean;
     domReadOnly?: boolean;
     readOnly?: boolean;
@@ -28,12 +41,6 @@ export type EditorAppConfigBase = ModelUpdate & {
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-}
-
-export enum ModelUpdateType {
-    NONE,
-    CODE,
-    MODEL
 }
 
 /**
@@ -46,6 +53,7 @@ export enum ModelUpdateType {
 export abstract class EditorAppBase {
 
     private id: string;
+    protected logger: Logger | undefined;
 
     private editor: monaco.editor.IStandaloneCodeEditor | undefined;
     private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
@@ -53,19 +61,16 @@ export abstract class EditorAppBase {
     private modelRef: IReference<ITextFileEditorModel> | undefined;
     private modelOriginalRef: IReference<ITextFileEditorModel> | undefined;
 
-    constructor(id: string) {
+    constructor(id: string, logger?: Logger) {
         this.id = id;
+        this.logger = logger;
     }
 
     protected buildConfig(userAppConfig: EditorAppConfigBase): EditorAppConfigBase {
         const config: EditorAppConfigBase = {
             $type: userAppConfig.$type,
-            languageId: userAppConfig.languageId,
-            code: userAppConfig.code ?? '',
-            codeOriginal: userAppConfig.codeOriginal ?? '',
+            codeResources: userAppConfig.codeResources,
             useDiffEditor: userAppConfig.useDiffEditor === true,
-            codeUri: userAppConfig.codeUri ?? undefined,
-            codeOriginalUri: userAppConfig.codeOriginalUri ?? undefined,
             readOnly: userAppConfig.readOnly ?? false,
             domReadOnly: userAppConfig.domReadOnly ?? false,
             overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true,
@@ -129,20 +134,20 @@ export abstract class EditorAppBase {
         }
     }
 
-    async updateModel(modelUpdate: ModelUpdate): Promise<void> {
+    async updateModel(modelUpdate: CodeResources): Promise<void> {
         if (!this.editor) {
             return Promise.reject(new Error('You cannot update the editor model, because the regular editor is not configured.'));
         }
 
-        const modelUpdateType = isModelUpdateRequired(this.getConfig(), modelUpdate);
+        const modelUpdateType = isModelUpdateRequired(this.getConfig().codeResources, modelUpdate);
 
         if (modelUpdateType === ModelUpdateType.CODE) {
             this.updateAppConfig(modelUpdate);
             if (this.getConfig().useDiffEditor) {
-                this.diffEditor?.getModifiedEditor().setValue(modelUpdate.code ?? '');
-                this.diffEditor?.getOriginalEditor().setValue(modelUpdate.codeOriginal ?? '');
+                this.diffEditor?.getModifiedEditor().setValue(modelUpdate.main?.text ?? '');
+                this.diffEditor?.getOriginalEditor().setValue(modelUpdate.original?.text ?? '');
             } else {
-                this.editor.setValue(modelUpdate.code ?? '');
+                this.editor.setValue(modelUpdate.main?.text ?? '');
             }
         } else if (modelUpdateType === ModelUpdateType.MODEL) {
             this.updateAppConfig(modelUpdate);
@@ -155,20 +160,22 @@ export abstract class EditorAppBase {
         const config = this.getConfig();
         this.modelRef?.dispose();
 
-        const uri: vscode.Uri = this.getEditorUri('code');
-        this.modelRef = await createModelReference(uri, config.code) as unknown as IReference<ITextFileEditorModel>;
-        this.modelRef.object.setLanguageId(config.languageId);
+        const codeResources = config.codeResources;
+        const uri: vscode.Uri = getEditorUri(this.id, false, codeResources.main);
+        this.modelRef = await createModelReference(uri, codeResources.main?.text) as unknown as IReference<ITextFileEditorModel>;
+        this.checkEnforceLanguageId(this.modelRef, codeResources.main?.enforceLanguageId);
+
         if (this.editor) {
             this.editor.setModel(this.modelRef.object.textEditorModel);
         }
     }
 
-    async updateDiffModel(modelUpdate: ModelUpdate): Promise<void> {
+    async updateDiffModel(codeResources: CodeResources): Promise<void> {
         if (!this.diffEditor) {
             return Promise.reject(new Error('You cannot update the diff editor models, because the diffEditor is not configured.'));
         }
-        if (isModelUpdateRequired(this.getConfig(), modelUpdate)) {
-            this.updateAppConfig(modelUpdate);
+        if (isModelUpdateRequired(this.getConfig().codeResources, codeResources)) {
+            this.updateAppConfig(codeResources);
             await this.updateDiffEditorModel();
         }
         return Promise.resolve();
@@ -179,18 +186,20 @@ export abstract class EditorAppBase {
         this.modelRef?.dispose();
         this.modelOriginalRef?.dispose();
 
-        const uri: vscode.Uri = this.getEditorUri('code');
-        const uriOriginal: vscode.Uri = this.getEditorUri('codeOriginal');
+        const codeResources = config.codeResources;
+        const uri: vscode.Uri = getEditorUri(this.id, false, codeResources.main);
+        const uriOriginal: vscode.Uri = getEditorUri(this.id, true, codeResources.original);
 
         const promises = [];
-        promises.push(createModelReference(uri, config.code));
-        promises.push(createModelReference(uriOriginal, config.codeOriginal));
+        promises.push(createModelReference(uri, codeResources.main?.text));
+        promises.push(createModelReference(uriOriginal, codeResources.original?.text));
 
         const refs = await Promise.all(promises);
         this.modelRef = refs[0] as unknown as IReference<ITextFileEditorModel>;
-        this.modelRef.object.setLanguageId(config.languageId);
         this.modelOriginalRef = refs[1] as unknown as IReference<ITextFileEditorModel>;
-        this.modelOriginalRef.object.setLanguageId(config.languageId);
+
+        this.checkEnforceLanguageId(this.modelRef, codeResources.main?.enforceLanguageId);
+        this.checkEnforceLanguageId(this.modelOriginalRef, codeResources.original?.enforceLanguageId);
 
         if (this.diffEditor && this.modelRef.object.textEditorModel !== null && this.modelOriginalRef.object.textEditorModel !== null) {
             this.diffEditor?.setModel({
@@ -200,23 +209,17 @@ export abstract class EditorAppBase {
         }
     }
 
-    private updateAppConfig(modelUpdate: ModelUpdate) {
-        const config = this.getConfig();
-        config.languageId = modelUpdate.languageId;
-        config.code = modelUpdate.code;
-        config.codeUri = modelUpdate.codeUri;
-        config.codeOriginal = modelUpdate.codeOriginal;
-        config.codeOriginalUri = modelUpdate.codeOriginalUri;
+    private checkEnforceLanguageId(modelRef: IReference<ITextFileEditorModel>, enforceLanguageId?: string) {
+        if (enforceLanguageId && modelRef) {
+            modelRef?.object.setLanguageId(enforceLanguageId);
+            this.logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
+        }
     }
 
-    getEditorUri(uriType: 'code' | 'codeOriginal') {
+    private updateAppConfig(codeResources: CodeResources) {
         const config = this.getConfig();
-        const uri = uriType === 'code' ? config.codeUri : config.codeOriginalUri;
-        if (uri) {
-            return vscode.Uri.parse(uri);
-        } else {
-            return vscode.Uri.parse(`/workspace/model${uriType === 'codeOriginal' ? 'Original' : ''}${this.id}.${config.languageId}`);
-        }
+        config.codeResources.main = codeResources.main;
+        config.codeResources.original = codeResources.original;
     }
 
     updateLayout() {
@@ -255,33 +258,3 @@ export abstract class EditorAppBase {
     abstract disposeApp(): void;
     abstract isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean;
 }
-
-export const isCodeUpdateRequired = (config: EditorAppConfigBase, modelUpdate: ModelUpdate) => {
-    const updateRequired = (modelUpdate.code !== undefined && modelUpdate.code !== config.code) || modelUpdate.codeOriginal !== config.codeOriginal;
-    return updateRequired ? ModelUpdateType.CODE : ModelUpdateType.NONE;
-};
-
-export const isModelUpdateRequired = (config: EditorAppConfigBase, modelUpdate: ModelUpdate): ModelUpdateType => {
-    const codeUpdate = isCodeUpdateRequired(config, modelUpdate);
-
-    type ModelUpdateKeys = keyof typeof modelUpdate;
-    const propsModelUpdate = ['languageId', 'codeUri', 'codeOriginalUri'];
-    const propCompare = (name: string) => {
-        return config[name as ModelUpdateKeys] !== modelUpdate[name as ModelUpdateKeys];
-    };
-    const updateRequired = propsModelUpdate.some(propCompare);
-    return updateRequired ? ModelUpdateType.MODEL : codeUpdate;
-};
-
-/**
- * The check for equality relies on JSON.stringify for instances of type Object.
- * Everything else is directly compared.
- * In this context, the check for equality is sufficient.
- */
-export const isEqual = (obj1: unknown, obj2: unknown) => {
-    if (obj1 instanceof Object && obj2 instanceof Object) {
-        return JSON.stringify(obj1) === JSON.stringify(obj2);
-    } else {
-        return obj1 === obj2;
-    }
-};

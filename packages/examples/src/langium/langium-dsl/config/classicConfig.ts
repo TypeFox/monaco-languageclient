@@ -44,16 +44,23 @@ export const setupLangiumClientClassic = async (): Promise<UserConfig> => {
             },
             editorAppConfig: {
                 $type: 'classic',
-                languageId: 'langium',
-                code: code,
+                codeResources: {
+                    main: {
+                        text: code,
+                        fileExt: 'langium',
+                        enforceLanguageId: 'langium'
+                    }
+                },
                 useDiffEditor: false,
-                theme: 'vs-dark',
                 editorOptions: {
                     'semanticHighlighting.enabled': true,
-                    wordBasedSuggestions: 'off'
+                    wordBasedSuggestions: 'off',
+                    theme: 'vs-dark'
                 },
-                languageExtensionConfig: { id: 'langium' },
-                languageDef: LangiumMonarchContent,
+                languageDef: {
+                    monarchLanguage: LangiumMonarchContent,
+                    languageExtensionConfig: { id: 'langium' },
+                }
             }
         },
         languageClientConfig: {

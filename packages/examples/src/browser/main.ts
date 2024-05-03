@@ -43,9 +43,12 @@ export const runBrowserEditor = async () => {
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'json',
-                code,
-                codeUri,
+                codeResources: {
+                    main: {
+                        text: code,
+                        uri: codeUri
+                    }
+                },
                 useDiffEditor: false,
                 userConfiguration: {
                     json: JSON.stringify({

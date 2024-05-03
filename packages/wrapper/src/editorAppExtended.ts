@@ -5,11 +5,11 @@
 
 import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
-import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
+import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
 import { UserConfig } from './userConfig.js';
-import { verifyUrlorCreateDataUrl } from './utils.js';
+import { verifyUrlorCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 
 export type ExtensionConfig = {
     config: IExtensionManifest | object;
@@ -48,7 +48,6 @@ export class EditorAppExtended extends EditorAppBase {
 
     private config: EditorAppConfigExtended;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
-    private logger: Logger | undefined;
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
         super(id);
@@ -113,7 +112,7 @@ export class EditorAppExtended extends EditorAppBase {
     isAppConfigDifferent(orgConfig: EditorAppConfigExtended, config: EditorAppConfigExtended, includeModelData: boolean): boolean {
         let different = false;
         if (includeModelData) {
-            different = isModelUpdateRequired(orgConfig, config) !== ModelUpdateType.NONE;
+            different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;
         }
         const propsExtended = [
             // model required changes are not taken into account in this list

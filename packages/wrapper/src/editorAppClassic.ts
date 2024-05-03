@@ -5,15 +5,20 @@
 
 import * as monaco from 'monaco-editor';
 import { Logger } from 'monaco-languageclient/tools';
-import { EditorAppBase, EditorAppConfigBase, ModelUpdateType, isEqual, isModelUpdateRequired } from './editorAppBase.js';
+import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
+import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { UserConfig } from './userConfig.js';
 
 export type EditorAppConfigClassic = EditorAppConfigBase & {
     $type: 'classic';
-    theme?: monaco.editor.BuiltinTheme | string;
-    languageExtensionConfig?: monaco.languages.ILanguageExtensionPoint;
-    languageDef?: monaco.languages.IMonarchLanguage;
-    themeData?: monaco.editor.IStandaloneThemeData;
+    languageDef?: {
+        languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
+        monarchLanguage?: monaco.languages.IMonarchLanguage;
+        theme?: {
+            name: monaco.editor.BuiltinTheme | string;
+            data: monaco.editor.IStandaloneThemeData;
+        }
+    }
 };
 
 /**
@@ -22,18 +27,12 @@ export type EditorAppConfigClassic = EditorAppConfigBase & {
 export class EditorAppClassic extends EditorAppBase {
 
     private config: EditorAppConfigClassic;
-    private logger: Logger | undefined;
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
-        super(id);
-        this.logger = logger;
+        super(id, logger);
         const userAppConfig = userConfig.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
         this.config = this.buildConfig(userAppConfig) as EditorAppConfigClassic;
-        // default to vs-light
-        this.config.theme = userAppConfig.theme ?? 'vs-light';
-        this.config.languageExtensionConfig = userAppConfig.languageExtensionConfig ?? undefined;
-        this.config.languageDef = userAppConfig.languageDef ?? undefined;
-        this.config.themeData = userAppConfig.themeData ?? undefined;
+        this.config.languageDef = userAppConfig.languageDef;
     }
 
     getConfig(): EditorAppConfigClassic {
@@ -51,30 +50,31 @@ export class EditorAppClassic extends EditorAppBase {
         // await all extenson that should be ready beforehand
         await this.awaitReadiness(this.config.awaitExtensionReadiness);
 
-        // register own language first
-        const extLang = this.config.languageExtensionConfig;
-        if (extLang) {
-            monaco.languages.register(extLang);
-        }
+        const languageDef = this.config.languageDef;
+        if (languageDef) {
+            // register own language first
+            if (languageDef.languageExtensionConfig) {
+                monaco.languages.register(languageDef.languageExtensionConfig);
 
-        const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === this.config.languageId);
-        if (languageRegistered.length === 0) {
-            // this is only meaningful for languages supported by monaco out of the box
-            monaco.languages.register({
-                id: this.config.languageId
-            });
-        }
+                const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+                if (languageRegistered.length === 0) {
+                    // this is only meaningful for languages supported by monaco out of the box
+                    monaco.languages.register({
+                        id: languageDef.languageExtensionConfig.id
+                    });
+                }
 
-        // apply monarch definitions
-        const tokenProvider = this.config.languageDef;
-        if (tokenProvider) {
-            monaco.languages.setMonarchTokensProvider(this.config.languageId, tokenProvider);
+            }
+            // apply monarch definitions
+            if (languageDef.monarchLanguage) {
+                monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
+            }
+
+            if (languageDef.theme) {
+                monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
+                monaco.editor.setTheme(languageDef.theme.name);
+            }
         }
-        const themeData = this.config.themeData;
-        if (themeData) {
-            monaco.editor.defineTheme(this.config.theme!, themeData);
-        }
-        monaco.editor.setTheme(this.config.theme!);
 
         if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
             // use updateConfiguration here as otherwise semantic highlighting will not work
@@ -94,7 +94,7 @@ export class EditorAppClassic extends EditorAppBase {
     isAppConfigDifferent(orgConfig: EditorAppConfigClassic, config: EditorAppConfigClassic, includeModelData: boolean): boolean {
         let different = false;
         if (includeModelData) {
-            different = isModelUpdateRequired(orgConfig, config) !== ModelUpdateType.NONE;
+            different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;
         }
         type ClassicKeys = keyof typeof orgConfig;
         const propsClassic = [

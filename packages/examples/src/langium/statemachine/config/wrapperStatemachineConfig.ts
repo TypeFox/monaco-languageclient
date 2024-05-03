@@ -31,8 +31,12 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'statemachine',
-                code: code,
+                codeResources: {
+                    main: {
+                        text: code,
+                        fileExt: 'statemachine'
+                    }
+                },
                 useDiffEditor: false,
                 extensions: [{
                     config: {

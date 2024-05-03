@@ -20,11 +20,11 @@ export const configureMonacoWorkers = () => {
     });
 };
 
-let codeMain = `{
+let code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": {"value": "windows"}
 }`;
-const codeOrg = `{
+const codeOriginal = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": {"value": "unix"}
 }`;
@@ -39,10 +39,18 @@ export const jsonClientUserConfig: UserConfig = {
         },
         editorAppConfig: {
             $type: 'extended',
-            languageId: 'json',
-            code: codeMain,
+            codeResources: {
+                main: {
+                    text: code,
+                    fileExt: 'json'
+                },
+                original: {
+                    text: codeOriginal,
+                    fileExt: 'json'
+                }
+            },
             useDiffEditor: false,
-            codeOriginal: codeOrg,
+
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
@@ -77,13 +85,13 @@ export const runJsonWrapper = () => {
     try {
         const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', () => {
-            startEditor(jsonClientUserConfig, htmlElement, codeMain, codeOrg);
+            startEditor(jsonClientUserConfig, htmlElement, code, codeOriginal);
         });
         document.querySelector('#button-swap')?.addEventListener('click', () => {
-            swapEditors(jsonClientUserConfig, htmlElement, codeMain, codeOrg);
+            swapEditors(jsonClientUserConfig, htmlElement, code, codeOriginal);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            codeMain = await disposeEditor(jsonClientUserConfig.wrapperConfig.editorAppConfig.useDiffEditor);
+            code = await disposeEditor(jsonClientUserConfig.wrapperConfig.editorAppConfig.useDiffEditor);
         });
     } catch (e) {
         console.error(e);

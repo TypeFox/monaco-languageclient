@@ -33,8 +33,12 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'langium',
-                code: code,
+                codeResources: {
+                    main: {
+                        text: code,
+                        fileExt: 'langium'
+                    }
+                },
                 useDiffEditor: false,
                 extensions: [{
                     config: {

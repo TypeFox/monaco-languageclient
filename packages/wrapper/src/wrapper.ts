@@ -10,7 +10,7 @@ import { Logger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic } from './editorAppClassic.js';
-import { ModelUpdate } from './editorAppBase.js';
+import { CodeResources } from './editorAppBase.js';
 import { LanguageClientWrapper } from './languageClientWrapper.js';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 import { UserConfig } from './userConfig.js';
@@ -37,8 +37,8 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
-        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeOriginal) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.code} codeOriginal: ${editorAppConfig.codeOriginal}`);
+        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeResources.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources.main} codeOriginal: ${editorAppConfig.codeResources.original}`);
         }
 
         // Always dispose old instances before start
@@ -153,12 +153,12 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getWorker();
     }
 
-    async updateModel(modelUpdate: ModelUpdate): Promise<void> {
-        await this.editorApp?.updateModel(modelUpdate);
+    async updateModel(codeResources: CodeResources): Promise<void> {
+        await this.editorApp?.updateModel(codeResources);
     }
 
-    async updateDiffModel(modelUpdate: ModelUpdate): Promise<void> {
-        await this.editorApp?.updateDiffModel(modelUpdate);
+    async updateDiffModel(codeResources: CodeResources): Promise<void> {
+        await this.editorApp?.updateDiffModel(codeResources);
     }
 
     public reportStatus() {

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ModelUpdate, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { CodeResources, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import * as monaco from 'monaco-editor';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -22,11 +22,11 @@ export const getWrapper = () => {
     return wrapper;
 };
 
-export const updateModel = async (modelUpdate: ModelUpdate) => {
+export const updateModel = async (codeResources: CodeResources) => {
     if (wrapper.getMonacoEditorApp()?.getConfig().useDiffEditor) {
-        await wrapper.updateDiffModel(modelUpdate);
+        await wrapper.updateDiffModel(codeResources);
     } else {
-        await wrapper.updateModel(modelUpdate);
+        await wrapper.updateModel(codeResources);
     }
 };
 
@@ -53,11 +53,12 @@ const restartEditor = async (userConfig: UserConfig, htmlElement: HTMLElement | 
 };
 
 const configureCodeEditors = (userConfig: UserConfig, code: string, codeOriginal?: string) => {
-    if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor) {
-        userConfig.wrapperConfig.editorAppConfig.code = code;
-        userConfig.wrapperConfig.editorAppConfig.codeOriginal = codeOriginal;
-    } else {
-        userConfig.wrapperConfig.editorAppConfig.code = code;
+    const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+    if (codeResources.main) {
+        codeResources.main.text = code;
+    }
+    if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor && codeResources.original && codeOriginal) {
+        codeResources.original.text = codeOriginal;
     }
 };
 

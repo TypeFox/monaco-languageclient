@@ -36,10 +36,16 @@ describe('Test EditorAppExtended', () => {
         const app = new EditorAppExtended('test', createBaseConfig('extended'));
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
-        config.code = 'test';
+        config.codeResources.main = {
+            text: 'test',
+            fileExt: 'js'
+        };
         expect(app.isAppConfigDifferent(orgConfig, config, true)).toBeTruthy();
 
-        config.code = '';
+        config.codeResources.main = {
+            text: '',
+            fileExt: 'js'
+        };
         config.extensions = [{
             config: {
                 name: 'Tester',

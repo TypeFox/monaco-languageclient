@@ -57,9 +57,12 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'python',
-                code,
-                codeUri,
+                codeResources: {
+                    main: {
+                        text: code,
+                        uri: codeUri
+                    }
+                },
                 extensions: [{
                     config: {
                         name: 'python-client',

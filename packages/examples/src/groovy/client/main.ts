@@ -32,8 +32,12 @@ const userConfig: UserConfig = {
         },
         editorAppConfig: {
             $type: 'extended',
-            languageId: 'groovy',
-            code,
+            codeResources: {
+                main: {
+                    text: code,
+                    fileExt: 'groovy'
+                }
+            },
             useDiffEditor: false,
             userConfiguration: {
                 json: JSON.stringify({

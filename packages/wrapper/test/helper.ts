@@ -26,8 +26,12 @@ export const createWrapperConfig = (type: EditorAppType) => {
 export const createEditorAppConfig = (type: EditorAppType) => {
     return {
         $type: type,
-        languageId: 'my-lang',
-        code: '',
+        codeResources: {
+            main: {
+                text: '',
+                fileExt: 'js'
+            }
+        },
         useDiffEditor: false,
     };
 };

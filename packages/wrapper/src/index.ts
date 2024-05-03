@@ -5,16 +5,15 @@
 
 import {
     EditorAppBase,
-    isCodeUpdateRequired,
-    isModelUpdateRequired,
-    isEqual,
-    ModelUpdateType
 } from './editorAppBase.js';
 
 import type {
     EditorAppConfigBase,
     EditorAppType,
-    ModelUpdate
+    CodeContent,
+    CodePlusUri,
+    CodePlusFileExt,
+    CodeResources
 } from './editorAppBase.js';
 
 import type {
@@ -83,19 +82,19 @@ export type {
     LanguageClientConfig,
     LanguageClientError,
     UserConfig,
-    ModelUpdate
+    CodeContent,
+    CodePlusUri,
+    CodePlusFileExt,
+    CodeResources
 };
 
 export {
     MonacoEditorLanguageClientWrapper,
     LanguageClientWrapper,
     EditorAppBase,
-    isCodeUpdateRequired,
-    isModelUpdateRequired,
-    isEqual,
-    ModelUpdateType,
     EditorAppClassic,
     EditorAppExtended
 };
 
 export * from './utils.js';
+export type * from './utils.js';
