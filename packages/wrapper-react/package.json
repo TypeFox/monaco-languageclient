@@ -1,6 +1,6 @@
 {
   "name": "@typefox/monaco-editor-react",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "license": "MIT",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
@@ -16,25 +16,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./bundle": {
-      "types": "./dist/index.d.ts",
-      "default": "./bundle/index.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "dist/index"
-      ],
-      "bundle": [
-        "dist/index"
       ]
     }
   },
   "files": [
     "dist",
-    "bundle",
     "src",
     "README.md",
     "CHANGELOG.md",
@@ -43,26 +35,25 @@
   "scripts": {
     "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
     "compile": " tsc --build tsconfig.src.json",
-    "build:bundle": "vite --config vite.bundle.config.ts build",
-    "build": "npm run clean && npm run compile && npm run build:bundle"
+    "build": "npm run clean && npm run compile"
   },
   "volta": {
     "node": "20.12.2",
     "npm": "10.5.0"
   },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.3.2",
-    "monaco-editor-wrapper": "~4.2.1",
-    "monaco-languageclient": "~8.3.1",
-    "react": "~18.2.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~4.3.2"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.0.1",
+    "monaco-editor-wrapper": "~4.3.0",
+    "monaco-languageclient": "~8.4.0",
+    "react": "~18.3.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~5.0.1"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.3.2",
-    "monaco-editor-wrapper": "~4.2.1",
-    "monaco-languageclient": "~8.3.1",
-    "react": "~18.2.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@~4.3.2"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.0.1",
+    "monaco-editor-wrapper": "~4.3.0",
+    "monaco-languageclient": "~8.4.0",
+    "react": "~18.3.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~5.0.1"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

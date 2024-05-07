@@ -2,6 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [4.4.0] - 2024-05-1x
+
+- Updated to `monaco-languageclient@8.4.0` and version `5.0.1` of `@codingame/monaco-vscode` packages
+  - Started using `@codingame/monaco-vscode-monarch-service-override` in classic editor
+- Remove the main bundle from the package. One should do this at application level.
+
 ## [4.2.1] - 2024-04-17
 
 - Updated to `monaco-languageclient@8.3.1` and version `4.3.2` of `@codingame/monaco-vscode` packages

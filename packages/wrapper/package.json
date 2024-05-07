@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -54,10 +54,6 @@
     },
     "./workers/classic/json": {
       "default": "./dist/workers/jsonWorker-iife.js"
-    },
-    "./bundle": {
-      "types": "./dist/index.d.ts",
-      "default": "./bundle/index.js"
     }
   },
   "typesVersions": {
@@ -70,15 +66,11 @@
       ],
       "workerFactory": [
         "dist/workerFactory"
-      ],
-      "bundle": [
-        "dist/index"
       ]
     }
   },
   "files": [
     "dist",
-    "bundle",
     "src",
     "README.md",
     "CHANGELOG.md",
@@ -87,7 +79,6 @@
   "scripts": {
     "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
-    "build:bundle": "vite --config vite.bundle.config.ts build",
     "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
     "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",
     "build:worker:html": "vite -c ./build/vite.htmlWorker.ts build",
@@ -95,36 +86,36 @@
     "build:worker:json": "vite -c ./build/vite.jsonWorker.ts build",
     "build:workers:vite": "npm run build:worker:editor && npm run build:worker:ts && npm run build:worker:html && npm run build:worker:css && npm run build:worker:json",
     "build:workers:esbuild": "vite-node ./build/buildAllWorkers.mts",
-    "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite && npm run build:bundle"
+    "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite"
   },
   "volta": {
     "node": "20.12.2",
     "npm": "10.5.0"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-configuration-service-override": "~4.3.2",
-    "@codingame/monaco-vscode-editor-service-override": "~4.3.2",
-    "@codingame/monaco-vscode-textmate-service-override": "~4.3.2",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~4.3.2",
-    "@codingame/monaco-vscode-theme-service-override": "~4.3.2",
-    "esbuild": "~0.20.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.3.2",
-    "vscode": "npm:@codingame/monaco-vscode-api@~4.3.2",
+    "@codingame/monaco-vscode-configuration-service-override": "~5.0.1",
+    "@codingame/monaco-vscode-editor-service-override": "~5.0.1",
+    "@codingame/monaco-vscode-monarch-service-override": "~5.0.1",
+    "@codingame/monaco-vscode-textmate-service-override": "~5.0.1",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~5.0.1",
+    "@codingame/monaco-vscode-theme-service-override": "~5.0.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.0.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~5.0.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
     "vscode-ws-jsonrpc": "~3.3.1"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-standalone-languages": "~4.3.2",
-    "@codingame/monaco-vscode-standalone-css-language-features": "~4.3.2",
-    "@codingame/monaco-vscode-standalone-html-language-features": "~4.3.2",
-    "@codingame/monaco-vscode-standalone-json-language-features": "~4.3.2",
-    "@codingame/monaco-vscode-standalone-typescript-language-features": "~4.3.2"
+    "@codingame/monaco-vscode-standalone-languages": "~5.0.1",
+    "@codingame/monaco-vscode-standalone-css-language-features": "~5.0.1",
+    "@codingame/monaco-vscode-standalone-html-language-features": "~5.0.1",
+    "@codingame/monaco-vscode-standalone-json-language-features": "~5.0.1",
+    "@codingame/monaco-vscode-standalone-typescript-language-features": "~5.0.1"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~4.3.2",
-    "monaco-languageclient": "~8.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~4.3.2"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.0.1",
+    "monaco-languageclient": "~8.4.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~5.0.1"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

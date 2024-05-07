@@ -10,7 +10,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
-            name: 'monaco-editor-wrapper',
+            name: 'examples-bundle-test',
             fileName: () => 'index.js',
             formats: ['es']
         },
@@ -21,7 +21,7 @@ export default defineConfig({
         sourcemap: true,
         rollupOptions: {
             output: {
-                name: 'monaco-editor-wrapper',
+                name: 'examples-bundle-test',
                 exports: 'named',
                 assetFileNames: (assetInfo) => {
                     return `assets/${assetInfo.name}`;
