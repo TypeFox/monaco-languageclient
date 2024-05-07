@@ -45,14 +45,6 @@ ReactDOM.createRoot(htmlElement!).render(comp);
 
 ```
 
-### Bundled Usage
-
-For special cases you might want the component to be processed in advance. For these cases we provide a pre-bundled version that you can reference instead, built using `npm run build:bundle`. This can be helpful if you're working within some other framework besides React (Hugo for example).
-
-```ts
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react/bundle';
-```
-
 ### Invoking Custom Commands
 
 *An experimental feature.*

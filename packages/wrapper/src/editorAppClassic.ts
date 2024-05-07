@@ -41,7 +41,10 @@ export class EditorAppClassic extends EditorAppBase {
     }
 
     override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
-        return Promise.resolve({});
+        const getMonarchServiceOverride = (await import('@codingame/monaco-vscode-monarch-service-override')).default;
+        return {
+            ...getMonarchServiceOverride()
+        };
     }
 
     async init() {

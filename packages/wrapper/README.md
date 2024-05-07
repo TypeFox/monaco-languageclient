@@ -69,14 +69,6 @@ const run = async () => {
 }
 ```
 
-### Bundled Usage
-
-For special cases you might want the component to be processed in advance. For these cases we provide a pre-bundled version that you can reference instead, built using `npm run build:bundle`. This can be helpful if you're working within some other framework besides React (Hugo for example).
-
-```ts
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper/bundle';
-```
-
 ## Examples
 
 For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.

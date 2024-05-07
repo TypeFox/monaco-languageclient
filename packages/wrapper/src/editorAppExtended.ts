@@ -71,8 +71,8 @@ export class EditorAppExtended extends EditorAppBase {
         const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
         const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
         return {
-            ...getThemeServiceOverride(),
-            ...getTextmateServiceOverride()
+            ...getTextmateServiceOverride(),
+            ...getThemeServiceOverride()
         };
     }
 
