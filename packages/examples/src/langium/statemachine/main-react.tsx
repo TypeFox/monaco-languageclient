@@ -18,7 +18,9 @@ export const configureMonacoWorkers = () => {
 
 export const runStatemachineReact = async () => {
     try {
-        const langiumGlobalConfig = await createLangiumGlobalConfig(loadStatemachineWorkerRegular());
+        const langiumGlobalConfig = await createLangiumGlobalConfig({
+            worker: loadStatemachineWorkerRegular()
+        });
         const comp = <MonacoEditorReactComp
             userConfig={langiumGlobalConfig}
             style={{

@@ -43,7 +43,7 @@ export type EditorAppConfigBase = {
 }
 
 export type ModelRefs = {
-    modelRef: IReference<ITextFileEditorModel>;
+    modelRef?: IReference<ITextFileEditorModel>;
     modelRefOriginal?: IReference<ITextFileEditorModel>;
 }
 
@@ -178,21 +178,8 @@ export abstract class EditorAppBase {
     }
 
     async buildModelRefs(codeResources: CodeResources): Promise<ModelRefs> {
-        if (!codeResources.main) {
-            return Promise.reject(new Error('Unable to build model reference as main code resource is missing.'));
-        }
-        const uri = getEditorUri(this.id, false, codeResources.main);
-        const modelRef = await createModelReference(uri, codeResources.main?.text);
-        this.checkEnforceLanguageId(modelRef, codeResources.main?.enforceLanguageId);
-
-        let modelRefOriginal;
-        if (codeResources.original) {
-            const uriOriginal = getEditorUri(this.id, true, codeResources.original);
-            if (uriOriginal) {
-                modelRefOriginal = await createModelReference(uriOriginal, codeResources.original?.text);
-                this.checkEnforceLanguageId(modelRefOriginal, codeResources.original?.enforceLanguageId);
-            }
-        }
+        const modelRef = await this.buildModelRef(codeResources.main);
+        const modelRefOriginal = await this.buildModelRef(codeResources.original);
 
         return {
             modelRef,
@@ -200,25 +187,41 @@ export abstract class EditorAppBase {
         };
     }
 
-    async updateEditorModels(main: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
+    private async buildModelRef(code?: CodePlusUri | CodePlusFileExt): Promise<IReference<ITextFileEditorModel> | undefined> {
+        if (code) {
+            const uri = getEditorUri(this.id, false, code);
+            if (uri) {
+                const modelRef = await createModelReference(uri, code?.text);
+                this.checkEnforceLanguageId(modelRef, code.enforceLanguageId);
+                return modelRef;
+            }
+        }
+        return undefined;
+    }
+
+    async updateEditorModels(main?: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
         if (!this.editor && !this.diffEditor) {
             return Promise.reject(new Error('You cannot update models as neither editor nor diff editor is available.'));
         }
 
-        this.modelRef?.dispose();
-        this.modelRef = main;
+        if (main) {
+            this.modelRef?.dispose();
+            this.modelRef = main;
+        }
         if (original) {
             this.modelRefOriginal?.dispose();
             this.modelRefOriginal = original;
         }
 
         if (this.editor) {
-            this.editor.setModel(this.modelRef.object.textEditorModel);
+            if (this.modelRef) {
+                this.editor.setModel(this.modelRef.object.textEditorModel);
+            }
         } else if (this.diffEditor) {
-            if (this.modelRefOriginal) {
+            if (this.modelRef && this.modelRefOriginal && this.modelRef.object.textEditorModel !== null && this.modelRefOriginal.object.textEditorModel !== null) {
                 this.diffEditor.setModel({
-                    original: this.modelRefOriginal.object.textEditorModel!,
-                    modified: this.modelRef.object.textEditorModel!
+                    original: this.modelRefOriginal.object.textEditorModel,
+                    modified: this.modelRef.object.textEditorModel
                 });
             } else {
                 return Promise.reject(new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.'));

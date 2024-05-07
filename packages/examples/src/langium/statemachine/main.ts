@@ -7,6 +7,8 @@ import * as vscode from 'vscode';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { getTextContent } from '../../common/example-apps-common.js';
+import { createModelReference } from 'vscode/monaco';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
@@ -23,10 +25,21 @@ const startEditor = async () => {
         return;
     }
 
+    const text = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
+
     // init first worker regularly
     const stateMachineWorkerRegular = loadStatemachineWorkerRegular();
-    const langiumGlobalConfig = await createLangiumGlobalConfig(stateMachineWorkerRegular);
+
+    // the configuration does not contain any text content
+    const langiumGlobalConfig = await createLangiumGlobalConfig({
+        worker: stateMachineWorkerRegular
+    });
     await wrapper.initAndStart(langiumGlobalConfig, document.getElementById('monaco-editor-root'));
+
+    // here the modelReference is created manually and given to the updateEditorModels of the wrapper
+    const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
+    const modelRef = await createModelReference(uri, text);
+    wrapper.updateEditorModels(modelRef);
 
     // init second worker with port for client and worker
     const stateMachineWorkerPort = loadStatemachinWorkerPort();
@@ -39,7 +52,11 @@ const startEditor = async () => {
         port: channel.port2
     }, [channel.port2]);
 
-    const langiumGlobalConfig2 = await createLangiumGlobalConfig(stateMachineWorkerPort, channel.port1);
+    const langiumGlobalConfig2 = await createLangiumGlobalConfig({
+        text,
+        worker: stateMachineWorkerPort,
+        messagePort: channel.port1
+    });
     await wrapper2.initAndStart(langiumGlobalConfig2, document.getElementById('monaco-editor-root2'));
 
     vscode.commands.getCommands().then((x) => {
