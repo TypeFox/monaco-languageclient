@@ -180,7 +180,8 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 ## Featured projects
 
 - JSONA Editor: [Showcase](https://jsona.github.io/editor/schema) ([GitHub](https://github.com/jsona/editor))
-- monaco-editor-wrapper: [Showcase](https://langium.org/showcase/minilogo/) ([GitHub](https://github.com/TypeFox/monaco-components))
+- Clangd in Browser: [Showcase](https://clangd.guyutongxue.site/) ([GitHub](https://github.com/Guyutongxue/clangd-in-browser))
+- Langium minilogo using monaco-editor-wrapper: [Showcase](https://langium.org/showcase/minilogo/) ([GitHub](https://github.com/TypeFox/monaco-components))
 
 ## Troubleshooting
 
