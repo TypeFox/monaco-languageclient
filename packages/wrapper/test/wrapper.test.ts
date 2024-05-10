@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as vscode from 'vscode';
+import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
 import { EditorAppClassic, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createBaseConfig, createMonacoEditorDiv } from './helper.js';
@@ -72,5 +74,85 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         userConfigClassicNew.wrapperConfig.editorAppConfig.useDiffEditor = true;
 
         expect(wrapper.isReInitRequired(userConfigClassicNew, userConfigClassic)).toBeTruthy();
+    });
+
+    test('code resources main', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        const app = wrapper.getMonacoEditorApp();
+
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeDefined();
+        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+        app?.disposeApp();
+    });
+
+    test('code resources original', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        userConfig.wrapperConfig.editorAppConfig.codeResources.main = undefined;
+        userConfig.wrapperConfig.editorAppConfig.codeResources.original = {
+            text: 'original',
+            fileExt: 'js'
+        };
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        const app = wrapper.getMonacoEditorApp();
+
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeUndefined();
+        expect(modelRefs?.modelRefOriginal).toBeDefined();
+        app?.disposeApp();
+    });
+
+    test('code resources main and original', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        userConfig.wrapperConfig.editorAppConfig.codeResources.original = {
+            text: 'original',
+            fileExt: 'js'
+        };
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        const app = wrapper.getMonacoEditorApp();
+
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeDefined();
+        expect(modelRefs?.modelRefOriginal).toBeDefined();
+        app?.disposeApp();
+    });
+
+    test('code resources empty', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+
+        const app = wrapper.getMonacoEditorApp();
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeUndefined();
+        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+    });
+
+    test('code resources model direct', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+
+        const app = wrapper.getMonacoEditorApp();
+
+        // here the modelReference is created manually and given to the updateEditorModels of the wrapper
+        const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
+        const modelRef = await createModelReference(uri, 'text');
+        wrapper.updateEditorModels(modelRef);
+
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeDefined();
+        expect(modelRefs?.modelRefOriginal).toBeUndefined();
     });
 });

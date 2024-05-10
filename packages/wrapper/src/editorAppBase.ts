@@ -114,15 +114,12 @@ export abstract class EditorAppBase {
         await this.updateEditorModels(modelRefs.modelRef, modelRefs.modelRefOriginal);
     }
 
-    protected disposeEditor() {
+    protected disposeEditors() {
         if (this.editor) {
             this.modelRef?.dispose();
             this.editor.dispose();
             this.editor = undefined;
         }
-    }
-
-    protected disposeDiffEditor() {
         if (this.diffEditor) {
             this.modelRef?.dispose();
             this.modelRefOriginal?.dispose();

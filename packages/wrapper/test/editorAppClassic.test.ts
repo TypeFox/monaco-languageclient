@@ -75,4 +75,15 @@ describe('Test EditorAppClassic', () => {
         const app = new EditorAppClassic('config defaults', config1);
         expect(app.isAppConfigDifferent(configclassic1, configclassic2, false)).toBeFalsy();
     });
+
+    test('config defaults', () => {
+        const config = createBaseConfig('classic');
+        const app = new EditorAppClassic('config defaults', config);
+        expect(app.getConfig().codeResources.main?.text).toEqual('');
+        expect(app.getConfig().codeResources.original).toBeUndefined();
+        expect(app.getConfig().useDiffEditor).toBeFalsy();
+        expect(app.getConfig().readOnly).toBeFalsy();
+        expect(app.getConfig().domReadOnly).toBeFalsy();
+    });
+
 });

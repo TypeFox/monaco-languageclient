@@ -58,4 +58,14 @@ describe('Test EditorAppExtended', () => {
         }];
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeTruthy();
     });
+
+    test('config defaults', () => {
+        const config = createBaseConfig('extended');
+        const app = new EditorAppExtended('config defaults', config);
+        expect(app.getConfig().codeResources.main?.text).toEqual('');
+        expect(app.getConfig().codeResources.original).toBeUndefined();
+        expect(app.getConfig().useDiffEditor).toBeFalsy();
+        expect(app.getConfig().readOnly).toBeFalsy();
+        expect(app.getConfig().domReadOnly).toBeFalsy();
+    });
 });

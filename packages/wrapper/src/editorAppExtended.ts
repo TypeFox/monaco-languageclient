@@ -104,8 +104,7 @@ export class EditorAppExtended extends EditorAppBase {
     }
 
     disposeApp(): void {
-        this.disposeEditor();
-        this.disposeDiffEditor();
+        this.disposeEditors();
         this.extensionRegisterResults.forEach((k) => k?.dispose());
     }
 

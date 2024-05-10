@@ -87,8 +87,7 @@ export class EditorAppClassic extends EditorAppBase {
     }
 
     disposeApp(): void {
-        this.disposeEditor();
-        this.disposeDiffEditor();
+        this.disposeEditors();
     }
 
     isAppConfigDifferent(orgConfig: EditorAppConfigClassic, config: EditorAppConfigClassic, includeModelData: boolean): boolean {
