@@ -49,11 +49,17 @@ describe('Test EditorAppClassic', () => {
         const app = new EditorAppClassic('test', createBaseConfig('classic'));
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
-        config.code = 'test';
+        config.codeResources.main = {
+            text: 'test',
+            fileExt: 'js'
+        };
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
         expect(app.isAppConfigDifferent(orgConfig, config, true)).toBeTruthy();
 
-        config.code = '';
+        config.codeResources.main = {
+            text: '',
+            fileExt: 'js'
+        };
         config.useDiffEditor = true;
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeTruthy();
     });
@@ -69,4 +75,15 @@ describe('Test EditorAppClassic', () => {
         const app = new EditorAppClassic('config defaults', config1);
         expect(app.isAppConfigDifferent(configclassic1, configclassic2, false)).toBeFalsy();
     });
+
+    test('config defaults', () => {
+        const config = createBaseConfig('classic');
+        const app = new EditorAppClassic('config defaults', config);
+        expect(app.getConfig().codeResources.main?.text).toEqual('');
+        expect(app.getConfig().codeResources.original).toBeUndefined();
+        expect(app.getConfig().useDiffEditor).toBeFalsy();
+        expect(app.getConfig().readOnly).toBeFalsy();
+        expect(app.getConfig().domReadOnly).toBeFalsy();
+    });
+
 });

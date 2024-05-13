@@ -30,22 +30,30 @@ const wrapper42Config: UserConfig = {
         },
         editorAppConfig: {
             $type: 'classic',
-            languageId: 'text/plain',
-            useDiffEditor: true,
-            codeOriginal: `This line is equal.
+            codeResources: {
+                original: {
+                    text: `This line is equal.
 This number is different 2002
 Misspeelled!
 Same again.`,
-            code: `This line is equal.
+                    fileExt: 'txt'
+                },
+                main: {
+                    text: `This line is equal.
 This number is different 2022
 Misspelled!
-Same again.`
+Same again.`,
+                    fileExt: 'txt'
+                }
+            },
+            useDiffEditor: true,
         }
     },
     languageClientConfig: {
+        languageId: 'json',
+        name: 'wrapper42 language client',
         options: {
             $type: 'WebSocket',
-            name: 'wrapper42 language client',
             host: 'localhost',
             port: 30000,
             path: 'sampleServer',
@@ -65,10 +73,17 @@ const wrapper43Config: UserConfig = {
         },
         editorAppConfig: {
             $type: 'classic',
-            languageId: 'text/plain',
+            codeResources: {
+                original: {
+                    text: 'This line is equal.\nThis number is different 3022.\nMisspelled!Same again.',
+                    fileExt: 'txt'
+                },
+                main: {
+                    text: 'This line is equal.\nThis number is different 3002.\nMisspelled!Same again.',
+                    fileExt: 'txt'
+                }
+            },
             useDiffEditor: true,
-            codeOriginal: 'This line is equal.\nThis number is different 3022.\nMisspelled!Same again.',
-            code: 'This line is equal.\nThis number is different 3002.\nMisspelled!Same again.',
             editorOptions: {
                 lineNumbers: 'off'
             },
@@ -90,11 +105,15 @@ const wrapper44Config: UserConfig = {
         },
         editorAppConfig: {
             $type: 'classic',
-            languageId: 'javascript',
-            useDiffEditor: false,
-            code: `function logMe() {
+            codeResources: {
+                main: {
+                    text: `function logMe() {
     console.log('Hello monaco-editor-wrapper!');
 };`,
+                    fileExt: 'js'
+                }
+            },
+            useDiffEditor: false,
             editorOptions: {
                 minimap: {
                     enabled: true
@@ -127,28 +146,46 @@ const sleepOne = (milliseconds: number) => {
         await wrapper42.dispose();
         wrapper42Config.languageClientConfig = undefined;
         const appConfig42 = wrapper42Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        appConfig42.languageId = 'javascript';
-        appConfig42.useDiffEditor = false;
-        appConfig42.code = `function logMe() {
+        appConfig42.codeResources = {
+            main: {
+                text: `function logMe() {
     console.log('Hello swap editors!');
-};`;
+};`,
+                fileExt: 'js'
+            }
+        };
+        appConfig42.useDiffEditor = false;
         const w42Start = wrapper42.initAndStart(wrapper42Config, document.getElementById('monaco-editor-root-42'));
 
-        const w43Start = wrapper43.updateDiffModel({
-            languageId: 'javascript',
-            code: 'text 5678',
-            codeOriginal: 'text 1234'
+        const w43Start = await wrapper43.updateCodeResources({
+            main: {
+                text: 'text 5678',
+                fileExt: 'txt'
+            },
+            original: {
+                text: 'text 1234',
+                fileExt: 'txt'
+            }
         });
 
         await wrapper44.dispose();
         const appConfig44 = wrapper44Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        appConfig44.languageId = 'text/plain';
         appConfig44.useDiffEditor = true;
-        appConfig44.codeOriginal = 'oh la la la!';
-        appConfig44.code = 'oh lo lo lo!';
+        appConfig44.codeResources = {
+            original: {
+                text: 'oh la la la!',
+                fileExt: 'txt'
+            },
+            main: {
+                text: 'oh lo lo lo!',
+                fileExt: 'txt'
+            }
+        };
         // This affects all editors globally and is only effective
         // if it is not in contrast to one configured later
-        appConfig44.theme = 'vs-light';
+        appConfig44.editorOptions = {
+            theme: 'vs-light'
+        };
         const w44Start = wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
 
         await w42Start;
@@ -167,7 +204,9 @@ const sleepTwo = (milliseconds: number) => {
         await wrapper44.dispose();
         const appConfig44 = wrapper44Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
         appConfig44.useDiffEditor = false;
-        appConfig44.theme = 'vs-dark';
+        appConfig44.editorOptions = {
+            theme: 'vs-dark'
+        };
         await wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
         console.log('Restarted wrapper44.');
     }, milliseconds);

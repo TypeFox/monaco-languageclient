@@ -8,16 +8,25 @@ import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-serv
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
-import { getTextContent } from '../../../common/example-apps-common.js';
 
-export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: MessagePort): Promise<UserConfig> => {
-    const code = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
-
+export const createLangiumGlobalConfig = async (params: {
+    text?: string,
+    worker: Worker,
+    messagePort?: MessagePort
+}): Promise<UserConfig> => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     const statemachineLanguageConfig = new URL('./src/langium/statemachine/config/language-configuration.json', window.location.href);
     const responseStatemachineTm = new URL('./src/langium/statemachine/syntaxes/statemachine.tmLanguage.json', window.location.href);
     extensionFilesOrContents.set('/statemachine-configuration.json', statemachineLanguageConfig);
     extensionFilesOrContents.set('/statemachine-grammar.json', responseStatemachineTm);
+
+    let main;
+    if (params.text) {
+        main = {
+            text: params.text,
+            fileExt: 'statemachine'
+        };
+    }
 
     return {
         wrapperConfig: {
@@ -31,8 +40,9 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'statemachine',
-                code: code,
+                codeResources: {
+                    main
+                },
                 useDiffEditor: false,
                 extensions: [{
                     config: {
@@ -68,10 +78,11 @@ export const createLangiumGlobalConfig = async (worker: Worker, messagePort?: Me
             }
         },
         languageClientConfig: {
+            languageId: 'statemachine',
             options: {
                 $type: 'WorkerDirect',
-                worker,
-                messagePort
+                worker: params.worker,
+                messagePort: params.messagePort
             }
         }
     };

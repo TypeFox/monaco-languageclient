@@ -4,28 +4,18 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { ITextFileEditorModel } from 'vscode/monaco';
+import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { initServices } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
-import type { LoggerConfig } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
-import { EditorAppExtended, EditorAppConfigExtended } from './editorAppExtended.js';
-import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
-import { ModelUpdate } from './editorAppBase.js';
-import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+import { EditorAppExtended } from './editorAppExtended.js';
+import { EditorAppClassic } from './editorAppClassic.js';
+import { CodeResources, ModelRefs } from './editorAppBase.js';
+import { LanguageClientWrapper } from './languageClientWrapper.js';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
-
-export type WrapperConfig = {
-    serviceConfig?: InitializeServiceConfig;
-    editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
-};
-
-export type UserConfig = {
-    id?: string;
-    loggerConfig?: LoggerConfig;
-    wrapperConfig: WrapperConfig;
-    languageClientConfig?: LanguageClientConfig;
-}
+import { UserConfig } from './userConfig.js';
 
 /**
  * This class is responsible for the overall ochestration.
@@ -49,8 +39,8 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
-        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeOriginal) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.code} codeOriginal: ${editorAppConfig.codeOriginal}`);
+        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeResources.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources.main} codeOriginal: ${editorAppConfig.codeResources.original}`);
         }
 
         // Always dispose old instances before start
@@ -78,12 +68,13 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
-        this.languageClientWrapper = new LanguageClientWrapper();
-        await this.languageClientWrapper.init({
-            languageId: this.editorApp.getConfig().languageId,
-            languageClientConfig: userConfig.languageClientConfig,
-            logger: this.logger
-        });
+        if (userConfig.languageClientConfig) {
+            this.languageClientWrapper = new LanguageClientWrapper();
+            await this.languageClientWrapper.init({
+                languageClientConfig: userConfig.languageClientConfig,
+                logger: this.logger
+            });
+        }
 
         this.initDone = true;
     }
@@ -132,6 +123,10 @@ export class MonacoEditorLanguageClientWrapper {
         return true;
     }
 
+    haveLanguageClient(): boolean {
+        return this.languageClientWrapper !== undefined;
+    }
+
     getMonacoEditorApp() {
         return this.editorApp;
     }
@@ -152,20 +147,24 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getLanguageClient();
     }
 
-    getModel(original?: boolean): monaco.editor.ITextModel | undefined {
-        return this.editorApp?.getModel(original);
+    getTextModel(original?: boolean): monaco.editor.ITextModel | undefined {
+        return this.editorApp?.getTextModel(original);
+    }
+
+    getModelRefs(): ModelRefs | undefined {
+        return this.editorApp?.getModelRefs();
     }
 
     getWorker(): Worker | undefined {
         return this.languageClientWrapper?.getWorker();
     }
 
-    async updateModel(modelUpdate: ModelUpdate): Promise<void> {
-        await this.editorApp?.updateModel(modelUpdate);
+    async updateCodeResources(codeResources: CodeResources): Promise<void> {
+        return this.editorApp?.updateCodeResources(codeResources);
     }
 
-    async updateDiffModel(modelUpdate: ModelUpdate): Promise<void> {
-        await this.editorApp?.updateDiffModel(modelUpdate);
+    async updateEditorModels(main: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
+        return this.editorApp?.updateEditorModels(main, original);
     }
 
     public reportStatus() {

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ModelUpdate, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import * as monaco from 'monaco-editor';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -20,14 +20,6 @@ export const startEditor = async (userConfig: UserConfig, htmlElement: HTMLEleme
 
 export const getWrapper = () => {
     return wrapper;
-};
-
-export const updateModel = async (modelUpdate: ModelUpdate) => {
-    if (wrapper.getMonacoEditorApp()?.getConfig().useDiffEditor) {
-        await wrapper.updateDiffModel(modelUpdate);
-    } else {
-        await wrapper.updateModel(modelUpdate);
-    }
 };
 
 export const swapEditors = async (userConfig: UserConfig, htmlElement: HTMLElement | null, code: string, codeOriginal?: string) => {
@@ -53,19 +45,20 @@ const restartEditor = async (userConfig: UserConfig, htmlElement: HTMLElement | 
 };
 
 const configureCodeEditors = (userConfig: UserConfig, code: string, codeOriginal?: string) => {
-    if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor) {
-        userConfig.wrapperConfig.editorAppConfig.code = code;
-        userConfig.wrapperConfig.editorAppConfig.codeOriginal = codeOriginal;
-    } else {
-        userConfig.wrapperConfig.editorAppConfig.code = code;
+    const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+    if (codeResources.main) {
+        codeResources.main.text = code;
+    }
+    if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor && codeResources.original && codeOriginal) {
+        codeResources.original.text = codeOriginal;
     }
 };
 
 const saveMainCode = (saveFromDiff: boolean) => {
     if (saveFromDiff) {
-        return wrapper.getModel(true)!.getValue();
+        return wrapper.getTextModel(true)!.getValue();
     } else {
-        return wrapper.getModel()!.getValue();
+        return wrapper.getTextModel()!.getValue();
     }
 };
 
@@ -78,9 +71,9 @@ const toggleSwapDiffButton = (enabled: boolean) => {
 
 const logEditorInfo = (userConfig: UserConfig) => {
     console.log(`# of configured languages: ${monaco.languages.getLanguages().length}`);
-    console.log(`Main code: ${wrapper.getModel(true)?.getValue() ?? ''}`);
+    console.log(`Main code: ${wrapper.getTextModel(true)?.getValue() ?? ''}`);
     if (userConfig.wrapperConfig.editorAppConfig.useDiffEditor) {
-        console.log(`Modified code: ${wrapper.getModel()!.getValue()}`);
+        console.log(`Modified code: ${wrapper.getTextModel()!.getValue()}`);
     }
 };
 

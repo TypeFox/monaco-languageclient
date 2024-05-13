@@ -12,20 +12,16 @@ export type WebSocketCallOptions = {
     reportStatus?: boolean;
 }
 
-export type LanguageClientConfigBase = {
-    name?: string;
-}
-
 export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WorkerConfig' | 'Worker';
 
-export type WebSocketUrl = LanguageClientConfigBase & {
+export type WebSocketUrl = {
     secured: boolean;
     host: string;
     port?: number;
     path?: string;
 }
 
-export type WebSocketConfigOptions = LanguageClientConfigBase & {
+export type WebSocketConfigOptions = {
     $type: 'WebSocket'
     secured: boolean;
     host: string;
@@ -36,21 +32,22 @@ export type WebSocketConfigOptions = LanguageClientConfigBase & {
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WebSocketConfigOptionsUrl = LanguageClientConfigBase & {
+export type WebSocketConfigOptionsUrl = {
     $type: 'WebSocketUrl'
     url: string;
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WorkerConfigOptions = LanguageClientConfigBase & {
+export type WorkerConfigOptions = {
     $type: 'WorkerConfig'
     url: URL;
     type: 'classic' | 'module';
     messagePort?: MessagePort;
+    workerName?: string;
 };
 
-export type WorkerConfigDirect = LanguageClientConfigBase & {
+export type WorkerConfigDirect = {
     $type: 'WorkerDirect';
     worker: Worker;
     messagePort?: MessagePort;

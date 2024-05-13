@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { isModelUpdateRequired, EditorAppClassic, ModelUpdateType } from 'monaco-editor-wrapper';
-import { createBaseConfig, createEditorAppConfig, createWrapperConfig } from './helper.js';
+import { isCodeUpdateRequired, isModelUpdateRequired, ModelUpdateType } from 'monaco-editor-wrapper';
+import { createEditorAppConfig, createWrapperConfig } from './helper.js';
 
 describe('Test EditorAppBase', () => {
 
@@ -19,32 +19,43 @@ describe('Test EditorAppBase', () => {
         expect(wrapperConfig.editorAppConfig.$type).toBe('extended');
     });
 
-    test('config defaults', () => {
-        const config = createBaseConfig('classic');
-        const app = new EditorAppClassic('config defaults', config);
-        expect(app.getConfig().languageId).toEqual('my-lang');
-        expect(app.getConfig().code).toEqual('');
-        expect(app.getConfig().codeOriginal).toEqual('');
-        expect(app.getConfig().useDiffEditor).toBeFalsy();
-        expect(app.getConfig().codeUri).toBeUndefined();
-        expect(app.getConfig().codeOriginalUri).toBeUndefined();
-        expect(app.getConfig().readOnly).toBeFalsy();
-        expect(app.getConfig().domReadOnly).toBeFalsy();
+    test('isCodeUpdateRequired', () => {
+        let codeUpdateType = isCodeUpdateRequired({ main: { text: '', fileExt: 'js' } }, { main: { text: '', fileExt: 'js' } });
+        expect(codeUpdateType).toBe(ModelUpdateType.NONE);
+
+        codeUpdateType = isCodeUpdateRequired({}, {});
+        expect(codeUpdateType).toBe(ModelUpdateType.NONE);
+
+        codeUpdateType = isCodeUpdateRequired({ main: { text: 'bar', fileExt: 'js' } }, { main: { text: '', fileExt: 'js' } });
+        expect(codeUpdateType).toBe(ModelUpdateType.CODE);
+
+        codeUpdateType = isCodeUpdateRequired({ main: { text: '', fileExt: 'js' } }, { main: { text: 'bar', fileExt: 'js' } });
+        expect(codeUpdateType).toBe(ModelUpdateType.CODE);
+
+        codeUpdateType = isCodeUpdateRequired({}, { main: { text: 'bar', fileExt: 'js' } });
+        expect(codeUpdateType).toBe(ModelUpdateType.CODE);
+
+        codeUpdateType = isCodeUpdateRequired({ main: { text: 'bar', fileExt: 'js' } }, {});
+        expect(codeUpdateType).toBe(ModelUpdateType.CODE);
     });
 
     test('isModelUpdateRequired', () => {
         const config = createEditorAppConfig('classic');
-        let modelUpdateType = isModelUpdateRequired(config, { languageId: 'my-lang', code: '' });
+
+        let modelUpdateType = isModelUpdateRequired(config.codeResources, { main: { text: '', fileExt: 'js' } });
         expect(modelUpdateType).toBe(ModelUpdateType.NONE);
 
-        modelUpdateType = isModelUpdateRequired(config, { languageId: 'my-lang' });
-        expect(modelUpdateType).toBe(ModelUpdateType.NONE);
-
-        modelUpdateType = isModelUpdateRequired(config, { languageId: 'my-lang', code: 'test' });
+        modelUpdateType = isModelUpdateRequired(config.codeResources, { main: { text: 'bar', fileExt: 'js' } });
         expect(modelUpdateType).toBe(ModelUpdateType.CODE);
 
-        modelUpdateType = isModelUpdateRequired(config, { languageId: 'javascript', code: 'test' });
-        expect(modelUpdateType).toBe(ModelUpdateType.MODEL);
+        modelUpdateType = isModelUpdateRequired(config.codeResources, { main: { text: 'bar', uri: 'file:///bar.js' } });
+        expect(modelUpdateType).toBe(ModelUpdateType.CODE_AND_MODEL);
+
+        modelUpdateType = isModelUpdateRequired(config.codeResources, { original: { text: 'bar', fileExt: 'python' } });
+        expect(modelUpdateType).toBe(ModelUpdateType.CODE_AND_MODEL);
+
+        modelUpdateType = isModelUpdateRequired(config.codeResources, {});
+        expect(modelUpdateType).toBe(ModelUpdateType.CODE_AND_MODEL);
     });
 
 });

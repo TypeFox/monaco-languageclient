@@ -9,8 +9,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { disposeEditor, getWrapper, startEditor, swapEditors, updateModel } from '../common/example-apps-common.js';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { disposeEditor, getWrapper, startEditor, swapEditors } from '../common/example-apps-common.js';
+import { CodePlusUri, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -60,10 +60,16 @@ export const runTsWrapper = async () => {
             },
             editorAppConfig: {
                 $type: 'extended',
-                languageId: 'typescript',
-                code,
-                codeUri: codeUri,
-                codeOriginal: codeOriginal,
+                codeResources: {
+                    main: {
+                        text: code,
+                        uri: codeUri
+                    },
+                    original: {
+                        text: codeOriginal,
+                        uri: codeOriginalUri,
+                    }
+                },
                 useDiffEditor: false,
                 editorOptions: monacoEditorConfig,
                 diffEditorOptions: monacoDiffEditorConfig
@@ -90,22 +96,34 @@ export const runTsWrapper = async () => {
             swapEditors(userConfig, htmlElement, code, codeOriginal);
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
-            if (wrapper.getMonacoEditorApp()?.getConfig().codeUri === codeUri) {
-                updateModel({
-                    code: codeOriginal,
-                    codeUri: codeOriginalUri,
-                    languageId: 'typescript',
+            const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
+            if ((codeResources?.main as CodePlusUri).uri === codeUri) {
+                wrapper.updateCodeResources({
+                    main: {
+                        text: codeOriginal,
+                        uri: codeOriginalUri
+                    },
+                    original: {
+                        text: code,
+                        uri: codeUri
+                    }
                 });
             } else {
-                updateModel({
-                    code: code,
-                    codeUri: codeUri,
-                    languageId: 'typescript',
+                wrapper.updateCodeResources({
+                    main: {
+                        text: code,
+                        uri: codeUri
+                    },
+                    original: {
+                        text: codeOriginal,
+                        uri: codeOriginalUri
+                    }
                 });
             }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            if (wrapper.getMonacoEditorApp()?.getConfig().codeUri === codeUri) {
+            const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
+            if ((codeResources?.main as CodePlusUri).uri === codeUri) {
                 code = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
             } else {
                 codeOriginal = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);

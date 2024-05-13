@@ -36,10 +36,16 @@ describe('Test EditorAppExtended', () => {
         const app = new EditorAppExtended('test', createBaseConfig('extended'));
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
-        config.code = 'test';
+        config.codeResources.main = {
+            text: 'test',
+            fileExt: 'js'
+        };
         expect(app.isAppConfigDifferent(orgConfig, config, true)).toBeTruthy();
 
-        config.code = '';
+        config.codeResources.main = {
+            text: '',
+            fileExt: 'js'
+        };
         config.extensions = [{
             config: {
                 name: 'Tester',
@@ -51,5 +57,15 @@ describe('Test EditorAppExtended', () => {
             }
         }];
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeTruthy();
+    });
+
+    test('config defaults', () => {
+        const config = createBaseConfig('extended');
+        const app = new EditorAppExtended('config defaults', config);
+        expect(app.getConfig().codeResources.main?.text).toEqual('');
+        expect(app.getConfig().codeResources.original).toBeUndefined();
+        expect(app.getConfig().useDiffEditor).toBeFalsy();
+        expect(app.getConfig().readOnly).toBeFalsy();
+        expect(app.getConfig().domReadOnly).toBeFalsy();
     });
 });
