@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import type { TextChanges } from '@typefox/monaco-editor-react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
@@ -26,8 +27,8 @@ export const runPythonReact = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const onTextChanged = (text: string, textOrg: string, isDirty: boolean) => {
-        console.log(`Dirty? ${isDirty}\ntext: ${text}\ntextOriginal: ${textOrg}`);
+    const onTextChanged = (textChanges: TextChanges) => {
+        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.main}\ntextOriginal: ${textChanges.original}`);
     };
 
     const htmlElement = document.getElementById('monaco-editor-root');

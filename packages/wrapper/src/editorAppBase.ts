@@ -116,7 +116,7 @@ export abstract class EditorAppBase {
         }
 
         const modelRefs = await this.buildModelRefs(this.getConfig().codeResources);
-        await this.updateEditorModels(modelRefs.modelRef, modelRefs.modelRefOriginal);
+        await this.updateEditorModels(modelRefs);
     }
 
     protected disposeEditors() {
@@ -167,7 +167,7 @@ export abstract class EditorAppBase {
             }
         } else if (modelUpdateType === ModelUpdateType.MODEL || modelUpdateType === ModelUpdateType.CODE_AND_MODEL) {
             const modelRefs = await this.buildModelRefs(codeResources);
-            this.updateEditorModels(modelRefs.modelRef, modelRefs.modelRefOriginal);
+            this.updateEditorModels(modelRefs);
         }
     }
 
@@ -193,26 +193,32 @@ export abstract class EditorAppBase {
         return undefined;
     }
 
-    async updateEditorModels(main?: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
+    async updateEditorModels(modelRefs: ModelRefs): Promise<void> {
         if (!this.editor && !this.diffEditor) {
             return Promise.reject(new Error('You cannot update models as neither editor nor diff editor is available.'));
         }
+        let updateMain = false;
+        let updateOriginal = false;
 
-        if (main) {
+        if (modelRefs.modelRef) {
             this.modelRef?.dispose();
-            this.modelRef = main;
+            this.modelRef = modelRefs.modelRef;
+            updateMain = true;
         }
-        if (original) {
+        if (modelRefs.modelRefOriginal) {
             this.modelRefOriginal?.dispose();
-            this.modelRefOriginal = original;
+            this.modelRefOriginal = modelRefs.modelRefOriginal;
+            updateOriginal = true;
         }
 
         if (this.editor) {
-            if (this.modelRef) {
+            if (updateMain && this.modelRef && this.modelRef.object.textEditorModel !== null) {
                 this.editor.setModel(this.modelRef.object.textEditorModel);
             }
         } else if (this.diffEditor) {
-            if (this.modelRef && this.modelRefOriginal && this.modelRef.object.textEditorModel !== null && this.modelRefOriginal.object.textEditorModel !== null) {
+            if ((updateMain || updateOriginal) &&
+                this.modelRef && this.modelRefOriginal &&
+                this.modelRef.object.textEditorModel !== null && this.modelRefOriginal.object.textEditorModel !== null) {
                 this.diffEditor.setModel({
                     original: this.modelRefOriginal.object.textEditorModel,
                     modified: this.modelRef.object.textEditorModel

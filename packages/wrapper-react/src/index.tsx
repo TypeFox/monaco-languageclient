@@ -9,11 +9,17 @@ import React, { CSSProperties } from 'react';
 import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { Logger } from 'monaco-languageclient/tools';
 
+export type TextChanges = {
+    main: string;
+    original: string;
+    isDirty: boolean;
+}
+
 export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
     userConfig: UserConfig,
-    onTextChanged?: (text: string, textOriginal: string, isDirty: boolean) => void;
+    onTextChanged?: (textChanges: TextChanges) => void;
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: (e: any) => void;
@@ -173,11 +179,15 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         const textModels = this.wrapper.getTextModels();
         if (textModels?.text || textModels?.textOriginal) {
             const verifyModelContent = () => {
-                const text = textModels?.text?.getValue() ?? '';
-                const textOrg = textModels?.textOriginal?.getValue() ?? '';
-                const textDirty = text !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text ?? '';
-                const textOrgDirty = textOrg !== userConfig.wrapperConfig.editorAppConfig.codeResources.original?.text ?? '';
-                onTextChanged(text, textOrg, textDirty || textOrgDirty);
+                const main = textModels?.text?.getValue() ?? '';
+                const original = textModels?.textOriginal?.getValue() ?? '';
+                const dirty = main !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text ?? '';
+                const dirtyOriginal = original !== userConfig.wrapperConfig.editorAppConfig.codeResources.original?.text ?? '';
+                onTextChanged({
+                    main,
+                    original,
+                    isDirty: dirty || dirtyOriginal
+                });
             };
 
             if (textModels?.text) {

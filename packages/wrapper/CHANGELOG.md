@@ -2,9 +2,15 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [5.0.0] - 2024-05-1x
+## [5.0.0] - 2024-05-15
 
-- BREAKING:
+- BREAKING: `UserConfig` changes:
+  - text is now supplied as `codeResources`. It is no longer required to supply a `languageId` and it is not required to supply any text to start the editor.
+  - `languageDef` used in the classic config is now an object that contains `monarchLanguage` and `languageExtensionConfig`
+  - The `languageId` is automatically derived from the uri, but can also be optionally enforced
+- BREAKING: changes to `MonacoEditorLanguageClientWrapper`:
+  - `updateCodeResources` or `updateEditorModels` allow to update the text content or editor model
+- Internal code handling model and text updates has been reworked. Different code paths for regualr and diff editors have been unified.
 - Updated to `monaco-languageclient@8.4.0` and version `5.1.1` of `@codingame/monaco-vscode` packages
   - Started using `@codingame/monaco-vscode-monarch-service-override` in classic editor
 - Remove the main bundle from the package. One should do this at application level.

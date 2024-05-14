@@ -4,8 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
-import { ITextFileEditorModel } from 'vscode/monaco';
-import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
@@ -163,8 +161,8 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 
-    async updateEditorModels(main: IReference<ITextFileEditorModel>, original?: IReference<ITextFileEditorModel>): Promise<void> {
-        return this.editorApp?.updateEditorModels(main, original);
+    async updateEditorModels(modelRefs: ModelRefs): Promise<void> {
+        return this.editorApp?.updateEditorModels(modelRefs);
     }
 
     public reportStatus() {

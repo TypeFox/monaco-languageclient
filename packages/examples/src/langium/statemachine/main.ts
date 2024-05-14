@@ -39,7 +39,9 @@ const startEditor = async () => {
     // here the modelReference is created manually and given to the updateEditorModels of the wrapper
     const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
     const modelRef = await createModelReference(uri, text);
-    wrapper.updateEditorModels(modelRef);
+    wrapper.updateEditorModels({
+        modelRef
+    });
 
     // init second worker with port for client and worker
     const stateMachineWorkerPort = loadStatemachinWorkerPort();

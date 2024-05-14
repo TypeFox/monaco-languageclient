@@ -124,10 +124,13 @@ The examples demonstrate mutliple things:
   - [Statemachine DSL (created with Langium)](./packages/examples/src/langium/statemachine): It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
     - It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
 
+- [bare monaco-languageclient](./packages/examples/src/bare) It demostrate how the `JSON Language client and language server example` can be realised without `monaco-editor-wrapper`. You find the implementation [here](./packages/examples/src/bare/client.ts).
+
 - [browser example](./packages/examples/src/browser) demonstrates how a [monaco-editor-wrapper can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
 
-- [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts)
-- [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts)
+- monaco-editor related examples
+  - [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts)
+  - [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts)
 
 ### Example usage
 

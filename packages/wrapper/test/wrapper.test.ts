@@ -149,7 +149,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         // here the modelReference is created manually and given to the updateEditorModels of the wrapper
         const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
         const modelRef = await createModelReference(uri, 'text');
-        wrapper.updateEditorModels(modelRef);
+        wrapper.updateEditorModels({
+            modelRef
+        });
 
         const modelRefs = app?.getModelRefs();
         expect(modelRefs?.modelRef).toBeDefined();

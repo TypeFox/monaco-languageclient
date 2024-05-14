@@ -2,9 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.4.0] - 2024-05-1x
+## [8.4.0] - 2024-05-1x5
 
 - Updated to `monaco-languageclient@8.4.0`, `monaco-editor-wrapper@5.0.0` and `@typefox/monaco-editor-react@4.0.0`. Updated all `@codingame/monaco-vscode` packages to `5.1.1`.
+- Aligned all examples to API changes
+- Updated python examples to load text content from files
+- Updated Langium Statemachine Example to supply a model instead of `codeResources`
+- Removed the need for `common/example-apps-common.ts`. The only two helper functions moved two independent helper functions moved to `utils/app-utils.ts`
 
 ## [8.3.1] - 2024-04-17
 

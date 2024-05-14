@@ -2,8 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [4.0.0] - 2024-05-1x
+## [4.0.0] - 2024-05-15
 
+- BREAKING:
+  - All `UserConfig` changes from `monaco-editor-wrapper@5.0.0`
+  - `onTextChanged` now expects an object and contains main plus original texts
 - Updated to `monaco-editor-wrapper@5.0.0`, `monaco-languageclient@8.4.0` and version `5.1.1` of `@codingame/monaco-vscode` packages
 - Remove the main bundle from the package. One should do this at application level.
 

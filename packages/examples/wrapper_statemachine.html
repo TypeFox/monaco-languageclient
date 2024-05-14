@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Langium Statemachine Web Worker Language Server Example</title>
+    <title>Langium Statemachine Client & Language Server (Worker)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h2>Langium Statemachine Web Worker Language Server Example</h2>
+    <h2>Langium Statemachine Client & Language Server (Worker)</h2>
     <button type="button" id="button-start">Start</button>
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 40vh;"></div>
     <div id="monaco-editor-root2" style="height: 40vh;"></div>
-    <script type="module" src="./src/utils/localeLoader.ts"></script>
+    <script type="module">
+        import { initLocalLoader } from './src/utils/localeLoader.ts';
+        initLocalLoader();
+    </script>
     <script type="module">
         import { configureMonacoWorkers, runStatemachineWrapper } from './src/langium/statemachine/main.ts';
 
