@@ -11,7 +11,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { getTextContent } from '../../common/example-apps-common.js';
+import { getTextContent } from '../../utils/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -26,11 +26,11 @@ export const runPythonReact = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const onTextChanged = (text: string, isDirty: boolean) => {
-        console.log(`Dirty? ${isDirty} Content: ${text}`);
+    const onTextChanged = (text: string, textOrg: string, isDirty: boolean) => {
+        console.log(`Dirty? ${isDirty}\ntext: ${text}\ntextOriginal: ${textOrg}`);
     };
 
-    const htmlElement = document.getElementById('root');
+    const htmlElement = document.getElementById('monaco-editor-root');
     const comp = <MonacoEditorReactComp
         userConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
         style={{

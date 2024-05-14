@@ -6,8 +6,7 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
-import { disposeEditor, startEditor, swapEditors } from '../../common/example-apps-common.js';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -20,11 +19,7 @@ export const configureMonacoWorkers = () => {
     });
 };
 
-let code = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": {"value": "windows"}
-}`;
-const codeOriginal = `{
+const text = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": {"value": "unix"}
 }`;
@@ -41,16 +36,11 @@ export const jsonClientUserConfig: UserConfig = {
             $type: 'extended',
             codeResources: {
                 main: {
-                    text: code,
-                    fileExt: 'json'
-                },
-                original: {
-                    text: codeOriginal,
+                    text,
                     fileExt: 'json'
                 }
             },
             useDiffEditor: false,
-
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
@@ -82,16 +72,16 @@ export const jsonClientUserConfig: UserConfig = {
 };
 
 export const runJsonWrapper = () => {
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const htmlElement = document.getElementById('monaco-editor-root');
+
     try {
-        const htmlElement = document.getElementById('monaco-editor-root');
-        document.querySelector('#button-start')?.addEventListener('click', () => {
-            startEditor(jsonClientUserConfig, htmlElement, code, codeOriginal);
-        });
-        document.querySelector('#button-swap')?.addEventListener('click', () => {
-            swapEditors(jsonClientUserConfig, htmlElement, code, codeOriginal);
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            await wrapper.dispose();
+            await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            code = await disposeEditor(jsonClientUserConfig.wrapperConfig.editorAppConfig.useDiffEditor);
+            await wrapper.dispose();
         });
     } catch (e) {
         console.error(e);

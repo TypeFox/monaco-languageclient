@@ -9,8 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { disposeEditor, getWrapper, startEditor, swapEditors } from '../common/example-apps-common.js';
-import { CodePlusUri, UserConfig } from 'monaco-editor-wrapper';
+import { CodePlusUri, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -24,12 +23,12 @@ export const configureMonacoWorkers = () => {
 
 export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';
-    let code = `function sayHello(): string {
+    const code = `function sayHello(): string {
     return "Hello";
 };`;
 
     const codeOriginalUri = '/workspace/goodbye.ts';
-    let codeOriginal = `function sayGoodbye(): string {
+    const codeOriginal = `function sayGoodbye(): string {
     return "Goodbye";
 };`;
 
@@ -77,11 +76,13 @@ export const runTsWrapper = async () => {
         }
     };
 
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const htmlElement = document.getElementById('monaco-editor-root');
+
     try {
-        const wrapper = getWrapper();
-        const htmlElement = document.getElementById('monaco-editor-root');
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await startEditor(userConfig, htmlElement, code, codeOriginal);
+            await wrapper.dispose();
+            await wrapper.initAndStart(userConfig, htmlElement);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -91,9 +92,6 @@ export const runTsWrapper = async () => {
 
             wrapper.getEditor()?.focus();
             await vscode.commands.executeCommand('actions.find');
-        });
-        document.querySelector('#button-swap')?.addEventListener('click', () => {
-            swapEditors(userConfig, htmlElement, code, codeOriginal);
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
             const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
@@ -121,13 +119,13 @@ export const runTsWrapper = async () => {
                 });
             }
         });
+        document.querySelector('#button-diff')?.addEventListener('click', async () => {
+            userConfig.wrapperConfig.editorAppConfig.useDiffEditor = !userConfig.wrapperConfig.editorAppConfig.useDiffEditor;
+            await wrapper.dispose();
+            await wrapper.initAndStart(userConfig, htmlElement);
+        });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
-            if ((codeResources?.main as CodePlusUri).uri === codeUri) {
-                code = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
-            } else {
-                codeOriginal = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
-            }
+            await wrapper.dispose();
         });
     } catch (e) {
         console.error(e);

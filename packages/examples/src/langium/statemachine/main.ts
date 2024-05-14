@@ -4,11 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { getTextContent } from '../../common/example-apps-common.js';
 import { createModelReference } from 'vscode/monaco';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
+import { getTextContent } from '../../utils/app-utils.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();

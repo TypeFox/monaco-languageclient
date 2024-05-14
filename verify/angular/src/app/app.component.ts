@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { AfterViewInit, Component } from '@angular/core';
-import { startEditor } from 'monaco-languageclient-examples';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { jsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 
@@ -12,11 +12,6 @@ useWorkerFactory({
     rootPath: window.location.href + '../..',
     basePath: '../assets',
 });
-
-const codeMain = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": {"value": "windows"}
-}`;
 
 @Component({
     selector: 'app-root',
@@ -28,7 +23,14 @@ export class MonacoEditorComponent implements AfterViewInit {
     initDone = false;
 
     async ngAfterViewInit(): Promise<void> {
+        const wrapper = new MonacoEditorLanguageClientWrapper();
         const htmlElement = document.getElementById('monaco-editor-root');
-        startEditor(jsonClientUserConfig, htmlElement, codeMain);
+
+        try {
+            await wrapper.dispose();
+            await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }

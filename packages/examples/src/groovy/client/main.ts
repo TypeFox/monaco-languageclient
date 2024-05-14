@@ -6,8 +6,7 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-groovy-default-extension';
-import { disposeEditor, startEditor } from '../../common/example-apps-common.js';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
@@ -57,13 +56,16 @@ const userConfig: UserConfig = {
 };
 
 export const runGroovyClient = () => {
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const htmlElement = document.getElementById('monaco-editor-root');
+
     try {
-        const htmlElement = document.getElementById('monaco-editor-root');
-        document.querySelector('#button-start')?.addEventListener('click', () => {
-            startEditor(userConfig, htmlElement, code);
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            await wrapper.dispose();
+            await wrapper.initAndStart(userConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
+            await wrapper.dispose();
         });
     } catch (e) {
         console.error(e);

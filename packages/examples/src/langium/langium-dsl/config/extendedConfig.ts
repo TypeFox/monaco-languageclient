@@ -8,8 +8,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '../../../../resources/vsix/GitHub.github-vscode-theme-6.3.4.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
-import { getTextContent } from '../../../common/example-apps-common.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
+import { getTextContent } from '../../../utils/app-utils.js';
 
 export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
     const code = await getTextContent(new URL('./src/langium/langium-dsl/content/example.langium', window.location.href));

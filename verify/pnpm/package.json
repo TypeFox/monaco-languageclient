@@ -15,7 +15,7 @@
     "vite": "~5.2.8"
   },
   "volta": {
-    "node": "20.12.2"
+    "node": "20.13.1"
   },
   "scripts": {
     "verify": "pnpm install && pnpm run build && pnpm run start",

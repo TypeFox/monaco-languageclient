@@ -33,13 +33,13 @@
     "@angular/cli": "~17.2.3",
     "@angular/compiler-cli": "~17.2.4",
     "@types/node": "~20.12.7",
-    "@types/vscode": "~1.88.0",
+    "@types/vscode": "~1.89.0",
     "css-loader": "~7.1.1",
     "shx": "~0.3.4",
     "style-loader": "~4.0.0"
   },
   "volta": {
-    "node": "20.12.2",
-    "npm": "10.5.0"
+    "node": "20.13.1",
+    "npm": "10.5.2"
   }
 }

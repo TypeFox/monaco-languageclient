@@ -13,7 +13,7 @@ export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
     userConfig: UserConfig,
-    onTextChanged?: (text: string, isDirty: boolean) => void;
+    onTextChanged?: (text: string, textOriginal: string, isDirty: boolean) => void;
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: (e: any) => void;
@@ -24,7 +24,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private logger: Logger = new Logger();
     private containerElement?: HTMLDivElement;
-    private _subscription: monaco.IDisposable | null = null;
+    private _subscriptions: monaco.IDisposable[] = [];
     private isRestarting?: Promise<void>;
     private started: (value: void | PromiseLike<void>) => void;
 
@@ -118,9 +118,10 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
                 // This should not prevent us from continue working.
             }
         }
-        if (this._subscription) {
-            this._subscription.dispose();
+        for (const subscription of this._subscriptions) {
+            subscription.dispose();
         }
+        this._subscriptions = [];
     }
 
     protected async initMonaco() {
@@ -169,16 +170,27 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
         if (!onTextChanged) return;
 
-        const model = this.wrapper.getTextModel();
-        if (model) {
+        const textModels = this.wrapper.getTextModels();
+        if (textModels?.text || textModels?.textOriginal) {
             const verifyModelContent = () => {
-                const modelText = model.getValue();
-                onTextChanged(modelText, modelText !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text);
+                const text = textModels?.text?.getValue() ?? '';
+                const textOrg = textModels?.textOriginal?.getValue() ?? '';
+                const textDirty = text !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text ?? '';
+                const textOrgDirty = textOrg !== userConfig.wrapperConfig.editorAppConfig.codeResources.original?.text ?? '';
+                onTextChanged(text, textOrg, textDirty || textOrgDirty);
             };
 
-            this._subscription = model.onDidChangeContent(() => {
-                verifyModelContent();
-            });
+            if (textModels?.text) {
+                this._subscriptions.push(textModels.text.onDidChangeContent(() => {
+                    verifyModelContent();
+                }));
+            }
+
+            if (textModels?.textOriginal) {
+                this._subscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
+                    verifyModelContent();
+                }));
+            }
             // do it initially
             verifyModelContent();
         }

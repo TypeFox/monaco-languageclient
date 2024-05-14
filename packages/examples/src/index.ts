@@ -4,5 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 /* client side export only */
-export * from './common/example-apps-common.js';
-
+export * from './utils/app-utils.js';

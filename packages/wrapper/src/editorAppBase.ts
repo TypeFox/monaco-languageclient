@@ -47,6 +47,11 @@ export type ModelRefs = {
     modelRefOriginal?: IReference<ITextFileEditorModel>;
 }
 
+export type TextModels = {
+    text?: monaco.editor.ITextModel;
+    textOriginal?: monaco.editor.ITextModel;
+}
+
 /**
  * This is the base class for both Monaco Ediotor Apps:
  * - EditorAppClassic
@@ -128,25 +133,17 @@ export abstract class EditorAppBase {
         }
     }
 
-    getTextModel(original?: boolean): monaco.editor.ITextModel | undefined {
-        if (!this.editor && !this.diffEditor) {
-            throw new Error('Unable to provide any models as neither editor nor diff editor is available.');
-        }
-
-        if (this.editor) {
-            return this.modelRef?.object.textEditorModel ?? undefined;
-        } else {
-            return ((original === true) ? this.modelRefOriginal?.object.textEditorModel : this.modelRef?.object.textEditorModel) ?? undefined;
-        }
+    getTextModels(): TextModels {
+        const modelRefs = this.getModelRefs();
+        return {
+            text: modelRefs.modelRef?.object.textEditorModel ?? undefined,
+            textOriginal: modelRefs.modelRefOriginal?.object.textEditorModel ?? undefined
+        };
     }
 
     getModelRefs(): ModelRefs {
-        if (!this.editor && !this.diffEditor) {
-            throw new Error('Unable to provide any model referencess as neither editor nor diff editor is available.');
-        }
-
         return {
-            modelRef: this.modelRef!,
+            modelRef: this.modelRef,
             modelRefOriginal: this.modelRefOriginal
         };
     }

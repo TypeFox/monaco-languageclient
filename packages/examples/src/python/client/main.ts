@@ -6,10 +6,11 @@
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-python-default-extension';
-import { disposeEditor, getTextContent, getWrapper } from '../../common/example-apps-common.js';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
-import { createUserConfig } from './config.js';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { createUserConfig } from './config.js';
+import { getTextContent } from '../../utils/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -29,13 +30,13 @@ export const runPythonWrapper = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(hello2PyUri, hello2PyCode));
 
     registerFileSystemOverlay(1, fileSystemProvider);
+    const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
+    const htmlElement = document.getElementById('monaco-editor-root');
+    const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
-        const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
-        const htmlElement = document.getElementById('monaco-editor-root');
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            const wrapper = getWrapper();
 
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
             if (wrapper.isStarted()) {
                 console.warn('Editor was already started!');
             } else {
@@ -49,7 +50,7 @@ export const runPythonWrapper = async () => {
             }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor);
+            await wrapper.dispose();
         });
     } catch (e) {
         console.error(e);

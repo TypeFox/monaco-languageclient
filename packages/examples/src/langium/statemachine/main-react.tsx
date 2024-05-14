@@ -9,6 +9,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { getTextContent } from '../../utils/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -18,7 +19,9 @@ export const configureMonacoWorkers = () => {
 
 export const runStatemachineReact = async () => {
     try {
+        const text = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
         const langiumGlobalConfig = await createLangiumGlobalConfig({
+            text,
             worker: loadStatemachineWorkerRegular()
         });
         const comp = <MonacoEditorReactComp
@@ -29,7 +32,7 @@ export const runStatemachineReact = async () => {
             }}
         />;
 
-        const htmlElement = document.getElementById('root');
+        const htmlElement = document.getElementById('monaco-editor-root');
         ReactDOM.createRoot(htmlElement!).render(comp);
     } catch (e) {
         console.error(e);
