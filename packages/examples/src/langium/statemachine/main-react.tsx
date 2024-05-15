@@ -6,10 +6,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { getTextContent } from '../../common/client/app-utils.js';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { getTextContent } from '../../utils/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({

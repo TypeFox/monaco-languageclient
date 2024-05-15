@@ -4,16 +4,15 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { WebSocketServer } from 'ws';
-import { Server } from 'http';
+import { Server } from 'node:http';
 import express from 'express';
-import { getLocalDirectory } from '../utils/fs-utils.js';
-import { LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
+import { getLocalDirectory, LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
 
 /** LSP server runner */
 export const runLanguageServer = (
     languageServerRunConfig: LanguageServerRunConfig
 ) => {
-    process.on('uncaughtException', function(err) {
+    process.on('uncaughtException', err => {
         console.error('Uncaught Exception: ', err.toString());
         if (err.stack) {
             console.error(err.stack);

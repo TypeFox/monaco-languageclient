@@ -4,4 +4,5 @@
  * ------------------------------------------------------------------------------------------ */
 
 /* client side export only */
-export * from './utils/app-utils.js';
+export * from './common/client/app-utils.js';
+export * from './common/client/localeLoader.js';

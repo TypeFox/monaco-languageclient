@@ -8,7 +8,10 @@ All notable changes to this npm module are documented in this file.
 - Aligned all examples to API changes
 - Updated python examples to load text content from files
 - Updated Langium Statemachine Example to supply a model instead of `codeResources`
-- Removed the need for `common/example-apps-common.ts`. The only two helper functions moved two independent helper functions moved to `utils/app-utils.ts`
+- Clean-up / code re-organization:
+  - Removed the need for `common/example-apps-common.ts`. The only two independent helper functions moved to `utils/app-utils.ts`
+  - Moved all common node functions to sub-directory `common/node`.
+  - Moved all common client functions to sub-directory `common/client`.
 
 ## [8.3.1] - 2024-04-17
 

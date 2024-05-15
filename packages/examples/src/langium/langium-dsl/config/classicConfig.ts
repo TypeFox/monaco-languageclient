@@ -11,7 +11,7 @@ import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
-import { getTextContent } from '../../../utils/app-utils.js';
+import { getTextContent } from '../../../common/client/app-utils.js';
 
 export const setupLangiumClientClassic = async (): Promise<UserConfig> => {
     const code = await getTextContent(new URL('./src/langium/langium-dsl/content/example.langium', window.location.href));

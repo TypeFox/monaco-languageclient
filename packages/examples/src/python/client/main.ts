@@ -10,7 +10,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createUserConfig } from './config.js';
-import { getTextContent } from '../../utils/app-utils.js';
+import { getTextContent } from '../../common/client/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({

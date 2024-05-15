@@ -9,10 +9,10 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import type { TextChanges } from '@typefox/monaco-editor-react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { createUserConfig } from './config.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { getTextContent } from '../../utils/app-utils.js';
+import { createUserConfig } from './config.js';
+import { getTextContent } from '../../common/client/app-utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({

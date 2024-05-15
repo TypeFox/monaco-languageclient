@@ -3,9 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { WebSocketServer, ServerOptions } from 'ws';
-import { IncomingMessage, Server } from 'http';
-import { URL } from 'url';
-import { Socket } from 'net';
+import { IncomingMessage, Server } from 'node:http';
+import { URL } from 'node:url';
+import { Socket } from 'node:net';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
@@ -92,4 +94,12 @@ export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
             });
         }
     });
+};
+
+/**
+ * Solves: __dirname is not defined in ES module scope
+ */
+export const getLocalDirectory = (referenceUrl: string | URL) => {
+    const __filename = fileURLToPath(referenceUrl);
+    return dirname(__filename);
 };

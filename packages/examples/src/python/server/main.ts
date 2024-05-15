@@ -3,10 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { resolve } from 'path';
-import { runLanguageServer } from '../../common/language-server-runner.js';
-import { IncomingMessage } from 'http';
-import { LanguageName } from '../../common/server-commons.js';
+import { resolve } from 'node:path';
+import { IncomingMessage } from 'node:http';
+import { runLanguageServer } from '../../common/node/language-server-runner.js';
+import { LanguageName } from '../../common/node/server-commons.js';
 
 export const runPythonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);
