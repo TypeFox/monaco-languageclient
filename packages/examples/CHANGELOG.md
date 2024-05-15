@@ -2,7 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.4.0] - 2024-05-1x5
+## [8.4.1] - 2024-05-15
+
+- Updated to `monaco-editor-wrapper@5.1.0` and `@typefox/monaco-editor-react@4.1.0`. Demostrate ConnectionProvider usage in `LangiumClientExtended`.
+
+## [8.4.0] - 2024-05-15
 
 - Updated to `monaco-languageclient@8.4.0`, `monaco-editor-wrapper@5.0.0` and `@typefox/monaco-editor-react@4.0.0`. Updated all `@codingame/monaco-vscode` packages to `5.1.1`.
 - Aligned all examples to API changes

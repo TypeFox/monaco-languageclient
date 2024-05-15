@@ -28,6 +28,9 @@ export class LanguageClientWrapper {
 
     private languageClient?: MonacoLanguageClient;
     private languageClientConfig?: LanguageClientConfig;
+    private messageTransports?: MessageTransports;
+    private connectionProvider?: IConnectionProvider;
+    private languageId: string;
     private worker?: Worker;
     private port: MessagePort;
     private name?: string;
@@ -40,6 +43,8 @@ export class LanguageClientWrapper {
         this.languageClientConfig = config.languageClientConfig;
         this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
+
+        this.languageId = this.languageClientConfig?.languageId ?? 'unknown';
     }
 
     haveLanguageClient(): boolean {
@@ -60,6 +65,14 @@ export class LanguageClientWrapper {
 
     isStarted(): boolean {
         return this.languageClient !== undefined && this.languageClient?.isRunning();
+    }
+
+    getMessageTransports(): MessageTransports | undefined {
+        return this.messageTransports;
+    }
+
+    getConnectionProvider(): IConnectionProvider | undefined {
+        return this.connectionProvider;
     }
 
     async start() {
@@ -105,19 +118,23 @@ export class LanguageClientWrapper {
             return Promise.resolve();
         }
 
+        const lcConfig = this.languageClientConfig?.options;
+        // allow to fully override the clonnecetionProvider
+        // if it is undefined it will be created from the message transports in handleLanguageClientStart
+        this.connectionProvider = this.languageClientConfig?.connectionProvider;
+
         return new Promise((resolve, reject) => {
-            const lcConfig = this.languageClientConfig?.options;
             if (lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') {
                 const url = createUrl(lcConfig);
                 const webSocket = new WebSocket(url);
 
-                webSocket.onopen = () => {
+                webSocket.onopen = async () => {
                     const socket = toSocket(webSocket);
-                    const messageTransports = {
+                    this.messageTransports = await this.connectionProvider?.get('') ?? {
                         reader: new WebSocketMessageReader(socket),
                         writer: new WebSocketMessageWriter(socket)
                     };
-                    this.handleLanguageClientStart(messageTransports, resolve, reject);
+                    this.handleLanguageClientStart(resolve, reject);
                 };
                 webSocket.onerror = (ev: Event) => {
                     const languageClientError: LanguageClientError = {
@@ -151,23 +168,50 @@ export class LanguageClientWrapper {
                     }
                 }
 
-                const messageTransports = {
-                    reader: new BrowserMessageReader(this.port ? this.port : this.worker),
-                    writer: new BrowserMessageWriter(this.port ? this.port : this.worker)
+                const startWorkerLS = async (port: MessagePort | Worker) => {
+                    this.messageTransports = await this.connectionProvider?.get('') ?? {
+                        reader: new BrowserMessageReader(port),
+                        writer: new BrowserMessageWriter(port)
+                    };
+                    this.handleLanguageClientStart(resolve, reject);
                 };
-                this.handleLanguageClientStart(messageTransports, resolve, reject);
+                startWorkerLS(this.port ? this.port : this.worker);
             }
         });
     }
 
-    private async handleLanguageClientStart(messageTransports: MessageTransports,
-        resolve: () => void,
-        reject: (reason?: unknown) => void) {
+    private async handleLanguageClientStart(resolve: () => void, reject: (reason?: unknown) => void) {
+        if (!this.connectionProvider) {
+            this.connectionProvider = {
+                get: () => {
+                    // even with the check "if (this.messageTransports)" the compiler requires the ! here
+                    return Promise.resolve(this.messageTransports!);
+                }
+            };
+        }
 
-        this.languageClient = this.createLanguageClient(messageTransports);
+        const mlcConfig = {
+            name: this.languageClientConfig?.name ?? 'Monaco Wrapper Language Client',
+
+            // allow to fully override the clientOptions
+            clientOptions: this.languageClientConfig?.clientOptions ?? {
+                documentSelector: [this.languageId],
+                // disable the default error handler
+                errorHandler: {
+                    error: () => ({ action: ErrorAction.Continue }),
+                    closed: () => ({ action: CloseAction.DoNotRestart })
+                }
+            },
+
+            connectionProvider: this.connectionProvider!
+        };
+        this.languageClient = new MonacoLanguageClient(mlcConfig);
+
         const lcConfig = this.languageClientConfig?.options;
-        messageTransports.reader.onClose(async () => {
+
+        this.messageTransports?.reader.onClose(async () => {
             await this.languageClient?.stop();
+
             if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig?.stopOptions) {
                 const stopOptions = lcConfig?.stopOptions;
                 stopOptions.onCall(this.getLanguageClient());
@@ -179,6 +223,7 @@ export class LanguageClientWrapper {
 
         try {
             await this.languageClient.start();
+
             if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig?.startOptions) {
                 const startOptions = lcConfig?.startOptions;
                 startOptions.onCall(this.getLanguageClient());
@@ -195,35 +240,6 @@ export class LanguageClientWrapper {
         }
         this.logger?.info(`languageClientWrapper (${this.name}): Started successfully.`);
         resolve();
-    }
-
-    private createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
-        const languageId = this.languageClientConfig?.languageId ?? 'unknown';
-        const mlcConfig = {
-            name: this.languageClientConfig?.name ?? 'Monaco Wrapper Language Client',
-
-            // allow to fully override the clientOptions
-            clientOptions: this.languageClientConfig?.clientOptions ?? {
-                documentSelector: [languageId],
-                // disable the default error handler
-                errorHandler: {
-                    error: () => ({ action: ErrorAction.Continue }),
-                    closed: () => ({ action: CloseAction.DoNotRestart })
-                }
-            },
-            // allow to fully override the clonnecetionProvider
-            connectionProvider: this.languageClientConfig?.connectionProvider ?? {
-                get: () => {
-                    return Promise.resolve(transports);
-                }
-            }
-        };
-
-        if (!mlcConfig.clientOptions.documentSelector?.includes(languageId)) {
-            throw new Error(`languageClientWrapper (${this.name}): The language id '${languageId}' is not included in the document selector.`);
-        }
-
-        return new MonacoLanguageClient(mlcConfig);
     }
 
     private disposeWorker(keepWorker?: boolean) {

@@ -8,6 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '../../../../resources/vsix/GitHub.github-vscode-theme-6.3.4.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import { getTextContent } from '../../../common/client/app-utils.js';
 
@@ -22,6 +23,9 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
     extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
 
     const langiumWorker = loadLangiumWorker();
+    const reader = new BrowserMessageReader(langiumWorker);
+    const writer = new BrowserMessageWriter(langiumWorker);
+
     return {
         wrapperConfig: {
             serviceConfig: {
@@ -78,6 +82,9 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
             options: {
                 $type: 'WorkerDirect',
                 worker: langiumWorker
+            },
+            connectionProvider: {
+                get: async () => ({ reader, writer }),
             }
         }
     };

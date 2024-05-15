@@ -63,24 +63,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                         uri: codeUri
                     }
                 },
-                extensions: [{
-                    config: {
-                        name: 'python-client',
-                        publisher: 'monaco-languageclient-project',
-                        version: '1.0.0',
-                        engines: {
-                            vscode: '^1.85.0'
-                        },
-                        contributes: {
-                            languages: [{
-                                id: 'python',
-                                extensions: ['.py', 'pyi'],
-                                aliases: ['python'],
-                                mimetypes: ['application/python'],
-                            }],
-                        }
-                    }
-                }],
                 userConfiguration: {
                     json: JSON.stringify({
                         'workbench.colorTheme': 'Default Dark Modern'

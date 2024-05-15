@@ -2,6 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [4.1.0] - 2024-05-15
+
+- Updated to `monaco-editor-wrapper@5.1.0`
+- Feature: If present `connectionProvider` from the languageclient section in the `UserConfig` is now driving the MessageTransports configuration. Previously the MessageTransports were always created indepently leading to inconsistent configuration of the `LanguageClientWrapper`.
+
 ## [4.0.0] - 2024-05-15
 
 - BREAKING:

@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "8.4.0",
+  "version": "8.4.1",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -85,11 +85,11 @@
     "@codingame/monaco-vscode-language-pack-tr": "~5.1.1",
     "@codingame/monaco-vscode-language-pack-zh-hans": "~5.1.1",
     "@codingame/monaco-vscode-language-pack-zh-hant": "~5.1.1",
-    "@typefox/monaco-editor-react": "~4.0.0",
+    "@typefox/monaco-editor-react": "~4.1.0",
     "express": "~4.19.2",
     "langium": "3.0.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.1.1",
-    "monaco-editor-wrapper": "~5.0.0",
+    "monaco-editor-wrapper": "~5.1.0",
     "monaco-languageclient": "~8.4.0",
     "pyright": "~1.1.362",
     "react": "~18.3.1",

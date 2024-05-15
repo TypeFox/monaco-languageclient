@@ -64,8 +64,7 @@ describe('Test LanguageClientWrapper', () => {
 
         // dispose & verify
         languageClientWrapper!.disposeLanguageClient();
-        expect(languageClientWrapper!.getWorker()).toBeDefined();
-        // no further way to verify post-terminate, but the worker should be disposed once no longer present
+        expect(languageClientWrapper!.getWorker()).toBeUndefined();
     });
 
     test('Constructor: config', async () => {
