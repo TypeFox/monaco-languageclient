@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [5.1.1] - 2024-05-15
+
+- Integrated `localLoader.js` from examples and make it available as sub-export `monaco-editor-wrapper/vscode/locale`
+
 ## [5.1.0] - 2024-05-15
 
 - Feature: If present `connectionProvider` from the languageclient section in the `UserConfig` is now driving the MessageTransports configuration. Previously the MessageTransports were always created indepently leading to inconsistent configuration of the `LanguageClientWrapper`.

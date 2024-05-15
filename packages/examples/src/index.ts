@@ -5,4 +5,3 @@
 
 /* client side export only */
 export * from './common/client/app-utils.js';
-export * from './common/client/localeLoader.js';

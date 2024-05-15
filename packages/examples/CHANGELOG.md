@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.4.2] - 2024-05-15
+
+- Moved `localeLoader` to `monaco-editor-wrapper/vscode/locale`
+
 ## [8.4.1] - 2024-05-15
 
 - Updated to `monaco-editor-wrapper@5.1.0` and `@typefox/monaco-editor-react@4.1.0`. Demostrate ConnectionProvider usage in `LangiumClientExtended`.

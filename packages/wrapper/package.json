@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -20,6 +20,10 @@
     "./vscode/services": {
       "types": "./dist/vscode/services.d.ts",
       "default": "./dist/vscode/services.js"
+    },
+    "./vscode/locale": {
+      "types": "./dist/vscode/localeLoader.d.ts",
+      "default": "./dist/vscode/localeLoader.js"
     },
     "./workerFactory": {
       "types": "./dist/workerFactory.d.ts",
@@ -64,6 +68,9 @@
       "vscode/services": [
         "dist/vscode/services"
       ],
+      "vscode/locale": [
+        "dist/vscode/localeLoader"
+      ],
       "workerFactory": [
         "dist/workerFactory"
       ]
@@ -95,6 +102,20 @@
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~5.1.1",
     "@codingame/monaco-vscode-editor-service-override": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-cs": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-de": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-es": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-fr": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-it": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-ja": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-ko": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-pl": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-pt-br": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-qps-ploc": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-ru": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-tr": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-zh-hans": "~5.1.1",
+    "@codingame/monaco-vscode-language-pack-zh-hant": "~5.1.1",
     "@codingame/monaco-vscode-monarch-service-override": "~5.1.1",
     "@codingame/monaco-vscode-textmate-service-override": "~5.1.1",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~5.1.1",
