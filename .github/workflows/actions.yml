@@ -25,24 +25,36 @@ jobs:
     - name: Use pnpm
       uses: pnpm/action-setup@v3
       with:
-        version: 8
+        version: 9
+
     - name: Install
       shell: bash
       run: |
         npm ci
+
     - name: Lint
       shell: bash
       run: |
         npm run lint
+
     - name: Build
       shell: bash
       run: |
         npm run build
+
     - name: Test
       shell: bash
       run: |
         npm run test:run
+
+    - name: Build production
+      if: github.ref_name == 'main'
+      shell: bash
+      run: |
+        npm run vite:build
+
     - name: Verify
+      if: github.ref_name == 'main'
       shell: bash
       run: |
         bash ./verify/buildAll.sh
