@@ -69,7 +69,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
+    "clean": "vite-node ../../scripts/clean.ts --relativePath packages/wrapper --recursive --paths ./dist ./bundle *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
     "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
     "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",

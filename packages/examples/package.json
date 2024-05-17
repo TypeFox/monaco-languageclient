@@ -110,7 +110,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -fr dist *.tsbuildinfo resources/vsix",
+    "clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths dist *.tsbuildinfo resources/vsix",
     "compile": "tsc --build tsconfig.src.json",
     "resources:download": "vite-node ./build/downloadResources.mts",
     "build:msg": "echo Building main examples:",
