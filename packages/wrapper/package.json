@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -43,21 +43,6 @@
     },
     "./workers/module/json": {
       "default": "./dist/workers/jsonWorker-es.js"
-    },
-    "./workers/classic/editor": {
-      "default": "./dist/workers/editorWorker-iife.js"
-    },
-    "./workers/classic/ts": {
-      "default": "./dist/workers/tsWorker-iife.js"
-    },
-    "./workers/classic/html": {
-      "default": "./dist/workers/htmlWorker-iife.js"
-    },
-    "./workers/classic/css": {
-      "default": "./dist/workers/cssWorker-iife.js"
-    },
-    "./workers/classic/json": {
-      "default": "./dist/workers/jsonWorker-iife.js"
     }
   },
   "typesVersions": {
@@ -84,7 +69,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -rf ./dist ./bundle *.tsbuildinfo",
+    "clean": "vite-node ../../scripts/clean.ts --relativePath packages/wrapper --recursive --paths ./dist ./bundle *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
     "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
     "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",

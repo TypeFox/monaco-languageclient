@@ -11,7 +11,11 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            javascript: () => new Worker(new URL('monaco-editor-wrapper/workers/module/ts', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
@@ -136,7 +140,6 @@ const startWrapper43 = async () => {
 const startWrapper44 = async () => {
     await wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
     console.log('wrapper44 was started.');
-
 };
 
 const sleepOne = (milliseconds: number) => {

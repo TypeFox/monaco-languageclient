@@ -14,12 +14,12 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 40vh;"></div>
     <div id="monaco-editor-root2" style="height: 40vh;"></div>
-    <script type="module">
+    <script type="module" rel="modulepreload">
         import { initLocalLoader } from 'monaco-editor-wrapper/vscode/locale';
-        initLocalLoader();
-    </script>
-    <script type="module">
-        import { configureMonacoWorkers, runStatemachineWrapper } from './src/langium/statemachine/main.ts';
+        await initLocalLoader();
+
+        // production build: ensure local loading is handled before loading the main script
+        const { configureMonacoWorkers, runStatemachineWrapper } = await import ('./src/langium/statemachine/main.ts');
 
         configureMonacoWorkers();
         runStatemachineWrapper();

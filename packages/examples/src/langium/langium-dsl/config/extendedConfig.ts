@@ -10,15 +10,14 @@ import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
-import { getTextContent } from '../../../common/client/app-utils.js';
+import langiumLanguageConfig from './langium.configuration.json?raw';
+import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
+import text from '../content/example.langium?raw';
 
 export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
-    const code = await getTextContent(new URL('./src/langium/langium-dsl/content/example.langium', window.location.href));
 
     const extensionFilesOrContents = new Map<string, string | URL>();
-    const langiumLanguageConfig = new URL('./src/langium/langium-dsl/config/langium.configuration.json', window.location.href);
-    const langiumTextmateGrammar = await getTextContent(new URL('./src/langium/langium-dsl/config/langium.tmLanguage.json', window.location.href));
-    // test both url and string content
+    // vite build is easier with string content
     extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
     extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
 
@@ -39,7 +38,7 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
                 $type: 'extended',
                 codeResources: {
                     main: {
-                        text: code,
+                        text,
                         fileExt: 'langium'
                     }
                 },

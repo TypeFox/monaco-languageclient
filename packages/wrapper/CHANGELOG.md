@@ -2,6 +2,11 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [5.1.2] - 2024-05-17
+
+- Aded `getUserConfiguration` to `EditorAppBase`, so one does not need to use another import.
+- Removed sub-exports that were forgotton to be removed before.
+
 ## [5.1.1] - 2024-05-15
 
 - Integrated `localLoader.js` from examples and make it available as sub-export `monaco-editor-wrapper/vscode/locale`

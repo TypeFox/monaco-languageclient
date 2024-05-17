@@ -6,6 +6,7 @@
 import { defineConfig as defineViteConfig, mergeConfig } from 'vite';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
 import * as path from 'path';
+// import * as fs from 'fs';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 
@@ -15,27 +16,30 @@ const viteConfig = defineViteConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
+                // bare monaco-languageclient
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
+
+                // monaco-editor-wrapper
+                // json
                 wrapperWebSocket: path.resolve(__dirname, 'packages/examples/wrapper_ws.html'),
-                // integrate locale from old example
+                browser: path.resolve(__dirname, 'packages/examples/browser.html'),
+                // langium
                 wrapperStatemachine: path.resolve(__dirname, 'packages/examples/wrapper_statemachine.html'),
-                // share configuration with wrapperStatemachine
-                reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
                 wrapperLangium: path.resolve(__dirname, 'packages/examples/wrapper_langium.html'),
-                // python and reactPython share the same configuration
+                // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
-                reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
-                // converted to wrapper
+                // grrovy
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
+
+                // monaco-editor-react
+                // langium
+                reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
+                // python
+                reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
 
                 // other examples
                 wrapperTs: path.resolve(__dirname, 'packages/examples/wrapper_ts.html'),
                 wrapperAdvanced: path.resolve(__dirname, 'packages/examples/wrapper_adv.html'),
-                // what about the common code?
-                browser: path.resolve(__dirname, 'packages/examples/browser.html'),
-                // verification examples
-                verifyWrapper: path.resolve(__dirname, 'packages/examples/verify_wrapper.html'),
-                verifyAlt: path.resolve(__dirname, 'packages/examples/verify_alt.html')
             }
         }
     },
@@ -59,6 +63,9 @@ const viteConfig = defineViteConfig({
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname)
+    },
+    worker: {
+        format: 'es'
     }
 });
 

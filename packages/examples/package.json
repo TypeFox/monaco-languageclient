@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "8.4.1",
+  "version": "2024.5.17",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -71,11 +71,11 @@
     "@codingame/monaco-vscode-theme-service-override": "~5.1.1",
     "@codingame/monaco-vscode-typescript-basics-default-extension": "~5.1.1",
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "~5.1.1",
-    "@typefox/monaco-editor-react": "~4.1.1",
+    "@typefox/monaco-editor-react": "~4.1.2",
     "express": "~4.19.2",
     "langium": "3.0.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.1.1",
-    "monaco-editor-wrapper": "~5.1.1",
+    "monaco-editor-wrapper": "~5.1.2",
     "monaco-languageclient": "~8.4.0",
     "pyright": "~1.1.363",
     "react": "~18.3.1",
@@ -110,7 +110,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -fr dist *.tsbuildinfo resources/vsix",
+    "clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths dist *.tsbuildinfo resources/vsix",
     "compile": "tsc --build tsconfig.src.json",
     "resources:download": "vite-node ./build/downloadResources.mts",
     "build:msg": "echo Building main examples:",

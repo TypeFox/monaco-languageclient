@@ -7,12 +7,7 @@
     // because vscode-jsonrpc requires DedicatedWorkerGlobalScope
     // we are required to include both DOM and WebWorker libs
     // the only way out currently is to disable lib checking
-    "skipLibCheck": true,
-    "lib": [
-      "ES2022",
-      "DOM",
-      "WebWorker"
-    ]
+    "skipLibCheck": true
   },
   "references": [{
     "path": "../client/tsconfig.src.json",
@@ -28,6 +23,9 @@
   }],
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/**/*.langium"
   ]
 }

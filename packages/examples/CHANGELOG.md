@@ -2,6 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.5.17] - 2024-05-17
+
+- All example now work with vite/rollup production build (lessons learned for me :-)
+  - static site approach (relative files) does not work for `useWorkerFactory` in this scenario
+- Apply independent version scheme
+- Drop `utils/app-utils.ts`
+
 ## [8.4.2] - 2024-05-15
 
 - Moved `localeLoader` to `monaco-editor-wrapper/vscode/locale`

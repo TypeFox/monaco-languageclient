@@ -3,10 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/// <reference lib="WebWorker" />
+declare module '*?raw' {
+    const content: string;
+    export default content;
+}
 
-import { start } from './statemachine-server-start.js';
-
-declare const self: DedicatedWorkerGlobalScope;
-
-start(self, 'statemachine-server');
+declare module '*?worker&url' {
+    const content: string;
+    export default content;
+}

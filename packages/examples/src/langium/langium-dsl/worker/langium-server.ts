@@ -2,6 +2,7 @@
  * Copyright (c) 2018-2022 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
+/// <reference lib="WebWorker" />
 
 import { EmptyFileSystem } from 'langium';
 import { DefaultSharedModuleContext, startLanguageServer } from 'langium/lsp';

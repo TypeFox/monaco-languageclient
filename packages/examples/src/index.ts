@@ -4,4 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 /* client side export only */
-export * from './common/client/app-utils.js';
+console.log('Currently there is nothing exported');

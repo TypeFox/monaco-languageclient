@@ -8,8 +8,8 @@
       "vscode"
     ],
     "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
     "lib": [
       "ES2022",
       "DOM"
