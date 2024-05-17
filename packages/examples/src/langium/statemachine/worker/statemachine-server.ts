@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/// <reference lib="WebWorker" />
+
 import { start } from './statemachine-server-start.js';
 
 declare const self: DedicatedWorkerGlobalScope;

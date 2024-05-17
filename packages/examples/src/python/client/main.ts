@@ -10,18 +10,21 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createUserConfig } from './config.js';
-import { getTextContent } from '../../common/client/app-utils.js';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import helloPyCode from './hello.py?raw';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import hello2PyCode from './hello2.py?raw';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
 export const runPythonWrapper = async () => {
-    const helloPyCode = await getTextContent(new URL('./src/python/client/hello.py', window.location.href));
-    const hello2PyCode = await getTextContent(new URL('./src/python/client/hello2.py', window.location.href));
-
     const helloPyUri = vscode.Uri.file('/workspace/hello.py');
     const hello2PyUri = vscode.Uri.file('/workspace/hello2.py');
 
@@ -35,7 +38,6 @@ export const runPythonWrapper = async () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
-
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             if (wrapper.isStarted()) {
                 console.warn('Editor was already started!');

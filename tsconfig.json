@@ -1,10 +1,10 @@
  {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "lib": [
-      "ES2022",
+      "ESNext",
       "DOM"
     ],
     "esModuleInterop": true,
@@ -28,6 +28,7 @@
      // Disallow inconsistently-cased references to the same file
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
+    "experimentalDecorators": true,
     "jsx": "react"
   },
   "include": [

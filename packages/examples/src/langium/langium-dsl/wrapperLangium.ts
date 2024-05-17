@@ -7,6 +7,8 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import workerUrl from './worker/langium-server?worker&url';
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;
@@ -14,7 +16,10 @@ const htmlElement = document.getElementById('monaco-editor-root');
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
@@ -83,10 +88,7 @@ export const disposeEditor = async () => {
 };
 
 export const loadLangiumWorker = () => {
-    // Language Server preparation
-    const workerUrl = new URL('./src/langium/langium-dsl/worker/langium-server.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
-
     return new Worker(workerUrl, {
         type: 'module',
         name: 'Langium LS',

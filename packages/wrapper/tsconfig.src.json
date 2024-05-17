@@ -8,11 +8,6 @@
     // we are required to include both DOM and WebWorker libs
     // the only way out currently is to disable lib checking
     "skipLibCheck": true,
-    "lib": [
-      "ES2022",
-      "DOM",
-      "WebWorker"
-    ],
     "types": [
       "vscode"
     ]

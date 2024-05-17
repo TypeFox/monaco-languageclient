@@ -8,14 +8,22 @@ import { createModelReference } from 'vscode/monaco';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
-import { getTextContent } from '../../common/client/app-utils.js';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import workerUrl from './worker/statemachine-server?worker&url';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import workerPortUrl from './worker/statemachine-server-port?worker&url';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import text from './content/example.statemachine?raw';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
@@ -24,8 +32,6 @@ const startEditor = async () => {
         alert('Editor was already started!');
         return;
     }
-
-    const text = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
 
     // init first worker regularly
     const stateMachineWorkerRegular = loadStatemachineWorkerRegular();
@@ -87,9 +93,7 @@ export const runStatemachineWrapper = async () => {
 
 export const loadStatemachineWorkerRegular = () => {
     // Language Server preparation
-    const workerUrl = new URL('./src/langium/statemachine/worker/statemachine-server.ts', window.location.href);
     console.log(`Langium worker URL: ${workerUrl}`);
-
     return new Worker(workerUrl, {
         type: 'module',
         name: 'Statemachine Server Regular',
@@ -98,10 +102,8 @@ export const loadStatemachineWorkerRegular = () => {
 
 export const loadStatemachinWorkerPort = () => {
     // Language Server preparation
-    const workerUrl = new URL('./src/langium/statemachine/worker/statemachine-server-port.ts', window.location.href);
-    console.log(`Langium worker URL: ${workerUrl}`);
-
-    return new Worker(workerUrl, {
+    console.log(`Langium worker URL: ${workerPortUrl}`);
+    return new Worker(workerPortUrl, {
         type: 'module',
         name: 'Statemachine Server Port',
     });

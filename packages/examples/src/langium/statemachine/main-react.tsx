@@ -7,19 +7,22 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { getTextContent } from '../../common/client/app-utils.js';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import text from './content/example.statemachine?raw';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
 export const runStatemachineReact = async () => {
     try {
-        const text = await getTextContent(new URL('./src/langium/statemachine/content/example.statemachine', window.location.href));
         const langiumGlobalConfig = await createLangiumGlobalConfig({
             text,
             worker: loadStatemachineWorkerRegular()

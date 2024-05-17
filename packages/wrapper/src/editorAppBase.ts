@@ -6,7 +6,7 @@
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import { getUserConfiguration, updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 import { Logger } from 'monaco-languageclient/tools';
 
@@ -270,6 +270,10 @@ export abstract class EditorAppBase {
             return vscodeUpdateUserConfiguration(json);
         }
         return Promise.resolve();
+    }
+
+    getUserConfiguration(): Promise<string> {
+        return getUserConfiguration();
     }
 
     abstract init(): Promise<void>;

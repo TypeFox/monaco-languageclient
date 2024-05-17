@@ -12,16 +12,19 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
-import { getTextContent } from '../../common/client/app-utils.js';
+// @ts-expect-error otherwise the vite notation leads to a compile error
+import badPyCode from './bad.py?raw';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        basePath: '../../../node_modules'
+        ignoreMapping: true,
+        workerLoaders: {
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+        }
     });
 };
 
 export const runPythonReact = async () => {
-    const badPyCode = await getTextContent(new URL('./src/python/client/bad.py', window.location.href));
     const badPyUri = vscode.Uri.file('/workspace/bad.py');
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
