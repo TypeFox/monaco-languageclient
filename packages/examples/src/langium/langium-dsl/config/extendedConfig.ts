@@ -10,17 +10,16 @@ import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
-import langiumLanguageConfig from './langium.configuration.json' assert { type: 'json' };
-import langiumTextmateGrammar from './langium.tmLanguage.json' assert { type: 'json' };
-// @ts-expect-error otherwise the vite notation leads to a compile error
+import langiumLanguageConfig from './langium.configuration.json?raw';
+import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../content/example.langium?raw';
 
 export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
 
     const extensionFilesOrContents = new Map<string, string | URL>();
     // vite build is easier with string content
-    extensionFilesOrContents.set('/langium-configuration.json', JSON.stringify(langiumLanguageConfig));
-    extensionFilesOrContents.set('/langium-grammar.json', JSON.stringify(langiumTextmateGrammar));
+    extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
+    extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
 
     const langiumWorker = loadLangiumWorker();
     const reader = new BrowserMessageReader(langiumWorker);

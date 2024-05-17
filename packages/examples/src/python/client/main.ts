@@ -10,9 +10,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createUserConfig } from './config.js';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import helloPyCode from './hello.py?raw';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import hello2PyCode from './hello2.py?raw';
 
 export const configureMonacoWorkers = () => {

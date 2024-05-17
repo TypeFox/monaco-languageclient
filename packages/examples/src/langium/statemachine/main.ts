@@ -8,11 +8,8 @@ import { createModelReference } from 'vscode/monaco';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import workerUrl from './worker/statemachine-server?worker&url';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import text from './content/example.statemachine?raw';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();

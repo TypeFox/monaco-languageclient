@@ -11,7 +11,6 @@ import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import code from '../content/example.langium?raw';
 
 export const setupLangiumClientClassic = async (): Promise<UserConfig> => {

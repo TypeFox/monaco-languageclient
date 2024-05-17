@@ -9,7 +9,6 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import text from './content/example.statemachine?raw';
 
 export const configureMonacoWorkers = () => {

@@ -12,7 +12,6 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import badPyCode from './bad.py?raw';
 
 export const configureMonacoWorkers = () => {

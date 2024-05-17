@@ -9,9 +9,8 @@ import getLocalizationServiceOverride from '@codingame/monaco-vscode-localizatio
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { UserConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import statemachineLanguageConfig from './language-configuration.json?raw';
-import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json' assert { type: 'json' };
+import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 
 export const createLangiumGlobalConfig = async (params: {
     text?: string,
@@ -20,7 +19,7 @@ export const createLangiumGlobalConfig = async (params: {
 }): Promise<UserConfig> => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set('/statemachine-configuration.json', statemachineLanguageConfig);
-    extensionFilesOrContents.set('/statemachine-grammar.json', JSON.stringify(responseStatemachineTm));
+    extensionFilesOrContents.set('/statemachine-grammar.json', responseStatemachineTm);
 
     let main;
     if (params.text) {

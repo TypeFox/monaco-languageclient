@@ -7,7 +7,6 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-// @ts-expect-error otherwise the vite notation leads to a compile error
 import workerUrl from './worker/langium-server?worker&url';
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
