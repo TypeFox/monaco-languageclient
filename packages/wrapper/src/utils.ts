@@ -42,7 +42,7 @@ export const createUrl = (config: WebSocketConfigOptions | WebSocketConfigOption
     return buildUrl;
 };
 
-export const verifyUrlorCreateDataUrl = (input: string | URL) => {
+export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
     return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
 };
 

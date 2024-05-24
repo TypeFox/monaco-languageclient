@@ -9,7 +9,7 @@ import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
 import { UserConfig } from './userConfig.js';
-import { verifyUrlorCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
+import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 
 export type ExtensionConfig = {
     config: IExtensionManifest | object;
@@ -90,7 +90,7 @@ export class EditorAppExtended extends EditorAppBase {
                 this.extensionRegisterResults.set(manifest.name, extRegResult);
                 if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                     for (const entry of extensionConfig.filesOrContents) {
-                        (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlorCreateDataUrl(entry[1]));
+                        (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
                     }
                 }
                 allPromises.push(extRegResult.whenReady());

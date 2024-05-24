@@ -73,7 +73,7 @@
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "~5.2.0",
     "@typefox/monaco-editor-react": "~4.2.0",
     "express": "~4.19.2",
-    "langium": "3.0.0",
+    "langium": "~3.0.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.2.0",
     "monaco-editor-wrapper": "~5.2.0",
     "monaco-languageclient": "~8.5.0",

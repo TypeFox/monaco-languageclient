@@ -6,20 +6,24 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import { IConnectionProvider } from 'monaco-languageclient';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { LanguageClientConfig, UserConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 
 export const createLangiumGlobalConfig = async (params: {
+    languageServerId: string,
+    useLanguageClient: boolean,
     text?: string,
-    worker: Worker,
-    messagePort?: MessagePort
+    worker?: Worker,
+    messagePort?: MessagePort,
+    connectionProvider?: IConnectionProvider
 }): Promise<UserConfig> => {
     const extensionFilesOrContents = new Map<string, string | URL>();
-    extensionFilesOrContents.set('/statemachine-configuration.json', statemachineLanguageConfig);
-    extensionFilesOrContents.set('/statemachine-grammar.json', responseStatemachineTm);
+    extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
+    extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
     let main;
     if (params.text) {
@@ -28,6 +32,16 @@ export const createLangiumGlobalConfig = async (params: {
             fileExt: 'statemachine'
         };
     }
+
+    const languageClientConfig: LanguageClientConfig | undefined = params.useLanguageClient && params.worker ? {
+        languageId: 'statemachine',
+        options: {
+            $type: 'WorkerDirect',
+            worker: params.worker,
+            messagePort: params.messagePort,
+        },
+        connectionProvider: params.connectionProvider
+    } : undefined;
 
     return {
         wrapperConfig: {
@@ -58,12 +72,12 @@ export const createLangiumGlobalConfig = async (params: {
                                 id: 'statemachine',
                                 extensions: ['.statemachine'],
                                 aliases: ['statemachine', 'Statemachine'],
-                                configuration: './statemachine-configuration.json'
+                                configuration: `./${params.languageServerId}-statemachine-configuration.json`
                             }],
                             grammars: [{
                                 language: 'statemachine',
                                 scopeName: 'source.statemachine',
-                                path: './statemachine-grammar.json'
+                                path: `./${params.languageServerId}-statemachine-grammar.json`
                             }]
                         }
                     },
@@ -78,13 +92,6 @@ export const createLangiumGlobalConfig = async (params: {
                 }
             }
         },
-        languageClientConfig: {
-            languageId: 'statemachine',
-            options: {
-                $type: 'WorkerDirect',
-                worker: params.worker,
-                messagePort: params.messagePort
-            }
-        }
+        languageClientConfig
     };
 };
