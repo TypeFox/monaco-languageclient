@@ -5,14 +5,19 @@
 
 /// <reference lib="WebWorker" />
 
-import { start } from './statemachine-server-start.js';
+import { start, messageReader } from './statemachine-server-start.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
 self.onmessage = async (event: MessageEvent) => {
     const data = event.data;
+    console.log(event.data);
     if (data.port) {
         start(data.port, 'statemachine-server-port');
+
+        messageReader?.listen((message) => {
+            console.log('Received message from main thread:', message);
+        });
 
         setTimeout(() => {
             // test independent communication

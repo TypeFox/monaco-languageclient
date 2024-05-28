@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [5.2.0] - 2024-05-2x
+
+- Updated to `monaco-languageclient@8.5.0` and version `5.2.0` of `@codingame/monaco-vscode` packages
+
 ## [5.1.2] - 2024-05-17
 
 - Aded `getUserConfiguration` to `EditorAppBase`, so one does not need to use another import.

@@ -3,12 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Module } from 'langium';
-import type { DefaultSharedModuleContext, LangiumServices, LangiumSharedServices, PartialLangiumServices } from 'langium/lsp';
-import { inject } from 'langium';
-import { createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
+import { type Module, inject } from 'langium';
+import type { LangiumServices, LangiumSharedServices, PartialLangiumServices } from 'langium/lsp';
+import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModuleContext } from 'langium/lsp';
 import { StatemachineGeneratedModule, StatemachineGeneratedSharedModule } from './generated/module.js';
-import { registerValidationChecks, StatemachineValidator } from './statemachine-validator.js';
+import { StatemachineValidator, registerValidationChecks } from './statemachine-validator.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -66,5 +65,10 @@ export function createStatemachineServices(context: DefaultSharedModuleContext):
     );
     shared.ServiceRegistry.register(statemachine);
     registerValidationChecks(statemachine);
+    if (!context.connection) {
+        // We don't run inside a language server
+        // Therefore, initialize the configuration provider instantly
+        shared.workspace.ConfigurationProvider.initialized({});
+    }
     return { shared, statemachine };
 }

@@ -23,6 +23,8 @@ export const configureMonacoWorkers = () => {
 export const runStatemachineReact = async () => {
     try {
         const langiumGlobalConfig = await createLangiumGlobalConfig({
+            languageServerId: 'react',
+            useLanguageClient: true,
             text,
             worker: loadStatemachineWorkerRegular()
         });

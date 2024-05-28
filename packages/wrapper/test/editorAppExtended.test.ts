@@ -4,20 +4,20 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { EditorAppConfigExtended, EditorAppExtended, verifyUrlorCreateDataUrl } from 'monaco-editor-wrapper';
+import { EditorAppConfigExtended, EditorAppExtended, verifyUrlOrCreateDataUrl } from 'monaco-editor-wrapper';
 import { createBaseConfig, createEditorAppConfig } from './helper.js';
 
 describe('Test EditorAppExtended', () => {
 
     test('verifyUrlorCreateDataUrl: url', () => {
         const url = new URL('./editorAppExtended.test.ts', import.meta.url);
-        expect(verifyUrlorCreateDataUrl(url)).toBe(url.href);
+        expect(verifyUrlOrCreateDataUrl(url)).toBe(url.href);
     });
 
     test('verifyUrlorCreateDataUrl: url', async () => {
         const url = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href);
         const text = await (await fetch(url)).text();
-        expect(verifyUrlorCreateDataUrl(text)).toBe(`data:text/plain;base64,${btoa(text)}`);
+        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${btoa(text)}`);
     });
 
     test('config userConfiguration', () => {
