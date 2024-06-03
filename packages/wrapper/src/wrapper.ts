@@ -37,8 +37,8 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
-        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeResources.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources.main} codeOriginal: ${editorAppConfig.codeResources.original}`);
+        if (editorAppConfig.useDiffEditor === true && !editorAppConfig.codeResources?.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
         }
 
         // Always dispose old instances before start
@@ -157,7 +157,7 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getWorker();
     }
 
-    async updateCodeResources(codeResources: CodeResources): Promise<void> {
+    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 

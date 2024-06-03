@@ -61,11 +61,11 @@ export enum ModelUpdateType {
     CODE_AND_MODEL
 }
 
-export const isCodeUpdateRequired = (codeResourcesPrevious: CodeResources, codeResources: CodeResources) => {
-    const a = evaluateCodeUpdate(codeResourcesPrevious.main);
-    const b = evaluateCodeUpdate(codeResources.main);
-    const c = evaluateCodeUpdate(codeResourcesPrevious.original);
-    const d = evaluateCodeUpdate(codeResources.original);
+export const isCodeUpdateRequired = (codeResourcesPrevious?: CodeResources, codeResources?: CodeResources) => {
+    const a = evaluateCodeUpdate(codeResourcesPrevious?.main);
+    const b = evaluateCodeUpdate(codeResources?.main);
+    const c = evaluateCodeUpdate(codeResourcesPrevious?.original);
+    const d = evaluateCodeUpdate(codeResources?.original);
     return a !== b || c !== d ? ModelUpdateType.CODE : ModelUpdateType.NONE;
 };
 
@@ -73,14 +73,14 @@ export const evaluateCodeUpdate = (code?: CodePlusUri | CodePlusFileExt) => {
     return code && Object.hasOwn(code, 'text') ? code.text : undefined;
 };
 
-export const isModelUpdateRequired = (codeResourcesPrevious: CodeResources, codeResources: CodeResources): ModelUpdateType => {
+export const isModelUpdateRequired = (codeResourcesPrevious?: CodeResources, codeResources?: CodeResources): ModelUpdateType => {
     const codeUpdateType = isCodeUpdateRequired(codeResourcesPrevious, codeResources);
     const codeChanged = codeUpdateType === ModelUpdateType.CODE;
 
-    const a = evaluateCodeModel(codeResourcesPrevious.main);
-    const b = evaluateCodeModel(codeResources.main);
-    const c = evaluateCodeModel(codeResourcesPrevious.original);
-    const d = evaluateCodeModel(codeResources.original);
+    const a = evaluateCodeModel(codeResourcesPrevious?.main);
+    const b = evaluateCodeModel(codeResources?.main);
+    const c = evaluateCodeModel(codeResourcesPrevious?.original);
+    const d = evaluateCodeModel(codeResources?.original);
     const modelChanged = a !== b || c !== d;
 
     return (modelChanged && codeChanged) ? ModelUpdateType.CODE_AND_MODEL : (modelChanged ? ModelUpdateType.MODEL : (codeChanged ? ModelUpdateType.CODE : ModelUpdateType.NONE));

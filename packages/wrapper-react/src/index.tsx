@@ -181,8 +181,9 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             const verifyModelContent = () => {
                 const main = textModels?.text?.getValue() ?? '';
                 const original = textModels?.textOriginal?.getValue() ?? '';
-                const dirty = main !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text ?? '';
-                const dirtyOriginal = original !== userConfig.wrapperConfig.editorAppConfig.codeResources.original?.text ?? '';
+                const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+                const dirty = main !== codeResources?.main?.text ?? '';
+                const dirtyOriginal = original !== codeResources?.original?.text ?? '';
                 onTextChanged({
                     main,
                     original,

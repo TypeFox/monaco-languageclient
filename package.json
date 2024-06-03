@@ -5,15 +5,15 @@
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
     "@codingame/monaco-vscode-rollup-vsix-plugin": "~5.2.0",
     "@rollup/pluginutils": "~5.1.0",
-    "@types/node": "~20.12.12",
+    "@types/node": "~20.14.0",
     "@types/react": "~18.3.3",
     "@types/react-dom": "~18.3.0",
     "@types/vscode": "~1.89.0",
-    "@typescript-eslint/eslint-plugin": "~7.10.0",
-    "@typescript-eslint/parser": "~7.10.0",
+    "@typescript-eslint/eslint-plugin": "~7.11.0",
+    "@typescript-eslint/parser": "~7.11.0",
     "@vitest/browser": "~1.6.0",
     "editorconfig": "~2.0.0",
-    "esbuild": "~0.21.3",
+    "esbuild": "~0.21.4",
     "eslint": "~8.57.0",
     "eslint-plugin-header": "~3.1.1",
     "eslint-plugin-import": "~2.29.1",
@@ -21,14 +21,14 @@
     "minimatch": "~9.0.4",
     "http-server": "~14.1.1",
     "typescript": "~5.4.5",
-    "vite": "~5.2.11",
+    "vite": "~5.2.12",
     "vitest": "~1.6.0",
     "vite-node": "~1.6.0",
-    "webdriverio": "~8.37.0"
+    "webdriverio": "~8.38.0"
   },
   "volta": {
-    "node": "20.13.1",
-    "npm": "10.5.2"
+    "node": "20.14.0",
+    "npm": "10.7.0"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
