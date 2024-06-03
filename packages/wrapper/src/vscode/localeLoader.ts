@@ -60,5 +60,3 @@ export const initLocaleLoader = async (locale = new URLSearchParams(window.locat
         }
     }
 };
-/** @deprecated use `initLocaleLoader` instead */
-export const initLocalLoader = initLocaleLoader;
