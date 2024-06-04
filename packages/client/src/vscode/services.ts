@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
-import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices } from 'vscode/services';
+import { ILogService, initialize, IWorkbenchConstructionOptions, LogLevel, StandaloneServices } from 'vscode/services';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
@@ -79,8 +79,8 @@ export const initServices = async (instruction: InitServicesInstruction) => {
         });
     }
 
-    if (!envEnhanced.vscodeInitialising) {
-        if (envEnhanced.vscodeApiInitialised) {
+    if (!(envEnhanced.vscodeInitialising ?? false)) {
+        if (envEnhanced.vscodeApiInitialised ?? false) {
             instruction.logger?.debug('Initialization of vscode services can only performed once!');
         } else {
             envEnhanced.vscodeInitialising = true;
@@ -118,10 +118,8 @@ export const importAllServices = async (instruction: InitServicesInstruction) =>
 
     if (instruction.performChecks === undefined || instruction.performChecks()) {
         await initialize(userServices);
-        const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel;
-        if (logLevel) {
-            StandaloneServices.get(ILogService).setLevel(logLevel);
-        }
+        const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel ?? LogLevel.Info;
+        StandaloneServices.get(ILogService).setLevel(logLevel);
     }
 };
 

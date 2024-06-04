@@ -66,7 +66,7 @@ export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
     }) => {
     config.server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
         const baseURL = `http://${request.headers.host}/`;
-        const pathName = request.url ? new URL(request.url, baseURL).pathname : undefined;
+        const pathName = request.url !== undefined ? new URL(request.url, baseURL).pathname : undefined;
         if (pathName === runconfig.pathName) {
             config.wss.handleUpgrade(request, socket, head, webSocket => {
                 const socket: IWebSocket = {

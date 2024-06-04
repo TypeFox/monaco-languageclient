@@ -34,8 +34,8 @@ describe('Test LanguageClientWrapper', () => {
             languageClientConfig
         });
         expect(languageClientWrapper).toBeDefined();
-        expect(languageClientWrapper?.haveLanguageClient).toBeTruthy();
-        expect(languageClientWrapper?.haveLanguageClientConfig).toBeTruthy();
+        expect(languageClientWrapper.haveLanguageClient).toBeTruthy();
+        expect(languageClientWrapper.haveLanguageClientConfig).toBeTruthy();
     });
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {

@@ -26,7 +26,7 @@ export const createLangiumGlobalConfig = async (params: {
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
     let main;
-    if (params.text) {
+    if (params.text !== undefined) {
         main = {
             text: params.text,
             fileExt: 'statemachine'

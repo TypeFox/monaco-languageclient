@@ -19,21 +19,19 @@ export const createUrl = (config: WebSocketConfigOptions | WebSocketConfigOption
         const options = config as WebSocketConfigOptions;
         const protocol = options.secured ? 'wss' : 'ws';
         buildUrl = `${protocol}://${options.host}`;
-        if (options.port) {
+        if (options.port !== undefined) {
             if (options.port !== 80) {
                 buildUrl += `:${options.port}`;
             }
         }
-        if (options.path) {
+        if (options.path !== undefined) {
             buildUrl += `/${options.path}`;
         }
         if (options.extraParams) {
             const url = new URL(buildUrl);
 
             for (const [key, value] of Object.entries(options.extraParams)) {
-                if (value) {
-                    url.searchParams.set(key, value instanceof Array ? value.join(',') : value.toString());
-                }
+                url.searchParams.set(key, value instanceof Array ? value.join(',') : value.toString());
             }
 
             buildUrl = url.toString();

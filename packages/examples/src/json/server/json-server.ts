@@ -38,9 +38,9 @@ export class JsonServer {
         });
 
         this.connection.onInitialize(params => {
-            if (params.rootPath) {
+            if (params.rootPath !== null && params.rootPath !== undefined) {
                 this.workspaceRoot = URI.URI.file(params.rootPath);
-            } else if (params.rootUri) {
+            } else if (params.rootUri !== null) {
                 this.workspaceRoot = URI.URI.parse(params.rootUri);
             }
             this.connection.console.log('The server is initialized.');
@@ -200,7 +200,7 @@ export class JsonServer {
             return response.responseText;
         } catch (error: unknown) {
             const err = error as Record<string, unknown>;
-            return Promise.reject(err.responseText || requestLight.getErrorStatusDescription(err.status as number) || err.toString());
+            return Promise.reject(err.responseText !== undefined || requestLight.getErrorStatusDescription(err.status as number) || err.toString());
         }
     }
 

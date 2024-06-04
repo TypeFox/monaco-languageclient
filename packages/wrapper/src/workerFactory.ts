@@ -6,17 +6,17 @@
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
 
 export type WorkerOverrides = {
-    rootPath?: string| URL;
-    basePath?: string| URL;
+    rootPath?: string | URL;
+    basePath?: string | URL;
     workerLoaders?: Partial<Record<string, WorkerConfigSupplier | WorkerLoader>>;
     ignoreMapping?: boolean;
     userDefinedMapping?: (label: string) => string;
 }
 
 export type WorkerConfig = {
-    rootPath: string| URL;
-    basePath?: string| URL;
-    workerFile: string| URL;
+    rootPath: string | URL;
+    basePath?: string | URL;
+    workerFile: string | URL;
     options?: WorkerOptions;
 }
 
@@ -48,7 +48,7 @@ export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier |
             workerFile: 'monaco-editor-wrapper/dist/workers/cssWorker-es.js'
         };
     },
-    jsonWorker:  () => {
+    jsonWorker: () => {
         return {
             rootPath: import.meta.url,
             workerFile: 'monaco-editor-wrapper/dist/workers/jsonWorker-es.js'
@@ -61,14 +61,14 @@ export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier |
  * importScripts accepts to load the code inside the blob worker
  */
 export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverrides): Worker => {
-    if (workerOverrides?.rootPath) {
+    if (workerOverrides?.rootPath !== undefined) {
         config.rootPath = workerOverrides.rootPath;
     }
-    if (workerOverrides?.basePath) {
+    if (workerOverrides?.basePath !== undefined) {
         config.basePath = workerOverrides.basePath;
     }
     let workerFile = config.workerFile;
-    if (config.basePath) {
+    if (config.basePath !== undefined) {
         workerFile = `${config.basePath}/${config.workerFile}`;
     }
     const fullUrl = new URL(workerFile, config.rootPath).href;
@@ -88,7 +88,7 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
 export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
 
-    const getWorker = (moduleId: string, label: string ) => {
+    const getWorker = (moduleId: string, label: string) => {
         console.log(`getWorker: moduleId: ${moduleId} label: ${label}`);
 
         let selector = label;
@@ -98,7 +98,7 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
         // workerLoaders passed with workerOverrides are used
         if (workerOverrides?.ignoreMapping === true) {
             workerLoaders = {
-                ...workerOverrides?.workerLoaders
+                ...workerOverrides.workerLoaders
             };
         } else {
             workerLoaders = {
@@ -107,7 +107,7 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
 
             let mappingFunc = useDefaultWorkerMapping;
             if (workerOverrides?.userDefinedMapping) {
-                mappingFunc = workerOverrides?.userDefinedMapping;
+                mappingFunc = workerOverrides.userDefinedMapping;
             }
             selector = mappingFunc(label);
         }

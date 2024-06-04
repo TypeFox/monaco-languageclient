@@ -53,18 +53,16 @@ export class EditorAppClassic extends EditorAppBase {
         const languageDef = this.config.languageDef;
         if (languageDef) {
             // register own language first
-            if (languageDef.languageExtensionConfig) {
-                monaco.languages.register(languageDef.languageExtensionConfig);
+            monaco.languages.register(languageDef.languageExtensionConfig);
 
-                const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
-                if (languageRegistered.length === 0) {
-                    // this is only meaningful for languages supported by monaco out of the box
-                    monaco.languages.register({
-                        id: languageDef.languageExtensionConfig.id
-                    });
-                }
-
+            const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+            if (languageRegistered.length === 0) {
+                // this is only meaningful for languages supported by monaco out of the box
+                monaco.languages.register({
+                    id: languageDef.languageExtensionConfig.id
+                });
             }
+
             // apply monarch definitions
             if (languageDef.monarchLanguage) {
                 monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);

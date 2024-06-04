@@ -9,7 +9,7 @@ import { getLocalDirectory } from '../../common/node/server-commons.js';
 
 const baseDir = resolve(getLocalDirectory(import.meta.url));
 const groovyJar = resolve(baseDir, '../../../resources/groovy/external/groovy-language-server-all.jar');
-const relativeDir = process.env.LANG_SERVER_JAR_PATH || groovyJar;
+const relativeDir = process.env.LANG_SERVER_JAR_PATH ?? groovyJar;
 console.log(`basedir: ${baseDir}`);
 console.log(`groovyJar: ${groovyJar}`);
 console.log(`LANG_SERVER_JAR_PATH: ${process.env.LANG_SERVER_JAR_PATH}`);

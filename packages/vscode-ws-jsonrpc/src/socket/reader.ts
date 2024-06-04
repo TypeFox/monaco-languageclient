@@ -41,9 +41,9 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
             this.callback = callback;
             while (this.events.length !== 0) {
                 const event = this.events.pop()!;
-                if (event.message) {
+                if (event.message !== undefined) {
                     this.readMessage(event.message);
-                } else if (event.error) {
+                } else if (event.error !== undefined) {
                     this.fireError(event.error);
                 } else {
                     this.fireClose();

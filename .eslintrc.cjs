@@ -16,7 +16,8 @@ module.exports = {
     ],
     parserOptions: {
         ecmaVersion: 2022,
-        sourceType: 'module'
+        sourceType: 'module',
+        project: ['./tsconfig.json']
     },
     plugins: [
         '@typescript-eslint',
@@ -80,6 +81,8 @@ module.exports = {
         '@typescript-eslint/prefer-for-of': 'error',                // prefer for-of loop over arrays
         '@typescript-eslint/prefer-namespace-keyword': 'error',     // prefer namespace over module in TypeScript
         '@typescript-eslint/triple-slash-reference': 'error',       // ban /// <reference />, prefer imports
-        '@typescript-eslint/type-annotation-spacing': 'error'       // consistent space around colon ':'
+        '@typescript-eslint/type-annotation-spacing': 'error',      // consistent space around colon ':'
+        '@typescript-eslint/strict-boolean-expressions': 'error',   // Disallow certain types in boolean expressions
+        '@typescript-eslint/no-unnecessary-condition': 'error'      // Disallow conditionals where the type is always truthy or always falsy
     }
 };
