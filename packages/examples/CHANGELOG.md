@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2024.6.4] - 2024-06-04
+## [2024.6.1] - 2024-06-04
 
 - Updated to `monaco-languageclient@8.5.0`, `vscode-ws-jsonrpc@3.3.2`, `monaco-editor-wrapper@5.2.0` and `@typefox/monaco-editor-react@4.2.0`. Updated all `@codingame/monaco-vscode` packages to `5.2.0`.
 - Fix: Multiple Monaco editor issue [#666](https://github.com/TypeFox/monaco-languageclient/pull/666)
