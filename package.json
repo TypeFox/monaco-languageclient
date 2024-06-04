@@ -51,7 +51,7 @@
     "start:example:server:json": "npm run start:server:json --workspace packages/examples",
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "start:example:server:groovy": "npm run start:server:groovy --workspace packages/examples",
-    "release:prepare": "npm run reset:repo && npm ci && npm run lint && npm run build && npm run test:run",
+    "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test:run",
     "reset:repo": "git clean -f -X -d",
     "test": "vitest",
     "test:run": "vitest --run"
