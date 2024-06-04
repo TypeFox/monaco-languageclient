@@ -81,8 +81,8 @@
     "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite"
   },
   "volta": {
-    "node": "20.13.1",
-    "npm": "10.5.2"
+    "node": "20.14.0",
+    "npm": "10.7.0"
   },
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~5.2.0",

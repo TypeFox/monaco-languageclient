@@ -60,7 +60,7 @@ export const startLangiumClientClassic = async () => {
 };
 
 const checkStarted = () => {
-    if (wrapper?.isStarted()) {
+    if (wrapper?.isStarted() ?? false) {
         alert('Editor was already started!\nPlease reload the page to test the alternative editor.');
         return true;
     }
@@ -68,7 +68,7 @@ const checkStarted = () => {
 };
 
 const disableButton = (id: string, disabled: boolean) => {
-    const button = document.getElementById(id) as HTMLButtonElement;
+    const button = document.getElementById(id) as HTMLButtonElement | null;
     if (button !== null) {
         button.disabled = disabled;
     }

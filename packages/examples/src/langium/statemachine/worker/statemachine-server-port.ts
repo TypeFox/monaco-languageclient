@@ -12,7 +12,7 @@ declare const self: DedicatedWorkerGlobalScope;
 self.onmessage = async (event: MessageEvent) => {
     const data = event.data;
     console.log(event.data);
-    if (data.port) {
+    if (data.port !== undefined) {
         start(data.port, 'statemachine-server-port');
 
         messageReader?.listen((message) => {

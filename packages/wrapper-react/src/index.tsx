@@ -179,10 +179,11 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         const textModels = this.wrapper.getTextModels();
         if (textModels?.text || textModels?.textOriginal) {
             const verifyModelContent = () => {
-                const main = textModels?.text?.getValue() ?? '';
-                const original = textModels?.textOriginal?.getValue() ?? '';
-                const dirty = main !== userConfig.wrapperConfig.editorAppConfig.codeResources.main?.text ?? '';
-                const dirtyOriginal = original !== userConfig.wrapperConfig.editorAppConfig.codeResources.original?.text ?? '';
+                const main = textModels.text?.getValue() ?? '';
+                const original = textModels.textOriginal?.getValue() ?? '';
+                const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+                const dirty = main !== codeResources?.main?.text;
+                const dirtyOriginal = original !== codeResources?.original?.text;
                 onTextChanged({
                     main,
                     original,
@@ -190,13 +191,13 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
                 });
             };
 
-            if (textModels?.text) {
+            if (textModels.text) {
                 this._subscriptions.push(textModels.text.onDidChangeContent(() => {
                     verifyModelContent();
                 }));
             }
 
-            if (textModels?.textOriginal) {
+            if (textModels.textOriginal) {
                 this._subscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
                     verifyModelContent();
                 }));

@@ -36,6 +36,7 @@ describe('Test EditorAppExtended', () => {
         const app = new EditorAppExtended('test', createBaseConfig('extended'));
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
+        config.codeResources ??= {};
         config.codeResources.main = {
             text: 'test',
             fileExt: 'js'
@@ -62,9 +63,9 @@ describe('Test EditorAppExtended', () => {
     test('config defaults', () => {
         const config = createBaseConfig('extended');
         const app = new EditorAppExtended('config defaults', config);
-        expect(app.getConfig().codeResources.main?.text).toEqual('');
-        expect(app.getConfig().codeResources.original).toBeUndefined();
-        expect(app.getConfig().useDiffEditor).toBeFalsy();
+        expect(app.getConfig().codeResources?.main?.text).toEqual('');
+        expect(app.getConfig().codeResources?.original).toBeUndefined();
+        expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();
         expect(app.getConfig().readOnly).toBeFalsy();
         expect(app.getConfig().domReadOnly).toBeFalsy();
     });

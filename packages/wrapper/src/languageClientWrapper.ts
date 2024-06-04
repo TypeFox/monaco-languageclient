@@ -32,7 +32,7 @@ export class LanguageClientWrapper {
     private connectionProvider?: IConnectionProvider;
     private languageId: string;
     private worker?: Worker;
-    private port: MessagePort;
+    private port?: MessagePort;
     private name?: string;
     private logger: Logger | undefined;
 
@@ -43,8 +43,7 @@ export class LanguageClientWrapper {
         this.languageClientConfig = config.languageClientConfig;
         this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
-
-        this.languageId = this.languageClientConfig?.languageId ?? 'unknown';
+        this.languageId = this.languageClientConfig.languageId;
     }
 
     haveLanguageClient(): boolean {
@@ -64,7 +63,7 @@ export class LanguageClientWrapper {
     }
 
     isStarted(): boolean {
-        return this.languageClient !== undefined && this.languageClient?.isRunning();
+        return this.languageClient !== undefined && this.languageClient.isRunning();
     }
 
     getMessageTransports(): MessageTransports | undefined {
@@ -164,7 +163,7 @@ export class LanguageClientWrapper {
                         this.worker = workerDirectConfig.worker;
                     }
                     if (lcConfig?.messagePort) {
-                        this.port = lcConfig?.messagePort;
+                        this.port = lcConfig.messagePort;
                     }
                 }
 
@@ -212,10 +211,10 @@ export class LanguageClientWrapper {
         this.messageTransports?.reader.onClose(async () => {
             await this.languageClient?.stop();
 
-            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig?.stopOptions) {
-                const stopOptions = lcConfig?.stopOptions;
+            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig.stopOptions) {
+                const stopOptions = lcConfig.stopOptions;
                 stopOptions.onCall(this.getLanguageClient());
-                if (stopOptions.reportStatus) {
+                if (stopOptions.reportStatus !== undefined) {
                     this.logger?.info(this.reportStatus().join('\n'));
                 }
             }
@@ -224,17 +223,17 @@ export class LanguageClientWrapper {
         try {
             await this.languageClient.start();
 
-            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig?.startOptions) {
-                const startOptions = lcConfig?.startOptions;
+            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig.startOptions) {
+                const startOptions = lcConfig.startOptions;
                 startOptions.onCall(this.getLanguageClient());
-                if (startOptions.reportStatus) {
+                if (startOptions.reportStatus !== undefined) {
                     this.logger?.info(this.reportStatus().join('\n'));
                 }
             }
-        } catch (e) {
+        } catch (e: unknown) {
             const languageClientError: LanguageClientError = {
                 message: `languageClientWrapper (${this.name}): Start was unsuccessful.`,
-                error: (e as Error) ?? 'No error was provided.'
+                error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
             };
             reject(languageClientError);
         }
@@ -257,7 +256,7 @@ export class LanguageClientWrapper {
         }
 
         // then attempt to dispose the LC
-        if (this.languageClient && this.languageClient.isRunning()) {
+        if (this.languageClient.isRunning()) {
             try {
                 await this.languageClient.dispose();
                 this.disposeWorker(keepWorker);
@@ -267,7 +266,7 @@ export class LanguageClientWrapper {
             } catch (e) {
                 const languageClientError: LanguageClientError = {
                     message: `languageClientWrapper (${this.name}): Disposing the monaco-languageclient resulted in error.`,
-                    error: (e as Error) ?? 'No error was provided.'
+                    error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
                 };
                 return Promise.reject(languageClientError);
             }

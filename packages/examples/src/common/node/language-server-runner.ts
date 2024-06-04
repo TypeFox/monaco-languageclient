@@ -14,7 +14,7 @@ export const runLanguageServer = (
 ) => {
     process.on('uncaughtException', err => {
         console.error('Uncaught Exception: ', err.toString());
-        if (err.stack) {
+        if (err.stack !== undefined) {
             console.error(err.stack);
         }
     });

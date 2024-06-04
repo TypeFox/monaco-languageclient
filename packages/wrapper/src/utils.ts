@@ -19,21 +19,19 @@ export const createUrl = (config: WebSocketConfigOptions | WebSocketConfigOption
         const options = config as WebSocketConfigOptions;
         const protocol = options.secured ? 'wss' : 'ws';
         buildUrl = `${protocol}://${options.host}`;
-        if (options.port) {
+        if (options.port !== undefined) {
             if (options.port !== 80) {
                 buildUrl += `:${options.port}`;
             }
         }
-        if (options.path) {
+        if (options.path !== undefined) {
             buildUrl += `/${options.path}`;
         }
         if (options.extraParams) {
             const url = new URL(buildUrl);
 
             for (const [key, value] of Object.entries(options.extraParams)) {
-                if (value) {
-                    url.searchParams.set(key, value instanceof Array ? value.join(',') : value.toString());
-                }
+                url.searchParams.set(key, value instanceof Array ? value.join(',') : value.toString());
             }
 
             buildUrl = url.toString();
@@ -61,11 +59,11 @@ export enum ModelUpdateType {
     CODE_AND_MODEL
 }
 
-export const isCodeUpdateRequired = (codeResourcesPrevious: CodeResources, codeResources: CodeResources) => {
-    const a = evaluateCodeUpdate(codeResourcesPrevious.main);
-    const b = evaluateCodeUpdate(codeResources.main);
-    const c = evaluateCodeUpdate(codeResourcesPrevious.original);
-    const d = evaluateCodeUpdate(codeResources.original);
+export const isCodeUpdateRequired = (codeResourcesPrevious?: CodeResources, codeResources?: CodeResources) => {
+    const a = evaluateCodeUpdate(codeResourcesPrevious?.main);
+    const b = evaluateCodeUpdate(codeResources?.main);
+    const c = evaluateCodeUpdate(codeResourcesPrevious?.original);
+    const d = evaluateCodeUpdate(codeResources?.original);
     return a !== b || c !== d ? ModelUpdateType.CODE : ModelUpdateType.NONE;
 };
 
@@ -73,14 +71,14 @@ export const evaluateCodeUpdate = (code?: CodePlusUri | CodePlusFileExt) => {
     return code && Object.hasOwn(code, 'text') ? code.text : undefined;
 };
 
-export const isModelUpdateRequired = (codeResourcesPrevious: CodeResources, codeResources: CodeResources): ModelUpdateType => {
+export const isModelUpdateRequired = (codeResourcesPrevious?: CodeResources, codeResources?: CodeResources): ModelUpdateType => {
     const codeUpdateType = isCodeUpdateRequired(codeResourcesPrevious, codeResources);
     const codeChanged = codeUpdateType === ModelUpdateType.CODE;
 
-    const a = evaluateCodeModel(codeResourcesPrevious.main);
-    const b = evaluateCodeModel(codeResources.main);
-    const c = evaluateCodeModel(codeResourcesPrevious.original);
-    const d = evaluateCodeModel(codeResources.original);
+    const a = evaluateCodeModel(codeResourcesPrevious?.main);
+    const b = evaluateCodeModel(codeResources?.main);
+    const c = evaluateCodeModel(codeResourcesPrevious?.original);
+    const d = evaluateCodeModel(codeResources?.original);
     const modelChanged = a !== b || c !== d;
 
     return (modelChanged && codeChanged) ? ModelUpdateType.CODE_AND_MODEL : (modelChanged ? ModelUpdateType.MODEL : (codeChanged ? ModelUpdateType.CODE : ModelUpdateType.NONE));

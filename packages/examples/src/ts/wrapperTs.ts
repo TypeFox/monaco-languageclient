@@ -120,7 +120,9 @@ export const runTsWrapper = async () => {
             }
         });
         document.querySelector('#button-diff')?.addEventListener('click', async () => {
-            userConfig.wrapperConfig.editorAppConfig.useDiffEditor = !userConfig.wrapperConfig.editorAppConfig.useDiffEditor;
+            // ensure it is boolean value and not undefined
+            const useDiffEditor = userConfig.wrapperConfig.editorAppConfig.useDiffEditor ?? false;
+            userConfig.wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
             await wrapper.dispose();
             await wrapper.initAndStart(userConfig, htmlElement);
         });

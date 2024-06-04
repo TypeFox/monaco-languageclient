@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { UserConfig, EditorAppType, EditorAppExtended, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { UserConfig, EditorAppType, EditorAppExtended, MonacoEditorLanguageClientWrapper, EditorAppClassic } from 'monaco-editor-wrapper';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -39,6 +39,10 @@ export const createEditorAppConfig = (type: EditorAppType) => {
 export const updateExtendedAppPrototyp = async () => {
     EditorAppExtended.prototype.specifyServices = async () => {
         console.log('Using overriden EditorAppExtended.prototype.specifyServices');
+        return Promise.resolve({});
+    };
+    EditorAppClassic.prototype.specifyServices = async () => {
+        console.log('Using overriden EditorAppClassic.prototype.specifyServices');
         return Promise.resolve({});
     };
 };

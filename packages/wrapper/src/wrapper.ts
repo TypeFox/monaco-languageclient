@@ -37,8 +37,8 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
-        if (editorAppConfig.useDiffEditor && !editorAppConfig.codeResources.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources.main} codeOriginal: ${editorAppConfig.codeResources.original}`);
+        if ((editorAppConfig.useDiffEditor ?? false) && !editorAppConfig.codeResources?.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
         }
 
         // Always dispose old instances before start
@@ -53,7 +53,7 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         // editorApps init their own service thats why they have to be created first
-        const specificServices = await this.editorApp?.specifyServices();
+        const specificServices = await this.editorApp.specifyServices();
         const serviceConfig = await configureServices({
             serviceConfig: userConfig.wrapperConfig.serviceConfig,
             specificServices,
@@ -100,8 +100,8 @@ export class MonacoEditorLanguageClientWrapper {
         await this.editorApp?.init();
         await this.editorApp?.createEditors(htmlElement);
 
-        if (this.languageClientWrapper?.haveLanguageClientConfig()) {
-            await this.languageClientWrapper.start();
+        if (this.languageClientWrapper?.haveLanguageClientConfig() ?? false) {
+            await this.languageClientWrapper?.start();
         }
     }
 
@@ -111,12 +111,12 @@ export class MonacoEditorLanguageClientWrapper {
 
     isStarted(): boolean {
         // fast-fail
-        if (!this.editorApp?.haveEditor()) {
+        if (!(this.editorApp?.haveEditor() ?? false)) {
             return false;
         }
 
-        if (this.languageClientWrapper?.haveLanguageClient()) {
-            return this.languageClientWrapper.isStarted();
+        if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
+            return this.languageClientWrapper?.isStarted() ?? false;
         }
         return true;
     }
@@ -157,7 +157,7 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getWorker();
     }
 
-    async updateCodeResources(codeResources: CodeResources): Promise<void> {
+    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 
@@ -179,8 +179,8 @@ export class MonacoEditorLanguageClientWrapper {
     async dispose(): Promise<void> {
         this.editorApp?.disposeApp();
 
-        if (this.languageClientWrapper?.haveLanguageClient()) {
-            await this.languageClientWrapper.disposeLanguageClient(false);
+        if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
+            await this.languageClientWrapper?.disposeLanguageClient(false);
             this.editorApp = undefined;
             await Promise.resolve('Monaco editor and languageclient completed disposed.');
         }
@@ -206,10 +206,10 @@ export class MonacoEditorLanguageClientWrapper {
         const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
 
         // check if both are configs and the workers are both undefined
-        if (prevIsWorkerConfig && prevIsWorker === undefined && currentIsWorkerConfig && currentIsWorker === undefined) {
+        if (prevIsWorkerConfig && !prevIsWorker && currentIsWorkerConfig && !currentIsWorker) {
             mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
             // check if both are workers and configs are both undefined
-        } else if (prevIsWorkerConfig === undefined && prevIsWorker && currentIsWorkerConfig === undefined && currentIsWorker) {
+        } else if (!prevIsWorkerConfig && prevIsWorker && !currentIsWorkerConfig && currentIsWorker) {
             mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
             // previous was worker and current config is not or the other way around
         } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {

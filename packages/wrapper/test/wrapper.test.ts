@@ -93,8 +93,12 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfig = createBaseConfig('classic');
-        userConfig.wrapperConfig.editorAppConfig.codeResources.main = undefined;
-        userConfig.wrapperConfig.editorAppConfig.codeResources.original = {
+        let codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+        if (!codeResources) {
+            codeResources = {};
+        }
+        codeResources.main = undefined;
+        codeResources.original = {
             text: 'original',
             fileExt: 'js'
         };
@@ -111,7 +115,11 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfig = createBaseConfig('classic');
-        userConfig.wrapperConfig.editorAppConfig.codeResources.original = {
+        let codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+        if (!codeResources) {
+            codeResources = {};
+        }
+        codeResources.original = {
             text: 'original',
             fileExt: 'js'
         };

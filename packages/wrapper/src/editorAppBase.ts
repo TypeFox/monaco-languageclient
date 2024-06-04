@@ -32,8 +32,8 @@ export type EditorAppType = 'extended' | 'classic';
 
 export type EditorAppConfigBase = {
     $type: EditorAppType;
-    codeResources: CodeResources;
-    useDiffEditor: boolean;
+    codeResources?: CodeResources;
+    useDiffEditor?: boolean;
     domReadOnly?: boolean;
     readOnly?: boolean;
     awaitExtensionReadiness?: Array<() => Promise<void>>;
@@ -79,7 +79,7 @@ export abstract class EditorAppBase {
         const config: EditorAppConfigBase = {
             $type: userAppConfig.$type,
             codeResources: userAppConfig.codeResources,
-            useDiffEditor: userAppConfig.useDiffEditor === true,
+            useDiffEditor: userAppConfig.useDiffEditor ?? false,
             readOnly: userAppConfig.readOnly ?? false,
             domReadOnly: userAppConfig.domReadOnly ?? false,
             overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true,
@@ -109,7 +109,7 @@ export abstract class EditorAppBase {
     }
 
     async createEditors(container: HTMLElement): Promise<void> {
-        if (this.getConfig().useDiffEditor) {
+        if (this.getConfig().useDiffEditor ?? false) {
             this.diffEditor = monaco.editor.createDiffEditor(container, this.getConfig().diffEditorOptions);
         } else {
             this.editor = monaco.editor.create(container, this.getConfig().editorOptions);
@@ -148,7 +148,7 @@ export abstract class EditorAppBase {
         };
     }
 
-    async updateCodeResources(codeResources: CodeResources): Promise<void> {
+    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
         if (!this.editor && !this.diffEditor) {
             return Promise.reject(new Error('You cannot update the code resources as neither editor or diff editor is available.'));
         }
@@ -160,10 +160,10 @@ export abstract class EditorAppBase {
 
         if (modelUpdateType === ModelUpdateType.CODE) {
             if (this.editor) {
-                this.editor.setValue(codeResources.main?.text ?? '');
+                this.editor.setValue(codeResources?.main?.text ?? '');
             } else {
-                this.diffEditor?.getModifiedEditor().setValue(codeResources.main?.text ?? '');
-                this.diffEditor?.getOriginalEditor().setValue(codeResources.original?.text ?? '');
+                this.diffEditor?.getModifiedEditor().setValue(codeResources?.main?.text ?? '');
+                this.diffEditor?.getOriginalEditor().setValue(codeResources?.original?.text ?? '');
             }
         } else if (modelUpdateType === ModelUpdateType.MODEL || modelUpdateType === ModelUpdateType.CODE_AND_MODEL) {
             const modelRefs = await this.buildModelRefs(codeResources);
@@ -171,9 +171,9 @@ export abstract class EditorAppBase {
         }
     }
 
-    async buildModelRefs(codeResources: CodeResources): Promise<ModelRefs> {
-        const modelRef = await this.buildModelRef(codeResources.main);
-        const modelRefOriginal = await this.buildModelRef(codeResources.original);
+    async buildModelRefs(codeResources?: CodeResources): Promise<ModelRefs> {
+        const modelRef = await this.buildModelRef(codeResources?.main);
+        const modelRefOriginal = await this.buildModelRef(codeResources?.original);
 
         return {
             modelRef,
@@ -184,11 +184,9 @@ export abstract class EditorAppBase {
     private async buildModelRef(code?: CodePlusUri | CodePlusFileExt): Promise<IReference<ITextFileEditorModel> | undefined> {
         if (code) {
             const uri = getEditorUri(this.id, false, code);
-            if (uri) {
-                const modelRef = await createModelReference(uri, code?.text);
-                this.checkEnforceLanguageId(modelRef, code.enforceLanguageId);
-                return modelRef;
-            }
+            const modelRef = await createModelReference(uri, code.text);
+            this.checkEnforceLanguageId(modelRef, code.enforceLanguageId);
+            return modelRef;
         }
         return undefined;
     }
@@ -230,20 +228,26 @@ export abstract class EditorAppBase {
     }
 
     private checkEnforceLanguageId(modelRef: IReference<ITextFileEditorModel>, enforceLanguageId?: string) {
-        if (enforceLanguageId && modelRef) {
-            modelRef?.object.setLanguageId(enforceLanguageId);
+        if (enforceLanguageId !== undefined) {
+            modelRef.object.setLanguageId(enforceLanguageId);
             this.logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
         }
     }
 
-    private updateCodeResourcesConfig(codeResources: CodeResources) {
+    private updateCodeResourcesConfig(codeResources?: CodeResources) {
         const config = this.getConfig();
-        config.codeResources.main = codeResources.main;
-        config.codeResources.original = codeResources.original;
+        // reset first, if the passed resources are empty, then the new resources will be empty as well
+        config.codeResources = {};
+        if (codeResources?.main) {
+            config.codeResources.main = codeResources.main;
+        }
+        if (codeResources?.original) {
+            config.codeResources.original = codeResources.original;
+        }
     }
 
     updateLayout() {
-        if (this.getConfig().useDiffEditor) {
+        if (this.getConfig().useDiffEditor ?? false) {
             this.diffEditor?.layout();
         } else {
             this.editor?.layout();
@@ -266,7 +270,7 @@ export abstract class EditorAppBase {
     }
 
     async updateUserConfiguration(json?: string) {
-        if (json) {
+        if (json !== undefined) {
             return vscodeUpdateUserConfiguration(json);
         }
         return Promise.resolve();

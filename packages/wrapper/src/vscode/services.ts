@@ -22,22 +22,21 @@ export type VscodeServicesConfig = {
 export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
     const serviceConfig = config.serviceConfig ?? {};
     // configure log level
-    serviceConfig.debugLogging = config.logger?.isEnabled() === true && (serviceConfig.debugLogging === true || config.logger?.isDebugEnabled() === true);
+    serviceConfig.debugLogging = config.logger?.isEnabled() === true && (serviceConfig.debugLogging === true || config.logger.isDebugEnabled() === true);
 
     // always set required services if not configured
     serviceConfig.userServices = serviceConfig.userServices ?? {};
     const configureService = serviceConfig.userServices.configurationService ?? undefined;
     const workspaceConfig = serviceConfig.workspaceConfig ?? undefined;
 
-    if (!configureService) {
+    if (configureService === undefined) {
+        if (workspaceConfig) {
+            throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
+        }
         const mlcDefautServices = {
             ...getConfigurationServiceOverride()
         };
         mergeServices(mlcDefautServices, serviceConfig.userServices);
-
-        if (workspaceConfig) {
-            throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
-        }
     }
 
     // adding the default workspace config if not provided
