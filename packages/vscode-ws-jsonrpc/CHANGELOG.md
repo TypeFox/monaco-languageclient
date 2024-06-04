@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.3.2] - 2024-06-04
+
+- Updated to `vscode-jsonrpc@8.2.1`
+- Minor code adjustments to eslint rule expansions
+
 ## [3.3.1] - 2024-04-10
 
 - Correction of README and unification of copyright statements.

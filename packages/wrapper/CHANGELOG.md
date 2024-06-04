@@ -2,9 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [5.2.0] - 2024-05-2x
+## [5.2.0] - 2024-06-04
 
-- Updated to `monaco-languageclient@8.5.0` and version `5.2.0` of `@codingame/monaco-vscode` packages
+- Updated to `monaco-languageclient@8.5.0`, `vscode-ws-jsonrpc@3.3.2` and version `5.2.0` of `@codingame/monaco-vscode` packages
+- Wrapper: Make codeResources and useDiffEditor optional in EditorAppConfig [#670](https://github.com/TypeFox/monaco-languageclient/pull/670)
+  - Additional code adjustments to eslint rule expansion
+- chore: localeLoader: allow manually select which locale to load [#669](https://github.com/TypeFox/monaco-languageclient/pull/669)
 
 ## [5.1.2] - 2024-05-17
 

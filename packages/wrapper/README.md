@@ -58,8 +58,12 @@ const run = async () => {
     wrapperConfig: {
       editorAppConfig: {
         $type: 'extendend',
-        languageId: 'python',
-        code: 'print("Hello, World!")'
+        codeResources: {
+          main: {
+            text: 'print("Hello, World!")',
+            uri: '/workspace/hello.py'
+          }
+        }
       }
     }
   };
