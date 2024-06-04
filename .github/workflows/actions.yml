@@ -18,8 +18,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Volta
       uses: volta-cli/action@v4
+
     - name: Use pnpm
       uses: pnpm/action-setup@v3
       with:
@@ -30,17 +32,17 @@ jobs:
       run: |
         npm ci
 
-    - name: Lint
-      shell: bash
-      run: |
-        npm run report:versions
-        npm run lint
-
     - name: Build
       shell: bash
       run: |
         npm run report:versions
         npm run build
+
+    - name: Lint
+      shell: bash
+      run: |
+        npm run report:versions
+        npm run lint
 
     - name: Test
       shell: bash
