@@ -20,7 +20,7 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     protected readonly connectionProvider: IConnectionProvider;
 
     constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClientOptions) {
-        super((id ?? 'unknown-id') || name.toLowerCase(), name, clientOptions);
+        super(id ?? name.toLowerCase(), name, clientOptions);
         this.connectionProvider = connectionProvider;
     }
 

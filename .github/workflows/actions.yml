@@ -35,16 +35,19 @@ jobs:
     - name: Lint
       shell: bash
       run: |
+        npm run report:versions
         npm run lint
 
     - name: Build
       shell: bash
       run: |
+        npm run report:versions
         npm run build
 
     - name: Test
       shell: bash
       run: |
+        npm run report:versions
         npm run test:run
 
     - name: Build production
