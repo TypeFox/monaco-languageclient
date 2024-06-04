@@ -31,6 +31,10 @@
     "./vscode/services": {
       "types": "./lib/vscode/services.d.ts",
       "default": "./lib/vscode/services.js"
+    },
+    "./vscode/locale": {
+      "types": "./lib/vscode/localeLoader.d.ts",
+      "default": "./lib/vscode/localeLoader.js"
     }
   },
   "typesVersions": {
@@ -43,6 +47,9 @@
       ],
       "vscode/services": [
         "lib/vscode/services"
+      ],
+      "vscode/locale": [
+        "lib/vscode/localeLoader"
       ]
     }
   },
@@ -63,6 +70,20 @@
   ],
   "dependencies": {
     "@codingame/monaco-vscode-extensions-service-override": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-cs": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-de": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-es": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-fr": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-it": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-ja": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-ko": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-pl": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-pt-br": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-qps-ploc": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-ru": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-tr": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-zh-hans": "~5.2.0",
+    "@codingame/monaco-vscode-language-pack-zh-hant": "~5.2.0",
     "@codingame/monaco-vscode-languages-service-override": "~5.2.0",
     "@codingame/monaco-vscode-localization-service-override": "~5.2.0",
     "@codingame/monaco-vscode-model-service-override": "~5.2.0",
