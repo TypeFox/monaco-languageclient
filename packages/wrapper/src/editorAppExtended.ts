@@ -48,6 +48,7 @@ export class EditorAppExtended extends EditorAppBase {
 
     private config: EditorAppConfigExtended;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
+    private subscriptions: monaco.IDisposable[] = [];
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
         super(id);
@@ -90,7 +91,8 @@ export class EditorAppExtended extends EditorAppBase {
                 this.extensionRegisterResults.set(manifest.name, extRegResult);
                 if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                     for (const entry of extensionConfig.filesOrContents) {
-                        (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
+                        const registerFileUrlResult = (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
+                        this.subscriptions.push(registerFileUrlResult);
                     }
                 }
                 allPromises.push(extRegResult.whenReady());
@@ -106,6 +108,8 @@ export class EditorAppExtended extends EditorAppBase {
     disposeApp(): void {
         this.disposeEditors();
         this.extensionRegisterResults.forEach((k) => k?.dispose());
+        this.subscriptions.forEach((k) => k.dispose());
+        this.subscriptions.length = 0;
     }
 
     isAppConfigDifferent(orgConfig: EditorAppConfigExtended, config: EditorAppConfigExtended, includeModelData: boolean): boolean {
