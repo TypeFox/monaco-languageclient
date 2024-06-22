@@ -10,7 +10,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 
 describe('Test MonacoEditorReactComp', () => {
-    test('test rerender', async () => {
+    test('rerender', async () => {
         const userConfig: UserConfig = {
             wrapperConfig: {
                 editorAppConfig: {
