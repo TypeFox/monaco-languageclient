@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
-import { EditorAppClassic, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createBaseConfig, createMonacoEditorDiv } from './helper.js';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
@@ -164,5 +164,37 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const modelRefs = app?.getModelRefs();
         expect(modelRefs?.modelRef).toBeDefined();
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
+    });
+
+    test('extended editor disposes extensions', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('extended');
+        (userConfig.wrapperConfig.editorAppConfig as EditorAppConfigExtended).extensions = [{
+            config: {
+                engines: {
+                    vscode: '*'
+                },
+                contributes: {
+                    languages: [{
+                        id: 'js',
+                        extensions: ['.js'],
+                        configuration: './language-configuration.json'
+                    }],
+                    grammars: [{
+                        language: 'js',
+                        scopeName: 'source.js',
+                        path: './javascript.tmLanguage.json'
+                    }]
+                }
+            },
+            filesOrContents: new Map([
+                ['/language-configuration.json', '{}'],
+                ['/javascript.tmLanguage.json', '{}']
+            ]),
+        }];
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.dispose();
+        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
     });
 });
