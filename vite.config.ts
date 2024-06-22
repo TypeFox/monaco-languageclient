@@ -9,6 +9,7 @@ import * as path from 'path';
 // import * as fs from 'fs';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
+import react from '@vitejs/plugin-react';
 
 const viteConfig = defineViteConfig({
     build: {
@@ -59,7 +60,8 @@ const viteConfig = defineViteConfig({
         }
     },
     plugins: [
-        vsixPlugin()
+        vsixPlugin(),
+        react(),
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname)
