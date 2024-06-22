@@ -30,7 +30,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private logger: Logger = new Logger();
     private containerElement?: HTMLDivElement;
-    private _subscriptions: monaco.IDisposable[] = [];
+    private onTextChangedSubscriptions: monaco.IDisposable[] = [];
     private isRestarting?: Promise<void>;
     private started: (value: void | PromiseLike<void>) => void;
 
@@ -69,6 +69,10 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
                 if (prevConfig.editorOptions !== config.editorOptions) {
                     (wrapper.getMonacoEditorApp() as EditorAppClassic).updateMonacoEditorOptions(config.editorOptions ?? {});
                 }
+            }
+
+            if (prevProps.onTextChanged !== this.props.onTextChanged) {
+                this.handleOnTextChanged();
             }
         }
     }
@@ -127,10 +131,7 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
                 // This should not prevent us from continue working.
             }
         }
-        for (const subscription of this._subscriptions) {
-            subscription.dispose();
-        }
-        this._subscriptions = [];
+        this.disposeOnTextChanged();
     }
 
     protected async initMonaco() {
@@ -171,7 +172,16 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         }
     }
 
+    private disposeOnTextChanged() {
+        for (const subscription of this.onTextChangedSubscriptions) {
+            subscription.dispose();
+        }
+        this.onTextChangedSubscriptions = [];
+    }
+
     private handleOnTextChanged() {
+        this.disposeOnTextChanged();
+
         const {
             userConfig,
             onTextChanged
@@ -195,13 +205,13 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             };
 
             if (textModels.text) {
-                this._subscriptions.push(textModels.text.onDidChangeContent(() => {
+                this.onTextChangedSubscriptions.push(textModels.text.onDidChangeContent(() => {
                     verifyModelContent();
                 }));
             }
 
             if (textModels.textOriginal) {
-                this._subscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
+                this.onTextChangedSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
                     verifyModelContent();
                 }));
             }
