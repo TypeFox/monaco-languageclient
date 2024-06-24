@@ -10,6 +10,7 @@ import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode
 import { Logger } from 'monaco-languageclient/tools';
 import { UserConfig } from './userConfig.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
+import { DisposableCollection } from 'vscode-ws-jsonrpc';
 
 export type ExtensionConfig = {
     config: IExtensionManifest | object;
@@ -48,7 +49,7 @@ export class EditorAppExtended extends EditorAppBase {
 
     private config: EditorAppConfigExtended;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
-    private subscriptions: monaco.IDisposable[] = [];
+    private subscriptions: DisposableCollection = new DisposableCollection();
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
         super(id);
@@ -108,8 +109,7 @@ export class EditorAppExtended extends EditorAppBase {
     disposeApp(): void {
         this.disposeEditors();
         this.extensionRegisterResults.forEach((k) => k?.dispose());
-        this.subscriptions.forEach((k) => k.dispose());
-        this.subscriptions.length = 0;
+        this.subscriptions.dispose();
     }
 
     isAppConfigDifferent(orgConfig: EditorAppConfigExtended, config: EditorAppConfigExtended, includeModelData: boolean): boolean {
