@@ -10,7 +10,7 @@ import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode
 import { Logger } from 'monaco-languageclient/tools';
 import { UserConfig } from './userConfig.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
-import { DisposableCollection } from 'vscode-ws-jsonrpc';
+import { DisposableStore } from 'vscode/monaco';
 
 export type ExtensionConfig = {
     config: IExtensionManifest | object;
@@ -49,7 +49,7 @@ export class EditorAppExtended extends EditorAppBase {
 
     private config: EditorAppConfigExtended;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
-    private subscriptions: DisposableCollection = new DisposableCollection();
+    private subscriptions: DisposableStore = new DisposableStore();
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
         super(id);
@@ -93,7 +93,7 @@ export class EditorAppExtended extends EditorAppBase {
                 if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                     for (const entry of extensionConfig.filesOrContents) {
                         const registerFileUrlResult = (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
-                        this.subscriptions.push(registerFileUrlResult);
+                        this.subscriptions.add(registerFileUrlResult);
                     }
                 }
                 allPromises.push(extRegResult.whenReady());
