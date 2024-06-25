@@ -10,6 +10,7 @@ import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode
 import { Logger } from 'monaco-languageclient/tools';
 import { UserConfig } from './userConfig.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
+import { DisposableStore } from 'vscode/monaco';
 
 export type ExtensionConfig = {
     config: IExtensionManifest | object;
@@ -48,6 +49,7 @@ export class EditorAppExtended extends EditorAppBase {
 
     private config: EditorAppConfigExtended;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
+    private subscriptions: DisposableStore = new DisposableStore();
 
     constructor(id: string, userConfig: UserConfig, logger?: Logger) {
         super(id);
@@ -90,7 +92,8 @@ export class EditorAppExtended extends EditorAppBase {
                 this.extensionRegisterResults.set(manifest.name, extRegResult);
                 if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                     for (const entry of extensionConfig.filesOrContents) {
-                        (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
+                        const registerFileUrlResult = (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
+                        this.subscriptions.add(registerFileUrlResult);
                     }
                 }
                 allPromises.push(extRegResult.whenReady());
@@ -106,6 +109,7 @@ export class EditorAppExtended extends EditorAppBase {
     disposeApp(): void {
         this.disposeEditors();
         this.extensionRegisterResults.forEach((k) => k?.dispose());
+        this.subscriptions.dispose();
     }
 
     isAppConfigDifferent(orgConfig: EditorAppConfigExtended, config: EditorAppConfigExtended, includeModelData: boolean): boolean {
