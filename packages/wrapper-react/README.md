@@ -10,7 +10,7 @@ All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-langu
 
 ## Getting Started
 
-This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient). Please follow the main repositories [instructions](https://github.com/TypeFox/monaco-languageclient#getting-started) to get started with local development.
 
 ## Usage
 
