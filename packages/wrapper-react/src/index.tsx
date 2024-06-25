@@ -49,6 +49,9 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
     override async componentDidUpdate(prevProps: T) {
         this.logger.debug('Called: componentDidUpdate');
+
+        await this.isRestarting;
+
         const { userConfig } = this.props;
         const { wrapper } = this;
 
