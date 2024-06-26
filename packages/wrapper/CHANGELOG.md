@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [5.3.0] - 2024-06-2x
+
+- Updated to `monaco-languageclient@8.6.0`, `6.0.3` of `@codingame/monaco-vscode` packages
+
 ## [5.2.0] - 2024-06-04
 
 - Updated to `monaco-languageclient@8.5.0`, `vscode-ws-jsonrpc@3.3.2` and version `5.2.0` of `@codingame/monaco-vscode` packages

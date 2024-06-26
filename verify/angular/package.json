@@ -20,10 +20,10 @@
     "@angular/core": "~17.2.4",
     "@angular/platform-browser": "~17.2.4",
     "@angular/platform-browser-dynamic": "~17.2.4",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~5.2.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~6.0.3",
     "monaco-editor-wrapper": "../../packages/wrapper",
     "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-api@~5.2.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~6.0.3",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.4"
   },
