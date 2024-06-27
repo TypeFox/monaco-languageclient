@@ -8,9 +8,11 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
+import { updateExtendedAppPrototyp } from './helper';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
+        updateExtendedAppPrototyp();
         const userConfig: UserConfig = {
             wrapperConfig: {
                 editorAppConfig: {
@@ -29,6 +31,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update onTextChanged', async () => {
+        updateExtendedAppPrototyp();
         const userConfig: UserConfig = {
             wrapperConfig: {
                 editorAppConfig: {
