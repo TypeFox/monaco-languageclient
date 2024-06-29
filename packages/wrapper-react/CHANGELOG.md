@@ -2,9 +2,13 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [4.3.0] - 2024-06-2x
+## [4.3.0] - 2024-06-29
 
-- Updated to `monaco-editor-wrapper@5.3.0`, `monaco-languageclient@8.6.0` and version `6.0.3` of `@codingame/monaco-vscode` packages
+- Update to latest monaco-vscode-api [#691](https://github.com/TypeFox/monaco-languageclient/pull/691)
+  - Updated to `monaco-editor-wrapper@5.3.0`, `monaco-languageclient@8.6.0` and version `6.0.3` of `@codingame/monaco-vscode` packages
+- Update onTextChanged in MonacoEditorReactComp [#684](https://github.com/TypeFox/monaco-languageclient/pull/684)
+- Wait for Monaco to initialize when MonacoEditorReactComp props are updated [#682](https://github.com/TypeFox/monaco-languageclient/pull/682)
+- Dispose extension files in EditorAppExtended [#680](https://github.com/TypeFox/monaco-languageclient/pull/680)
 
 ## [4.2.0] - 2024-06-04
 

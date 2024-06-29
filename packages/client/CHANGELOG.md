@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [8.6.0] - 2024-06-2x
+## [8.6.0] - 2024-06-29
 
-- Updated to version `6.0.3` of `@codingame/monaco-vscode` packages
+- Update to latest monaco-vscode-api [#691](https://github.com/TypeFox/monaco-languageclient/pull/691)
+  - Updated to version `6.0.3` of `@codingame/monaco-vscode` packages
 
 ## [8.5.0] - 2024-05-2x
 

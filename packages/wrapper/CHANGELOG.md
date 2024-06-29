@@ -2,9 +2,11 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [5.3.0] - 2024-06-2x
+## [5.3.0] - 2024-06-29
 
-- Updated to `monaco-languageclient@8.6.0`, `6.0.3` of `@codingame/monaco-vscode` packages
+- Update to latest monaco-vscode-api [#691](https://github.com/TypeFox/monaco-languageclient/pull/691)
+  - Updated to `monaco-languageclient@8.6.0`, `6.0.3` of `@codingame/monaco-vscode` packages
+- Dispose extension files in EditorAppExtended [#680](https://github.com/TypeFox/monaco-languageclient/pull/680)
 
 ## [5.2.0] - 2024-06-04
 
