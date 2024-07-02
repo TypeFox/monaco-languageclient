@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import * as monaco from 'monaco-editor';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
@@ -32,22 +31,6 @@ export const runTsWrapper = async () => {
     return "Goodbye";
 };`;
 
-    const monacoEditorConfig = {
-        glyphMargin: true,
-        guides: {
-            bracketPairs: true
-        },
-        lightbulb: {
-            enabled: monaco.editor.ShowLightbulbIconMode.On
-        },
-        theme: 'vs-dark'
-    };
-
-    const monacoDiffEditorConfig = {
-        ...monacoEditorConfig,
-        renderSideBySide: false
-    };
-
     const userConfig: UserConfig = {
         wrapperConfig: {
             serviceConfig: {
@@ -70,8 +53,16 @@ export const runTsWrapper = async () => {
                     }
                 },
                 useDiffEditor: false,
-                editorOptions: monacoEditorConfig,
-                diffEditorOptions: monacoDiffEditorConfig
+                userConfiguration: {
+                    json: JSON.stringify({
+                        'workbench.colorTheme': 'Default Dark Modern',
+                        'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
+                        'diffEditor.renderSideBySide': false,
+                        'editor.lightbulb.enabled': 'on',
+                        'editor.glyphMargin': true,
+                        'editor.guides.bracketPairsHorizontal': true
+                    })
+                }
             }
         }
     };
