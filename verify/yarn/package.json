@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@typefox/monaco-editor-react": "~4.3.0",
+    "@typefox/monaco-editor-react": "~4.3.1",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~6.0.3",
     "monaco-editor-wrapper": "~5.3.0",
     "monaco-languageclient-examples": "~2024.6.2",

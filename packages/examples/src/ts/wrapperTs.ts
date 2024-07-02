@@ -56,6 +56,7 @@ export const runTsWrapper = async () => {
                 userConfiguration: {
                     json: JSON.stringify({
                         'workbench.colorTheme': 'Default Dark Modern',
+                        'typescript.tsserver.web.projectWideIntellisense.enabled': true,
                         'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
                         'diffEditor.renderSideBySide': false,
                         'editor.lightbulb.enabled': 'on',
