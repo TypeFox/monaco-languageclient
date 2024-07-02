@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [5.3.1] - 2024-07-02
+
+- Fix Diff Editor Model Refs [#696](https://github.com/TypeFox/monaco-languageclient/pull/696)
+
 ## [5.3.0] - 2024-06-29
 
 - Update to latest monaco-vscode-api [#691](https://github.com/TypeFox/monaco-languageclient/pull/691)

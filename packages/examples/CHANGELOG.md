@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.7.2] - 2024-07-02
+
+- Updated to `monaco-editor-wrapper@5.3.1` and `@typefox/monaco-editor-react@4.3.2`.
+
 ## [2024.7.1] - 2024-07-02
 
 - Updated to `@typefox/monaco-editor-react@4.3.1`.
