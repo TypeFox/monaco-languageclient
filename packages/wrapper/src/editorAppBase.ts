@@ -172,8 +172,8 @@ export abstract class EditorAppBase {
     }
 
     async buildModelRefs(codeResources?: CodeResources): Promise<ModelRefs> {
-        const modelRef = await this.buildModelRef(codeResources?.main);
-        const modelRefOriginal = await this.buildModelRef(codeResources?.original);
+        const modelRef = await this.buildModelRef(codeResources?.main, false);
+        const modelRefOriginal = await this.buildModelRef(codeResources?.original, true);
 
         return {
             modelRef,
@@ -181,9 +181,9 @@ export abstract class EditorAppBase {
         };
     }
 
-    private async buildModelRef(code?: CodePlusUri | CodePlusFileExt): Promise<IReference<ITextFileEditorModel> | undefined> {
+    private async buildModelRef(code?: CodePlusUri | CodePlusFileExt, original?: boolean): Promise<IReference<ITextFileEditorModel> | undefined> {
         if (code) {
-            const uri = getEditorUri(this.id, false, code);
+            const uri = getEditorUri(this.id, original ?? false, code);
             const modelRef = await createModelReference(uri, code.text);
             this.checkEnforceLanguageId(modelRef, code.enforceLanguageId);
             return modelRef;

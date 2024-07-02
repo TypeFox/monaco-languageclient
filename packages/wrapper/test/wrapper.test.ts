@@ -129,6 +129,13 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const modelRefs = app?.getModelRefs();
         expect(modelRefs?.modelRef).toBeDefined();
         expect(modelRefs?.modelRefOriginal).toBeDefined();
+
+        const name = modelRefs?.modelRef?.object.name;
+        const nameOriginal = modelRefs?.modelRefOriginal?.object.name;
+        expect(name).toBeDefined();
+        expect(nameOriginal).toBeDefined();
+        expect(name).not.toEqual(nameOriginal);
+
         app?.disposeApp();
     });
 
