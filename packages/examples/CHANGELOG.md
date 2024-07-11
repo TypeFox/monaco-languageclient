@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.7.3] - 2024-07-1x
+
+- Update to latest monaco-vscode-api [#7xx](https://github.com/TypeFox/monaco-languageclient/pull/7xx)
+  - Updated to `monaco-languageclient@8.7.0`, `monaco-editor-wrapper@5.4.0` and `@typefox/monaco-editor-react@4.4.0`. Updated all `@codingame/monaco-vscode` packages to `7.0.3`.
+
 ## [2024.7.2] - 2024-07-02
 
 - Updated to `monaco-editor-wrapper@5.3.1` and `@typefox/monaco-editor-react@4.3.2`.

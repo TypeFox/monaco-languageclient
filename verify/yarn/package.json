@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@typefox/monaco-editor-react": "~4.3.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~6.0.3",
-    "monaco-editor-wrapper": "~5.3.1",
-    "monaco-languageclient-examples": "~2024.7.2",
-    "vscode": "npm:@codingame/monaco-vscode-api@~6.0.3",
+    "@typefox/monaco-editor-react": "~4.4.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.3",
+    "monaco-editor-wrapper": "~5.4.0",
+    "monaco-languageclient-examples": "~2024.7.3",
+    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.3",
     "vscode-ws-jsonrpc": "~3.3.2"
   },
   "devDependencies": {
