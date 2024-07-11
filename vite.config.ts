@@ -84,6 +84,7 @@ const vitestConfig = defineVitestConfig({
             enabled: true,
             headless: true,
             name: 'chrome',
+            provider: 'webdriverio',
             api: {
                 port: 20101
             }
