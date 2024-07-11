@@ -4,13 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { LanguageClientConfig, LanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createBaseConfig, createWorkerFromFunction, createAndInitWrapper } from './helper.js';
+import { LanguageClientConfig, LanguageClientWrapper, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { createBaseConfig, createWorkerFromFunction } from './helper.js';
 
 describe('Test LanguageClientWrapper', () => {
 
     test('Not defined after construction without configuration', async () => {
-        const wrapper = await createAndInitWrapper(createBaseConfig('extended'));
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(createBaseConfig('extended'));
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper();
         expect(languageClientWrapper).toBeUndefined();
@@ -53,7 +54,8 @@ describe('Test LanguageClientWrapper', () => {
                 worker
             }
         };
-        const wrapper = await createAndInitWrapper(config);
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(config);
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper();
         expect(languageClientWrapper).toBeDefined();
@@ -76,7 +78,8 @@ describe('Test LanguageClientWrapper', () => {
                 url: 'ws://localhost:12345/Tester'
             }
         };
-        const wrapper = await createAndInitWrapper(config);
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(config);
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper();
         expect(languageClientWrapper).toBeDefined();
@@ -94,7 +97,8 @@ describe('Test LanguageClientWrapper', () => {
                 url: 'ws://localhost:12345/Tester'
             }
         };
-        const wrapper = await createAndInitWrapper(config);
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(config);
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper();
         expect(languageClientWrapper).toBeDefined();
@@ -128,7 +132,8 @@ describe('Test LanguageClientWrapper', () => {
                 type: 'classic'
             }
         };
-        const wrapper = await createAndInitWrapper(config);
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(config);
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper();
         expect(languageClientWrapper).toBeDefined();

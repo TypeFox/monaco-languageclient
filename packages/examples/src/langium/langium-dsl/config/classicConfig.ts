@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Uri } from 'vscode';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
@@ -27,18 +26,7 @@ export const setupLangiumClientClassic = async (): Promise<UserConfig> => {
                     ...getEditorServiceOverride(useOpenEditorStub),
                     ...getKeybindingsServiceOverride()
                 },
-                debugLogging: true,
-                workspaceConfig: {
-                    workspaceProvider: {
-                        trusted: true,
-                        workspace: {
-                            workspaceUri: Uri.file('/workspace')
-                        },
-                        async open() {
-                            return false;
-                        }
-                    }
-                }
+                debugLogging: true
             },
             editorAppConfig: {
                 $type: 'classic',

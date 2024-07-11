@@ -48,7 +48,8 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
                     workspaceUri: vscode.Uri.file('/workspace')
                 },
                 async open() {
-                    return false;
+                    window.open(window.location.href);
+                    return true;
                 }
             }
         };
