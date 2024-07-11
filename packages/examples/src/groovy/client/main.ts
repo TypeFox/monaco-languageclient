@@ -20,7 +20,7 @@ export const configureMonacoWorkers = () => {
 };
 
 const code = `package test.org;
-import java.io.File ;
+import java.io.File;
 File file = new File("E:/Example.txt");
 `;
 
