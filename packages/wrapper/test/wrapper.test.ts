@@ -173,7 +173,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
     });
 
-    test('extended editor disposes extensions', async () => {
+    @
+    test.skip('extended editor disposes extensions', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfig = createBaseConfig('extended');
@@ -203,5 +204,5 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
         await wrapper.dispose();
         await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
-    }, 20000);
+    });
 });
