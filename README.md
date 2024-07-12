@@ -28,6 +28,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
         - [JSON Language Server](#json-language-server)
         - [Pyright Language Server](#pyright-language-server)
         - [Groovy Language Server](#groovy-language-server)
+        - [Java Language Server](#java-language-server)
     - [Verification Examples \& Usage](#verification-examples--usage)
     - [VSCode integration](#vscode-integration)
   - [Featured projects](#featured-projects)
@@ -113,11 +114,16 @@ The examples demonstrate mutliple things:
 - [Python Language client and pyright language server example](./packages/examples/src/python):
   - The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
   - The **python-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+   It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server.
 
 - [Groovy Language client and language server example](./packages/examples/src/groovy):
   - The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
-  - The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
-  - It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server.
+  - The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+
+
+- [Java Language client and language server example](./packages/examples/src/eclipse.jdt.ls):
+  - The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
+  - The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 - Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above:
   - [Langium grammar DSL](./packages/examples/src/langium/langium-dsl): It contains both the [language client](./packages/examples/src/langium/langium-dsl/wrapperLangium.ts) and the [langauge server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts). Here you can chose beforehand if the wrapper should be started in classic or extended mode.
@@ -156,11 +162,11 @@ npm run start:example:server:python
 
 ##### Groovy Language Server
 
-For the **groovy-client** example you need to ensure the **groovy-server** example is running. There are two options available:
+For the **groovy-client** example you need to ensure the **groovy-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
 
-- **Preferred option**: Use **docker-compose** which does not require any manual setup (Java/Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
+##### Java Language Server
 
-- **Secondary option** (not recommended): [Groovy Language Server self-built instructions](./packages/examples/src/groovy/server/README.md)
+For the **java-client** example you need to ensure the **java-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Eclipse JDT LS). From the project root run `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml down` to stop it.
 
 ### Verification Examples & Usage
 
