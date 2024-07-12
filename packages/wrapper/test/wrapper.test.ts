@@ -173,7 +173,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
     });
 
-    @
     test.skip('extended editor disposes extensions', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
