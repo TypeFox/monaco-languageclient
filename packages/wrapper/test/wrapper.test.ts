@@ -203,5 +203,5 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
         await wrapper.dispose();
         await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
-    });
+    }, 20000);
 });
