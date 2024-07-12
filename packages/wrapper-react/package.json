@@ -38,22 +38,22 @@
     "build": "npm run clean && npm run compile"
   },
   "volta": {
-    "node": "20.14.0",
+    "node": "20.15.1",
     "npm": "10.7.0"
   },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.3",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.5",
     "monaco-editor-wrapper": "~5.4.0",
     "monaco-languageclient": "~8.7.0",
     "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.3"
+    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.5"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.3",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.5",
     "monaco-editor-wrapper": "~5.4.0",
     "monaco-languageclient": "~8.7.0",
     "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.3"
+    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.5"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

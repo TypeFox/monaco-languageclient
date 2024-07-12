@@ -4,18 +4,18 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.3",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.5",
     "monaco-editor-wrapper": "../../packages/wrapper",
     "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.3"
+    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.5"
   },
   "devDependencies": {
-    "http-server": "~14.1.1",
     "shx": "~0.3.4",
-    "vite": "~5.2.8"
+    "vite": "~5.3.3"
   },
   "volta": {
-    "node": "20.14.0"
+    "node": "20.15.1",
+    "pnpm": "9.5.0"
   },
   "scripts": {
     "verify": "pnpm install && pnpm run build && pnpm run start",
@@ -23,6 +23,6 @@
     "clean": "shx rm -fr dist",
     "build:msg": "echo Building pnpm/vite example:",
     "build": "pnpm run build:msg && pnpm run clean && vite build",
-    "start": "http-server ./dist --port 8083"
+    "start": "vite preview"
   }
 }

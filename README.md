@@ -120,7 +120,6 @@ The examples demonstrate mutliple things:
   - The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
   - The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
-
 - [Java Language client and language server example](./packages/examples/src/eclipse.jdt.ls):
   - The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
   - The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
@@ -261,7 +260,7 @@ loader.config({ monaco });
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (you find the [compatibility table here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@~7.0.3"
+"vscode": "npm:@codingame/monaco-vscode-api@~7.0.5"
 ```
 
 ## Licenses

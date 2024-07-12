@@ -3,7 +3,7 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "~7.0.3",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "~7.0.5",
     "@rollup/pluginutils": "~5.1.0",
     "@testing-library/react": "~16.0.0",
     "@types/node": "~20.14.10",
@@ -29,7 +29,7 @@
     "webdriverio": "~8.39.1"
   },
   "volta": {
-    "node": "20.14.0",
+    "node": "20.15.1",
     "npm": "10.7.0"
   },
   "scripts": {
