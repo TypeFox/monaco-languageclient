@@ -1,0 +1,16 @@
+services:
+  eclipsejdtls:
+    build:
+      dockerfile: ./packages/examples/resources/eclipse.jdt.ls/Dockerfile
+      context: ../../../..
+    environment:
+      - PATH_MLC=/home/mlc
+      - JDT_TAR_URL=https://download.eclipse.org/jdtls/milestones/1.37.0/jdt-language-server-1.37.0-202406271335.tar.gz
+      - JDT_TAR_LOCAL=eclipse.jdt.ls.tar.gz
+    command: [
+      "bash", "-c", "npm i && npm run start:example:server:jdtls"
+    ]
+    ports:
+      - 30003:30003
+    working_dir: /home/mlc
+    container_name: eclipsejdtls

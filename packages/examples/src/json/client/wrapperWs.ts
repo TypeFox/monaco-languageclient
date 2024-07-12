@@ -45,7 +45,8 @@ export const jsonClientUserConfig: UserConfig = {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.lightbulb.enabled': 'On'
+                    'editor.lightbulb.enabled': 'On',
+                    'editor.wordBasedSuggestions': 'off'
                 })
             }
         }

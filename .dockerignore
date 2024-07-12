@@ -1,8 +1,1 @@
-# Linked packages are problematic during build, npm i during start will fix it
-node_modules/@typefox/monaco-editor-react
-node_modules/example-client-vite
-node_modules/example-client-webpack
-node_modules/monaco-languageclient
-node_modules/monaco-editor-wrapper
-node_modules/monaco-languageclient-examples
-node_modules/vscode-ws-jsonrpc
+node_modules

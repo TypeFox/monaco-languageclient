@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Java Language Client & Language Server (Web Socket)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<h2>Java Language Client & Language Server (Web Socket)</h2>
+    <button type="button" id="button-start">Start</button>
+    <button type="button" id="button-dispose">Dispose</button>
+	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
+    <script type="module">
+        import { configureMonacoWorkers, runEclipseJdtLsClient } from "./src/eclipse.jdt.ls/client/main.ts";
+
+        configureMonacoWorkers();
+        runEclipseJdtLsClient();
+    </script>
+</body>
+
+</html>

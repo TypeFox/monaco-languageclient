@@ -4,5 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 export const groovyConfig = {
     port: 30002,
-    path: '/groovy'
+    path: '/groovy',
+    basePath: '/home/gradle/mlc/packages/examples/resources/groovy'
 };

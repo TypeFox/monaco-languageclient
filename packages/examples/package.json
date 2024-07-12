@@ -60,6 +60,7 @@
     "@codingame/monaco-vscode-keybindings-service-override": "~7.0.3",
     "@codingame/monaco-vscode-lifecycle-service-override": "~7.0.3",
     "@codingame/monaco-vscode-localization-service-override": "~7.0.3",
+    "@codingame/monaco-vscode-java-default-extension": "~7.0.3",
     "@codingame/monaco-vscode-javascript-default-extension": "~7.0.3",
     "@codingame/monaco-vscode-json-default-extension": "~7.0.3",
     "@codingame/monaco-vscode-python-default-extension": "~7.0.3",
@@ -116,9 +117,10 @@
     "build:msg": "echo Building main examples:",
     "build": "npm run build:msg && npm run clean && npm run resources:download && npm run compile",
     "build:bundle": "vite --config vite.bundle.config.ts build",
-    "start:server:json": "node --loader ts-node/esm src/json/server/direct.ts",
-    "start:server:python": "node --loader ts-node/esm src/python/server/direct.ts",
-    "start:server:groovy": "node --watch --loader  ts-node/esm src/groovy/server/direct.ts",
+    "start:server:json": "vite-node src/json/server/direct.ts",
+    "start:server:python": "vite-node src/python/server/direct.ts",
+    "start:server:groovy": "vite-node src/groovy/server/direct.ts",
+    "start:server:jdtls": "vite-node src/eclipse.jdt.ls/server/direct.ts",
     "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json"
   }
 }

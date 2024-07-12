@@ -65,7 +65,9 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 },
                 userConfiguration: {
                     json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern'
+                        'workbench.colorTheme': 'Default Dark Modern',
+                        'editor.guides.bracketPairsHorizontal': 'active',
+                        'editor.wordBasedSuggestions': 'off'
                     })
                 },
                 useDiffEditor: false
