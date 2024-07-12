@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jdk
 
-ARG MLC_PATH=/home/mlc
-ARG ECLIPSE_JDT_PATH=${MLC_PATH}/packages/examples/resources/eclipse.jdt.ls/ls
+ARG PATH_MLC=/home/mlc
+ARG PATH_ECLIPSE_JDT=${PATH_MLC}/packages/examples/resources/eclipse.jdt.ls/ls
 ARG JDT_TAR_URL=https://download.eclipse.org/jdtls/milestones/1.37.0/jdt-language-server-1.37.0-202406271335.tar.gz
 ARG JDT_TAR_LOCAL=eclipse.jdt.ls.tar.gz
 
@@ -15,15 +15,18 @@ ENV VOLTA_HOME "/root/.volta"
 ENV PATH "$VOLTA_HOME/bin:$PATH"
 RUN volta install node@20
 
-RUN mkdir -p ${MLC_PATH}
+# prepare
+RUN mkdir -p ${PATH_MLC}
 
-COPY ./ ${MLC_PATH}
+# copy repo content
+COPY ./ ${PATH_MLC}
 
-RUN mkdir -p ${ECLIPSE_JDT_PATH} \
-    && cd ${ECLIPSE_JDT_PATH} \
+# download and extract Eclipse JDT LS in target folder
+RUN mkdir -p ${PATH_ECLIPSE_JDT} \
+    && cd ${PATH_ECLIPSE_JDT} \
     && wget -O ${JDT_TAR_LOCAL} ${JDT_TAR_URL} \
     && tar -xzf ${JDT_TAR_LOCAL}
 
-WORKDIR ${MLC_PATH}
+WORKDIR ${PATH_MLC}
 
 CMD ["/bin/bash", "npm i && npm run start:example:server:jdtls"]

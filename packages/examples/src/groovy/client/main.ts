@@ -44,7 +44,8 @@ const userConfig: UserConfig = {
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active'
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off'
                 })
             }
         }

@@ -4,7 +4,10 @@ services:
       dockerfile: ./packages/examples/resources/groovy/Dockerfile
       context: ../../../..
     environment:
-      - LANG_SERVER_JAR_PATH=/home/gradle/groovy-language-server/build/libs/groovy-language-server-all.jar
+      - HOME_DIR=/home/gradle
+      - PATH_MLC=/home/gradle/mlc
+      - PATH_GLS=/home/gradle/groovy-language-server
+      - PATH_GROOVY_JAR=/home/gradle/mlc/packages/examples/resources/groovy/lib
     command: [
       "bash", "-c", "npm i && npm run start:example:server:groovy"
     ]
