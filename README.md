@@ -23,7 +23,15 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
   - [Usage](#usage)
   - [Examples Overview](#examples-overview)
     - [Main Examples](#main-examples)
-    - [Example usage](#example-usage)
+      - [JSON Language client and language server example (Location)](#json-language-client-and-language-server-example-location)
+      - [Python Language client and pyright language server example (Location)](#python-language-client-and-pyright-language-server-example-location)
+      - [Groovy Language client and language server example (Location)](#groovy-language-client-and-language-server-example-location)
+      - [Java Language client and language server example (Location)](#java-language-client-and-language-server-example-location)
+      - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
+      - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
+      - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
+      - [Browser example (Location)](#browser-example-location)
+      - [Purely monaco-editor related examples](#purely-monaco-editor-related-examples)
       - [Server processes](#server-processes)
         - [JSON Language Server](#json-language-server)
         - [Pyright Language Server](#pyright-language-server)
@@ -107,37 +115,51 @@ The examples demonstrate mutliple things:
 
 ### Main Examples
 
-- [JSON Language client and language server example](./packages/examples/src/json):
-  - The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
-  - The **json-client** contains the [monaco-editor-wrapper app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+#### JSON Language client and language server example ([Location](./packages/examples/src/json))
 
-- [Python Language client and pyright language server example](./packages/examples/src/python):
-  - The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
-  - The **python-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
+The **json-client** contains the [monaco-editor-wrapper app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+
+#### Python Language client and pyright language server example ([Location](./packages/examples/src/python))
+
+The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
+The **python-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
    It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server.
 
-- [Groovy Language client and language server example](./packages/examples/src/groovy):
-  - The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
-  - The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+#### Groovy Language client and language server example ([Location](./packages/examples/src/groovy))
 
-- [Java Language client and language server example](./packages/examples/src/eclipse.jdt.ls):
-  - The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
-  - The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
+The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
-- Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above:
-  - [Langium grammar DSL](./packages/examples/src/langium/langium-dsl): It contains both the [language client](./packages/examples/src/langium/langium-dsl/wrapperLangium.ts) and the [langauge server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts). Here you can chose beforehand if the wrapper should be started in classic or extended mode.
-  - [Statemachine DSL (created with Langium)](./packages/examples/src/langium/statemachine): It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
-    - It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
+#### Java Language client and language server example ([Location](./packages/examples/src/eclipse.jdt.ls))
 
-- [bare monaco-languageclient](./packages/examples/src/bare) It demostrate how the `JSON Language client and language server example` can be realised without `monaco-editor-wrapper`. You find the implementation [here](./packages/examples/src/bare/client.ts).
+The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
+The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
-- [browser example](./packages/examples/src/browser) demonstrates how a [monaco-editor-wrapper can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
+Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above
 
-- monaco-editor related examples
-  - [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts)
-  - [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts)
+#### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
-### Example usage
+It contains both the [language client](./packages/examples/src/langium/langium-dsl/wrapperLangium.ts) and the [langauge server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts). Here you can chose beforehand if the wrapper should be started in classic or extended mode.
+
+#### Statemachine DSL (created with Langium) ([Location](./packages/examples/src/langium/statemachine))
+
+It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
+It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
+
+#### bare monaco-languageclient ([Location](./packages/examples/src/bare))
+
+It demostrate how the `JSON Language client and language server example` can be realised without `monaco-editor-wrapper`. You find the implementation [here](./packages/examples/src/bare/client.ts).
+
+#### Browser example ([Location](./packages/examples/src/browser))
+
+It demonstrates how a [monaco-editor-wrapper can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
+
+#### Purely monaco-editor related examples
+
+See [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts).
+
+See [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts).
 
 #### Server processes
 
