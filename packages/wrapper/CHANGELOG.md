@@ -2,10 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [5.4.0] - 2024-07-1x
+## [5.4.0] - 2024-07-16
 
 - Update to latest monaco-vscode-api [#707](https://github.com/TypeFox/monaco-languageclient/pull/707)
-  - Updated to `monaco-languageclient@8.7.0`, `7.0.5` of `@codingame/monaco-vscode` packages
+  - Updated to `monaco-languageclient@8.7.0`, `7.0.7` of `@codingame/monaco-vscode` packages
 - Add Eclipse JDT Language Server example [#708](https://github.com/TypeFox/monaco-languageclient/pull/708)
   - Harmonize the Groovy Language Server configuration and execution, both are container based
 

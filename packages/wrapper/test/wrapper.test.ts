@@ -173,6 +173,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
     });
 
+    /**
+     * Test does not work headlessly on Linux/CI that's why it is currently skipped
+     */
     test.skip('extended editor disposes extensions', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();

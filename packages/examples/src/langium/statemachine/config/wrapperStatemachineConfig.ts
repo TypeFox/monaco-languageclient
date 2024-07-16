@@ -92,6 +92,10 @@ export const createLangiumGlobalConfig = async (params: {
                 }
             }
         },
-        languageClientConfig
+        languageClientConfig,
+        loggerConfig: {
+            enabled: true,
+            debugEnabled: true
+        }
     };
 };

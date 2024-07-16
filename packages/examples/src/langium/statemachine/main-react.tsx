@@ -28,16 +28,33 @@ export const runStatemachineReact = async () => {
             text,
             worker: loadStatemachineWorkerRegular()
         });
+        const styles = {
+            'paddingTop': '5px',
+            'height': '80vh'
+        };
         const comp = <MonacoEditorReactComp
             userConfig={langiumGlobalConfig}
-            style={{
-                'paddingTop': '5px',
-                'height': '80vh'
-            }}
+            style={styles}
         />;
 
         const htmlElement = document.getElementById('monaco-editor-root');
         ReactDOM.createRoot(htmlElement!).render(comp);
+
+        // container comp around MonacoEditorReactComp
+
+        // app comp
+        //   => MonacoEditorReactComp
+
+        // use
+        setTimeout(() => {
+            console.log('Updating styles');
+            styles.height = '85vh';
+            if (langiumGlobalConfig.wrapperConfig.editorAppConfig.codeResources !== undefined) {
+                if (langiumGlobalConfig.wrapperConfig.editorAppConfig.codeResources.main !== undefined) {
+                    langiumGlobalConfig.wrapperConfig.editorAppConfig.codeResources.main.text = 'tester';
+                }
+            }
+        }, 2000);
     } catch (e) {
         console.error(e);
     }

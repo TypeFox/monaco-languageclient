@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.5",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.7",
     "monaco-editor-wrapper": "../../packages/wrapper",
     "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.5"
+    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.7"
   },
   "devDependencies": {
     "css-loader": "~7.1.2",
