@@ -6,8 +6,8 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 
 - Update to latest monaco-vscode-api [#707](https://github.com/TypeFox/monaco-languageclient/pull/707)
   - Updated to `monaco-languageclient@8.7.0`, `7.0.7` of `@codingame/monaco-vscode` packages
-- Add Eclipse JDT Language Server example [#708](https://github.com/TypeFox/monaco-languageclient/pull/708)
-  - Harmonize the Groovy Language Server configuration and execution, both are container based
+- Test "Dispose extension files in EditorAppExtended" [#688](https://github.com/TypeFox/monaco-languageclient/pull/688)
+  - Test is disabled again as it is not working in headless Linux environment / CI
 
 ## [5.3.1] - 2024-07-02
 
