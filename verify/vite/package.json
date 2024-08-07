@@ -14,8 +14,8 @@
     "vite": "~5.3.3"
   },
   "volta": {
-    "node": "20.15.1",
-    "npm": "10.7.0"
+    "node": "20.16.0",
+    "npm": "10.8.1"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",
