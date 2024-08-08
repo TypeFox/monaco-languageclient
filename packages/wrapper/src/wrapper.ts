@@ -177,6 +177,9 @@ export class MonacoEditorLanguageClientWrapper {
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
     async dispose(): Promise<void> {
+        if (!this.initDone) {
+            return Promise.reject('Wrapper dispose is rejected as init was not yet completed.');
+        }
         this.editorApp?.disposeApp();
 
         if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
