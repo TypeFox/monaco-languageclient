@@ -4,7 +4,10 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 
 ## [5.5.0] - 2024-08-08
 
-- Updated to `monaco-languageclient@8.8.0`, `8.0.0` of `@codingame/monaco-vscode` packages
+- isRestarting is only checked and awaited at the beginning of handleReInit [#723](https://github.com/TypeFox/monaco-languageclient/pull/723)
+- Open default workspace [#14](https://github.com/TypeFox/monaco-languageclient/pull/714)
+- Update to monaco-vscode-api 8.0.0 [#722](https://github.com/TypeFox/monaco-languageclient/pull/722)
+  - Updated to `monaco-languageclient@8.8.0`, `8.0.0` of `@codingame/monaco-vscode` packages
 
 ## [5.4.0] - 2024-07-16
 
