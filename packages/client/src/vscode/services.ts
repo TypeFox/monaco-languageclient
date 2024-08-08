@@ -117,7 +117,7 @@ export const importAllServices = async (instruction: InitServicesInstruction) =>
     reportServiceLoading(userServices, instruction.logger);
 
     if (instruction.performChecks === undefined || instruction.performChecks()) {
-        await initialize(userServices);
+        await initialize(userServices, undefined, lc.workspaceConfig);
         const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel ?? LogLevel.Info;
         StandaloneServices.get(ILogService).setLevel(logLevel);
     }
