@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@typefox/monaco-editor-react": "~4.4.0",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~7.0.7",
-    "monaco-editor-wrapper": "~5.4.0",
-    "monaco-languageclient-examples": "~2024.7.3",
-    "vscode": "npm:@codingame/monaco-vscode-api@~7.0.7",
+    "@typefox/monaco-editor-react": "~4.5.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.0",
+    "monaco-editor-wrapper": "~5.5.0",
+    "monaco-languageclient-examples": "~2024.8.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~8.0.0",
     "vscode-ws-jsonrpc": "~3.3.2"
   },
   "devDependencies": {
@@ -16,7 +16,7 @@
     "vite": "~5.3.3"
   },
   "volta": {
-    "node": "20.15.1",
+    "node": "20.16.0",
     "yarn": "1.22.22"
   },
   "scripts": {
