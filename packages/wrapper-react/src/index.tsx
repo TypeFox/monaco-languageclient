@@ -42,15 +42,11 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
 
     override async componentDidMount() {
         this.logger.debug('Called: componentDidMount');
-        if (!this.isRestarting) {
-            await this.handleReinit();
-        }
+        await this.handleReInit();
     }
 
     override async componentDidUpdate(prevProps: T) {
         this.logger.debug('Called: componentDidUpdate');
-
-        await this.isRestarting;
 
         const { userConfig } = this.props;
         const { wrapper } = this;
@@ -58,7 +54,9 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         const mustReInit = this.isReInitRequired(prevProps);
 
         if (mustReInit) {
-            await this.handleReinit();
+            await this.handleReInit();
+
+            Promise.resolve('Underlying wrapper was restarted as sole re-confiuration was not sufficient.');
         } else {
             // the function now ensure a model update is only required if something else than the code changed
             this.wrapper.updateCodeResources(userConfig.wrapperConfig.editorAppConfig.codeResources);
@@ -74,12 +72,14 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
             if (prevProps.onTextChanged !== this.props.onTextChanged) {
                 this.handleOnTextChanged();
             }
+
+            Promise.resolve('Underlying wrapper was re-configured wihtout need to restart the editor.');
         }
     }
 
-    override componentWillUnmount() {
+    override async componentWillUnmount() {
         this.logger.debug('Called: componentWillUnmount');
-        this.destroyMonaco();
+        await this.destroyMonaco();
     }
 
     protected assignRef = (component: HTMLDivElement) => {
@@ -98,7 +98,12 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
         );
     }
 
-    protected async handleReinit() {
+    protected async handleReInit() {
+        // always check and await before if defined
+        if (this.isRestarting !== undefined) {
+            await this.isRestarting;
+        }
+
         // block everything unti until (re)-start is complete
         this.isRestarting = new Promise<void>((resolve) => {
             this.started = resolve;
@@ -120,16 +125,11 @@ export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorPro
     }
 
     protected async destroyMonaco(): Promise<void> {
-        if (this.wrapper.isInitDone()) {
-            if (this.isRestarting) {
-                await this.isRestarting;
-            }
-            try {
-                await this.wrapper.dispose();
-            } catch {
-                // The language client may throw an error during disposal.
-                // This should not prevent us from continue working.
-            }
+        try {
+            await this.wrapper.dispose();
+        } catch {
+            // The language client may throw an error during disposal.
+            // This should not prevent us from continue working.
         }
         this.disposeOnTextChanged();
     }

@@ -177,6 +177,9 @@ export class MonacoEditorLanguageClientWrapper {
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
     async dispose(): Promise<void> {
+        if (!this.initDone) {
+            return Promise.reject('Wrapper dispose is rejected as init was not yet completed.');
+        }
         this.editorApp?.disposeApp();
 
         if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
@@ -219,9 +222,9 @@ export class MonacoEditorLanguageClientWrapper {
         if (prevConfig.$type !== config.$type) {
             mustReInit = true;
         } else if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-            mustReInit = (this.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
+            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
         } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
-            mustReInit = (this.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
+            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
         }
 
         return mustReInit;
