@@ -3,6 +3,7 @@ services:
     build:
       dockerfile: ./packages/examples/resources/groovy/Dockerfile
       context: ../../../..
+    platform: linux/amd64
     environment:
       - HOME_DIR=/home/gradle
       - PATH_MLC=/home/gradle/mlc

@@ -3,6 +3,7 @@ services:
     build:
       dockerfile: ./packages/examples/resources/eclipse.jdt.ls/Dockerfile
       context: ../../../..
+    platform: linux/amd64
     environment:
       - PATH_MLC=/home/mlc
       - JDT_TAR_URL=https://download.eclipse.org/jdtls/milestones/1.37.0/jdt-language-server-1.37.0-202406271335.tar.gz
