@@ -11,8 +11,8 @@ RUN apt install -y curl
 
 RUN curl https://get.volta.sh | bash
 ENV VOLTA_FEATURE_PNPM=1
-ENV VOLTA_HOME "/root/.volta"
-ENV PATH "$VOLTA_HOME/bin:$PATH"
+ENV VOLTA_HOME="/root/.volta"
+ENV PATH="$VOLTA_HOME/bin:$PATH"
 RUN volta install node@20
 
 # prepare
