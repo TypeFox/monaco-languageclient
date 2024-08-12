@@ -27,7 +27,6 @@ export class MonacoEditorComponent implements AfterViewInit {
         const htmlElement = document.getElementById('monaco-editor-root');
 
         try {
-            await wrapper.dispose();
             await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
         } catch (e) {
             console.error(e);
