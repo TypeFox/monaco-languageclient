@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [8.8.1] - 2024-08-12
+
+- Update to monaco-vscode-api 8.0.1
+
 ## [8.8.0] - 2024-08-08
 
 - Open default workspace [#14](https://github.com/TypeFox/monaco-languageclient/pull/714)

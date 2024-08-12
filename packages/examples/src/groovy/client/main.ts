@@ -65,7 +65,6 @@ export const runGroovyClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.dispose();
             await wrapper.initAndStart(userConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

@@ -42,7 +42,7 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         // Always dispose old instances before start
-        this.editorApp?.disposeApp();
+        this.dispose(false);
         this.id = userConfig.id ?? Math.floor(Math.random() * 101).toString();
         this.logger.updateConfig(userConfig.loggerConfig);
 
@@ -176,13 +176,10 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(): Promise<void> {
-        if (!this.initDone) {
-            return Promise.reject('Wrapper dispose is rejected as init was not yet completed.');
-        }
+    async dispose(disposeLanguageClient: boolean = true): Promise<void> {
         this.editorApp?.disposeApp();
 
-        if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
+        if ((disposeLanguageClient && this.languageClientWrapper?.haveLanguageClient()) ?? false) {
             await this.languageClientWrapper?.disposeLanguageClient(false);
             this.editorApp = undefined;
             await Promise.resolve('Monaco editor and languageclient completed disposed.');

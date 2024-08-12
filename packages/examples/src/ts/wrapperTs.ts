@@ -73,7 +73,6 @@ export const runTsWrapper = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.dispose();
             await wrapper.initAndStart(userConfig, htmlElement);
 
             vscode.commands.getCommands().then((x) => {
@@ -115,7 +114,6 @@ export const runTsWrapper = async () => {
             // ensure it is boolean value and not undefined
             const useDiffEditor = userConfig.wrapperConfig.editorAppConfig.useDiffEditor ?? false;
             userConfig.wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
-            await wrapper.dispose();
             await wrapper.initAndStart(userConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

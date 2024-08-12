@@ -76,7 +76,6 @@ export const runEclipseJdtLsClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.dispose();
             await wrapper.init(userConfig);
 
             // open files, so the LS can pick it up

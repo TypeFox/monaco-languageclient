@@ -78,7 +78,6 @@ export const runJsonWrapper = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.dispose();
             await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
