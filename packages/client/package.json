@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "8.8.1",
+  "version": "8.8.2",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -62,17 +62,17 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-extensions-service-override": "~8.0.1",
-    "@codingame/monaco-vscode-languages-service-override": "~8.0.1",
-    "@codingame/monaco-vscode-localization-service-override": "~8.0.1",
-    "@codingame/monaco-vscode-model-service-override": "~8.0.1",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~8.0.1",
+    "@codingame/monaco-vscode-extensions-service-override": "~8.0.2",
+    "@codingame/monaco-vscode-languages-service-override": "~8.0.2",
+    "@codingame/monaco-vscode-localization-service-override": "~8.0.2",
+    "@codingame/monaco-vscode-model-service-override": "~8.0.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~8.0.2",
     "vscode-languageclient": "~9.0.1"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~8.0.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~8.0.2"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {

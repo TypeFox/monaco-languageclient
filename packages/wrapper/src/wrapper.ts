@@ -161,8 +161,8 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 
-    async updateEditorModels(modelRefs: ModelRefs): Promise<void> {
-        return this.editorApp?.updateEditorModels(modelRefs);
+    updateEditorModels(modelRefs: ModelRefs) {
+        this.editorApp?.updateEditorModels(modelRefs);
     }
 
     public reportStatus() {

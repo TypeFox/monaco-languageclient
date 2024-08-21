@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.8.3] - 2024-08-21
+
+- Updated to `monaco-languageclient@8.8.2`, `monaco-editor-wrapper@5.5.2` and `@typefox/monaco-editor-react@4.5.2`. Updated all `@codingame/monaco-vscode` packages to `8.0.2`.
+
 ## [2024.8.2] - 2024-08-12
 
 - Updated to `monaco-languageclient@8.8.1`, `monaco-editor-wrapper@5.5.1` and `@typefox/monaco-editor-react@4.5.1`. Updated all `@codingame/monaco-vscode` packages to `8.0.1`.
