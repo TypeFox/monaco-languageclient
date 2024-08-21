@@ -207,4 +207,30 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         await wrapper.dispose();
         await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
     });
+
+    test('Early code resources update on wrapper are ok', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const userConfig = createBaseConfig('classic');
+        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
+
+        await wrapper.init(userConfig);
+        const app = wrapper.getMonacoEditorApp();
+        const promise = await wrapper.updateCodeResources({
+            main: {
+                text: 'blah',
+                fileExt: 'statemachine'
+            }
+        });
+        expect(promise).toBeUndefined();
+        expect(wrapper.getEditor()).toBeUndefined();
+        expect(wrapper.getDiffEditor()).toBeUndefined();
+
+        const modelRefs = app?.getModelRefs();
+        expect(modelRefs?.modelRef).toBeDefined();
+        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+
+        await wrapper.start(document.getElementById('monaco-editor-root'));
+    });
+
 });

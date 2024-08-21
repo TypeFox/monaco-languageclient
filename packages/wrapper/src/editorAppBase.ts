@@ -116,7 +116,7 @@ export abstract class EditorAppBase {
         }
 
         const modelRefs = await this.buildModelRefs(this.getConfig().codeResources);
-        await this.updateEditorModels(modelRefs);
+        this.updateEditorModels(modelRefs);
     }
 
     protected disposeEditors() {
@@ -149,10 +149,6 @@ export abstract class EditorAppBase {
     }
 
     async updateCodeResources(codeResources?: CodeResources): Promise<void> {
-        if (!this.editor && !this.diffEditor) {
-            return Promise.reject(new Error('You cannot update the code resources as neither editor or diff editor is available.'));
-        }
-
         const modelUpdateType = isModelUpdateRequired(this.getConfig().codeResources, codeResources);
         if (modelUpdateType !== ModelUpdateType.NONE) {
             this.updateCodeResourcesConfig(codeResources);
@@ -169,6 +165,7 @@ export abstract class EditorAppBase {
             const modelRefs = await this.buildModelRefs(codeResources);
             this.updateEditorModels(modelRefs);
         }
+        return Promise.resolve();
     }
 
     async buildModelRefs(codeResources?: CodeResources): Promise<ModelRefs> {
@@ -191,10 +188,7 @@ export abstract class EditorAppBase {
         return undefined;
     }
 
-    async updateEditorModels(modelRefs: ModelRefs): Promise<void> {
-        if (!this.editor && !this.diffEditor) {
-            return Promise.reject(new Error('You cannot update models as neither editor nor diff editor is available.'));
-        }
+    updateEditorModels(modelRefs: ModelRefs) {
         let updateMain = false;
         let updateOriginal = false;
 
@@ -222,7 +216,7 @@ export abstract class EditorAppBase {
                     modified: this.modelRef.object.textEditorModel
                 });
             } else {
-                return Promise.reject(new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.'));
+                throw new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.');
             }
         }
     }
