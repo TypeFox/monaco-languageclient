@@ -2,6 +2,10 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [4.5.2] - 2024-08-21
+
+- Updated to `monaco-editor-wrapper@5.5.2` and `monaco-languageclient@8.8.2`. Updated all `@codingame/monaco-vscode` packages to `8.0.2`.
+
 ## [4.5.1] - 2024-08-12
 
 - Updated to `monaco-editor-wrapper@5.5.1` and `monaco-languageclient@8.8.1`. Updated all `@codingame/monaco-vscode` packages to `8.0.1`.

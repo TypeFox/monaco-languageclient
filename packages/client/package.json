@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "8.8.1",
+  "version": "8.8.2",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
