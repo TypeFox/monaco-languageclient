@@ -29,10 +29,14 @@ RUN cd ${HOME_DIR} \
 # copy repo content
 COPY ./ ${PATH_MLC}
 
+RUN cd ${PATH_MLC} \
+    && npm i \
+    && npm run build
+
 # copy language server to target
 RUN mkdir -p ${PATH_GROOVY_JAR} \
     && cp ${PATH_GLS}/build/libs/groovy-language-server-all.jar ${PATH_GROOVY_JAR}
 
 WORKDIR ${PATH_MLC}
 
-CMD ["/bin/bash", "npm i && npm run start:example:server:groovy"]
+CMD ["/bin/bash", "npm run start:example:server:groovy"]
