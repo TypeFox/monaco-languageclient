@@ -15,4 +15,4 @@ RUN volta install node \
 RUN mkdir /builder
 
 COPY configure-docker.sh /builder/configure-docker.sh
-RUN (cd /builder; ./configure-docker.sh)
+RUN (cd /builder; bash ./configure-docker.sh)
