@@ -21,6 +21,10 @@ RUN mkdir -p ${PATH_MLC}
 # copy repo content
 COPY ./ ${PATH_MLC}
 
+RUN cd ${PATH_MLC} \
+    && npm i \
+    && npm run build
+
 # download and extract Eclipse JDT LS in target folder
 RUN mkdir -p ${PATH_ECLIPSE_JDT} \
     && cd ${PATH_ECLIPSE_JDT} \
@@ -29,4 +33,4 @@ RUN mkdir -p ${PATH_ECLIPSE_JDT} \
 
 WORKDIR ${PATH_MLC}
 
-CMD ["/bin/bash", "npm i && npm run start:example:server:jdtls"]
+CMD ["/bin/bash", "npm run start:example:server:jdtls"]

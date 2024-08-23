@@ -1,5 +1,6 @@
 services:
-  clangd-build:
+  clangd-wasm-build:
+    image: ghcr.io/typefox/monaco-languageclient/clangd-wasm-build:latest
     build:
       dockerfile: ./build.Dockerfile
       context: .
@@ -7,4 +8,4 @@ services:
       platforms:
         - "linux/amd64"
     platform: linux/amd64
-    container_name: clangd-build
+    container_name: clangd-wasm-build

@@ -116,7 +116,7 @@
     "compile": "tsc --build tsconfig.src.json",
     "resources:download": "vite-node ./build/downloadResources.mts",
     "build:msg": "echo Building main examples:",
-    "build": "npm run build:msg && npm run clean && npm run resources:download && npm run compile",
+    "build": "npm run build:msg && npm run clean && npm run resources:download && npm run extract:docker && npm run compile",
     "build:bundle": "vite --config vite.bundle.config.ts build",
     "start:server:json": "vite-node src/json/server/direct.ts",
     "start:server:python": "vite-node src/python/server/direct.ts",
