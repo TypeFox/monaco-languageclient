@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { updateExtendedAppPrototyp } from './helper';
 
 describe('Test MonacoEditorReactComp', () => {
@@ -38,7 +38,7 @@ describe('Test MonacoEditorReactComp', () => {
                     $type: 'extended',
                     codeResources: {
                         main: {
-                            text: '',
+                            text: 'hello world',
                             fileExt: 'js'
                         }
                     }
@@ -49,7 +49,12 @@ describe('Test MonacoEditorReactComp', () => {
                 debugEnabled: true,
             }
         };
-        const { rerender } = render(<MonacoEditorReactComp userConfig={userConfig} />);
-        await new Promise(resolve => rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={resolve} />));
+
+        const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+            const value = await new Promise(resolve => rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={resolve} />));
+            expect(value).toEqual({ main: 'test', original: '', isDirty: true });
+        };
+
+        const { rerender } = render(<MonacoEditorReactComp userConfig={userConfig} onLoad={handleOnLoad} />);
     });
 });

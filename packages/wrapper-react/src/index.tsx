@@ -108,9 +108,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 const main = textModels.text?.getValue() ?? '';
                 const original = textModels.textOriginal?.getValue() ?? '';
                 const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const dirty = main !== codeResources?.main?.text;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const dirtyOriginal = original !== codeResources?.original?.text;
                 onTextChanged({
                     main,
@@ -133,6 +131,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 }));
             }
             setOnTextChangedSubscriptions(newSubscriptions);
+            // do it initially
             verifyModelContent();
         }
     }, [onTextChanged, userConfig]);
