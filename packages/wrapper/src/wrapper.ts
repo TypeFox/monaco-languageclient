@@ -12,7 +12,6 @@ import { EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic } from './editorAppClassic.js';
 import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
 import { LanguageClientWrapper } from './languageClientWrapper.js';
-import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 import { UserConfig } from './userConfig.js';
 
 /**
@@ -196,46 +195,6 @@ export class MonacoEditorLanguageClientWrapper {
 
     updateLayout() {
         this.editorApp?.updateLayout();
-    }
-
-    /**
-     * @deprecated
-     * Will be removed in the future.
-     * @param userConfig
-     * @param previousUserConfig
-     * @returns
-     */
-    isReInitRequired(userConfig: UserConfig, previousUserConfig: UserConfig): boolean {
-        let mustReInit = false;
-        const config = userConfig.wrapperConfig.editorAppConfig;
-        const prevConfig = previousUserConfig.wrapperConfig.editorAppConfig;
-        const prevWorkerOptions = previousUserConfig.languageClientConfig?.options;
-        const currentWorkerOptions = userConfig.languageClientConfig?.options;
-        const prevIsWorker = (prevWorkerOptions?.$type === 'WorkerDirect');
-        const currentIsWorker = (currentWorkerOptions?.$type === 'WorkerDirect');
-        const prevIsWorkerConfig = (prevWorkerOptions?.$type === 'WorkerConfig');
-        const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
-
-        // check if both are configs and the workers are both undefined
-        if (prevIsWorkerConfig && !prevIsWorker && currentIsWorkerConfig && !currentIsWorker) {
-            mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
-            // check if both are workers and configs are both undefined
-        } else if (!prevIsWorkerConfig && prevIsWorker && !currentIsWorkerConfig && currentIsWorker) {
-            mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
-            // previous was worker and current config is not or the other way around
-        } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {
-            mustReInit = true;
-        }
-
-        if (prevConfig.$type !== config.$type) {
-            mustReInit = true;
-        } else if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
-        } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
-            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
-        }
-
-        return mustReInit;
     }
 
 }
