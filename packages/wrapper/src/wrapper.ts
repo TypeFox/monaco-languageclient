@@ -194,6 +194,13 @@ export class MonacoEditorLanguageClientWrapper {
         this.editorApp?.updateLayout();
     }
 
+    /**
+     * @deprecated
+     * Will be removed in the future.
+     * @param userConfig
+     * @param previousUserConfig
+     * @returns
+     */
     isReInitRequired(userConfig: UserConfig, previousUserConfig: UserConfig): boolean {
         let mustReInit = false;
         const config = userConfig.wrapperConfig.editorAppConfig;
