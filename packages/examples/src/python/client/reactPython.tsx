@@ -30,7 +30,7 @@ export const runPythonReact = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const onTextChanged = (textChanges: TextChanges) => {
-        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.main}\ntextOriginal: ${textChanges.original}`);
+        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.text}\ntextOriginal: ${textChanges.textOriginal}`);
     };
 
     const htmlElement = document.getElementById('monaco-editor-root');

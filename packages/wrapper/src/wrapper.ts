@@ -10,7 +10,7 @@ import { Logger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic } from './editorAppClassic.js';
-import { CodeResources, ModelRefs, TextModels } from './editorAppBase.js';
+import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
 import { LanguageClientWrapper } from './languageClientWrapper.js';
 import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 import { UserConfig } from './userConfig.js';
@@ -143,6 +143,10 @@ export class MonacoEditorLanguageClientWrapper {
 
     getLanguageClient(): MonacoLanguageClient | undefined {
         return this.languageClientWrapper?.getLanguageClient();
+    }
+
+    getTextContents(): TextContents | undefined {
+        return this.editorApp?.getTextContents();
     }
 
     getTextModels(): TextModels | undefined {

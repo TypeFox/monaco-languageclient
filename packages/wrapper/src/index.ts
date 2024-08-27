@@ -14,7 +14,9 @@ import type {
     CodePlusUri,
     CodePlusFileExt,
     CodeResources,
-    ModelRefs
+    ModelRefs,
+    TextModels,
+    TextContents
 } from './editorAppBase.js';
 
 import type {
@@ -87,7 +89,9 @@ export type {
     CodePlusUri,
     CodePlusFileExt,
     CodeResources,
-    ModelRefs
+    ModelRefs,
+    TextModels,
+    TextContents
 };
 
 export {

@@ -5,12 +5,10 @@
 
 import * as monaco from 'monaco-editor';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, TextContents, UserConfig } from 'monaco-editor-wrapper';
 import { Logger } from 'monaco-languageclient/tools';
 
-export type TextChanges = {
-    main: string;
-    original: string;
+export type TextChanges = TextContents & {
     isDirty: boolean;
 }
 
@@ -105,14 +103,14 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         const textModels = wrapperRef.current.getTextModels();
         if (textModels?.text || textModels?.textOriginal) {
             const verifyModelContent = () => {
-                const main = textModels.text?.getValue() ?? '';
-                const original = textModels.textOriginal?.getValue() ?? '';
+                const text = textModels.text?.getValue() ?? '';
+                const textOriginal = textModels.textOriginal?.getValue() ?? '';
                 const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
-                const dirty = main !== codeResources?.main?.text;
-                const dirtyOriginal = original !== codeResources?.original?.text;
+                const dirty = text !== codeResources?.main?.text;
+                const dirtyOriginal = textOriginal !== codeResources?.original?.text;
                 onTextChanged({
-                    main,
-                    original,
+                    text,
+                    textOriginal,
                     isDirty: dirty || dirtyOriginal
                 });
             };
