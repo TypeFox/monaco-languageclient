@@ -26,11 +26,16 @@ export class MonacoEditorLanguageClientWrapper {
     private languageClientWrapper?: LanguageClientWrapper;
     private logger: Logger = new Logger();
     private initDone = false;
+    private starting?: Promise<void>;
+    private startAwait: (value: void | PromiseLike<void>) => void;
+    private stopping?: Promise<void>;
+    private stopAwait: (value: void | PromiseLike<void>) => void;
 
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
     async init(userConfig: UserConfig) {
+        this.markStarting();
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
@@ -102,9 +107,25 @@ export class MonacoEditorLanguageClientWrapper {
         if (this.languageClientWrapper?.haveLanguageClientConfig() ?? false) {
             await this.languageClientWrapper?.start();
         }
+        this.markStarted();
     }
 
-    public isInitDone() {
+    private markStarting() {
+        this.starting = new Promise<void>((resolve) => {
+            this.startAwait = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startAwait();
+        this.starting = undefined;
+    }
+
+    isStarting() {
+        return this.starting;
+    }
+
+    isInitDone() {
         return this.initDone;
     }
 
@@ -168,7 +189,7 @@ export class MonacoEditorLanguageClientWrapper {
         this.editorApp?.updateEditorModels(modelRefs);
     }
 
-    public reportStatus() {
+    reportStatus() {
         const status: string[] = [];
         status.push('Wrapper status:');
         status.push(`Editor: ${this.editorApp?.getEditor()?.getId()}`);
@@ -180,6 +201,8 @@ export class MonacoEditorLanguageClientWrapper {
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
     async dispose(disposeLanguageClient: boolean = true): Promise<void> {
+        this.markStopping();
+
         this.editorApp?.disposeApp();
 
         if ((disposeLanguageClient && this.languageClientWrapper?.haveLanguageClient()) ?? false) {
@@ -191,6 +214,23 @@ export class MonacoEditorLanguageClientWrapper {
             await Promise.resolve('Monaco editor has been disposed.');
         }
         this.initDone = false;
+
+        this.markStopped();
+    }
+
+    private markStopping() {
+        this.stopping = new Promise<void>((resolve) => {
+            this.stopAwait = resolve;
+        });
+    }
+
+    private markStopped() {
+        this.stopAwait();
+        this.stopping = undefined;
+    }
+
+    isStopping() {
+        return this.stopping;
     }
 
     updateLayout() {

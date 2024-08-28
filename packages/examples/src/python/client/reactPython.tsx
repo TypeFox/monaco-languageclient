@@ -32,21 +32,40 @@ export const runPythonReact = async () => {
     const onTextChanged = (textChanges: TextChanges) => {
         console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.text}\ntextOriginal: ${textChanges.textOriginal}`);
     };
-
     const htmlElement = document.getElementById('monaco-editor-root');
-    const comp = <MonacoEditorReactComp
-        userConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
-        style={{
-            'paddingTop': '5px',
-            'height': '80vh'
-        }}
-        onTextChanged={onTextChanged}
-        onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-            console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
-        }}
-        onError={(e) => {
-            console.error(e);
-        }}
-    />;
-    ReactDOM.createRoot(htmlElement!).render(<StrictMode>{comp}</StrictMode>);
+    const root = ReactDOM.createRoot(htmlElement!);
+
+    try {
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            const App = () => {
+                return (
+                    <div style={{ 'height': '80vh', padding: '5px' }} >
+                        <MonacoEditorReactComp
+                            userConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
+                            style={{ 'height': '100%' }}
+                            onTextChanged={onTextChanged}
+                            onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
+                                console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
+                            }}
+                            onError={(e) => {
+                                console.error(e);
+                            }} />
+                    </div>
+                );
+            };
+
+            const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;
+
+            if (strictMode) {
+                root.render(<StrictMode><App /></StrictMode>);
+            } else {
+                root.render(<App />);
+            }
+        });
+        document.querySelector('#button-dispose')?.addEventListener('click', () => {
+            root.render([]);
+        });
+    } catch (e) {
+        console.error(e);
+    }
 };

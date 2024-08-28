@@ -69,12 +69,12 @@ describe('Test MonacoEditorReactComp', () => {
             const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
 
                 const p1 = await new Promise<void>(p1Resolve => {
-                    const textReceiver1 = (textChanges: TextChanges) => {
+                    const textReceiverHello = (textChanges: TextChanges) => {
                         expect(textChanges.text).toEqual('hello world');
                         p1Resolve();
                     };
                     // because the onTextChanged callback is updated there will be a result even if the text is unchanged
-                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiver1)} />);
+                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiverHello)} />);
                 });
                 expect(p1).toBeUndefined();
 
@@ -120,13 +120,12 @@ describe('Test MonacoEditorReactComp', () => {
                         }
                     });
 
-                    const textReceiver1 = (textChanges: TextChanges) => {
+                    const textReceiverGoodbye = (textChanges: TextChanges) => {
                         expect(textChanges.text).toBe('goodbye world');
                         p1Resolve();
                     };
 
-                    // because the onTextChanged callback is updated there will be a result even if the text is unchanged
-                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiver1)} />);
+                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiverGoodbye)} />);
                 });
                 expect(p1).toBeUndefined();
 

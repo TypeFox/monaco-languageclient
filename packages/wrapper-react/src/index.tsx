@@ -36,7 +36,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const loggerRef = useRef<Logger>(new Logger());
     const containerRef = useRef<HTMLDivElement>(null);
     const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
-    const [isRestarting, setIsRestarting] = useState<Promise<void> | undefined>();
 
     useEffect(() => {
         loggerRef.current.updateConfig(userConfig.loggerConfig);
@@ -60,18 +59,19 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [className]);
 
     const handleReInit = useCallback(async () => {
-        if (isRestarting !== undefined) {
-            await isRestarting;
+        if (wrapperRef.current.isStopping() === undefined) {
+            await destroyMonaco();
+        } else {
+            await wrapperRef.current.isStopping();
         }
 
-        const promiseExecution = async (resolve: (value: void | PromiseLike<void>) => void) => {
-            await destroyMonaco();
+        if (wrapperRef.current.isStarting() === undefined) {
             await initMonaco();
             await startMonaco();
-            setIsRestarting(undefined);
-            resolve();
-        };
-        setIsRestarting(new Promise<void>(promiseExecution));
+        } else {
+            await wrapperRef.current.isStarting();
+        }
+
     }, [userConfig]);
 
     const initMonaco = useCallback(async () => {
