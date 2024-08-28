@@ -52,6 +52,11 @@ export type TextModels = {
     textOriginal?: monaco.editor.ITextModel;
 }
 
+export type TextContents = {
+    text?: string;
+    textOriginal?: string;
+}
+
 /**
  * This is the base class for both Monaco Ediotor Apps:
  * - EditorAppClassic
@@ -131,6 +136,14 @@ export abstract class EditorAppBase {
             this.diffEditor.dispose();
             this.diffEditor = undefined;
         }
+    }
+
+    getTextContents(): TextContents {
+        const modelRefs = this.getModelRefs();
+        return {
+            text: modelRefs.modelRef?.object.textEditorModel?.getValue() ?? undefined,
+            textOriginal: modelRefs.modelRefOriginal?.object.textEditorModel?.getValue() ?? undefined
+        };
     }
 
     getTextModels(): TextModels {

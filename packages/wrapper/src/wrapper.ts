@@ -10,9 +10,8 @@ import { Logger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic } from './editorAppClassic.js';
-import { CodeResources, ModelRefs, TextModels } from './editorAppBase.js';
+import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
 import { LanguageClientWrapper } from './languageClientWrapper.js';
-import { WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
 import { UserConfig } from './userConfig.js';
 
 /**
@@ -27,11 +26,16 @@ export class MonacoEditorLanguageClientWrapper {
     private languageClientWrapper?: LanguageClientWrapper;
     private logger: Logger = new Logger();
     private initDone = false;
+    private starting?: Promise<void>;
+    private startAwait: (value: void | PromiseLike<void>) => void;
+    private stopping?: Promise<void>;
+    private stopAwait: (value: void | PromiseLike<void>) => void;
 
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
     async init(userConfig: UserConfig) {
+        this.markStarting();
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
@@ -103,9 +107,25 @@ export class MonacoEditorLanguageClientWrapper {
         if (this.languageClientWrapper?.haveLanguageClientConfig() ?? false) {
             await this.languageClientWrapper?.start();
         }
+        this.markStarted();
     }
 
-    public isInitDone() {
+    private markStarting() {
+        this.starting = new Promise<void>((resolve) => {
+            this.startAwait = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startAwait();
+        this.starting = undefined;
+    }
+
+    isStarting() {
+        return this.starting;
+    }
+
+    isInitDone() {
         return this.initDone;
     }
 
@@ -145,6 +165,10 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrapper?.getLanguageClient();
     }
 
+    getTextContents(): TextContents | undefined {
+        return this.editorApp?.getTextContents();
+    }
+
     getTextModels(): TextModels | undefined {
         return this.editorApp?.getTextModels();
     }
@@ -165,7 +189,7 @@ export class MonacoEditorLanguageClientWrapper {
         this.editorApp?.updateEditorModels(modelRefs);
     }
 
-    public reportStatus() {
+    reportStatus() {
         const status: string[] = [];
         status.push('Wrapper status:');
         status.push(`Editor: ${this.editorApp?.getEditor()?.getId()}`);
@@ -177,6 +201,8 @@ export class MonacoEditorLanguageClientWrapper {
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
     async dispose(disposeLanguageClient: boolean = true): Promise<void> {
+        this.markStopping();
+
         this.editorApp?.disposeApp();
 
         if ((disposeLanguageClient && this.languageClientWrapper?.haveLanguageClient()) ?? false) {
@@ -188,43 +214,27 @@ export class MonacoEditorLanguageClientWrapper {
             await Promise.resolve('Monaco editor has been disposed.');
         }
         this.initDone = false;
+
+        this.markStopped();
+    }
+
+    private markStopping() {
+        this.stopping = new Promise<void>((resolve) => {
+            this.stopAwait = resolve;
+        });
+    }
+
+    private markStopped() {
+        this.stopAwait();
+        this.stopping = undefined;
+    }
+
+    isStopping() {
+        return this.stopping;
     }
 
     updateLayout() {
         this.editorApp?.updateLayout();
-    }
-
-    isReInitRequired(userConfig: UserConfig, previousUserConfig: UserConfig): boolean {
-        let mustReInit = false;
-        const config = userConfig.wrapperConfig.editorAppConfig;
-        const prevConfig = previousUserConfig.wrapperConfig.editorAppConfig;
-        const prevWorkerOptions = previousUserConfig.languageClientConfig?.options;
-        const currentWorkerOptions = userConfig.languageClientConfig?.options;
-        const prevIsWorker = (prevWorkerOptions?.$type === 'WorkerDirect');
-        const currentIsWorker = (currentWorkerOptions?.$type === 'WorkerDirect');
-        const prevIsWorkerConfig = (prevWorkerOptions?.$type === 'WorkerConfig');
-        const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
-
-        // check if both are configs and the workers are both undefined
-        if (prevIsWorkerConfig && !prevIsWorker && currentIsWorkerConfig && !currentIsWorker) {
-            mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
-            // check if both are workers and configs are both undefined
-        } else if (!prevIsWorkerConfig && prevIsWorker && !currentIsWorkerConfig && currentIsWorker) {
-            mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
-            // previous was worker and current config is not or the other way around
-        } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {
-            mustReInit = true;
-        }
-
-        if (prevConfig.$type !== config.$type) {
-            mustReInit = true;
-        } else if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
-        } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
-            mustReInit = this.getMonacoEditorApp() !== undefined && (this.getMonacoEditorApp() as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
-        }
-
-        return mustReInit;
     }
 
 }

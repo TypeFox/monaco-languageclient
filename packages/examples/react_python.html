@@ -10,6 +10,9 @@
 
     <body>
         <h2>React: Python Language Client & Language Server (Web Socket)</h2>
+        <button type="button" id="button-start">Start</button>
+        <label>Enable Strict mode:</label><input type="checkbox" id="checkbox-strictmode" />
+        <button type="button" id="button-dispose">Dispose</button>
         <div id="monaco-editor-root"></div>
         <script type="module">
             import { configureMonacoWorkers, runPythonReact } from './src/python/client/reactPython.tsx';

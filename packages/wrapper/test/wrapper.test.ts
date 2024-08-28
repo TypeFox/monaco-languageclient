@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
-import { EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { isReInitRequired, EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createBaseConfig, createMonacoEditorDiv } from './helper.js';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
@@ -65,15 +65,19 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfigClassic = createBaseConfig('classic');
         wrapper.init(userConfigClassic);
-        expect(wrapper.isReInitRequired(userConfigClassic, userConfigClassic)).toBeFalsy();
+        const app = wrapper.getMonacoEditorApp();
+        expect(app).toBeDefined();
+        if (app) {
+            expect(isReInitRequired(app, userConfigClassic, userConfigClassic)).toBeFalsy();
 
-        const userConfigExtended = createBaseConfig('extended');
-        expect(wrapper.isReInitRequired(userConfigClassic, userConfigExtended)).toBeTruthy();
+            const userConfigExtended = createBaseConfig('extended');
+            expect(isReInitRequired(app, userConfigClassic, userConfigExtended)).toBeTruthy();
 
-        const userConfigClassicNew = createBaseConfig('classic');
-        userConfigClassicNew.wrapperConfig.editorAppConfig.useDiffEditor = true;
+            const userConfigClassicNew = createBaseConfig('classic');
+            userConfigClassicNew.wrapperConfig.editorAppConfig.useDiffEditor = true;
 
-        expect(wrapper.isReInitRequired(userConfigClassicNew, userConfigClassic)).toBeTruthy();
+            expect(isReInitRequired(app, userConfigClassicNew, userConfigClassic)).toBeTruthy();
+        }
     });
 
     test('code resources main', async () => {

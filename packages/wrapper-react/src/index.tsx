@@ -1,17 +1,14 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
- * Licensed under the MIT License. See LICENSE in the package root for license information.
- * ------------------------------------------------------------------------------------------ */
+* Copyright (c) 2024 TypeFox and others.
+* Licensed under the MIT License. See LICENSE in the package root for license information.
+* ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
-import * as vscode from 'vscode';
-import React, { CSSProperties } from 'react';
-import { EditorAppClassic, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import { MonacoEditorLanguageClientWrapper, TextContents, UserConfig } from 'monaco-editor-wrapper';
 import { Logger } from 'monaco-languageclient/tools';
 
-export type TextChanges = {
-    main: string;
-    original: string;
+export type TextChanges = TextContents & {
     isDirty: boolean;
 }
 
@@ -25,212 +22,140 @@ export type MonacoEditorProps = {
     onError?: (e: any) => void;
 }
 
-export class MonacoEditorReactComp<T extends MonacoEditorProps = MonacoEditorProps> extends React.Component<T> {
+export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
+    const {
+        style,
+        className,
+        userConfig,
+        onTextChanged,
+        onLoad,
+        onError
+    } = props;
 
-    private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
-    private logger: Logger = new Logger();
-    private containerElement?: HTMLDivElement;
-    private onTextChangedSubscriptions: monaco.IDisposable[] = [];
-    private isRestarting?: Promise<void>;
-    private started: (value: void | PromiseLike<void>) => void;
+    const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
+    const loggerRef = useRef<Logger>(new Logger());
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
 
-    constructor(props: T) {
-        super(props);
-        const { userConfig } = this.props;
-        this.logger.updateConfig(userConfig.loggerConfig);
-    }
+    useEffect(() => {
+        loggerRef.current.updateConfig(userConfig.loggerConfig);
+        return () => {
+            destroyMonaco();
+        };
+    }, []);
 
-    override async componentDidMount() {
-        this.logger.debug('Called: componentDidMount');
-        await this.handleReInit();
-    }
+    useEffect(() => {
+        handleReInit();
+    }, [userConfig]);
 
-    override async componentDidUpdate(prevProps: T) {
-        this.logger.debug('Called: componentDidUpdate');
+    useEffect(() => {
+        handleOnTextChanged();
+    }, [onTextChanged]);
 
-        const { userConfig } = this.props;
-        const { wrapper } = this;
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.className = className ?? '';
+        }
+    }, [className]);
 
-        const mustReInit = this.isReInitRequired(prevProps);
-
-        if (mustReInit) {
-            await this.handleReInit();
-
-            Promise.resolve('Underlying wrapper was restarted as sole re-confiuration was not sufficient.');
+    const handleReInit = useCallback(async () => {
+        if (wrapperRef.current.isStopping() === undefined) {
+            await destroyMonaco();
         } else {
-            // the function now ensure a model update is only required if something else than the code changed
-            this.wrapper.updateCodeResources(userConfig.wrapperConfig.editorAppConfig.codeResources);
-
-            const config = userConfig.wrapperConfig.editorAppConfig;
-            const prevConfig = prevProps.userConfig.wrapperConfig.editorAppConfig;
-            if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-                if (prevConfig.editorOptions !== config.editorOptions) {
-                    (wrapper.getMonacoEditorApp() as EditorAppClassic).updateMonacoEditorOptions(config.editorOptions ?? {});
-                }
-            }
-
-            if (prevProps.onTextChanged !== this.props.onTextChanged) {
-                this.handleOnTextChanged();
-            }
-
-            Promise.resolve('Underlying wrapper was re-configured wihtout need to restart the editor.');
-        }
-    }
-
-    override async componentWillUnmount() {
-        this.logger.debug('Called: componentWillUnmount');
-        await this.destroyMonaco();
-    }
-
-    protected assignRef = (component: HTMLDivElement) => {
-        this.logger.debug('Called: assignRef');
-        this.containerElement = component;
-    };
-
-    override render() {
-        this.logger.debug('Called: render');
-        return (
-            <div
-                ref={this.assignRef}
-                style={this.props.style}
-                className={this.props.className}
-            />
-        );
-    }
-
-    protected async handleReInit() {
-        // always check and await before if defined
-        if (this.isRestarting !== undefined) {
-            await this.isRestarting;
+            await wrapperRef.current.isStopping();
         }
 
-        // block everything unti until (re)-start is complete
-        this.isRestarting = new Promise<void>((resolve) => {
-            this.started = resolve;
-        });
-
-        await this.destroyMonaco();
-        await this.initMonaco();
-        await this.startMonaco();
-    }
-
-    protected isReInitRequired(prevProps: T) {
-        const { className, userConfig } = this.props;
-        let mustReInit = false;
-        if (prevProps.className !== className && this.containerElement) {
-            this.containerElement.className = className ?? '';
-            mustReInit = true;
+        if (wrapperRef.current.isStarting() === undefined) {
+            await initMonaco();
+            await startMonaco();
+        } else {
+            await wrapperRef.current.isStarting();
         }
-        return mustReInit || this.wrapper.isReInitRequired(userConfig, prevProps.userConfig);
-    }
 
-    protected async destroyMonaco(): Promise<void> {
-        try {
-            await this.wrapper.dispose();
-        } catch {
-            // The language client may throw an error during disposal.
-            // This should not prevent us from continue working.
-        }
-        this.disposeOnTextChanged();
-    }
+    }, [userConfig]);
 
-    protected async initMonaco() {
-        const {
-            userConfig
-        } = this.props;
+    const initMonaco = useCallback(async () => {
+        await wrapperRef.current.init(userConfig);
+    }, [userConfig]);
 
-        await this.wrapper.init(userConfig);
-    }
-
-    protected async startMonaco() {
-        const {
-            className,
-            onLoad,
-            onError,
-        } = this.props;
-
-        if (this.containerElement) {
-            this.containerElement.className = className ?? '';
-
-            // exceptions are forwarded to onError callback or the exception is thrown
+    const startMonaco = useCallback(async () => {
+        if (containerRef.current) {
+            containerRef.current.className = className ?? '';
             try {
-                await this.wrapper.start(this.containerElement);
-
-                // once awaiting start is done onLoad is called if available
-                onLoad?.(this.wrapper);
-                this.handleOnTextChanged();
+                await wrapperRef.current.start(containerRef.current);
+                onLoad?.(wrapperRef.current);
+                handleOnTextChanged();
             } catch (e) {
                 if (onError) {
                     onError(e);
                 } else {
                     throw e;
                 }
-            } finally {
-                this.started();
-                this.isRestarting = undefined;
             }
         }
-    }
+    }, [className, onError, onLoad]);
 
-    private disposeOnTextChanged() {
-        for (const subscription of this.onTextChangedSubscriptions) {
-            subscription.dispose();
-        }
-        this.onTextChangedSubscriptions = [];
-    }
-
-    private handleOnTextChanged() {
-        this.disposeOnTextChanged();
-
-        const {
-            userConfig,
-            onTextChanged
-        } = this.props;
+    const handleOnTextChanged = useCallback(() => {
+        disposeOnTextChanged();
 
         if (!onTextChanged) return;
 
-        const textModels = this.wrapper.getTextModels();
+        const textModels = wrapperRef.current.getTextModels();
         if (textModels?.text || textModels?.textOriginal) {
             const verifyModelContent = () => {
-                const main = textModels.text?.getValue() ?? '';
-                const original = textModels.textOriginal?.getValue() ?? '';
+                const text = textModels.text?.getValue() ?? '';
+                const textOriginal = textModels.textOriginal?.getValue() ?? '';
                 const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
-                const dirty = main !== codeResources?.main?.text;
-                const dirtyOriginal = original !== codeResources?.original?.text;
+                const dirty = text !== codeResources?.main?.text;
+                const dirtyOriginal = textOriginal !== codeResources?.original?.text;
                 onTextChanged({
-                    main,
-                    original,
+                    text,
+                    textOriginal,
                     isDirty: dirty || dirtyOriginal
                 });
             };
 
+            const newSubscriptions: monaco.IDisposable[] = [];
+
             if (textModels.text) {
-                this.onTextChangedSubscriptions.push(textModels.text.onDidChangeContent(() => {
+                newSubscriptions.push(textModels.text.onDidChangeContent(() => {
                     verifyModelContent();
                 }));
             }
 
             if (textModels.textOriginal) {
-                this.onTextChangedSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
+                newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
                     verifyModelContent();
                 }));
             }
+            setOnTextChangedSubscriptions(newSubscriptions);
             // do it initially
             verifyModelContent();
         }
-    }
+    }, [onTextChanged, userConfig]);
 
-    getEditorWrapper() {
-        return this.wrapper;
-    }
+    const destroyMonaco = useCallback(async () => {
+        try {
+            await wrapperRef.current.dispose();
+        } catch {
+            // The language client may throw an error during disposal.
+            // This should not prevent us from continue working.
+        }
+        disposeOnTextChanged();
+    }, []);
 
-    /**
-     * Executes a custom VSCode/LSP command by name with args, and returns the result
-     * @param cmd Command to execute
-     * @param args Arguments to pass along with this command
-     * @returns The result of executing this command in the language server
-     */
-    executeCommand(cmd: string, ...args: unknown[]): Thenable<unknown> {
-        return vscode.commands.executeCommand(cmd, ...args);
-    }
-}
+    const disposeOnTextChanged = useCallback(() => {
+        for (const subscription of onTextChangedSubscriptions) {
+            subscription.dispose();
+        }
+        setOnTextChangedSubscriptions([]);
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            style={style}
+            className={className}
+        />
+    );
+};
