@@ -83,7 +83,7 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
                 worker: langiumWorker
             },
             connectionProvider: {
-                get: async () => ({ reader, writer }),
+                get: async () => ({ reader, writer })
             }
         }
     };

@@ -4,22 +4,22 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { WebSocketConfigOptions, WebSocketConfigOptionsUrl, WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
+import { WebSocketUrlParams, WebSocketUrlString, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-languageclient';
 import { CodePlusFileExt, CodePlusUri, CodeResources } from './editorAppBase.js';
 import { EditorAppClassic } from './editorAppClassic.js';
 import { UserConfig } from './userConfig.js';
 import { EditorAppExtended } from './editorAppExtended.js';
 
-export const createUrl = (config: WebSocketConfigOptions | WebSocketConfigOptionsUrl) => {
+export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';
-    if ((config as WebSocketConfigOptionsUrl).url) {
-        const options = config as WebSocketConfigOptionsUrl;
+    if ((config as WebSocketUrlString).url) {
+        const options = config as WebSocketUrlString;
         if (!options.url.startsWith('ws://') && !options.url.startsWith('wss://')) {
             throw new Error(`This is not a proper websocket url: ${options.url}`);
         }
         buildUrl = options.url;
     } else {
-        const options = config as WebSocketConfigOptions;
+        const options = config as WebSocketUrlParams;
         const protocol = options.secured ? 'wss' : 'ws';
         buildUrl = `${protocol}://${options.host}`;
         if (options.port !== undefined) {

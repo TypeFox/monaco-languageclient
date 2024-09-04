@@ -35,6 +35,7 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
                     callback(false);
                 }
             }
-        }
+        },
+        logMessages: true
     });
 };

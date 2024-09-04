@@ -57,7 +57,7 @@ Same again.`,
         languageId: 'json',
         name: 'wrapper42 language client',
         options: {
-            $type: 'WebSocket',
+            $type: 'WebSocketParams',
             host: 'localhost',
             port: 30000,
             path: 'sampleServer',

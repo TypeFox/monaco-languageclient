@@ -3,17 +3,16 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient, IConnectionProvider } from 'monaco-languageclient';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/lib/common/client.js';
+import { MonacoLanguageClient, IConnectionProvider, WorkerConfigOptions, WorkerConfigDirect, LanguageClientConfigOptions, WebSocketConfigOptionsParams, WebSocketConfigOptionsDirect, WebSocketConfigOptionsUrl, LanguageClientRestartOptions } from 'monaco-languageclient';
 import { Logger } from 'monaco-languageclient/tools';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
+import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
 import { createUrl } from './utils.js';
-import { WebSocketConfigOptions, WebSocketConfigOptionsUrl, WorkerConfigDirect, WorkerConfigOptions } from './commonTypes.js';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export type LanguageClientConfig = {
     languageId: string;
-    options: WebSocketConfigOptions | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect;
+    options: LanguageClientConfigOptions;
     name?: string;
     clientOptions?: LanguageClientOptions;
     connectionProvider?: IConnectionProvider;
@@ -28,8 +27,6 @@ export class LanguageClientWrapper {
 
     private languageClient?: MonacoLanguageClient;
     private languageClientConfig?: LanguageClientConfig;
-    private messageTransports?: MessageTransports;
-    private connectionProvider?: IConnectionProvider;
     private languageId: string;
     private worker?: Worker;
     private port?: MessagePort;
@@ -66,14 +63,6 @@ export class LanguageClientWrapper {
         return this.languageClient !== undefined && this.languageClient.isRunning();
     }
 
-    getMessageTransports(): MessageTransports | undefined {
-        return this.messageTransports;
-    }
-
-    getConnectionProvider(): IConnectionProvider | undefined {
-        return this.connectionProvider;
-    }
-
     async start() {
         if (this.languageClientConfig) {
             return this.startLanguageClientConnection();
@@ -92,12 +81,9 @@ export class LanguageClientWrapper {
      * @param updatedWorker Set a new worker here that should be used. keepWorker has no effect then, as we want to dispose of the prior workers
      * @param keepWorker Set to true if worker should not be disposed
      */
-    async restartLanguageClient(updatedWorker?: Worker, keepWorker?: boolean): Promise<void> {
-        if (updatedWorker) {
-            await this.disposeLanguageClient(false);
-        } else {
-            await this.disposeLanguageClient(keepWorker);
-        }
+    async restartLanguageClient(updatedWorker?: Worker, keepWorker: boolean = false): Promise<void> {
+        await this.disposeLanguageClient(keepWorker);
+
         this.worker = updatedWorker;
         if (this.languageClientConfig) {
             this.logger?.info('Re-Starting monaco-languageclient');
@@ -111,84 +97,101 @@ export class LanguageClientWrapper {
         }
     }
 
-    private startLanguageClientConnection(): Promise<void> {
-        if (this.languageClient && this.languageClient.isRunning()) {
-            this.logger?.info('monaco-languageclient already running!');
+    protected async startLanguageClientConnection(): Promise<void> {
+        if (this.languageClient?.isRunning() ?? false) {
+            this.logger?.info('startLanguageClientConnection: monaco-languageclient already running!');
             return Promise.resolve();
         }
+        const lccOptions = this.languageClientConfig?.options;
 
-        const lcConfig = this.languageClientConfig?.options;
-        // allow to fully override the clonnecetionProvider
-        // if it is undefined it will be created from the message transports in handleLanguageClientStart
-        this.connectionProvider = this.languageClientConfig?.connectionProvider;
-
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise((resolve, reject) => {
-            if (lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') {
-                const url = createUrl(lcConfig);
-                const webSocket = new WebSocket(url);
-
-                webSocket.onopen = async () => {
-                    const socket = toSocket(webSocket);
-                    this.messageTransports = await this.connectionProvider?.get('') ?? {
-                        reader: new WebSocketMessageReader(socket),
-                        writer: new WebSocketMessageWriter(socket)
-                    };
-                    this.handleLanguageClientStart(resolve, reject);
-                };
-                webSocket.onerror = (ev: Event) => {
-                    const languageClientError: LanguageClientError = {
-                        message: `languageClientWrapper (${this.name}): Websocket connection failed.`,
-                        error: (ev as ErrorEvent).error ?? 'No error was provided.'
-                    };
-                    reject(languageClientError);
-                };
+            if (lccOptions === undefined) {
+                reject('Unable to start languageclient, because configuration options are not provided.');
             } else {
-                if (!this.worker) {
-                    if (lcConfig?.$type === 'WorkerConfig') {
-                        const workerConfig = lcConfig as WorkerConfigOptions;
-                        this.worker = new Worker(new URL(workerConfig.url, import.meta.url).href, {
-                            type: workerConfig.type,
-                            name: workerConfig.workerName
-                        });
-
-                        this.worker.onerror = (ev) => {
-                            const languageClientError: LanguageClientError = {
-                                message: `languageClientWrapper (${this.name}): Illegal worker configuration detected. Potentially the url is wrong.`,
-                                error: ev.error ?? 'No error was provided.'
-                            };
-                            reject(languageClientError);
-                        };
-                    } else {
-                        const workerDirectConfig = lcConfig as WorkerConfigDirect;
-                        this.worker = workerDirectConfig.worker;
-                    }
-                    if (lcConfig?.messagePort) {
-                        this.port = lcConfig.messagePort;
-                    }
+                if (lccOptions.$type === 'WebSocketDirect' || lccOptions.$type === 'WebSocketParams' || lccOptions.$type === 'WebSocketUrl') {
+                    this.initMessageTransportWebSocket(lccOptions, resolve, reject);
+                } else {
+                    // init of worker and start of languageclient can be handled directly, because worker available already
+                    this.initMessageTransportWorker(lccOptions, resolve, reject);
                 }
-
-                const startWorkerLS = async (port: MessagePort | Worker) => {
-                    this.messageTransports = await this.connectionProvider?.get('') ?? {
-                        reader: new BrowserMessageReader(port),
-                        writer: new BrowserMessageWriter(port)
-                    };
-                    this.handleLanguageClientStart(resolve, reject);
-                };
-                startWorkerLS(this.port ? this.port : this.worker);
             }
         });
     }
 
-    private async handleLanguageClientStart(resolve: () => void, reject: (reason?: unknown) => void) {
-        if (!this.connectionProvider) {
-            this.connectionProvider = {
-                get: () => {
-                    // even with the check "if (this.messageTransports)" the compiler requires the ! here
-                    return Promise.resolve(this.messageTransports!);
-                }
+    protected async initMessageTransportWebSocket(lccOptions: WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl,
+        resolve: () => void, reject: (reason?: unknown) => void) {
+        const webSocket = lccOptions.$type === 'WebSocketDirect' ? lccOptions.webSocket : new WebSocket(createUrl(lccOptions));
+
+        const createMessageTransports = (transport: Worker | MessagePort | WebSocket) => {
+            const iWebSocket = toSocket(transport as WebSocket);
+            return {
+                reader: new WebSocketMessageReader(iWebSocket),
+                writer: new WebSocketMessageWriter(iWebSocket)
             };
+        };
+
+        // if websocket is already open, then start the languageclient directly
+        if (webSocket.readyState === WebSocket.OPEN) {
+            await this.performLanguageClientStart(webSocket, createMessageTransports, resolve, reject);
         }
 
+        // otherwise start on open
+        webSocket.onopen = async () => {
+            await this.performLanguageClientStart(webSocket, createMessageTransports, resolve, reject);
+        };
+        webSocket.onerror = (ev: Event) => {
+            const languageClientError: LanguageClientError = {
+                message: `languageClientWrapper (${this.name}): Websocket connection failed.`,
+                error: (ev as ErrorEvent).error ?? 'No error was provided.'
+            };
+            reject(languageClientError);
+        };
+    }
+
+    protected async initMessageTransportWorker(lccOptions: WorkerConfigDirect | WorkerConfigOptions, resolve: () => void, reject: (reason?: unknown) => void) {
+        if (!this.worker) {
+            if (lccOptions.$type === 'WorkerConfig') {
+                const workerConfig = lccOptions as WorkerConfigOptions;
+                this.worker = new Worker(new URL(workerConfig.url, import.meta.url).href, {
+                    type: workerConfig.type,
+                    name: workerConfig.workerName
+                });
+
+                this.worker.onerror = (ev) => {
+                    const languageClientError: LanguageClientError = {
+                        message: `languageClientWrapper (${this.name}): Illegal worker configuration detected. Potentially the url is wrong.`,
+                        error: ev.error ?? 'No error was provided.'
+                    };
+                    reject(languageClientError);
+                };
+            } else {
+                const workerDirectConfig = lccOptions as WorkerConfigDirect;
+                this.worker = workerDirectConfig.worker;
+            }
+            if (lccOptions.messagePort !== undefined) {
+                this.port = lccOptions.messagePort;
+            }
+        }
+
+        const portOrWorker = this.port ? this.port : this.worker;
+        const createMessageTransports = (transport: Worker | MessagePort | WebSocket) => {
+            return {
+                reader: new BrowserMessageReader(transport),
+                writer: new BrowserMessageWriter(transport)
+            };
+        };
+        await this.performLanguageClientStart(portOrWorker, createMessageTransports, resolve, reject);
+    }
+
+    protected async performLanguageClientStart(transport: Worker | MessagePort | WebSocket,
+        createMessageTransports: (transport: Worker | MessagePort | WebSocket) => MessageTransports,
+        resolve: () => void, reject: (reason?: unknown) => void) {
+        // do not perform another start attempt if already running
+        if (this.languageClient?.isRunning() ?? false) {
+            this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
+            resolve();
+        }
         const mlcConfig = {
             name: this.languageClientConfig?.name ?? 'Monaco Wrapper Language Client',
 
@@ -201,18 +204,22 @@ export class LanguageClientWrapper {
                     closed: () => ({ action: CloseAction.DoNotRestart })
                 }
             },
-
-            connectionProvider: this.connectionProvider!
+            connectionProvider: this.languageClientConfig?.connectionProvider ?? {
+                get: async () => createMessageTransports(transport)
+            }
         };
+
         this.languageClient = new MonacoLanguageClient(mlcConfig);
+        const messageTransports = await mlcConfig.connectionProvider.get('utf-8');
 
-        const lcConfig = this.languageClientConfig?.options;
+        const lccOptions = this.languageClientConfig?.options;
+        this.initRestartConfiguration(messageTransports, lccOptions?.restartOptions);
 
-        this.messageTransports?.reader.onClose(async () => {
+        messageTransports.reader.onClose(async () => {
             await this.languageClient?.stop();
 
-            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig.stopOptions) {
-                const stopOptions = lcConfig.stopOptions;
+            if ((lccOptions?.$type === 'WebSocketParams' || lccOptions?.$type === 'WebSocketUrl') && lccOptions.stopOptions) {
+                const stopOptions = lccOptions.stopOptions;
                 stopOptions.onCall(this.getLanguageClient());
                 if (stopOptions.reportStatus !== undefined) {
                     this.logger?.info(this.reportStatus().join('\n'));
@@ -223,8 +230,8 @@ export class LanguageClientWrapper {
         try {
             await this.languageClient.start();
 
-            if ((lcConfig?.$type === 'WebSocket' || lcConfig?.$type === 'WebSocketUrl') && lcConfig.startOptions) {
-                const startOptions = lcConfig.startOptions;
+            if ((lccOptions?.$type === 'WebSocketParams' || lccOptions?.$type === 'WebSocketUrl') && lccOptions.startOptions) {
+                const startOptions = lccOptions.startOptions;
                 startOptions.onCall(this.getLanguageClient());
                 if (startOptions.reportStatus !== undefined) {
                     this.logger?.info(this.reportStatus().join('\n'));
@@ -241,14 +248,47 @@ export class LanguageClientWrapper {
         resolve();
     }
 
-    private disposeWorker(keepWorker?: boolean) {
+    protected initRestartConfiguration(messageTransports: MessageTransports, restartOptions?: LanguageClientRestartOptions) {
+        if (restartOptions !== undefined) {
+            let retry = 0;
+
+            const readerOnError = messageTransports.reader.onError(() => restartLC);
+            const readerOnClose = messageTransports.reader.onClose(() => restartLC);
+
+            const restartLC = async () => {
+                if (this.isStarted()) {
+                    try {
+                        readerOnError.dispose();
+                        readerOnClose.dispose();
+
+                        await this.restartLanguageClient(this.worker, restartOptions.keepWorker);
+                    } finally {
+                        retry++;
+                        if (retry > (restartOptions.retries) && !this.isStarted()) {
+                            this.logger?.info('Disabling Language Client. Failed to start clangd after 5 retries');
+                        } else {
+                            setTimeout(async () => {
+                                await this.restartLanguageClient(this.worker, restartOptions.keepWorker);
+                            }, restartOptions.timeout);
+                        }
+                    }
+                }
+            };
+        }
+        const successCallback = messageTransports.reader.listen(() => {
+            this.logger?.info('MessageTransport Reader started listening.');
+            successCallback.dispose();
+        });
+    }
+
+    protected disposeWorker(keepWorker?: boolean) {
         if (keepWorker === undefined || keepWorker === false) {
             this.worker?.terminate();
             this.worker = undefined;
         }
     }
 
-    public async disposeLanguageClient(keepWorker?: boolean): Promise<void> {
+    async disposeLanguageClient(keepWorker?: boolean): Promise<void> {
         // If there is no language client, try to terminate the worker
         if (!this.languageClient) {
             this.disposeWorker(keepWorker);

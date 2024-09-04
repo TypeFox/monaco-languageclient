@@ -2,7 +2,11 @@
   "extends": "./tsconfig.src.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "test"
+    "rootDir": "test",
+    // because vscode-jsonrpc requires DedicatedWorkerGlobalScope
+    // we are required to include both DOM and WebWorker libs
+    // the only way out currently is to disable lib checking
+    "skipLibCheck": true
   },
   "references": [{
     "path": "./tsconfig.src.json"

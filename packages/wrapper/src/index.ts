@@ -40,15 +40,6 @@ import {
 } from './editorAppExtended.js';
 
 import type {
-    WebSocketCallOptions,
-    LanguageClientConfigType,
-    WebSocketConfigOptions,
-    WebSocketConfigOptionsUrl,
-    WorkerConfigOptions,
-    WorkerConfigDirect
-} from './commonTypes.js';
-
-import type {
     LanguageClientConfig,
     LanguageClientError
 } from './languageClientWrapper.js';
@@ -76,12 +67,6 @@ export type {
     RegisterExtensionResult,
     RegisterLocalProcessExtensionResult,
     UserConfiguration,
-    WebSocketCallOptions,
-    LanguageClientConfigType,
-    WebSocketConfigOptions,
-    WebSocketConfigOptionsUrl,
-    WorkerConfigOptions,
-    WorkerConfigDirect,
     LanguageClientConfig,
     LanguageClientError,
     UserConfig,

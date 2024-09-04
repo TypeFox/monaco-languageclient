@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { MonacoLanguageClient } from './client.js';
 
 export type WebSocketCallOptions = {
     /** Adds handle on languageClient */
@@ -12,29 +12,45 @@ export type WebSocketCallOptions = {
     reportStatus?: boolean;
 }
 
-export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WorkerConfig' | 'Worker';
-
-export type WebSocketUrl = {
-    secured: boolean;
-    host: string;
-    port?: number;
-    path?: string;
+export type LanguageClientRestartOptions = {
+    retries: number;
+    timeout: number;
+    keepWorker?: boolean;
 }
 
-export type WebSocketConfigOptions = {
-    $type: 'WebSocket'
+export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WebSocketDirect' | 'WorkerConfig' | 'Worker';
+
+export type LanguageClientConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect) & {
+    restartOptions?: LanguageClientRestartOptions;
+}
+
+export type WebSocketUrlParams = {
     secured: boolean;
     host: string;
     port?: number;
     path?: string;
     extraParams?: Record<string, string | number | Array<string | number>>;
+}
+
+export type WebSocketUrlString = {
+    url: string;
+}
+
+export type WebSocketConfigOptionsDirect = {
+    $type: 'WebSocketDirect'
+    webSocket: WebSocket
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WebSocketConfigOptionsUrl = {
+export type WebSocketConfigOptionsParams = WebSocketUrlParams & {
+    $type: 'WebSocketParams'
+    startOptions?: WebSocketCallOptions;
+    stopOptions?: WebSocketCallOptions;
+}
+
+export type WebSocketConfigOptionsUrl = WebSocketUrlString & {
     $type: 'WebSocketUrl'
-    url: string;
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }

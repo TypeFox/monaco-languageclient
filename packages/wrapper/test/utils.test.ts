@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { WebSocketConfigOptions, WebSocketConfigOptionsUrl, createUrl } from 'monaco-editor-wrapper';
+import { WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from 'monaco-languageclient';
+import { createUrl } from 'monaco-editor-wrapper';
 
 describe('createUrl', () => {
 
@@ -14,7 +15,7 @@ describe('createUrl', () => {
             host: 'localhost',
             port: 30000,
             path: 'sampleServer'
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('ws://localhost:30000/sampleServer');
     });
@@ -25,7 +26,7 @@ describe('createUrl', () => {
             host: 'localhost',
             port: 30000,
             path: 'sampleServer'
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('wss://localhost:30000/sampleServer');
     });
@@ -35,7 +36,7 @@ describe('createUrl', () => {
             secured: true,
             host: 'localhost',
             path: 'sampleServer'
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('wss://localhost/sampleServer');
     });
@@ -45,7 +46,7 @@ describe('createUrl', () => {
             secured: true,
             host: 'localhost',
             port: 30000
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('wss://localhost:30000');
     });
@@ -54,7 +55,7 @@ describe('createUrl', () => {
         const url = createUrl({
             secured: true,
             host: 'localhost'
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('wss://localhost');
     });
@@ -64,7 +65,7 @@ describe('createUrl', () => {
             secured: false,
             host: 'localhost',
             port: 80
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('ws://localhost');
     });
@@ -75,7 +76,7 @@ describe('createUrl', () => {
             host: 'localhost',
             port: 80,
             path: 'sampleServer'
-        } as WebSocketConfigOptions);
+        } as WebSocketConfigOptionsParams);
 
         expect(url).toBe('ws://localhost/sampleServer');
     });

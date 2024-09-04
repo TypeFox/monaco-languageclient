@@ -8,7 +8,7 @@ import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
 import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
-import { updateExtendedAppPrototyp } from './helper';
+import { updateExtendedAppPrototyp } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
