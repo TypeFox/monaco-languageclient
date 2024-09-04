@@ -51,22 +51,24 @@ export const jsonClientUserConfig: UserConfig = {
             }
         }
     },
-    languageClientConfig: {
-        languageId: 'json',
-        options: {
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:30000/sampleServer',
-            startOptions: {
-                onCall: () => {
-                    console.log('Connected to socket.');
+    languageClientConfigs: {
+        json: {
+            languageId: 'json',
+            options: {
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:30000/sampleServer',
+                startOptions: {
+                    onCall: () => {
+                        console.log('Connected to socket.');
+                    },
+                    reportStatus: true
                 },
-                reportStatus: true
-            },
-            stopOptions: {
-                onCall: () => {
-                    console.log('Disconnected from socket.');
-                },
-                reportStatus: true
+                stopOptions: {
+                    onCall: () => {
+                        console.log('Disconnected from socket.');
+                    },
+                    reportStatus: true
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ describe('Test LanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.init(createBaseConfig('extended'));
 
-        const languageClientWrapper = wrapper.getLanguageClientWrapper();
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('unknown');
         expect(languageClientWrapper).toBeUndefined();
     });
 
@@ -47,17 +47,19 @@ describe('Test LanguageClientWrapper', () => {
 
         // setup the wrapper
         const config = createBaseConfig('extended');
-        config.languageClientConfig = {
-            languageId: 'javascript',
-            options: {
-                $type: 'WorkerDirect',
-                worker
+        config.languageClientConfigs = {
+            javascript: {
+                languageId: 'javascript',
+                options: {
+                    $type: 'WorkerDirect',
+                    worker
+                }
             }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.init(config);
 
-        const languageClientWrapper = wrapper.getLanguageClientWrapper();
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
         // start up & verify (don't wait for start to finish, just roll past it, we only care about the worker)
@@ -71,17 +73,19 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Constructor: config', async () => {
         const config = createBaseConfig('extended');
-        config.languageClientConfig = {
-            languageId: 'javascript',
-            options: {
-                $type: 'WebSocketUrl',
-                url: 'ws://localhost:12345/Tester'
+        config.languageClientConfigs = {
+            javascript: {
+                languageId: 'javascript',
+                options: {
+                    $type: 'WebSocketUrl',
+                    url: 'ws://localhost:12345/Tester'
+                }
             }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.init(config);
 
-        const languageClientWrapper = wrapper.getLanguageClientWrapper();
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
         expect(languageClientWrapper!.haveLanguageClientConfig()).toBeTruthy();
@@ -89,18 +93,20 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Start: unreachable url', async () => {
         const config = createBaseConfig('extended');
-        config.languageClientConfig = {
-            languageId: 'javascript',
-            name: 'test-unreachable',
-            options: {
-                $type: 'WebSocketUrl',
-                url: 'ws://localhost:12345/Tester'
+        config.languageClientConfigs = {
+            javascript: {
+                languageId: 'javascript',
+                name: 'test-unreachable',
+                options: {
+                    $type: 'WebSocketUrl',
+                    url: 'ws://localhost:12345/Tester'
+                }
             }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.init(config);
 
-        const languageClientWrapper = wrapper.getLanguageClientWrapper();
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
         expect(languageClientWrapper!.haveLanguageClientConfig()).toBeTruthy();
@@ -124,18 +130,20 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Start: unreachable worker url', async () => {
         const config = createBaseConfig('extended');
-        config.languageClientConfig = {
-            languageId: 'javascript',
-            options: {
-                $type: 'WorkerConfig',
-                url: new URL('http://localhost:20101'),
-                type: 'classic'
+        config.languageClientConfigs = {
+            javascript: {
+                languageId: 'javascript',
+                options: {
+                    $type: 'WorkerConfig',
+                    url: new URL('http://localhost:20101'),
+                    type: 'classic'
+                }
             }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.init(config);
 
-        const languageClientWrapper = wrapper.getLanguageClientWrapper();
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
         expect(languageClientWrapper!.haveLanguageClientConfig()).toBeTruthy();

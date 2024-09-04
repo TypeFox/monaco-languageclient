@@ -23,7 +23,7 @@ export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
     private editorApp: EditorAppClassic | EditorAppExtended | undefined;
-    private languageClientWrapper?: LanguageClientWrapper;
+    private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private logger: Logger = new Logger();
     private initDone = false;
     private starting?: Promise<void>;
@@ -70,12 +70,18 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
-        if (userConfig.languageClientConfig) {
-            this.languageClientWrapper = new LanguageClientWrapper();
-            await this.languageClientWrapper.init({
-                languageClientConfig: userConfig.languageClientConfig,
-                logger: this.logger
-            });
+        const lccs = userConfig.languageClientConfigs;
+        if (lccs !== undefined && Object.entries(lccs).length > 0) {
+
+            for (const [languageId, lcc] of Object.entries(lccs)) {
+                const lcw = new LanguageClientWrapper();
+                this.languageClientWrappers.set(languageId, lcw);
+
+                lcw.init({
+                    languageClientConfig: lcc,
+                    logger: this.logger
+                });
+            }
         }
 
         this.initDone = true;
@@ -104,9 +110,12 @@ export class MonacoEditorLanguageClientWrapper {
         await this.editorApp?.init();
         await this.editorApp?.createEditors(htmlElement);
 
-        if (this.languageClientWrapper?.haveLanguageClientConfig() ?? false) {
-            await this.languageClientWrapper?.start();
+        for (const lcw of this.languageClientWrappers.values()) {
+            if (lcw.haveLanguageClientConfig()) {
+                await lcw.start();
+            }
         }
+
         this.markStarted();
     }
 
@@ -135,14 +144,19 @@ export class MonacoEditorLanguageClientWrapper {
             return false;
         }
 
-        if (this.languageClientWrapper?.haveLanguageClient() ?? false) {
-            return this.languageClientWrapper?.isStarted() ?? false;
+        for (const lcw of this.languageClientWrappers.values()) {
+            if (lcw.haveLanguageClient()) {
+                // as soon as one is not started return
+                if (!lcw.isStarted()) {
+                    return false;
+                }
+            }
         }
         return true;
     }
 
-    haveLanguageClient(): boolean {
-        return this.languageClientWrapper !== undefined;
+    haveLanguageClients(): boolean {
+        return this.languageClientWrappers.size > 0;
     }
 
     getMonacoEditorApp() {
@@ -157,12 +171,12 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.getDiffEditor();
     }
 
-    getLanguageClientWrapper(): LanguageClientWrapper | undefined {
-        return this.languageClientWrapper;
+    getLanguageClientWrapper(languageId: string): LanguageClientWrapper | undefined {
+        return this.languageClientWrappers.get(languageId);
     }
 
-    getLanguageClient(): MonacoLanguageClient | undefined {
-        return this.languageClientWrapper?.getLanguageClient();
+    getLanguageClient(languageId: string): MonacoLanguageClient | undefined {
+        return this.languageClientWrappers.get(languageId)?.getLanguageClient();
     }
 
     getTextContents(): TextContents | undefined {
@@ -177,8 +191,8 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.getModelRefs();
     }
 
-    getWorker(): Worker | undefined {
-        return this.languageClientWrapper?.getWorker();
+    getWorker(languageId: string): Worker | undefined {
+        return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
     async updateCodeResources(codeResources?: CodeResources): Promise<void> {
@@ -200,17 +214,20 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(disposeLanguageClient: boolean = true): Promise<void> {
+    async dispose(disposeLanguageClients: boolean = true): Promise<void> {
         this.markStopping();
 
         this.editorApp?.disposeApp();
 
-        if ((disposeLanguageClient && this.languageClientWrapper?.haveLanguageClient()) ?? false) {
-            await this.languageClientWrapper?.disposeLanguageClient(false);
-            this.editorApp = undefined;
-            await Promise.resolve('Monaco editor and languageclient completed disposed.');
-        }
-        else {
+        if (disposeLanguageClients) {
+            for (const lcw of this.languageClientWrappers.values()) {
+                if (lcw.haveLanguageClient()) {
+                    await lcw.disposeLanguageClient(false);
+                }
+                this.editorApp = undefined;
+                await Promise.resolve('Monaco editor and languageclient completed disposed.');
+            }
+        } else {
             await Promise.resolve('Monaco editor has been disposed.');
         }
         this.initDone = false;

@@ -33,14 +33,16 @@ export const createLangiumGlobalConfig = async (params: {
         };
     }
 
-    const languageClientConfig: LanguageClientConfig | undefined = params.useLanguageClient && params.worker ? {
-        languageId: 'statemachine',
-        options: {
-            $type: 'WorkerDirect',
-            worker: params.worker,
-            messagePort: params.messagePort,
-        },
-        connectionProvider: params.connectionProvider
+    const languageClientConfigs: Record<string, LanguageClientConfig> | undefined = params.useLanguageClient && params.worker ? {
+        statemachine: {
+            languageId: 'statemachine',
+            options: {
+                $type: 'WorkerDirect',
+                worker: params.worker,
+                messagePort: params.messagePort,
+            },
+            connectionProvider: params.connectionProvider
+        }
     } : undefined;
 
     return {
@@ -92,7 +94,7 @@ export const createLangiumGlobalConfig = async (params: {
                 }
             }
         },
-        languageClientConfig,
+        languageClientConfigs,
         loggerConfig: {
             enabled: true,
             debugEnabled: true

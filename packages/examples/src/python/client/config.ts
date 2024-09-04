@@ -28,35 +28,37 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
     const writer = new WebSocketMessageWriter(iWebSocket);
 
     return {
-        languageClientConfig: {
-            languageId: 'python',
-            name: 'Python Language Server Example',
-            options: {
-                $type: 'WebSocketDirect',
-                webSocket: webSocket,
-                startOptions: {
-                    onCall: (languageClient?: MonacoLanguageClient) => {
-                        setTimeout(() => {
-                            ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                    languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+        languageClientConfigs: {
+            python: {
+                languageId: 'python',
+                name: 'Python Language Server Example',
+                options: {
+                    $type: 'WebSocketDirect',
+                    webSocket: webSocket,
+                    startOptions: {
+                        onCall: (languageClient?: MonacoLanguageClient) => {
+                            setTimeout(() => {
+                                ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                                    vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                        languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                    });
                                 });
-                            });
-                        }, 250);
-                    },
-                    reportStatus: true,
-                }
-            },
-            clientOptions: {
-                documentSelector: ['python'],
-                workspaceFolder: {
-                    index: 0,
-                    name: 'workspace',
-                    uri: vscode.Uri.parse(workspaceRoot)
+                            }, 250);
+                        },
+                        reportStatus: true,
+                    }
                 },
-            },
-            connectionProvider: {
-                get: async () => ({ reader, writer })
+                clientOptions: {
+                    documentSelector: ['python'],
+                    workspaceFolder: {
+                        index: 0,
+                        name: 'workspace',
+                        uri: vscode.Uri.parse(workspaceRoot)
+                    },
+                },
+                connectionProvider: {
+                    get: async () => ({ reader, writer })
+                }
             }
         },
         wrapperConfig: {

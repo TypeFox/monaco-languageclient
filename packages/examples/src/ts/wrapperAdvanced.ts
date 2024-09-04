@@ -3,233 +3,114 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-standalone-languages';
-import '@codingame/monaco-vscode-standalone-typescript-language-features';
-import { EditorAppConfigClassic, LanguageClientError, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+// this is required syntax highlighting
+import '@codingame/monaco-vscode-json-default-extension';
+import '@codingame/monaco-vscode-python-default-extension';
+import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { MonacoLanguageClient } from 'monaco-languageclient';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
         ignoreMapping: true,
         workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-            javascript: () => new Worker(new URL('monaco-editor-wrapper/workers/module/ts', import.meta.url), { type: 'module' }),
+            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
         }
     });
 };
 
-const wrapper42 = new MonacoEditorLanguageClientWrapper();
-const wrapper43 = new MonacoEditorLanguageClientWrapper();
-const wrapper44 = new MonacoEditorLanguageClientWrapper();
-
-const wrapper42Config: UserConfig = {
-    id: '42',
-    wrapperConfig: {
-        serviceConfig: {
-            userServices: {
-                ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
-        },
-        editorAppConfig: {
-            $type: 'classic',
-            codeResources: {
-                original: {
-                    text: `This line is equal.
-This number is different 2002
-Misspeelled!
-Same again.`,
-                    fileExt: 'txt'
+export const runMultipleLanguageClientsExample = async () => {
+    const text = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": {"value": "unix"}
+}`;
+    const userConfig: UserConfig = {
+        id: '42',
+        wrapperConfig: {
+            serviceConfig: {
+                userServices: {
+                    ...getKeybindingsServiceOverride()
                 },
-                main: {
-                    text: `This line is equal.
-This number is different 2022
-Misspelled!
-Same again.`,
-                    fileExt: 'txt'
+                debugLogging: true
+            },
+            editorAppConfig: {
+                $type: 'extended',
+                codeResources: {
+                    main: {
+                        text,
+                        fileExt: 'json'
+                    }
+                },
+                useDiffEditor: false,
+                userConfiguration: {
+                    json: JSON.stringify({
+                        'workbench.colorTheme': 'Default Dark Modern',
+                        'editor.wordBasedSuggestions': 'off'
+                    })
+                }
+            }
+        },
+        languageClientConfigs: {
+            json: {
+                languageId: 'json',
+                name: 'JSON Client',
+                options: {
+                    $type: 'WebSocketParams',
+                    host: 'localhost',
+                    port: 30000,
+                    path: 'sampleServer',
+                    secured: false
                 }
             },
-            useDiffEditor: true,
-        }
-    },
-    languageClientConfig: {
-        languageId: 'json',
-        name: 'wrapper42 language client',
-        options: {
-            $type: 'WebSocketParams',
-            host: 'localhost',
-            port: 30000,
-            path: 'sampleServer',
-            secured: false
-        }
-    }
-};
-
-const wrapper43Config: UserConfig = {
-    id: '43',
-    wrapperConfig: {
-        serviceConfig: {
-            userServices: {
-                ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
-        },
-        editorAppConfig: {
-            $type: 'classic',
-            codeResources: {
-                original: {
-                    text: 'This line is equal.\nThis number is different 3022.\nMisspelled!Same again.',
-                    fileExt: 'txt'
+            python: {
+                languageId: 'python',
+                name: 'Python Client',
+                options: {
+                    $type: 'WebSocketParams',
+                    host: 'localhost',
+                    port: 30001,
+                    path: 'pyright',
+                    secured: false,
+                    extraParams: {
+                        authorization: 'UserAuth'
+                    },
+                    startOptions: {
+                        onCall: (languageClient?: MonacoLanguageClient) => {
+                            setTimeout(() => {
+                                ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                                    vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                        languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                    });
+                                });
+                            }, 250);
+                        },
+                        reportStatus: true,
+                    }
                 },
-                main: {
-                    text: 'This line is equal.\nThis number is different 3002.\nMisspelled!Same again.',
-                    fileExt: 'txt'
+                clientOptions: {
+                    documentSelector: ['python'],
+                    workspaceFolder: {
+                        index: 0,
+                        name: 'workspace',
+                        uri: vscode.Uri.parse('/workspace')
+                    }
                 }
-            },
-            useDiffEditor: true,
-            editorOptions: {
-                lineNumbers: 'off'
-            },
-            diffEditorOptions: {
-                lineNumbers: 'off'
             }
         }
-    }
-};
+    };
 
-const wrapper44Config: UserConfig = {
-    id: '44',
-    wrapperConfig: {
-        serviceConfig: {
-            userServices: {
-                ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
-        },
-        editorAppConfig: {
-            $type: 'classic',
-            codeResources: {
-                main: {
-                    text: `function logMe() {
-    console.log('Hello monaco-editor-wrapper!');
-};`,
-                    fileExt: 'js'
-                }
-            },
-            useDiffEditor: false,
-            editorOptions: {
-                minimap: {
-                    enabled: true
-                },
-                theme: 'vs-dark'
-            }
-        }
-    }
-};
+    const htmlElement = document.getElementById('monaco-editor-root');
+    const wrapper = new MonacoEditorLanguageClientWrapper();
 
-const startWrapper42 = async () => {
-    await wrapper42.initAndStart(wrapper42Config, document.getElementById('monaco-editor-root-42'));
-    console.log('wrapper42 was started.');
-};
-
-const startWrapper43 = async () => {
-    await wrapper43.initAndStart(wrapper43Config, document.getElementById('monaco-editor-root-43'));
-    console.log('wrapper43 was started.');
-};
-const startWrapper44 = async () => {
-    await wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
-    console.log('wrapper44 was started.');
-};
-
-const sleepOne = (milliseconds: number) => {
-    setTimeout(async () => {
-        alert(`Updating editors after ${milliseconds}ms`);
-
-        await wrapper42.dispose();
-        wrapper42Config.languageClientConfig = undefined;
-        const appConfig42 = wrapper42Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        appConfig42.codeResources = {
-            main: {
-                text: `function logMe() {
-    console.log('Hello swap editors!');
-};`,
-                fileExt: 'js'
-            }
-        };
-        appConfig42.useDiffEditor = false;
-        const w42Start = wrapper42.initAndStart(wrapper42Config, document.getElementById('monaco-editor-root-42'));
-
-        const w43Start = await wrapper43.updateCodeResources({
-            main: {
-                text: 'text 5678',
-                fileExt: 'txt'
-            },
-            original: {
-                text: 'text 1234',
-                fileExt: 'txt'
-            }
-        });
-
-        await wrapper44.dispose();
-        const appConfig44 = wrapper44Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        appConfig44.useDiffEditor = true;
-        appConfig44.codeResources = {
-            original: {
-                text: 'oh la la la!',
-                fileExt: 'txt'
-            },
-            main: {
-                text: 'oh lo lo lo!',
-                fileExt: 'txt'
-            }
-        };
-        // This affects all editors globally and is only effective
-        // if it is not in contrast to one configured later
-        appConfig44.editorOptions = {
-            theme: 'vs-light'
-        };
-        const w44Start = wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
-
-        await w42Start;
-        console.log('Restarted wrapper42.');
-        await w43Start;
-        console.log('Updated diffmodel of wrapper43.');
-        await w44Start;
-        console.log('Restarted wrapper44.');
-    }, milliseconds);
-};
-
-const sleepTwo = (milliseconds: number) => {
-    setTimeout(async () => {
-        alert(`Updating last editor after ${milliseconds}ms`);
-
-        await wrapper44.dispose();
-        const appConfig44 = wrapper44Config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        appConfig44.useDiffEditor = false;
-        appConfig44.editorOptions = {
-            theme: 'vs-dark'
-        };
-        await wrapper44.initAndStart(wrapper44Config, document.getElementById('monaco-editor-root-44'));
-        console.log('Restarted wrapper44.');
-    }, milliseconds);
-};
-
-export const runAdvancedExample = async () => {
     try {
-        await startWrapper43();
-        await startWrapper44();
-        try {
-            await startWrapper42();
-        } catch (e) {
-            console.log(`Catched expected connection error: ${(e as LanguageClientError).message}`);
-        }
-
-        // change the editors config, content or swap normal and diff editors after five seconds
-        sleepOne(5000);
-
-        // change last editor to regular mode
-        sleepTwo(10000);
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            await wrapper.initAndStart(userConfig, htmlElement);
+        });
+        document.querySelector('#button-dispose')?.addEventListener('click', async () => {
+            await wrapper.dispose();
+        });
     } catch (e) {
         console.error(e);
     }

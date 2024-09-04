@@ -54,20 +54,22 @@ export const runEclipseJdtLsClient = () => {
                 }
             }
         },
-        languageClientConfig: {
-            languageId: 'java',
-            options: {
-                $type: 'WebSocketUrl',
-                url: 'ws://localhost:30003/jdtls'
-            },
-            clientOptions: {
-                documentSelector: ['java'],
-                workspaceFolder: {
-                    index: 0,
-                    name: 'workspace',
-                    uri: vscode.Uri.parse(`${eclipseJdtLsConfig.basePath}/workspace`)
+        languageClientConfigs: {
+            java: {
+                languageId: 'java',
+                options: {
+                    $type: 'WebSocketUrl',
+                    url: 'ws://localhost:30003/jdtls'
                 },
-            },
+                clientOptions: {
+                    documentSelector: ['java'],
+                    workspaceFolder: {
+                        index: 0,
+                        name: 'workspace',
+                        uri: vscode.Uri.parse(`${eclipseJdtLsConfig.basePath}/workspace`)
+                    }
+                }
+            }
         }
     };
 

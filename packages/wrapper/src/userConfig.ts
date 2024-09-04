@@ -18,5 +18,5 @@ export type UserConfig = {
     id?: string;
     loggerConfig?: LoggerConfig;
     wrapperConfig: WrapperConfig;
-    languageClientConfig?: LanguageClientConfig;
+    languageClientConfigs?: Record<string, LanguageClientConfig>;
 }

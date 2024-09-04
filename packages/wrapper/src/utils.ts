@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { WebSocketUrlParams, WebSocketUrlString, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-languageclient';
+import { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
 import { CodePlusFileExt, CodePlusUri, CodeResources } from './editorAppBase.js';
 import { EditorAppClassic } from './editorAppClassic.js';
 import { UserConfig } from './userConfig.js';
@@ -119,23 +119,6 @@ export const isReInitRequired = (editorApp: EditorAppClassic | EditorAppExtended
     let mustReInit = false;
     const config = userConfig.wrapperConfig.editorAppConfig;
     const prevConfig = previousUserConfig.wrapperConfig.editorAppConfig;
-    const prevWorkerOptions = previousUserConfig.languageClientConfig?.options;
-    const currentWorkerOptions = userConfig.languageClientConfig?.options;
-    const prevIsWorker = (prevWorkerOptions?.$type === 'WorkerDirect');
-    const currentIsWorker = (currentWorkerOptions?.$type === 'WorkerDirect');
-    const prevIsWorkerConfig = (prevWorkerOptions?.$type === 'WorkerConfig');
-    const currentIsWorkerConfig = (currentWorkerOptions?.$type === 'WorkerConfig');
-
-    // check if both are configs and the workers are both undefined
-    if (prevIsWorkerConfig && !prevIsWorker && currentIsWorkerConfig && !currentIsWorker) {
-        mustReInit = (prevWorkerOptions as WorkerConfigOptions).url !== (currentWorkerOptions as WorkerConfigOptions).url;
-        // check if both are workers and configs are both undefined
-    } else if (!prevIsWorkerConfig && prevIsWorker && !currentIsWorkerConfig && currentIsWorker) {
-        mustReInit = (prevWorkerOptions as WorkerConfigDirect).worker !== (currentWorkerOptions as WorkerConfigDirect).worker;
-        // previous was worker and current config is not or the other way around
-    } else if (prevIsWorker && currentIsWorkerConfig || prevIsWorkerConfig && currentIsWorker) {
-        mustReInit = true;
-    }
 
     if (prevConfig.$type !== config.$type) {
         mustReInit = true;

@@ -49,11 +49,13 @@ export const setupLangiumClientClassic = async (): Promise<UserConfig> => {
                 }
             }
         },
-        languageClientConfig: {
-            languageId: 'langium',
-            options: {
-                $type: 'WorkerDirect',
-                worker: langiumWorker
+        languageClientConfigs: {
+            langium: {
+                languageId: 'langium',
+                options: {
+                    $type: 'WorkerDirect',
+                    worker: langiumWorker
+                }
             }
         }
     };
