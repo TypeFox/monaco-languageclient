@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "5.5.3",
+  "version": "6.0.0-next.0",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -81,8 +81,8 @@
     "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite"
   },
   "volta": {
-    "node": "20.16.0",
-    "npm": "10.8.1"
+    "node": "20.17.0",
+    "npm": "10.8.3"
   },
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~8.0.4",
@@ -120,7 +120,7 @@
   },
   "peerDependencies": {
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~8.0.4",
-    "monaco-languageclient": "~8.8.3",
+    "monaco-languageclient": "~9.0.0-next.0",
     "vscode": "npm:@codingame/monaco-vscode-api@~8.0.4"
   },
   "peerDependenciesMeta": {
