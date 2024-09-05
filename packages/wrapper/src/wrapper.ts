@@ -74,13 +74,11 @@ export class MonacoEditorLanguageClientWrapper {
         if (lccs !== undefined && Object.entries(lccs).length > 0) {
 
             for (const [languageId, lcc] of Object.entries(lccs)) {
-                const lcw = new LanguageClientWrapper();
-                this.languageClientWrappers.set(languageId, lcw);
-
-                lcw.init({
+                const lcw = new LanguageClientWrapper({
                     languageClientConfig: lcc,
                     logger: this.logger
                 });
+                this.languageClientWrappers.set(languageId, lcw);
             }
         }
 
@@ -111,9 +109,7 @@ export class MonacoEditorLanguageClientWrapper {
         await this.editorApp?.createEditors(htmlElement);
 
         for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClientConfig()) {
-                await lcw.start();
-            }
+            await lcw.start();
         }
 
         this.markStarted();

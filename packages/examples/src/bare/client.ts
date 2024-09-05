@@ -73,7 +73,7 @@ export const initWebSocketAndStartClient = (url: string): WebSocket => {
     return webSocket;
 };
 
-export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
+export const createLanguageClient = (messageTransports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {
@@ -86,8 +86,6 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
             }
         },
         // create a language client connection from the JSON RPC connection on demand
-        connectionProvider: {
-            get: async () => (transports)
-        }
+        messageTransports
     });
 };

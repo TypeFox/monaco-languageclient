@@ -20,7 +20,7 @@ export type LanguageClientRestartOptions = {
 
 export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WebSocketDirect' | 'WorkerConfig' | 'Worker';
 
-export type LanguageClientConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect) & {
+export type ConnetionConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect) & {
     restartOptions?: LanguageClientRestartOptions;
 }
 

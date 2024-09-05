@@ -55,9 +55,7 @@ const startEditor = async () => {
         useLanguageClient: true,
         worker: stateMachineWorkerPort,
         messagePort: channel.port1,
-        connectionProvider: {
-            get: async () => ({ reader, writer })
-        }
+        messageTransports: { reader, writer }
     });
     await wrapper.initAndStart(langiumGlobalConfig, document.getElementById('monaco-editor-root'));
 

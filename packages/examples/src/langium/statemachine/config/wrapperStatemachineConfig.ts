@@ -6,12 +6,12 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
-import { IConnectionProvider } from 'monaco-languageclient';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { LanguageClientConfig, UserConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
+import { MessageTransports } from 'vscode-languageclient';
 
 export const createLangiumGlobalConfig = async (params: {
     languageServerId: string,
@@ -19,7 +19,7 @@ export const createLangiumGlobalConfig = async (params: {
     text?: string,
     worker?: Worker,
     messagePort?: MessagePort,
-    connectionProvider?: IConnectionProvider
+    messageTransports?: MessageTransports
 }): Promise<UserConfig> => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
@@ -36,12 +36,14 @@ export const createLangiumGlobalConfig = async (params: {
     const languageClientConfigs: Record<string, LanguageClientConfig> | undefined = params.useLanguageClient && params.worker ? {
         statemachine: {
             languageId: 'statemachine',
-            options: {
-                $type: 'WorkerDirect',
-                worker: params.worker,
-                messagePort: params.messagePort,
-            },
-            connectionProvider: params.connectionProvider
+            connection: {
+                configOptions: {
+                    $type: 'WorkerDirect',
+                    worker: params.worker,
+                    messagePort: params.messagePort,
+                },
+                messageTransports: params.messageTransports
+            }
         }
     } : undefined;
 

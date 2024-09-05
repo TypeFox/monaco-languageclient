@@ -56,40 +56,44 @@ export const runMultipleLanguageClientsExample = async () => {
             json: {
                 languageId: 'json',
                 name: 'JSON Client',
-                options: {
-                    $type: 'WebSocketParams',
-                    host: 'localhost',
-                    port: 30000,
-                    path: 'sampleServer',
-                    secured: false
+                connection: {
+                    configOptions: {
+                        $type: 'WebSocketParams',
+                        host: 'localhost',
+                        port: 30000,
+                        path: 'sampleServer',
+                        secured: false
+                    }
                 }
             },
             python: {
                 languageId: 'python',
                 name: 'Python Client',
-                options: {
-                    $type: 'WebSocketParams',
-                    host: 'localhost',
-                    port: 30001,
-                    path: 'pyright',
-                    secured: false,
-                    extraParams: {
-                        authorization: 'UserAuth'
-                    },
-                    startOptions: {
-                        onCall: (languageClient?: MonacoLanguageClient) => {
-                            setTimeout(() => {
-                                ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                    vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                        languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
-                                    });
-                                });
-                            }, 250);
+                connection: {
+                    configOptions: {
+                        $type: 'WebSocketParams',
+                        host: 'localhost',
+                        port: 30001,
+                        path: 'pyright',
+                        secured: false,
+                        extraParams: {
+                            authorization: 'UserAuth'
                         },
-                        reportStatus: true,
+                        startOptions: {
+                            onCall: (languageClient?: MonacoLanguageClient) => {
+                                setTimeout(() => {
+                                    ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                                        vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                            languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                        });
+                                    });
+                                }, 250);
+                            },
+                            reportStatus: true,
+                        }
                     }
                 },
-                clientOptions: {
+                languageClientOptions: {
                     documentSelector: ['python'],
                     workspaceFolder: {
                         index: 0,

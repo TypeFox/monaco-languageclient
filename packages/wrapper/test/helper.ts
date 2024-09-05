@@ -35,12 +35,3 @@ export const createEditorAppConfig = (type: EditorAppType) => {
         useDiffEditor: false,
     };
 };
-
-/**
- * Helper to generate a quick worker from a function blob
- */
-export const createWorkerFromFunction = (fn: () => void): Worker => {
-    return new Worker(URL.createObjectURL(
-        new Blob([`(${fn.toString()})()`], { type: 'application/javascript' })
-    ));
-};

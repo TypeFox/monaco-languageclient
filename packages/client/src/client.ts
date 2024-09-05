@@ -5,26 +5,22 @@
 
 import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/browser.js';
 
-export interface IConnectionProvider {
-    get(encoding: string): Promise<MessageTransports>;
-}
-
 export type MonacoLanguageClientOptions = {
     name: string;
     id?: string;
     clientOptions: LanguageClientOptions;
-    connectionProvider: IConnectionProvider;
+    messageTransports: MessageTransports;
 }
 
 export class MonacoLanguageClient extends BaseLanguageClient {
-    protected readonly connectionProvider: IConnectionProvider;
+    protected readonly messageTransports: MessageTransports;
 
-    constructor({ id, name, clientOptions, connectionProvider }: MonacoLanguageClientOptions) {
+    constructor({ id, name, clientOptions, messageTransports }: MonacoLanguageClientOptions) {
         super(id ?? name.toLowerCase(), name, clientOptions);
-        this.connectionProvider = connectionProvider;
+        this.messageTransports = messageTransports;
     }
 
-    protected override createMessageTransports(encoding: string): Promise<MessageTransports> {
-        return this.connectionProvider.get(encoding);
+    protected override createMessageTransports(_encoding: string): Promise<MessageTransports> {
+        return Promise.resolve(this.messageTransports);
     }
 }
