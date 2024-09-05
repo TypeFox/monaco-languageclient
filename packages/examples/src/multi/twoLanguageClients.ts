@@ -8,9 +8,10 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { CodePlusFileExt, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoLanguageClient } from 'monaco-languageclient';
+import { disableButton } from '../common/client/utils.js';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
@@ -22,34 +23,44 @@ export const configureMonacoWorkers = () => {
 };
 
 export const runMultipleLanguageClientsExample = async () => {
-    const text = `{
+    disableButton('button-flip', true);
+
+    const textJson = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": {"value": "unix"}
 }`;
-    const userConfig: UserConfig = {
+
+    const textPython = `from hello2 import print_hello
+
+print_hello()
+print("Hello Moon!")
+`;
+
+    let currentText = textJson;
+    let currenFileExt = 'json';
+
+    const wrapperConfig: WrapperConfig = {
         id: '42',
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getKeybindingsServiceOverride()
-                },
-                debugLogging: true
+        serviceConfig: {
+            userServices: {
+                ...getKeybindingsServiceOverride()
             },
-            editorAppConfig: {
-                $type: 'extended',
-                codeResources: {
-                    main: {
-                        text,
-                        fileExt: 'json'
-                    }
-                },
-                useDiffEditor: false,
-                userConfiguration: {
-                    json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern',
-                        'editor.wordBasedSuggestions': 'off'
-                    })
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text: currentText,
+                    fileExt: currenFileExt
                 }
+            },
+            useDiffEditor: false,
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.wordBasedSuggestions': 'off'
+                })
             }
         },
         languageClientConfigs: {
@@ -57,7 +68,7 @@ export const runMultipleLanguageClientsExample = async () => {
                 languageId: 'json',
                 name: 'JSON Client',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WebSocketParams',
                         host: 'localhost',
                         port: 30000,
@@ -70,7 +81,7 @@ export const runMultipleLanguageClientsExample = async () => {
                 languageId: 'python',
                 name: 'Python Client',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WebSocketParams',
                         host: 'localhost',
                         port: 30001,
@@ -93,8 +104,8 @@ export const runMultipleLanguageClientsExample = async () => {
                         }
                     }
                 },
-                languageClientOptions: {
-                    documentSelector: ['python'],
+                clientOptions: {
+                    documentSelector: ['python', 'py'],
                     workspaceFolder: {
                         index: 0,
                         name: 'workspace',
@@ -110,10 +121,27 @@ export const runMultipleLanguageClientsExample = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig, htmlElement);
+            if (wrapperConfig.editorAppConfig.codeResources?.main !== undefined) {
+                (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).text = currentText;
+                (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
+            }
+
+            await wrapper.initAndStart(wrapperConfig, htmlElement);
+            disableButton('button-flip', false);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();
+            disableButton('button-flip', true);
+        });
+        document.querySelector('#button-flip')?.addEventListener('click', async () => {
+            currentText = currentText === textJson ? textPython : textJson;
+            currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
+            wrapper.updateCodeResources({
+                main: {
+                    text: currentText,
+                    fileExt: currenFileExt
+                }
+            });
         });
     } catch (e) {
         console.error(e);

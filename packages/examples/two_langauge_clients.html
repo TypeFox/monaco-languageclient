@@ -2,19 +2,20 @@
 <html lang="en">
 
 <head>
-    <title>Multiple Language Clients</title>
+    <title>Json & Python Languageclients & Language Server (Web Socket)</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h2>Multiple Language Clients</h2>
+    <h2>Json & Python Languageclients & Language Server (Web Socket)</h2>
     <button type="button" id="button-start">Start</button>
     <button type="button" id="button-dispose">Dispose</button>
+    <button type="button" id="button-flip">Flip Content</button>
     <div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers, runMultipleLanguageClientsExample } from './src/ts/wrapperAdvanced.ts';
+        import { configureMonacoWorkers, runMultipleLanguageClientsExample } from './src/multi/twoLanguageClients.ts';
 
         configureMonacoWorkers();
         runMultipleLanguageClientsExample();

@@ -7,8 +7,8 @@ import * as vscode from 'vscode';
 import { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
 import { CodePlusFileExt, CodePlusUri, CodeResources } from './editorAppBase.js';
 import { EditorAppClassic } from './editorAppClassic.js';
-import { UserConfig } from './userConfig.js';
 import { EditorAppExtended } from './editorAppExtended.js';
+import { EditorAppConfigBase } from './editorAppBase.js';
 
 export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';
@@ -115,17 +115,15 @@ export const isEqual = (obj1: unknown, obj2: unknown) => {
  * @param previousUserConfig
  * @returns
  */
-export const isReInitRequired = (editorApp: EditorAppClassic | EditorAppExtended, userConfig: UserConfig, previousUserConfig: UserConfig): boolean => {
+export const isReInitRequired = (editorApp: EditorAppClassic | EditorAppExtended, config: EditorAppConfigBase, previousConfig: EditorAppConfigBase): boolean => {
     let mustReInit = false;
-    const config = userConfig.wrapperConfig.editorAppConfig;
-    const prevConfig = previousUserConfig.wrapperConfig.editorAppConfig;
 
-    if (prevConfig.$type !== config.$type) {
+    if (previousConfig.$type !== config.$type) {
         mustReInit = true;
-    } else if (prevConfig.$type === 'classic' && config.$type === 'classic') {
-        mustReInit = (editorApp as EditorAppClassic).isAppConfigDifferent(prevConfig, config, false) === true;
-    } else if (prevConfig.$type === 'extended' && config.$type === 'extended') {
-        mustReInit = (editorApp as EditorAppExtended).isAppConfigDifferent(prevConfig, config, false) === true;
+    } else if (previousConfig.$type === 'classic' && config.$type === 'classic') {
+        mustReInit = (editorApp as EditorAppClassic).isAppConfigDifferent(previousConfig, config, false) === true;
+    } else if (previousConfig.$type === 'extended' && config.$type === 'extended') {
+        mustReInit = (editorApp as EditorAppExtended).isAppConfigDifferent(previousConfig, config, false) === true;
     }
 
     return mustReInit;

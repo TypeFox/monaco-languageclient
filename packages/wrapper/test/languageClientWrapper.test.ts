@@ -26,7 +26,7 @@ describe('Test LanguageClientWrapper', () => {
         const languageClientConfig: LanguageClientConfig = {
             languageId: 'javascript',
             connection: {
-                configOptions: {
+                options: {
                     $type: 'WorkerDirect',
                     worker
                 }
@@ -53,7 +53,7 @@ describe('Test LanguageClientWrapper', () => {
             javascript: {
                 languageId: 'javascript',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WorkerDirect',
                         worker
                     }
@@ -86,7 +86,7 @@ describe('Test LanguageClientWrapper', () => {
             javascript: {
                 languageId: 'javascript',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WebSocketUrl',
                         url: 'ws://localhost:12345/Tester'
                     }
@@ -107,7 +107,7 @@ describe('Test LanguageClientWrapper', () => {
                 languageId: 'javascript',
                 name: 'test-unreachable',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WebSocketUrl',
                         url: 'ws://localhost:12345/Tester'
                     }
@@ -143,7 +143,7 @@ describe('Test LanguageClientWrapper', () => {
             javascript: {
                 languageId: 'javascript',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WorkerConfig',
                         url: new URL('http://localhost:20101'),
                         type: 'classic'

@@ -7,7 +7,6 @@ import * as monaco from 'monaco-editor';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
-import { UserConfig } from './userConfig.js';
 
 export type EditorAppConfigClassic = EditorAppConfigBase & {
     $type: 'classic';
@@ -28,11 +27,10 @@ export class EditorAppClassic extends EditorAppBase {
 
     private config: EditorAppConfigClassic;
 
-    constructor(id: string, userConfig: UserConfig, logger?: Logger) {
+    constructor(id: string, editorAppConfig: EditorAppConfigClassic, logger?: Logger) {
         super(id, logger);
-        const userAppConfig = userConfig.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        this.config = this.buildConfig(userAppConfig) as EditorAppConfigClassic;
-        this.config.languageDef = userAppConfig.languageDef;
+        this.config = this.buildConfig(editorAppConfig) as EditorAppConfigClassic;
+        this.config.languageDef = editorAppConfig.languageDef;
     }
 
     getConfig(): EditorAppConfigClassic {
@@ -88,7 +86,7 @@ export class EditorAppClassic extends EditorAppBase {
         this.disposeEditors();
     }
 
-    isAppConfigDifferent(orgConfig: EditorAppConfigClassic, config: EditorAppConfigClassic, includeModelData: boolean): boolean {
+    isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean {
         let different = false;
         if (includeModelData) {
             different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;

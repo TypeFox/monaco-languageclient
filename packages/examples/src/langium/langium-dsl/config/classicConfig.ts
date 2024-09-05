@@ -7,53 +7,51 @@ import getConfigurationServiceOverride from '@codingame/monaco-vscode-configurat
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import code from '../content/example.langium?raw';
 
-export const setupLangiumClientClassic = async (): Promise<UserConfig> => {
+export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
         loggerConfig: {
             enabled: true,
             debugEnabled: true
         },
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getConfigurationServiceOverride(),
-                    ...getEditorServiceOverride(useOpenEditorStub),
-                    ...getKeybindingsServiceOverride()
-                },
-                debugLogging: true
+        serviceConfig: {
+            userServices: {
+                ...getConfigurationServiceOverride(),
+                ...getEditorServiceOverride(useOpenEditorStub),
+                ...getKeybindingsServiceOverride()
             },
-            editorAppConfig: {
-                $type: 'classic',
-                codeResources: {
-                    main: {
-                        text: code,
-                        fileExt: 'langium',
-                        enforceLanguageId: 'langium'
-                    }
-                },
-                useDiffEditor: false,
-                editorOptions: {
-                    'semanticHighlighting.enabled': true,
-                    wordBasedSuggestions: 'off',
-                    theme: 'vs-dark'
-                },
-                languageDef: {
-                    monarchLanguage: LangiumMonarchContent,
-                    languageExtensionConfig: { id: 'langium' },
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'classic',
+            codeResources: {
+                main: {
+                    text: code,
+                    fileExt: 'langium',
+                    enforceLanguageId: 'langium'
                 }
+            },
+            useDiffEditor: false,
+            editorOptions: {
+                'semanticHighlighting.enabled': true,
+                wordBasedSuggestions: 'off',
+                theme: 'vs-dark'
+            },
+            languageDef: {
+                monarchLanguage: LangiumMonarchContent,
+                languageExtensionConfig: { id: 'langium' },
             }
         },
         languageClientConfigs: {
             langium: {
                 languageId: 'langium',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WorkerDirect',
                         worker: langiumWorker
                     }

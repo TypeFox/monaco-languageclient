@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient, WorkerConfigOptions, WorkerConfigDirect, LanguageClientRestartOptions, ConnetionConfigOptions } from 'monaco-languageclient';
+import { MonacoLanguageClient, LanguageClientRestartOptions, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
 import { Logger } from 'monaco-languageclient/tools';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
@@ -11,7 +11,7 @@ import { createUrl } from './utils.js';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export type ConnectionConfig = {
-    configOptions: ConnetionConfigOptions;
+    options: ConnetionConfigOptions;
     messageTransports?: MessageTransports;
 }
 
@@ -19,7 +19,8 @@ export type LanguageClientConfig = {
     name?: string;
     languageId: string;
     connection: ConnectionConfig;
-    languageClientOptions?: LanguageClientOptions;
+    clientOptions?: LanguageClientOptions;
+    restartOptions?: LanguageClientRestartOptions;
 }
 
 export type LanguageClientError = {
@@ -72,7 +73,7 @@ export class LanguageClientWrapper {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise((resolve, reject) => {
             const conConfig = this.languageClientConfig.connection;
-            const conOptions = conConfig.configOptions;
+            const conOptions = conConfig.options;
 
             if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') {
                 const webSocket = conOptions.$type === 'WebSocketDirect' ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
@@ -127,10 +128,10 @@ export class LanguageClientWrapper {
         };
     }
 
-    protected async initMessageTransportWorker(lccOptions: WorkerConfigDirect | WorkerConfigOptions, resolve: () => void, reject: (reason?: unknown) => void) {
+    protected async initMessageTransportWorker(lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams, resolve: () => void, reject: (reason?: unknown) => void) {
         if (!this.worker) {
             if (lccOptions.$type === 'WorkerConfig') {
-                const workerConfig = lccOptions as WorkerConfigOptions;
+                const workerConfig = lccOptions as WorkerConfigOptionsParams;
                 this.worker = new Worker(new URL(workerConfig.url, import.meta.url).href, {
                     type: workerConfig.type,
                     name: workerConfig.workerName
@@ -144,7 +145,7 @@ export class LanguageClientWrapper {
                     reject(languageClientError);
                 };
             } else {
-                const workerDirectConfig = lccOptions as WorkerConfigDirect;
+                const workerDirectConfig = lccOptions as WorkerConfigOptionsDirect;
                 this.worker = workerDirectConfig.worker;
             }
             if (lccOptions.messagePort !== undefined) {
@@ -174,7 +175,7 @@ export class LanguageClientWrapper {
             name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
 
             // allow to fully override the clientOptions
-            clientOptions: this.languageClientConfig.languageClientOptions ?? {
+            clientOptions: this.languageClientConfig.clientOptions ?? {
                 documentSelector: [this.languageId],
                 // disable the default error handler
                 errorHandler: {
@@ -187,8 +188,8 @@ export class LanguageClientWrapper {
 
         this.languageClient = new MonacoLanguageClient(mlcConfig);
 
-        const conOptions = this.languageClientConfig.connection.configOptions;
-        this.initRestartConfiguration(messageTransports, conOptions.restartOptions);
+        const conOptions = this.languageClientConfig.connection.options;
+        this.initRestartConfiguration(messageTransports, this.languageClientConfig.restartOptions);
 
         messageTransports.reader.onClose(async () => {
             await this.languageClient?.stop();

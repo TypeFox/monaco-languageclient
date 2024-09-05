@@ -63,20 +63,20 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('Verify if configuration changes make re-init necessary', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfigClassic = createBaseConfig('classic');
-        wrapper.init(userConfigClassic);
+        const wrapperConfigClassic = createBaseConfig('classic');
+        wrapper.init(wrapperConfigClassic);
         const app = wrapper.getMonacoEditorApp();
         expect(app).toBeDefined();
         if (app) {
-            expect(isReInitRequired(app, userConfigClassic, userConfigClassic)).toBeFalsy();
+            expect(isReInitRequired(app, wrapperConfigClassic.editorAppConfig, wrapperConfigClassic.editorAppConfig)).toBeFalsy();
 
-            const userConfigExtended = createBaseConfig('extended');
-            expect(isReInitRequired(app, userConfigClassic, userConfigExtended)).toBeTruthy();
+            const wrapperConfigExtended = createBaseConfig('extended');
+            expect(isReInitRequired(app, wrapperConfigClassic.editorAppConfig, wrapperConfigExtended.editorAppConfig)).toBeTruthy();
 
-            const userConfigClassicNew = createBaseConfig('classic');
-            userConfigClassicNew.wrapperConfig.editorAppConfig.useDiffEditor = true;
+            const wrapperConfigClassicNew = createBaseConfig('classic');
+            wrapperConfigClassicNew.editorAppConfig.useDiffEditor = true;
 
-            expect(isReInitRequired(app, userConfigClassicNew, userConfigClassic)).toBeTruthy();
+            expect(isReInitRequired(app, wrapperConfigClassicNew.editorAppConfig, wrapperConfigClassic.editorAppConfig)).toBeTruthy();
         }
     });
 
@@ -96,8 +96,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('code resources original', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('classic');
-        let codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+        const wrapperConfig = createBaseConfig('classic');
+        let codeResources = wrapperConfig.editorAppConfig.codeResources;
         if (!codeResources) {
             codeResources = {};
         }
@@ -106,7 +106,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             fileExt: 'js'
         };
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -118,8 +118,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('code resources main and original', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('classic');
-        let codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+        const wrapperConfig = createBaseConfig('classic');
+        let codeResources = wrapperConfig.editorAppConfig.codeResources;
         if (!codeResources) {
             codeResources = {};
         }
@@ -127,7 +127,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             fileExt: 'js'
         };
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -146,9 +146,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('code resources empty', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('classic');
-        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        const wrapperConfig = createBaseConfig('classic');
+        wrapperConfig.editorAppConfig.codeResources = {};
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
 
         const app = wrapper.getMonacoEditorApp();
         const modelRefs = app?.getModelRefs();
@@ -159,9 +159,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('code resources model direct', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('classic');
-        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        const wrapperConfig = createBaseConfig('classic');
+        wrapperConfig.editorAppConfig.codeResources = {};
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
 
         const app = wrapper.getMonacoEditorApp();
 
@@ -183,8 +183,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test.skip('extended editor disposes extensions', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('extended');
-        (userConfig.wrapperConfig.editorAppConfig as EditorAppConfigExtended).extensions = [{
+        const wrapperConfig = createBaseConfig('extended');
+        (wrapperConfig.editorAppConfig as EditorAppConfigExtended).extensions = [{
             config: {
                 engines: {
                     vscode: '*'
@@ -207,18 +207,18 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
                 ['/javascript.tmLanguage.json', '{}']
             ]),
         }];
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
         await wrapper.dispose();
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
     });
 
     test('Early code resources update on wrapper are ok', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createBaseConfig('classic');
-        userConfig.wrapperConfig.editorAppConfig.codeResources = {};
+        const wrapperConfig = createBaseConfig('classic');
+        wrapperConfig.editorAppConfig.codeResources = {};
 
-        await wrapper.init(userConfig);
+        await wrapper.init(wrapperConfig);
         const app = wrapper.getMonacoEditorApp();
         const promise = await wrapper.updateCodeResources({
             main: {

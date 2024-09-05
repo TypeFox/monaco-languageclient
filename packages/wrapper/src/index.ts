@@ -15,8 +15,7 @@ export * from './editorAppExtended.js';
 export type * from './languageClientWrapper.js';
 export * from './languageClientWrapper.js';
 
-export type * from './userConfig.js';
-
+export type * from './wrapper.js';
 export * from './wrapper.js';
 
 export * from './utils.js';

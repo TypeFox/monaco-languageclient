@@ -18,11 +18,7 @@ export type LanguageClientRestartOptions = {
     keepWorker?: boolean;
 }
 
-export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WebSocketDirect' | 'WorkerConfig' | 'Worker';
-
-export type ConnetionConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptions | WorkerConfigDirect) & {
-    restartOptions?: LanguageClientRestartOptions;
-}
+export type ConnetionConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect);
 
 export type WebSocketUrlParams = {
     secured: boolean;
@@ -55,7 +51,7 @@ export type WebSocketConfigOptionsUrl = WebSocketUrlString & {
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WorkerConfigOptions = {
+export type WorkerConfigOptionsParams = {
     $type: 'WorkerConfig'
     url: URL;
     type: 'classic' | 'module';
@@ -63,7 +59,7 @@ export type WorkerConfigOptions = {
     workerName?: string;
 };
 
-export type WorkerConfigDirect = {
+export type WorkerConfigOptionsDirect = {
     $type: 'WorkerDirect';
     worker: Worker;
     messagePort?: MessagePort;

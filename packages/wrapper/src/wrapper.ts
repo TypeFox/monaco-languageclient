@@ -5,14 +5,21 @@
 
 import * as monaco from 'monaco-editor';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { initServices } from 'monaco-languageclient/vscode/services';
-import { Logger } from 'monaco-languageclient/tools';
+import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { Logger, LoggerConfig } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
-import { EditorAppExtended } from './editorAppExtended.js';
-import { EditorAppClassic } from './editorAppClassic.js';
+import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
+import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
-import { LanguageClientWrapper } from './languageClientWrapper.js';
-import { UserConfig } from './userConfig.js';
+import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+
+export type WrapperConfig = {
+    id?: string;
+    loggerConfig?: LoggerConfig;
+    serviceConfig?: InitializeServiceConfig;
+    editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
+    languageClientConfigs?: Record<string, LanguageClientConfig>;
+};
 
 /**
  * This class is responsible for the overall ochestration.
@@ -34,32 +41,32 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
-    async init(userConfig: UserConfig) {
+    async init(wrapperConfig: WrapperConfig) {
         this.markStarting();
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
 
-        const editorAppConfig = userConfig.wrapperConfig.editorAppConfig;
+        const editorAppConfig = wrapperConfig.editorAppConfig;
         if ((editorAppConfig.useDiffEditor ?? false) && !editorAppConfig.codeResources?.original) {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
         }
 
         // Always dispose old instances before start
         this.dispose(false);
-        this.id = userConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger.updateConfig(userConfig.loggerConfig);
+        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+        this.logger.updateConfig(wrapperConfig.loggerConfig);
 
         if (editorAppConfig.$type === 'classic') {
-            this.editorApp = new EditorAppClassic(this.id, userConfig, this.logger);
+            this.editorApp = new EditorAppClassic(this.id, wrapperConfig.editorAppConfig as EditorAppConfigClassic, this.logger);
         } else {
-            this.editorApp = new EditorAppExtended(this.id, userConfig, this.logger);
+            this.editorApp = new EditorAppExtended(this.id, wrapperConfig.editorAppConfig as EditorAppConfigExtended, this.logger);
         }
 
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp.specifyServices();
         const serviceConfig = await configureServices({
-            serviceConfig: userConfig.wrapperConfig.serviceConfig,
+            serviceConfig: wrapperConfig.serviceConfig,
             specificServices,
             logger: this.logger
         });
@@ -70,7 +77,7 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
-        const lccs = userConfig.languageClientConfigs;
+        const lccs = wrapperConfig.languageClientConfigs;
         if (lccs !== undefined && Object.entries(lccs).length > 0) {
 
             for (const [languageId, lcc] of Object.entries(lccs)) {
@@ -88,8 +95,8 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(userConfig: UserConfig, htmlElement: HTMLElement | null) {
-        await this.init(userConfig);
+    async initAndStart(wrapperConfig: WrapperConfig, htmlElement: HTMLElement | null) {
+        await this.init(wrapperConfig);
         await this.start(htmlElement);
     }
 

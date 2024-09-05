@@ -5,16 +5,16 @@
 
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '../../../../resources/vsix/GitHub.github-vscode-theme-6.3.4.vsix';
+import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { WrapperConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../content/example.langium?raw';
 
-export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
+export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
 
     const extensionFilesOrContents = new Map<string, string | URL>();
     // vite build is easier with string content
@@ -26,61 +26,59 @@ export const setupLangiumClientExtended = async (): Promise<UserConfig> => {
     const writer = new BrowserMessageWriter(langiumWorker);
 
     return {
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getEditorServiceOverride(useOpenEditorStub),
-                    ...getKeybindingsServiceOverride()
-                },
-                debugLogging: true
+        serviceConfig: {
+            userServices: {
+                ...getEditorServiceOverride(useOpenEditorStub),
+                ...getKeybindingsServiceOverride()
             },
-            editorAppConfig: {
-                $type: 'extended',
-                codeResources: {
-                    main: {
-                        text,
-                        fileExt: 'langium'
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text,
+                    fileExt: 'langium'
+                }
+            },
+            useDiffEditor: false,
+            extensions: [{
+                config: {
+                    name: 'langium-example',
+                    publisher: 'monaco-editor-wrapper-examples',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [{
+                            id: 'langium',
+                            extensions: ['.langium'],
+                            aliases: ['langium', 'LANGIUM'],
+                            configuration: './langium-configuration.json'
+                        }],
+                        grammars: [{
+                            language: 'langium',
+                            scopeName: 'source.langium',
+                            path: './langium-grammar.json'
+                        }]
                     }
                 },
-                useDiffEditor: false,
-                extensions: [{
-                    config: {
-                        name: 'langium-example',
-                        publisher: 'monaco-editor-wrapper-examples',
-                        version: '1.0.0',
-                        engines: {
-                            vscode: '*'
-                        },
-                        contributes: {
-                            languages: [{
-                                id: 'langium',
-                                extensions: ['.langium'],
-                                aliases: ['langium', 'LANGIUM'],
-                                configuration: './langium-configuration.json'
-                            }],
-                            grammars: [{
-                                language: 'langium',
-                                scopeName: 'source.langium',
-                                path: './langium-grammar.json'
-                            }]
-                        }
-                    },
-                    filesOrContents: extensionFilesOrContents
-                }],
-                userConfiguration: {
-                    json: JSON.stringify({
-                        'workbench.colorTheme': 'GitHub Dark High Contrast',
-                        'editor.guides.bracketPairsHorizontal': 'active',
-                        'editor.wordBasedSuggestions': 'off'
-                    })
-                }
+                filesOrContents: extensionFilesOrContents
+            }],
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'GitHub Dark High Contrast',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off'
+                })
             }
         },
         languageClientConfigs: {
             langium: {
                 languageId: 'langium',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WorkerDirect',
                         worker: langiumWorker
                     },

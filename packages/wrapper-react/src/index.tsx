@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
-import { MonacoEditorLanguageClientWrapper, TextContents, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, TextContents, WrapperConfig } from 'monaco-editor-wrapper';
 import { Logger } from 'monaco-languageclient/tools';
 
 export type TextChanges = TextContents & {
@@ -15,7 +15,7 @@ export type TextChanges = TextContents & {
 export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
-    userConfig: UserConfig,
+    wrapperConfig: WrapperConfig,
     onTextChanged?: (textChanges: TextChanges) => void;
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +26,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
         style,
         className,
-        userConfig,
+        wrapperConfig,
         onTextChanged,
         onLoad,
         onError
@@ -38,7 +38,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
 
     useEffect(() => {
-        loggerRef.current.updateConfig(userConfig.loggerConfig);
+        loggerRef.current.updateConfig(wrapperConfig.loggerConfig);
         return () => {
             destroyMonaco();
         };
@@ -46,7 +46,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     useEffect(() => {
         handleReInit();
-    }, [userConfig]);
+    }, [wrapperConfig]);
 
     useEffect(() => {
         handleOnTextChanged();
@@ -72,11 +72,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             await wrapperRef.current.isStarting();
         }
 
-    }, [userConfig]);
+    }, [wrapperConfig]);
 
     const initMonaco = useCallback(async () => {
-        await wrapperRef.current.init(userConfig);
-    }, [userConfig]);
+        await wrapperRef.current.init(wrapperConfig);
+    }, [wrapperConfig]);
 
     const startMonaco = useCallback(async () => {
         if (containerRef.current) {
@@ -105,7 +105,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             const verifyModelContent = () => {
                 const text = textModels.text?.getValue() ?? '';
                 const textOriginal = textModels.textOriginal?.getValue() ?? '';
-                const codeResources = userConfig.wrapperConfig.editorAppConfig.codeResources;
+                const codeResources = wrapperConfig.editorAppConfig.codeResources;
                 const dirty = text !== codeResources?.main?.text;
                 const dirtyOriginal = textOriginal !== codeResources?.original?.text;
                 onTextChanged({
@@ -132,7 +132,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             // do it initially
             verifyModelContent();
         }
-    }, [onTextChanged, userConfig]);
+    }, [onTextChanged, wrapperConfig]);
 
     const destroyMonaco = useCallback(async () => {
         try {

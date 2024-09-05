@@ -8,7 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { CodePlusUri, MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -31,39 +31,37 @@ export const runTsWrapper = async () => {
     return "Goodbye";
 };`;
 
-    const userConfig: UserConfig = {
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getKeybindingsServiceOverride()
-                },
-                enableExtHostWorker: true,
-                debugLogging: true
+    const wrapperConfig: WrapperConfig = {
+        serviceConfig: {
+            userServices: {
+                ...getKeybindingsServiceOverride()
             },
-            editorAppConfig: {
-                $type: 'extended',
-                codeResources: {
-                    main: {
-                        text: code,
-                        uri: codeUri
-                    },
-                    original: {
-                        text: codeOriginal,
-                        uri: codeOriginalUri,
-                    }
+            enableExtHostWorker: true,
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text: code,
+                    uri: codeUri
                 },
-                useDiffEditor: false,
-                userConfiguration: {
-                    json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern',
-                        'typescript.tsserver.web.projectWideIntellisense.enabled': true,
-                        'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
-                        'diffEditor.renderSideBySide': false,
-                        'editor.lightbulb.enabled': 'on',
-                        'editor.glyphMargin': true,
-                        'editor.guides.bracketPairsHorizontal': true
-                    })
+                original: {
+                    text: codeOriginal,
+                    uri: codeOriginalUri,
                 }
+            },
+            useDiffEditor: false,
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'typescript.tsserver.web.projectWideIntellisense.enabled': true,
+                    'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
+                    'diffEditor.renderSideBySide': false,
+                    'editor.lightbulb.enabled': 'on',
+                    'editor.glyphMargin': true,
+                    'editor.guides.bracketPairsHorizontal': true
+                })
             }
         }
     };
@@ -73,7 +71,7 @@ export const runTsWrapper = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig, htmlElement);
+            await wrapper.initAndStart(wrapperConfig, htmlElement);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -112,9 +110,9 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-diff')?.addEventListener('click', async () => {
             // ensure it is boolean value and not undefined
-            const useDiffEditor = userConfig.wrapperConfig.editorAppConfig.useDiffEditor ?? false;
-            userConfig.wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
-            await wrapper.initAndStart(userConfig, htmlElement);
+            const useDiffEditor = wrapperConfig.editorAppConfig.useDiffEditor ?? false;
+            wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
+            await wrapper.initAndStart(wrapperConfig, htmlElement);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

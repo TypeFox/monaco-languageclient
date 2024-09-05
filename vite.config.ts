@@ -32,6 +32,9 @@ const viteConfig = defineViteConfig({
                 // grrovy
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
 
+                // json & python
+                twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
+
                 // monaco-editor-react
                 // langium
                 reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
@@ -39,8 +42,7 @@ const viteConfig = defineViteConfig({
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
 
                 // other examples
-                wrapperTs: path.resolve(__dirname, 'packages/examples/wrapper_ts.html'),
-                wrapperAdvanced: path.resolve(__dirname, 'packages/examples/wrapper_adv.html'),
+                wrapperTs: path.resolve(__dirname, 'packages/examples/wrapper_ts.html')
             }
         }
     },

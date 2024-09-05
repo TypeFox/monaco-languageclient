@@ -7,12 +7,12 @@ import * as vscode from 'vscode';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
-import { createUrl, UserConfig } from 'monaco-editor-wrapper';
+import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
-export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): UserConfig => {
+export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
     const url = createUrl({
         secured: false,
         host: 'localhost',
@@ -33,7 +33,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 languageId: 'python',
                 name: 'Python Language Server Example',
                 connection: {
-                    configOptions: {
+                    options: {
                         $type: 'WebSocketDirect',
                         webSocket: webSocket,
                         startOptions: {
@@ -51,7 +51,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     },
                     messageTransports: { reader, writer }
                 },
-                languageClientOptions: {
+                clientOptions: {
                     documentSelector: ['python'],
                     workspaceFolder: {
                         index: 0,
@@ -61,31 +61,29 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             }
         },
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getEditorServiceOverride(useOpenEditorStub),
-                    ...getKeybindingsServiceOverride()
-                },
-                debugLogging: true
+        serviceConfig: {
+            userServices: {
+                ...getEditorServiceOverride(useOpenEditorStub),
+                ...getKeybindingsServiceOverride()
             },
-            editorAppConfig: {
-                $type: 'extended',
-                codeResources: {
-                    main: {
-                        text: code,
-                        uri: codeUri
-                    }
-                },
-                userConfiguration: {
-                    json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern',
-                        'editor.guides.bracketPairsHorizontal': 'active',
-                        'editor.wordBasedSuggestions': 'off'
-                    })
-                },
-                useDiffEditor: false
-            }
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text: code,
+                    uri: codeUri
+                }
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off'
+                })
+            },
+            useDiffEditor: false
         },
         loggerConfig: {
             enabled: true,
