@@ -258,40 +258,31 @@ export class LanguageClientWrapper {
         }
     }
 
-    protected disposeWorker(keepWorker?: boolean) {
-        if (keepWorker === undefined || keepWorker === false) {
-            this.worker?.terminate();
-            this.worker = undefined;
-        }
+    protected disposeWorker() {
+        this.worker?.terminate();
+        this.worker = undefined;
     }
 
-    async disposeLanguageClient(keepWorker?: boolean): Promise<void> {
-        // If there is no language client, try to terminate the worker
-        if (!this.languageClient) {
-            this.disposeWorker(keepWorker);
-            return Promise.resolve();
-        }
-
-        // then attempt to dispose the LC
-        if (this.languageClient.isRunning()) {
-            try {
+    async disposeLanguageClient(keepWorker: boolean): Promise<void> {
+        try {
+            if (this.languageClient !== undefined && this.languageClient.isRunning()) {
                 await this.languageClient.dispose();
-                this.disposeWorker(keepWorker);
                 this.languageClient = undefined;
                 this.logger?.info('monaco-languageclient and monaco-editor were successfully disposed.');
-                return Promise.resolve();
-            } catch (e) {
-                const languageClientError: LanguageClientError = {
-                    message: `languageClientWrapper (${this.name}): Disposing the monaco-languageclient resulted in error.`,
-                    error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
-                };
-                return Promise.reject(languageClientError);
+            }
+        } catch (e) {
+            const languageClientError: LanguageClientError = {
+                message: `languageClientWrapper (${this.name}): Disposing the monaco-languageclient resulted in error.`,
+                error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
+            };
+            return Promise.reject(languageClientError);
+        } finally {
+            // always terminate the worker if desired
+            if (!keepWorker) {
+                this.disposeWorker();
             }
         }
-        else {
-            // disposing the languageclient if it does not exist is considered ok
-            return Promise.resolve();
-        }
+        return Promise.resolve();
     }
 
     reportStatus() {
