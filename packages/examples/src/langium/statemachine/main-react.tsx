@@ -48,7 +48,7 @@ export const runStatemachineReact = async () => {
                     <div style={{ 'height': height }} >
                         <MonacoEditorReactComp
                             style={{ 'height': '100%' }}
-                            userConfig={langiumGlobalConfig} />
+                            wrapperConfig={langiumGlobalConfig} />
                     </div>
                 );
             };

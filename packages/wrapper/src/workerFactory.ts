@@ -3,9 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { Logger } from 'monaco-languageclient/tools';
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
 
-export type WorkerOverrides = {
+export interface WorkerOverrides {
     rootPath?: string | URL;
     basePath?: string | URL;
     workerLoaders?: Partial<Record<string, WorkerConfigSupplier | WorkerLoader>>;
@@ -13,7 +14,7 @@ export type WorkerOverrides = {
     userDefinedMapping?: (label: string) => string;
 }
 
-export type WorkerConfig = {
+export interface WorkerConfig {
     rootPath: string | URL;
     basePath?: string | URL;
     workerFile: string | URL;
@@ -60,7 +61,7 @@ export const defaultWorkerLoaders: Partial<Record<string, WorkerConfigSupplier |
  * The workaround used by vscode is to start a worker on a blob url containing a short script calling 'importScripts'
  * importScripts accepts to load the code inside the blob worker
  */
-export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverrides): Worker => {
+export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverrides, logger?: Logger): Worker => {
     if (workerOverrides?.rootPath !== undefined) {
         config.rootPath = workerOverrides.rootPath;
     }
@@ -72,7 +73,7 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
         workerFile = `${config.basePath}/${config.workerFile}`;
     }
     const fullUrl = new URL(workerFile, config.rootPath).href;
-    console.log(`Creating worker: ${fullUrl}`);
+    logger?.info(`Creating worker: ${fullUrl}`);
 
     // default to 'module' if not specified
     const workerOptions = config.options ?? {};
@@ -85,11 +86,11 @@ export const buildWorker = (config: WorkerConfig, workerOverrides?: WorkerOverri
     return new Worker(URL.createObjectURL(blob), workerOptions);
 };
 
-export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
+export const useWorkerFactory = (workerOverrides?: WorkerOverrides, logger?: Logger) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
 
     const getWorker = (moduleId: string, label: string) => {
-        console.log(`getWorker: moduleId: ${moduleId} label: ${label}`);
+        logger?.info(`getWorker: moduleId: ${moduleId} label: ${label}`);
 
         let selector = label;
         let workerLoaders;
@@ -116,7 +117,7 @@ export const useWorkerFactory = (workerOverrides?: WorkerOverrides) => {
         if (workerOrConfig) {
             const invoked = workerOrConfig();
             if (Object.hasOwn(invoked, 'workerFile')) {
-                return buildWorker(invoked as WorkerConfig, workerOverrides);
+                return buildWorker(invoked as WorkerConfig, workerOverrides, logger);
             } else {
                 return invoked as Worker;
             }

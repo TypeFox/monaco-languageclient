@@ -10,7 +10,7 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
-import { Message, InitializeRequest, InitializeParams } from 'vscode-languageserver';
+import { Message, InitializeRequest, InitializeParams, RequestMessage, ResponseMessage } from 'vscode-languageserver-protocol';
 import * as cp from 'child_process';
 
 export enum LanguageName {
@@ -28,6 +28,9 @@ export interface LanguageServerRunConfig {
     runCommandArgs: string[];
     wsServerOptions: ServerOptions,
     spawnOptions?: cp.SpawnOptions;
+    logMessages?: boolean;
+    requestMessageHandler?: (message: RequestMessage) => RequestMessage;
+    responseMessageHandler?: (message: ResponseMessage) => ResponseMessage;
 }
 
 /**
@@ -43,16 +46,27 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
     if (serverConnection) {
         forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
-                console.log(`${serverName} Server received:`);
-                console.log(message);
                 if (message.method === InitializeRequest.type.method) {
                     const initializeParams = message.params as InitializeParams;
                     initializeParams.processId = process.pid;
                 }
+
+                if (runconfig.logMessages ?? false) {
+                    console.log(`${serverName} Server received: ${message.method}`);
+                    console.log(message);
+                }
+                if (runconfig.requestMessageHandler !== undefined) {
+                    return runconfig.requestMessageHandler(message);
+                }
             }
             if (Message.isResponse(message)) {
-                console.log(`${serverName} Server sent:`);
-                console.log(message);
+                if (runconfig.logMessages ?? false) {
+                    console.log(`${serverName} Server sent:`);
+                    console.log(message);
+                }
+                if (runconfig.responseMessageHandler !== undefined) {
+                    return runconfig.responseMessageHandler(message);
+                }
             }
             return message;
         });
@@ -76,7 +90,6 @@ export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
                         }
                     }),
                     onMessage: cb => webSocket.on('message', (data) => {
-                        console.log(data.toString());
                         cb(data);
                     }),
                     onError: cb => webSocket.on('error', cb),

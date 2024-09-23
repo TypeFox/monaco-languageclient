@@ -13,7 +13,7 @@ import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
-import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
+import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -73,7 +73,7 @@ export const initWebSocketAndStartClient = (url: string): WebSocket => {
     return webSocket;
 };
 
-export const createLanguageClient = (transports: MessageTransports): MonacoLanguageClient => {
+export const createLanguageClient = (messageTransports: MessageTransports): MonacoLanguageClient => {
     return new MonacoLanguageClient({
         name: 'Sample Language Client',
         clientOptions: {
@@ -86,10 +86,6 @@ export const createLanguageClient = (transports: MessageTransports): MonacoLangu
             }
         },
         // create a language client connection from the JSON RPC connection on demand
-        connectionProvider: {
-            get: () => {
-                return Promise.resolve(transports);
-            }
-        }
+        messageTransports
     });
 };

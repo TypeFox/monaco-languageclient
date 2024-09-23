@@ -7,37 +7,35 @@ import { describe, expect, test } from 'vitest';
 import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
-import { updateExtendedAppPrototyp } from './helper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { updateExtendedAppPrototyp } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
         updateExtendedAppPrototyp();
-        const userConfig: UserConfig = {
-            wrapperConfig: {
-                editorAppConfig: {
-                    $type: 'extended',
-                }
+        const wrapperConfig: WrapperConfig = {
+            editorAppConfig: {
+                $type: 'extended',
             },
             loggerConfig: {
                 enabled: true,
                 debugEnabled: true,
             }
         };
-        const { rerender } = render(<MonacoEditorReactComp userConfig={userConfig} />);
-        rerender(<MonacoEditorReactComp userConfig={userConfig} />);
+        const { rerender } = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
+        rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
         await Promise.resolve();
-        rerender(<MonacoEditorReactComp userConfig={userConfig} />);
+        rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
 
         let renderResult: RenderResult;
         // we have to await the full start of the editor with the onLoad callback, then it is save to contine
         const p = await new Promise<void>(resolve => {
             const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
-                renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} />);
+                renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
 
                 resolve();
             };
-            renderResult = render(<MonacoEditorReactComp userConfig={userConfig} onLoad={handleOnLoad} />);
+            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
         });
         // void promise is undefined after it was awaited
         expect(p).toBeUndefined();
@@ -45,15 +43,13 @@ describe('Test MonacoEditorReactComp', () => {
 
     test('update onTextChanged', async () => {
         updateExtendedAppPrototyp();
-        const userConfig: UserConfig = {
-            wrapperConfig: {
-                editorAppConfig: {
-                    $type: 'extended',
-                    codeResources: {
-                        main: {
-                            text: 'hello world',
-                            fileExt: 'js'
-                        }
+        const wrapperConfig: WrapperConfig = {
+            editorAppConfig: {
+                $type: 'extended',
+                codeResources: {
+                    main: {
+                        text: 'hello world',
+                        fileExt: 'js'
                     }
                 }
             },
@@ -74,13 +70,13 @@ describe('Test MonacoEditorReactComp', () => {
                         p1Resolve();
                     };
                     // because the onTextChanged callback is updated there will be a result even if the text is unchanged
-                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiverHello)} />);
+                    renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} />);
                 });
                 expect(p1).toBeUndefined();
 
                 resolve();
             };
-            renderResult = render(<MonacoEditorReactComp userConfig={userConfig} onLoad={handleOnLoad} />);
+            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
         });
         // void promise is undefined after it was awaited
         expect(p).toBeUndefined();
@@ -88,15 +84,13 @@ describe('Test MonacoEditorReactComp', () => {
 
     test('update codeResources', async () => {
         updateExtendedAppPrototyp();
-        const userConfig: UserConfig = {
-            wrapperConfig: {
-                editorAppConfig: {
-                    $type: 'extended',
-                    codeResources: {
-                        main: {
-                            text: 'hello world',
-                            fileExt: 'js'
-                        }
+        const wrapperConfig: WrapperConfig = {
+            editorAppConfig: {
+                $type: 'extended',
+                codeResources: {
+                    main: {
+                        text: 'hello world',
+                        fileExt: 'js'
                     }
                 }
             },
@@ -125,13 +119,13 @@ describe('Test MonacoEditorReactComp', () => {
                         p1Resolve();
                     };
 
-                    renderResult.rerender(<MonacoEditorReactComp userConfig={userConfig} onTextChanged={(textReceiverGoodbye)} />);
+                    renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverGoodbye)} />);
                 });
                 expect(p1).toBeUndefined();
 
                 resolve();
             };
-            renderResult = render(<MonacoEditorReactComp userConfig={userConfig} onLoad={handleOnLoad} />);
+            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
         });
         // void promise is undefined after it was awaited
         expect(p).toBeUndefined();

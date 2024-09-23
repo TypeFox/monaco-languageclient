@@ -8,6 +8,7 @@ import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import workerUrl from './worker/langium-server?worker&url';
+import { disableButton } from '../../common/client/utils.js';
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;
@@ -65,13 +66,6 @@ const checkStarted = () => {
         return true;
     }
     return false;
-};
-
-const disableButton = (id: string, disabled: boolean) => {
-    const button = document.getElementById(id) as HTMLButtonElement | null;
-    if (button !== null) {
-        button.disabled = disabled;
-    }
 };
 
 export const disposeEditor = async () => {

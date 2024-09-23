@@ -21,19 +21,19 @@ describe('Test EditorAppExtended', () => {
     });
 
     test('config userConfiguration', () => {
-        const config = createBaseConfig('extended');
-        const appConfig = config.wrapperConfig.editorAppConfig as EditorAppConfigExtended;
+        const wrapperConfig = createBaseConfig('extended');
+        const appConfig = wrapperConfig.editorAppConfig as EditorAppConfigExtended;
         appConfig.userConfiguration = {
             json: '{ "editor.semanticHighlighting.enabled": true }'
         };
-        const app = new EditorAppExtended('config defaults', config);
+        const app = new EditorAppExtended('config defaults', appConfig);
         expect(app.getConfig().userConfiguration?.json).toEqual('{ "editor.semanticHighlighting.enabled": true }');
     });
 
     test('isAppConfigDifferent: basic', () => {
         const orgConfig = createEditorAppConfig('extended') as EditorAppConfigExtended;
         const config = createEditorAppConfig('extended') as EditorAppConfigExtended;
-        const app = new EditorAppExtended('test', createBaseConfig('extended'));
+        const app = new EditorAppExtended('test', config);
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
         config.codeResources ??= {};
@@ -61,8 +61,8 @@ describe('Test EditorAppExtended', () => {
     });
 
     test('config defaults', () => {
-        const config = createBaseConfig('extended');
-        const app = new EditorAppExtended('config defaults', config);
+        const editorAppConfig = createEditorAppConfig('extended') as EditorAppConfigExtended;
+        const app = new EditorAppExtended('config defaults', editorAppConfig);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();

@@ -41,7 +41,7 @@ export const runPythonReact = async () => {
                 return (
                     <div style={{ 'height': '80vh', padding: '5px' }} >
                         <MonacoEditorReactComp
-                            userConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
+                            wrapperConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
                             style={{ 'height': '100%' }}
                             onTextChanged={onTextChanged}
                             onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {

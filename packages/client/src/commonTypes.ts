@@ -3,52 +3,58 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { MonacoLanguageClient } from './client.js';
 
-export type WebSocketCallOptions = {
+export type ConnetionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
+
+export interface WebSocketCallOptions {
     /** Adds handle on languageClient */
     onCall: (languageClient?: MonacoLanguageClient) => void;
     /** Reports Status Of Language Client */
     reportStatus?: boolean;
 }
 
-export type LanguageClientConfigType = 'WebSocket' | 'WebSocketUrl' | 'WorkerConfig' | 'Worker';
-
-export type WebSocketUrl = {
-    secured: boolean;
-    host: string;
-    port?: number;
-    path?: string;
+export interface WebSocketConfigOptionsDirect {
+    $type: 'WebSocketDirect'
+    webSocket: WebSocket
+    startOptions?: WebSocketCallOptions;
+    stopOptions?: WebSocketCallOptions;
 }
 
-export type WebSocketConfigOptions = {
-    $type: 'WebSocket'
+export interface WebSocketUrlParams {
     secured: boolean;
     host: string;
     port?: number;
     path?: string;
     extraParams?: Record<string, string | number | Array<string | number>>;
+}
+
+export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
+    $type: 'WebSocketParams'
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WebSocketConfigOptionsUrl = {
-    $type: 'WebSocketUrl'
+export interface WebSocketUrlString {
     url: string;
+}
+
+export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
+    $type: 'WebSocketUrl'
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WorkerConfigOptions = {
+export interface WorkerConfigOptionsParams {
     $type: 'WorkerConfig'
     url: URL;
     type: 'classic' | 'module';
     messagePort?: MessagePort;
     workerName?: string;
-};
+}
 
-export type WorkerConfigDirect = {
+export interface WorkerConfigOptionsDirect {
     $type: 'WorkerDirect';
     worker: Worker;
     messagePort?: MessagePort;
-};
+}

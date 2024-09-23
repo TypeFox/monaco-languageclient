@@ -10,27 +10,27 @@ import { getUserConfiguration, updateUserConfiguration as vscodeUpdateUserConfig
 import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 import { Logger } from 'monaco-languageclient/tools';
 
-export type CodeContent = {
+export interface CodeContent {
     text: string;
     enforceLanguageId?: string;
 }
 
-export type CodePlusUri = CodeContent & {
+export interface CodePlusUri extends CodeContent {
     uri: string;
 }
 
-export type CodePlusFileExt = CodeContent & {
+export interface CodePlusFileExt extends CodeContent {
     fileExt: string;
 }
 
-export type CodeResources = {
+export interface CodeResources {
     main?: CodePlusUri | CodePlusFileExt;
     original?: CodePlusUri | CodePlusFileExt;
 }
 
 export type EditorAppType = 'extended' | 'classic';
 
-export type EditorAppConfigBase = {
+export interface EditorAppConfigBase {
     $type: EditorAppType;
     codeResources?: CodeResources;
     useDiffEditor?: boolean;
@@ -42,17 +42,17 @@ export type EditorAppConfigBase = {
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
 }
 
-export type ModelRefs = {
+export interface ModelRefs {
     modelRef?: IReference<ITextFileEditorModel>;
     modelRefOriginal?: IReference<ITextFileEditorModel>;
 }
 
-export type TextModels = {
+export interface TextModels {
     text?: monaco.editor.ITextModel;
     textOriginal?: monaco.editor.ITextModel;
 }
 
-export type TextContents = {
+export interface TextContents {
     text?: string;
     textOriginal?: string;
 }

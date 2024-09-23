@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { UserConfig, EditorAppType } from 'monaco-editor-wrapper';
+import { EditorAppType, WrapperConfig } from 'monaco-editor-wrapper';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -11,13 +11,7 @@ export const createMonacoEditorDiv = () => {
     document.body.insertAdjacentElement('beforeend', div);
 };
 
-export const createBaseConfig = (type: EditorAppType): UserConfig => {
-    return {
-        wrapperConfig: createWrapperConfig(type)
-    };
-};
-
-export const createWrapperConfig = (type: EditorAppType) => {
+export const createBaseConfig = (type: EditorAppType): WrapperConfig => {
     return {
         editorAppConfig: createEditorAppConfig(type)
     };
@@ -34,13 +28,4 @@ export const createEditorAppConfig = (type: EditorAppType) => {
         },
         useDiffEditor: false,
     };
-};
-
-/**
- * Helper to generate a quick worker from a function blob
- */
-export const createWorkerFromFunction = (fn: () => void): Worker => {
-    return new Worker(URL.createObjectURL(
-        new Blob([`(${fn.toString()})()`], { type: 'application/javascript' })
-    ));
 };

@@ -6,7 +6,7 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -24,49 +24,51 @@ const text = `{
     "line_endings": {"value": "unix"}
 }`;
 
-export const jsonClientUserConfig: UserConfig = {
-    wrapperConfig: {
-        serviceConfig: {
-            userServices: {
-                ...getKeybindingsServiceOverride(),
-            },
-            debugLogging: true
+export const jsonClientUserConfig: WrapperConfig = {
+    serviceConfig: {
+        userServices: {
+            ...getKeybindingsServiceOverride(),
         },
-        editorAppConfig: {
-            $type: 'extended',
-            codeResources: {
-                main: {
-                    text,
-                    fileExt: 'json'
-                }
-            },
-            useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.lightbulb.enabled': 'On',
-                    'editor.wordBasedSuggestions': 'off'
-                })
+        debugLogging: true
+    },
+    editorAppConfig: {
+        $type: 'extended',
+        codeResources: {
+            main: {
+                text,
+                fileExt: 'json'
             }
+        },
+        useDiffEditor: false,
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.lightbulb.enabled': 'On',
+                'editor.wordBasedSuggestions': 'off'
+            })
         }
     },
-    languageClientConfig: {
-        languageId: 'json',
-        options: {
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:30000/sampleServer',
-            startOptions: {
-                onCall: () => {
-                    console.log('Connected to socket.');
-                },
-                reportStatus: true
-            },
-            stopOptions: {
-                onCall: () => {
-                    console.log('Disconnected from socket.');
-                },
-                reportStatus: true
+    languageClientConfigs: {
+        json: {
+            languageId: 'json',
+            connection: {
+                options: {
+                    $type: 'WebSocketUrl',
+                    url: 'ws://localhost:30000/sampleServer',
+                    startOptions: {
+                        onCall: () => {
+                            console.log('Connected to socket.');
+                        },
+                        reportStatus: true
+                    },
+                    stopOptions: {
+                        onCall: () => {
+                            console.log('Disconnected from socket.');
+                        },
+                        reportStatus: true
+                    }
+                }
             }
         }
     }

@@ -3,7 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export type * from './client.js';
-export * from './client.js';
-export type * from './commonTypes.js';
-export * from './commonTypes.js';
+export const disableButton = (id: string, disabled: boolean) => {
+    const button = document.getElementById(id) as HTMLButtonElement | null;
+    if (button !== null) {
+        button.disabled = disabled;
+    }
+};

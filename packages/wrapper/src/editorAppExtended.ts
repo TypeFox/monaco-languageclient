@@ -8,39 +8,38 @@ import * as monaco from 'monaco-editor';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
-import { UserConfig } from './userConfig.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { DisposableStore } from 'vscode/monaco';
 
-export type ExtensionConfig = {
+export interface ExtensionConfig {
     config: IExtensionManifest | object;
     filesOrContents?: Map<string, string | URL>;
-};
+}
 
-export type UserConfiguration = {
+export interface UserConfiguration {
     json?: string;
 }
 
-export type EditorAppConfigExtended = EditorAppConfigBase & {
+export interface EditorAppConfigExtended extends EditorAppConfigBase {
     $type: 'extended';
     extensions?: ExtensionConfig[];
     userConfiguration?: UserConfiguration;
-};
+}
 
-export type RegisterExtensionResult = {
+export interface RegisterExtensionResult {
     id: string;
     dispose(): Promise<void>;
     whenReady(): Promise<void>;
 }
 
-interface RegisterLocalExtensionResult extends RegisterExtensionResult {
+export interface RegisterLocalExtensionResult extends RegisterExtensionResult {
     registerFileUrl: (path: string, url: string) => monaco.IDisposable;
 }
 
-export type RegisterLocalProcessExtensionResult = RegisterLocalExtensionResult & {
+export interface RegisterLocalProcessExtensionResult extends RegisterLocalExtensionResult {
     getApi(): Promise<typeof vscode>;
     setAsDefaultApi(): Promise<void>;
-};
+}
 
 /**
  * The vscode-apo monaco-editor app uses vscode user and extension configuration for monaco-editor.
@@ -51,13 +50,12 @@ export class EditorAppExtended extends EditorAppBase {
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
     private subscriptions: DisposableStore = new DisposableStore();
 
-    constructor(id: string, userConfig: UserConfig, logger?: Logger) {
+    constructor(id: string, editorAppConfig: EditorAppConfigExtended, logger?: Logger) {
         super(id);
         this.logger = logger;
-        const userAppConfig = userConfig.wrapperConfig.editorAppConfig as EditorAppConfigExtended;
-        this.config = this.buildConfig(userAppConfig) as EditorAppConfigExtended;
-        this.config.extensions = userAppConfig.extensions ?? undefined;
-        this.config.userConfiguration = userAppConfig.userConfiguration ?? undefined;
+        this.config = this.buildConfig(editorAppConfig) as EditorAppConfigExtended;
+        this.config.extensions = editorAppConfig.extensions ?? undefined;
+        this.config.userConfiguration = editorAppConfig.userConfiguration ?? undefined;
     }
 
     getConfig(): EditorAppConfigExtended {
@@ -112,7 +110,7 @@ export class EditorAppExtended extends EditorAppBase {
         this.subscriptions.dispose();
     }
 
-    isAppConfigDifferent(orgConfig: EditorAppConfigExtended, config: EditorAppConfigExtended, includeModelData: boolean): boolean {
+    isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean {
         let different = false;
         if (includeModelData) {
             different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;

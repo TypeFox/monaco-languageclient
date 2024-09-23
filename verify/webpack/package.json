@@ -19,8 +19,8 @@
     "webpack-cli": "~5.1.4"
   },
   "volta": {
-    "node": "20.16.0",
-    "npm": "10.8.1"
+    "node": "20.17.0",
+    "npm": "10.8.3"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [9.0.0-next.0] - 2024-08-26
+
+- Pass MessageTransports directly
+
 ## [8.8.3] - 2024-08-26
 
 - Update to monaco-vscode-api 8.0.4 (monaco-editor 0.51.0)

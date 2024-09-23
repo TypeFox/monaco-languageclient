@@ -4,49 +4,49 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { EditorAppClassic, EditorAppConfigClassic } from 'monaco-editor-wrapper';
+import { EditorAppClassic, EditorAppConfigClassic, WrapperConfig } from 'monaco-editor-wrapper';
 import { createBaseConfig, createEditorAppConfig } from './helper.js';
 
-const buildConfig = () => {
-    const config = createBaseConfig('classic');
-    (config.wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {};
-    return config;
+const buildConfig = (): WrapperConfig => {
+    const wrapperConfig = createBaseConfig('classic');
+    (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {};
+    return wrapperConfig;
 };
 
 describe('Test EditorAppClassic', () => {
 
     test('editorOptions: semanticHighlighting=true', () => {
-        const config = buildConfig();
-        const configclassic = config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        configclassic.editorOptions!['semanticHighlighting.enabled'] = true;
+        const wrapperConfig = buildConfig();
+        const configClassic = wrapperConfig.editorAppConfig as EditorAppConfigClassic;
+        configClassic.editorOptions!['semanticHighlighting.enabled'] = true;
 
-        const app = new EditorAppClassic('config defaults', config);
-        expect(configclassic.$type).toEqual('classic');
+        const app = new EditorAppClassic('config defaults', configClassic);
+        expect(configClassic.$type).toEqual('classic');
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeTruthy();
     });
 
     test('editorOptions: semanticHighlighting=false', () => {
-        const config = buildConfig();
-        const configclassic = config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        configclassic.editorOptions!['semanticHighlighting.enabled'] = false;
+        const wrapperConfig = buildConfig();
+        const configClassic = wrapperConfig.editorAppConfig as EditorAppConfigClassic;
+        configClassic.editorOptions!['semanticHighlighting.enabled'] = false;
 
-        const app = new EditorAppClassic('config defaults', config);
+        const app = new EditorAppClassic('config defaults', configClassic);
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeFalsy();
     });
 
     test('editorOptions: semanticHighlighting="configuredByTheme"', () => {
-        const config = buildConfig();
-        const configclassic = config.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
-        configclassic.editorOptions!['semanticHighlighting.enabled'] = 'configuredByTheme';
+        const wrapperConfig = buildConfig();
+        const configClassic = wrapperConfig.editorAppConfig as EditorAppConfigClassic;
+        configClassic.editorOptions!['semanticHighlighting.enabled'] = 'configuredByTheme';
 
-        const app = new EditorAppClassic('config defaults', config);
+        const app = new EditorAppClassic('config defaults', configClassic);
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toEqual('configuredByTheme');
     });
 
     test('isAppConfigDifferent: basic', () => {
         const orgConfig = createEditorAppConfig('classic') as EditorAppConfigClassic;
         const config = createEditorAppConfig('classic') as EditorAppConfigClassic;
-        const app = new EditorAppClassic('test', createBaseConfig('classic'));
+        const app = new EditorAppClassic('test', config);
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
         config.codeResources ??= {};
@@ -66,20 +66,20 @@ describe('Test EditorAppClassic', () => {
     });
 
     test('isAppConfigDifferent: non-simple properties"', () => {
-        const config1 = buildConfig();
-        const config2 = buildConfig();
-        const configclassic1 = config1.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
+        const wrapperConfig1 = buildConfig();
+        const wrapperConfig2 = buildConfig();
+        const configclassic1 = wrapperConfig1.editorAppConfig as EditorAppConfigClassic;
         configclassic1.editorOptions!['semanticHighlighting.enabled'] = true;
-        const configclassic2 = config2.wrapperConfig.editorAppConfig as EditorAppConfigClassic;
+        const configclassic2 = wrapperConfig2.editorAppConfig as EditorAppConfigClassic;
         configclassic2.editorOptions!['semanticHighlighting.enabled'] = true;
 
-        const app = new EditorAppClassic('config defaults', config1);
+        const app = new EditorAppClassic('config defaults', configclassic1);
         expect(app.isAppConfigDifferent(configclassic1, configclassic2, false)).toBeFalsy();
     });
 
     test('config defaults', () => {
-        const config = createBaseConfig('classic');
-        const app = new EditorAppClassic('config defaults', config);
+        const editorAppConfig = createEditorAppConfig('classic') as EditorAppConfigClassic;
+        const app = new EditorAppClassic('config defaults', editorAppConfig);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();

@@ -19,12 +19,12 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeApiInitialised?: boolean;
 }
 
-export type InitializeServiceConfig = {
+export interface InitializeServiceConfig {
     userServices?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
     debugLogging?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
-};
+}
 
 export const initEnhancedMonacoEnvironment = () => {
     const monWin = (self as Window);
@@ -61,12 +61,12 @@ export const mergeServices = (services: monaco.editor.IEditorOverrideServices, o
     }
 };
 
-export type InitServicesInstruction = {
+export interface InitServicesInstruction {
     serviceConfig?: InitializeServiceConfig;
     caller?: string;
     performChecks?: () => boolean;
     logger?: Logger;
-};
+}
 
 export const initServices = async (instruction: InitServicesInstruction) => {
     const envEnhanced = initEnhancedMonacoEnvironment();

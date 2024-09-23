@@ -10,7 +10,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
@@ -36,30 +36,28 @@ export const runBrowserEditor = async () => {
     const codeUri = '/workspace/model.json';
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const jsonClientUserConfig: UserConfig = {
-        wrapperConfig: {
-            serviceConfig: {
-                userServices: {
-                    ...getKeybindingsServiceOverride(),
-                },
-                debugLogging: true
+    const jsonClientUserConfig: WrapperConfig = {
+        serviceConfig: {
+            userServices: {
+                ...getKeybindingsServiceOverride(),
             },
-            editorAppConfig: {
-                $type: 'extended',
-                codeResources: {
-                    main: {
-                        text: code,
-                        uri: codeUri
-                    }
-                },
-                useDiffEditor: false,
-                userConfiguration: {
-                    json: JSON.stringify({
-                        'workbench.colorTheme': 'Default Dark Modern',
-                        'editor.guides.bracketPairsHorizontal': 'active',
-                        'editor.lightbulb.enabled': 'On'
-                    })
+            debugLogging: true
+        },
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text: code,
+                    uri: codeUri
                 }
+            },
+            useDiffEditor: false,
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.lightbulb.enabled': 'On'
+                })
             }
         }
     };

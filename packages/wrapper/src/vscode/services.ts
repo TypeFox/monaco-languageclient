@@ -10,11 +10,11 @@ import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
 
-export type VscodeServicesConfig = {
+export interface VscodeServicesConfig {
     serviceConfig?: InitializeServiceConfig;
     specificServices?: monaco.editor.IEditorOverrideServices;
     logger?: Logger;
-};
+}
 
 /**
  * Child classes are allow to override the services configuration implementation.
