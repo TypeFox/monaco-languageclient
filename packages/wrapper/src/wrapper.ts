@@ -13,13 +13,13 @@ import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js'
 import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 
-export type WrapperConfig = {
+export interface WrapperConfig {
     id?: string;
     loggerConfig?: LoggerConfig;
     serviceConfig?: InitializeServiceConfig;
     editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
-};
+}
 
 /**
  * This class is responsible for the overall ochestration.

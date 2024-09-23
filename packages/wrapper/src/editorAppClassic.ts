@@ -8,7 +8,7 @@ import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 
-export type EditorAppConfigClassic = EditorAppConfigBase & {
+export interface EditorAppConfigClassic extends EditorAppConfigBase {
     $type: 'classic';
     languageDef?: {
         languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
@@ -18,7 +18,7 @@ export type EditorAppConfigClassic = EditorAppConfigBase & {
             data: monaco.editor.IStandaloneThemeData;
         }
     }
-};
+}
 
 /**
  * The classic monaco-editor app uses the classic monaco-editor configuration.

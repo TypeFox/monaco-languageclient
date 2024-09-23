@@ -10,12 +10,12 @@ import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, Sta
 import { createUrl } from './utils.js';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
-export type ConnectionConfig = {
+export interface ConnectionConfig {
     options: ConnetionConfigOptions;
     messageTransports?: MessageTransports;
 }
 
-export type LanguageClientConfig = {
+export interface LanguageClientConfig {
     name?: string;
     languageId: string;
     connection: ConnectionConfig;
@@ -23,13 +23,13 @@ export type LanguageClientConfig = {
     restartOptions?: LanguageClientRestartOptions;
 }
 
-export type LanguageClientRestartOptions = {
+export interface LanguageClientRestartOptions {
     retries: number;
     timeout: number;
     keepWorker?: boolean;
 }
 
-export type LanguageClientError = {
+export interface LanguageClientError {
     message: string;
     error: Error | string;
 }

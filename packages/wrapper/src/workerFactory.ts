@@ -6,7 +6,7 @@
 import { Logger } from 'monaco-languageclient/tools';
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
 
-export type WorkerOverrides = {
+export interface WorkerOverrides {
     rootPath?: string | URL;
     basePath?: string | URL;
     workerLoaders?: Partial<Record<string, WorkerConfigSupplier | WorkerLoader>>;
@@ -14,7 +14,7 @@ export type WorkerOverrides = {
     userDefinedMapping?: (label: string) => string;
 }
 
-export type WorkerConfig = {
+export interface WorkerConfig {
     rootPath: string | URL;
     basePath?: string | URL;
     workerFile: string | URL;

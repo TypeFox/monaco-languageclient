@@ -11,35 +11,35 @@ import { Logger } from 'monaco-languageclient/tools';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { DisposableStore } from 'vscode/monaco';
 
-export type ExtensionConfig = {
+export interface ExtensionConfig {
     config: IExtensionManifest | object;
     filesOrContents?: Map<string, string | URL>;
-};
+}
 
-export type UserConfiguration = {
+export interface UserConfiguration {
     json?: string;
 }
 
-export type EditorAppConfigExtended = EditorAppConfigBase & {
+export interface EditorAppConfigExtended extends EditorAppConfigBase {
     $type: 'extended';
     extensions?: ExtensionConfig[];
     userConfiguration?: UserConfiguration;
-};
+}
 
-export type RegisterExtensionResult = {
+export interface RegisterExtensionResult {
     id: string;
     dispose(): Promise<void>;
     whenReady(): Promise<void>;
 }
 
-interface RegisterLocalExtensionResult extends RegisterExtensionResult {
+export interface RegisterLocalExtensionResult extends RegisterExtensionResult {
     registerFileUrl: (path: string, url: string) => monaco.IDisposable;
 }
 
-export type RegisterLocalProcessExtensionResult = RegisterLocalExtensionResult & {
+export interface RegisterLocalProcessExtensionResult extends RegisterLocalExtensionResult {
     getApi(): Promise<typeof vscode>;
     setAsDefaultApi(): Promise<void>;
-};
+}
 
 /**
  * The vscode-apo monaco-editor app uses vscode user and extension configuration for monaco-editor.
