@@ -8,6 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-groovy-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 const code = `package test.org;
 import java.io.File;
@@ -34,9 +35,11 @@ const userConfig: WrapperConfig = {
             json: JSON.stringify({
                 'workbench.colorTheme': 'Default Dark Modern',
                 'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.wordBasedSuggestions': 'off'
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': false
             })
-        }
+        },
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         groovy: {

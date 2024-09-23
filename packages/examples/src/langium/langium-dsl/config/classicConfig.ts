@@ -8,6 +8,7 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { WrapperConfig } from 'monaco-editor-wrapper';
+import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import code from '../content/example.langium?raw';
@@ -45,7 +46,8 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
             languageDef: {
                 monarchLanguage: LangiumMonarchContent,
                 languageExtensionConfig: { id: 'langium' },
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             langium: {

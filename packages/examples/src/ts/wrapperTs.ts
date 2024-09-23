@@ -9,6 +9,7 @@ import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { configureMonacoWorkers } from '../common/client/utils.js';
 
 export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';
@@ -50,9 +51,11 @@ export const runTsWrapper = async () => {
                     'diffEditor.renderSideBySide': false,
                     'editor.lightbulb.enabled': 'on',
                     'editor.glyphMargin': true,
-                    'editor.guides.bracketPairsHorizontal': true
+                    'editor.guides.bracketPairsHorizontal': true,
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 

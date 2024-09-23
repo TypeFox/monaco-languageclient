@@ -10,6 +10,7 @@ import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
+import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../content/example.langium?raw';
@@ -32,6 +33,10 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                 ...getKeybindingsServiceOverride()
             },
             debugLogging: true
+        },
+        loggerConfig: {
+            enabled: true,
+            debugEnabled: true
         },
         editorAppConfig: {
             $type: 'extended',
@@ -70,9 +75,11 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'GitHub Dark High Contrast',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             langium: {

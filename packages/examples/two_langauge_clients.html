@@ -15,10 +15,8 @@
     <button type="button" id="button-flip">Flip Content</button>
     <div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers } from "./src/common/client/utils.ts";
         import { runMultipleLanguageClientsExample } from './src/multi/twoLanguageClients.ts';
 
-        configureMonacoWorkers();
         runMultipleLanguageClientsExample();
     </script>
 </body>

@@ -5,6 +5,7 @@
 
 import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
@@ -75,6 +76,11 @@ export class EditorAppExtended extends EditorAppBase {
         };
     }
 
+    override async loadUserConfiguration() {
+        // buildConfig ensures userConfiguration is available
+        await updateUserConfiguration(this.config.userConfiguration?.json ?? JSON.stringify({}));
+    }
+
     override async init() {
         // await all extensions that should be ready beforehand
         // always await theme extension
@@ -98,9 +104,6 @@ export class EditorAppExtended extends EditorAppBase {
             }
             await Promise.all(allPromises);
         }
-
-        // buildConfig ensures userConfiguration is available
-        await this.updateUserConfiguration(this.config.userConfiguration?.json);
         this.logger?.info('Init of Extended App was completed.');
     }
 

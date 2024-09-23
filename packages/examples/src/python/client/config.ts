@@ -11,6 +11,7 @@ import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
     const url = createUrl({
@@ -80,10 +81,12 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
             },
-            useDiffEditor: false
+            useDiffEditor: false,
+            monacoWorkerFactory: configureMonacoWorkers
         },
         loggerConfig: {
             enabled: true,

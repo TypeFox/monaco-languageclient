@@ -6,7 +6,7 @@
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { getUserConfiguration, updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import { getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 import { Logger } from 'monaco-languageclient/tools';
 
@@ -40,6 +40,7 @@ export interface EditorAppConfigBase {
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+    monacoWorkerFactory?: (logger: Logger) => void;
 }
 
 export interface ModelRefs {
@@ -276,17 +277,11 @@ export abstract class EditorAppBase {
         this.getEditor()?.updateOptions(options);
     }
 
-    async updateUserConfiguration(json?: string) {
-        if (json !== undefined) {
-            return vscodeUpdateUserConfiguration(json);
-        }
-        return Promise.resolve();
-    }
-
     getUserConfiguration(): Promise<string> {
         return getUserConfiguration();
     }
 
+    abstract loadUserConfiguration(): Promise<void>;
     abstract init(): Promise<void>;
     abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;

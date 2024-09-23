@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
@@ -44,8 +45,17 @@ export class EditorAppClassic extends EditorAppBase {
         };
     }
 
+    override async loadUserConfiguration() {
+        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+            // use updateConfiguration here as otherwise semantic highlighting will not work
+            await updateUserConfiguration(JSON.stringify({
+                'editor.semanticHighlighting.enabled': this.config.editorOptions['semanticHighlighting.enabled']
+            }));
+        }
+    }
+
     async init() {
-        // await all extenson that should be ready beforehand
+        // await all extensions that should be ready beforehand
         await this.awaitReadiness(this.config.awaitExtensionReadiness);
 
         const languageDef = this.config.languageDef;
@@ -70,14 +80,6 @@ export class EditorAppClassic extends EditorAppBase {
                 monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
                 monaco.editor.setTheme(languageDef.theme.name);
             }
-        }
-
-        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-            // use updateConfiguration here as otherwise semantic highlighting will not work
-            const json = JSON.stringify({
-                'editor.semanticHighlighting.enabled': this.config.editorOptions['semanticHighlighting.enabled']
-            });
-            await this.updateUserConfiguration(json);
         }
         this.logger?.info('Init of Classic App was completed.');
     }

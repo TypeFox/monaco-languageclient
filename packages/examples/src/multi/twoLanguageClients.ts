@@ -10,7 +10,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { CodePlusFileExt, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { disableButton } from '../common/client/utils.js';
+import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
 
 export const runMultipleLanguageClientsExample = async () => {
     disableButton('button-flip', true);
@@ -49,9 +49,11 @@ print("Hello Moon!")
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             json: {

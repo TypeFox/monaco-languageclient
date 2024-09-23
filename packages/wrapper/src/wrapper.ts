@@ -57,6 +57,10 @@ export class MonacoEditorLanguageClientWrapper {
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
         this.logger.updateConfig(wrapperConfig.loggerConfig);
 
+        if (typeof wrapperConfig.editorAppConfig.monacoWorkerFactory === 'function') {
+            wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
+        }
+
         if (editorAppConfig.$type === 'classic') {
             this.editorApp = new EditorAppClassic(this.id, wrapperConfig.editorAppConfig as EditorAppConfigClassic, this.logger);
         } else {
@@ -77,6 +81,8 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
+        await this.editorApp.loadUserConfiguration();
+
         const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
@@ -87,6 +93,8 @@ export class MonacoEditorLanguageClientWrapper {
                 this.languageClientWrappers.set(languageId, lcw);
             }
         }
+
+        await this.editorApp.init();
 
         this.initDone = true;
     }
@@ -111,7 +119,6 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        await this.editorApp?.init();
         await this.editorApp?.createEditors(htmlElement);
 
         for (const lcw of this.languageClientWrappers.values()) {

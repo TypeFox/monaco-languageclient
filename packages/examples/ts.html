@@ -16,10 +16,8 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 80vh;"></div>
     <script type="module">
-        import { configureMonacoWorkers } from "./src/common/client/utils.ts";
         import { runTsWrapper } from './src/ts/wrapperTs.ts';
 
-        configureMonacoWorkers();
         runTsWrapper();
     </script>
 </body>

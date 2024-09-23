@@ -19,10 +19,8 @@
         await initLocaleLoader();
 
         // production build: ensure local loading is handled before loading the main script
-        import { configureMonacoWorkers } from "./src/common/client/utils.ts";
         const { runStatemachineWrapper } = await import ('./src/langium/statemachine/main.ts');
 
-        configureMonacoWorkers();
         runStatemachineWrapper();
     </script>
 </body>

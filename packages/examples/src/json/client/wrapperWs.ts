@@ -7,6 +7,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 const text = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -34,9 +35,11 @@ export const jsonClientUserConfig: WrapperConfig = {
                 'workbench.colorTheme': 'Default Dark Modern',
                 'editor.guides.bracketPairsHorizontal': 'active',
                 'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off'
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': false
             })
-        }
+        },
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         json: {

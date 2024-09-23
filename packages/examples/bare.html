@@ -13,10 +13,8 @@
 	<h2>JSON Language Client & Language Server (Web Socket)</h2>
 	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers } from "./src/common/client/utils.ts";
         import { runClient } from "./src/bare/client.ts";
 
-        configureMonacoWorkers();
         runClient();
     </script>
 </body>
