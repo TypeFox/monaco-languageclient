@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient, LanguageClientRestartOptions, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
+import { MonacoLanguageClient, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
 import { Logger } from 'monaco-languageclient/tools';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
@@ -23,10 +23,16 @@ export type LanguageClientConfig = {
     restartOptions?: LanguageClientRestartOptions;
 }
 
+export type LanguageClientRestartOptions = {
+    retries: number;
+    timeout: number;
+    keepWorker?: boolean;
+}
+
 export type LanguageClientError = {
     message: string;
     error: Error | string;
-};
+}
 
 export class LanguageClientWrapper {
 
@@ -70,7 +76,6 @@ export class LanguageClientWrapper {
             return Promise.resolve();
         }
 
-        // eslint-disable-next-line no-async-promise-executor
         return new Promise((resolve, reject) => {
             const conConfig = this.languageClientConfig.connection;
             const conOptions = conConfig.options;

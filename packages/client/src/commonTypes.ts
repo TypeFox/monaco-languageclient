@@ -5,22 +5,23 @@
 
 import { MonacoLanguageClient } from './client.js';
 
-export type WebSocketCallOptions = {
+export type ConnetionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
+
+export interface WebSocketCallOptions {
     /** Adds handle on languageClient */
     onCall: (languageClient?: MonacoLanguageClient) => void;
     /** Reports Status Of Language Client */
     reportStatus?: boolean;
 }
 
-export type LanguageClientRestartOptions = {
-    retries: number;
-    timeout: number;
-    keepWorker?: boolean;
+export interface WebSocketConfigOptionsDirect {
+    $type: 'WebSocketDirect'
+    webSocket: WebSocket
+    startOptions?: WebSocketCallOptions;
+    stopOptions?: WebSocketCallOptions;
 }
 
-export type ConnetionConfigOptions = (WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect);
-
-export type WebSocketUrlParams = {
+export interface WebSocketUrlParams {
     secured: boolean;
     host: string;
     port?: number;
@@ -28,39 +29,32 @@ export type WebSocketUrlParams = {
     extraParams?: Record<string, string | number | Array<string | number>>;
 }
 
-export type WebSocketUrlString = {
-    url: string;
-}
-
-export type WebSocketConfigOptionsDirect = {
-    $type: 'WebSocketDirect'
-    webSocket: WebSocket
-    startOptions?: WebSocketCallOptions;
-    stopOptions?: WebSocketCallOptions;
-}
-
-export type WebSocketConfigOptionsParams = WebSocketUrlParams & {
+export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
     $type: 'WebSocketParams'
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WebSocketConfigOptionsUrl = WebSocketUrlString & {
+export interface WebSocketUrlString {
+    url: string;
+}
+
+export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
     $type: 'WebSocketUrl'
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
-export type WorkerConfigOptionsParams = {
+export interface WorkerConfigOptionsParams {
     $type: 'WorkerConfig'
     url: URL;
     type: 'classic' | 'module';
     messagePort?: MessagePort;
     workerName?: string;
-};
+}
 
-export type WorkerConfigOptionsDirect = {
+export interface WorkerConfigOptionsDirect {
     $type: 'WorkerDirect';
     worker: Worker;
     messagePort?: MessagePort;
-};
+}

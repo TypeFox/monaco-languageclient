@@ -77,10 +77,9 @@ export class MonacoEditorLanguageClientWrapper {
             logger: this.logger
         });
 
-        const lccs = wrapperConfig.languageClientConfigs;
-        if (lccs !== undefined && Object.entries(lccs).length > 0) {
-
-            for (const [languageId, lcc] of Object.entries(lccs)) {
+        const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
+        if (lccEntries.length > 0) {
+            for (const [languageId, lcc] of lccEntries) {
                 const lcw = new LanguageClientWrapper({
                     languageClientConfig: lcc,
                     logger: this.logger
@@ -217,24 +216,23 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(disposeLanguageClients: boolean = true): Promise<void> {
+    async dispose(disposeLanguageClients: boolean = true) {
         this.markStopping();
 
         this.editorApp?.disposeApp();
+        this.editorApp = undefined;
 
         if (disposeLanguageClients) {
+            const allPromises: Array<Promise<void>> = [];
             for (const lcw of this.languageClientWrappers.values()) {
                 if (lcw.haveLanguageClient()) {
-                    await lcw.disposeLanguageClient(false);
+                    allPromises.push(lcw.disposeLanguageClient(false));
                 }
-                this.editorApp = undefined;
-                await Promise.resolve('Monaco editor and languageclient completed disposed.');
             }
-        } else {
-            await Promise.resolve('Monaco editor has been disposed.');
+            await Promise.all(allPromises);
         }
-        this.initDone = false;
 
+        this.initDone = false;
         this.markStopped();
     }
 
