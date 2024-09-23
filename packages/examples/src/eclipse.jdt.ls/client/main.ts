@@ -8,19 +8,9 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runEclipseJdtLsClient = () => {
     const helloJavaUri = vscode.Uri.file(`${eclipseJdtLsConfig.basePath}/workspace/hello.java`);

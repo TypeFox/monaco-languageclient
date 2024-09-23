@@ -22,11 +22,11 @@ const viteConfig = defineViteConfig({
 
                 // monaco-editor-wrapper
                 // json
-                wrapperWebSocket: path.resolve(__dirname, 'packages/examples/wrapper_ws.html'),
+                wrapperWebSocket: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
                 // langium
-                wrapperStatemachine: path.resolve(__dirname, 'packages/examples/wrapper_statemachine.html'),
-                wrapperLangium: path.resolve(__dirname, 'packages/examples/wrapper_langium.html'),
+                wrapperStatemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
+                wrapperLangium: path.resolve(__dirname, 'packages/examples/langium.html'),
                 // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
                 // grrovy
@@ -42,7 +42,7 @@ const viteConfig = defineViteConfig({
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
 
                 // other examples
-                wrapperTs: path.resolve(__dirname, 'packages/examples/wrapper_ts.html')
+                wrapperTs: path.resolve(__dirname, 'packages/examples/ts.html')
             }
         }
     },

@@ -8,16 +8,6 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-groovy-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 const code = `package test.org;
 import java.io.File;

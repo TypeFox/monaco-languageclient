@@ -11,16 +11,6 @@ import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runBrowserEditor = async () => {
     const codeConverter = createCodeConverter();

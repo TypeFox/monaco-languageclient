@@ -7,17 +7,6 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-export const configureMonacoWorkers = () => {
-    // override the worker factory with your own direct definition
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
-        }
-    });
-};
 
 const text = `{
     "$schema": "http://json.schemastore.org/coffeelint",

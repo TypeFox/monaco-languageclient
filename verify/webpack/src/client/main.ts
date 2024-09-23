@@ -3,7 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { configureMonacoWorkers, runJsonWrapper } from 'monaco-languageclient-examples/json-client';
+import { configureMonacoWorkers } from 'monaco-languageclient-examples';
+import { runJsonWrapper } from 'monaco-languageclient-examples/json-client';
 
 configureMonacoWorkers();
 runJsonWrapper();

@@ -8,19 +8,9 @@ import * as vscode from 'vscode';
 import '@codingame/monaco-vscode-python-default-extension';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createUserConfig } from './config.js';
 import helloPyCode from './hello.py?raw';
 import hello2PyCode from './hello2.py?raw';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runPythonWrapper = async () => {
     const helloPyUri = vscode.Uri.file('/workspace/hello.py');

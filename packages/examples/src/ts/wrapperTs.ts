@@ -9,16 +9,6 @@ import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';

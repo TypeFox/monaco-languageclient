@@ -15,7 +15,8 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root"></div>
     <script type="module">
-        import { configureMonacoWorkers, runStatemachineReact } from './src/langium/statemachine/main-react.tsx';
+        import { configureMonacoWorkers } from "./src/common/client/utils.ts";
+        import { runStatemachineReact } from './src/langium/statemachine/main-react.tsx';
 
         configureMonacoWorkers();
         runStatemachineReact();

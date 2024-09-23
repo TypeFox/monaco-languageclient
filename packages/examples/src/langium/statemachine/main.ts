@@ -6,7 +6,6 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
@@ -16,15 +15,6 @@ import textMod from './content/example-mod.statemachine?raw';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
-        }
-    });
-};
 
 const startEditor = async () => {
     if (wrapper.isStarted() && wrapper2.isStarted()) {

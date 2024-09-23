@@ -14,16 +14,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 export const runClient = async () => {
     await initServices({
         serviceConfig: {
