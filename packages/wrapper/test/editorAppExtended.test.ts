@@ -5,7 +5,7 @@
 
 import { describe, expect, test } from 'vitest';
 import { EditorAppConfigExtended, EditorAppExtended, verifyUrlOrCreateDataUrl } from 'monaco-editor-wrapper';
-import { createBaseConfig, createEditorAppConfig } from './helper.js';
+import { createWrapperConfigExtendedApp } from './helper.js';
 
 describe('Test EditorAppExtended', () => {
 
@@ -21,8 +21,7 @@ describe('Test EditorAppExtended', () => {
     });
 
     test('config userConfiguration', () => {
-        const wrapperConfig = createBaseConfig('extended');
-        const appConfig = wrapperConfig.editorAppConfig as EditorAppConfigExtended;
+        const appConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
         appConfig.userConfiguration = {
             json: '{ "editor.semanticHighlighting.enabled": true }'
         };
@@ -31,8 +30,8 @@ describe('Test EditorAppExtended', () => {
     });
 
     test('isAppConfigDifferent: basic', () => {
-        const orgConfig = createEditorAppConfig('extended') as EditorAppConfigExtended;
-        const config = createEditorAppConfig('extended') as EditorAppConfigExtended;
+        const orgConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
+        const config = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
         const app = new EditorAppExtended('test', config);
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
@@ -61,7 +60,7 @@ describe('Test EditorAppExtended', () => {
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createEditorAppConfig('extended') as EditorAppConfigExtended;
+        const editorAppConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
         const app = new EditorAppExtended('config defaults', editorAppConfig);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();

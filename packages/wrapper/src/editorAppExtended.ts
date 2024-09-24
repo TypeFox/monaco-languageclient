@@ -23,6 +23,7 @@ export interface UserConfiguration {
 
 export interface EditorAppConfigExtended extends EditorAppConfigBase {
     $type: 'extended';
+    loadThemes?: boolean;
     extensions?: ExtensionConfig[];
     userConfiguration?: UserConfiguration;
 }
@@ -57,6 +58,7 @@ export class EditorAppExtended extends EditorAppBase {
         this.config = this.buildConfig(editorAppConfig) as EditorAppConfigExtended;
         this.config.extensions = editorAppConfig.extensions ?? undefined;
         this.config.userConfiguration = editorAppConfig.userConfiguration ?? undefined;
+        this.config.loadThemes = editorAppConfig.loadThemes ?? true;
     }
 
     getConfig(): EditorAppConfigExtended {
@@ -82,7 +84,9 @@ export class EditorAppExtended extends EditorAppBase {
     }
 
     override async init() {
-        await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+        if (this.config.loadThemes ?? true) {
+            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+        }
 
         if (this.config.extensions) {
             const allPromises: Array<Promise<void>> = [];
