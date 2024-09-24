@@ -10,6 +10,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 
@@ -28,11 +29,11 @@ export const runBrowserEditor = async () => {
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
     const jsonClientUserConfig: WrapperConfig = {
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',

@@ -5,10 +5,11 @@
 
 import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
@@ -20,11 +21,11 @@ export const runEclipseJdtLsClient = () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const userConfig: WrapperConfig = {
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',

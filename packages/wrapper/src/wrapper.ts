@@ -4,9 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { LogLevel } from 'vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
-import { Logger, LoggerConfig } from 'monaco-languageclient/tools';
+import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
@@ -15,7 +16,7 @@ import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWra
 
 export interface WrapperConfig {
     id?: string;
-    loggerConfig?: LoggerConfig;
+    logLevel?: LogLevel | number;
     serviceConfig?: InitializeServiceConfig;
     editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
@@ -31,7 +32,7 @@ export class MonacoEditorLanguageClientWrapper {
     private id: string;
     private editorApp: EditorAppClassic | EditorAppExtended | undefined;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
-    private logger: Logger = new Logger();
+    private logger: Logger = new ConsoleLogger();
     private initDone = false;
     private starting?: Promise<void>;
     private startAwait: (value: void | PromiseLike<void>) => void;
@@ -55,7 +56,7 @@ export class MonacoEditorLanguageClientWrapper {
         // Always dispose old instances before start
         this.dispose(false);
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger.updateConfig(wrapperConfig.loggerConfig);
+        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
 
         if (typeof wrapperConfig.editorAppConfig.monacoWorkerFactory === 'function') {
             wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
@@ -71,11 +72,12 @@ export class MonacoEditorLanguageClientWrapper {
         const specificServices = await this.editorApp.specifyServices();
         const serviceConfig = await configureServices({
             serviceConfig: wrapperConfig.serviceConfig,
-            specificServices,
-            logger: this.logger
+            specificServices
         });
         await initServices({
-            serviceConfig,
+            userServices: serviceConfig.userServices,
+            enableExtHostWorker: serviceConfig.enableExtHostWorker,
+            workspaceConfig: serviceConfig.workspaceConfig,
             caller: `monaco-editor (${this.id})`,
             performChecks: checkServiceConsistency,
             logger: this.logger

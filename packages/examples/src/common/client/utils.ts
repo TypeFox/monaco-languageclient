@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { Logger } from 'monaco-languageclient/tools';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const disableButton = (id: string, disabled: boolean) => {
     const button = document.getElementById(id) as HTMLButtonElement | null;

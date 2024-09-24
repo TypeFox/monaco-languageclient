@@ -8,12 +8,10 @@ import * as monaco from 'monaco-editor';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
-import { Logger } from 'monaco-languageclient/tools';
 
 export interface VscodeServicesConfig {
     serviceConfig?: InitializeServiceConfig;
     specificServices?: monaco.editor.IEditorOverrideServices;
-    logger?: Logger;
 }
 
 /**
@@ -21,8 +19,6 @@ export interface VscodeServicesConfig {
  */
 export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
     const serviceConfig = config.serviceConfig ?? {};
-    // configure log level
-    serviceConfig.debugLogging = config.logger?.isEnabled() === true && (serviceConfig.debugLogging === true || config.logger.isDebugEnabled() === true);
 
     // always set required services if not configured
     serviceConfig.userServices = serviceConfig.userServices ?? {};

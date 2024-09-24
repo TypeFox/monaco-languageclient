@@ -6,9 +6,9 @@
 import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
-import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
+import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { DisposableStore } from 'vscode/monaco';
 

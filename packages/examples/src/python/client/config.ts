@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
@@ -62,12 +63,12 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             }
         },
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -87,10 +88,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
             },
             useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
-        },
-        loggerConfig: {
-            enabled: true,
-            debugEnabled: true
         }
     };
 };

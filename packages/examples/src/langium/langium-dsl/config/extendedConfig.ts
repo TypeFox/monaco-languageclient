@@ -7,8 +7,9 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
-import { WrapperConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { checkLogLevel } from 'monaco-languageclient/tools';
+import { WrapperConfig } from 'monaco-editor-wrapper';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
@@ -27,16 +28,12 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
     const writer = new BrowserMessageWriter(langiumWorker);
 
     return {
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
-        },
-        loggerConfig: {
-            enabled: true,
-            debugEnabled: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',

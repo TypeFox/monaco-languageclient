@@ -6,6 +6,7 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-groovy-default-extension';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
@@ -16,11 +17,11 @@ File file = new File("E:/Example.txt");
 `;
 
 const userConfig: WrapperConfig = {
+    logLevel: checkLogLevel(2),
     serviceConfig: {
         userServices: {
             ...getKeybindingsServiceOverride(),
-        },
-        debugLogging: true
+        }
     },
     editorAppConfig: {
         $type: 'extended',

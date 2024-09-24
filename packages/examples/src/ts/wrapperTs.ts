@@ -8,6 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 
@@ -23,12 +24,12 @@ export const runTsWrapper = async () => {
 };`;
 
     const wrapperConfig: WrapperConfig = {
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride()
             },
-            enableExtHostWorker: true,
-            debugLogging: true
+            enableExtHostWorker: true
         },
         editorAppConfig: {
             $type: 'extended',

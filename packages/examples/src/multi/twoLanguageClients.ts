@@ -8,6 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
+import { checkLogLevel } from 'monaco-languageclient/tools';
 import { CodePlusFileExt, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
@@ -31,11 +32,11 @@ print("Hello Moon!")
 
     const wrapperConfig: WrapperConfig = {
         id: '42',
+        logLevel: checkLogLevel(2),
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',

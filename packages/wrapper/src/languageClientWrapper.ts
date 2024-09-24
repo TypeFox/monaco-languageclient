@@ -3,12 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoLanguageClient, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
-import { Logger } from 'monaco-languageclient/tools';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { createUrl } from './utils.js';
+import { MonacoLanguageClient, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
+import { Logger } from 'monaco-languageclient/tools';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { createUrl } from './utils.js';
 
 export interface ConnectionConfig {
     options: ConnetionConfigOptions;

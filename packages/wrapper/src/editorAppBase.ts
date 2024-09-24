@@ -7,8 +7,8 @@ import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
-import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 import { Logger } from 'monaco-languageclient/tools';
+import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 
 export interface CodeContent {
     text: string;

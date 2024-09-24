@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Logger } from 'monaco-languageclient/tools';
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
+import { Logger } from 'monaco-languageclient/tools';
 
 export interface WorkerOverrides {
     rootPath?: string | URL;
