@@ -3,8 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as path from 'path';
 import { defineWorkspace } from 'vitest/config';
 
 export default defineWorkspace([
-    './vite.config.ts'
+    path.resolve(__dirname, './vite.config.ts')
 ]);

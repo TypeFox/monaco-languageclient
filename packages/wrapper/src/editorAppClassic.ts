@@ -55,9 +55,6 @@ export class EditorAppClassic extends EditorAppBase {
     }
 
     async init() {
-        // await all extensions that should be ready beforehand
-        await this.awaitReadiness(this.config.awaitExtensionReadiness);
-
         const languageDef = this.config.languageDef;
         if (languageDef) {
             // register own language first
@@ -99,7 +96,6 @@ export class EditorAppClassic extends EditorAppBase {
             'useDiffEditor',
             'domReadOnly',
             'readOnly',
-            'awaitExtensionReadiness',
             'overrideAutomaticLayout',
             'editorOptions',
             'diffEditorOptions',

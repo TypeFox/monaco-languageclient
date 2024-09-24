@@ -36,7 +36,6 @@ export interface EditorAppConfigBase {
     useDiffEditor?: boolean;
     domReadOnly?: boolean;
     readOnly?: boolean;
-    awaitExtensionReadiness?: Array<() => Promise<void>>;
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
@@ -88,8 +87,7 @@ export abstract class EditorAppBase {
             useDiffEditor: userAppConfig.useDiffEditor ?? false,
             readOnly: userAppConfig.readOnly ?? false,
             domReadOnly: userAppConfig.domReadOnly ?? false,
-            overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true,
-            awaitExtensionReadiness: userAppConfig.awaitExtensionReadiness ?? undefined,
+            overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
         config.editorOptions = {
             ...userAppConfig.editorOptions,
@@ -260,17 +258,6 @@ export abstract class EditorAppBase {
         } else {
             this.editor?.layout();
         }
-    }
-
-    async awaitReadiness(awaitExtensionReadiness?: Array<() => Promise<void>>) {
-        if (awaitExtensionReadiness) {
-            const allPromises: Array<Promise<void>> = [];
-            for (const awaitReadiness of awaitExtensionReadiness) {
-                allPromises.push(awaitReadiness());
-            }
-            return Promise.all(allPromises);
-        }
-        return Promise.resolve();
     }
 
     updateMonacoEditorOptions(options: monaco.editor.IEditorOptions & monaco.editor.IGlobalEditorOptions) {

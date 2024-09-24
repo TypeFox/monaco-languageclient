@@ -82,11 +82,7 @@ export class EditorAppExtended extends EditorAppBase {
     }
 
     override async init() {
-        // await all extensions that should be ready beforehand
-        // always await theme extension
-        const whenReadyTheme = (await import('@codingame/monaco-vscode-theme-defaults-default-extension')).whenReady;
-        const awaitReadiness = (this.config.awaitExtensionReadiness ?? []).concat(whenReadyTheme);
-        await this.awaitReadiness(awaitReadiness);
+        await import('@codingame/monaco-vscode-theme-defaults-default-extension');
 
         if (this.config.extensions) {
             const allPromises: Array<Promise<void>> = [];
