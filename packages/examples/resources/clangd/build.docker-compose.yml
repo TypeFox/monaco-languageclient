@@ -1,0 +1,10 @@
+services:
+  clangd-build:
+    build:
+      dockerfile: ./build.Dockerfile
+      context: .
+      # only linux/amd64 for now
+      platforms:
+        - "linux/amd64"
+    platform: linux/amd64
+    container_name: clangd-build
