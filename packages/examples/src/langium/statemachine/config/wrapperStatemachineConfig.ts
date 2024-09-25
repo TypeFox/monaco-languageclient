@@ -7,7 +7,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { checkLogLevel } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
 import { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
@@ -50,7 +50,7 @@ export const createLangiumGlobalConfig = async (params: {
     } : undefined;
 
     return {
-        logLevel: checkLogLevel(2),
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),

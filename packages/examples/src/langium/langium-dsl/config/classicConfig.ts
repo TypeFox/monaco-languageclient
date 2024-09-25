@@ -7,9 +7,9 @@ import getConfigurationServiceOverride from '@codingame/monaco-vscode-configurat
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
-import { checkLogLevel, Logger } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
+import { Logger } from 'monaco-languageclient/tools';
 import { WrapperConfig } from 'monaco-editor-wrapper';
-// import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import { loadLangiumWorker } from '../wrapperLangium.js';
 import code from '../content/example.langium?raw';
@@ -18,7 +18,7 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
-        logLevel: checkLogLevel(2),
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getConfigurationServiceOverride(),

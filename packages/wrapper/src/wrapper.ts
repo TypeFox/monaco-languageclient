@@ -71,8 +71,9 @@ export class MonacoEditorLanguageClientWrapper {
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp.specifyServices();
         const serviceConfig = await configureServices({
-            serviceConfig: wrapperConfig.serviceConfig,
-            specificServices
+            serviceConfig: wrapperConfig.serviceConfig ?? {},
+            specificServices,
+            logLevel: this.logger.getLevel()
         });
         await initServices({
             userServices: serviceConfig.userServices,
@@ -204,6 +205,10 @@ export class MonacoEditorLanguageClientWrapper {
 
     getWorker(languageId: string): Worker | undefined {
         return this.languageClientWrappers.get(languageId)?.getWorker();
+    }
+
+    getLogger() {
+        return this.logger;
     }
 
     async updateCodeResources(codeResources?: CodeResources): Promise<void> {

@@ -4,6 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 export * from './fakeWorker.js';
-
-export type * from './services.js';
 export * from './services.js';

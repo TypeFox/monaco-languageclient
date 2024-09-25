@@ -6,7 +6,7 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
-import { checkLogLevel } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 
@@ -16,7 +16,7 @@ const text = `{
 }`;
 
 export const jsonClientUserConfig: WrapperConfig = {
-    logLevel: checkLogLevel(2),
+    logLevel: LogLevel.Debug,
     serviceConfig: {
         userServices: {
             ...getKeybindingsServiceOverride(),

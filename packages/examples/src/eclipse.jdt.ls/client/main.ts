@@ -9,7 +9,7 @@ import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemO
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { checkLogLevel } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
@@ -21,7 +21,7 @@ export const runEclipseJdtLsClient = () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const userConfig: WrapperConfig = {
-        logLevel: checkLogLevel(2),
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),

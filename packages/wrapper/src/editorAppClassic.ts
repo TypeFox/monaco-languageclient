@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
-import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
@@ -46,12 +45,7 @@ export class EditorAppClassic extends EditorAppBase {
     }
 
     override async loadUserConfiguration() {
-        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-            // use updateConfiguration here as otherwise semantic highlighting will not work
-            await updateUserConfiguration(JSON.stringify({
-                'editor.semanticHighlighting.enabled': this.config.editorOptions['semanticHighlighting.enabled']
-            }));
-        }
+        // nothing needed here currently
     }
 
     async init() {

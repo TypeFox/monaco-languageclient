@@ -5,30 +5,27 @@
 
 import * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
+import { LogLevel } from 'vscode/services';
 import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
 
 export interface VscodeServicesConfig {
-    serviceConfig?: InitializeServiceConfig;
-    specificServices?: monaco.editor.IEditorOverrideServices;
+    serviceConfig: InitializeServiceConfig;
+    specificServices: monaco.editor.IEditorOverrideServices;
+    logLevel: LogLevel
 }
 
 /**
  * Child classes are allow to override the services configuration implementation.
  */
 export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
-    const serviceConfig = config.serviceConfig ?? {};
-
-    // always set required services if not configured
+    const serviceConfig = config.serviceConfig;
+    // set empty object if undefined
     serviceConfig.userServices = serviceConfig.userServices ?? {};
-    const configureService = serviceConfig.userServices.configurationService ?? undefined;
-    const workspaceConfig = serviceConfig.workspaceConfig ?? undefined;
 
-    if (configureService === undefined) {
-        if (workspaceConfig) {
-            throw new Error('You provided a workspaceConfig without using the configurationServiceOverride');
-        }
+    // import configuration service if it is not available
+    if (serviceConfig.userServices.configurationService === undefined) {
+        const getConfigurationServiceOverride = (await import('@codingame/monaco-vscode-configuration-service-override')).default;
         const mlcDefautServices = {
             ...getConfigurationServiceOverride()
         };
@@ -36,7 +33,7 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
     }
 
     // adding the default workspace config if not provided
-    if (!workspaceConfig) {
+    if (serviceConfig.workspaceConfig === undefined) {
         serviceConfig.workspaceConfig = {
             workspaceProvider: {
                 trusted: true,
@@ -50,7 +47,20 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
             }
         };
     }
-    mergeServices(config.specificServices ?? {}, serviceConfig.userServices);
+    mergeServices(config.specificServices, serviceConfig.userServices);
+
+    // set the log-level via the development settings
+    const devLogLevel = serviceConfig.workspaceConfig.developmentOptions?.logLevel;
+    if (serviceConfig.workspaceConfig.developmentOptions?.logLevel === undefined) {
+
+        // this needs to be done so complicated, because developmentOptions is read-only
+        const devOptions = (serviceConfig.workspaceConfig.developmentOptions as unknown as Record<string, unknown> | undefined) ?? {};
+        devOptions.logLevel = config.logLevel;
+        (serviceConfig.workspaceConfig.developmentOptions as Record<string, unknown>) = Object.assign(serviceConfig.workspaceConfig.developmentOptions ?? {}, devOptions);
+    } else if (devLogLevel !== config.logLevel) {
+
+        throw new Error(`You have configured mismatching logLevels: ${config.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
+    }
 
     return serviceConfig;
 };

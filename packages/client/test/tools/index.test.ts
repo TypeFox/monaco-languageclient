@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { checkLogLevel, ConsoleLogger } from 'monaco-languageclient/tools';
+import { ConsoleLogger } from 'monaco-languageclient/tools';
 import { LogLevel } from 'vscode/services';
 
 describe('Logger', () => {
@@ -34,7 +34,7 @@ describe('Logger', () => {
     });
 
     test('Config: checkLogLevel debug', () => {
-        const logger = new ConsoleLogger(checkLogLevel(2));
+        const logger = new ConsoleLogger(LogLevel.Debug);
 
         expect(logger.getLevel()).toBe(LogLevel.Debug);
     });

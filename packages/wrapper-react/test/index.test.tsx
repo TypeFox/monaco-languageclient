@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
-import { checkLogLevel } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
 import { updateExtendedAppPrototyp } from './helper.js';
@@ -15,7 +15,7 @@ describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
-            logLevel: checkLogLevel(2),
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
             }
@@ -42,7 +42,7 @@ describe('Test MonacoEditorReactComp', () => {
     test('update onTextChanged', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
-            logLevel: checkLogLevel(2),
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {
@@ -80,7 +80,7 @@ describe('Test MonacoEditorReactComp', () => {
     test('update codeResources', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
-            logLevel: checkLogLevel(2),
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {

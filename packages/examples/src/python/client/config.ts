@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
-import { checkLogLevel } from 'monaco-languageclient/tools';
+import { LogLevel } from 'vscode/services';
 import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
@@ -63,7 +63,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             }
         },
-        logLevel: checkLogLevel(2),
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
