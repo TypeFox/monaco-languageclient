@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
-import badPyCode from './bad.py?raw';
+import badPyCode from '../../../resources/python/bad.py?raw';
 
 export const runPythonReact = async () => {
     const badPyUri = vscode.Uri.file('/workspace/bad.py');

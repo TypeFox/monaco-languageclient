@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Advanced Application Playground</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta http-equiv="Content-Security-Policy" content="connect-src 'self' http://localhost:* https://localhost:* http://127.0.0.1:* https://127.0.0.1:*;" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://localhost:* https://localhost:* http://127.0.0.1:* https://127.0.0.1:*;" /> -->
+    <link rel="stylesheet" href="./resources/advanced/style.css">
+</head>
+
+<body>
+    <h2>Advanced Application Playground</h2>
+    <script type="module">
+        import { initLocaleLoader } from 'monaco-editor-wrapper/vscode/locale';
+        const url = new URL('./src/advanced/launcher.ts', import.meta.url);
+        await initLocaleLoader(url.href);
+    </script>
+</body>
+
+</html>

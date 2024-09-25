@@ -9,8 +9,8 @@ import '@codingame/monaco-vscode-python-default-extension';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
-import helloPyCode from './hello.py?raw';
-import hello2PyCode from './hello2.py?raw';
+import helloPyCode from '../../../resources/python/hello.py?raw';
+import hello2PyCode from '../../../resources/python/hello2.py?raw';
 
 export const runPythonWrapper = async () => {
     const helloPyUri = vscode.Uri.file('/workspace/hello.py');

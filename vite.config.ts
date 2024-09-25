@@ -15,6 +15,10 @@ export const definedViteConfig = defineConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
+
+                // advanced application playground
+                advanced: path.resolve(__dirname, 'packages/examples/advanced.html'),
+
                 // bare monaco-languageclient
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
 

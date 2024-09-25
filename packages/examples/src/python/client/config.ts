@@ -4,12 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
 import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
-import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
@@ -66,7 +64,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
             userServices: {
-                ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
