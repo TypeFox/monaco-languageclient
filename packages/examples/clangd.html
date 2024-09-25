@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cpp Language Client & Clangd Language Server (Worker/Wasm)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<h2>Cpp Language Client & Clangd Language Server (Worker/Wasm)</h2>
+    This example has been derived from: <a href="https://github.com/guyutongxue/clangd-in-browser">clangd-in-browser</a><br>
+    <button type="button" id="button-start">Start</button>
+    <button type="button" id="button-dispose">Dispose</button>
+	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
+    <script type="module">
+        import { runClangdWrapper } from "./src/clangd/client/main.ts";
+
+        runClangdWrapper();
+    </script>
+</body>
+
+</html>

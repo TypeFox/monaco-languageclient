@@ -3,16 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/// <reference types="vite/client" />
+export const LANGUAGE_ID = 'cpp';
+export const WORKSPACE_PATH = '/home/web_user';
+export const FILE_PATH = '/home/web_user/main.cpp';
 
-declare const __WASM_SIZE__: number;
-
-declare module '*?raw' {
-    const content: string;
-    export default content;
-}
-
-declare module '*?worker&url' {
-    const content: string;
-    export default content;
-}
+export const COMPILE_ARGS = [
+    '-xc++',
+    '-std=c++2b',
+    '-pedantic-errors',
+    '-Wall',
+];

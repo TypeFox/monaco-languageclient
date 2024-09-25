@@ -1,0 +1,31 @@
+diff --git a/clang-tools-extra/clangd/JSONTransport.cpp b/clang-tools-extra/clangd/JSONTransport.cpp
+index 9dc0df807..b1a4e9bd1 100644
+--- a/clang-tools-extra/clangd/JSONTransport.cpp
++++ b/clang-tools-extra/clangd/JSONTransport.cpp
+@@ -1,3 +1,26 @@
++#ifdef __EMSCRIPTEN__
++
++#include <emscripten.h>
++
++#include "support/Shutdown.h"
++#include <utility>
++
++EM_ASYNC_JS(void, waitForStdin, (), {
++  await Module.stdinReady();
++})
++
++template <typename Fun, typename Ret = decltype(std::declval<Fun>()())>
++Ret doUntilStdinAvailable(
++    const std::enable_if_t<true, Ret>& fail,
++    const Fun& f) {
++  waitForStdin();
++  return clang::clangd::retryAfterSignalUnlessShutdown(fail, f);
++}
++
++#define retryAfterSignalUnlessShutdown doUntilStdinAvailable
++
++#endif
++
+ //===--- JSONTransport.cpp - sending and receiving LSP messages over JSON -===//
+ //
+ // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.

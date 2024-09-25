@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~10.1.1",
+    "@codingame/monaco-vscode-cpp-default-extension": "~10.1.1",
     "@codingame/monaco-vscode-files-service-override": "~10.1.1",
     "@codingame/monaco-vscode-groovy-default-extension": "~10.1.1",
     "@codingame/monaco-vscode-keybindings-service-override": "~10.1.1",
@@ -121,6 +122,7 @@
     "start:server:python": "vite-node src/python/server/direct.ts",
     "start:server:groovy": "vite-node src/groovy/server/direct.ts",
     "start:server:jdtls": "vite-node src/eclipse.jdt.ls/server/direct.ts",
-    "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json"
+    "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
+    "extract:docker": "vite-node ./resources/clangd/scripts/extractDockerFiles.ts"
   }
 }
