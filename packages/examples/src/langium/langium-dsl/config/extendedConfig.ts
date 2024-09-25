@@ -3,10 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
-import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
+
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { LogLevel } from 'vscode/services';
 import { WrapperConfig } from 'monaco-editor-wrapper';
@@ -14,7 +13,7 @@ import { loadLangiumWorker } from '../wrapperLangium.js';
 import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
-import text from '../content/example.langium?raw';
+import text from '../../../../resources/langium/langium-dsl//example.langium?raw';
 
 export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
 
@@ -31,7 +30,6 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
             userServices: {
-                ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
@@ -55,7 +53,7 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
             extensions: [{
                 config: {
                     name: 'langium-example',
-                    publisher: 'monaco-editor-wrapper-examples',
+                    publisher: 'TypeFox',
                     version: '1.0.0',
                     engines: {
                         vscode: '*'
