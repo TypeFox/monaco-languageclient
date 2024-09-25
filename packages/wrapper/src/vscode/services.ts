@@ -51,12 +51,14 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
 
     // set the log-level via the development settings
     const devLogLevel = serviceConfig.workspaceConfig.developmentOptions?.logLevel;
-    if (serviceConfig.workspaceConfig.developmentOptions?.logLevel === undefined) {
+    if (devLogLevel === undefined) {
 
         // this needs to be done so complicated, because developmentOptions is read-only
-        const devOptions = (serviceConfig.workspaceConfig.developmentOptions as unknown as Record<string, unknown> | undefined) ?? {};
+        const devOptions: Record<string, unknown> = {
+            ...serviceConfig.workspaceConfig.developmentOptions
+        };
         devOptions.logLevel = config.logLevel;
-        (serviceConfig.workspaceConfig.developmentOptions as Record<string, unknown>) = Object.assign(serviceConfig.workspaceConfig.developmentOptions ?? {}, devOptions);
+        (serviceConfig.workspaceConfig.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
     } else if (devLogLevel !== config.logLevel) {
 
         throw new Error(`You have configured mismatching logLevels: ${config.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
