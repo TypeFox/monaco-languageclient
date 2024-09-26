@@ -15,9 +15,8 @@
         <button type="button" id="button-dispose">Dispose</button>
         <div id="monaco-editor-root"></div>
         <script type="module">
-            import { configureMonacoWorkers, runPythonReact } from './src/python/client/reactPython.tsx';
+            import { runPythonReact } from './src/python/client/reactPython.tsx';
 
-            configureMonacoWorkers();
             runPythonReact();
         </script>
     </body>

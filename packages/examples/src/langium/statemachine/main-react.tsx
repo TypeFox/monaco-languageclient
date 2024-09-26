@@ -6,19 +6,9 @@
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
 import text from './content/example.statemachine?raw';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runStatemachineReact = async () => {
     const langiumGlobalConfig = await createLangiumGlobalConfig({

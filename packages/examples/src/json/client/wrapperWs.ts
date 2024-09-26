@@ -6,18 +6,9 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
+import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-
-export const configureMonacoWorkers = () => {
-    // override the worker factory with your own direct definition
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
-        }
-    });
-};
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 const text = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -25,11 +16,11 @@ const text = `{
 }`;
 
 export const jsonClientUserConfig: WrapperConfig = {
+    logLevel: LogLevel.Debug,
     serviceConfig: {
         userServices: {
             ...getKeybindingsServiceOverride(),
-        },
-        debugLogging: true
+        }
     },
     editorAppConfig: {
         $type: 'extended',
@@ -45,9 +36,11 @@ export const jsonClientUserConfig: WrapperConfig = {
                 'workbench.colorTheme': 'Default Dark Modern',
                 'editor.guides.bracketPairsHorizontal': 'active',
                 'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off'
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': false
             })
-        }
+        },
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         json: {

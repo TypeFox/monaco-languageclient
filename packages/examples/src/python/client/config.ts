@@ -7,10 +7,12 @@ import * as vscode from 'vscode';
 import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
+import { LogLevel } from 'vscode/services';
 import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
     const url = createUrl({
@@ -61,12 +63,12 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             }
         },
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -80,14 +82,12 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
             },
-            useDiffEditor: false
-        },
-        loggerConfig: {
-            enabled: true,
-            debugEnabled: true
+            useDiffEditor: false,
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

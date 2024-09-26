@@ -6,9 +6,9 @@
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { getUserConfiguration, updateUserConfiguration as vscodeUpdateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
-import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
+import { getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { Logger } from 'monaco-languageclient/tools';
+import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 
 export interface CodeContent {
     text: string;
@@ -36,10 +36,10 @@ export interface EditorAppConfigBase {
     useDiffEditor?: boolean;
     domReadOnly?: boolean;
     readOnly?: boolean;
-    awaitExtensionReadiness?: Array<() => Promise<void>>;
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+    monacoWorkerFactory?: (logger: Logger) => void;
 }
 
 export interface ModelRefs {
@@ -87,8 +87,7 @@ export abstract class EditorAppBase {
             useDiffEditor: userAppConfig.useDiffEditor ?? false,
             readOnly: userAppConfig.readOnly ?? false,
             domReadOnly: userAppConfig.domReadOnly ?? false,
-            overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true,
-            awaitExtensionReadiness: userAppConfig.awaitExtensionReadiness ?? undefined,
+            overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
         config.editorOptions = {
             ...userAppConfig.editorOptions,
@@ -261,32 +260,15 @@ export abstract class EditorAppBase {
         }
     }
 
-    async awaitReadiness(awaitExtensionReadiness?: Array<() => Promise<void>>) {
-        if (awaitExtensionReadiness) {
-            const allPromises: Array<Promise<void>> = [];
-            for (const awaitReadiness of awaitExtensionReadiness) {
-                allPromises.push(awaitReadiness());
-            }
-            return Promise.all(allPromises);
-        }
-        return Promise.resolve();
-    }
-
     updateMonacoEditorOptions(options: monaco.editor.IEditorOptions & monaco.editor.IGlobalEditorOptions) {
         this.getEditor()?.updateOptions(options);
-    }
-
-    async updateUserConfiguration(json?: string) {
-        if (json !== undefined) {
-            return vscodeUpdateUserConfiguration(json);
-        }
-        return Promise.resolve();
     }
 
     getUserConfiguration(): Promise<string> {
         return getUserConfiguration();
     }
 
+    abstract loadUserConfiguration(): Promise<void>;
     abstract init(): Promise<void>;
     abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;

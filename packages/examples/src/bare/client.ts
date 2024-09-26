@@ -5,35 +5,35 @@
 
 import * as monaco from 'monaco-editor';
 import { initServices } from 'monaco-languageclient/vscode/services';
+import { LogLevel } from 'vscode/services';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { configureMonacoWorkers } from '../common/client/utils.js';
+import { ConsoleLogger } from 'monaco-languageclient/tools';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 export const runClient = async () => {
+    const logger = new ConsoleLogger(LogLevel.Debug);
     await initServices({
-        serviceConfig: {
-            userServices: {
-                ...getThemeServiceOverride(),
-                ...getTextmateServiceOverride(),
-            },
-            debugLogging: true,
-        }
+        userServices: {
+            ...getConfigurationServiceOverride(),
+            ...getThemeServiceOverride(),
+            ...getTextmateServiceOverride(),
+        },
+        logger
     });
+
+    updateUserConfiguration(JSON.stringify({
+        'editor.experimental.asyncTokenization': false
+    }));
 
     // register the JSON language with Monaco
     monaco.languages.register({
@@ -42,6 +42,8 @@ export const runClient = async () => {
         aliases: ['JSON', 'json'],
         mimetypes: ['application/json']
     });
+
+    configureMonacoWorkers(logger);
 
     // create monaco editor
     monaco.editor.create(document.getElementById('monaco-editor-root')!, {

@@ -7,9 +7,11 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
-import { WrapperConfig } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { LogLevel } from 'vscode/services';
+import { WrapperConfig } from 'monaco-editor-wrapper';
 import { loadLangiumWorker } from '../wrapperLangium.js';
+import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../content/example.langium?raw';
@@ -26,12 +28,12 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
     const writer = new BrowserMessageWriter(langiumWorker);
 
     return {
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -70,9 +72,11 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'GitHub Dark High Contrast',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             langium: {

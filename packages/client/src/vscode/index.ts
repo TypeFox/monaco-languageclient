@@ -3,5 +3,5 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './client.js';
-export * from './commonTypes.js';
+export * from './fakeWorker.js';
+export * from './services.js';

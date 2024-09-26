@@ -43,7 +43,7 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
     const writer = new WebSocketMessageWriter(socket);
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
     const serverConnection = createServerProcess(serverName, runCommand, runCommandArgs, spawnOptions);
-    if (serverConnection) {
+    if (serverConnection !== undefined) {
         forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
                 if (message.method === InitializeRequest.type.method) {

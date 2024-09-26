@@ -17,9 +17,8 @@
     </div>
     <div id="monaco-editor-root" style="height: 80vh; border: 1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers, runLangiumDslWrapper } from './src/langium/langium-dsl/wrapperLangium.ts';
+        import { runLangiumDslWrapper } from './src/langium/langium-dsl/wrapperLangium.ts';
 
-        configureMonacoWorkers();
         runLangiumDslWrapper();
     </script>;
 </body>

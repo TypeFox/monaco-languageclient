@@ -2,22 +2,23 @@
 <html lang="en">
 
 <head>
-    <title>JSON Language Client & Language Server (Web Socket)</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Editor Wrapper TypeScript Example</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h2>JSON Language Client & Language Server (Web Socket)</h2>
+    <h2>Monaco Editor Wrapper TypeScript Example</h2>
     <button type="button" id="button-start">Start</button>
+    <button type="button" id="button-swap-code">Swap Code</button>
+    <button type="button" id="button-diff">Show Diff</button>
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 80vh;"></div>
     <script type="module">
-        import { configureMonacoWorkers, runJsonWrapper } from './src/json/client/wrapperWs.ts';
+        import { runTsWrapper } from './src/ts/wrapperTs.ts';
 
-        configureMonacoWorkers();
-        runJsonWrapper();
+        runTsWrapper();
     </script>
 </body>
 

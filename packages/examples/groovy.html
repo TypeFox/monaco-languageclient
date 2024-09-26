@@ -14,9 +14,8 @@
     <button type="button" id="button-dispose">Dispose</button>
 	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
-        import { configureMonacoWorkers, runGroovyClient } from "./src/groovy/client/main.ts";
+        import { runGroovyClient } from "./src/groovy/client/main.ts";
 
-        configureMonacoWorkers();
         runGroovyClient();
     </script>
 </body>

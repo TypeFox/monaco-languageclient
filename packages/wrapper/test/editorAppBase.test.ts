@@ -5,17 +5,17 @@
 
 import { describe, expect, test } from 'vitest';
 import { isCodeUpdateRequired, isModelUpdateRequired, ModelUpdateType } from 'monaco-editor-wrapper';
-import { createEditorAppConfig, createBaseConfig } from './helper.js';
+import { createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 
 describe('Test EditorAppBase', () => {
 
     test('classic type: empty EditorAppConfigClassic', () => {
-        const wrapperConfig = createBaseConfig('classic');
+        const wrapperConfig = createWrapperConfigClassicApp();
         expect(wrapperConfig.editorAppConfig.$type).toBe('classic');
     });
 
     test('extended type: empty EditorAppConfigExtended', () => {
-        const wrapperConfig = createBaseConfig('extended');
+        const wrapperConfig = createWrapperConfigExtendedApp();
         expect(wrapperConfig.editorAppConfig.$type).toBe('extended');
     });
 
@@ -40,7 +40,7 @@ describe('Test EditorAppBase', () => {
     });
 
     test('isModelUpdateRequired', () => {
-        const config = createEditorAppConfig('classic');
+        const config = createWrapperConfigClassicApp().editorAppConfig;
 
         let modelUpdateType = isModelUpdateRequired(config.codeResources, { main: { text: '', fileExt: 'js' } });
         expect(modelUpdateType).toBe(ModelUpdateType.NONE);

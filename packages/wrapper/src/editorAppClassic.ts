@@ -44,10 +44,11 @@ export class EditorAppClassic extends EditorAppBase {
         };
     }
 
-    async init() {
-        // await all extenson that should be ready beforehand
-        await this.awaitReadiness(this.config.awaitExtensionReadiness);
+    override async loadUserConfiguration() {
+        // nothing needed here currently
+    }
 
+    async init() {
         const languageDef = this.config.languageDef;
         if (languageDef) {
             // register own language first
@@ -71,14 +72,6 @@ export class EditorAppClassic extends EditorAppBase {
                 monaco.editor.setTheme(languageDef.theme.name);
             }
         }
-
-        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-            // use updateConfiguration here as otherwise semantic highlighting will not work
-            const json = JSON.stringify({
-                'editor.semanticHighlighting.enabled': this.config.editorOptions['semanticHighlighting.enabled']
-            });
-            await this.updateUserConfiguration(json);
-        }
         this.logger?.info('Init of Classic App was completed.');
     }
 
@@ -97,7 +90,6 @@ export class EditorAppClassic extends EditorAppBase {
             'useDiffEditor',
             'domReadOnly',
             'readOnly',
-            'awaitExtensionReadiness',
             'overrideAutomaticLayout',
             'editorOptions',
             'diffEditorOptions',

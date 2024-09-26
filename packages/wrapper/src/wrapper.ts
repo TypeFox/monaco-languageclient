@@ -4,9 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { LogLevel } from 'vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
-import { Logger, LoggerConfig } from 'monaco-languageclient/tools';
+import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
 import { checkServiceConsistency, configureServices } from './vscode/services.js';
 import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
@@ -15,7 +16,7 @@ import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWra
 
 export interface WrapperConfig {
     id?: string;
-    loggerConfig?: LoggerConfig;
+    logLevel?: LogLevel | number;
     serviceConfig?: InitializeServiceConfig;
     editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
@@ -31,7 +32,7 @@ export class MonacoEditorLanguageClientWrapper {
     private id: string;
     private editorApp: EditorAppClassic | EditorAppExtended | undefined;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
-    private logger: Logger = new Logger();
+    private logger: Logger = new ConsoleLogger();
     private initDone = false;
     private starting?: Promise<void>;
     private startAwait: (value: void | PromiseLike<void>) => void;
@@ -55,7 +56,11 @@ export class MonacoEditorLanguageClientWrapper {
         // Always dispose old instances before start
         this.dispose(false);
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger.updateConfig(wrapperConfig.loggerConfig);
+        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
+
+        if (typeof wrapperConfig.editorAppConfig.monacoWorkerFactory === 'function') {
+            wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
+        }
 
         if (editorAppConfig.$type === 'classic') {
             this.editorApp = new EditorAppClassic(this.id, wrapperConfig.editorAppConfig as EditorAppConfigClassic, this.logger);
@@ -66,16 +71,20 @@ export class MonacoEditorLanguageClientWrapper {
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp.specifyServices();
         const serviceConfig = await configureServices({
-            serviceConfig: wrapperConfig.serviceConfig,
+            serviceConfig: wrapperConfig.serviceConfig ?? {},
             specificServices,
-            logger: this.logger
+            logLevel: this.logger.getLevel()
         });
         await initServices({
-            serviceConfig,
+            userServices: serviceConfig.userServices,
+            enableExtHostWorker: serviceConfig.enableExtHostWorker,
+            workspaceConfig: serviceConfig.workspaceConfig,
             caller: `monaco-editor (${this.id})`,
             performChecks: checkServiceConsistency,
             logger: this.logger
         });
+
+        await this.editorApp.loadUserConfiguration();
 
         const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
@@ -87,6 +96,8 @@ export class MonacoEditorLanguageClientWrapper {
                 this.languageClientWrappers.set(languageId, lcw);
             }
         }
+
+        await this.editorApp.init();
 
         this.initDone = true;
     }
@@ -111,7 +122,6 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        await this.editorApp?.init();
         await this.editorApp?.createEditors(htmlElement);
 
         for (const lcw of this.languageClientWrappers.values()) {
@@ -195,6 +205,10 @@ export class MonacoEditorLanguageClientWrapper {
 
     getWorker(languageId: string): Worker | undefined {
         return this.languageClientWrappers.get(languageId)?.getWorker();
+    }
+
+    getLogger() {
+        return this.logger;
     }
 
     async updateCodeResources(codeResources?: CodeResources): Promise<void> {

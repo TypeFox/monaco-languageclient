@@ -5,22 +5,14 @@
 
 import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import { LogLevel } from 'vscode/services';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
+import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 export const runEclipseJdtLsClient = () => {
     const helloJavaUri = vscode.Uri.file(`${eclipseJdtLsConfig.basePath}/workspace/hello.java`);
@@ -29,11 +21,11 @@ export const runEclipseJdtLsClient = () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const userConfig: WrapperConfig = {
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -48,10 +40,11 @@ export const runEclipseJdtLsClient = () => {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
-
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             java: {

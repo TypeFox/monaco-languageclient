@@ -6,22 +6,12 @@
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import workerUrl from './worker/langium-server?worker&url';
 import { disableButton } from '../../common/client/utils.js';
 
 let wrapper: MonacoEditorLanguageClientWrapper | undefined;
 let extended = false;
 const htmlElement = document.getElementById('monaco-editor-root');
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runLangiumDslWrapper = async () => {
     try {

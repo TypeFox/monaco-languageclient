@@ -8,19 +8,10 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
+import { LogLevel } from 'vscode/services';
 import { CodePlusFileExt, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { disableButton } from '../common/client/utils.js';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
-        }
-    });
-};
+import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
 
 export const runMultipleLanguageClientsExample = async () => {
     disableButton('button-flip', true);
@@ -41,11 +32,11 @@ print("Hello Moon!")
 
     const wrapperConfig: WrapperConfig = {
         id: '42',
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride()
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -59,9 +50,11 @@ print("Hello Moon!")
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             json: {

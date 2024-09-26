@@ -6,20 +6,18 @@
 import { describe, expect, test } from 'vitest';
 import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
-import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
+import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
 import { updateExtendedAppPrototyp } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
-            },
-            loggerConfig: {
-                enabled: true,
-                debugEnabled: true,
             }
         };
         const { rerender } = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
@@ -44,6 +42,7 @@ describe('Test MonacoEditorReactComp', () => {
     test('update onTextChanged', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {
@@ -52,10 +51,6 @@ describe('Test MonacoEditorReactComp', () => {
                         fileExt: 'js'
                     }
                 }
-            },
-            loggerConfig: {
-                enabled: true,
-                debugEnabled: true,
             }
         };
 
@@ -85,6 +80,7 @@ describe('Test MonacoEditorReactComp', () => {
     test('update codeResources', async () => {
         updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {
@@ -93,10 +89,6 @@ describe('Test MonacoEditorReactComp', () => {
                         fileExt: 'js'
                     }
                 }
-            },
-            loggerConfig: {
-                enabled: true,
-                debugEnabled: true,
             }
         };
 

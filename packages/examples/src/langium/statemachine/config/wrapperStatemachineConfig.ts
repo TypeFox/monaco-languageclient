@@ -7,11 +7,13 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
+import { LogLevel } from 'vscode/services';
 import { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 import { MessageTransports } from 'vscode-languageclient';
+import { configureMonacoWorkers } from '../../../common/client/utils.js';
 
 export const createLangiumGlobalConfig = async (params: {
     languageServerId: string,
@@ -48,13 +50,13 @@ export const createLangiumGlobalConfig = async (params: {
     } : undefined;
 
     return {
+        logLevel: LogLevel.Debug,
         serviceConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
-            },
-            debugLogging: true
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -90,14 +92,12 @@ export const createLangiumGlobalConfig = async (params: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off'
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': false
                 })
-            }
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
-        languageClientConfigs,
-        loggerConfig: {
-            enabled: true,
-            debugEnabled: true
-        }
+        languageClientConfigs
     };
 };

@@ -5,10 +5,10 @@
 
 import { describe, expect, test } from 'vitest';
 import { EditorAppClassic, EditorAppConfigClassic, WrapperConfig } from 'monaco-editor-wrapper';
-import { createBaseConfig, createEditorAppConfig } from './helper.js';
+import { createWrapperConfigClassicApp } from './helper.js';
 
 const buildConfig = (): WrapperConfig => {
-    const wrapperConfig = createBaseConfig('classic');
+    const wrapperConfig = createWrapperConfigClassicApp();
     (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {};
     return wrapperConfig;
 };
@@ -44,9 +44,9 @@ describe('Test EditorAppClassic', () => {
     });
 
     test('isAppConfigDifferent: basic', () => {
-        const orgConfig = createEditorAppConfig('classic') as EditorAppConfigClassic;
-        const config = createEditorAppConfig('classic') as EditorAppConfigClassic;
-        const app = new EditorAppClassic('test', config);
+        const orgConfig = createWrapperConfigClassicApp().editorAppConfig;
+        const config = createWrapperConfigClassicApp().editorAppConfig;
+        const app = new EditorAppClassic('test', config as EditorAppConfigClassic);
         expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
 
         config.codeResources ??= {};
@@ -78,8 +78,8 @@ describe('Test EditorAppClassic', () => {
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createEditorAppConfig('classic') as EditorAppConfigClassic;
-        const app = new EditorAppClassic('config defaults', editorAppConfig);
+        const editorAppConfig = createWrapperConfigClassicApp().editorAppConfig;
+        const app = new EditorAppClassic('config defaults', editorAppConfig as EditorAppConfigClassic);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();

@@ -5,9 +5,10 @@
 
 import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
-import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
+import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { DisposableStore } from 'vscode/monaco';
 
@@ -22,6 +23,7 @@ export interface UserConfiguration {
 
 export interface EditorAppConfigExtended extends EditorAppConfigBase {
     $type: 'extended';
+    loadThemes?: boolean;
     extensions?: ExtensionConfig[];
     userConfiguration?: UserConfiguration;
 }
@@ -56,6 +58,7 @@ export class EditorAppExtended extends EditorAppBase {
         this.config = this.buildConfig(editorAppConfig) as EditorAppConfigExtended;
         this.config.extensions = editorAppConfig.extensions ?? undefined;
         this.config.userConfiguration = editorAppConfig.userConfiguration ?? undefined;
+        this.config.loadThemes = editorAppConfig.loadThemes ?? true;
     }
 
     getConfig(): EditorAppConfigExtended {
@@ -75,12 +78,15 @@ export class EditorAppExtended extends EditorAppBase {
         };
     }
 
+    override async loadUserConfiguration() {
+        // buildConfig ensures userConfiguration is available
+        await updateUserConfiguration(this.config.userConfiguration?.json ?? JSON.stringify({}));
+    }
+
     override async init() {
-        // await all extensions that should be ready beforehand
-        // always await theme extension
-        const whenReadyTheme = (await import('@codingame/monaco-vscode-theme-defaults-default-extension')).whenReady;
-        const awaitReadiness = (this.config.awaitExtensionReadiness ?? []).concat(whenReadyTheme);
-        await this.awaitReadiness(awaitReadiness);
+        if (this.config.loadThemes ?? true) {
+            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+        }
 
         if (this.config.extensions) {
             const allPromises: Array<Promise<void>> = [];
@@ -98,9 +104,6 @@ export class EditorAppExtended extends EditorAppBase {
             }
             await Promise.all(allPromises);
         }
-
-        // buildConfig ensures userConfiguration is available
-        await this.updateUserConfiguration(this.config.userConfiguration?.json);
         this.logger?.info('Init of Extended App was completed.');
     }
 

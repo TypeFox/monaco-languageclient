@@ -6,7 +6,6 @@
 import * as monaco from 'monaco-editor';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { MonacoEditorLanguageClientWrapper, TextContents, WrapperConfig } from 'monaco-editor-wrapper';
-import { Logger } from 'monaco-languageclient/tools';
 
 export type TextChanges = TextContents & {
     isDirty: boolean;
@@ -33,12 +32,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     } = props;
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
-    const loggerRef = useRef<Logger>(new Logger());
     const containerRef = useRef<HTMLDivElement>(null);
     const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
 
     useEffect(() => {
-        loggerRef.current.updateConfig(wrapperConfig.loggerConfig);
         return () => {
             destroyMonaco();
         };

@@ -5,14 +5,15 @@
 
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
-import { ILogService, initialize, IWorkbenchConstructionOptions, LogLevel, StandaloneServices } from 'vscode/services';
+import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices, LogLevel } from 'vscode/services';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
+import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
+import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
-import { Logger } from '../tools/index.js';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -22,8 +23,13 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
 export interface InitializeServiceConfig {
     userServices?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
-    debugLogging?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
+}
+
+export interface InitServicesInstructions extends InitializeServiceConfig {
+    caller?: string;
+    performChecks?: () => boolean;
+    logger?: Logger;
 }
 
 export const initEnhancedMonacoEnvironment = () => {
@@ -45,6 +51,7 @@ export const initEnhancedMonacoEnvironment = () => {
 export const supplyRequiredServices = async () => {
     return {
         ...getLanguagesServiceOverride(),
+        ...getLogServiceOverride(),
         ...getModelServiceOverride()
     };
 };
@@ -61,33 +68,18 @@ export const mergeServices = (services: monaco.editor.IEditorOverrideServices, o
     }
 };
 
-export interface InitServicesInstruction {
-    serviceConfig?: InitializeServiceConfig;
-    caller?: string;
-    performChecks?: () => boolean;
-    logger?: Logger;
-}
-
-export const initServices = async (instruction: InitServicesInstruction) => {
+export const initServices = async (instructions: InitServicesInstructions) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
-
-    // in case debugLogging is set and for whatever reason no logger is passed a proper one is created
-    if (instruction.serviceConfig?.debugLogging === true && !instruction.logger) {
-        instruction.logger = new Logger({
-            enabled: true,
-            debugEnabled: true
-        });
-    }
 
     if (!(envEnhanced.vscodeInitialising ?? false)) {
         if (envEnhanced.vscodeApiInitialised ?? false) {
-            instruction.logger?.debug('Initialization of vscode services can only performed once!');
+            instructions.logger?.debug('Initialization of vscode services can only performed once!');
         } else {
             envEnhanced.vscodeInitialising = true;
-            instruction.logger?.debug(`Initializing vscode services. Caller: ${instruction.caller ?? 'unknown'}`);
+            instructions.logger?.debug(`Initializing vscode services. Caller: ${instructions.caller ?? 'unknown'}`);
 
-            await importAllServices(instruction);
-            instruction.logger?.debug('Initialization of vscode services completed successfully.');
+            await importAllServices(instructions);
+            instructions.logger?.debug('Initialization of vscode services completed successfully.');
 
             envEnhanced.vscodeApiInitialised = true;
         }
@@ -105,21 +97,19 @@ export const initServices = async (instruction: InitServicesInstruction) => {
  *   - languages
  *   - model
  */
-export const importAllServices = async (instruction: InitServicesInstruction) => {
-    const lc: InitializeServiceConfig = instruction.serviceConfig ?? {};
-    const userServices: monaco.editor.IEditorOverrideServices = lc.userServices ?? {};
+export const importAllServices = async (instructions: InitServicesInstructions) => {
+    const userServices: monaco.editor.IEditorOverrideServices = instructions.userServices ?? {};
 
     const lcRequiredServices = await supplyRequiredServices();
 
     mergeServices(lcRequiredServices, userServices);
-    await configureExtHostWorker(instruction.serviceConfig?.enableExtHostWorker === true, userServices);
+    await configureExtHostWorker(instructions.enableExtHostWorker === true, userServices);
 
-    reportServiceLoading(userServices, instruction.logger);
+    reportServiceLoading(userServices, instructions.logger);
 
-    if (instruction.performChecks === undefined || instruction.performChecks()) {
-        await initialize(userServices, undefined, lc.workspaceConfig);
-        const logLevel = lc.workspaceConfig?.developmentOptions?.logLevel ?? LogLevel.Info;
-        StandaloneServices.get(ILogService).setLevel(logLevel);
+    if (instructions.performChecks === undefined || (typeof instructions.performChecks === 'function' && instructions.performChecks())) {
+        await initialize(userServices, undefined, instructions.workspaceConfig);
+        StandaloneServices.get(ILogService).setLevel(instructions.logger?.getLevel() ?? LogLevel.Off);
     }
 };
 

@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { EditorAppType, WrapperConfig } from 'monaco-editor-wrapper';
+import { WrapperConfig } from 'monaco-editor-wrapper';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -11,21 +11,33 @@ export const createMonacoEditorDiv = () => {
     document.body.insertAdjacentElement('beforeend', div);
 };
 
-export const createBaseConfig = (type: EditorAppType): WrapperConfig => {
+export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     return {
-        editorAppConfig: createEditorAppConfig(type)
+        editorAppConfig: {
+            loadThemes: false,
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text: '',
+                    fileExt: 'js'
+                }
+            },
+            useDiffEditor: false,
+        }
     };
 };
 
-export const createEditorAppConfig = (type: EditorAppType) => {
+export const createWrapperConfigClassicApp = (): WrapperConfig => {
     return {
-        $type: type,
-        codeResources: {
-            main: {
-                text: '',
-                fileExt: 'js'
-            }
-        },
-        useDiffEditor: false,
+        editorAppConfig: {
+            $type: 'classic',
+            codeResources: {
+                main: {
+                    text: '',
+                    fileExt: 'js'
+                }
+            },
+            useDiffEditor: false,
+        }
     };
 };

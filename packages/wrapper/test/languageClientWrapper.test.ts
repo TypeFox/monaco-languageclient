@@ -5,13 +5,13 @@
 
 import { describe, expect, test } from 'vitest';
 import { LanguageClientConfig, LanguageClientWrapper, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createBaseConfig } from './helper.js';
+import { createWrapperConfigExtendedApp } from './helper.js';
 
 describe('Test LanguageClientWrapper', () => {
 
     test('Not defined after construction without configuration', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        await wrapper.init(createBaseConfig('extended'));
+        await wrapper.init(createWrapperConfigExtendedApp());
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper('unknown');
         expect(languageClientWrapper).toBeUndefined();
@@ -48,7 +48,7 @@ describe('Test LanguageClientWrapper', () => {
         });
 
         // setup the wrapper
-        const config = createBaseConfig('extended');
+        const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
                 languageId: 'javascript',
@@ -74,14 +74,14 @@ describe('Test LanguageClientWrapper', () => {
 
         setTimeout(async () => {
             // dispose & verify
-            await languageClientWrapper?.disposeLanguageClient();
+            await languageClientWrapper?.disposeLanguageClient(false);
             expect(languageClientWrapper?.getWorker()).toBeUndefined();
         }, 250);
         expect(languageClientWrapper?.getWorker()).toBeTruthy();
     });
 
     test('Constructor: config', async () => {
-        const config = createBaseConfig('extended');
+        const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
                 languageId: 'javascript',
@@ -101,7 +101,7 @@ describe('Test LanguageClientWrapper', () => {
     });
 
     test('Start: unreachable url', async () => {
-        const config = createBaseConfig('extended');
+        const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
                 languageId: 'javascript',
@@ -138,7 +138,7 @@ describe('Test LanguageClientWrapper', () => {
     });
 
     test('Start: unreachable worker url', async () => {
-        const config = createBaseConfig('extended');
+        const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
                 languageId: 'javascript',

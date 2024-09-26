@@ -9,19 +9,9 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import type { TextChanges } from '@typefox/monaco-editor-react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
 import badPyCode from './bad.py?raw';
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        ignoreMapping: true,
-        workerLoaders: {
-            editorWorkerService: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
-};
 
 export const runPythonReact = async () => {
     const badPyUri = vscode.Uri.file('/workspace/bad.py');
