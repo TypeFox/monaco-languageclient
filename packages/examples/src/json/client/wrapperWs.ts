@@ -37,7 +37,7 @@ export const jsonClientUserConfig: WrapperConfig = {
                 'editor.guides.bracketPairsHorizontal': 'active',
                 'editor.lightbulb.enabled': 'On',
                 'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': false
+                'editor.experimental.asyncTokenization': true
             })
         },
         monacoWorkerFactory: configureMonacoWorkers

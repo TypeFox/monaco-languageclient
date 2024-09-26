@@ -51,7 +51,7 @@ print("Hello Moon!")
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             monacoWorkerFactory: configureMonacoWorkers

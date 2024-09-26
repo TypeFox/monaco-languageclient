@@ -83,7 +83,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
                     'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             useDiffEditor: false,

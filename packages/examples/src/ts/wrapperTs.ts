@@ -53,7 +53,7 @@ export const runTsWrapper = async () => {
                     'editor.lightbulb.enabled': 'on',
                     'editor.glyphMargin': true,
                     'editor.guides.bracketPairsHorizontal': true,
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             monacoWorkerFactory: configureMonacoWorkers

@@ -41,7 +41,7 @@ export const runEclipseJdtLsClient = () => {
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
                     'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             monacoWorkerFactory: configureMonacoWorkers

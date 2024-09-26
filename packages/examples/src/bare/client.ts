@@ -32,7 +32,7 @@ export const runClient = async () => {
     });
 
     updateUserConfiguration(JSON.stringify({
-        'editor.experimental.asyncTokenization': false
+        'editor.experimental.asyncTokenization': true
     }));
 
     // register the JSON language with Monaco

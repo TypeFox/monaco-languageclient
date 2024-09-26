@@ -27,7 +27,8 @@
           "type": "chrome",
           "request": "launch",
           "url": "http://localhost:20001",
-          "webRoot": "${workspaceFolder}"
+          "webRoot": "${workspaceFolder}",
+          "userDataDir": "${workspaceFolder}/.vscode/profile"
         }
     ]
 }

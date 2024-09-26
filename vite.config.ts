@@ -59,7 +59,11 @@ const viteConfig = defineViteConfig({
             plugins: [
                 importMetaUrlPlugin
             ]
-        }
+        },
+        include: [
+            'vscode-textmate',
+            'vscode-oniguruma'
+        ]
     },
     plugins: [
         vsixPlugin(),

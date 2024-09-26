@@ -49,7 +49,7 @@ export const runBrowserEditor = async () => {
                     'workbench.colorTheme': 'Default Dark Modern',
                     'editor.guides.bracketPairsHorizontal': 'active',
                     'editor.lightbulb.enabled': 'On',
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             monacoWorkerFactory: configureMonacoWorkers

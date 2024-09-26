@@ -73,7 +73,7 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                     'workbench.colorTheme': 'GitHub Dark High Contrast',
                     'editor.guides.bracketPairsHorizontal': 'active',
                     'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': false
+                    'editor.experimental.asyncTokenization': true
                 })
             },
             monacoWorkerFactory: configureMonacoWorkers
