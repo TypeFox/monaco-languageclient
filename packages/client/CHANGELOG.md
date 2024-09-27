@@ -4,8 +4,12 @@ All notable changes to this npm module are documented in this file.
 
 ## [9.0.0-next.1] - 2024-09-xy
 
-- Update to monaco-vscode-api 9.0.3 (monaco-editor 0.52.0)
-- Pass MessageTransports directly
+- Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
+  - Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+  - Enhancements to logging
+- monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
+  - Pass MessageTransports directly
+  - Allows to configure more than one language client
 
 ## [8.8.3] - 2024-08-26
 

@@ -4,7 +4,11 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [6.0.0-next.1] - 2024-09-xy
 
-- Updated to `monaco-editor-wrapper@9.0.0-next.1` and `monaco-languageclient@6.0.0-next.1`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+- Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
+  - Updated to `monaco-editor-wrapper@9.0.0-next.1` and `monaco-languageclient@6.0.0-next.1`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+  - Enhancements to logging
+- monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
+- Turned react component from class to function [#739](https://github.com/TypeFox/monaco-languageclient/pull/739)
 
 ## [4.5.3] - 2024-08-26
 

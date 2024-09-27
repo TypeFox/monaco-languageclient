@@ -50,7 +50,7 @@ const localeLoader: Partial<Record<string, () => Promise<void>>> = {
 
 export const locales = Object.keys(localeLoader);
 
-export const initLocaleLoader = async (locale = new URLSearchParams(window.location.search).get('locale')) => {
+export const initLocaleLoader = async (urlToImport?: string, locale = new URLSearchParams(window.location.search).get('locale')) => {
     if (locale !== null) {
         const loader = localeLoader[locale];
         if (loader) {
@@ -58,5 +58,8 @@ export const initLocaleLoader = async (locale = new URLSearchParams(window.locat
         } else {
             console.error(`Unknown locale ${locale}`);
         }
+    }
+    if (urlToImport !== undefined) {
+        void import(urlToImport);
     }
 };

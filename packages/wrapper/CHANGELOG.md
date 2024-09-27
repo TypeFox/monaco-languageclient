@@ -4,7 +4,14 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 
 ## [6.0.0-next.1] - 2024-08-xy
 
-- Updated to `monaco-languageclient@9.0.0-next.1`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+- Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
+  - Updated to `monaco-languageclient@9.0.0-next.1`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+  - Enhancements to logging, worker factory and start order. The worker factory only accepts direct worker loading instructions from now on
+- monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
+  - Allows to configure more than one language client
+  - `UserConfig` is renamed to `WrapperConfig` and one level less deep
+  - Restart options are now intergrated into the configuration
+- You can now pass a URL to `initLocaleLoader` for module import
 
 ## [5.5.3] - 2024-08-26
 

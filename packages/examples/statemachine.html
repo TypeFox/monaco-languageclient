@@ -16,12 +16,8 @@
     <div id="monaco-editor-root2" style="height: 40vh;"></div>
     <script type="module" rel="modulepreload">
         import { initLocaleLoader } from 'monaco-editor-wrapper/vscode/locale';
-        await initLocaleLoader();
-
-        // production build: ensure local loading is handled before loading the main script
-        const { runStatemachineWrapper } = await import ('./src/langium/statemachine/main.ts');
-
-        runStatemachineWrapper();
+        const url = new URL('./src/langium/statemachine/launcher.ts', import.meta.url);
+        await initLocaleLoader(url.href);
     </script>
 </body>
 

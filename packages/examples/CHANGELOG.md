@@ -5,6 +5,11 @@ All notable changes to this npm module are documented in this file.
 ## [2024.9.1] - 2024-09-xy
 
 - Updated to `monaco-languageclient@9.0.0-next.1`, `monaco-editor-wrapper@6.0.0-next.1` and `@typefox/monaco-editor-react@6.0.0-next.1`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+- Align configuration of all examples to the latest configuration adjustments.
+- Only use a single function to configure `monaco-editor` that all examples.
+- `server-commons`: Allow to set `requestMessageHandler` and `responseMessageHandler`.
+- Updated react examples to wrap the editor in an app component. Strict mode can be set on the page before starting.
+- Introduce a new example that makes use of two language clients (json and python). It replaces the multi-editor example.
 
 ## [2024.8.4] - 2024-08-26
 
