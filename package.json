@@ -5,8 +5,8 @@
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
     "@codingame/monaco-vscode-rollup-vsix-plugin": "~9.0.3",
     "@testing-library/react": "~16.0.1",
-    "@types/node": "~20.16.5",
-    "@types/react": "~18.3.8",
+    "@types/node": "~20.16.9",
+    "@types/react": "~18.3.9",
     "@types/react-dom": "~18.3.0",
     "@types/vscode": "~1.93.0",
     "@typescript-eslint/eslint-plugin": "~7.18.0",
@@ -21,11 +21,12 @@
     "eslint-plugin-unused-imports": "~3.2.0",
     "http-server": "~14.1.1",
     "minimatch": "~10.0.1",
+    "playwright": "~1.47.2",
     "typescript": "~5.5.4",
-    "vite": "~5.4.7",
+    "vite": "~5.4.8",
     "vite-node": "~2.1.1",
     "vitest": "~2.1.1",
-    "webdriverio": "~9.1.0"
+    "webdriverio": "~9.1.1"
   },
   "volta": {
     "node": "20.17.0",
@@ -56,7 +57,9 @@
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test:run",
     "reset:repo": "git clean -f -X -d",
     "test": "vitest",
-    "test:run": "vitest --run"
+    "test:run": "vitest --run",
+    "test:debug": "vitest --config vitest.debug.config.ts --inspect-brk=20222 --browser --no-file-parallelism",
+    "test:install": "playwright install"
   },
   "workspaces": [
     "packages/client",

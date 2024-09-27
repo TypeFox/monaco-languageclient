@@ -7,5 +7,5 @@ import * as path from 'path';
 import { defineWorkspace } from 'vitest/config';
 
 export default defineWorkspace([
-    path.resolve(__dirname, './vite.config.ts')
+    path.resolve(__dirname, './vitest.config.ts')
 ]);
