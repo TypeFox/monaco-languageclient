@@ -3,23 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { defineConfig, mergeConfig } from 'vitest/config';
-import viteConfig from './vite.config.js';
-import { vitestConfig } from './vitest.config.js';
+import { mergeConfig } from 'vite';
+import { defineConfig as defineVitestConfig } from 'vitest/config';
+import { definedViteConfig } from './vite.config.js';
+import { vitestBaseConfig } from './vitest.config.js';
 
-export default defineConfig(configEnv => {
+const vitestDebugConfig = vitestBaseConfig;
+vitestDebugConfig.test.browser.name = 'chromium';
+vitestDebugConfig.test.browser.provider = 'playwright';
 
-    const vitestDebugConfig = vitestConfig;
-    vitestDebugConfig.test!.browser!.name = 'chromium';
-    vitestDebugConfig.test!.browser!.provider = 'playwright';
+const definedVitestDebugConfig = defineVitestConfig(vitestDebugConfig);
 
-    console.log('vitestDebugConfig:', vitestDebugConfig);
-
-    const mergedConfig = mergeConfig(
-        viteConfig(configEnv),
-        defineConfig(vitestDebugConfig)
-    );
-
-    return mergedConfig;
-
-});
+export default mergeConfig(definedVitestDebugConfig, definedViteConfig);

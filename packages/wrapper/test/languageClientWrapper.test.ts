@@ -145,7 +145,7 @@ describe('Test LanguageClientWrapper', () => {
                 connection: {
                     options: {
                         $type: 'WorkerConfig',
-                        url: new URL('http://localhost:20101'),
+                        url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
                         type: 'classic'
                     }
                 }
@@ -158,7 +158,7 @@ describe('Test LanguageClientWrapper', () => {
         expect(languageClientWrapper).toBeDefined();
 
         await expect(languageClientWrapper!.start()).rejects.toEqual({
-            message: 'languageClientWrapper (unnamed): Illegal worker configuration detected. Potentially the url is wrong.',
+            message: 'languageClientWrapper (unnamed): Illegal worker configuration detected.',
             error: 'No error was provided.'
         });
     });

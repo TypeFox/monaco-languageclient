@@ -137,14 +137,14 @@ export class LanguageClientWrapper {
         if (!this.worker) {
             if (lccOptions.$type === 'WorkerConfig') {
                 const workerConfig = lccOptions as WorkerConfigOptionsParams;
-                this.worker = new Worker(new URL(workerConfig.url, import.meta.url).href, {
+                this.worker = new Worker(workerConfig.url.href, {
                     type: workerConfig.type,
                     name: workerConfig.workerName
                 });
 
                 this.worker.onerror = (ev) => {
                     const languageClientError: LanguageClientError = {
-                        message: `languageClientWrapper (${this.name}): Illegal worker configuration detected. Potentially the url is wrong.`,
+                        message: `languageClientWrapper (${this.name}): Illegal worker configuration detected.`,
                         error: ev.error ?? 'No error was provided.'
                     };
                     reject(languageClientError);

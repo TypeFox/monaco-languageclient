@@ -3,10 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { defineConfig, defineConfig as vitestDefineConfig, mergeConfig, UserConfig } from 'vitest/config';
-import viteConfig from './vite.config.js';
+import { mergeConfig } from 'vite';
+import { defineConfig as defineVitestConfig } from 'vitest/config';
+import definedViteConfig from './vite.config.js';
 
-export const vitestConfig: UserConfig = {
+export const vitestBaseConfig = {
     test: {
         testTimeout: 10000,
         pool: 'threads',
@@ -38,14 +39,7 @@ export const vitestConfig: UserConfig = {
     }
 };
 
-export default defineConfig(configEnv => {
+const definedVitestConfig = defineVitestConfig(vitestBaseConfig);
 
-    console.log('vitestConfig:', vitestConfig);
+export default mergeConfig(definedVitestConfig, definedViteConfig);
 
-    const mergedConfig = mergeConfig(
-        viteConfig(configEnv),
-        vitestDefineConfig(vitestConfig)
-    );
-
-    return mergedConfig;
-});
