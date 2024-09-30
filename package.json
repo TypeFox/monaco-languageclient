@@ -56,9 +56,13 @@
     "start:example:server:jdtls": "npm run start:server:jdtls --workspace packages/examples",
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test:run",
     "reset:repo": "git clean -f -X -d",
-    "test": "vitest",
-    "test:run": "vitest --run",
-    "test:debug": "vitest --config vitest.debug.config.ts --inspect-brk=20222 --browser --no-file-parallelism",
+    "test": "npm run test:webdriverio",
+    "test:run": "npm run test:webdriverio",
+    "test:webdriverio": "vitest",
+    "test:webdriverio:run": "vitest --run",
+    "test:playwright": "vitest --config vitest.debug.config.ts",
+    "test:playwright:run": "vitest --config vitest.debug.config.ts --run",
+    "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
     "test:install": "playwright install"
   },
   "workspaces": [
