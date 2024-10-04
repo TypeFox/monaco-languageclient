@@ -64,10 +64,18 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
             }
         },
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getEditorServiceOverride(useOpenEditorStub),
                 ...getKeybindingsServiceOverride()
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
         editorAppConfig: {
@@ -77,14 +85,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     text: code,
                     uri: codeUri
                 }
-            },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
             },
             useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers,

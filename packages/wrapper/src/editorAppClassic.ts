@@ -49,10 +49,6 @@ export class EditorAppClassic extends EditorAppBase {
         };
     }
 
-    override async loadUserConfiguration() {
-        // nothing needed here currently
-    }
-
     async init() {
         const languageDef = this.config.languageDef;
         if (languageDef) {

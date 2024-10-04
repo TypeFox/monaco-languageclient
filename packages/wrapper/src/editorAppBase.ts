@@ -266,7 +266,6 @@ export abstract class EditorAppBase {
     }
 
     abstract updateHtmlContainer(htmlContainer: HTMLElement): void;
-    abstract loadUserConfiguration(): Promise<void>;
     abstract init(): Promise<void>;
     abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;

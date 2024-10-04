@@ -51,12 +51,20 @@ export const createLangiumGlobalConfig = async (params: {
 
     return {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
-            }
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
+            },
         },
         editorAppConfig: {
             $type: 'extended',
@@ -88,14 +96,6 @@ export const createLangiumGlobalConfig = async (params: {
                 },
                 filesOrContents: extensionFilesOrContents
             }],
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
             monacoWorkerFactory: configureMonacoWorkers,
             htmlContainer: document.getElementById('monaco-editor-root')!
         },

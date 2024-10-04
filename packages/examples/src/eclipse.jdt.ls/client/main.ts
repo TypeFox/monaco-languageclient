@@ -22,9 +22,17 @@ export const runEclipseJdtLsClient = () => {
 
     const userConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
         editorAppConfig: {
@@ -36,14 +44,6 @@ export const runEclipseJdtLsClient = () => {
                 }
             },
             useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
             monacoWorkerFactory: configureMonacoWorkers,
             htmlContainer: document.getElementById('monaco-editor-root')!
         },

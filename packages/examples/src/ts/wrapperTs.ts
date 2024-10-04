@@ -25,11 +25,23 @@ export const runTsWrapper = async () => {
 
     const wrapperConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride()
             },
-            enableExtHostWorker: true
+            enableExtHostWorker: true,
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'typescript.tsserver.web.projectWideIntellisense.enabled': true,
+                    'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
+                    'diffEditor.renderSideBySide': false,
+                    'editor.lightbulb.enabled': 'on',
+                    'editor.glyphMargin': true,
+                    'editor.guides.bracketPairsHorizontal': true,
+                    'editor.experimental.asyncTokenization': true
+                })
+            }
         },
         editorAppConfig: {
             $type: 'extended',
@@ -44,18 +56,6 @@ export const runTsWrapper = async () => {
                 }
             },
             useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'typescript.tsserver.web.projectWideIntellisense.enabled': true,
-                    'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
-                    'diffEditor.renderSideBySide': false,
-                    'editor.lightbulb.enabled': 'on',
-                    'editor.glyphMargin': true,
-                    'editor.guides.bracketPairsHorizontal': true,
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
             monacoWorkerFactory: configureMonacoWorkers,
             htmlContainer: document.getElementById('monaco-editor-root')!
         }

@@ -19,7 +19,7 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getConfigurationServiceOverride(),
                 ...getEditorServiceOverride(useOpenEditorStub),

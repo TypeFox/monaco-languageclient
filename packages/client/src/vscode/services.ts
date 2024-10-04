@@ -22,10 +22,15 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeApiInitialised?: boolean;
 }
 
-export interface InitializeServiceConfig {
+export interface UserConfiguration {
+    json?: string;
+}
+
+export interface VscodeApiConfig {
     userServices?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
+    userConfiguration?: UserConfiguration;
     viewsConfig?: {
         viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
         openEditorFunc?: OpenEditor;
@@ -34,7 +39,7 @@ export interface InitializeServiceConfig {
     envOptions?: EnvironmentOverride;
 }
 
-export interface InitServicesInstructions extends InitializeServiceConfig {
+export interface InitVscodeApiInstructions extends VscodeApiConfig {
     htmlContainer: HTMLElement;
     caller?: string;
     performChecks?: () => boolean;
@@ -82,7 +87,7 @@ export const mergeServices = (services: monaco.editor.IEditorOverrideServices, o
     }
 };
 
-export const initServices = async (instructions: InitServicesInstructions) => {
+export const initServices = async (instructions: InitVscodeApiInstructions) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
 
     if (!(envEnhanced.vscodeInitialising ?? false)) {
@@ -112,7 +117,7 @@ export const initServices = async (instructions: InitServicesInstructions) => {
  *   - languages
  *   - model
  */
-export const importAllServices = async (instructions: InitServicesInstructions) => {
+export const importAllServices = async (instructions: InitVscodeApiInstructions) => {
     const userServices: monaco.editor.IEditorOverrideServices = instructions.userServices ?? {};
 
     const lcRequiredServices = await supplyRequiredServices();

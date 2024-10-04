@@ -5,23 +5,23 @@
 
 import { describe, expect, test } from 'vitest';
 import { LogLevel } from 'vscode/services';
-import { configureServices } from '../../src/vscode/services.js';
+import { configureVscodeApi } from '../../src/vscode/services.js';
 
 describe('createUrl', () => {
 
     test('test configureServices logLevel trace', async () => {
-        const serviceConfig = await configureServices({
-            serviceConfig: {},
+        const vscodeApiConfig = await configureVscodeApi({
+            vscodeApiConfig: {},
             specificServices: {},
             logLevel: LogLevel.Trace
         });
 
-        expect(serviceConfig.workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Trace);
+        expect(vscodeApiConfig.workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Trace);
     });
 
     test('test configureServices logLevel and developmenet info', async () => {
-        const serviceConfig = await configureServices({
-            serviceConfig: {
+        const vscodeApiConfig = await configureVscodeApi({
+            vscodeApiConfig: {
                 workspaceConfig: {
                     developmentOptions: {
                         logLevel: LogLevel.Info
@@ -32,13 +32,13 @@ describe('createUrl', () => {
             logLevel: LogLevel.Info
         });
 
-        expect(serviceConfig.workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Info);
+        expect(vscodeApiConfig.workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Info);
     });
 
     test('test configureServices logLevel development mismatch', async () => {
         expect(async () => {
-            await configureServices({
-                serviceConfig: {
+            await configureVscodeApi({
+                vscodeApiConfig: {
                     workspaceConfig: {
                         developmentOptions: {
                             logLevel: LogLevel.Info
