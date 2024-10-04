@@ -53,6 +53,11 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
         }
 
+        const viewServiceType = wrapperConfig.serviceConfig?.viewsConfig?.viewServiceType ?? 'EditorService';
+        if ((viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService') && editorAppConfig.$type === 'classic') {
+            throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
+        }
+
         // Always dispose old instances before start
         this.dispose(false);
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
@@ -79,6 +84,7 @@ export class MonacoEditorLanguageClientWrapper {
             userServices: serviceConfig.userServices,
             enableExtHostWorker: serviceConfig.enableExtHostWorker,
             workspaceConfig: serviceConfig.workspaceConfig,
+            htmlContainer: wrapperConfig.editorAppConfig.htmlContainer,
             caller: `monaco-editor (${this.id})`,
             performChecks: checkServiceConsistency,
             logger: this.logger
@@ -105,24 +111,21 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(wrapperConfig: WrapperConfig, htmlElement: HTMLElement | null) {
+    async initAndStart(wrapperConfig: WrapperConfig) {
         await this.init(wrapperConfig);
-        await this.start(htmlElement);
+        await this.start();
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(htmlElement: HTMLElement | null) {
+    async start() {
         if (!this.initDone) {
             throw new Error('No init was performed. Please call init() before start()');
         }
-        if (!htmlElement) {
-            throw new Error('No HTMLElement provided for monaco-editor.');
-        }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        await this.editorApp?.createEditors(htmlElement);
+        await this.editorApp?.createEditors();
 
         for (const lcw of this.languageClientWrappers.values()) {
             await lcw.start();

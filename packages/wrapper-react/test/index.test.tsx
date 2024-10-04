@@ -9,7 +9,7 @@ import React from 'react';
 import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
-import { updateExtendedAppPrototyp } from './helper.js';
+import { createMonacoEditorDiv, updateExtendedAppPrototyp } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
@@ -18,6 +18,7 @@ describe('Test MonacoEditorReactComp', () => {
             logLevel: LogLevel.Debug,
             editorAppConfig: {
                 $type: 'extended',
+                htmlContainer: createMonacoEditorDiv()
             }
         };
         const { rerender } = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
@@ -50,7 +51,8 @@ describe('Test MonacoEditorReactComp', () => {
                         text: 'hello world',
                         fileExt: 'js'
                     }
-                }
+                },
+                htmlContainer: createMonacoEditorDiv()
             }
         };
 
@@ -88,7 +90,8 @@ describe('Test MonacoEditorReactComp', () => {
                         text: 'hello world',
                         fileExt: 'js'
                     }
-                }
+                },
+                htmlContainer: createMonacoEditorDiv()
             }
         };
 

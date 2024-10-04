@@ -40,7 +40,8 @@ export const jsonClientUserConfig: WrapperConfig = {
                 'editor.experimental.asyncTokenization': true
             })
         },
-        monacoWorkerFactory: configureMonacoWorkers
+        monacoWorkerFactory: configureMonacoWorkers,
+        htmlContainer: document.getElementById('monaco-editor-root')!
     },
     languageClientConfigs: {
         json: {
@@ -69,11 +70,10 @@ export const jsonClientUserConfig: WrapperConfig = {
 
 export const runJsonWrapper = () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
+            await wrapper.initAndStart(jsonClientUserConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

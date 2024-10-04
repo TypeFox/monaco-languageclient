@@ -54,7 +54,8 @@ print("Hello Moon!")
                     'editor.experimental.asyncTokenization': true
                 })
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             json: {
@@ -109,7 +110,6 @@ print("Hello Moon!")
         }
     };
 
-    const htmlElement = document.getElementById('monaco-editor-root');
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
@@ -119,7 +119,7 @@ print("Hello Moon!")
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
             }
 
-            await wrapper.initAndStart(wrapperConfig, htmlElement);
+            await wrapper.initAndStart(wrapperConfig);
             disableButton('button-flip', false);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

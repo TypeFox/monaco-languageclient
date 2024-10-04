@@ -5,13 +5,15 @@
 
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
-import { ILogService, initialize, IWorkbenchConstructionOptions, StandaloneServices, LogLevel } from 'vscode/services';
+import { initialize, IWorkbenchConstructionOptions } from 'vscode/services';
+import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
+import { EnvironmentOverride } from 'vscode/workbench';
 import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 
@@ -24,9 +26,16 @@ export interface InitializeServiceConfig {
     userServices?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
+    viewsConfig?: {
+        viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
+        openEditorFunc?: OpenEditor;
+        viewsInitFunc?: () => void;
+    },
+    envOptions?: EnvironmentOverride;
 }
 
 export interface InitServicesInstructions extends InitializeServiceConfig {
+    htmlContainer: HTMLElement;
     caller?: string;
     performChecks?: () => boolean;
     logger?: Logger;
@@ -46,6 +55,11 @@ export const initEnhancedMonacoEnvironment = () => {
     }
 
     return envEnhanced;
+};
+
+export const getMonacoEnvironmentEnhanced = () => {
+    const monWin = (self as Window);
+    return monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
 };
 
 export const supplyRequiredServices = async () => {
@@ -79,6 +93,7 @@ export const initServices = async (instructions: InitServicesInstructions) => {
             instructions.logger?.debug(`Initializing vscode services. Caller: ${instructions.caller ?? 'unknown'}`);
 
             await importAllServices(instructions);
+            instructions.viewsConfig?.viewsInitFunc?.();
             instructions.logger?.debug('Initialization of vscode services completed successfully.');
 
             envEnhanced.vscodeApiInitialised = true;
@@ -108,8 +123,7 @@ export const importAllServices = async (instructions: InitServicesInstructions) 
     reportServiceLoading(userServices, instructions.logger);
 
     if (instructions.performChecks === undefined || (typeof instructions.performChecks === 'function' && instructions.performChecks())) {
-        await initialize(userServices, undefined, instructions.workspaceConfig);
-        StandaloneServices.get(ILogService).setLevel(instructions.logger?.getLevel() ?? LogLevel.Off);
+        await initialize(userServices, instructions.htmlContainer, instructions.workspaceConfig, instructions.envOptions);
     }
 };
 

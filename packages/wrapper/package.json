@@ -105,6 +105,8 @@
     "@codingame/monaco-vscode-textmate-service-override": "~9.0.3",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~9.0.3",
     "@codingame/monaco-vscode-theme-service-override": "~9.0.3",
+    "@codingame/monaco-vscode-views-service-override": "~9.0.3",
+    "@codingame/monaco-vscode-workbench-service-override": "~9.0.3",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~9.0.3",
     "vscode": "npm:@codingame/monaco-vscode-api@~9.0.3",
     "vscode-languageclient": "~9.0.1",

@@ -76,7 +76,8 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                     'editor.experimental.asyncTokenization': true
                 })
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             langium: {

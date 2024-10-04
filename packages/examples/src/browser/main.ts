@@ -19,7 +19,7 @@ export const runBrowserEditor = async () => {
     const protocolConverter = createProtocolConverter(undefined, true, true);
 
     let mainVscodeDocument: vscode.TextDocument | undefined;
-    const htmlElement = document.getElementById('monaco-editor-root');
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const languageId = 'json';
     const code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -52,7 +52,8 @@ export const runBrowserEditor = async () => {
                     'editor.experimental.asyncTokenization': true
                 })
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer
         }
     };
     await wrapper.init(jsonClientUserConfig);
@@ -155,7 +156,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await wrapper.start(htmlElement);
+    await wrapper.start();
 
     wrapper.getTextModels()?.text?.onDidChangeContent(() => {
         validate();

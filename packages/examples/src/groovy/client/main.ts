@@ -40,7 +40,8 @@ const userConfig: WrapperConfig = {
                 'editor.experimental.asyncTokenization': true
             })
         },
-        monacoWorkerFactory: configureMonacoWorkers
+        monacoWorkerFactory: configureMonacoWorkers,
+        htmlContainer: document.getElementById('monaco-editor-root')!
     },
     languageClientConfigs: {
         groovy: {
@@ -57,11 +58,10 @@ const userConfig: WrapperConfig = {
 
 export const runGroovyClient = () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig, htmlElement);
+            await wrapper.initAndStart(userConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

@@ -49,7 +49,8 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
                 useWorkerFactory({
                     logger
                 });
-            }
+            },
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             langium: {

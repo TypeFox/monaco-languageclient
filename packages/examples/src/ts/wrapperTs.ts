@@ -56,16 +56,16 @@ export const runTsWrapper = async () => {
                     'editor.experimental.asyncTokenization': true
                 })
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         }
     };
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(wrapperConfig, htmlElement);
+            await wrapper.initAndStart(wrapperConfig);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -106,7 +106,7 @@ export const runTsWrapper = async () => {
             // ensure it is boolean value and not undefined
             const useDiffEditor = wrapperConfig.editorAppConfig.useDiffEditor ?? false;
             wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
-            await wrapper.initAndStart(wrapperConfig, htmlElement);
+            await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

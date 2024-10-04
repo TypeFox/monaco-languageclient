@@ -96,7 +96,8 @@ export const createLangiumGlobalConfig = async (params: {
                     'editor.experimental.asyncTokenization': true
                 })
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs
     };

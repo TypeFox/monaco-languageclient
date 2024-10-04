@@ -7,6 +7,7 @@ import * as monaco from 'monaco-editor';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
 import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
+import { getUserConfiguration, updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface EditorAppConfigClassic extends EditorAppConfigBase {
     $type: 'classic';
@@ -35,6 +36,10 @@ export class EditorAppClassic extends EditorAppBase {
 
     getConfig(): EditorAppConfigClassic {
         return this.config;
+    }
+
+    updateHtmlContainer(htmlContainer: HTMLElement) {
+        this.config.htmlContainer = htmlContainer;
     }
 
     override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
@@ -71,6 +76,20 @@ export class EditorAppClassic extends EditorAppBase {
                 monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
                 monaco.editor.setTheme(languageDef.theme.name);
             }
+        }
+
+        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+            let userConfig;
+            try {
+                userConfig = JSON.parse(await getUserConfiguration());
+            } catch (e) {
+                userConfig = {};
+            }
+            const json = JSON.stringify({
+                ...userConfig,
+                'editor.semanticHighlighting.enabled': this.config.editorOptions['semanticHighlighting.enabled']
+            });
+            await updateUserConfiguration(json);
         }
         this.logger?.info('Init of Classic App was completed.');
     }

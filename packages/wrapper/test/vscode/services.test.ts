@@ -36,7 +36,7 @@ describe('createUrl', () => {
     });
 
     test('test configureServices logLevel development mismatch', async () => {
-        await expect(async () => {
+        expect(async () => {
             await configureServices({
                 serviceConfig: {
                     workspaceConfig: {

@@ -65,6 +65,10 @@ export class EditorAppExtended extends EditorAppBase {
         return this.config;
     }
 
+    updateHtmlContainer(htmlContainer: HTMLElement) {
+        this.config.htmlContainer = htmlContainer;
+    }
+
     getExtensionRegisterResult(extensionName: string) {
         return this.extensionRegisterResults.get(extensionName);
     }

@@ -9,6 +9,7 @@ export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
     div.id = 'monaco-editor-root';
     document.body.insertAdjacentElement('beforeend', div);
+    return div;
 };
 
 export const createWrapperConfigExtendedApp = (): WrapperConfig => {
@@ -23,6 +24,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
+            htmlContainer: createMonacoEditorDiv()
         }
     };
 };
@@ -38,6 +40,7 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
+            htmlContainer: createMonacoEditorDiv()
         }
     };
 };

@@ -47,7 +47,7 @@ const startEditor = async () => {
         messagePort: channel.port1,
         messageTransports: { reader, writer }
     });
-    await wrapper.initAndStart(langiumGlobalConfig, document.getElementById('monaco-editor-root'));
+    await wrapper.initAndStart(langiumGlobalConfig);
 
     // here the modelReference is created manually and given to the updateEditorModels of the wrapper
     const uri = vscode.Uri.parse('/workspace/statemachine-mod.statemachine');
@@ -63,7 +63,7 @@ const startEditor = async () => {
         useLanguageClient: false,
         text: textMod
     });
-    await wrapper2.initAndStart(langiumGlobalConfig2, document.getElementById('monaco-editor-root2'));
+    await wrapper2.initAndStart(langiumGlobalConfig2);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);

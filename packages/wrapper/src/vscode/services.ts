@@ -32,6 +32,30 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
         mergeServices(mlcDefautServices, serviceConfig.userServices);
     }
 
+    let extra = {};
+    if (serviceConfig.viewsConfig !== undefined) {
+        if (serviceConfig.viewsConfig.viewServiceType === 'ViewsService') {
+            const getViewsServiceOverride = (await import('@codingame/monaco-vscode-views-service-override')).default;
+            extra = {
+                ...getViewsServiceOverride(serviceConfig.viewsConfig.openEditorFunc ?? useOpenEditorStub)
+            };
+        } else if (serviceConfig.viewsConfig.viewServiceType === 'WorkspaceService') {
+            const getWorkbenchServiceOverride = (await import('@codingame/monaco-vscode-workbench-service-override')).default;
+            extra = {
+                ...getWorkbenchServiceOverride()
+            };
+        }
+    }
+
+    // if nothing was added above, add the standard
+    if (Object.keys(extra).length === 0) {
+        const getEditorServiceOverride = (await import('@codingame/monaco-vscode-editor-service-override')).default;
+        extra = {
+            ...getEditorServiceOverride(serviceConfig.viewsConfig?.openEditorFunc ?? useOpenEditorStub)
+        };
+    }
+    mergeServices(extra, serviceConfig.userServices);
+
     // adding the default workspace config if not provided
     if (serviceConfig.workspaceConfig === undefined) {
         serviceConfig.workspaceConfig = {

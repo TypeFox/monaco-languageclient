@@ -87,7 +87,8 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 })
             },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         }
     };
 };

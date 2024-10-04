@@ -22,8 +22,8 @@ export const runPythonReact = async () => {
     const onTextChanged = (textChanges: TextChanges) => {
         console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.text}\ntextOriginal: ${textChanges.textOriginal}`);
     };
-    const htmlElement = document.getElementById('monaco-editor-root');
-    const root = ReactDOM.createRoot(htmlElement!);
+    const wrapperConfig = createUserConfig('/workspace', badPyCode, '/workspace/bad.py');
+    const root = ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
@@ -31,7 +31,7 @@ export const runPythonReact = async () => {
                 return (
                     <div style={{ 'height': '80vh', padding: '5px' }} >
                         <MonacoEditorReactComp
-                            wrapperConfig={createUserConfig('/workspace', badPyCode, '/workspace/bad.py')}
+                            wrapperConfig={wrapperConfig}
                             style={{ 'height': '100%' }}
                             onTextChanged={onTextChanged}
                             onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
