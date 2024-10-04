@@ -230,7 +230,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         await wrapper.start();
     });
 
-
     test('config userConfiguration', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
