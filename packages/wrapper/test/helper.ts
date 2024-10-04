@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { WrapperConfig } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -43,4 +44,15 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
             htmlContainer: createMonacoEditorDiv()
         }
     };
+};
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        workerOverrides: {
+            ignoreMapping: true,
+            workerLoaders: {
+                TextEditorWorker: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            }
+        }
+    });
 };
