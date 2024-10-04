@@ -25,7 +25,8 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv()
+            htmlContainer: createMonacoEditorDiv(),
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };
@@ -41,7 +42,8 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv()
+            htmlContainer: createMonacoEditorDiv(),
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

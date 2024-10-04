@@ -39,7 +39,7 @@ export interface EditorAppConfigBase {
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    monacoWorkerFactory?: (logger: Logger) => void;
+    monacoWorkerFactory?: (logger?: Logger) => void;
 }
 
 export interface ModelRefs {

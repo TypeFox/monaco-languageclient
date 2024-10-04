@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
 import { isReInitRequired, EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper, EditorAppConfigClassic } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers, createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
+import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 import { IConfigurationService, StandaloneServices } from 'vscode/services';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
@@ -233,21 +233,18 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('editorConfig semanticHighlighting.enabled workaround', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        wrapperConfig.editorAppConfig.monacoWorkerFactory = configureMonacoWorkers;
+
         (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {
             'semanticHighlighting.enabled': true,
         };
         const updatedWrapperConfig = await wrapper.init(wrapperConfig);
         expect(updatedWrapperConfig.vscodeApiConfig?.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
 
-        // await wrapper.start();
-
         const semHigh = await new Promise<unknown>(resolve => {
             setTimeout(() => {
                 resolve(StandaloneServices.get(IConfigurationService).getValue('editor.semanticHighlighting.enabled'));
-            }, 1000);
+            }, 100);
         });
-        // const semHigh = StandaloneServices.get(IConfigurationService).getValue('editor.semanticHighlighting.enabled');
         expect(semHigh).toEqual(true);
     });
 });

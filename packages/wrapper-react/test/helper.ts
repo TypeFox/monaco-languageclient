@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { EditorAppClassic, EditorAppExtended } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -21,4 +22,15 @@ export const updateExtendedAppPrototyp = async () => {
         console.log('Using overriden EditorAppClassic.prototype.specifyServices');
         return Promise.resolve({});
     };
+};
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        workerOverrides: {
+            ignoreMapping: true,
+            workerLoaders: {
+                TextEditorWorker: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            }
+        }
+    });
 };
