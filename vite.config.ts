@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { defineConfig } from 'vite';
-import * as path from 'path';
+import * as path from 'node:path';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 import react from '@vitejs/plugin-react';

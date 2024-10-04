@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import path from 'path';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
