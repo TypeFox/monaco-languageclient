@@ -29,7 +29,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "types": [
       "vscode"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
