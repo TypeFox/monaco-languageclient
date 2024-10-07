@@ -6,18 +6,19 @@
 import * as monaco from 'monaco-editor';
 import { LogLevel } from 'vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { InitializeServiceConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { VscodeApiConfig, initServices } from 'monaco-languageclient/vscode/services';
 import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
-import { checkServiceConsistency, configureServices } from './vscode/services.js';
+import { checkServiceConsistency, configureVscodeApi } from './vscode/services.js';
 import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
 import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
 import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface WrapperConfig {
     id?: string;
     logLevel?: LogLevel | number;
-    serviceConfig?: InitializeServiceConfig;
+    vscodeApiConfig?: VscodeApiConfig;
     editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
 }
@@ -53,6 +54,11 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
         }
 
+        const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType ?? 'EditorService';
+        if ((viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService') && editorAppConfig.$type === 'classic') {
+            throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
+        }
+
         // Always dispose old instances before start
         this.dispose(false);
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
@@ -70,21 +76,26 @@ export class MonacoEditorLanguageClientWrapper {
 
         // editorApps init their own service thats why they have to be created first
         const specificServices = await this.editorApp.specifyServices();
-        const serviceConfig = await configureServices({
-            serviceConfig: wrapperConfig.serviceConfig ?? {},
+        const vscodeApiConfig = await configureVscodeApi({
+            vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
             specificServices,
-            logLevel: this.logger.getLevel()
+            logLevel: this.logger.getLevel(),
+            // workaround for classic monaco-editor not applying semanticHighlighting
+            semanticHighlighting: wrapperConfig.editorAppConfig.editorOptions?.['semanticHighlighting.enabled'] === true
         });
+        wrapperConfig.vscodeApiConfig = vscodeApiConfig;
         await initServices({
-            userServices: serviceConfig.userServices,
-            enableExtHostWorker: serviceConfig.enableExtHostWorker,
-            workspaceConfig: serviceConfig.workspaceConfig,
+            userServices: vscodeApiConfig.userServices,
+            enableExtHostWorker: vscodeApiConfig.enableExtHostWorker,
+            workspaceConfig: vscodeApiConfig.workspaceConfig,
+            userConfiguration: vscodeApiConfig.userConfiguration,
+            htmlContainer: editorAppConfig.htmlContainer,
             caller: `monaco-editor (${this.id})`,
             performChecks: checkServiceConsistency,
             logger: this.logger
         });
 
-        await this.editorApp.loadUserConfiguration();
+        await updateUserConfiguration(vscodeApiConfig.userConfiguration?.json ?? JSON.stringify({}));
 
         const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
@@ -98,31 +109,29 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         await this.editorApp.init();
-
         this.initDone = true;
+
+        return wrapperConfig;
     }
 
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(wrapperConfig: WrapperConfig, htmlElement: HTMLElement | null) {
+    async initAndStart(wrapperConfig: WrapperConfig) {
         await this.init(wrapperConfig);
-        await this.start(htmlElement);
+        await this.start();
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(htmlElement: HTMLElement | null) {
+    async start() {
         if (!this.initDone) {
             throw new Error('No init was performed. Please call init() before start()');
         }
-        if (!htmlElement) {
-            throw new Error('No HTMLElement provided for monaco-editor.');
-        }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        await this.editorApp?.createEditors(htmlElement);
+        await this.editorApp?.createEditors();
 
         for (const lcw of this.languageClientWrappers.values()) {
             await lcw.start();

@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { build, Format } from 'esbuild';
 
 export const getLocalDirectory = () => {

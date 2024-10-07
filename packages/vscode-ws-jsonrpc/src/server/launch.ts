@@ -3,9 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as net from 'net';
-import * as stream from 'stream';
-import * as cp from 'child_process';
+import * as net from 'node:net';
+import * as stream from 'node:stream';
+import * as cp from 'node:child_process';
 import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node.js';
 import { IConnection, createConnection } from './connection.js';
 import { IWebSocket, IWebSocketConnection } from '../socket/socket.js';

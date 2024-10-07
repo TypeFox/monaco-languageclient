@@ -22,7 +22,6 @@ export const runPythonWrapper = async () => {
 
     registerFileSystemOverlay(1, fileSystemProvider);
     const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
-    const htmlElement = document.getElementById('monaco-editor-root');
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
@@ -36,7 +35,7 @@ export const runPythonWrapper = async () => {
                 await vscode.workspace.openTextDocument(hello2PyUri);
                 await vscode.workspace.openTextDocument(helloPyUri);
 
-                await wrapper.start(htmlElement);
+                await wrapper.start();
             }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

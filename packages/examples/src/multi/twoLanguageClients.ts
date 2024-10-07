@@ -33,9 +33,16 @@ print("Hello Moon!")
     const wrapperConfig: WrapperConfig = {
         id: '42',
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride()
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
         editorAppConfig: {
@@ -47,14 +54,8 @@ print("Hello Moon!")
                 }
             },
             useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             json: {
@@ -109,7 +110,6 @@ print("Hello Moon!")
         }
     };
 
-    const htmlElement = document.getElementById('monaco-editor-root');
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
@@ -119,7 +119,7 @@ print("Hello Moon!")
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
             }
 
-            await wrapper.initAndStart(wrapperConfig, htmlElement);
+            await wrapper.initAndStart(wrapperConfig);
             disableButton('button-flip', false);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

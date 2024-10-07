@@ -6,8 +6,9 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
-import { isReInitRequired, EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { isReInitRequired, EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper, EditorAppConfigClassic } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
+import { IConfigurationService, StandaloneServices } from 'vscode/services';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 
@@ -25,7 +26,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('Check default values', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        await wrapper.initAndStart(createWrapperConfigClassicApp(), document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(createWrapperConfigClassicApp());
 
         const app = wrapper.getMonacoEditorApp() as EditorAppClassic;
         expect(app).toBeDefined();
@@ -34,29 +35,21 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(appConfig.overrideAutomaticLayout).toBeTruthy();
     });
 
-    test('No HTML in Userconfig', async () => {
-        createMonacoEditorDiv();
-        const wrapper = new MonacoEditorLanguageClientWrapper();
-        await expect(async () => {
-            await wrapper.initAndStart(createWrapperConfigClassicApp(), null);
-        }).rejects.toThrowError('No HTMLElement provided for monaco-editor.');
-    });
-
     test('Expected throw: Start without init', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        await expect(async () => {
-            await wrapper.start(document.getElementById('monaco-editor-root'));
+        expect(async () => {
+            await wrapper.start();
         }).rejects.toThrowError('No init was performed. Please call init() before start()');
     });
 
     test('Expected throw: Call normal start with prior init', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        await expect(async () => {
+        expect(async () => {
             const config = createWrapperConfigClassicApp();
             await wrapper.init(config);
-            await wrapper.initAndStart(config, document.getElementById('monaco-editor-root'));
+            await wrapper.initAndStart(config);
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
     });
 
@@ -84,7 +77,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const userConfig = createWrapperConfigClassicApp();
-        await wrapper.initAndStart(userConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(userConfig);
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -106,7 +99,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             fileExt: 'js'
         };
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -127,7 +120,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             fileExt: 'js'
         };
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -148,7 +141,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.editorAppConfig.codeResources = {};
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
 
         const app = wrapper.getMonacoEditorApp();
         const modelRefs = app?.getModelRefs();
@@ -161,7 +154,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.editorAppConfig.codeResources = {};
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
 
         const app = wrapper.getMonacoEditorApp();
 
@@ -207,9 +200,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
                 ['/javascript.tmLanguage.json', '{}']
             ]),
         }];
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
         await wrapper.dispose();
-        await wrapper.initAndStart(wrapperConfig, document.getElementById('monaco-editor-root'));
+        await wrapper.initAndStart(wrapperConfig);
     });
 
     test('Early code resources update on wrapper are ok', async () => {
@@ -234,7 +227,24 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRef).toBeDefined();
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
 
-        await wrapper.start(document.getElementById('monaco-editor-root'));
+        await wrapper.start();
     });
 
+    test('editorConfig semanticHighlighting.enabled workaround', async () => {
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const wrapperConfig = createWrapperConfigClassicApp();
+
+        (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {
+            'semanticHighlighting.enabled': true,
+        };
+        const updatedWrapperConfig = await wrapper.init(wrapperConfig);
+        expect(updatedWrapperConfig.vscodeApiConfig?.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
+
+        const semHigh = await new Promise<unknown>(resolve => {
+            setTimeout(() => {
+                resolve(StandaloneServices.get(IConfigurationService).getValue('editor.semanticHighlighting.enabled'));
+            }, 100);
+        });
+        expect(semHigh).toEqual(true);
+    });
 });

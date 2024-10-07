@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "declarationDir": "lib"
+    "declarationDir": "lib",
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",

@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import path from 'node:path';
 import { defineConfig } from 'vite';
-import path from 'path';
 
 export default defineConfig({
     build: {

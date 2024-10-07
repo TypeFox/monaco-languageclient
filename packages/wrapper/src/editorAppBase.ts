@@ -6,7 +6,6 @@
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import { Logger } from 'monaco-languageclient/tools';
 import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
 
@@ -32,6 +31,7 @@ export type EditorAppType = 'extended' | 'classic';
 
 export interface EditorAppConfigBase {
     $type: EditorAppType;
+    htmlContainer: HTMLElement;
     codeResources?: CodeResources;
     useDiffEditor?: boolean;
     domReadOnly?: boolean;
@@ -39,7 +39,7 @@ export interface EditorAppConfigBase {
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    monacoWorkerFactory?: (logger: Logger) => void;
+    monacoWorkerFactory?: (logger?: Logger) => void;
 }
 
 export interface ModelRefs {
@@ -83,6 +83,7 @@ export abstract class EditorAppBase {
     protected buildConfig(userAppConfig: EditorAppConfigBase): EditorAppConfigBase {
         const config: EditorAppConfigBase = {
             $type: userAppConfig.$type,
+            htmlContainer: userAppConfig.htmlContainer,
             codeResources: userAppConfig.codeResources,
             useDiffEditor: userAppConfig.useDiffEditor ?? false,
             readOnly: userAppConfig.readOnly ?? false,
@@ -112,11 +113,11 @@ export abstract class EditorAppBase {
         return this.diffEditor;
     }
 
-    async createEditors(container: HTMLElement): Promise<void> {
+    async createEditors(): Promise<void> {
         if (this.getConfig().useDiffEditor ?? false) {
-            this.diffEditor = monaco.editor.createDiffEditor(container, this.getConfig().diffEditorOptions);
+            this.diffEditor = monaco.editor.createDiffEditor(this.getConfig().htmlContainer, this.getConfig().diffEditorOptions);
         } else {
-            this.editor = monaco.editor.create(container, this.getConfig().editorOptions);
+            this.editor = monaco.editor.create(this.getConfig().htmlContainer, this.getConfig().editorOptions);
         }
 
         const modelRefs = await this.buildModelRefs(this.getConfig().codeResources);
@@ -264,11 +265,7 @@ export abstract class EditorAppBase {
         this.getEditor()?.updateOptions(options);
     }
 
-    getUserConfiguration(): Promise<string> {
-        return getUserConfiguration();
-    }
-
-    abstract loadUserConfiguration(): Promise<void>;
+    abstract updateHtmlContainer(htmlContainer: HTMLElement): void;
     abstract init(): Promise<void>;
     abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;

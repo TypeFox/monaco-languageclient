@@ -7,34 +7,59 @@ import * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { LogLevel } from 'vscode/services';
-import { mergeServices, InitializeServiceConfig } from 'monaco-languageclient/vscode/services';
+import { mergeServices, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 
 export interface VscodeServicesConfig {
-    serviceConfig: InitializeServiceConfig;
+    vscodeApiConfig: VscodeApiConfig;
     specificServices: monaco.editor.IEditorOverrideServices;
     logLevel: LogLevel
+    semanticHighlighting?: boolean;
 }
 
 /**
  * Child classes are allow to override the services configuration implementation.
  */
-export const configureServices = async (config: VscodeServicesConfig): Promise<InitializeServiceConfig> => {
-    const serviceConfig = config.serviceConfig;
+export const configureVscodeApi = async (config: VscodeServicesConfig): Promise<VscodeApiConfig> => {
+    const vscodeApiConfig = config.vscodeApiConfig;
     // set empty object if undefined
-    serviceConfig.userServices = serviceConfig.userServices ?? {};
+    vscodeApiConfig.userServices = vscodeApiConfig.userServices ?? {};
 
     // import configuration service if it is not available
-    if (serviceConfig.userServices.configurationService === undefined) {
+    if (vscodeApiConfig.userServices.configurationService === undefined) {
         const getConfigurationServiceOverride = (await import('@codingame/monaco-vscode-configuration-service-override')).default;
         const mlcDefautServices = {
             ...getConfigurationServiceOverride()
         };
-        mergeServices(mlcDefautServices, serviceConfig.userServices);
+        mergeServices(mlcDefautServices, vscodeApiConfig.userServices);
     }
 
+    let extra = {};
+    if (vscodeApiConfig.viewsConfig !== undefined) {
+        if (vscodeApiConfig.viewsConfig.viewServiceType === 'ViewsService') {
+            const getViewsServiceOverride = (await import('@codingame/monaco-vscode-views-service-override')).default;
+            extra = {
+                ...getViewsServiceOverride(vscodeApiConfig.viewsConfig.openEditorFunc ?? useOpenEditorStub)
+            };
+        } else if (vscodeApiConfig.viewsConfig.viewServiceType === 'WorkspaceService') {
+            const getWorkbenchServiceOverride = (await import('@codingame/monaco-vscode-workbench-service-override')).default;
+            extra = {
+                ...getWorkbenchServiceOverride()
+            };
+        }
+    }
+
+    // if nothing was added above, add the standard
+    if (Object.keys(extra).length === 0) {
+        const getEditorServiceOverride = (await import('@codingame/monaco-vscode-editor-service-override')).default;
+        extra = {
+            ...getEditorServiceOverride(vscodeApiConfig.viewsConfig?.openEditorFunc ?? useOpenEditorStub)
+        };
+    }
+    mergeServices(extra, vscodeApiConfig.userServices);
+
     // adding the default workspace config if not provided
-    if (serviceConfig.workspaceConfig === undefined) {
-        serviceConfig.workspaceConfig = {
+    if (vscodeApiConfig.workspaceConfig === undefined) {
+        vscodeApiConfig.workspaceConfig = {
             workspaceProvider: {
                 trusted: true,
                 workspace: {
@@ -47,24 +72,34 @@ export const configureServices = async (config: VscodeServicesConfig): Promise<I
             }
         };
     }
-    mergeServices(config.specificServices, serviceConfig.userServices);
+    mergeServices(config.specificServices, vscodeApiConfig.userServices);
 
     // set the log-level via the development settings
-    const devLogLevel = serviceConfig.workspaceConfig.developmentOptions?.logLevel;
+    const devLogLevel = vscodeApiConfig.workspaceConfig.developmentOptions?.logLevel;
+
     if (devLogLevel === undefined) {
 
         // this needs to be done so complicated, because developmentOptions is read-only
         const devOptions: Record<string, unknown> = {
-            ...serviceConfig.workspaceConfig.developmentOptions
+            ...vscodeApiConfig.workspaceConfig.developmentOptions
         };
         devOptions.logLevel = config.logLevel;
-        (serviceConfig.workspaceConfig.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
+        (vscodeApiConfig.workspaceConfig.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
     } else if (devLogLevel !== config.logLevel) {
 
         throw new Error(`You have configured mismatching logLevels: ${config.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
     }
 
-    return serviceConfig;
+    // enable semantic highlighting in the default configuration
+    if (config.semanticHighlighting ?? false) {
+        const configDefaults: Record<string, unknown> = {
+            ...vscodeApiConfig.workspaceConfig.configurationDefaults
+        };
+        configDefaults['editor.semanticHighlighting.enabled'] = true;
+        (vscodeApiConfig.workspaceConfig.configurationDefaults as Record<string, unknown>) = Object.assign({}, configDefaults);
+    }
+
+    return vscodeApiConfig;
 };
 
 export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide) => {

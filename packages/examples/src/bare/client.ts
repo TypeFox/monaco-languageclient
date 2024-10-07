@@ -22,12 +22,14 @@ import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     await initServices({
         userServices: {
             ...getConfigurationServiceOverride(),
             ...getThemeServiceOverride(),
             ...getTextmateServiceOverride(),
         },
+        htmlContainer,
         logger
     });
 
@@ -46,7 +48,7 @@ export const runClient = async () => {
     configureMonacoWorkers(logger);
 
     // create monaco editor
-    monaco.editor.create(document.getElementById('monaco-editor-root')!, {
+    monaco.editor.create(htmlContainer, {
         value: `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"

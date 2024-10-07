@@ -19,7 +19,7 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getConfigurationServiceOverride(),
                 ...getEditorServiceOverride(useOpenEditorStub),
@@ -49,7 +49,8 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
                 useWorkerFactory({
                     logger
                 });
-            }
+            },
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             langium: {

@@ -22,9 +22,17 @@ export const runEclipseJdtLsClient = () => {
 
     const userConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
         editorAppConfig: {
@@ -36,15 +44,8 @@ export const runEclipseJdtLsClient = () => {
                 }
             },
             useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: document.getElementById('monaco-editor-root')!
         },
         languageClientConfigs: {
             java: {
@@ -68,7 +69,6 @@ export const runEclipseJdtLsClient = () => {
     };
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
@@ -77,7 +77,7 @@ export const runEclipseJdtLsClient = () => {
             // open files, so the LS can pick it up
             await vscode.workspace.openTextDocument(helloJavaUri);
 
-            await wrapper.start(htmlElement);
+            await wrapper.start();
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

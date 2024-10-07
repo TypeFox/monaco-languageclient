@@ -20,15 +20,6 @@ describe('Test EditorAppExtended', () => {
         expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${btoa(text)}`);
     });
 
-    test('config userConfiguration', () => {
-        const appConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
-        appConfig.userConfiguration = {
-            json: '{ "editor.semanticHighlighting.enabled": true }'
-        };
-        const app = new EditorAppExtended('config defaults', appConfig);
-        expect(app.getConfig().userConfiguration?.json).toEqual('{ "editor.semanticHighlighting.enabled": true }');
-    });
-
     test('isAppConfigDifferent: basic', () => {
         const orgConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
         const config = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;

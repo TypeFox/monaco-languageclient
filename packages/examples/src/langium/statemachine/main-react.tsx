@@ -11,7 +11,7 @@ import { loadStatemachineWorkerRegular } from './main.js';
 import text from './content/example.statemachine?raw';
 
 export const runStatemachineReact = async () => {
-    const langiumGlobalConfig = await createLangiumGlobalConfig({
+    const wrapperConfig = await createLangiumGlobalConfig({
         languageServerId: 'react',
         useLanguageClient: true,
         text,
@@ -20,7 +20,6 @@ export const runStatemachineReact = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            const htmlElement = document.getElementById('monaco-editor-root');
             const App = () => {
 
                 const [ height, setHeight ] = useState('80vh');
@@ -38,15 +37,15 @@ export const runStatemachineReact = async () => {
                     <div style={{ 'height': height }} >
                         <MonacoEditorReactComp
                             style={{ 'height': '100%' }}
-                            wrapperConfig={langiumGlobalConfig} />
+                            wrapperConfig={wrapperConfig} />
                     </div>
                 );
             };
             const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;
             if (strictMode) {
-                ReactDOM.createRoot(htmlElement!).render(<StrictMode><App /></StrictMode>);
+                ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer).render(<StrictMode><App /></StrictMode>);
             } else {
-                ReactDOM.createRoot(htmlElement!).render(<App />);
+                ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer).render(<App />);
             }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {

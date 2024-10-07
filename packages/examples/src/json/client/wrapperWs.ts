@@ -17,9 +17,18 @@ const text = `{
 
 export const jsonClientUserConfig: WrapperConfig = {
     logLevel: LogLevel.Debug,
-    serviceConfig: {
+    vscodeApiConfig: {
         userServices: {
             ...getKeybindingsServiceOverride(),
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.lightbulb.enabled': 'On',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true
+            })
         }
     },
     editorAppConfig: {
@@ -31,16 +40,8 @@ export const jsonClientUserConfig: WrapperConfig = {
             }
         },
         useDiffEditor: false,
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureMonacoWorkers
+        monacoWorkerFactory: configureMonacoWorkers,
+        htmlContainer: document.getElementById('monaco-editor-root')!
     },
     languageClientConfigs: {
         json: {
@@ -69,11 +70,10 @@ export const jsonClientUserConfig: WrapperConfig = {
 
 export const runJsonWrapper = () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(jsonClientUserConfig, htmlElement);
+            await wrapper.initAndStart(jsonClientUserConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

@@ -18,9 +18,17 @@ File file = new File("E:/Example.txt");
 
 const userConfig: WrapperConfig = {
     logLevel: LogLevel.Debug,
-    serviceConfig: {
+    vscodeApiConfig: {
         userServices: {
             ...getKeybindingsServiceOverride(),
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true
+            })
         }
     },
     editorAppConfig: {
@@ -32,15 +40,8 @@ const userConfig: WrapperConfig = {
             }
         },
         useDiffEditor: false,
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureMonacoWorkers
+        monacoWorkerFactory: configureMonacoWorkers,
+        htmlContainer: document.getElementById('monaco-editor-root')!
     },
     languageClientConfigs: {
         groovy: {
@@ -57,11 +58,10 @@ const userConfig: WrapperConfig = {
 
 export const runGroovyClient = () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
-    const htmlElement = document.getElementById('monaco-editor-root');
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig, htmlElement);
+            await wrapper.initAndStart(userConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

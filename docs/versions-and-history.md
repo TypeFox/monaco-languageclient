@@ -6,7 +6,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | monaco-editor-wrapper | monaco-editor-react | monaco-vscode-api / editor-api | vscode | monaco-editor | release date | comment |
 | :---- | :---- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 9.0.0-next.1  | 6.0.0-next.1 | 6.0.0-next.1 | 9.0.3  | 1.93.1 | 0.52.0 | 2024-09-xy | |
+| 9.0.0-next.2  | 6.0.0-next.2 | 6.0.0-next.2 | 9.0.3  | 1.93.1 | 0.52.0 | 2024-10-xy | |
 | 8.8.3         | 5.5.3 | 4.5.3 | 8.0.4  | 1.92.2 | 0.51.0 | 2024-08-26 | |
 | 8.8.2         | 5.5.2 | 4.5.2 | 8.0.2  | 1.92.2 | 0.50.0 | 2024-08-21 | |
 | 8.8.1         | 5.5.1 | 4.5.1 | 8.0.1  | 1.92.1 | 0.50.0 | 2024-08-12 | |

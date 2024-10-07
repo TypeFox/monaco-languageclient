@@ -4,11 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { WrapperConfig } from 'monaco-editor-wrapper';
+import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
     div.id = 'monaco-editor-root';
     document.body.insertAdjacentElement('beforeend', div);
+    return div;
 };
 
 export const createWrapperConfigExtendedApp = (): WrapperConfig => {
@@ -23,6 +25,8 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
+            htmlContainer: createMonacoEditorDiv(),
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };
@@ -38,6 +42,19 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
+            htmlContainer: createMonacoEditorDiv(),
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
+};
+
+export const configureMonacoWorkers = () => {
+    useWorkerFactory({
+        workerOverrides: {
+            ignoreMapping: true,
+            workerLoaders: {
+                TextEditorWorker: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            }
+        }
+    });
 };

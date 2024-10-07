@@ -79,7 +79,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (containerRef.current) {
             containerRef.current.className = className ?? '';
             try {
-                await wrapperRef.current.start(containerRef.current);
+                wrapperRef.current.getMonacoEditorApp()?.updateHtmlContainer(containerRef.current);
+                await wrapperRef.current.start();
                 onLoad?.(wrapperRef.current);
                 handleOnTextChanged();
             } catch (e) {
@@ -89,6 +90,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     throw e;
                 }
             }
+        } else {
+            throw new Error('No htmlContainer found');
         }
     }, [className, onError, onLoad]);
 

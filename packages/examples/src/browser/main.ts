@@ -19,7 +19,7 @@ export const runBrowserEditor = async () => {
     const protocolConverter = createProtocolConverter(undefined, true, true);
 
     let mainVscodeDocument: vscode.TextDocument | undefined;
-    const htmlElement = document.getElementById('monaco-editor-root');
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const languageId = 'json';
     const code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -30,9 +30,17 @@ export const runBrowserEditor = async () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
     const jsonClientUserConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
-        serviceConfig: {
+        vscodeApiConfig: {
             userServices: {
                 ...getKeybindingsServiceOverride(),
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.lightbulb.enabled': 'On',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
         editorAppConfig: {
@@ -44,15 +52,8 @@ export const runBrowserEditor = async () => {
                 }
             },
             useDiffEditor: false,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.lightbulb.enabled': 'On',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer
         }
     };
     await wrapper.init(jsonClientUserConfig);
@@ -155,7 +156,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await wrapper.start(htmlElement);
+    await wrapper.start();
 
     wrapper.getTextModels()?.text?.onDidChangeContent(() => {
         validate();
