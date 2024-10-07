@@ -18,9 +18,9 @@ export class MonacoEditorComponent implements AfterViewInit {
 
     async ngAfterViewInit(): Promise<void> {
         const wrapper = new MonacoEditorLanguageClientWrapper();
-
+        const htmlElement = document.getElementById('monaco-editor-root');
         try {
-            await wrapper.initAndStart(jsonClientUserConfig);
+            await wrapper.initAndStart(jsonClientUserConfig , htmlElement );
         } catch (e) {
             console.error(e);
         }
