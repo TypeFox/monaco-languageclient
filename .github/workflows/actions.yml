@@ -57,7 +57,6 @@ jobs:
         npm run vite:build
 
     - name: Verify
-      if: github.ref_name == 'main'
       shell: bash
       run: |
         bash ./verify/buildAll.sh
