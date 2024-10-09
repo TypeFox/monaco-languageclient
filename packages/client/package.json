@@ -62,18 +62,18 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-extensions-service-override": "~9.0.3",
-    "@codingame/monaco-vscode-languages-service-override": "~9.0.3",
-    "@codingame/monaco-vscode-localization-service-override": "~9.0.3",
-    "@codingame/monaco-vscode-log-service-override": "~9.0.3",
-    "@codingame/monaco-vscode-model-service-override": "~9.0.3",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~9.0.3",
-    "vscode": "npm:@codingame/monaco-vscode-api@~9.0.3",
+    "@codingame/monaco-vscode-extensions-service-override": "~10.0.1",
+    "@codingame/monaco-vscode-languages-service-override": "~10.0.1",
+    "@codingame/monaco-vscode-localization-service-override": "~10.0.1",
+    "@codingame/monaco-vscode-log-service-override": "~10.0.1",
+    "@codingame/monaco-vscode-model-service-override": "~10.0.1",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.0.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~10.0.1",
     "vscode-languageclient": "~9.0.1"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~9.0.3",
-    "vscode": "npm:@codingame/monaco-vscode-api@~9.0.3"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.0.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~10.0.1"
   },
   "peerDependenciesMeta": {
     "monaco-editor": {
