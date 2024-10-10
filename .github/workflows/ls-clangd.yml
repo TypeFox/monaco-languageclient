@@ -1,0 +1,88 @@
+name: Clangd LS Image
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  REPO_NAME: ${{ github.repository }}
+  PATH_CONTEXT: ./packages/examples/resources/clangd
+  CONTAINER_NAME_CONFIGURE: clangd-wasm-configure
+  CONTAINER_NAME_BUILD: clangd-wasm-build
+
+jobs:
+  images-clangd-wasm:
+    name: Build & Deploy Clangd LS
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    timeout-minutes: 150
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (configure)
+      id: meta_configure
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_CONFIGURE }}
+        # enforce latest tag for now
+        tags: |
+          type=raw,value=latest
+
+    - name: Build & Push (configure)
+      id: push_configure
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ env.PATH_CONTEXT }}
+        file: ${{ env.PATH_CONTEXT }}/configure.Dockerfile
+        push: true
+        tags: ${{ steps.meta_configure.outputs.tags }}
+        labels: ${{ steps.meta_configure.outputs.labels }}
+
+    - name: Attest (configure)
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_CONFIGURE }}
+        subject-digest: ${{ steps.push_configure.outputs.digest }}
+        push-to-registry: true
+
+    - name: Extract metadata (build)
+      id: meta_build
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_BUILD }}
+        # enforce latest tag for now
+        tags: |
+          type=raw,value=latest
+
+    - name: Build & Push (build)
+      id: push_build
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ env.PATH_CONTEXT }}
+        file: ${{ env.PATH_CONTEXT }}/build.Dockerfile
+        push: true
+        tags: ${{ steps.meta_build.outputs.tags }}
+        labels: ${{ steps.meta_build.outputs.labels }}
+
+    - name: Attest (build)
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_BUILD }}
+        subject-digest: ${{ steps.push_build.outputs.digest }}
+        push-to-registry: true

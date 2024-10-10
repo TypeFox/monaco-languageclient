@@ -1,3 +1,4 @@
+resources/clangd/wasm
 resources/groovy/external
 resources/eclipse.jdt.ls/ls
 resources/eclipse.jdt.ls/*.tar.gz

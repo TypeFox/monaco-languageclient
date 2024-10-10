@@ -1,5 +1,6 @@
 services:
   eclipsejdtls:
+    image: ghcr.io/typefox/monaco-languageclient/eclipse.jdt.ls:latest
     build:
       dockerfile: ./packages/examples/resources/eclipse.jdt.ls/Dockerfile
       context: ../../../..
@@ -10,7 +11,7 @@ services:
         # - "linux/arm64"
     platform: linux/amd64
     command: [
-      "bash", "-c", "npm i && npm run start:example:server:jdtls"
+      "bash", "-c", "npm run start:example:server:jdtls"
     ]
     ports:
       - 30003:30003
