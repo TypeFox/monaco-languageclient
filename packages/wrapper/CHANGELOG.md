@@ -2,7 +2,7 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.2] - 2024-10-xy
+## [6.0.0-next.2] - 2024-10-10
 
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - This also allows to configure editor-, view- or workspace-service. This is a preparation for further enhancements.

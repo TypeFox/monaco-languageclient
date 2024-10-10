@@ -29,7 +29,11 @@ const config = {
     output: {
         filename: 'main.js',
         path: resolve(__dirname, 'dist', 'client'),
-        module: true
+        module: true,
+        workerChunkLoading: 'import',
+        environment: {
+            dynamicImportInWorker: true
+        }
     },
     target: 'web',
     resolve: {

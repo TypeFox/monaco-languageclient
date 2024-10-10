@@ -15,52 +15,56 @@ const text = `{
     "line_endings": {"value": "unix"}
 }`;
 
-export const jsonClientUserConfig: WrapperConfig = {
-    logLevel: LogLevel.Debug,
-    vscodeApiConfig: {
-        userServices: {
-            ...getKeybindingsServiceOverride(),
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        }
-    },
-    editorAppConfig: {
-        $type: 'extended',
-        codeResources: {
-            main: {
-                text,
-                fileExt: 'json'
+export const buildJsonClientUserConfig = (params: {
+    htmlContainer: HTMLElement
+}): WrapperConfig => {
+    return {
+        logLevel: LogLevel.Debug,
+        vscodeApiConfig: {
+            userServices: {
+                ...getKeybindingsServiceOverride(),
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.lightbulb.enabled': 'On',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true
+                })
             }
         },
-        useDiffEditor: false,
-        monacoWorkerFactory: configureMonacoWorkers,
-        htmlContainer: document.getElementById('monaco-editor-root')!
-    },
-    languageClientConfigs: {
-        json: {
-            languageId: 'json',
-            connection: {
-                options: {
-                    $type: 'WebSocketUrl',
-                    url: 'ws://localhost:30000/sampleServer',
-                    startOptions: {
-                        onCall: () => {
-                            console.log('Connected to socket.');
+        editorAppConfig: {
+            $type: 'extended',
+            codeResources: {
+                main: {
+                    text,
+                    fileExt: 'json'
+                }
+            },
+            useDiffEditor: false,
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: params.htmlContainer
+        },
+        languageClientConfigs: {
+            json: {
+                languageId: 'json',
+                connection: {
+                    options: {
+                        $type: 'WebSocketUrl',
+                        url: 'ws://localhost:30000/sampleServer',
+                        startOptions: {
+                            onCall: () => {
+                                console.log('Connected to socket.');
+                            },
+                            reportStatus: true
                         },
-                        reportStatus: true
-                    },
-                    stopOptions: {
-                        onCall: () => {
-                            console.log('Disconnected from socket.');
-                        },
-                        reportStatus: true
+                        stopOptions: {
+                            onCall: () => {
+                                console.log('Disconnected from socket.');
+                            },
+                            reportStatus: true
+                        }
                     }
                 }
             }
@@ -73,7 +77,10 @@ export const runJsonWrapper = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(jsonClientUserConfig);
+            const config = buildJsonClientUserConfig({
+                htmlContainer: document.getElementById('monaco-editor-root')!
+            });
+            await wrapper.initAndStart(config);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();
