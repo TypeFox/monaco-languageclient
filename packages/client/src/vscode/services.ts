@@ -128,7 +128,11 @@ export const importAllServices = async (instructions: InitVscodeApiInstructions)
     reportServiceLoading(userServices, instructions.logger);
 
     if (instructions.performChecks === undefined || (typeof instructions.performChecks === 'function' && instructions.performChecks())) {
-        await initialize(userServices, instructions.htmlContainer, instructions.workspaceConfig, instructions.envOptions);
+        if (instructions.viewsConfig?.viewServiceType === 'ViewsService' || instructions.viewsConfig?.viewServiceType === 'WorkspaceService') {
+            await initialize(userServices, instructions.htmlContainer, instructions.workspaceConfig, instructions.envOptions);
+        } else {
+            await initialize(userServices, undefined, instructions.workspaceConfig, instructions.envOptions);
+        }
     }
 };
 
