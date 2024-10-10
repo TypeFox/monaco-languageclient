@@ -21,7 +21,6 @@ export class AppComponent implements AfterViewInit {
 
     readonly codeText = signal('');
 
-
     async ngAfterViewInit(): Promise<void> {
         const config = buildJsonClientUserConfig({
             htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -33,4 +32,3 @@ export class AppComponent implements AfterViewInit {
         this.codeText.set(text);
     }
 }
-
