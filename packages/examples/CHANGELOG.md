@@ -5,6 +5,7 @@ All notable changes to this npm module are documented in this file.
 ## [2024.10.1] - 20241-10-xy
 
 - Aligend example config. `htmlContainer` is now a required property of `editorAppConfig`
+- Fixed problems with Statemachine example (two editor and react version)
 
 ## [2024.9.1] - 2024-09-27
 
