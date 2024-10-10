@@ -3,30 +3,34 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { AfterViewInit, Component } from '@angular/core';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { AfterViewInit, Component, signal } from '@angular/core';
+import { WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper.component';
 import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
-
+import '@codingame/monaco-vscode-groovy-default-extension';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    standalone: true
+    standalone: true,
+    imports: [MonacoAngularWrapperComponent],
 })
-export class MonacoEditorComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit {
+    wrapperConfig: WrapperConfig | undefined;
     title = 'angular-client';
-    initDone = false;
+
+    readonly codeText = signal('');
+
 
     async ngAfterViewInit(): Promise<void> {
-        const wrapper = new MonacoEditorLanguageClientWrapper();
-
         const config = buildJsonClientUserConfig({
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            htmlContainer: document.getElementById('monaco-editor-root')!,
         });
-        try {
-            await wrapper.initAndStart(config);
-        } catch (e) {
-            console.error(e);
-        }
+        this.wrapperConfig = config;
+    }
+
+    onTextChanged(text: string) {
+        this.codeText.set(text);
     }
 }
+
