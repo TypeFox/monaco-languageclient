@@ -69,7 +69,7 @@ export const buildJsonClientUserConfig = (params: {
                 }
             }
         }
-    }
+    };
 };
 
 export const runJsonWrapper = () => {
