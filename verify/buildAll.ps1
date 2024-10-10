@@ -6,4 +6,4 @@ Set-Location $MyPath/angular; npm run verify:ci
 Set-Location $MyPath/pnpm; pnpm run verify:ci
 
 # yarn example is instable because we can't refence local file based dependencies
-# Set-Location $MyPath/yarn; yarn run verify:ci
+Set-Location $MyPath/yarn; yarn run verify:ci

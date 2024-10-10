@@ -6,4 +6,4 @@ cd $MyPath/angular; npm run verify:ci
 cd $MyPath/pnpm; pnpm run verify:ci
 
 # yarn example is instable because we can't refence local file based dependencies
-# cd $MyPath/yarn; yarn run verify:ci
+cd $MyPath/yarn; yarn run verify:ci

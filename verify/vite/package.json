@@ -5,13 +5,13 @@
   "type": "module",
   "dependencies": {
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.0.1",
-    "monaco-editor-wrapper": "../../packages/wrapper",
-    "monaco-languageclient-examples": "../../packages/examples",
+    "monaco-editor-wrapper": "~6.0.0-next.2",
+    "monaco-languageclient-examples": "~2024.10.1",
     "vscode": "npm:@codingame/monaco-vscode-api@~10.0.1"
   },
   "devDependencies": {
     "shx": "~0.3.4",
-    "vite": "~5.3.3"
+    "vite": "~5.4.8"
   },
   "volta": {
     "node": "20.18.0",

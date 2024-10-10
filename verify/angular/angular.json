@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-client": {
+    "ng-mlc": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,78 +11,60 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-builders/custom-esbuild:application",
           "options": {
-            "outputPath": "dist/angular-client",
+            "outputPath": "dist/ng-mlc",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.json",
+            // "plugins": ["./node_modules/@codingame/esbuild-import-meta-url-plugin/dist/esbuildImportMetaUrlPlugin.js"],
             "polyfills": [
               "zone.js"
             ],
-            "tsConfig": "tsconfig.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "./node_modules/monaco-editor-wrapper/dist",
-                "output": "assets/monaco-editor-wrapper/dist"
-              }
-            ],
+            "assets": [],
             "styles": [],
             "scripts": [],
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.js"
-            },
+            "aot": false,
+            "optimization": false,
+            "sourceMap": true,
+            "namedChunks": false,
+            "extractLicenses": false,
             "allowedCommonJsDependencies": [
-              "vscode-jsonrpc",
               "vscode-languageclient",
               "vscode-languageserver-protocol",
-              "vscode-semver",
+              "vscode-jsonrpc",
               "vscode-oniguruma",
               "vscode-textmate",
-              "vscode-marked"
+              "@vscode/iconv-lite-umd"
             ]
           },
           "configurations": {
             "production": {
-              "buildOptimizer": true,
               "aot": true,
               "optimization": true,
-              "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "vendorChunk": false,
               "extractLicenses": true
             },
             "development": {
-              "buildOptimizer": false,
-              "aot": false,
-              "optimization": false,
-              "outputHashing": "none",
-              "sourceMap": true,
-              "namedChunks": true,
-              "vendorChunk": true,
-              "extractLicenses": false
             }
           },
           "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-builders/custom-esbuild:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-client:build:production"
+              "buildTarget": "ng-mlc:build:production"
             },
             "development": {
-              "browserTarget": "angular-client:build:development"
+              "buildTarget": "ng-mlc:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "angular-client:build"
-          }
+          "builder": "@angular/build:extract-i18n"
         }
       }
     }

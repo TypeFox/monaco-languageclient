@@ -16,27 +16,28 @@
     "reset:repo": "git clean -f -X -d"
   },
   "dependencies": {
-    "@angular/compiler": "~18.1.0",
-    "@angular/core": "~18.1.0",
-    "@angular/platform-browser": "~18.1.0",
-    "@angular/platform-browser-dynamic": "~18.1.0",
+    "@angular/compiler": "~18.2.8",
+    "@angular/core": "~18.2.8",
+    "@angular/platform-browser": "~18.2.8",
+    "@angular/platform-browser-dynamic": "~18.2.8",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.0.1",
-    "monaco-editor-wrapper": "../../packages/wrapper",
-    "monaco-languageclient-examples": "../../packages/examples",
+    "monaco-editor-wrapper": "~6.0.0-next.2",
+    "monaco-languageclient-examples": "~2024.10.1",
     "vscode": "npm:@codingame/monaco-vscode-api@~10.0.1",
     "rxjs": "~7.8.1",
-    "zone.js": "~0.14.7"
+    "zone.js": "~0.14.10"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "~18.0.0",
-    "@angular-devkit/build-angular": "~18.1.0",
-    "@angular/cli": "~18.1.0",
-    "@angular/compiler-cli": "~18.1.0",
-    "@types/node": "~20.14.10",
-    "@types/vscode": "~1.91.0",
+    "@angular-builders/custom-esbuild": "~18.0.0",
+    "@angular/cli": "~18.2.8",
+    "@angular/compiler-cli": "~18.2.8",
+    "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
+    "@types/node": "~20.16.11",
+    "@types/vscode": "~1.94.0",
     "css-loader": "~7.1.2",
     "shx": "~0.3.4",
-    "style-loader": "~4.0.0"
+    "style-loader": "~4.0.0",
+    "typescript": "~5.5.4"
   },
   "volta": {
     "node": "20.18.0",
