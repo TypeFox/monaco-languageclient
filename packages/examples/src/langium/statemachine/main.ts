@@ -45,7 +45,8 @@ const startEditor = async () => {
         useLanguageClient: true,
         worker: stateMachineWorkerPort,
         messagePort: channel.port1,
-        messageTransports: { reader, writer }
+        messageTransports: { reader, writer },
+        htmlContainer: document.getElementById('monaco-editor-root')!
     });
     await wrapper.initAndStart(langiumGlobalConfig);
 
@@ -61,7 +62,8 @@ const startEditor = async () => {
     const langiumGlobalConfig2 = await createLangiumGlobalConfig({
         languageServerId: 'second',
         useLanguageClient: false,
-        text: textMod
+        text: textMod,
+        htmlContainer: document.getElementById('monaco-editor-root2')!
     });
     await wrapper2.initAndStart(langiumGlobalConfig2);
 

@@ -15,8 +15,10 @@ export const runStatemachineReact = async () => {
         languageServerId: 'react',
         useLanguageClient: true,
         text,
-        worker: loadStatemachineWorkerRegular()
+        worker: loadStatemachineWorkerRegular(),
+        htmlContainer: document.getElementById('monaco-editor-root')!
     });
+    const root = ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
@@ -43,13 +45,13 @@ export const runStatemachineReact = async () => {
             };
             const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;
             if (strictMode) {
-                ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer).render(<StrictMode><App /></StrictMode>);
+                root.render(<StrictMode><App /></StrictMode>);
             } else {
-                ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer).render(<App />);
+                root.render(<App />);
             }
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {
-
+            root.render([]);
         });
     } catch (e) {
         console.error(e);

@@ -21,7 +21,8 @@ export const createLangiumGlobalConfig = async (params: {
     text?: string,
     worker?: Worker,
     messagePort?: MessagePort,
-    messageTransports?: MessageTransports
+    messageTransports?: MessageTransports,
+    htmlContainer: HTMLElement
 }): Promise<WrapperConfig> => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
@@ -97,7 +98,7 @@ export const createLangiumGlobalConfig = async (params: {
                 filesOrContents: extensionFilesOrContents
             }],
             monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            htmlContainer: params.htmlContainer
         },
         languageClientConfigs
     };

@@ -5,10 +5,11 @@ All notable changes to this npm module are documented in this file.
 ## [2024.10.1] - 20241-10-xy
 
 - Aligend example config. `htmlContainer` is now a required property of `editorAppConfig`
+- Fixed problems with Statemachine example (two editor and react version)
 
 ## [2024.9.1] - 2024-09-27
 
-- Updated to `monaco-languageclient@9.0.0-next.2`, `monaco-editor-wrapper@6.0.0-next.2` and `@typefox/monaco-editor-react@6.0.0-next.2`. Updated all `@codingame/monaco-vscode` packages to `9.0.3`.
+- Updated to `monaco-languageclient@9.0.0-next.2`, `monaco-editor-wrapper@6.0.0-next.2` and `@typefox/monaco-editor-react@6.0.0-next.2`. Updated all `@codingame/monaco-vscode` packages to `10.0.1`.
 - Align configuration of all examples to the latest configuration adjustments.
 - Only use a single function to configure `monaco-editor` that all examples.
 - `server-commons`: Allow to set `requestMessageHandler` and `responseMessageHandler`.
