@@ -1,3 +1,8 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
 import {
     AfterViewInit,
     Component,
@@ -6,7 +11,6 @@ import {
     OnDestroy,
     Output,
 } from '@angular/core';
-
 
 import * as monaco from 'monaco-editor';
 import {
@@ -40,11 +44,10 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
     private started: (value: void | PromiseLike<void>) => void;
 
     async ngAfterViewInit(): Promise<void> {
-
         this.containerElement = document.getElementById(
             'monaco-editor-root'
         ) as HTMLDivElement;
-     //  await this.handleReinit();
+        //  await this.handleReinit();
         try {
             await this.wrapper.initAndStart(this.wrapperConfig);
         } catch (e) {
@@ -59,16 +62,15 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
     }
 
     protected async destroyMonaco(): Promise<void> {
-        if (this.wrapper) {
-            if (this.isRestarting) {
-                await this.isRestarting;
-            }
-            try {
-                await this.wrapper.dispose();
-            } catch {
-                // The language client may throw an error during disposal.
-                // This should not prevent us from continue working.
-            }
+
+        if (this.isRestarting) {
+            await this.isRestarting;
+        }
+        try {
+            await this.wrapper.dispose();
+        } catch {
+            // The language client may throw an error during disposal.
+            // This should not prevent us from continue working.
         }
         if (this._subscription) {
             this._subscription.dispose();
@@ -91,7 +93,9 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
             // exceptions are forwarded to onError callback or the exception is thrown
             try {
                 await this.wrapper.start();
-            } catch (e) {}
+            } catch (e) {
+                console.error(e);
+            }
             this.started();
             this.isRestarting = undefined;
 
