@@ -52,7 +52,7 @@ export const definedViteConfig = defineConfig({
                 // other examples
                 wrapperTs: path.resolve(__dirname, 'packages/examples/ts.html')
             }
-        }
+        },
     },
     resolve: {
         // not needed here, see https://github.com/TypeFox/monaco-languageclient#vite-dev-server-troubleshooting
@@ -61,6 +61,9 @@ export const definedViteConfig = defineConfig({
     server: {
         origin: 'http://localhost:20001',
         port: 20001,
+        cors: {
+            origin: '*'
+        },
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp',
@@ -83,8 +86,6 @@ export const definedViteConfig = defineConfig({
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname),
-        // Server-provided Content-Length header may be gzipped, get the real size in build time
-        __WASM_SIZE__: fs.existsSync(clangdWasmLocation) ? fs.statSync(clangdWasmLocation).size : 0
     },
     worker: {
         format: 'es'

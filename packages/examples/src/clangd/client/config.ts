@@ -5,18 +5,18 @@
 
 import * as vscode from 'vscode';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import '@codingame/monaco-vscode-theme-defaults-default-extension';
-// this is required syntax highlighting
-import '@codingame/monaco-vscode-cpp-default-extension';
 import { LogLevel } from 'vscode/services';
 import { WrapperConfig } from 'monaco-editor-wrapper';
-import { FILE_PATH, LANGUAGE_ID, WORKSPACE_PATH } from '../definitions.js';
-import { createServer } from '../worker/server.js';
+import { LANGUAGE_ID, WORKSPACE_PATH } from '../definitions.js';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
+import { ClangdWorkerHandler } from './workerHandler.js';
+import { openNewEditor } from './main.js';
 
-export const createUserConfig = async (code: string): Promise<WrapperConfig> => {
+export const createUserConfig = async (config: {
+    htmlContainer: HTMLElement,
+    clangdWorkerHandler: ClangdWorkerHandler,
+    lsMessageLocalPort: MessagePort
+}): Promise<WrapperConfig> => {
     return {
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
@@ -26,7 +26,8 @@ export const createUserConfig = async (code: string): Promise<WrapperConfig> => 
                 connection: {
                     options: {
                         $type: 'WorkerDirect',
-                        worker: await createServer(),
+                        worker: await config.clangdWorkerHandler.createWorker(),
+                        messagePort: config.lsMessageLocalPort
                     }
                 },
                 restartOptions: {
@@ -44,47 +45,41 @@ export const createUserConfig = async (code: string): Promise<WrapperConfig> => 
                 }
             }
         },
-        serviceConfig: {
+        vscodeApiConfig: {
             workspaceConfig: {
                 workspaceProvider: {
                     trusted: true,
                     workspace: {
-                        workspaceUri: vscode.Uri.file(WORKSPACE_PATH),
+                        workspaceUri: vscode.Uri.file(`${WORKSPACE_PATH}/workspace.code-workspace`)
                     },
-                    async open(p) {
-                        console.log(`Editor open request: ${p}`);
-                        return false;
-                    },
+                    async open() {
+                        window.open(window.location.href);
+                        return true;
+                    }
                 },
+            },
+            viewsConfig: {
+                viewServiceType: 'EditorService',
+                openEditorFunc: openNewEditor
             },
             userServices: {
                 ...getConfigurationServiceOverride(),
-                ...getTextmateServiceOverride(),
-                ...getThemeServiceOverride(),
+            },
+            userConfiguration: {
+                json: JSON.stringify({
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.inlayHints.enabled': 'offUnlessPressed',
+                    'editor.quickSuggestionsDelay': 200,
+                    'editor.experimental.asyncTokenization': false
+                })
             }
         },
         editorAppConfig: {
             $type: 'extended',
-            codeResources: {
-                main: {
-                    text: code,
-                    uri: FILE_PATH,
-                },
-            },
-            userConfiguration: {
-                json: getUserConfigurationJson(),
-            },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureMonacoWorkers,
+            htmlContainer: config.htmlContainer
         }
     };
-};
-
-const getUserConfigurationJson = () => {
-    return JSON.stringify({
-        'workbench.colorTheme': 'Default Dark Modern',
-        'editor.wordBasedSuggestions': 'off',
-        'editor.inlayHints.enabled': 'offUnlessPressed',
-        'editor.quickSuggestionsDelay': 200,
-    });
 };
