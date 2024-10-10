@@ -1,4 +1,12 @@
-<h2>Monaco Language Client Angular Client Example</h2>
+<h2>Monaco Language Client Angular Client Two way data binding Example</h2>
 <div>
-    <div id="monaco-editor-root" class="monaco-editor"></div>
+    @if(wrapperConfig) {
+    <monaco-angular-wrapper
+        [wrapperConfig]="wrapperConfig"
+        (onTextChanged)="onTextChanged($event)"
+    ></monaco-angular-wrapper>
+
+    }
+
+    {{ codeText() }}
 </div>

@@ -4,5 +4,5 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { bootstrapApplication } from '@angular/platform-browser';
-import { MonacoEditorComponent } from './app/app.component';
-bootstrapApplication(MonacoEditorComponent);
+import { AppComponent } from './app/app.component';
+bootstrapApplication(AppComponent);
