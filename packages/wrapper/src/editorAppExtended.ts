@@ -8,7 +8,7 @@ import * as monaco from 'monaco-editor';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
-import { verifyUrlOrCreateDataUrl, ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
+import { verifyUrlOrCreateDataUrl } from './utils.js';
 import { DisposableStore } from 'vscode/monaco';
 
 export interface ExtensionConfig {
@@ -105,28 +105,4 @@ export class EditorAppExtended extends EditorAppBase {
         this.subscriptions.dispose();
     }
 
-    isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean {
-        let different = false;
-        if (includeModelData) {
-            different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;
-        }
-        const propsExtended = [
-            // model required changes are not taken into account in this list
-            'useDiffEditor',
-            'domReadOnly',
-            'readOnly',
-            'awaitExtensionReadiness',
-            'overrideAutomaticLayout',
-            'editorOptions',
-            'diffEditorOptions',
-            'extensions',
-            'userConfiguration'
-        ];
-        type ExtendedKeys = keyof typeof orgConfig;
-        const propCompareExtended = (name: string) => {
-            return !isEqual(orgConfig[name as ExtendedKeys], config[name as ExtendedKeys]);
-        };
-        different = different || propsExtended.some(propCompareExtended);
-        return different;
-    }
 }

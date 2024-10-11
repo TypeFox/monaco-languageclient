@@ -20,36 +20,6 @@ describe('Test EditorAppExtended', () => {
         expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${btoa(text)}`);
     });
 
-    test('isAppConfigDifferent: basic', () => {
-        const orgConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
-        const config = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
-        const app = new EditorAppExtended('test', config);
-        expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
-
-        config.codeResources ??= {};
-        config.codeResources.main = {
-            text: 'test',
-            fileExt: 'js'
-        };
-        expect(app.isAppConfigDifferent(orgConfig, config, true)).toBeTruthy();
-
-        config.codeResources.main = {
-            text: '',
-            fileExt: 'js'
-        };
-        config.extensions = [{
-            config: {
-                name: 'Tester',
-                publisher: 'Tester',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
-                }
-            }
-        }];
-        expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeTruthy();
-    });
-
     test('config defaults', () => {
         const editorAppConfig = createWrapperConfigExtendedApp().editorAppConfig as EditorAppConfigExtended;
         const app = new EditorAppExtended('config defaults', editorAppConfig);

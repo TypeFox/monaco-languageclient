@@ -7,9 +7,8 @@ import * as vscode from 'vscode';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import type { TextChanges } from '@typefox/monaco-editor-react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wrapper';
 import { createUserConfig } from './config.js';
 import badPyCode from './bad.py?raw';
 

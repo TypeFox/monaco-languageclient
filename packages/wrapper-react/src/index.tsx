@@ -5,11 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
-import { MonacoEditorLanguageClientWrapper, TextContents, WrapperConfig } from 'monaco-editor-wrapper';
-
-export type TextChanges = TextContents & {
-    isDirty: boolean;
-}
+import { MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
@@ -80,6 +76,41 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             containerRef.current.className = className ?? '';
             try {
                 wrapperRef.current.getMonacoEditorApp()?.updateHtmlContainer(containerRef.current);
+
+                wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
+                    if (textModels.text || textModels.textOriginal) {
+                        const verifyModelContent = () => {
+                            const text = textModels.text?.getValue() ?? '';
+                            const textOriginal = textModels.textOriginal?.getValue() ?? '';
+                            const codeResources = wrapperConfig.editorAppConfig.codeResources;
+                            const dirty = text !== codeResources?.main?.text;
+                            const dirtyOriginal = textOriginal !== codeResources?.original?.text;
+                            onTextChanged?.({
+                                text,
+                                textOriginal,
+                                isDirty: dirty || dirtyOriginal
+                            });
+                        };
+
+                        const newSubscriptions: monaco.IDisposable[] = [];
+
+                        if (textModels.text) {
+                            newSubscriptions.push(textModels.text.onDidChangeContent(() => {
+                                verifyModelContent();
+                            }));
+                        }
+
+                        if (textModels.textOriginal) {
+                            newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
+                                verifyModelContent();
+                            }));
+                        }
+                        setOnTextChangedSubscriptions(newSubscriptions);
+                        // do it initially
+                        verifyModelContent();
+                    }
+                });
+
                 await wrapperRef.current.start();
                 onLoad?.(wrapperRef.current);
                 handleOnTextChanged();
@@ -93,45 +124,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         } else {
             throw new Error('No htmlContainer found');
         }
-    }, [className, onError, onLoad]);
+    }, [className, onError, onLoad, onTextChanged]);
 
     const handleOnTextChanged = useCallback(() => {
         disposeOnTextChanged();
 
         if (!onTextChanged) return;
 
-        const textModels = wrapperRef.current.getTextModels();
-        if (textModels?.text || textModels?.textOriginal) {
-            const verifyModelContent = () => {
-                const text = textModels.text?.getValue() ?? '';
-                const textOriginal = textModels.textOriginal?.getValue() ?? '';
-                const codeResources = wrapperConfig.editorAppConfig.codeResources;
-                const dirty = text !== codeResources?.main?.text;
-                const dirtyOriginal = textOriginal !== codeResources?.original?.text;
-                onTextChanged({
-                    text,
-                    textOriginal,
-                    isDirty: dirty || dirtyOriginal
-                });
-            };
-
-            const newSubscriptions: monaco.IDisposable[] = [];
-
-            if (textModels.text) {
-                newSubscriptions.push(textModels.text.onDidChangeContent(() => {
-                    verifyModelContent();
-                }));
-            }
-
-            if (textModels.textOriginal) {
-                newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
-                    verifyModelContent();
-                }));
-            }
-            setOnTextChangedSubscriptions(newSubscriptions);
-            // do it initially
-            verifyModelContent();
-        }
     }, [onTextChanged, wrapperConfig]);
 
     const destroyMonaco = useCallback(async () => {

@@ -224,6 +224,10 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 
+    registerModelUpdate(modelUpdateCallback: (textModels: TextModels) => void) {
+        this.editorApp?.registerModelUpdate(modelUpdateCallback);
+    }
+
     updateEditorModels(modelRefs: ModelRefs) {
         this.editorApp?.updateEditorModels(modelRefs);
     }

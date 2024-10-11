@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
-import { isReInitRequired, EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper, EditorAppConfigClassic } from 'monaco-editor-wrapper';
+import { EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper, EditorAppConfigClassic } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 import { IConfigurationService, StandaloneServices } from 'vscode/services';
 
@@ -51,26 +51,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             await wrapper.init(config);
             await wrapper.initAndStart(config);
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
-    });
-
-    test('Verify if configuration changes make re-init necessary', async () => {
-        createMonacoEditorDiv();
-        const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfigClassic = createWrapperConfigClassicApp();
-        wrapper.init(wrapperConfigClassic);
-        const app = wrapper.getMonacoEditorApp();
-        expect(app).toBeDefined();
-        if (app) {
-            expect(isReInitRequired(app, wrapperConfigClassic.editorAppConfig, wrapperConfigClassic.editorAppConfig)).toBeFalsy();
-
-            const wrapperConfigExtended = createWrapperConfigExtendedApp();
-            expect(isReInitRequired(app, wrapperConfigClassic.editorAppConfig, wrapperConfigExtended.editorAppConfig)).toBeTruthy();
-
-            const wrapperConfigClassicNew = createWrapperConfigClassicApp();
-            wrapperConfigClassicNew.editorAppConfig.useDiffEditor = true;
-
-            expect(isReInitRequired(app, wrapperConfigClassicNew.editorAppConfig, wrapperConfigClassic.editorAppConfig)).toBeTruthy();
-        }
     });
 
     test('code resources main', async () => {

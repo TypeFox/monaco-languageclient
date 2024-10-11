@@ -2,12 +2,13 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.2] - 2024-10-10
+## [6.0.0-next.3] - 2024-10-10
 
+- Clean-up and allow registering a registerModelUpdate callback
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - This also allows to configure editor-, view- or workspace-service. This is a preparation for further enhancements.
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated to `monaco-languageclient@9.0.0-next.2`. Updated all `@codingame/monaco-vscode` packages to `10.0.1`.
+  - Updated to `monaco-languageclient@9.0.0-next.3`. Updated all `@codingame/monaco-vscode` packages to `10.0.2`.
   - Enhancements to logging, worker factory and start order. The worker factory only accepts direct worker loading instructions from now on
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Allows to configure more than one language client

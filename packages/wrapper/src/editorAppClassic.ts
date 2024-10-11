@@ -6,7 +6,6 @@
 import * as monaco from 'monaco-editor';
 import { Logger } from 'monaco-languageclient/tools';
 import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
-import { ModelUpdateType, isEqual, isModelUpdateRequired } from './utils.js';
 import { ConfigurationTarget, IConfigurationService, StandaloneServices } from 'vscode/services';
 
 export interface EditorAppConfigClassic extends EditorAppConfigBase {
@@ -86,29 +85,4 @@ export class EditorAppClassic extends EditorAppBase {
         this.disposeEditors();
     }
 
-    isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean {
-        let different = false;
-        if (includeModelData) {
-            different = isModelUpdateRequired(orgConfig.codeResources, config.codeResources) !== ModelUpdateType.NONE;
-        }
-        type ClassicKeys = keyof typeof orgConfig;
-        const propsClassic = [
-            // model required changes are not taken into account in this list
-            'useDiffEditor',
-            'domReadOnly',
-            'readOnly',
-            'overrideAutomaticLayout',
-            'editorOptions',
-            'diffEditorOptions',
-            'theme',
-            'languageDef',
-            'languageExtensionConfig',
-            'themeData'
-        ];
-        const propCompareClassic = (name: string) => {
-            return !isEqual(orgConfig[name as ClassicKeys], config[name as ClassicKeys]);
-        };
-        different = different || propsClassic.some(propCompareClassic);
-        return different;
-    }
 }

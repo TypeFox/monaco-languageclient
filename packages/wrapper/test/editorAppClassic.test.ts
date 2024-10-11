@@ -43,40 +43,6 @@ describe('Test EditorAppClassic', () => {
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toEqual('configuredByTheme');
     });
 
-    test('isAppConfigDifferent: basic', () => {
-        const orgConfig = createWrapperConfigClassicApp().editorAppConfig;
-        const config = createWrapperConfigClassicApp().editorAppConfig;
-        const app = new EditorAppClassic('test', config as EditorAppConfigClassic);
-        expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
-
-        config.codeResources ??= {};
-        config.codeResources.main = {
-            text: 'test',
-            fileExt: 'js'
-        };
-        expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeFalsy();
-        expect(app.isAppConfigDifferent(orgConfig, config, true)).toBeTruthy();
-
-        config.codeResources.main = {
-            text: '',
-            fileExt: 'js'
-        };
-        config.useDiffEditor = true;
-        expect(app.isAppConfigDifferent(orgConfig, config, false)).toBeTruthy();
-    });
-
-    test('isAppConfigDifferent: non-simple properties"', () => {
-        const wrapperConfig1 = buildConfig();
-        const wrapperConfig2 = buildConfig();
-        const configclassic1 = wrapperConfig1.editorAppConfig as EditorAppConfigClassic;
-        configclassic1.editorOptions!['semanticHighlighting.enabled'] = true;
-        const configclassic2 = wrapperConfig2.editorAppConfig as EditorAppConfigClassic;
-        configclassic2.editorOptions!['semanticHighlighting.enabled'] = true;
-
-        const app = new EditorAppClassic('config defaults', configclassic1);
-        expect(app.isAppConfigDifferent(configclassic1, configclassic2, false)).toBeFalsy();
-    });
-
     test('config defaults', () => {
         const editorAppConfig = createWrapperConfigClassicApp().editorAppConfig;
         const app = new EditorAppClassic('config defaults', editorAppConfig as EditorAppConfigClassic);

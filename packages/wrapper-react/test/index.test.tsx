@@ -7,8 +7,8 @@ import { describe, expect, test } from 'vitest';
 import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { LogLevel } from 'vscode/services';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { MonacoEditorReactComp, TextChanges } from '@typefox/monaco-editor-react';
+import { MonacoEditorLanguageClientWrapper, TextChanges, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configureMonacoWorkers, createMonacoEditorDiv, updateExtendedAppPrototyp } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
@@ -58,27 +58,14 @@ describe('Test MonacoEditorReactComp', () => {
             }
         };
 
-        let renderResult: RenderResult;
-        // we have to await the full start of the editor with the onLoad callback, then it is save to contine
-        const p = await new Promise<void>(resolve => {
-            const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+        const textReceiverHello = (textChanges: TextChanges) => {
+            expect(textChanges.text).toEqual('hello world');
+        };
 
-                const p1 = await new Promise<void>(p1Resolve => {
-                    const textReceiverHello = (textChanges: TextChanges) => {
-                        expect(textChanges.text).toEqual('hello world');
-                        p1Resolve();
-                    };
-                    // because the onTextChanged callback is updated there will be a result even if the text is unchanged
-                    renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} />);
-                });
-                expect(p1).toBeUndefined();
-
-                resolve();
-            };
-            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
-        });
-        // void promise is undefined after it was awaited
-        expect(p).toBeUndefined();
+        const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+            expect(wrapper.getTextModels()?.text?.getValue()).toEqual('hello world');
+        };
+        render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} onLoad={handleOnLoad} />);
     });
 
     test('update codeResources', async () => {
@@ -98,34 +85,26 @@ describe('Test MonacoEditorReactComp', () => {
             }
         };
 
-        let renderResult: RenderResult;
-        // we have to await the full start of the editor with the onLoad callback, then it is save to contine
-        const p = await new Promise<void>(resolve => {
-            const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+        let count = 0;
+        const textReceiver = (textChanges: TextChanges) => {
+            if (count === 0) {
+                expect(textChanges.text).toBe('hello world');
+            } else {
+                expect(textChanges.text).toBe('goodbye world');
+            }
+        };
 
-                // eslint-disable-next-line no-async-promise-executor
-                const p1 = await new Promise<void>(async p1Resolve => {
-                    await wrapper.updateCodeResources({
-                        main: {
-                            text: 'goodbye world',
-                            fileExt: 'js'
-                        }
-                    });
+        const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+            count++;
 
-                    const textReceiverGoodbye = (textChanges: TextChanges) => {
-                        expect(textChanges.text).toBe('goodbye world');
-                        p1Resolve();
-                    };
+            await wrapper.updateCodeResources({
+                main: {
+                    text: 'goodbye world',
+                    fileExt: 'js'
+                }
+            });
 
-                    renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverGoodbye)} />);
-                });
-                expect(p1).toBeUndefined();
-
-                resolve();
-            };
-            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
-        });
-        // void promise is undefined after it was awaited
-        expect(p).toBeUndefined();
+        };
+        render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} onTextChanged={textReceiver} />);
     });
 });

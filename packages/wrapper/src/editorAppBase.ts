@@ -7,7 +7,7 @@ import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { Logger } from 'monaco-languageclient/tools';
-import { getEditorUri, isModelUpdateRequired, ModelUpdateType } from './utils.js';
+import { getEditorUri } from './utils.js';
 
 export interface CodeContent {
     text: string;
@@ -57,6 +57,10 @@ export interface TextContents {
     textOriginal?: string;
 }
 
+export type TextChanges = TextContents & {
+    isDirty: boolean;
+}
+
 /**
  * This is the base class for both Monaco Ediotor Apps:
  * - EditorAppClassic
@@ -74,6 +78,8 @@ export abstract class EditorAppBase {
 
     private modelRef: IReference<ITextFileEditorModel> | undefined;
     private modelRefOriginal: IReference<ITextFileEditorModel> | undefined;
+
+    private modelUpdateCallback?: (textModels: TextModels) => void;
 
     constructor(id: string, logger?: Logger) {
         this.id = id;
@@ -161,24 +167,13 @@ export abstract class EditorAppBase {
         };
     }
 
-    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
-        const modelUpdateType = isModelUpdateRequired(this.getConfig().codeResources, codeResources);
-        if (modelUpdateType !== ModelUpdateType.NONE) {
-            this.updateCodeResourcesConfig(codeResources);
-        }
+    registerModelUpdate(modelUpdateCallback: (textModels: TextModels) => void) {
+        this.modelUpdateCallback = modelUpdateCallback;
+    }
 
-        if (modelUpdateType === ModelUpdateType.CODE) {
-            if (this.editor) {
-                this.editor.setValue(codeResources?.main?.text ?? '');
-            } else {
-                this.diffEditor?.getModifiedEditor().setValue(codeResources?.main?.text ?? '');
-                this.diffEditor?.getOriginalEditor().setValue(codeResources?.original?.text ?? '');
-            }
-        } else if (modelUpdateType === ModelUpdateType.MODEL || modelUpdateType === ModelUpdateType.CODE_AND_MODEL) {
-            const modelRefs = await this.buildModelRefs(codeResources);
-            this.updateEditorModels(modelRefs);
-        }
-        return Promise.resolve();
+    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
+        const modelRefs = await this.buildModelRefs(codeResources);
+        this.updateEditorModels(modelRefs);
     }
 
     async buildModelRefs(codeResources?: CodeResources): Promise<ModelRefs> {
@@ -218,15 +213,24 @@ export abstract class EditorAppBase {
 
         if (this.editor) {
             if (updateMain && this.modelRef && this.modelRef.object.textEditorModel !== null) {
-                this.editor.setModel(this.modelRef.object.textEditorModel);
+                const textModels = {
+                    text: this.modelRef.object.textEditorModel
+                };
+                this.editor.setModel(textModels.text);
+                this.modelUpdateCallback?.(textModels);
             }
         } else if (this.diffEditor) {
             if ((updateMain || updateOriginal) &&
                 this.modelRef && this.modelRefOriginal &&
                 this.modelRef.object.textEditorModel !== null && this.modelRefOriginal.object.textEditorModel !== null) {
-                this.diffEditor.setModel({
+                const textModels = {
                     original: this.modelRefOriginal.object.textEditorModel,
                     modified: this.modelRef.object.textEditorModel
+                };
+                this.diffEditor.setModel(textModels);
+                this.modelUpdateCallback?.({
+                    textOriginal: textModels.original,
+                    text: textModels.modified
                 });
             } else {
                 throw new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.');
@@ -238,18 +242,6 @@ export abstract class EditorAppBase {
         if (enforceLanguageId !== undefined) {
             modelRef.object.setLanguageId(enforceLanguageId);
             this.logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
-        }
-    }
-
-    private updateCodeResourcesConfig(codeResources?: CodeResources) {
-        const config = this.getConfig();
-        // reset first, if the passed resources are empty, then the new resources will be empty as well
-        config.codeResources = {};
-        if (codeResources?.main) {
-            config.codeResources.main = codeResources.main;
-        }
-        if (codeResources?.original) {
-            config.codeResources.original = codeResources.original;
         }
     }
 
@@ -270,5 +262,5 @@ export abstract class EditorAppBase {
     abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;
     abstract disposeApp(): void;
-    abstract isAppConfigDifferent(orgConfig: EditorAppConfigBase, config: EditorAppConfigBase, includeModelData: boolean): boolean;
+
 }
