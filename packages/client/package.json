@@ -31,6 +31,10 @@
     "./vscode/services": {
       "types": "./lib/vscode/index.d.ts",
       "default": "./lib/vscode/index.js"
+    },
+    "./fs": {
+      "types": "./lib/fs/index.d.ts",
+      "default": "./lib/fs/index.js"
     }
   },
   "typesVersions": {
@@ -43,6 +47,9 @@
       ],
       "vscode/services": [
         "lib/vscode/index"
+      ],
+      "fs": [
+        "lib/fs/index"
       ]
     }
   },
