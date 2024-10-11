@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Files Testbed</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+	<h2>Files Testbed</h2>
+	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
+    <script type="module">
+        import { runFilesClient } from "./src/files/client/filesClient.ts";
+
+        runFilesClient();
+    </script>
+</body>
+</html>
