@@ -7,7 +7,6 @@ import { AfterViewInit, Component, signal } from '@angular/core';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper.component';
 import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
-import '@codingame/monaco-vscode-groovy-default-extension';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
