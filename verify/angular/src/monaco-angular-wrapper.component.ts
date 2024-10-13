@@ -36,8 +36,7 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
     @Output() onTextChanged = new EventEmitter<string>();
     @Input() wrapperConfig: WrapperConfig;
     title = 'angluar-lang-client';
-    private wrapper: MonacoEditorLanguageClientWrapper =
-        new MonacoEditorLanguageClientWrapper();
+    private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private containerElement?: HTMLDivElement;
     private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
