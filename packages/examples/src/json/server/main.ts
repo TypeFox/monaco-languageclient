@@ -43,4 +43,4 @@ export const startMockHttpServerForSavingCodeFromEditor = () => {
     app.listen(PORT, () => {
         console.log(`JSON server running on port ${PORT}`);
     });
-}
+};
