@@ -4,10 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import {
-    AfterViewInit,
     Component,
+    effect,
     EventEmitter,
-    Input,
+    input,
     OnDestroy,
     Output,
 } from '@angular/core';
@@ -21,47 +21,37 @@ import {
 @Component({
     standalone: true,
     selector: 'monaco-angular-wrapper',
-    template: `
-        <div>
-            <div id='monaco-editor-root' class='monaco-editor'></div>
-        </div>
-    `,
-    styles: `
-.monaco-editor {
-  height: 50vh;
-}
-`,
+    templateUrl: './monaco-angular-wrapper.component.html',
+    styleUrls: ['./monaco-angular-wrapper.component.scss'],
 })
-export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
+export class MonacoAngularWrapperComponent implements OnDestroy {
     @Output() onTextChanged = new EventEmitter<string>();
-    @Input() wrapperConfig: WrapperConfig;
-    title = 'angluar-lang-client';
-    private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
-    private containerElement?: HTMLDivElement;
+    wrapperConfig = input<WrapperConfig>();
+    monacoEditorId = input<string>();
+    editorInlineStyle   = input<string>();
+    private wrapper: MonacoEditorLanguageClientWrapper =
+        new MonacoEditorLanguageClientWrapper();
     private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
-    private started: (value: void | PromiseLike<void>) => void;
 
-    async ngAfterViewInit(): Promise<void> {
-        this.containerElement = document.getElementById(
-            'monaco-editor-root'
-        ) as HTMLDivElement;
-        //  await this.handleReinit();
-        try {
-            await this.wrapper.initAndStart(this.wrapperConfig);
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    protected async handleReinit() {
-        await this.destroyMonaco();
-        await this.initMonaco();
-        await this.startMonaco();
+    constructor() {
+        effect(async () => {
+            try {
+                if (this.wrapperConfig() !== undefined) {
+                    if (this.wrapperConfig() !== undefined) {
+                        await this.wrapper.initAndStart(
+                            this.wrapperConfig() as WrapperConfig
+                        );
+                        this.handleOnTextChanged();
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
     }
 
     protected async destroyMonaco(): Promise<void> {
-
         if (this.isRestarting) {
             await this.isRestarting;
         }
@@ -80,36 +70,14 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
         this.destroyMonaco();
     }
 
-    protected async initMonaco() {
-        this.isRestarting = new Promise<void>((resolve) => {
-            this.started = resolve;
-        });
-        await this.wrapper.init(this.wrapperConfig);
-    }
-
-    protected async startMonaco() {
-        if (this.containerElement) {
-            // exceptions are forwarded to onError callback or the exception is thrown
-            try {
-                await this.wrapper.start();
-            } catch (e) {
-                console.error(e);
-            }
-            this.started();
-            this.isRestarting = undefined;
-
-            this.handleOnTextChanged();
-        }
-    }
-
     handleOnTextChanged() {
         const textModels = this.wrapper.getTextModels();
         if (textModels) {
             const verifyModelContent = () => {
                 const text = textModels.text?.getValue() ?? '';
                 const textOriginal = textModels.textOriginal?.getValue() ?? '';
-                const codeResources =
-                    this.wrapperConfig.editorAppConfig.codeResources;
+                const codeResources = (this.wrapperConfig() as WrapperConfig)
+                    .editorAppConfig.codeResources;
                 const dirty = text !== codeResources?.main?.text;
                 const dirtyOriginal =
                     textOriginal !== codeResources?.original?.text;
@@ -120,6 +88,7 @@ export class MonacoAngularWrapperComponent implements AfterViewInit, OnDestroy {
             const newSubscriptions: monaco.IDisposable[] = [];
 
             if (textModels.text) {
+                verifyModelContent();
                 newSubscriptions.push(
                     textModels.text.onDidChangeContent(() => {
                         verifyModelContent();
