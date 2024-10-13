@@ -92,6 +92,7 @@
     "ws": "~8.18.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "~5.0.0",
     "@types/ws": "~8.5.12",
     "langium-cli": "~3.2.0",
