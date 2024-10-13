@@ -3,31 +3,50 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { AfterViewInit, Component, signal } from '@angular/core';
+import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { WrapperConfig } from 'monaco-editor-wrapper';
-import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper.component';
+import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-angular-wrapper.component';
 import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
+import { SaveCodeService } from '../save-code.service';
+import { firstValueFrom } from 'rxjs';
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
+    templateUrl: "./app.component.html",
+    styleUrls: ["./app.component.scss"],
     standalone: true,
     imports: [MonacoAngularWrapperComponent],
 })
 export class AppComponent implements AfterViewInit {
-    wrapperConfig: WrapperConfig | undefined;
-    title = 'angular-client';
+    private saveCodeService = inject(SaveCodeService);
+    wrapperConfig = signal<WrapperConfig | undefined>(undefined); // this can be updated at runtime
 
+    title = 'angular demo for saving code';
+    editorId = 'monaco-editor-root'; // this can be parameterized or it can be in a loop to support multiple editors
+    editorInlineStyle = signal('height: 50vh;');
     readonly codeText = signal('');
 
     async ngAfterViewInit(): Promise<void> {
-        const config = buildJsonClientUserConfig({
-            htmlContainer: document.getElementById('monaco-editor-root')!,
-        });
-        this.wrapperConfig = config;
+        const editorDom = document.getElementById(this.editorId);
+        if (editorDom) {
+            const config = buildJsonClientUserConfig({
+                htmlContainer: editorDom,
+            });
+            this.wrapperConfig.set(config);
+        }
     }
 
     onTextChanged(text: string) {
         this.codeText.set(text);
     }
+
+    save = async () => {
+        try {
+            const response = await firstValueFrom(
+                this.saveCodeService.saveCode(this.codeText())
+            );
+            alert('Code saved:' + JSON.stringify(response));
+        } catch (error) {
+            console.error('Error saving code:', error);
+        }
+    };
 }
