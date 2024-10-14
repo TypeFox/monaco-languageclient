@@ -38,12 +38,10 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
         effect(async () => {
             try {
                 if (this.wrapperConfig() !== undefined) {
-                    if (this.wrapperConfig() !== undefined) {
-                        await this.wrapper.initAndStart(
-                            this.wrapperConfig() as WrapperConfig
-                        );
-                        this.handleOnTextChanged();
-                    }
+                    await this.wrapper.initAndStart(
+                        this.wrapperConfig() as WrapperConfig
+                    );
+                    this.handleOnTextChanged();
                 }
             } catch (e) {
                 console.error(e);
