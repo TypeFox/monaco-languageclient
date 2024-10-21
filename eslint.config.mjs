@@ -107,8 +107,11 @@ export default [{
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/parameter-properties': 'error',
+        'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': ['error', {
-            argsIgnorePattern: '^_'
+            caughtErrorsIgnorePattern: '^_',
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_'
         }],
         '@typescript-eslint/no-var-requires': 'error',
         '@typescript-eslint/prefer-for-of': 'error',
