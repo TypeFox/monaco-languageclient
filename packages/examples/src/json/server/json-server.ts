@@ -191,7 +191,11 @@ export class JsonServer {
         if (uri.scheme === 'file') {
             return new Promise<string>((resolve, reject) => {
                 readFile(uri.fsPath, { encoding: 'utf8' }, (err, result) => {
-                    err ? reject(err) : resolve(result.toString());
+                    if (err === null) {
+                        resolve(result.toString());
+                    } else {
+                        reject(err);
+                    }
                 });
             });
         }
