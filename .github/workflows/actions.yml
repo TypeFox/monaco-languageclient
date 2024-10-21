@@ -15,6 +15,8 @@ jobs:
     name: monaco-languageclient
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: github.ref_name != 'verify'
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -59,9 +61,21 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: github.ref_name == 'verify'
+
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Volta
+      uses: volta-cli/action@v4
+
+    - name: Use pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 9
+
     - name: Execute verification
-      if: github.ref_name == 'verify'
       shell: bash
       run: |
         bash ./verify/buildAll.sh

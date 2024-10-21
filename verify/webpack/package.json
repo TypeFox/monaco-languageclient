@@ -10,6 +10,7 @@
     "vscode": "npm:@codingame/monaco-vscode-api@~10.1.0"
   },
   "devDependencies": {
+    "@types/vscode": "~1.94.0",
     "css-loader": "~7.1.2",
     "http-server": "~14.1.1",
     "shx": "~0.3.4",
