@@ -2,13 +2,14 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.3] - 2024-10-10
+## [6.0.0-next.4] - 2024-10-22
 
+- Updated to eslint 9
 - Clean-up and allow registering a registerModelUpdate callback. This is used to properly handle `onTextChanged`
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - On startup the current containerRef is passed to the interal editor app/monaco-editor
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated to `monaco-editor-wrapper@9.0.0-next.3` and `monaco-languageclient@6.0.0-next.3`. Updated all `@codingame/monaco-vscode` packages to `10.0.2`.
+  - Updated to `monaco-editor-wrapper@9.0.0-next.4` and `monaco-languageclient@6.0.0-next.4`. Updated all `@codingame/monaco-vscode` packages to `10.1.0`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
 - Turned react component from class to function [#739](https://github.com/TypeFox/monaco-languageclient/pull/739)
