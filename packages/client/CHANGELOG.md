@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.4] - 2024-10-22
+## [9.0.0-next.4] - 2024-10-21
 
 - Updated to eslint 9
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)

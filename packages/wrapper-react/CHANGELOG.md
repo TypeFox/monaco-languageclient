@@ -2,7 +2,7 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.4] - 2024-10-22
+## [6.0.0-next.4] - 2024-10-21
 
 - Updated to eslint 9
 - Clean-up and allow registering a registerModelUpdate callback. This is used to properly handle `onTextChanged`

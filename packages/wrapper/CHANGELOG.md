@@ -2,7 +2,7 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.4] - 2024-10-22
+## [6.0.0-next.4] - 2024-10-21
 
 - Updated to eslint 9
 - Clean-up and allow registering a registerModelUpdate callback
