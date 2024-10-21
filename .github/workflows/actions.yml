@@ -56,8 +56,12 @@ jobs:
       run: |
         npm run vite:build
 
-    - name: Verify
-      if: github.ref_name == 'main'
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Execute verification
+      if: github.ref_name == 'verify'
       shell: bash
       run: |
         bash ./verify/buildAll.sh
