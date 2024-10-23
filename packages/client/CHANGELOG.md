@@ -2,12 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.4] - 2024-10-21
+## [9.0.0-next.5] - 2024-10-23
 
+- Added `createUrl` to `monaco-languageclient/tools`. Moved it here from `monaco-editor-wrapper`.
 - Updated to eslint 9
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated all `@codingame/monaco-vscode` packages to `10.1.0`.
+  - Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Pass MessageTransports directly

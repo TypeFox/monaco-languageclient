@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
-import { MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
+import { didModelContentChange, MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
@@ -79,35 +79,22 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                 wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
                     if (textModels.text || textModels.textOriginal) {
-                        const verifyModelContent = () => {
-                            const text = textModels.text?.getValue() ?? '';
-                            const textOriginal = textModels.textOriginal?.getValue() ?? '';
-                            const codeResources = wrapperConfig.editorAppConfig.codeResources;
-                            const dirty = text !== codeResources?.main?.text;
-                            const dirtyOriginal = textOriginal !== codeResources?.original?.text;
-                            onTextChanged?.({
-                                text,
-                                textOriginal,
-                                isDirty: dirty || dirtyOriginal
-                            });
-                        };
-
                         const newSubscriptions: monaco.IDisposable[] = [];
 
                         if (textModels.text) {
                             newSubscriptions.push(textModels.text.onDidChangeContent(() => {
-                                verifyModelContent();
+                                didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
                             }));
                         }
 
                         if (textModels.textOriginal) {
                             newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
-                                verifyModelContent();
+                                didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
                             }));
                         }
                         setOnTextChangedSubscriptions(newSubscriptions);
                         // do it initially
-                        verifyModelContent();
+                        didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
                     }
                 });
 

@@ -8,9 +8,10 @@ import getEditorServiceOverride from '@codingame/monaco-vscode-editor-service-ov
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
-import { createUrl, WrapperConfig } from 'monaco-editor-wrapper';
-import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { MonacoLanguageClient } from 'monaco-languageclient';
+import { createUrl } from 'monaco-languageclient/tools';
+import { WrapperConfig } from 'monaco-editor-wrapper';
+import { useOpenEditorStub } from 'monaco-editor-wrapper/vscode/services';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 

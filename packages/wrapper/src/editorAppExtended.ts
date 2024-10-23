@@ -7,8 +7,7 @@ import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { Logger } from 'monaco-languageclient/tools';
-import { EditorAppBase, EditorAppConfigBase } from './editorAppBase.js';
-import { verifyUrlOrCreateDataUrl } from './utils.js';
+import { EditorAppBase, EditorAppConfigBase, verifyUrlOrCreateDataUrl } from './editorAppBase.js';
 import { DisposableStore } from 'vscode/monaco';
 
 export interface ExtensionConfig {

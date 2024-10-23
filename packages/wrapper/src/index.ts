@@ -8,4 +8,3 @@ export * from './editorAppClassic.js';
 export * from './editorAppExtended.js';
 export * from './languageClientWrapper.js';
 export * from './wrapper.js';
-export * from './utils.js';

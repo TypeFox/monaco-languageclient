@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { Logger } from 'monaco-languageclient/tools';
-import { getEditorUri } from './utils.js';
 
 export interface CodeContent {
     text: string;
@@ -59,6 +59,7 @@ export interface TextContents {
 
 export type TextChanges = TextContents & {
     isDirty: boolean;
+    isDirtyOriginal: boolean;
 }
 
 /**
@@ -264,3 +265,28 @@ export abstract class EditorAppBase {
     abstract disposeApp(): void;
 
 }
+
+export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
+    return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
+};
+
+export const getEditorUri = (id: string, original: boolean, code: CodePlusUri | CodePlusFileExt, basePath?: string) => {
+    if (Object.hasOwn(code, 'uri')) {
+        return vscode.Uri.parse((code as CodePlusUri).uri);
+    } else {
+        return vscode.Uri.parse(`${basePath ?? '/workspace'}/model${original ? 'Original' : ''}${id}.${(code as CodePlusFileExt).fileExt}`);
+    }
+};
+
+export const didModelContentChange = (textModels: TextModels, codeResources?: CodeResources, onTextChanged?: (textChanges: TextChanges) => void) => {
+    const text = textModels.text?.getValue() ?? '';
+    const textOriginal = textModels.textOriginal?.getValue() ?? '';
+    const isDirty = text !== codeResources?.main?.text;
+    const isDirtyOriginal = textOriginal !== codeResources?.original?.text;
+    onTextChanged?.({
+        text,
+        textOriginal,
+        isDirty,
+        isDirtyOriginal
+    });
+};

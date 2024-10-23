@@ -3,9 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
 import { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
-import { CodePlusFileExt, CodePlusUri } from './editorAppBase.js';
 
 export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';
@@ -38,16 +36,4 @@ export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
         }
     }
     return buildUrl;
-};
-
-export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
-    return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
-};
-
-export const getEditorUri = (id: string, original: boolean, code: CodePlusUri | CodePlusFileExt, basePath?: string) => {
-    if (Object.hasOwn(code, 'uri')) {
-        return vscode.Uri.parse((code as CodePlusUri).uri);
-    } else {
-        return vscode.Uri.parse(`${basePath ?? '/workspace'}/model${original ? 'Original' : ''}${id}.${(code as CodePlusFileExt).fileExt}`);
-    }
 };
