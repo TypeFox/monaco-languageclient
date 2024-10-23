@@ -96,8 +96,10 @@
     "@types/express": "~5.0.0",
     "@types/ws": "~8.5.12",
     "@types/emscripten": "~1.39.13",
+    "mini-coi": "~0.4.2",
     "langium-cli": "~3.2.0",
     "ts-node": "~10.9.1",
+    "vite-plugin-static-copy": "~2.0.0",
     "vscode-languageserver-types": "~3.17.5"
   },
   "volta": {
@@ -119,12 +121,16 @@
     "resources:download": "vite-node ./build/downloadResources.mts",
     "build:msg": "echo Building main examples:",
     "build": "npm run build:msg && npm run clean && npm run resources:download && npm run extract:docker && npm run compile",
-    "build:bundle": "vite --config vite.bundle.config.ts build",
     "start:server:json": "vite-node src/json/server/direct.ts",
     "start:server:python": "vite-node src/python/server/direct.ts",
     "start:server:groovy": "vite-node src/groovy/server/direct.ts",
     "start:server:jdtls": "vite-node src/eclipse.jdt.ls/server/direct.ts",
     "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
-    "extract:docker": "vite-node ./resources/clangd/scripts/extractDockerFiles.ts"
+    "extract:docker": "vite-node ./resources/clangd/scripts/extractDockerFiles.ts",
+    "production:clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths production",
+    "production:copy:mini-coi": "mini-coi --service-worker production/mini-coi.js",
+    "production:build": "npm run production:clean && vite --config vite.config.deploy.ts build && npm run production:copy:mini-coi",
+    "production:preview:build": "npm run production:clean && vite --config vite.config.preview.ts build && npm run production:copy:mini-coi",
+    "production:preview": "vite --config vite.config.preview.ts preview -d"
   }
 }
