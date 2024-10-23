@@ -89,11 +89,13 @@
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
     "vscode-ws-jsonrpc": "~3.3.2",
-    "ws": "~8.18.0"
+    "ws": "~8.18.0",
+    "wtd-core": "~4.0.1"
   },
   "devDependencies": {
     "@types/express": "~5.0.0",
     "@types/ws": "~8.5.12",
+    "@types/emscripten": "~1.39.13",
     "langium-cli": "~3.2.0",
     "ts-node": "~10.9.1",
     "vscode-languageserver-types": "~3.17.5"

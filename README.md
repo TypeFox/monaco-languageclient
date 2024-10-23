@@ -27,6 +27,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Python Language client and pyright language server example (Location)](#python-language-client-and-pyright-language-server-example-location)
       - [Groovy Language client and language server example (Location)](#groovy-language-client-and-language-server-example-location)
       - [Java Language client and language server example (Location)](#java-language-client-and-language-server-example-location)
+      - [Cpp / Clangd (Location)](#cpp--clangd-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
       - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
@@ -137,6 +138,10 @@ The **java-server** runs an external [Java app](./packages/examples/src/eclipse.
 The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above
+
+#### Cpp / Clangd ([Location](./packages/examples/src/clangd))
+
+It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser.
 
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
