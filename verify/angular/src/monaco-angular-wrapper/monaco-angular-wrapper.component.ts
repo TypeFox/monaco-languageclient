@@ -74,10 +74,8 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     handleOnTextChanged() {
         const wrapperConfig = this.wrapperConfig();
         const textModels = this.wrapper.getTextModels();
-
-        if (textModels && typeof textModels.text !== 'undefined' && wrapperConfig) {
+        if (textModels?.text !== undefined && wrapperConfig !== undefined) {
             const newSubscriptions: monaco.IDisposable[] = [];
-
             this.emitCodeChange(textModels, wrapperConfig);
             newSubscriptions.push(
                 textModels.text.onDidChangeContent(() => {
