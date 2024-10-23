@@ -27,6 +27,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Python Language client and pyright language server example (Location)](#python-language-client-and-pyright-language-server-example-location)
       - [Groovy Language client and language server example (Location)](#groovy-language-client-and-language-server-example-location)
       - [Java Language client and language server example (Location)](#java-language-client-and-language-server-example-location)
+      - [Cpp / Clangd (Location)](#cpp--clangd-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
       - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
@@ -138,6 +139,10 @@ The **java-client** contains the [monaco-editor-wrapper app](./packages/examples
 
 Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above
 
+#### Cpp / Clangd ([Location](./packages/examples/src/clangd))
+
+It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser.
+
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
 It contains both the [language client](./packages/examples/src/langium/langium-dsl/wrapperLangium.ts) and the [langauge server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts). Here you can chose beforehand if the wrapper should be started in classic or extended mode.
@@ -183,11 +188,11 @@ npm run start:example:server:python
 
 ##### Groovy Language Server
 
-For the **groovy-client** example you need to ensure the **groovy-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
+For the **groovy-client** example you need to ensure the **groovy-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
 
 ##### Java Language Server
 
-For the **java-client** example you need to ensure the **java-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Eclipse JDT LS). From the project root run `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d`. First start up will take longer as the container is built. Use `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml down` to stop it.
+For the **java-client** example you need to ensure the **java-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Eclipse JDT LS). From the project root run `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml down` to stop it.
 
 ### Verification Examples & Usage
 

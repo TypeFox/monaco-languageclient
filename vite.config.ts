@@ -4,10 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { defineConfig } from 'vite';
+import fs from 'node:fs';
 import * as path from 'node:path';
 import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 import react from '@vitejs/plugin-react';
+
+const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm';
 
 export const definedViteConfig = defineConfig({
     build: {
@@ -15,6 +18,7 @@ export const definedViteConfig = defineConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
+
                 // bare monaco-languageclient
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
 
@@ -22,13 +26,19 @@ export const definedViteConfig = defineConfig({
                 // json
                 wrapperWebSocket: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
+
                 // langium
                 wrapperStatemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
                 wrapperLangium: path.resolve(__dirname, 'packages/examples/langium.html'),
+
                 // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
+
                 // grrovy
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
+
+                // clangd
+                clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),
 
                 // json & python
                 twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
@@ -50,7 +60,11 @@ export const definedViteConfig = defineConfig({
     },
     server: {
         origin: 'http://localhost:20001',
-        port: 20001
+        port: 20001,
+        headers: {
+            'Cross-Origin-Opener-Policy': 'same-origin',
+            'Cross-Origin-Embedder-Policy': 'require-corp',
+        }
     },
     optimizeDeps: {
         esbuildOptions: {
@@ -68,7 +82,9 @@ export const definedViteConfig = defineConfig({
         react(),
     ],
     define: {
-        rootDirectory: JSON.stringify(__dirname)
+        rootDirectory: JSON.stringify(__dirname),
+        // Server-provided Content-Length header may be gzipped, get the real size in build time
+        __WASM_SIZE__: fs.existsSync(clangdWasmLocation) ? fs.statSync(clangdWasmLocation).size : 0
     },
     worker: {
         format: 'es'
