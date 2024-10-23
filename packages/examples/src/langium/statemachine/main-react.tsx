@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
-import text from './content/example.statemachine?raw';
+import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 
 export const runStatemachineReact = async () => {
     const wrapperConfig = await createLangiumGlobalConfig({

@@ -10,8 +10,8 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
-import text from './content/example.statemachine?raw';
-import textMod from './content/example-mod.statemachine?raw';
+import text from '../../../resources/langium/statemachine/example.statemachine?raw';
+import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();

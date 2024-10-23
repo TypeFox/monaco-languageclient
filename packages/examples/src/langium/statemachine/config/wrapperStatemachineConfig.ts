@@ -76,7 +76,7 @@ export const createLangiumGlobalConfig = async (params: {
             extensions: [{
                 config: {
                     name: 'statemachine-example',
-                    publisher: 'monaco-editor-wrapper-examples',
+                    publisher: 'TypeFox',
                     version: '1.0.0',
                     engines: {
                         vscode: '*'
