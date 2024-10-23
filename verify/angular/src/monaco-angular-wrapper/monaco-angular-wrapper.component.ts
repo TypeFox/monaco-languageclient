@@ -76,7 +76,7 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
         const textModels = this.wrapper.getTextModels();
         if (textModels) {
             const newSubscriptions: monaco.IDisposable[] = [];
-            if (textModels.text && wrapperConfig) {
+            if (!!textModels.text && !!wrapperConfig) {
                 this.emitCodeChange(textModels , wrapperConfig);
                 newSubscriptions.push(
                     textModels.text.onDidChangeContent(() => {
@@ -87,10 +87,10 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
         }
     }
 
-    emitCodeChange(textModels :  TextModels , wrapperConfig : WrapperConfig ) {
+    emitCodeChange(textModels:  TextModels , wrapperConfig: WrapperConfig ) {
         const  onTextChanged = (textChanges: TextChanges) => {
             this.onTextChanged.emit(textChanges.text);
-        }
+        };
         didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
     }
 
