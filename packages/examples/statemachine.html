@@ -14,11 +14,7 @@
     <button type="button" id="button-dispose">Dispose</button>
     <div id="monaco-editor-root" style="height: 40vh;"></div>
     <div id="monaco-editor-root2" style="height: 40vh;"></div>
-    <script type="module" rel="modulepreload">
-        import { initLocaleLoader } from 'monaco-editor-wrapper/vscode/locale';
-        const url = new URL('./src/langium/statemachine/launcher.ts', import.meta.url);
-        await initLocaleLoader(url.href);
-    </script>
+    <script type="module" rel="modulepreload" src="./src/langium/statemachine/launcher"></script>
 </body>
 
 </html>

@@ -1,9 +1,9 @@
-name: Build
+name: Build, Lint and Test
 
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     tags-ignore:
       - '**'
   pull_request:
@@ -13,10 +13,8 @@ on:
 
 jobs:
   build:
-    name: monaco-languageclient
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.ref_name != 'verify'
 
     steps:
     - name: Checkout
@@ -52,31 +50,3 @@ jobs:
       run: |
         npm run report:versions
         npm run test:run
-
-    - name: Build production
-      if: github.ref_name == 'main'
-      shell: bash
-      run: |
-        npm run vite:build
-
-  verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    if: github.ref_name == 'verify'
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Volta
-      uses: volta-cli/action@v4
-
-    - name: Use pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 9
-
-    - name: Execute verification
-      shell: bash
-      run: |
-        bash ./verify/buildAll.sh

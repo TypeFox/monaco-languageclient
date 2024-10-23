@@ -24,12 +24,12 @@ export const definedViteConfig = defineConfig({
 
                 // monaco-editor-wrapper
                 // json
-                wrapperWebSocket: path.resolve(__dirname, 'packages/examples/json.html'),
+                json: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
 
                 // langium
-                wrapperStatemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
-                wrapperLangium: path.resolve(__dirname, 'packages/examples/langium.html'),
+                langium: path.resolve(__dirname, 'packages/examples/langium.html'),
+                statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
 
                 // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
@@ -50,7 +50,7 @@ export const definedViteConfig = defineConfig({
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
 
                 // other examples
-                wrapperTs: path.resolve(__dirname, 'packages/examples/ts.html')
+                tsExtHost: path.resolve(__dirname, 'packages/examples/ts.html')
             }
         }
     },

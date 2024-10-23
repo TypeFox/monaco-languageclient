@@ -12,7 +12,7 @@ export const getLocalDirectory = () => {
     return dirname(__filename);
 };
 
-const downloadVsix = async (url: string, targetDir: string, filename: string) => {
+const downloadResource = async (url: string, targetDir: string, filename: string) => {
     const target = resolve(targetDir, filename);
     if (existsSync(target)) {
         console.log(`Skipping download because ${target} already exists.`);
@@ -31,9 +31,9 @@ const downloadVsix = async (url: string, targetDir: string, filename: string) =>
 // Source: https://gist.github.com/wanglf/7acc591890dc0d8ceff1e7ec9af32a55?permalink_comment_id=4151555#gistcomment-4151555
 // https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${publisher}/vsextensions/${extension}/${version}/vspackage
 
-await downloadVsix('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/github-vscode-theme/6.3.4/vspackage',
+await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/github-vscode-theme/6.3.4/vspackage',
     resolve(getLocalDirectory(), '../resources/vsix/'), 'github-vscode-theme.vsix');
 
 // not yet used
-await downloadVsix('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.2.3/vspackage',
+await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.2.4/vspackage',
     resolve(getLocalDirectory(), '../resources/vsix/'), 'open-collaboration-tools.vsix');

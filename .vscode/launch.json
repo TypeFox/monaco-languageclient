@@ -31,6 +31,14 @@
           "userDataDir": "${workspaceFolder}/.vscode/profile"
         },
         {
+          "name": "Chrome Preview",
+          "type": "chrome",
+          "request": "launch",
+          "url": "http://localhost:20002",
+          "webRoot": "${workspaceFolder}/packages/examples/production",
+          "userDataDir": "${workspaceFolder}/.vscode/profile"
+        },
+        {
           "type": "node",
           "request": "launch",
           "name": "Run Vitest Browser Debug",

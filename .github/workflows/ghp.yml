@@ -1,0 +1,64 @@
+name: Build Production for GitHub Pages
+
+on:
+  push:
+   branches:
+     - "ghp"
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  ghp-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Volta
+      uses: volta-cli/action@v4
+
+    - name: Use pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 9
+
+    - name: Install
+      shell: bash
+      run: |
+        npm ci
+
+    - name: Build
+      run: |
+        npm run report:versions
+        npm run build
+
+    - name: Build Production
+      run: |
+        npm run production:build
+
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v5
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./packages/examples/production/
+
+  ghp-deploy:
+    needs: ghp-build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

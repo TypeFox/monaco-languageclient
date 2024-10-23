@@ -66,7 +66,7 @@ export class ClangdInteractionWorker implements ComRouter {
     private async runClangdLanguageServer() {
         const clangdWasmUrl = new URL('../../../resources/clangd/wasm/clangd.wasm', import.meta.url);
         const clangdJsUrl = new URL('../../../resources/clangd/wasm/clangd.js', import.meta.url);
-        const jsModule = import(  /* @vite-ignore */ `${clangdJsUrl}`);
+        const jsModule = import(`${clangdJsUrl}`);
 
         // Pre-fetch wasm, and report progress to main
         const wasmResponse = await fetch(clangdWasmUrl);
