@@ -15,7 +15,9 @@ import {
 import * as monaco from 'monaco-editor';
 import {
     MonacoEditorLanguageClientWrapper,
-    WrapperConfig,
+    TextChanges,
+    TextModels,
+    WrapperConfig , didModelContentChange
 } from 'monaco-editor-wrapper';
 
 @Component({
@@ -58,6 +60,7 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
         } catch {
             // The language client may throw an error during disposal.
             // This should not prevent us from continue working.
+            console.error('Error during disposal of the language client.');
         }
         if (this._subscription) {
             this._subscription.dispose();
@@ -69,30 +72,26 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     }
 
     handleOnTextChanged() {
+        const wrapperConfig =  this.wrapperConfig() ;
         const textModels = this.wrapper.getTextModels();
         if (textModels) {
-            const verifyModelContent = () => {
-                const text = textModels.text?.getValue() ?? '';
-                const textOriginal = textModels.textOriginal?.getValue() ?? '';
-                const codeResources = (this.wrapperConfig() as WrapperConfig)
-                    .editorAppConfig.codeResources;
-                const dirty = text !== codeResources?.main?.text;
-                const dirtyOriginal =
-                    textOriginal !== codeResources?.original?.text;
-                this.onTextChanged.emit(text);
-                console.log('dirty , dirtyOriginal', dirty, dirtyOriginal);
-            };
-
             const newSubscriptions: monaco.IDisposable[] = [];
-
-            if (textModels.text) {
-                verifyModelContent();
+            if (textModels.text && wrapperConfig) {
+                this.emitCodeChange(textModels , wrapperConfig);
                 newSubscriptions.push(
                     textModels.text.onDidChangeContent(() => {
-                        verifyModelContent();
+                        this.emitCodeChange(textModels , wrapperConfig);
                     })
                 );
             }
         }
     }
+
+    emitCodeChange(textModels :  TextModels , wrapperConfig : WrapperConfig ) {
+        const  onTextChanged = (textChanges: TextChanges) => {
+            this.onTextChanged.emit(textChanges.text);
+        }
+        didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
+    }
+
 }
