@@ -74,6 +74,7 @@
     "@codingame/monaco-vscode-typescript-basics-default-extension": "~10.1.1",
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "~10.1.1",
     "@typefox/monaco-editor-react": "~6.0.0-next.5",
+    "cors": "^2.8.5",
     "express": "~4.21.1",
     "langium": "~3.2.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
@@ -93,6 +94,7 @@
     "wtd-core": "~4.0.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "~5.0.0",
     "@types/ws": "~8.5.12",
     "@types/emscripten": "~1.39.13",
