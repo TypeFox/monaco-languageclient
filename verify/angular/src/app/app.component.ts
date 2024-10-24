@@ -9,6 +9,7 @@ import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-
 import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 import { SaveCodeService } from '../save-code.service';
 import { firstValueFrom } from 'rxjs';
+import { getGroovyClientConfig } from '../config/groovy.config';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -19,17 +20,23 @@ import { firstValueFrom } from 'rxjs';
 export class AppComponent implements AfterViewInit {
     private saveCodeService = inject(SaveCodeService);
     wrapperConfig = signal<WrapperConfig | undefined>(undefined); // this can be updated at runtime
-
+    groovyWrapperConfig = signal<WrapperConfig | undefined>(undefined); // this can be updated at runtime
     title = 'angular demo for saving code';
     editorId = 'monaco-editor-root'; // this can be parameterized or it can be in a loop to support multiple editors
+    groovyEditorId = 'monaco-editor-groovy'; // this can be parameterized or it can be in a loop to support multiple editors
     editorInlineStyle = signal('height: 50vh;');
     readonly codeText = signal('');
 
     async ngAfterViewInit(): Promise<void> {
         const editorDom = document.getElementById(this.editorId);
+        const groovyEditorDom = document.getElementById(this.groovyEditorId);
         if (editorDom) {
             const config = buildJsonClientUserConfig(editorDom);
             this.wrapperConfig.set(config);
+        }
+        if (groovyEditorDom) {
+            const groovyConfig = getGroovyClientConfig(this.groovyEditorId);
+            this.groovyWrapperConfig.set(groovyConfig);
         }
     }
 
