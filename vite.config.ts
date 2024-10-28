@@ -18,38 +18,18 @@ export const definedViteConfig = defineConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
-
-                // bare monaco-languageclient
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
-
-                // monaco-editor-wrapper
-                // json
                 json: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
-
-                // langium
                 langium: path.resolve(__dirname, 'packages/examples/langium.html'),
                 statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
-
-                // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
-
-                // grrovy
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
-
-                // clangd
                 clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),
-
-                // json & python
+                appPlayground: path.resolve(__dirname, 'packages/examples/appPlayground.html'),
                 twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
-
-                // monaco-editor-react
-                // langium
                 reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
-                // python
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
-
-                // other examples
                 tsExtHost: path.resolve(__dirname, 'packages/examples/ts.html')
             }
         }

@@ -15,6 +15,7 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
                     statemachine: path.resolve(__dirname, 'statemachine.html'),
                     clangd: path.resolve(__dirname, 'clangd.html'),
                     reactStatemachine: path.resolve(__dirname, 'react_statemachine.html'),
+                    appPlayground: path.resolve(__dirname, 'appPlayground.html'),
                     tsExtHost: path.resolve(__dirname, 'tsExtHost.html')
                 }
             },

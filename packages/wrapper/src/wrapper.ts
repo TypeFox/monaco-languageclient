@@ -89,9 +89,10 @@ export class MonacoEditorLanguageClientWrapper {
             enableExtHostWorker: vscodeApiConfig.enableExtHostWorker,
             workspaceConfig: vscodeApiConfig.workspaceConfig,
             userConfiguration: vscodeApiConfig.userConfiguration,
+            viewsConfig: vscodeApiConfig.viewsConfig,
             htmlContainer: editorAppConfig.htmlContainer,
             caller: `monaco-editor (${this.id})`,
-            performChecks: checkServiceConsistency,
+            performServiceConsistencyChecks: checkServiceConsistency,
             logger: this.logger
         });
 

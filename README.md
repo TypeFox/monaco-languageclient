@@ -28,6 +28,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Groovy Language client and language server example (Location)](#groovy-language-client-and-language-server-example-location)
       - [Java Language client and language server example (Location)](#java-language-client-and-language-server-example-location)
       - [Cpp / Clangd (Location)](#cpp--clangd-location)
+      - [Application Playground (Location)](#application-playground-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
       - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
@@ -141,7 +142,11 @@ Langium examples (here client and server communicate via `vscode-languageserver-
 
 #### Cpp / Clangd ([Location](./packages/examples/src/clangd))
 
-It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser.
+It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser. <b>Heads up:</b> This is a prototype and still evolving.
+
+#### Application Playground ([Location](./packages/examples/src/appPlayground))
+
+This [example](./packages/examples/src/appPlayground/main.ts) uses the view service provider from `@codingame/monaco-vscode-editor-api` to build an application that utilizes more vscode features. <b>Heads up:</b> This is a prototype and still evolving.
 
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
@@ -163,8 +168,6 @@ It demonstrates how a [monaco-editor-wrapper can be combined with a language ser
 #### Purely monaco-editor related examples
 
 See [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts).
-
-See [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts).
 
 #### Server processes
 

@@ -16,6 +16,7 @@ import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-
 import { EnvironmentOverride } from 'vscode/workbench';
 import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
+import { setUnexpectedErrorHandler } from 'vscode/monaco';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -42,7 +43,7 @@ export interface VscodeApiConfig {
 export interface InitVscodeApiInstructions extends VscodeApiConfig {
     htmlContainer: HTMLElement;
     caller?: string;
-    performChecks?: () => boolean;
+    performServiceConsistencyChecks?: () => boolean;
     logger?: Logger;
 }
 
@@ -127,13 +128,18 @@ export const importAllServices = async (instructions: InitVscodeApiInstructions)
 
     reportServiceLoading(userServices, instructions.logger);
 
-    if (instructions.performChecks === undefined || (typeof instructions.performChecks === 'function' && instructions.performChecks())) {
+    if (instructions.performServiceConsistencyChecks === undefined ||
+        (typeof instructions.performServiceConsistencyChecks === 'function' && instructions.performServiceConsistencyChecks())) {
         if (instructions.viewsConfig?.viewServiceType === 'ViewsService' || instructions.viewsConfig?.viewServiceType === 'WorkspaceService') {
             await initialize(userServices, instructions.htmlContainer, instructions.workspaceConfig, instructions.envOptions);
         } else {
             await initialize(userServices, undefined, instructions.workspaceConfig, instructions.envOptions);
         }
     }
+
+    setUnexpectedErrorHandler((e) => {
+        instructions.logger?.createErrorAndLog('Unexpected error', e);
+    });
 };
 
 /**
