@@ -4,6 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [9.0.0-next.5] - 2024-10-23
 
+- Function naming adjustments
 - Prototype: File system endpoint.
 - Added `createUrl` to `monaco-languageclient/tools`. Moved it here from `monaco-editor-wrapper`.
 - Updated to eslint 9

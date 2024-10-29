@@ -9,12 +9,14 @@ import getConfigurationServiceOverride, { IStoredWorkspace } from '@codingame/mo
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
-import { Parts, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, Position, onDidChangeSideBarPosition } from '@codingame/monaco-vscode-views-service-override';
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
 import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
+import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
+import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
+import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
@@ -26,48 +28,9 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/s
 import { configureMonacoWorkers } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
-import viewsHtml from '../../resources/appPlayground/views.html?raw';
+import { defaultViewsHtml, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
-
-const initViews = () => {
-    for (const config of [
-        { part: Parts.TITLEBAR_PART, element: '#titleBar' },
-        { part: Parts.BANNER_PART, element: '#banner' },
-        {
-            part: Parts.SIDEBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#sidebar' : '#sidebar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        {
-            part: Parts.ACTIVITYBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#activityBar' : '#activityBar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        {
-            part: Parts.AUXILIARYBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#auxiliaryBar' : '#auxiliaryBar-left';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        { part: Parts.EDITOR_PART, element: '#editors' },
-        { part: Parts.PANEL_PART, element: '#panel' },
-        { part: Parts.STATUSBAR_PART, element: '#statusBar' }
-    ]) {
-        attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
-
-        config.onDidElementChange?.(() => {
-            attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
-        });
-
-        if (!isPartVisibile(config.part)) {
-            document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
-        }
-
-        onPartVisibilityChange(config.part, visible => {
-            document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
-        });
-    }
-};
 
 export const runApplicationPlayground = async () => {
     const helloTsUri = vscode.Uri.file('/workspace/hello.ts');
@@ -86,12 +49,15 @@ export const runApplicationPlayground = async () => {
                 ...getBannerServiceOverride(),
                 ...getStatusBarServiceOverride(),
                 ...getTitleBarServiceOverride(),
-                ...getExplorerServiceOverride()
+                ...getExplorerServiceOverride(),
+                ...getRemoteAgentServiceOverride(),
+                ...getEnvironmentServiceOverride(),
+                ...getSecretStorageServiceOverride()
             },
             enableExtHostWorker: true,
             viewsConfig: {
                 viewServiceType: 'ViewsService',
-                viewsInitFunc: initViews
+                viewsInitFunc: defaultViewsInit
             },
             workspaceConfig: {
                 enableWorkspaceTrust: true,
@@ -162,7 +128,7 @@ export const runApplicationPlayground = async () => {
     };
 
     const htmlContainer = document.createElement('div', { is: 'app' });
-    htmlContainer.innerHTML = viewsHtml;
+    htmlContainer.innerHTML = defaultViewsHtml;
     document.body.append(htmlContainer);
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
