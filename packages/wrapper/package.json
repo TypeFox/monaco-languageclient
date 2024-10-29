@@ -18,8 +18,8 @@
       "default": "./dist/index.js"
     },
     "./vscode/services": {
-      "types": "./dist/vscode/services.d.ts",
-      "default": "./dist/vscode/services.js"
+      "types": "./dist/vscode/index.d.ts",
+      "default": "./dist/vscode/index.js"
     },
     "./vscode/locale": {
       "types": "./dist/vscode/localeLoader.d.ts",

@@ -5,6 +5,7 @@ All notable changes to this npm module are documented in this file.
 ## [2024.10.5] - 2024-10-2x
 
 - Added clangd example.
+- Added application playground example featuring the views service override.
 
 ## [2024.10.4] - 2024-10-23
 
