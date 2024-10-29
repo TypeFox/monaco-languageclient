@@ -48,18 +48,18 @@ export const defaultViewsHtml = `<div id="workbench-container">
     <div id="titleBar"></div>
     <div id="banner"></div>
     <div id="workbench-top">
-        <div style="display: flex; flex: none; border: 1px solid var(--vscode-editorWidget-border)">
+        <div id="sidebarDiv">
             <div id="activityBar"></div>
-            <div id="sidebar" style="width: 400px"></div>
-            <div id="auxiliaryBar-left" style="max-width: 300px"></div>
+            <div id="sidebar"></div>
+            <div id="auxiliaryBar-left"></div>
         </div>
-        <div style="flex: 1; min-width: 0">
+        <div id="editorsDiv">
             <div id="editors"></div>
         </div>
-        <div style="display: flex; flex: none; border: 1px solid var(--vscode-editorWidget-border);">
-            <div id="sidebar-right" style="max-width: 500px"></div>
+        <div id="sidebarRightDiv">
+            <div id="sidebar-right"></div>
             <div id="activityBar-right"></div>
-            <div id="auxiliaryBar" style="max-width: 300px"></div>
+            <div id="auxiliaryBar"></div>
         </div>
     </div>
     <div id="panel"></div>
