@@ -10,13 +10,13 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
-                    browser: path.resolve(__dirname, 'browser.html'),
-                    langium: path.resolve(__dirname, 'langium.html'),
-                    statemachine: path.resolve(__dirname, 'statemachine.html'),
-                    clangd: path.resolve(__dirname, 'clangd.html'),
-                    reactStatemachine: path.resolve(__dirname, 'react_statemachine.html'),
-                    appPlayground: path.resolve(__dirname, 'appPlayground.html'),
-                    tsExtHost: path.resolve(__dirname, 'tsExtHost.html')
+                    langium: path.resolve(__dirname, 'ghp_langium.html'),
+                    statemachine: path.resolve(__dirname, 'ghp_statemachine.html'),
+                    clangd: path.resolve(__dirname, 'ghp_clangd.html'),
+                    appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),
+                    browser: path.resolve(__dirname, 'ghp_browser.html'),
+                    tsExtHost: path.resolve(__dirname, 'ghp_tsExtHost.html'),
+                    reactStatemachine: path.resolve(__dirname, 'ghp_react_statemachine.html')
                 }
             },
             emptyOutDir: false,
