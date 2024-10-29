@@ -1,25 +1,13 @@
-import { LogLevel } from "vscode";
-import { useWorkerFactory } from "monaco-editor-wrapper/workerFactory";
-import getKeybindingsServiceOverride from "@codingame/monaco-vscode-keybindings-service-override";
-import { WrapperConfig } from "monaco-editor-wrapper";
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
+import { LogLevel } from 'vscode';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import { WrapperConfig } from 'monaco-editor-wrapper';
+import { configureMonacoWorkers } from 'monaco-languageclient-examples';
 export function getGroovyClientConfig(htmlContainerId: string) {
-    const configureMonacoWorkers = () => {
-        useWorkerFactory({
-            workerOverrides: {
-                ignoreMapping: true,
-                workerLoaders: {
-                    TextEditorWorker: () =>
-                        new Worker(
-                            new URL(
-                                "monaco-editor/esm/vs/editor/editor.worker.js",
-                                import.meta.url
-                            ),
-                            { type: "module" }
-                        ),
-                },
-            },
-        });
-    };
     const userConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
@@ -28,19 +16,19 @@ export function getGroovyClientConfig(htmlContainerId: string) {
             },
             userConfiguration: {
                 json: JSON.stringify({
-                    "workbench.colorTheme": "Default Dark Modern",
-                    "editor.guides.bracketPairsHorizontal": "active",
-                    "editor.wordBasedSuggestions": "off",
-                    "editor.experimental.asyncTokenization": true,
+                    'workbench.colorTheme': 'Default Dark Modern',
+                    'editor.guides.bracketPairsHorizontal': 'active',
+                    'editor.wordBasedSuggestions': 'off',
+                    'editor.experimental.asyncTokenization': true,
                 }),
             },
         },
         editorAppConfig: {
-            $type: "extended",
+            $type: 'extended',
             codeResources: {
                 main: {
-                    text: "",
-                    fileExt: "groovy",
+                    text: '',
+                    fileExt: 'groovy',
                 },
             },
             useDiffEditor: false,
@@ -49,11 +37,11 @@ export function getGroovyClientConfig(htmlContainerId: string) {
         },
         languageClientConfigs: {
             groovy: {
-                languageId: "groovy",
+                languageId: 'groovy',
                 connection: {
                     options: {
-                        $type: "WebSocketUrl",
-                        url: `ws://localhost:30002/groovy`,
+                        $type: 'WebSocketUrl',
+                        url: 'ws://localhost:30002/groovy',
                     },
                 },
             },
