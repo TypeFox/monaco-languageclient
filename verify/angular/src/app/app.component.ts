@@ -6,7 +6,6 @@
 import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-angular-wrapper.component';
-import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 import { SaveCodeService } from '../save-code.service';
 import { firstValueFrom } from 'rxjs';
 import { getGroovyClientConfig } from '../config/groovy.config';
@@ -28,12 +27,8 @@ export class AppComponent implements AfterViewInit {
     readonly codeText = signal('');
 
     async ngAfterViewInit(): Promise<void> {
-        const editorDom = document.getElementById(this.editorId);
         const groovyEditorDom = document.getElementById(this.groovyEditorId);
-        if (editorDom) {
-            const config = buildJsonClientUserConfig(editorDom);
-            this.wrapperConfig.set(config);
-        }
+
         if (groovyEditorDom) {
             const groovyConfig = getGroovyClientConfig(this.groovyEditorId);
             this.groovyWrapperConfig.set(groovyConfig);
