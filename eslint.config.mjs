@@ -31,7 +31,8 @@ export default [{
         '**/lib/**/*',
         '**/out/**/*',
         '**/bin/**/*',
-        '**/resources/**/*'
+        '**/resources/**/*',
+        '**/production/**/*'
     ],
 }, ...compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended'), {
     files: [

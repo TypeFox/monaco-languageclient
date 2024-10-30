@@ -21,15 +21,6 @@
             "polyfills": [
               "zone.js"
             ],
-            "assets": [
-              "src/assets",
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/base/worker", "output": "./assets/worker" },
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/editor", "output": "./assets/editor" },
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/language/json", "output": "./assets/json" },
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/language/css", "output": "./assets/css" },
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/language/html", "output": "./assets/html" },
-              { "glob": "**/*", "input": "./node_modules/monaco-editor/esm/vs/language/typescript", "output": "./assets/typescript" }
-            ],
             "styles": [],
             "scripts": [],
             "aot": false,
