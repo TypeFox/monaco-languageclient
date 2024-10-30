@@ -4,11 +4,6 @@ services:
     build:
       dockerfile: ./packages/examples/resources/groovy/Dockerfile
       context: ../../../..
-      # requires "Use containerd for pulling and storing images" in Docker Desktop
-      platforms:
-        - "linux/amd64"
-        # pre-built volta binaries are currently unavailable for linux/arm64, will change with v2.0.0
-        # - "linux/arm64"
     platform: linux/amd64
     command: [
       "bash", "-c", "npm run start:example:server:groovy"
