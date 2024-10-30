@@ -3,8 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { Uri } from 'vscode';
 import { Logger } from 'monaco-languageclient/tools';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
+import { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 
 export const disableButton = (id: string, disabled: boolean) => {
     const button = document.getElementById(id) as HTMLButtonElement | null;
@@ -24,4 +27,21 @@ export const configureMonacoWorkers = (logger?: Logger) => {
         },
         logger
     });
+};
+
+export const createDefaultWorkspaceFile = (workspaceFile: Uri, workspacePath: string) => {
+    return new RegisteredMemoryFile(
+        workspaceFile,
+        JSON.stringify(
+            <IStoredWorkspace>{
+                folders: [
+                    {
+                        path: workspacePath
+                    }
+                ]
+            },
+            null,
+            2
+        )
+    );
 };

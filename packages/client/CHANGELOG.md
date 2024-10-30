@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.5] - 2024-10-23
+## [9.0.0-next.6] - 2024-10-30
 
 - Function naming adjustments
 - Prototype: File system endpoint.
@@ -10,7 +10,7 @@ All notable changes to this npm module are documented in this file.
 - Updated to eslint 9
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
+  - Updated all `@codingame/monaco-vscode` packages to `10.1.3`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Pass MessageTransports directly
