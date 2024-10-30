@@ -21,7 +21,6 @@
             "polyfills": [
               "zone.js"
             ],
-            "assets": [],
             "styles": [],
             "scripts": [],
             "aot": false,
