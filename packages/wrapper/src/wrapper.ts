@@ -134,11 +134,17 @@ export class MonacoEditorLanguageClientWrapper {
         this.logger.info(`Starting monaco-editor (${this.id})`);
         await this.editorApp?.createEditors();
 
-        for (const lcw of this.languageClientWrappers.values()) {
-            await lcw.start();
-        }
+        await this.startLanguageClients();
 
         this.markStarted();
+    }
+
+    async startLanguageClients() {
+        const allPromises: Array<Promise<void>> = [];
+        for (const lcw of this.languageClientWrappers.values()) {
+            allPromises.push(lcw.start());
+        }
+        return Promise.all(allPromises);
     }
 
     private markStarting() {
@@ -251,17 +257,21 @@ export class MonacoEditorLanguageClientWrapper {
         this.editorApp = undefined;
 
         if (disposeLanguageClients) {
-            const allPromises: Array<Promise<void>> = [];
-            for (const lcw of this.languageClientWrappers.values()) {
-                if (lcw.haveLanguageClient()) {
-                    allPromises.push(lcw.disposeLanguageClient(false));
-                }
-            }
-            await Promise.all(allPromises);
+            await this.disposeLanguageClients();
         }
 
         this.initDone = false;
         this.markStopped();
+    }
+
+    async disposeLanguageClients() {
+        const allPromises: Array<Promise<void>> = [];
+        for (const lcw of this.languageClientWrappers.values()) {
+            if (lcw.haveLanguageClient()) {
+                allPromises.push(lcw.disposeLanguageClient(false));
+            }
+        }
+        return Promise.all(allPromises);
     }
 
     private markStopping() {

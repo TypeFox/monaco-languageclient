@@ -36,7 +36,7 @@
   #editors {
     position: relative;
     min-width: 0;
-    height: 90vh;
+    height: 95%;
     border: 1px solid var(--vscode-editorWidget-border);
   }
 

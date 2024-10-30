@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import { LogLevel } from 'vscode/services';
-import getConfigurationServiceOverride, { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
@@ -25,7 +25,7 @@ import '../../resources/vsix/open-collaboration-tools.vsix';
 
 import { EditorAppExtended, MonacoEditorLanguageClientWrapper, RegisterLocalProcessExtensionResult, WrapperConfig } from 'monaco-editor-wrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { configureMonacoWorkers } from '../common/client/utils.js';
+import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
 import { defaultViewsHtml, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
@@ -33,9 +33,7 @@ import { defaultViewsHtml, defaultViewsInit } from 'monaco-editor-wrapper/vscode
 const wrapper = new MonacoEditorLanguageClientWrapper();
 
 export const runApplicationPlayground = async () => {
-    const helloTsUri = vscode.Uri.file('/workspace/hello.ts');
-    const testerTsUri = vscode.Uri.file('/workspace/tester.ts');
-    const workspaceFile = vscode.Uri.file('/workspace.code-workspace');
+    const workspaceFile = vscode.Uri.file('/workspace/.vscode/workspace.code-workspace');
 
     const wrapperConfig: WrapperConfig = {
         id: 'AAP',
@@ -62,7 +60,7 @@ export const runApplicationPlayground = async () => {
             workspaceConfig: {
                 enableWorkspaceTrust: true,
                 windowIndicator: {
-                    label: 'mlc-advanced-example',
+                    label: 'mlc-app-playground',
                     tooltip: '',
                     command: ''
                 },
@@ -77,19 +75,11 @@ export const runApplicationPlayground = async () => {
                     }
                 },
                 configurationDefaults: {
-                    'window.title': 'mlc-advanced-example${separator}${dirty}${activeEditorShort}'
+                    'window.title': 'mlc-app-playground${separator}${dirty}${activeEditorShort}'
                 },
                 productConfiguration: {
-                    nameShort: 'mlc-advanced-example',
-                    nameLong: 'mlc-advanced-example',
-                    extensionsGallery: {
-                        serviceUrl: 'https://open-vsx.org/vscode/gallery',
-                        itemUrl: 'https://open-vsx.org/vscode/item',
-                        resourceUrlTemplate: 'https://open-vsx.org/vscode/unpkg/{publisher}/{name}/{version}/{path}',
-                        controlUrl: '',
-                        nlsBaseUrl: '',
-                        publisherUrl: ''
-                    }
+                    nameShort: 'mlc-app-playground',
+                    nameLong: 'mlc-app-playground'
                 }
             },
             userConfiguration: {
@@ -108,7 +98,7 @@ export const runApplicationPlayground = async () => {
             $type: 'extended',
             extensions: [{
                 config: {
-                    name: 'mlc-advanced-example',
+                    name: 'mlc-app-playground',
                     publisher: 'TypeFox',
                     version: '1.0.0',
                     engines: {
@@ -116,12 +106,6 @@ export const runApplicationPlayground = async () => {
                     }
                 }
             }],
-            codeResources: {
-                main: {
-                    text: helloTsCode,
-                    uri: '/workspace/hello.ts'
-                }
-            },
             monacoWorkerFactory: configureMonacoWorkers,
             htmlContainer: document.body
         }
@@ -131,30 +115,16 @@ export const runApplicationPlayground = async () => {
     htmlContainer.innerHTML = defaultViewsHtml;
     document.body.append(htmlContainer);
 
+    const helloTsUri = vscode.Uri.file('/workspace/hello.ts');
+    const testerTsUri = vscode.Uri.file('/workspace/tester.ts');
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     fileSystemProvider.registerFile(new RegisteredMemoryFile(helloTsUri, helloTsCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(testerTsUri, testerTsCode));
-
-    fileSystemProvider.registerFile(
-        new RegisteredMemoryFile(
-            workspaceFile,
-            JSON.stringify(
-                <IStoredWorkspace>{
-                    folders: [
-                        {
-                            path: '/workspace'
-                        }
-                    ]
-                },
-                null,
-                2
-            )
-        )
-    );
+    fileSystemProvider.registerFile(createDefaultWorkspaceFile(workspaceFile, '/workspace'));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     await wrapper.init(wrapperConfig);
-    const result = (wrapper.getMonacoEditorApp() as EditorAppExtended).getExtensionRegisterResult('mlc-advanced-example') as RegisterLocalProcessExtensionResult;
+    const result = (wrapper.getMonacoEditorApp() as EditorAppExtended).getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
 
     await Promise.all([
