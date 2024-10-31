@@ -11,7 +11,6 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
-// import { getMonacoEnvironmentEnhanced, MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscode/services';
 import { defaultViewsHtml } from 'monaco-editor-wrapper/vscode/services';
 import { createDefaultWorkspaceFile } from '../../common/client/utils.js';
 import { WORKSPACE_PATH } from '../definitions.js';
@@ -28,7 +27,7 @@ export const runClangdWrapper = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const readiness = async () => {
-        const resourceUri = vscode.Uri.file(`${WORKSPACE_PATH}/hello.cpp`);
+        const resourceUri = vscode.Uri.file(`${WORKSPACE_PATH}/main.cpp`);
         await vscode.window.showTextDocument(resourceUri);
     };
     new MainRemoteMessageChannelFs(fileSystemProvider, channelFs.port1, readiness);
@@ -47,12 +46,15 @@ export const runClangdWrapper = async () => {
     });
 
     await wrapper.init(userConfig);
-    // const mee = getMonacoEnvironmentEnhanced() as MEEOPen;
-    // mee.openFile = openFile;
 
     await clangdWorkerHandler.init({
         lsMessagePort: channelLs.port2,
-        fsMessagePort: channelFs.port2
+        fsMessagePort: channelFs.port2,
+        loadWorkspace: true,
+        // allows to load additional files from resources/clangd/workspace/volatile/**/*.{cpp,c,h,hpp}
+        // volatile: {
+        //     useDefaultGlob: true
+        // }
     });
     await clangdWorkerHandler.launch();
 

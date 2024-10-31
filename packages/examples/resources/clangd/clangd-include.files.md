@@ -2,9 +2,6 @@
 
 ## Files
 
-/home/web_user/.clangd
-/home/web_user/hello.cpp
-/home/web_user/tester.h
 /usr/include/wasm32-wasi-threads/__errno.h
 /usr/include/wasm32-wasi-threads/__errno_values.h
 /usr/include/wasm32-wasi-threads/__fd_set.h

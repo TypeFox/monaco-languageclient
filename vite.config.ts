@@ -44,6 +44,11 @@ export const definedViteConfig = defineConfig({
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
+        watch: {
+            ignored: [
+                '**/profile/**/*'
+            ]
         }
     },
     optimizeDeps: {
@@ -59,7 +64,7 @@ export const definedViteConfig = defineConfig({
     },
     plugins: [
         vsixPlugin(),
-        react(),
+        react()
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname),
