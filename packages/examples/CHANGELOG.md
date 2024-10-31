@@ -2,10 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2024.10.5] - 2024-10-30
+## [2024.10.5] - 2024-10-31
 
 - Updated to `monaco-languageclient@9.0.0-next.6`, `monaco-editor-wrapper@6.0.0-next.6` and `@typefox/monaco-editor-react@6.0.0-next.6`.
-- Updated all `@codingame/monaco-vscode` packages to `10.1.3`.
+- Updated all `@codingame/monaco-vscode` packages to `10.1.4`.
 - Added clangd example.
 - Added application playground example featuring the views service override.
 
