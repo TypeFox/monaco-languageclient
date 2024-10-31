@@ -7,12 +7,10 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js';
 import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
-import { WORKSPACE_PATH } from '../definitions.js';
+import { VolatileInput, WORKSPACE_PATH } from '../definitions.js';
 import { JsonStream } from './json_stream.js';
 import { WorkerRemoteMessageChannelFs } from './workerRemoteMessageChannelFs.js';
 import { fsReadAllFiles } from './memfs-tools.js';
-import helloCppCode from '../../../resources/clangd/workspace/hello.cpp?raw';
-import testerHCode from '../../../resources/clangd/workspace/tester.h?raw';
 import clangdConfig from '../../../resources/clangd/workspace/.clangd?raw';
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -20,7 +18,7 @@ declare const self: DedicatedWorkerGlobalScope;
 export class ClangdInteractionWorker implements ComRouter {
 
     private endpointWorker?: ComChannelEndpoint;
-    // private fileHub: FileHub = new FileHub();
+
     private reader?: BrowserMessageReader;
     private writer?: BrowserMessageWriter;
 
@@ -29,6 +27,8 @@ export class ClangdInteractionWorker implements ComRouter {
 
     private emscriptenFS?: typeof FS;
     private remoteFs?: WorkerRemoteMessageChannelFs;
+    private loadWorkspace: boolean;
+    private volatile?: VolatileInput;
 
     setComChannelEndpoint(comChannelEndpoint: ComChannelEndpoint): void {
         this.endpointWorker = comChannelEndpoint;
@@ -38,11 +38,11 @@ export class ClangdInteractionWorker implements ComRouter {
         const rawPayload = (message.payloads![0] as RawPayload).message.raw;
         this.lsMessagePort = rawPayload.lsMessagePort as MessagePort;
         this.fsMessagePort = rawPayload.fsMessagePort as MessagePort;
+        this.loadWorkspace = rawPayload.loadWorkspace as boolean;
+        this.volatile = rawPayload.volatile as VolatileInput;
 
         this.reader = new BrowserMessageReader(this.lsMessagePort);
         this.writer = new BrowserMessageWriter(this.lsMessagePort);
-
-        // await this.fileHub.init(this.fsMessagePort);
 
         this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
@@ -59,8 +59,11 @@ export class ClangdInteractionWorker implements ComRouter {
                 overrideCmd: 'clangd_launch_complete'
             })
         });
-
-        await this.updateFilesystem();
+        if (this.emscriptenFS !== undefined) {
+            await this.updateFilesystem(this.emscriptenFS);
+        } else {
+            console.error('Emscripten FS is not available');
+        }
     }
 
     private async runClangdLanguageServer() {
@@ -158,11 +161,17 @@ export class ClangdInteractionWorker implements ComRouter {
         });
 
         this.emscriptenFS = clangd.FS as typeof FS;
-
+        this.emscriptenFS.mkdir(WORKSPACE_PATH);
         this.emscriptenFS.writeFile(`${WORKSPACE_PATH}/.clangd`, clangdConfig);
-        this.emscriptenFS.writeFile(`${WORKSPACE_PATH}/hello.cpp`, helloCppCode);
-        this.emscriptenFS.writeFile(`${WORKSPACE_PATH}/tester.h`, testerHCode);
 
+        if (this.loadWorkspace) {
+            const mainFiles = import.meta.glob('../../../resources/clangd/workspace/*.{cpp,c,h,hpp}', { query: '?raw' });
+            await this.processInputFiles(this.emscriptenFS, mainFiles, '../../../resources/clangd/workspace', []);
+        }
+        if (this.volatile !== undefined) {
+            const volatileFiles = this.readVolatileFiles(this.volatile.useDefaultGlob);
+            await this.processInputFiles(this.emscriptenFS, volatileFiles, '../../../resources/clangd/workspace/volatile/', this.volatile.ignoreSubDirectories ?? []);
+        }
         function startServer() {
             console.log('%c%s', 'font-size: 2em; color: green', 'clangd started');
             clangd.callMain([]);
@@ -182,19 +191,97 @@ export class ClangdInteractionWorker implements ComRouter {
         });
     }
 
-    private async updateFilesystem() {
-        if (this.fsMessagePort !== undefined && this.emscriptenFS !== undefined) {
-            const t0 = performance.now();
-            const allFilesAndDirectories = fsReadAllFiles(this.emscriptenFS, '/');
+    /**
+     * Helper function to create extra directories and files from a given input
+     * to the home directory.
+     */
+    private readVolatileFiles(useDefaultGlob: boolean) {
+        // Use glob expression to get all files from input directory.
+        let files: Record<string, () => Promise<unknown>> = {};
+        // variable input currently not supported by vite, therefore this will not work
+        // const files = import.meta.glob(volatile.inputGlob, { query: '?raw' });
+        if (useDefaultGlob) {
+            files = import.meta.glob('../../../resources/clangd/workspace/volatile/**/*.{cpp,c,h,hpp}', { query: '?raw' });
+        } else {
+            files = import.meta.glob('!../../../resources/clangd/workspace/volatile/**/*', { query: '?raw' });
+        }
+        return files;
+    }
 
-            this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, this.emscriptenFS);
+    private async processInputFiles(fs: typeof FS, files: Record<string, () => Promise<unknown>>, dirReplacer: string, ignoreSubDirectories: string[]) {
+        const dirsToCreate = new Set<string>();
+        const filesToUse: Record<string, () => Promise<unknown>> = {};
+        for (const [sourceFile, content] of Object.entries(files)) {
+
+            const targetFile = `${WORKSPACE_PATH}/${sourceFile.replace(dirReplacer, '')}`;
+            const targetDir = targetFile.substring(0, targetFile.lastIndexOf('/'));
+            const foundIgnoredDir = ignoreSubDirectories.find((ignore) => {
+                return targetDir.includes(ignore);
+            });
+
+            // only use unignored directories
+            if (foundIgnoredDir === undefined) {
+                // store only un-ignore target files
+                filesToUse[targetFile] = content;
+
+                // List all parent directories
+                let dirToCreate = '';
+                const targetDirParts = targetDir.split('/');
+                for (const part of targetDirParts) {
+
+                    if (part.length > 0) {
+                        dirToCreate = `${dirToCreate}/${part}`;
+                        // set reduces to unique directories
+                        dirsToCreate.add(dirToCreate);
+                    }
+                }
+
+            } else {
+                console.log(`Ignoring directory ${foundIgnoredDir} and file: ${targetFile}`);
+            }
+        }
+
+        // create unique directories
+        for (const dirToCreate of dirsToCreate) {
+            try {
+                fs.mkdir(dirToCreate);
+                const { mode } = fs.lookupPath(dirToCreate, { parent: false }).node;
+                if (fs.isDir(mode)) {
+                    console.log(`Create dir: ${dirToCreate} mode: ${mode}`);
+                }
+            } catch (e) {
+                if (e instanceof Object && (e as { code: string }).code === 'EEXIST') {
+                    console.log(`Directory already exists: ${dirToCreate}`);
+                }
+            }
+        }
+
+        // write out files
+        type RawContent = { default: string };
+        for (const [targetFile, content] of Object.entries(filesToUse)) {
+            const rawContent: RawContent = await content() as RawContent;
+            try {
+                fs.writeFile(targetFile, rawContent.default);
+                console.log(`Wrote file: ${targetFile}`);
+            } catch (e) {
+                console.error(`Error writing ${targetFile}: ${e}`);
+            }
+        }
+    }
+
+    private async updateFilesystem(fs: typeof FS) {
+        if (this.fsMessagePort !== undefined) {
+            const t0 = performance.now();
+            const allFilesAndDirectories = fsReadAllFiles(fs, '/');
+
+            this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, fs);
             this.remoteFs.init();
             // console.log(String.fromCharCode.apply(null, test2));
 
             const allPromises = [];
             for (const filename of allFilesAndDirectories.files) {
                 try {
-                    const content = this.emscriptenFS.readFile(filename, { encoding: 'binary' });
+                    const content = fs.readFile(filename, { encoding: 'binary' });
                     allPromises.push(this.remoteFs.syncFile({
                         resourceUri: filename,
                         content: content
@@ -234,4 +321,3 @@ new ComChannelEndpoint({
     verbose: true,
     endpointName: 'clangd_main'
 }).connect(new ClangdInteractionWorker());
-

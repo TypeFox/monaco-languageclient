@@ -5,6 +5,7 @@
 
 import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 import clangdWorkerUrl from '../worker/clangd-server?worker&url';
+import { VolatileInput } from '../definitions.js';
 
 class ClangdInteractionMain implements ComRouter {
 
@@ -42,12 +43,16 @@ export class ClangdWorkerHandler {
 
     async init(config: {
         lsMessagePort: MessagePort,
-        fsMessagePort: MessagePort
+        fsMessagePort: MessagePort,
+        loadWorkspace: boolean,
+        volatile?: VolatileInput
     }) {
         await this.endpointMain?.sentMessage({
             message: WorkerMessage.fromPayload(new RawPayload({
                 lsMessagePort: config.lsMessagePort,
-                fsMessagePort: config.fsMessagePort
+                fsMessagePort: config.fsMessagePort,
+                volatile: config.volatile,
+                loadWorkspace: config.loadWorkspace
             }), 'clangd_init'),
             transferables: [config.lsMessagePort, config.fsMessagePort],
             awaitAnswer: true,
