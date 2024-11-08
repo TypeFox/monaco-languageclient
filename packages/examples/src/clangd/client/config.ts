@@ -44,7 +44,7 @@ export const createWrapperConfig = async (config: {
                     timeout: 1000,
                     keepWorker: true
                 },
-                clientOptionsOrLanguageIds: {
+                clientOptions: {
                     documentSelector: ['cpp'],
                     workspaceFolder: {
                         index: 0,

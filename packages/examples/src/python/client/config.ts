@@ -51,7 +51,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     },
                     messageTransports: { reader, writer }
                 },
-                clientOptionsOrLanguageIds: {
+                clientOptions: {
                     documentSelector: ['python'],
                     workspaceFolder: {
                         index: 0,

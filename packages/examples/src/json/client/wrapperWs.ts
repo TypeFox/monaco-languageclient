@@ -48,7 +48,9 @@ export const buildJsonClientUserConfig = (params: {
         },
         languageClientConfigs: {
             json: {
-                clientOptionsOrLanguageIds: ['json'],
+                clientOptions: {
+                    documentSelector: ['json']
+                },
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',

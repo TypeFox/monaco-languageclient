@@ -17,7 +17,7 @@ export interface ConnectionConfig {
 export interface LanguageClientConfig {
     name?: string;
     connection: ConnectionConfig;
-    clientOptionsOrLanguageIds: LanguageClientOptions | string[];
+    clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
 }
 
@@ -176,25 +176,16 @@ export class LanguageClientWrapper {
         const mlcConfig = {
             name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
             clientOptions: {
-            },
-            messageTransports
-        };
-
-        // allow to fully override the clientOptions or just use an array of languageIds as preset
-        const clientOptions = this.languageClientConfig.clientOptionsOrLanguageIds;
-        if (Array.isArray(clientOptions)) {
-            mlcConfig.clientOptions = {
-                documentSelector: clientOptions,
-                // disable the default error handler
+                // disable the default error handler...
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
                     closed: () => ({ action: CloseAction.DoNotRestart })
-                }
-            };
-        } else {
-            mlcConfig.clientOptions = clientOptions;
-        }
-
+                },
+                // ...but allowm to override all options
+                ...this.languageClientConfig.clientOptions,
+            },
+            messageTransports
+        };
         this.languageClient = new MonacoLanguageClient(mlcConfig);
 
         const conOptions = this.languageClientConfig.connection.options;

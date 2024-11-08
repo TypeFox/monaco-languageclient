@@ -55,7 +55,7 @@ export const runEclipseJdtLsClient = () => {
                         url: 'ws://localhost:30003/jdtls'
                     }
                 },
-                clientOptionsOrLanguageIds: {
+                clientOptions: {
                     documentSelector: ['java'],
                     workspaceFolder: {
                         index: 0,
