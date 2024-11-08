@@ -59,7 +59,7 @@ print("Hello Moon!")
         },
         languageClientConfigs: {
             json: {
-                languageId: 'json',
+                clientOptionsOrLanguageIds: ['json'],
                 name: 'JSON Client',
                 connection: {
                     options: {
@@ -72,7 +72,6 @@ print("Hello Moon!")
                 }
             },
             python: {
-                languageId: 'python',
                 name: 'Python Client',
                 connection: {
                     options: {
@@ -98,7 +97,7 @@ print("Hello Moon!")
                         }
                     }
                 },
-                clientOptions: {
+                clientOptionsOrLanguageIds: {
                     documentSelector: ['python', 'py'],
                     workspaceFolder: {
                         index: 0,

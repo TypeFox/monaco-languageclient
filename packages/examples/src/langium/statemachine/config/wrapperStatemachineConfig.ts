@@ -38,7 +38,7 @@ export const createLangiumGlobalConfig = async (params: {
 
     const languageClientConfigs: Record<string, LanguageClientConfig> | undefined = params.useLanguageClient && params.worker ? {
         statemachine: {
-            languageId: 'statemachine',
+            clientOptionsOrLanguageIds: ['statemachine'],
             connection: {
                 options: {
                     $type: 'WorkerDirect',

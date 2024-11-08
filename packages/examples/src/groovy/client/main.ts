@@ -45,7 +45,7 @@ const userConfig: WrapperConfig = {
     },
     languageClientConfigs: {
         groovy: {
-            languageId: 'groovy',
+            clientOptionsOrLanguageIds: ['groovy'],
             connection: {
                 options: {
                     $type: 'WebSocketUrl',

@@ -79,7 +79,7 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
         },
         languageClientConfigs: {
             langium: {
-                languageId: 'langium',
+                clientOptionsOrLanguageIds: ['langium'],
                 connection: {
                     options: {
                         $type: 'WorkerDirect',

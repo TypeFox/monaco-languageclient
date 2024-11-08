@@ -16,9 +16,8 @@ export interface ConnectionConfig {
 
 export interface LanguageClientConfig {
     name?: string;
-    languageId: string;
     connection: ConnectionConfig;
-    clientOptions?: LanguageClientOptions;
+    clientOptionsOrLanguageIds: LanguageClientOptions | string[];
     restartOptions?: LanguageClientRestartOptions;
 }
 
@@ -37,7 +36,6 @@ export class LanguageClientWrapper {
 
     private languageClient?: MonacoLanguageClient;
     private languageClientConfig: LanguageClientConfig;
-    private languageId: string;
     private worker?: Worker;
     private port?: MessagePort;
     private name?: string;
@@ -50,7 +48,6 @@ export class LanguageClientWrapper {
         this.languageClientConfig = config.languageClientConfig;
         this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
-        this.languageId = this.languageClientConfig.languageId;
     }
 
     haveLanguageClient(): boolean {
@@ -175,20 +172,28 @@ export class LanguageClientWrapper {
             this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
             resolve();
         }
+
         const mlcConfig = {
             name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
+            clientOptions: {
+            },
+            messageTransports
+        };
 
-            // allow to fully override the clientOptions
-            clientOptions: this.languageClientConfig.clientOptions ?? {
-                documentSelector: [this.languageId],
+        // allow to fully override the clientOptions or just use an array of languageIds as preset
+        const clientOptions = this.languageClientConfig.clientOptionsOrLanguageIds;
+        if (Array.isArray(clientOptions)) {
+            mlcConfig.clientOptions = {
+                documentSelector: clientOptions,
                 // disable the default error handler
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
                     closed: () => ({ action: CloseAction.DoNotRestart })
                 }
-            },
-            messageTransports
-        };
+            };
+        } else {
+            mlcConfig.clientOptions = clientOptions;
+        }
 
         this.languageClient = new MonacoLanguageClient(mlcConfig);
 

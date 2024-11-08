@@ -49,14 +49,13 @@ export const runEclipseJdtLsClient = () => {
         },
         languageClientConfigs: {
             java: {
-                languageId: 'java',
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
                         url: 'ws://localhost:30003/jdtls'
                     }
                 },
-                clientOptions: {
+                clientOptionsOrLanguageIds: {
                     documentSelector: ['java'],
                     workspaceFolder: {
                         index: 0,

@@ -24,7 +24,7 @@ describe('Test LanguageClientWrapper', () => {
             name: 'Langium LS',
         });
         const languageClientConfig: LanguageClientConfig = {
-            languageId: 'javascript',
+            clientOptionsOrLanguageIds: ['javascript'],
             connection: {
                 options: {
                     $type: 'WorkerDirect',
@@ -51,7 +51,7 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptionsOrLanguageIds: ['javascript'],
                 connection: {
                     options: {
                         $type: 'WorkerDirect',
@@ -84,7 +84,7 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptionsOrLanguageIds: ['javascript'],
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -104,7 +104,7 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptionsOrLanguageIds: ['javascript'],
                 name: 'test-unreachable',
                 connection: {
                     options: {
@@ -141,7 +141,7 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptionsOrLanguageIds: ['javascript'],
                 connection: {
                     options: {
                         $type: 'WorkerConfig',

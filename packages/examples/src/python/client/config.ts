@@ -31,7 +31,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
     return {
         languageClientConfigs: {
             python: {
-                languageId: 'python',
                 name: 'Python Language Server Example',
                 connection: {
                     options: {
@@ -52,7 +51,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     },
                     messageTransports: { reader, writer }
                 },
-                clientOptions: {
+                clientOptionsOrLanguageIds: {
                     documentSelector: ['python'],
                     workspaceFolder: {
                         index: 0,
