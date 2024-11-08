@@ -49,7 +49,6 @@ export const runEclipseJdtLsClient = () => {
         },
         languageClientConfigs: {
             java: {
-                languageId: 'java',
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',

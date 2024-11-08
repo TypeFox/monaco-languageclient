@@ -59,7 +59,9 @@ print("Hello Moon!")
         },
         languageClientConfigs: {
             json: {
-                languageId: 'json',
+                clientOptions: {
+                    documentSelector: ['json']
+                },
                 name: 'JSON Client',
                 connection: {
                     options: {
@@ -72,7 +74,6 @@ print("Hello Moon!")
                 }
             },
             python: {
-                languageId: 'python',
                 name: 'Python Client',
                 connection: {
                     options: {

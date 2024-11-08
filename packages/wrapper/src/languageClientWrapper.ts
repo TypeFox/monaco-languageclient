@@ -16,9 +16,8 @@ export interface ConnectionConfig {
 
 export interface LanguageClientConfig {
     name?: string;
-    languageId: string;
     connection: ConnectionConfig;
-    clientOptions?: LanguageClientOptions;
+    clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
 }
 
@@ -37,7 +36,6 @@ export class LanguageClientWrapper {
 
     private languageClient?: MonacoLanguageClient;
     private languageClientConfig: LanguageClientConfig;
-    private languageId: string;
     private worker?: Worker;
     private port?: MessagePort;
     private name?: string;
@@ -50,7 +48,6 @@ export class LanguageClientWrapper {
         this.languageClientConfig = config.languageClientConfig;
         this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
-        this.languageId = this.languageClientConfig.languageId;
     }
 
     haveLanguageClient(): boolean {
@@ -175,21 +172,20 @@ export class LanguageClientWrapper {
             this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
             resolve();
         }
+
         const mlcConfig = {
             name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
-
-            // allow to fully override the clientOptions
-            clientOptions: this.languageClientConfig.clientOptions ?? {
-                documentSelector: [this.languageId],
-                // disable the default error handler
+            clientOptions: {
+                // disable the default error handler...
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
                     closed: () => ({ action: CloseAction.DoNotRestart })
-                }
+                },
+                // ...but allowm to override all options
+                ...this.languageClientConfig.clientOptions,
             },
             messageTransports
         };
-
         this.languageClient = new MonacoLanguageClient(mlcConfig);
 
         const conOptions = this.languageClientConfig.connection.options;

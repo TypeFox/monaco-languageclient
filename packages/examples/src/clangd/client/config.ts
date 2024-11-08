@@ -27,12 +27,10 @@ export const createWrapperConfig = async (config: {
     clangdWorkerHandler: ClangdWorkerHandler,
     lsMessageLocalPort: MessagePort
 }): Promise<WrapperConfig> => {
-    const languageId = 'cpp';
     return {
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
             LANGUAGE_ID: {
-                languageId: languageId,
                 name: 'Clangd WASM Language Server',
                 connection: {
                     options: {
@@ -47,7 +45,7 @@ export const createWrapperConfig = async (config: {
                     keepWorker: true
                 },
                 clientOptions: {
-                    documentSelector: [languageId],
+                    documentSelector: ['cpp'],
                     workspaceFolder: {
                         index: 0,
                         name: 'workspace',
