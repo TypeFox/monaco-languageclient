@@ -2,7 +2,7 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.7] - 2024-10-31
+## [6.0.0-next.7] - 2024-11-13
 
 - Use `didModelContentChange` from `monaco-editor-wrapper` for model content verifications.
 - Updated to eslint 9

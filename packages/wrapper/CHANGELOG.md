@@ -2,7 +2,7 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.7] - 2024-10-31
+## [6.0.0-next.7] - 2024-11-13
 
 - Moved `createUrl` to `monaco-languageclient/tools`, moved editor app specific utils to editorAppbase and create function `didModelContentChange`.
 - Added

@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.7] - 2024-11-xy
+## [9.0.0-next.7] - 2024-11-13
 
 - Function naming adjustments
 - Prototype: File system endpoint.
