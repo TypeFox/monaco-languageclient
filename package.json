@@ -8,7 +8,7 @@
     "@eslint/eslintrc": "~3.1.0",
     "@stylistic/eslint-plugin": "~2.10.1",
     "@testing-library/react": "~16.0.1",
-    "@types/node": "~20.16.15",
+    "@types/node": "~22.9.0",
     "@types/react": "~18.3.12",
     "@types/react-dom": "~18.3.1",
     "@types/vscode": "~1.95.0",
@@ -33,8 +33,8 @@
     "webdriverio": "~9.2.12"
   },
   "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+    "node": "22.11.0",
+    "npm": "10.9.0"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
@@ -54,7 +54,6 @@
     "build:examples": "npm run build --workspace packages/examples",
     "build:verify:webpack": "npm run build --workspace packages/verify/webpack",
     "build:verify:vite": "npm run build --workspace packages/verify/vite",
-    "start:http": "npm run start:http --workspace packages/examples",
     "start:example:server:json": "npm run start:server:json --workspace packages/examples",
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "start:example:server:groovy": "npm run start:server:groovy --workspace packages/examples",
