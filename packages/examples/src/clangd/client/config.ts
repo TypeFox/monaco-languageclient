@@ -29,6 +29,7 @@ export const createWrapperConfig = async (config: {
 }): Promise<WrapperConfig> => {
     return {
         logLevel: LogLevel.Debug,
+        htmlContainer: config.htmlContainer,
         languageClientConfigs: {
             LANGUAGE_ID: {
                 name: 'Clangd WASM Language Server',
@@ -55,7 +56,8 @@ export const createWrapperConfig = async (config: {
             }
         },
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
@@ -119,8 +121,7 @@ export const createWrapperConfig = async (config: {
                     }
                 }
             }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: config.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

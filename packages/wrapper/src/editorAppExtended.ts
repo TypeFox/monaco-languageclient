@@ -57,21 +57,8 @@ export class EditorAppExtended extends EditorAppBase {
         return this.config;
     }
 
-    updateHtmlContainer(htmlContainer: HTMLElement) {
-        this.config.htmlContainer = htmlContainer;
-    }
-
     getExtensionRegisterResult(extensionName: string) {
         return this.extensionRegisterResults.get(extensionName);
-    }
-
-    override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
-        const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
-        const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
-        return {
-            ...getTextmateServiceOverride(),
-            ...getThemeServiceOverride()
-        };
     }
 
     override async init() {

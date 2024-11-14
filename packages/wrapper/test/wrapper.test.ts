@@ -217,8 +217,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {
             'semanticHighlighting.enabled': true,
         };
-        const updatedWrapperConfig = await wrapper.init(wrapperConfig);
-        expect(updatedWrapperConfig.vscodeApiConfig?.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
+        await wrapper.init(wrapperConfig);
+        expect(wrapper.getWrapperConfig()?.vscodeApiConfig.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
 
         const semHigh = await new Promise<unknown>(resolve => {
             setTimeout(() => {

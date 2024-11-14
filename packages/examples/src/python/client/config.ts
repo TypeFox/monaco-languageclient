@@ -62,8 +62,10 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
             }
         },
         logLevel: LogLevel.Debug,
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
@@ -84,8 +86,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

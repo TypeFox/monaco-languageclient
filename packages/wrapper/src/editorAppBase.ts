@@ -31,7 +31,6 @@ export type EditorAppType = 'extended' | 'classic';
 
 export interface EditorAppConfigBase {
     $type: EditorAppType;
-    htmlContainer: HTMLElement;
     codeResources?: CodeResources;
     useDiffEditor?: boolean;
     domReadOnly?: boolean;
@@ -90,7 +89,6 @@ export abstract class EditorAppBase {
     protected buildConfig(userAppConfig: EditorAppConfigBase): EditorAppConfigBase {
         const config: EditorAppConfigBase = {
             $type: userAppConfig.$type,
-            htmlContainer: userAppConfig.htmlContainer,
             codeResources: userAppConfig.codeResources,
             useDiffEditor: userAppConfig.useDiffEditor ?? false,
             readOnly: userAppConfig.readOnly ?? false,
@@ -120,11 +118,11 @@ export abstract class EditorAppBase {
         return this.diffEditor;
     }
 
-    async createEditors(): Promise<void> {
+    async createEditors(htmlContainer: HTMLElement): Promise<void> {
         if (this.getConfig().useDiffEditor ?? false) {
-            this.diffEditor = monaco.editor.createDiffEditor(this.getConfig().htmlContainer, this.getConfig().diffEditorOptions);
+            this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.getConfig().diffEditorOptions);
         } else {
-            this.editor = monaco.editor.create(this.getConfig().htmlContainer, this.getConfig().editorOptions);
+            this.editor = monaco.editor.create(htmlContainer, this.getConfig().editorOptions);
         }
 
         const modelRefs = await this.buildModelRefs(this.getConfig().codeResources);
@@ -258,9 +256,7 @@ export abstract class EditorAppBase {
         this.getEditor()?.updateOptions(options);
     }
 
-    abstract updateHtmlContainer(htmlContainer: HTMLElement): void;
     abstract init(): Promise<void>;
-    abstract specifyServices(): Promise<monaco.editor.IEditorOverrideServices>;
     abstract getConfig(): EditorAppConfigBase;
     abstract disposeApp(): void;
 

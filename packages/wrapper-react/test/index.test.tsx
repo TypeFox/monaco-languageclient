@@ -9,16 +9,18 @@ import React from 'react';
 import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, TextChanges, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureMonacoWorkers, createMonacoEditorDiv, updateExtendedAppPrototyp } from './helper.js';
+import { configureMonacoWorkers, createMonacoEditorDiv } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
             logLevel: LogLevel.Debug,
+            htmlContainer: createMonacoEditorDiv(),
+            vscodeApiConfig: {
+                enableTextmate: true
+            },
             editorAppConfig: {
                 $type: 'extended',
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -42,9 +44,12 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update onTextChanged', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
             logLevel: LogLevel.Debug,
+            htmlContainer: createMonacoEditorDiv(),
+            vscodeApiConfig: {
+                enableTextmate: true
+            },
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {
@@ -53,7 +58,6 @@ describe('Test MonacoEditorReactComp', () => {
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -69,9 +73,12 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update codeResources', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
             logLevel: LogLevel.Debug,
+            htmlContainer: createMonacoEditorDiv(),
+            vscodeApiConfig: {
+                enableTextmate: true
+            },
             editorAppConfig: {
                 $type: 'extended',
                 codeResources: {
@@ -80,7 +87,6 @@ describe('Test MonacoEditorReactComp', () => {
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };

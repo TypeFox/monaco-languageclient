@@ -38,8 +38,10 @@ export const runApplicationPlayground = async () => {
     const wrapperConfig: WrapperConfig = {
         id: 'AAP',
         logLevel: LogLevel.Debug,
+        htmlContainer: document.body,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
@@ -106,8 +108,7 @@ export const runApplicationPlayground = async () => {
                     }
                 }
             }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.body
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 

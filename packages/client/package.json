@@ -69,6 +69,7 @@
     "LICENSE"
   ],
   "dependencies": {
+    "@codingame/monaco-vscode-configuration-service-override": "~11.0.1",
     "@codingame/monaco-vscode-extensions-service-override": "~11.0.1",
     "@codingame/monaco-vscode-languages-service-override": "~11.0.1",
     "@codingame/monaco-vscode-localization-service-override": "~11.0.1",

@@ -37,17 +37,6 @@ export class EditorAppClassic extends EditorAppBase {
         return this.config;
     }
 
-    updateHtmlContainer(htmlContainer: HTMLElement) {
-        this.config.htmlContainer = htmlContainer;
-    }
-
-    override async specifyServices(): Promise<monaco.editor.IEditorOverrideServices> {
-        const getMonarchServiceOverride = (await import('@codingame/monaco-vscode-monarch-service-override')).default;
-        return {
-            ...getMonarchServiceOverride()
-        };
-    }
-
     async init() {
         const languageDef = this.config.languageDef;
         if (languageDef) {

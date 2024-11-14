@@ -28,8 +28,10 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
 
     return {
         logLevel: LogLevel.Debug,
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
@@ -74,8 +76,7 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                 },
                 filesOrContents: extensionFilesOrContents
             }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             langium: {

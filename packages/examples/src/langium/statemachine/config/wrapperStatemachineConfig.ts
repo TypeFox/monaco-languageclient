@@ -54,8 +54,10 @@ export const createLangiumGlobalConfig = async (params: {
 
     return {
         logLevel: LogLevel.Debug,
+        htmlContainer: params.htmlContainer,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
@@ -99,8 +101,7 @@ export const createLangiumGlobalConfig = async (params: {
                 },
                 filesOrContents: extensionFilesOrContents
             }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs
     };

@@ -20,8 +20,10 @@ export const buildJsonClientUserConfig = (params: {
 }): WrapperConfig => {
     return {
         logLevel: LogLevel.Debug,
+        htmlContainer: params.htmlContainer,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -43,8 +45,7 @@ export const buildJsonClientUserConfig = (params: {
                 }
             },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             json: {

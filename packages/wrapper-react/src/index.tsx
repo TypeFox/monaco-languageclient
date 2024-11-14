@@ -75,8 +75,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (containerRef.current) {
             containerRef.current.className = className ?? '';
             try {
-                wrapperRef.current.getMonacoEditorApp()?.updateHtmlContainer(containerRef.current);
-
                 wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
                     if (textModels.text || textModels.textOriginal) {
                         const newSubscriptions: monaco.IDisposable[] = [];
@@ -98,7 +96,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     }
                 });
 
-                await wrapperRef.current.start();
+                await wrapperRef.current.start(containerRef.current);
                 onLoad?.(wrapperRef.current);
                 handleOnTextChanged();
             } catch (e) {

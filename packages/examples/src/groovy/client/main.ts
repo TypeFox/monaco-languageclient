@@ -18,8 +18,10 @@ File file = new File("E:/Example.txt");
 
 const userConfig: WrapperConfig = {
     logLevel: LogLevel.Debug,
+    htmlContainer: document.getElementById('monaco-editor-root')!,
     vscodeApiConfig: {
-        userServices: {
+        enableTextmate: true,
+        serviceOverrides: {
             ...getKeybindingsServiceOverride(),
         },
         userConfiguration: {
@@ -40,8 +42,7 @@ const userConfig: WrapperConfig = {
             }
         },
         useDiffEditor: false,
-        monacoWorkerFactory: configureMonacoWorkers,
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         groovy: {

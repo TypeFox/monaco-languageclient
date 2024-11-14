@@ -22,8 +22,10 @@ export const runEclipseJdtLsClient = () => {
 
     const userConfig: WrapperConfig = {
         logLevel: LogLevel.Debug,
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -44,8 +46,7 @@ export const runEclipseJdtLsClient = () => {
                 }
             },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             java: {

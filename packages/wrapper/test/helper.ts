@@ -15,6 +15,11 @@ export const createMonacoEditorDiv = () => {
 
 export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     return {
+        htmlContainer: createMonacoEditorDiv(),
+        vscodeApiConfig: {
+            vscodeApiInitPerformExternally: false,
+            enableTextmate: true
+        },
         editorAppConfig: {
             loadThemes: false,
             $type: 'extended',
@@ -25,7 +30,6 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv(),
             monacoWorkerFactory: configureMonacoWorkers
         }
     };
@@ -33,6 +37,11 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
 
 export const createWrapperConfigClassicApp = (): WrapperConfig => {
     return {
+        htmlContainer: createMonacoEditorDiv(),
+        vscodeApiConfig: {
+            vscodeApiInitPerformExternally: false,
+            enableTextmate: false
+        },
         editorAppConfig: {
             $type: 'classic',
             codeResources: {
@@ -42,7 +51,6 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
                 }
             },
             useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv(),
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

@@ -3,15 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
+import 'vscode/localExtensionHost';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
-import { CodePlusFileExt, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { CodePlusFileExt, configureAndInitVscodeApi, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
+import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 
 export const runMultipleLanguageClientsExample = async () => {
     disableButton('button-flip', true);
@@ -30,11 +30,19 @@ print("Hello Moon!")
     let currentText = textJson;
     let currenFileExt = 'json';
 
+    const lccJson = createJsonLanguageClientConfig();
+    const lccPython = createPythonLanguageClientConfig();
+
+    let lcwJson: LanguageClientWrapper | undefined;
+    let lcwPython: LanguageClientWrapper | undefined;
+
     const wrapperConfig: WrapperConfig = {
         id: '42',
         logLevel: LogLevel.Debug,
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
-            userServices: {
+            enableTextmate: true,
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
@@ -54,60 +62,7 @@ print("Hello Moon!")
                 }
             },
             useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
-        },
-        languageClientConfigs: {
-            json: {
-                clientOptions: {
-                    documentSelector: ['json']
-                },
-                name: 'JSON Client',
-                connection: {
-                    options: {
-                        $type: 'WebSocketParams',
-                        host: 'localhost',
-                        port: 30000,
-                        path: 'sampleServer',
-                        secured: false
-                    }
-                }
-            },
-            python: {
-                name: 'Python Client',
-                connection: {
-                    options: {
-                        $type: 'WebSocketParams',
-                        host: 'localhost',
-                        port: 30001,
-                        path: 'pyright',
-                        secured: false,
-                        extraParams: {
-                            authorization: 'UserAuth'
-                        },
-                        startOptions: {
-                            onCall: (languageClient?: MonacoLanguageClient) => {
-                                setTimeout(() => {
-                                    ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                        vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                            languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
-                                        });
-                                    });
-                                }, 250);
-                            },
-                            reportStatus: true,
-                        }
-                    }
-                },
-                clientOptions: {
-                    documentSelector: ['python', 'py'],
-                    workspaceFolder: {
-                        index: 0,
-                        name: 'workspace',
-                        uri: vscode.Uri.parse('/workspace')
-                    }
-                }
-            }
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 
@@ -115,12 +70,45 @@ print("Hello Moon!")
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
+            wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            if (wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally === true) {
+
+                const logger = wrapper.getLogger();
+                logger.setLevel(wrapperConfig.logLevel!);
+                await configureAndInitVscodeApi({
+                    vscodeApiConfig: wrapperConfig.vscodeApiConfig!,
+                    logLevel: wrapperConfig.logLevel!,
+                }, {
+                    htmlContainer: wrapperConfig.htmlContainer,
+                    caller: 'runMultipleLanguageClientsExample',
+                    logger
+                });
+
+                if (lcwJson === undefined) {
+                    lcwJson = new LanguageClientWrapper({
+                        languageClientConfig: lccJson
+                    });
+                    await lcwJson.start();
+                }
+                if (lcwPython === undefined) {
+                    lcwPython = new LanguageClientWrapper({
+                        languageClientConfig: lccPython
+                    });
+                    await lcwPython.start();
+                }
+            } else {
+                wrapperConfig.languageClientConfigs = {
+                    json: lccJson,
+                    python: lccPython
+                };
+            }
+
+            await wrapper.initAndStart(wrapperConfig);
             if (wrapperConfig.editorAppConfig.codeResources?.main !== undefined) {
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).text = currentText;
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
             }
 
-            await wrapper.initAndStart(wrapperConfig);
             disableButton('button-flip', false);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
