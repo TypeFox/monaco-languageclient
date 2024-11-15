@@ -44,7 +44,6 @@ export const buildJsonClientUserConfig = (params: {
                     fileExt: 'json'
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {

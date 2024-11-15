@@ -85,7 +85,6 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                     uri: codeUri
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

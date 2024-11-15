@@ -43,6 +43,30 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                 })
             }
         },
+        extensions: [{
+            config: {
+                name: 'langium-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
+                },
+                contributes: {
+                    languages: [{
+                        id: 'langium',
+                        extensions: ['.langium'],
+                        aliases: ['langium', 'LANGIUM'],
+                        configuration: './langium-configuration.json'
+                    }],
+                    grammars: [{
+                        language: 'langium',
+                        scopeName: 'source.langium',
+                        path: './langium-grammar.json'
+                    }]
+                }
+            },
+            filesOrContents: extensionFilesOrContents
+        }],
         editorAppConfig: {
             $type: 'extended',
             codeResources: {
@@ -51,31 +75,6 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
                     fileExt: 'langium'
                 }
             },
-            useDiffEditor: false,
-            extensions: [{
-                config: {
-                    name: 'langium-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    },
-                    contributes: {
-                        languages: [{
-                            id: 'langium',
-                            extensions: ['.langium'],
-                            aliases: ['langium', 'LANGIUM'],
-                            configuration: './langium-configuration.json'
-                        }],
-                        grammars: [{
-                            language: 'langium',
-                            scopeName: 'source.langium',
-                            path: './langium-grammar.json'
-                        }]
-                    }
-                },
-                filesOrContents: extensionFilesOrContents
-            }],
             monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {

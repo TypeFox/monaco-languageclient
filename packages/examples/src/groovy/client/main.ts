@@ -41,7 +41,6 @@ const userConfig: WrapperConfig = {
                 fileExt: 'groovy'
             }
         },
-        useDiffEditor: false,
         monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {

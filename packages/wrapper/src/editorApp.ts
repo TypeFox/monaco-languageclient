@@ -6,6 +6,7 @@
 import * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
+import { ConfigurationTarget, IConfigurationService, StandaloneServices } from 'vscode/services';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { Logger } from 'monaco-languageclient/tools';
 
@@ -29,7 +30,7 @@ export interface CodeResources {
 
 export type EditorAppType = 'extended' | 'classic';
 
-export interface EditorAppConfigBase {
+export interface EditorAppConfig {
     $type: EditorAppType;
     codeResources?: CodeResources;
     useDiffEditor?: boolean;
@@ -39,6 +40,14 @@ export interface EditorAppConfigBase {
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
     monacoWorkerFactory?: (logger?: Logger) => void;
+    languageDef?: {
+        languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
+        monarchLanguage?: monaco.languages.IMonarchLanguage;
+        theme?: {
+            name: monaco.editor.BuiltinTheme | string;
+            data: monaco.editor.IStandaloneThemeData;
+        }
+    }
 }
 
 export interface ModelRefs {
@@ -68,7 +77,7 @@ export type TextChanges = TextContents & {
  *
  * It provides the generic functionality for both implementations.
  */
-export abstract class EditorAppBase {
+export class EditorApp {
 
     private id: string;
     protected logger: Logger | undefined;
@@ -80,14 +89,12 @@ export abstract class EditorAppBase {
     private modelRefOriginal: IReference<ITextFileEditorModel> | undefined;
 
     private modelUpdateCallback?: (textModels: TextModels) => void;
+    private config: EditorAppConfig;
 
-    constructor(id: string, logger?: Logger) {
+    constructor(id: string, userAppConfig: EditorAppConfig, logger?: Logger) {
         this.id = id;
         this.logger = logger;
-    }
-
-    protected buildConfig(userAppConfig: EditorAppConfigBase): EditorAppConfigBase {
-        const config: EditorAppConfigBase = {
+        this.config = {
             $type: userAppConfig.$type,
             codeResources: userAppConfig.codeResources,
             useDiffEditor: userAppConfig.useDiffEditor ?? false,
@@ -95,15 +102,55 @@ export abstract class EditorAppBase {
             domReadOnly: userAppConfig.domReadOnly ?? false,
             overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
-        config.editorOptions = {
+        this.config.editorOptions = {
             ...userAppConfig.editorOptions,
             automaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
-        config.diffEditorOptions = {
+        this.config.diffEditorOptions = {
             ...userAppConfig.diffEditorOptions,
             automaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
-        return config;
+        this.config.languageDef = userAppConfig.languageDef;
+    }
+
+    async init(): Promise<void> {
+        const languageDef = this.config.languageDef;
+        if (languageDef) {
+            if (this.config.$type === 'extended') {
+                throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
+            }
+            // register own language first
+            monaco.languages.register(languageDef.languageExtensionConfig);
+
+            const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+            if (languageRegistered.length === 0) {
+                // this is only meaningful for languages supported by monaco out of the box
+                monaco.languages.register({
+                    id: languageDef.languageExtensionConfig.id
+                });
+            }
+
+            // apply monarch definitions
+            if (languageDef.monarchLanguage) {
+                monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
+            }
+
+            if (languageDef.theme) {
+                monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
+                monaco.editor.setTheme(languageDef.theme.name);
+            }
+        }
+
+        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+            StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+        }
+
+        this.logger?.info('Init of Editor App was completed.');
+    }
+
+    getConfig(): EditorAppConfig {
+        return this.config;
     }
 
     haveEditor() {
@@ -119,13 +166,13 @@ export abstract class EditorAppBase {
     }
 
     async createEditors(htmlContainer: HTMLElement): Promise<void> {
-        if (this.getConfig().useDiffEditor ?? false) {
-            this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.getConfig().diffEditorOptions);
+        if (this.config.useDiffEditor ?? false) {
+            this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
         } else {
-            this.editor = monaco.editor.create(htmlContainer, this.getConfig().editorOptions);
+            this.editor = monaco.editor.create(htmlContainer, this.config.editorOptions);
         }
 
-        const modelRefs = await this.buildModelRefs(this.getConfig().codeResources);
+        const modelRefs = await this.buildModelRefs(this.config.codeResources);
         this.updateEditorModels(modelRefs);
     }
 
@@ -245,7 +292,7 @@ export abstract class EditorAppBase {
     }
 
     updateLayout() {
-        if (this.getConfig().useDiffEditor ?? false) {
+        if (this.config.useDiffEditor ?? false) {
             this.diffEditor?.layout();
         } else {
             this.editor?.layout();
@@ -256,9 +303,9 @@ export abstract class EditorAppBase {
         this.getEditor()?.updateOptions(options);
     }
 
-    abstract init(): Promise<void>;
-    abstract getConfig(): EditorAppConfigBase;
-    abstract disposeApp(): void;
+    disposeApp(): void {
+        this.disposeEditors();
+    }
 
 }
 

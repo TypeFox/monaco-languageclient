@@ -56,7 +56,6 @@ export const runTsWrapper = async () => {
                     uri: codeOriginalUri,
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

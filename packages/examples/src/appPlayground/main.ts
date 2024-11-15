@@ -23,7 +23,7 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import { EditorAppExtended, MonacoEditorLanguageClientWrapper, RegisterLocalProcessExtensionResult, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, RegisterLocalProcessExtensionResult, WrapperConfig } from 'monaco-editor-wrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
@@ -96,18 +96,18 @@ export const runApplicationPlayground = async () => {
                 })
             },
         },
+        extensions: [{
+            config: {
+                name: 'mlc-app-playground',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
+                }
+            }
+        }],
         editorAppConfig: {
             $type: 'extended',
-            extensions: [{
-                config: {
-                    name: 'mlc-app-playground',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    }
-                }
-            }],
             monacoWorkerFactory: configureMonacoWorkers
         }
     };
@@ -125,7 +125,7 @@ export const runApplicationPlayground = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     await wrapper.init(wrapperConfig);
-    const result = (wrapper.getMonacoEditorApp() as EditorAppExtended).getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
+    const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
 
     await Promise.all([

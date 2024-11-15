@@ -53,7 +53,6 @@ export const runBrowserEditor = async () => {
                     uri: codeUri
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

@@ -109,18 +109,18 @@ export const createWrapperConfig = async (config: {
                 })
             }
         },
+        extensions: [{
+            config: {
+                name: 'mlc-clangd-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
+                }
+            }
+        }],
         editorAppConfig: {
             $type: 'extended',
-            extensions: [{
-                config: {
-                    name: 'mlc-clangd-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    }
-                }
-            }],
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

@@ -3,24 +3,46 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
+import { DisposableStore } from 'vscode/monaco';
 import { LogLevel } from 'vscode/services';
+import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
 import { augmentVscodeApiConfig, checkServiceConsistency, VscodeServicesConfig } from './vscode/services.js';
-import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
-import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
-import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
+import { CodeResources, EditorApp, EditorAppConfig, ModelRefs, TextContents, TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+
+export interface ExtensionConfig {
+    config: IExtensionManifest | object;
+    filesOrContents?: Map<string, string | URL>;
+}
 
 export interface WrapperConfig {
     id?: string;
     logLevel?: LogLevel | number;
     htmlContainer: HTMLElement;
+    extensions?: ExtensionConfig[];
     vscodeApiConfig: VscodeApiConfig;
-    editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
+    editorAppConfig: EditorAppConfig;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
+}
+
+export interface RegisterExtensionResult {
+    id: string;
+    dispose(): Promise<void>;
+    whenReady(): Promise<void>;
+}
+
+export interface RegisterLocalExtensionResult extends RegisterExtensionResult {
+    registerFileUrl: (path: string, url: string) => monaco.IDisposable;
+}
+
+export interface RegisterLocalProcessExtensionResult extends RegisterLocalExtensionResult {
+    getApi(): Promise<typeof vscode>;
+    setAsDefaultApi(): Promise<void>;
 }
 
 /**
@@ -31,7 +53,9 @@ export interface WrapperConfig {
 export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
-    private editorApp: EditorAppClassic | EditorAppExtended | undefined;
+    private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
+    private subscriptions: DisposableStore = new DisposableStore();
+    private editorApp?: EditorApp;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
@@ -94,20 +118,44 @@ export class MonacoEditorLanguageClientWrapper {
             }
         }
 
-        if (editorAppConfig.$type === 'classic') {
-            this.editorApp = new EditorAppClassic(this.id, wrapperConfig.editorAppConfig as EditorAppConfigClassic, this.logger);
-        } else {
-            this.editorApp = new EditorAppExtended(this.id, wrapperConfig.editorAppConfig as EditorAppConfigExtended, this.logger);
-        }
+        this.initExtensions(wrapperConfig.vscodeApiConfig, wrapperConfig.extensions);
 
+        this.editorApp = new EditorApp(this.id, wrapperConfig.editorAppConfig, this.logger);
         await this.editorApp.init();
         this.initDone = true;
 
         this.wrapperConfig = wrapperConfig;
     }
 
+    protected async initExtensions(vscodeApiConfig: VscodeApiConfig, extensions?: ExtensionConfig[]) {
+        if (vscodeApiConfig.loadThemes === true) {
+            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+        }
+
+        if (extensions) {
+            const allPromises: Array<Promise<void>> = [];
+            for (const extensionConfig of extensions) {
+                const manifest = extensionConfig.config as IExtensionManifest;
+                const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
+                this.extensionRegisterResults.set(manifest.name, extRegResult);
+                if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+                    for (const entry of extensionConfig.filesOrContents) {
+                        const registerFileUrlResult = (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
+                        this.subscriptions.add(registerFileUrlResult);
+                    }
+                }
+                allPromises.push(extRegResult.whenReady());
+            }
+            await Promise.all(allPromises);
+        }
+    }
+
     getWrapperConfig() {
         return this.wrapperConfig;
+    }
+
+    getExtensionRegisterResult(extensionName: string) {
+        return this.extensionRegisterResults.get(extensionName);
     }
 
     /**
@@ -251,6 +299,9 @@ export class MonacoEditorLanguageClientWrapper {
 
         this.editorApp?.disposeApp();
         this.editorApp = undefined;
+
+        this.extensionRegisterResults.forEach((k) => k?.dispose());
+        this.subscriptions.dispose();
 
         if (disposeLanguageClients) {
             await this.disposeLanguageClients();

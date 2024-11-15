@@ -34,7 +34,6 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
                     enforceLanguageId: 'langium'
                 }
             },
-            useDiffEditor: false,
             editorOptions: {
                 'semanticHighlighting.enabled': true,
                 wordBasedSuggestions: 'off',

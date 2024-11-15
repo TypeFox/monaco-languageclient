@@ -71,36 +71,35 @@ export const createLangiumGlobalConfig = async (params: {
                 })
             },
         },
+        extensions: [{
+            config: {
+                name: 'statemachine-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
+                },
+                contributes: {
+                    languages: [{
+                        id: 'statemachine',
+                        extensions: ['.statemachine'],
+                        aliases: ['statemachine', 'Statemachine'],
+                        configuration: `./${params.languageServerId}-statemachine-configuration.json`
+                    }],
+                    grammars: [{
+                        language: 'statemachine',
+                        scopeName: 'source.statemachine',
+                        path: `./${params.languageServerId}-statemachine-grammar.json`
+                    }]
+                }
+            },
+            filesOrContents: extensionFilesOrContents
+        }],
         editorAppConfig: {
             $type: 'extended',
             codeResources: {
                 main
             },
-            useDiffEditor: false,
-            extensions: [{
-                config: {
-                    name: 'statemachine-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    },
-                    contributes: {
-                        languages: [{
-                            id: 'statemachine',
-                            extensions: ['.statemachine'],
-                            aliases: ['statemachine', 'Statemachine'],
-                            configuration: `./${params.languageServerId}-statemachine-configuration.json`
-                        }],
-                        grammars: [{
-                            language: 'statemachine',
-                            scopeName: 'source.statemachine',
-                            path: `./${params.languageServerId}-statemachine-grammar.json`
-                        }]
-                    }
-                },
-                filesOrContents: extensionFilesOrContents
-            }],
             monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs

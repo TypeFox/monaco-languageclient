@@ -18,10 +18,10 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
         htmlContainer: createMonacoEditorDiv(),
         vscodeApiConfig: {
             vscodeApiInitPerformExternally: false,
-            enableTextmate: true
+            enableTextmate: true,
+            loadThemes: false
         },
         editorAppConfig: {
-            loadThemes: false,
             $type: 'extended',
             codeResources: {
                 main: {
@@ -29,7 +29,6 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                     fileExt: 'js'
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };
@@ -50,7 +49,6 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
                     fileExt: 'js'
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

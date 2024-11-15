@@ -45,7 +45,6 @@ export const runEclipseJdtLsClient = () => {
                     uri: `${eclipseJdtLsConfig.basePath}/workspace/hello.java`
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {

@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { createModelReference } from 'vscode/monaco';
 import { describe, expect, test } from 'vitest';
-import { EditorAppClassic, EditorAppConfigExtended, MonacoEditorLanguageClientWrapper, EditorAppConfigClassic } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 import { IConfigurationService, StandaloneServices } from 'vscode/services';
 
@@ -28,10 +28,10 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await wrapper.initAndStart(createWrapperConfigClassicApp());
 
-        const app = wrapper.getMonacoEditorApp() as EditorAppClassic;
+        const app = wrapper.getMonacoEditorApp();
         expect(app).toBeDefined();
 
-        const appConfig = app.getConfig();
+        const appConfig = app!.getConfig();
         expect(appConfig.overrideAutomaticLayout).toBeTruthy();
     });
 
@@ -157,7 +157,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigExtendedApp();
-        (wrapperConfig.editorAppConfig as EditorAppConfigExtended).extensions = [{
+        wrapperConfig.extensions = [{
             config: {
                 engines: {
                     vscode: '*'
@@ -214,7 +214,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
 
-        (wrapperConfig.editorAppConfig as EditorAppConfigClassic).editorOptions = {
+        wrapperConfig.editorAppConfig.editorOptions = {
             'semanticHighlighting.enabled': true,
         };
         await wrapper.init(wrapperConfig);

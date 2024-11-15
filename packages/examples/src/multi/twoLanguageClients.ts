@@ -61,7 +61,6 @@ print("Hello Moon!")
                     fileExt: currenFileExt
                 }
             },
-            useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers
         }
     };
