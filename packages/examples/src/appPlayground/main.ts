@@ -41,6 +41,7 @@ export const runApplicationPlayground = async () => {
         htmlContainer: document.body,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),

@@ -13,7 +13,8 @@ describe('createUrl', () => {
         const vscodeApiConfig = await augmentVscodeApiConfig({
             vscodeApiConfig: {
                 vscodeApiInitPerformExternally: false,
-                enableTextmate: false
+                enableTextmate: false,
+                loadThemes: false
             },
             logLevel: LogLevel.Trace
         });
@@ -26,6 +27,7 @@ describe('createUrl', () => {
             vscodeApiConfig: {
                 vscodeApiInitPerformExternally: false,
                 enableTextmate: false,
+                loadThemes: false,
                 workspaceConfig: {
                     developmentOptions: {
                         logLevel: LogLevel.Info
@@ -44,6 +46,7 @@ describe('createUrl', () => {
                 vscodeApiConfig: {
                     vscodeApiInitPerformExternally: false,
                     enableTextmate: false,
+                    loadThemes: false,
                     workspaceConfig: {
                         developmentOptions: {
                             logLevel: LogLevel.Info

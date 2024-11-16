@@ -33,6 +33,7 @@ export const runBrowserEditor = async () => {
         htmlContainer,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },

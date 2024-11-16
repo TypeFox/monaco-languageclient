@@ -111,9 +111,7 @@ export class EditorApp {
             automaticLayout: userAppConfig.overrideAutomaticLayout ?? true
         };
         this.config.languageDef = userAppConfig.languageDef;
-    }
 
-    async init(): Promise<void> {
         const languageDef = this.config.languageDef;
         if (languageDef) {
             if (this.config.$type === 'extended') {
@@ -141,12 +139,12 @@ export class EditorApp {
             }
         }
 
-        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+        if (this.config.editorOptions['semanticHighlighting.enabled'] !== undefined) {
             StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
                 this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
         }
 
-        this.logger?.info('Init of Editor App was completed.');
+        this.logger?.info('Init of EditorApp was completed.');
     }
 
     getConfig(): EditorAppConfig {

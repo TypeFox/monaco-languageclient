@@ -3,7 +3,7 @@
   "type": "module",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "~11.0.1",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "~11.0.2",
     "@eslint/js": "~9.14.0",
     "@eslint/eslintrc": "~3.1.0",
     "@stylistic/eslint-plugin": "~2.10.1",

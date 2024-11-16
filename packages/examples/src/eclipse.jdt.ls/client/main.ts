@@ -25,6 +25,7 @@ export const runEclipseJdtLsClient = () => {
         htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },

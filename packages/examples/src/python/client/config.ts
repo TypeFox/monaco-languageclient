@@ -65,6 +65,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
         htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },

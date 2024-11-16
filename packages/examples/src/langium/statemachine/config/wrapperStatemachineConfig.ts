@@ -57,6 +57,7 @@ export const createLangiumGlobalConfig = async (params: {
         htmlContainer: params.htmlContainer,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),

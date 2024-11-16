@@ -36,7 +36,7 @@ export interface ViewsConfig {
 export interface VscodeApiConfig {
     enableTextmate: boolean;
     vscodeApiInitPerformExternally?: boolean;
-    loadThemes?: boolean;
+    loadThemes: boolean;
     serviceOverrides?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;

@@ -27,6 +27,7 @@ export const runTsWrapper = async () => {
         htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },

@@ -53,9 +53,9 @@ export interface RegisterLocalProcessExtensionResult extends RegisterLocalExtens
 export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
+    private editorApp?: EditorApp;
     private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
     private subscriptions: DisposableStore = new DisposableStore();
-    private editorApp?: EditorApp;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
@@ -84,11 +84,14 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
         }
 
-        // Always dispose old instances before start
+        // Always dispose old instances before start and
+        // ensure disposable store is available again after dispose
         this.dispose(false);
-        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
+        this.subscriptions = new DisposableStore();
 
+        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+
+        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
         if (typeof wrapperConfig.editorAppConfig.monacoWorkerFactory === 'function') {
             wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
         }
@@ -107,7 +110,16 @@ export class MonacoEditorLanguageClientWrapper {
             });
         }
 
-        const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
+        await this.initLanguageClients(wrapperConfig.languageClientConfigs);
+        await this.initExtensions(wrapperConfig.vscodeApiConfig, wrapperConfig.extensions);
+        this.editorApp = new EditorApp(this.id, wrapperConfig.editorAppConfig, this.logger);
+        this.initDone = true;
+
+        this.wrapperConfig = wrapperConfig;
+    }
+
+    async initLanguageClients(languageClientConfigs?: Record<string, LanguageClientConfig>) {
+        const lccEntries = Object.entries(languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
                 const lcw = new LanguageClientWrapper({
@@ -117,22 +129,15 @@ export class MonacoEditorLanguageClientWrapper {
                 this.languageClientWrappers.set(languageId, lcw);
             }
         }
-
-        this.initExtensions(wrapperConfig.vscodeApiConfig, wrapperConfig.extensions);
-
-        this.editorApp = new EditorApp(this.id, wrapperConfig.editorAppConfig, this.logger);
-        await this.editorApp.init();
-        this.initDone = true;
-
-        this.wrapperConfig = wrapperConfig;
     }
 
     protected async initExtensions(vscodeApiConfig: VscodeApiConfig, extensions?: ExtensionConfig[]) {
-        if (vscodeApiConfig.loadThemes === true) {
+        if (vscodeApiConfig.loadThemes) {
             await import('@codingame/monaco-vscode-theme-defaults-default-extension');
         }
 
         if (extensions) {
+            this.subscriptions.clear();
             const allPromises: Array<Promise<void>> = [];
             for (const extensionConfig of extensions) {
                 const manifest = extensionConfig.config as IExtensionManifest;
@@ -140,8 +145,7 @@ export class MonacoEditorLanguageClientWrapper {
                 this.extensionRegisterResults.set(manifest.name, extRegResult);
                 if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                     for (const entry of extensionConfig.filesOrContents) {
-                        const registerFileUrlResult = (extRegResult as RegisterLocalExtensionResult).registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1]));
-                        this.subscriptions.add(registerFileUrlResult);
+                        this.subscriptions.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
                     }
                 }
                 allPromises.push(extRegResult.whenReady());

@@ -39,7 +39,8 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
         htmlContainer: createMonacoEditorDiv(),
         vscodeApiConfig: {
             vscodeApiInitPerformExternally: false,
-            enableTextmate: false
+            enableTextmate: false,
+            loadThemes: false
         },
         editorAppConfig: {
             $type: 'classic',

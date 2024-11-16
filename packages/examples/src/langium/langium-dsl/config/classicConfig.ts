@@ -20,6 +20,7 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
         htmlContainer: document.getElementById('monaco-editor-root')!,
         vscodeApiConfig: {
             enableTextmate: false,
+            loadThemes: false,
             serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()

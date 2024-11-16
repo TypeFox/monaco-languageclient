@@ -9,7 +9,6 @@ import { LogLevel } from 'vscode/services';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
@@ -23,6 +22,7 @@ export const runClient = async () => {
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     await initServices({
         enableTextmate: true,
+        loadThemes: true,
         serviceOverrides: {
             ...getConfigurationServiceOverride()
         }

@@ -23,6 +23,7 @@ export const buildJsonClientUserConfig = (params: {
         htmlContainer: params.htmlContainer,
         vscodeApiConfig: {
             enableTextmate: true,
+            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
