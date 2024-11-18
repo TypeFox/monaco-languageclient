@@ -17,7 +17,8 @@ describe('Test MonacoEditorReactComp', () => {
             logLevel: LogLevel.Debug,
             htmlContainer: createMonacoEditorDiv(),
             vscodeApiConfig: {
-                enableTextmate: true
+                enableTextmate: true,
+                loadThemes: false
             },
             editorAppConfig: {
                 $type: 'extended',
@@ -48,7 +49,8 @@ describe('Test MonacoEditorReactComp', () => {
             logLevel: LogLevel.Debug,
             htmlContainer: createMonacoEditorDiv(),
             vscodeApiConfig: {
-                enableTextmate: true
+                enableTextmate: true,
+                loadThemes: false
             },
             editorAppConfig: {
                 $type: 'extended',
@@ -77,7 +79,8 @@ describe('Test MonacoEditorReactComp', () => {
             logLevel: LogLevel.Debug,
             htmlContainer: createMonacoEditorDiv(),
             vscodeApiConfig: {
-                enableTextmate: true
+                enableTextmate: true,
+                loadThemes: false
             },
             editorAppConfig: {
                 $type: 'extended',

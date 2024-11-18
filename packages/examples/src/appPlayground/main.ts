@@ -5,6 +5,7 @@
 
 import * as vscode from 'vscode';
 import { LogLevel } from 'vscode/services';
+import { RegisterLocalProcessExtensionResult } from 'vscode/extensions';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
@@ -23,7 +24,7 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import { MonacoEditorLanguageClientWrapper, RegisterLocalProcessExtensionResult, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';

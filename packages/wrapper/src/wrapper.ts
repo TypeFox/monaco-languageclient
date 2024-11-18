@@ -3,11 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type * as vscode from 'vscode';
 import * as monaco from 'monaco-editor';
 import { DisposableStore } from 'vscode/monaco';
 import { LogLevel } from 'vscode/services';
-import { registerExtension, IExtensionManifest, ExtensionHostKind } from 'vscode/extensions';
+import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from 'vscode/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
@@ -30,21 +29,6 @@ export interface WrapperConfig {
     languageClientConfigs?: Record<string, LanguageClientConfig>;
 }
 
-export interface RegisterExtensionResult {
-    id: string;
-    dispose(): Promise<void>;
-    whenReady(): Promise<void>;
-}
-
-export interface RegisterLocalExtensionResult extends RegisterExtensionResult {
-    registerFileUrl: (path: string, url: string) => monaco.IDisposable;
-}
-
-export interface RegisterLocalProcessExtensionResult extends RegisterLocalExtensionResult {
-    getApi(): Promise<typeof vscode>;
-    setAsDefaultApi(): Promise<void>;
-}
-
 /**
  * This class is responsible for the overall ochestration.
  * It inits, start and disposes the editor apps and the language client (if configured) and provides
@@ -54,8 +38,8 @@ export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
     private editorApp?: EditorApp;
-    private extensionRegisterResults: Map<string, RegisterLocalProcessExtensionResult | RegisterExtensionResult | undefined> = new Map();
-    private subscriptions: DisposableStore = new DisposableStore();
+    private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
+    private disposableStore?: DisposableStore;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
@@ -87,7 +71,7 @@ export class MonacoEditorLanguageClientWrapper {
         // Always dispose old instances before start and
         // ensure disposable store is available again after dispose
         this.dispose(false);
-        this.subscriptions = new DisposableStore();
+        this.disposableStore = new DisposableStore();
 
         this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
 
@@ -111,11 +95,11 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         await this.initLanguageClients(wrapperConfig.languageClientConfigs);
-        await this.initExtensions(wrapperConfig.vscodeApiConfig, wrapperConfig.extensions);
+        await initExtensions(this.extensionRegisterResults, this.disposableStore, wrapperConfig.vscodeApiConfig, wrapperConfig.extensions);
         this.editorApp = new EditorApp(this.id, wrapperConfig.editorAppConfig, this.logger);
-        this.initDone = true;
 
         this.wrapperConfig = wrapperConfig;
+        this.initDone = true;
     }
 
     async initLanguageClients(languageClientConfigs?: Record<string, LanguageClientConfig>) {
@@ -128,29 +112,6 @@ export class MonacoEditorLanguageClientWrapper {
                 });
                 this.languageClientWrappers.set(languageId, lcw);
             }
-        }
-    }
-
-    protected async initExtensions(vscodeApiConfig: VscodeApiConfig, extensions?: ExtensionConfig[]) {
-        if (vscodeApiConfig.loadThemes) {
-            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
-        }
-
-        if (extensions) {
-            this.subscriptions.clear();
-            const allPromises: Array<Promise<void>> = [];
-            for (const extensionConfig of extensions) {
-                const manifest = extensionConfig.config as IExtensionManifest;
-                const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
-                this.extensionRegisterResults.set(manifest.name, extRegResult);
-                if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
-                    for (const entry of extensionConfig.filesOrContents) {
-                        this.subscriptions.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
-                    }
-                }
-                allPromises.push(extRegResult.whenReady());
-            }
-            await Promise.all(allPromises);
         }
     }
 
@@ -298,31 +259,21 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(disposeLanguageClients: boolean = true) {
+    async dispose(doDisposeLanguageClients: boolean = true) {
         this.markStopping();
 
         this.editorApp?.disposeApp();
         this.editorApp = undefined;
 
-        this.extensionRegisterResults.forEach((k) => k?.dispose());
-        this.subscriptions.dispose();
+        this.extensionRegisterResults.forEach((k) => k.dispose());
+        this.disposableStore?.dispose();
 
-        if (disposeLanguageClients) {
-            await this.disposeLanguageClients();
+        if (doDisposeLanguageClients) {
+            await disposeLanguageClients(this.languageClientWrappers.values(), false);
         }
 
         this.initDone = false;
         this.markStopped();
-    }
-
-    async disposeLanguageClients() {
-        const allPromises: Array<Promise<void>> = [];
-        for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClient()) {
-                allPromises.push(lcw.disposeLanguageClient(false));
-            }
-        }
-        return Promise.all(allPromises);
     }
 
     private markStopping() {
@@ -350,4 +301,38 @@ export const configureAndInitVscodeApi = async (config: VscodeServicesConfig, in
     const vscodeApiConfigAugmented = await augmentVscodeApiConfig(config);
     await initServices(vscodeApiConfigAugmented, initInstructions);
     return vscodeApiConfigAugmented;
+};
+
+export const initExtensions = async (extensionRegisterResults: Map<string, | RegisterExtensionResult>, disposableStore: DisposableStore,
+    vscodeApiConfig: VscodeApiConfig, extensions?: ExtensionConfig[]) => {
+
+    if (vscodeApiConfig.loadThemes === true) {
+        await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+    }
+
+    if (extensions) {
+        const allPromises: Array<Promise<void>> = [];
+        for (const extensionConfig of extensions) {
+            const manifest = extensionConfig.config as IExtensionManifest;
+            const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
+            extensionRegisterResults.set(manifest.name, extRegResult);
+            if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+                for (const entry of extensionConfig.filesOrContents) {
+                    disposableStore.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
+                }
+            }
+            allPromises.push(extRegResult.whenReady());
+        }
+        await Promise.all(allPromises);
+    }
+};
+
+export const disposeLanguageClients = async (languageClientWrappers: LanguageClientWrapper[] | MapIterator<LanguageClientWrapper>, keepWorker: boolean) => {
+    const allPromises: Array<Promise<void>> = [];
+    for (const lcw of languageClientWrappers) {
+        if (lcw.haveLanguageClient()) {
+            allPromises.push(lcw.disposeLanguageClient(keepWorker));
+        }
+    }
+    return Promise.all(allPromises);
 };

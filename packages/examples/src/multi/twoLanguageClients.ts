@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from 'vscode/services';
-import { CodePlusFileExt, configureAndInitVscodeApi, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { CodePlusFileExt, configureAndInitVscodeApi, disposeLanguageClients, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 
@@ -31,10 +31,13 @@ print("Hello Moon!")
     let currenFileExt = 'json';
 
     const lccJson = createJsonLanguageClientConfig();
+    const lcwJson = new LanguageClientWrapper({
+        languageClientConfig: lccJson
+    });
     const lccPython = createPythonLanguageClientConfig();
-
-    let lcwJson: LanguageClientWrapper | undefined;
-    let lcwPython: LanguageClientWrapper | undefined;
+    const lcwPython = new LanguageClientWrapper({
+        languageClientConfig: lccPython
+    });
 
     const wrapperConfig: WrapperConfig = {
         id: '42',
@@ -84,18 +87,14 @@ print("Hello Moon!")
                     logger
                 });
 
-                if (lcwJson === undefined) {
-                    lcwJson = new LanguageClientWrapper({
-                        languageClientConfig: lccJson
-                    });
-                    await lcwJson.start();
+                const allPromises: Array<Promise<void>> = [];
+                if (!lcwJson.isStarted()) {
+                    allPromises.push(lcwJson.start());
                 }
-                if (lcwPython === undefined) {
-                    lcwPython = new LanguageClientWrapper({
-                        languageClientConfig: lccPython
-                    });
-                    await lcwPython.start();
+                if (!lcwPython.isStarted()) {
+                    allPromises.push(lcwPython.start());
                 }
+                await Promise.all(allPromises);
             } else {
                 wrapperConfig.languageClientConfigs = {
                     json: lccJson,
@@ -112,8 +111,13 @@ print("Hello Moon!")
             disableButton('button-flip', false);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await wrapper.dispose();
             disableButton('button-flip', true);
+
+            wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            if (wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally === true) {
+                disposeLanguageClients([lcwJson, lcwPython], false);
+            }
+            await wrapper.dispose();
         });
         document.querySelector('#button-flip')?.addEventListener('click', async () => {
             currentText = currentText === textJson ? textPython : textJson;
