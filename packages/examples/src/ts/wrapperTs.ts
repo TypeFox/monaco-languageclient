@@ -23,11 +23,10 @@ export const runTsWrapper = async () => {
 };`;
 
     const wrapperConfig: WrapperConfig = {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
@@ -46,7 +45,6 @@ export const runTsWrapper = async () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: code,
@@ -104,8 +102,8 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-diff')?.addEventListener('click', async () => {
             // ensure it is boolean value and not undefined
-            const useDiffEditor = wrapperConfig.editorAppConfig.useDiffEditor ?? false;
-            wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
+            const useDiffEditor = wrapperConfig.editorAppConfig!.useDiffEditor ?? false;
+            wrapperConfig.editorAppConfig!.useDiffEditor = !useDiffEditor;
             await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

@@ -9,6 +9,8 @@ import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { LogLevel } from 'vscode/services';
 import { mergeServices, ViewsConfig, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 
+export type OverallConfigType = 'extended' | 'classic';
+
 export interface VscodeServicesConfig {
     vscodeApiConfig: VscodeApiConfig;
     logLevel: LogLevel
@@ -18,7 +20,7 @@ export interface VscodeServicesConfig {
 /**
  * Child classes are allow to override the services configuration implementation.
  */
-export const augmentVscodeApiConfig = async (config: VscodeServicesConfig): Promise<VscodeApiConfig> => {
+export const augmentVscodeApiConfig = async ($type: OverallConfigType, config: VscodeServicesConfig): Promise<VscodeApiConfig> => {
     const vscodeApiConfig = config.vscodeApiConfig;
     // set empty object if undefined
     const services: monaco.editor.IEditorOverrideServices = vscodeApiConfig.serviceOverrides ?? {};
@@ -31,7 +33,7 @@ export const augmentVscodeApiConfig = async (config: VscodeServicesConfig): Prom
         });
     }
 
-    await augmentHighlightingServices(services, config.vscodeApiConfig.enableTextmate);
+    await augmentHighlightingServices($type, services);
     await augmentViewsServices(services, vscodeApiConfig.viewsConfig);
 
     // ensures "vscodeApiConfig.workspaceConfig" is available
@@ -46,8 +48,8 @@ export const augmentVscodeApiConfig = async (config: VscodeServicesConfig): Prom
     return vscodeApiConfig;
 };
 
-export const augmentHighlightingServices = async (services: monaco.editor.IEditorOverrideServices, enableTextmate: boolean) => {
-    if (enableTextmate === true) {
+export const augmentHighlightingServices = async ($type: OverallConfigType, services: monaco.editor.IEditorOverrideServices) => {
+    if ($type === 'extended') {
         const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
         const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
         mergeServices(services, {

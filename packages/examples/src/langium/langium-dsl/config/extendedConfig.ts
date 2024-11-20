@@ -27,11 +27,10 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
     const writer = new BrowserMessageWriter(langiumWorker);
 
     return {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
@@ -69,7 +68,6 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
             filesOrContents: extensionFilesOrContents
         }],
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text,

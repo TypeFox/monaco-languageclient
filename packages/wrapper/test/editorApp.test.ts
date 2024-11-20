@@ -4,12 +4,12 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { EditorApp, EditorAppConfig, verifyUrlOrCreateDataUrl, WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, verifyUrlOrCreateDataUrl, EditorAppConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 
 const buildConfig = (): WrapperConfig => {
     const wrapperConfig = createWrapperConfigClassicApp();
-    wrapperConfig.editorAppConfig.editorOptions = {};
+    wrapperConfig.editorAppConfig!.editorOptions = {};
     return wrapperConfig;
 };
 
@@ -17,12 +17,12 @@ describe('Test EditorAppBase', () => {
 
     test('classic type: empty EditorAppConfigClassic', () => {
         const wrapperConfig = createWrapperConfigClassicApp();
-        expect(wrapperConfig.editorAppConfig.$type).toBe('classic');
+        expect(wrapperConfig.$type).toBe('classic');
     });
 
     test('extended type: empty EditorAppConfigExtended', () => {
         const wrapperConfig = createWrapperConfigExtendedApp();
-        expect(wrapperConfig.editorAppConfig.$type).toBe('extended');
+        expect(wrapperConfig.$type).toBe('extended');
     });
 
     test('editorOptions: semanticHighlighting=true', () => {
@@ -30,8 +30,8 @@ describe('Test EditorAppBase', () => {
         const configClassic = wrapperConfig.editorAppConfig as EditorAppConfig;
         configClassic.editorOptions!['semanticHighlighting.enabled'] = true;
 
-        const app = new EditorApp('config defaults', configClassic);
-        expect(configClassic.$type).toEqual('classic');
+        const app = new EditorApp('config defaults', wrapperConfig.$type, configClassic);
+        expect(wrapperConfig.$type).toEqual('classic');
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeTruthy();
     });
 
@@ -40,7 +40,7 @@ describe('Test EditorAppBase', () => {
         const configClassic = wrapperConfig.editorAppConfig as EditorAppConfig;
         configClassic.editorOptions!['semanticHighlighting.enabled'] = false;
 
-        const app = new EditorApp('config defaults', configClassic);
+        const app = new EditorApp('config defaults', wrapperConfig.$type, configClassic);
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeFalsy();
     });
 
@@ -49,13 +49,13 @@ describe('Test EditorAppBase', () => {
         const configClassic = wrapperConfig.editorAppConfig as EditorAppConfig;
         configClassic.editorOptions!['semanticHighlighting.enabled'] = 'configuredByTheme';
 
-        const app = new EditorApp('config defaults', configClassic);
+        const app = new EditorApp('config defaults', wrapperConfig.$type, configClassic);
         expect(app.getConfig().editorOptions?.['semanticHighlighting.enabled']).toEqual('configuredByTheme');
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createWrapperConfigClassicApp().editorAppConfig;
-        const app = new EditorApp('config defaults', editorAppConfig as EditorAppConfig);
+        const wrapperConfig = createWrapperConfigClassicApp();
+        const app = new EditorApp('config defaults', wrapperConfig.$type, wrapperConfig.editorAppConfig);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();
@@ -75,8 +75,8 @@ describe('Test EditorAppBase', () => {
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createWrapperConfigExtendedApp().editorAppConfig;
-        const app = new EditorApp('config defaults', editorAppConfig);
+        const wrapperConfig = createWrapperConfigExtendedApp();
+        const app = new EditorApp('config defaults', wrapperConfig.$type, wrapperConfig.editorAppConfig);
         expect(app.getConfig().codeResources?.main?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();

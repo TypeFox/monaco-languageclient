@@ -29,11 +29,10 @@ export const runBrowserEditor = async () => {
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
     const jsonClientUserConfig: WrapperConfig = {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
@@ -47,7 +46,6 @@ export const runBrowserEditor = async () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: code,

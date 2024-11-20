@@ -70,10 +70,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        let codeResources = wrapperConfig.editorAppConfig.codeResources;
-        if (!codeResources) {
-            codeResources = {};
-        }
+        const codeResources = wrapperConfig.editorAppConfig?.codeResources ?? {};
         codeResources.main = undefined;
         codeResources.original = {
             text: 'original',
@@ -92,10 +89,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        let codeResources = wrapperConfig.editorAppConfig.codeResources;
-        if (!codeResources) {
-            codeResources = {};
-        }
+        const codeResources = wrapperConfig.editorAppConfig?.codeResources ?? {};
         codeResources.original = {
             text: 'original',
             fileExt: 'js'
@@ -120,7 +114,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        wrapperConfig.editorAppConfig.codeResources = {};
+        wrapperConfig.editorAppConfig!.codeResources = {};
         await wrapper.initAndStart(wrapperConfig);
 
         const app = wrapper.getMonacoEditorApp();
@@ -133,7 +127,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        wrapperConfig.editorAppConfig.codeResources = {};
+        wrapperConfig.editorAppConfig!.codeResources = {};
         await wrapper.initAndStart(wrapperConfig);
 
         const app = wrapper.getMonacoEditorApp();
@@ -189,7 +183,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        wrapperConfig.editorAppConfig.codeResources = {};
+        wrapperConfig.editorAppConfig!.codeResources = {};
 
         await wrapper.init(wrapperConfig);
         const app = wrapper.getMonacoEditorApp();
@@ -214,11 +208,11 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
 
-        wrapperConfig.editorAppConfig.editorOptions = {
+        wrapperConfig.editorAppConfig!.editorOptions = {
             'semanticHighlighting.enabled': true,
         };
         await wrapper.init(wrapperConfig);
-        expect(wrapper.getWrapperConfig()?.vscodeApiConfig.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
+        expect(wrapper.getWrapperConfig()?.vscodeApiConfig?.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
 
         const semHigh = await new Promise<unknown>(resolve => {
             setTimeout(() => {

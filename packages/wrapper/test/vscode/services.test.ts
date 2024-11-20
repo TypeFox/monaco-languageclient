@@ -10,10 +10,8 @@ import { augmentVscodeApiConfig } from '../../src/vscode/services.js';
 describe('createUrl', () => {
 
     test('test configureServices logLevel trace', async () => {
-        const vscodeApiConfig = await augmentVscodeApiConfig({
+        const vscodeApiConfig = await augmentVscodeApiConfig('extended', {
             vscodeApiConfig: {
-                vscodeApiInitPerformExternally: false,
-                enableTextmate: false,
                 loadThemes: false
             },
             logLevel: LogLevel.Trace
@@ -23,10 +21,8 @@ describe('createUrl', () => {
     });
 
     test('test configureServices logLevel and developmenet info', async () => {
-        const vscodeApiConfig = await augmentVscodeApiConfig({
+        const vscodeApiConfig = await augmentVscodeApiConfig('extended', {
             vscodeApiConfig: {
-                vscodeApiInitPerformExternally: false,
-                enableTextmate: false,
                 loadThemes: false,
                 workspaceConfig: {
                     developmentOptions: {
@@ -42,10 +38,8 @@ describe('createUrl', () => {
 
     test('test configureServices logLevel development mismatch', async () => {
         expect(async () => {
-            await augmentVscodeApiConfig({
+            await augmentVscodeApiConfig('extended', {
                 vscodeApiConfig: {
-                    vscodeApiInitPerformExternally: false,
-                    enableTextmate: false,
                     loadThemes: false,
                     workspaceConfig: {
                         developmentOptions: {

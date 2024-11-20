@@ -21,8 +21,6 @@ export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     await initServices({
-        enableTextmate: true,
-        loadThemes: true,
         serviceOverrides: {
             ...getConfigurationServiceOverride()
         }

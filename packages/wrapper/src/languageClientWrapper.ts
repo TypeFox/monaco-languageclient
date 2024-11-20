@@ -5,7 +5,7 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { MonacoLanguageClient, ConnectionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
+import { ConnectionConfigOptions, MonacoLanguageClient, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
 import { createUrl, Logger } from 'monaco-languageclient/tools';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 

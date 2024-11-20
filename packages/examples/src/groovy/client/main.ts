@@ -17,11 +17,10 @@ File file = new File("E:/Example.txt");
 `;
 
 const userConfig: WrapperConfig = {
-    logLevel: LogLevel.Debug,
+    $type: 'extended',
     htmlContainer: document.getElementById('monaco-editor-root')!,
+    logLevel: LogLevel.Debug,
     vscodeApiConfig: {
-        enableTextmate: true,
-        loadThemes: true,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
         },
@@ -35,7 +34,6 @@ const userConfig: WrapperConfig = {
         }
     },
     editorAppConfig: {
-        $type: 'extended',
         codeResources: {
             main: {
                 text: code,

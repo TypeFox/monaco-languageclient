@@ -25,8 +25,8 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 
 const userConfig: UserConfig = {
   wrapperConfig: {
+    $type: 'extendend',
     editorAppConfig: {
-      $type: 'extendend',
       codeResources: {
         main: {
           text: 'print("Hello, World!")',

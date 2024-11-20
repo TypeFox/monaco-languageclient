@@ -9,46 +9,7 @@ import { createModelReference, ITextFileEditorModel } from 'vscode/monaco';
 import { ConfigurationTarget, IConfigurationService, StandaloneServices } from 'vscode/services';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { Logger } from 'monaco-languageclient/tools';
-
-export interface CodeContent {
-    text: string;
-    enforceLanguageId?: string;
-}
-
-export interface CodePlusUri extends CodeContent {
-    uri: string;
-}
-
-export interface CodePlusFileExt extends CodeContent {
-    fileExt: string;
-}
-
-export interface CodeResources {
-    main?: CodePlusUri | CodePlusFileExt;
-    original?: CodePlusUri | CodePlusFileExt;
-}
-
-export type EditorAppType = 'extended' | 'classic';
-
-export interface EditorAppConfig {
-    $type: EditorAppType;
-    codeResources?: CodeResources;
-    useDiffEditor?: boolean;
-    domReadOnly?: boolean;
-    readOnly?: boolean;
-    overrideAutomaticLayout?: boolean;
-    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
-    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    monacoWorkerFactory?: (logger?: Logger) => void;
-    languageDef?: {
-        languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
-        monarchLanguage?: monaco.languages.IMonarchLanguage;
-        theme?: {
-            name: monaco.editor.BuiltinTheme | string;
-            data: monaco.editor.IStandaloneThemeData;
-        }
-    }
-}
+import { OverallConfigType } from './vscode/services.js';
 
 export interface ModelRefs {
     modelRef?: IReference<ITextFileEditorModel>;
@@ -68,6 +29,43 @@ export interface TextContents {
 export type TextChanges = TextContents & {
     isDirty: boolean;
     isDirtyOriginal: boolean;
+}
+
+export interface CodeContent {
+    text: string;
+    enforceLanguageId?: string;
+}
+
+export interface CodePlusUri extends CodeContent {
+    uri: string;
+}
+
+export interface CodePlusFileExt extends CodeContent {
+    fileExt: string;
+}
+
+export interface CodeResources {
+    main?: CodePlusUri | CodePlusFileExt;
+    original?: CodePlusUri | CodePlusFileExt;
+}
+
+export interface EditorAppConfig {
+    codeResources?: CodeResources;
+    useDiffEditor?: boolean;
+    domReadOnly?: boolean;
+    readOnly?: boolean;
+    overrideAutomaticLayout?: boolean;
+    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
+    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+    monacoWorkerFactory?: (logger?: Logger) => void;
+    languageDef?: {
+        languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
+        monarchLanguage?: monaco.languages.IMonarchLanguage;
+        theme?: {
+            name: monaco.editor.BuiltinTheme | string;
+            data: monaco.editor.IStandaloneThemeData;
+        }
+    }
 }
 
 /**
@@ -91,30 +89,29 @@ export class EditorApp {
     private modelUpdateCallback?: (textModels: TextModels) => void;
     private config: EditorAppConfig;
 
-    constructor(id: string, userAppConfig: EditorAppConfig, logger?: Logger) {
+    constructor(id: string, $type: OverallConfigType, userAppConfig?: EditorAppConfig, logger?: Logger) {
         this.id = id;
         this.logger = logger;
         this.config = {
-            $type: userAppConfig.$type,
-            codeResources: userAppConfig.codeResources,
-            useDiffEditor: userAppConfig.useDiffEditor ?? false,
-            readOnly: userAppConfig.readOnly ?? false,
-            domReadOnly: userAppConfig.domReadOnly ?? false,
-            overrideAutomaticLayout: userAppConfig.overrideAutomaticLayout ?? true
+            codeResources: userAppConfig?.codeResources ?? undefined,
+            useDiffEditor: userAppConfig?.useDiffEditor ?? false,
+            readOnly: userAppConfig?.readOnly ?? false,
+            domReadOnly: userAppConfig?.domReadOnly ?? false,
+            overrideAutomaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
         };
         this.config.editorOptions = {
-            ...userAppConfig.editorOptions,
-            automaticLayout: userAppConfig.overrideAutomaticLayout ?? true
+            ...userAppConfig?.editorOptions,
+            automaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
         };
         this.config.diffEditorOptions = {
-            ...userAppConfig.diffEditorOptions,
-            automaticLayout: userAppConfig.overrideAutomaticLayout ?? true
+            ...userAppConfig?.diffEditorOptions,
+            automaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
         };
-        this.config.languageDef = userAppConfig.languageDef;
+        this.config.languageDef = userAppConfig?.languageDef;
 
         const languageDef = this.config.languageDef;
         if (languageDef) {
-            if (this.config.$type === 'extended') {
+            if ($type === 'extended') {
                 throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
             }
             // register own language first

@@ -14,14 +14,13 @@ import { configureMonacoWorkers, createMonacoEditorDiv } from './helper.js';
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
         const wrapperConfig: WrapperConfig = {
-            logLevel: LogLevel.Debug,
+            $type: 'extended',
             htmlContainer: createMonacoEditorDiv(),
+            logLevel: LogLevel.Debug,
             vscodeApiConfig: {
-                enableTextmate: true,
                 loadThemes: false
             },
             editorAppConfig: {
-                $type: 'extended',
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -46,14 +45,13 @@ describe('Test MonacoEditorReactComp', () => {
 
     test('update onTextChanged', async () => {
         const wrapperConfig: WrapperConfig = {
-            logLevel: LogLevel.Debug,
+            $type: 'extended',
             htmlContainer: createMonacoEditorDiv(),
+            logLevel: LogLevel.Debug,
             vscodeApiConfig: {
-                enableTextmate: true,
                 loadThemes: false
             },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
                     main: {
                         text: 'hello world',
@@ -76,14 +74,13 @@ describe('Test MonacoEditorReactComp', () => {
 
     test('update codeResources', async () => {
         const wrapperConfig: WrapperConfig = {
-            logLevel: LogLevel.Debug,
+            $type: 'extended',
             htmlContainer: createMonacoEditorDiv(),
+            logLevel: LogLevel.Debug,
             vscodeApiConfig: {
-                enableTextmate: true,
                 loadThemes: false
             },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
                     main: {
                         text: 'hello world',

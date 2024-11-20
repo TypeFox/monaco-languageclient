@@ -41,11 +41,10 @@ print("Hello Moon!")
 
     const wrapperConfig: WrapperConfig = {
         id: '42',
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
@@ -58,7 +57,6 @@ print("Hello Moon!")
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: currentText,
@@ -73,12 +71,12 @@ print("Hello Moon!")
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
-            if (wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally === true) {
+            wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            if (wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally === true) {
 
                 const logger = wrapper.getLogger();
                 logger.setLevel(wrapperConfig.logLevel!);
-                await configureAndInitVscodeApi({
+                await configureAndInitVscodeApi(wrapperConfig.$type, {
                     vscodeApiConfig: wrapperConfig.vscodeApiConfig!,
                     logLevel: wrapperConfig.logLevel!,
                 }, {
@@ -103,7 +101,7 @@ print("Hello Moon!")
             }
 
             await wrapper.initAndStart(wrapperConfig);
-            if (wrapperConfig.editorAppConfig.codeResources?.main !== undefined) {
+            if (wrapperConfig.editorAppConfig?.codeResources?.main !== undefined) {
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).text = currentText;
                 (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
             }
@@ -113,8 +111,8 @@ print("Hello Moon!")
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             disableButton('button-flip', true);
 
-            wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
-            if (wrapperConfig.vscodeApiConfig.vscodeApiInitPerformExternally === true) {
+            wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            if (wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally === true) {
                 disposeLanguageClients([lcwJson, lcwPython], false);
             }
             await wrapper.dispose();

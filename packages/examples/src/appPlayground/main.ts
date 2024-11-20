@@ -37,12 +37,11 @@ export const runApplicationPlayground = async () => {
     const workspaceFile = vscode.Uri.file('/workspace/.vscode/workspace.code-workspace');
 
     const wrapperConfig: WrapperConfig = {
+        $type: 'extended',
         id: 'AAP',
         logLevel: LogLevel.Debug,
         htmlContainer: document.body,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
@@ -109,7 +108,6 @@ export const runApplicationPlayground = async () => {
             }
         }],
         editorAppConfig: {
-            $type: 'extended',
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

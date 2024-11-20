@@ -19,11 +19,10 @@ export const buildJsonClientUserConfig = (params: {
     htmlContainer: HTMLElement
 }): WrapperConfig => {
     return {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: params.htmlContainer,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
@@ -38,7 +37,6 @@ export const buildJsonClientUserConfig = (params: {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text,

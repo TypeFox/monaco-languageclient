@@ -15,14 +15,12 @@ export const createMonacoEditorDiv = () => {
 
 export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     return {
+        $type: 'extended',
         htmlContainer: createMonacoEditorDiv(),
         vscodeApiConfig: {
-            vscodeApiInitPerformExternally: false,
-            enableTextmate: true,
             loadThemes: false
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: '',
@@ -36,14 +34,12 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
 
 export const createWrapperConfigClassicApp = (): WrapperConfig => {
     return {
+        $type: 'classic',
         htmlContainer: createMonacoEditorDiv(),
         vscodeApiConfig: {
-            vscodeApiInitPerformExternally: false,
-            enableTextmate: false,
             loadThemes: false
         },
         editorAppConfig: {
-            $type: 'classic',
             codeResources: {
                 main: {
                     text: '',

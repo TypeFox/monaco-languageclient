@@ -16,18 +16,16 @@ import code from '../../../../resources/langium/langium-dsl/example.langium?raw'
 export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
-        logLevel: LogLevel.Debug,
+        $type: 'classic',
         htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: false,
-            loadThemes: false,
             serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()
             }
         },
         editorAppConfig: {
-            $type: 'classic',
             codeResources: {
                 main: {
                     text: code,

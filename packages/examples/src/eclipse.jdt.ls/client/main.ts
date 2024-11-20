@@ -21,11 +21,10 @@ export const runEclipseJdtLsClient = () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const userConfig: WrapperConfig = {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
@@ -39,7 +38,6 @@ export const runEclipseJdtLsClient = () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: helloJavaCode,

@@ -53,11 +53,10 @@ export const createLangiumGlobalConfig = async (params: {
     } : undefined;
 
     return {
-        logLevel: LogLevel.Debug,
+        $type: 'extended',
         htmlContainer: params.htmlContainer,
+        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            enableTextmate: true,
-            loadThemes: true,
             serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
@@ -97,7 +96,6 @@ export const createLangiumGlobalConfig = async (params: {
             filesOrContents: extensionFilesOrContents
         }],
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main
             },
