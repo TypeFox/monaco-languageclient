@@ -2,8 +2,14 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.7] - 2024-11-13
+## [6.0.0-next.8] - 2024-11-21
 
+- Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
+  - API and internal functions clean-up
+  - Re-combination of `EditorAppClassic` and `EditorAppClassic`
+  - Moved `$type` to mandatory top-level element in `WrapperConfig`
+  - Reduced minimally mandatory configuration
+  - Exposed vscodeApi init functions
 - Moved `createUrl` to `monaco-languageclient/tools`, moved editor app specific utils to editorAppbase and create function `didModelContentChange`.
 - Added
 - Updated to eslint 9
@@ -11,7 +17,7 @@ All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - This also allows to configure editor-, view- or workspace-service. This is a preparation for further enhancements.
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated to `monaco-languageclient@9.0.0-next.7`. Updated all `@codingame/monaco-vscode` packages to `11.1.0`.
+  - Updated to `monaco-languageclient@9.0.0-next.8`. Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
   - Enhancements to logging, worker factory and start order. The worker factory only accepts direct worker loading instructions from now on
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Allows to configure more than one language client
