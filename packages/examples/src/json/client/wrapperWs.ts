@@ -19,9 +19,11 @@ export const buildJsonClientUserConfig = (params: {
     htmlContainer: HTMLElement
 }): WrapperConfig => {
     return {
+        $type: 'extended',
+        htmlContainer: params.htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -35,16 +37,13 @@ export const buildJsonClientUserConfig = (params: {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text,
                     fileExt: 'json'
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             json: {

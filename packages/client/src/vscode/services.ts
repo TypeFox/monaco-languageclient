@@ -17,6 +17,7 @@ import { EnvironmentOverride } from 'vscode/workbench';
 import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 import { setUnexpectedErrorHandler } from 'vscode/monaco';
+import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -26,22 +27,25 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
 export interface UserConfiguration {
     json?: string;
 }
+export interface ViewsConfig {
+    viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
+    openEditorFunc?: OpenEditor;
+    viewsInitFunc?: () => void;
+}
 
 export interface VscodeApiConfig {
-    userServices?: monaco.editor.IEditorOverrideServices;
+    vscodeApiInitPerformExternally?: boolean;
+    loadThemes?: boolean;
+    serviceOverrides?: monaco.editor.IEditorOverrideServices;
     enableExtHostWorker?: boolean;
     workspaceConfig?: IWorkbenchConstructionOptions;
     userConfiguration?: UserConfiguration;
-    viewsConfig?: {
-        viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
-        openEditorFunc?: OpenEditor;
-        viewsInitFunc?: () => void;
-    },
+    viewsConfig?: ViewsConfig,
     envOptions?: EnvironmentOverride;
 }
 
-export interface InitVscodeApiInstructions extends VscodeApiConfig {
-    htmlContainer: HTMLElement;
+export interface InitServicesInstructions {
+    htmlContainer?: HTMLElement;
     caller?: string;
     performServiceConsistencyChecks?: () => boolean;
     logger?: Logger;
@@ -82,13 +86,15 @@ export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServ
     }
 };
 
-export const mergeServices = (services: monaco.editor.IEditorOverrideServices, overrideServices: monaco.editor.IEditorOverrideServices) => {
-    for (const [name, service] of Object.entries(services)) {
-        overrideServices[name] = service;
+export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideServices, services?: monaco.editor.IEditorOverrideServices) => {
+    if (services !== undefined) {
+        for (const [name, service] of Object.entries(services)) {
+            overrideServices[name] = service;
+        }
     }
 };
 
-export const initServices = async (instructions: InitVscodeApiInstructions) => {
+export const initServices = async (vscodeApiConfig: VscodeApiConfig, instructions: InitServicesInstructions) => {
     const envEnhanced = initEnhancedMonacoEnvironment();
 
     if (!(envEnhanced.vscodeInitialising ?? false)) {
@@ -98,12 +104,14 @@ export const initServices = async (instructions: InitVscodeApiInstructions) => {
             envEnhanced.vscodeInitialising = true;
             instructions.logger?.debug(`Initializing vscode services. Caller: ${instructions.caller ?? 'unknown'}`);
 
-            await importAllServices(instructions);
-            instructions.viewsConfig?.viewsInitFunc?.();
+            await importAllServices(vscodeApiConfig, instructions);
+            vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
             instructions.logger?.debug('Initialization of vscode services completed successfully.');
 
             envEnhanced.vscodeApiInitialised = true;
         }
+
+        await updateUserConfiguration(vscodeApiConfig.userConfiguration?.json ?? JSON.stringify({}));
     }
 };
 
@@ -118,22 +126,20 @@ export const initServices = async (instructions: InitVscodeApiInstructions) => {
  *   - languages
  *   - model
  */
-export const importAllServices = async (instructions: InitVscodeApiInstructions) => {
-    const userServices: monaco.editor.IEditorOverrideServices = instructions.userServices ?? {};
+export const importAllServices = async (vscodeApiConfig: VscodeApiConfig, instructions: InitServicesInstructions) => {
+    const services = await supplyRequiredServices();
 
-    const lcRequiredServices = await supplyRequiredServices();
+    mergeServices(services, vscodeApiConfig.serviceOverrides);
+    await configureExtHostWorker(vscodeApiConfig.enableExtHostWorker === true, services);
 
-    mergeServices(lcRequiredServices, userServices);
-    await configureExtHostWorker(instructions.enableExtHostWorker === true, userServices);
-
-    reportServiceLoading(userServices, instructions.logger);
+    reportServiceLoading(services, instructions.logger);
 
     if (instructions.performServiceConsistencyChecks === undefined ||
         (typeof instructions.performServiceConsistencyChecks === 'function' && instructions.performServiceConsistencyChecks())) {
-        if (instructions.viewsConfig?.viewServiceType === 'ViewsService' || instructions.viewsConfig?.viewServiceType === 'WorkspaceService') {
-            await initialize(userServices, instructions.htmlContainer, instructions.workspaceConfig, instructions.envOptions);
+        if (vscodeApiConfig.viewsConfig?.viewServiceType === 'ViewsService' || vscodeApiConfig.viewsConfig?.viewServiceType === 'WorkspaceService') {
+            await initialize(services, instructions.htmlContainer, vscodeApiConfig.workspaceConfig, vscodeApiConfig.envOptions);
         } else {
-            await initialize(userServices, undefined, instructions.workspaceConfig, instructions.envOptions);
+            await initialize(services, undefined, vscodeApiConfig.workspaceConfig, vscodeApiConfig.envOptions);
         }
     }
 
@@ -153,10 +159,9 @@ export const configureExtHostWorker = async (enableExtHostWorker: boolean, userS
             options: fakeWorker.options
         };
 
-        const extHostServices = {
+        mergeServices(userServices, {
             ...getExtensionServiceOverride(workerConfig),
-        };
-        mergeServices(extHostServices, userServices);
+        });
     }
 };
 

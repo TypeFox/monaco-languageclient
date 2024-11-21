@@ -15,17 +15,18 @@ export const createMonacoEditorDiv = () => {
 
 export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     return {
+        $type: 'extended',
+        htmlContainer: createMonacoEditorDiv(),
+        vscodeApiConfig: {
+            loadThemes: false
+        },
         editorAppConfig: {
-            loadThemes: false,
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: '',
                     fileExt: 'js'
                 }
             },
-            useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv(),
             monacoWorkerFactory: configureMonacoWorkers
         }
     };
@@ -33,16 +34,18 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
 
 export const createWrapperConfigClassicApp = (): WrapperConfig => {
     return {
+        $type: 'classic',
+        htmlContainer: createMonacoEditorDiv(),
+        vscodeApiConfig: {
+            loadThemes: false
+        },
         editorAppConfig: {
-            $type: 'classic',
             codeResources: {
                 main: {
                     text: '',
                     fileExt: 'js'
                 }
             },
-            useDiffEditor: false,
-            htmlContainer: createMonacoEditorDiv(),
             monacoWorkerFactory: configureMonacoWorkers
         }
     };

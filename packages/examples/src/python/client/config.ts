@@ -29,6 +29,9 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
     const writer = new WebSocketMessageWriter(iWebSocket);
 
     return {
+        $type: 'extended',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
+        logLevel: LogLevel.Debug,
         languageClientConfigs: {
             python: {
                 name: 'Python Language Server Example',
@@ -61,9 +64,8 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
                 }
             }
         },
-        logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
             userConfiguration: {
@@ -76,16 +78,13 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: code,
                     uri: codeUri
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

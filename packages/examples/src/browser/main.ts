@@ -29,9 +29,11 @@ export const runBrowserEditor = async () => {
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
     const jsonClientUserConfig: WrapperConfig = {
+        $type: 'extended',
+        htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -44,16 +46,13 @@ export const runBrowserEditor = async () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: code,
                     uri: codeUri
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
     await wrapper.init(jsonClientUserConfig);

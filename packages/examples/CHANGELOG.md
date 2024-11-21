@@ -2,10 +2,18 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.11.2] - 2024-11-21
+
+- Updated to `monaco-languageclient@9.0.0-next.8`, `monaco-editor-wrapper@6.0.0-next.8` and `@typefox/monaco-editor-react@6.0.0-next.8`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
+- Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
+  - Aligned examples with API changes
+  - Two language clients example can now be launch with both language clients initialized by the wrapper or externally
+
 ## [2024.10.6] - 2024-11-13
 
 - Updated to `monaco-languageclient@9.0.0-next.7`, `monaco-editor-wrapper@6.0.0-next.7` and `@typefox/monaco-editor-react@6.0.0-next.7`.
-- Updated all `@codingame/monaco-vscode` packages to `11.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.0`.
 
 ## [2024.10.5] - 2024-10-31
 

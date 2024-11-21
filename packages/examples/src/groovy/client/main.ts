@@ -17,9 +17,11 @@ File file = new File("E:/Example.txt");
 `;
 
 const userConfig: WrapperConfig = {
+    $type: 'extended',
+    htmlContainer: document.getElementById('monaco-editor-root')!,
     logLevel: LogLevel.Debug,
     vscodeApiConfig: {
-        userServices: {
+        serviceOverrides: {
             ...getKeybindingsServiceOverride(),
         },
         userConfiguration: {
@@ -32,16 +34,13 @@ const userConfig: WrapperConfig = {
         }
     },
     editorAppConfig: {
-        $type: 'extended',
         codeResources: {
             main: {
                 text: code,
                 fileExt: 'groovy'
             }
         },
-        useDiffEditor: false,
-        monacoWorkerFactory: configureMonacoWorkers,
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         groovy: {

@@ -28,9 +28,7 @@ export const vitestBaseConfig = {
         include: [
             '**/client/test/tools/index.test.ts',
             '**/wrapper/test/vscode/services.test.ts',
-            '**/wrapper/test/editorAppBase.test.ts',
-            '**/wrapper/test/editorAppClassic.test.ts',
-            '**/wrapper/test/editorAppExtended.test.ts',
+            '**/wrapper/test/editorApp.test.ts',
             '**/wrapper/test/languageClientWrapper.test.ts',
             '**/wrapper/test/utils.test.ts',
             '**/wrapper/test/wrapper.test.ts',

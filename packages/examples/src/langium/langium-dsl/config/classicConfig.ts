@@ -16,15 +16,16 @@ import code from '../../../../resources/langium/langium-dsl/example.langium?raw'
 export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
     const langiumWorker = loadLangiumWorker();
     return {
+        $type: 'classic',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()
             }
         },
         editorAppConfig: {
-            $type: 'classic',
             codeResources: {
                 main: {
                     text: code,
@@ -32,7 +33,6 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
                     enforceLanguageId: 'langium'
                 }
             },
-            useDiffEditor: false,
             editorOptions: {
                 'semanticHighlighting.enabled': true,
                 wordBasedSuggestions: 'off',
@@ -46,8 +46,7 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
                 useWorkerFactory({
                     logger
                 });
-            },
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            }
         },
         languageClientConfigs: {
             langium: {

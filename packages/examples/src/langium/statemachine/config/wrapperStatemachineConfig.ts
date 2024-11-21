@@ -53,9 +53,11 @@ export const createLangiumGlobalConfig = async (params: {
     } : undefined;
 
     return {
+        $type: 'extended',
+        htmlContainer: params.htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
@@ -69,38 +71,35 @@ export const createLangiumGlobalConfig = async (params: {
                 })
             },
         },
+        extensions: [{
+            config: {
+                name: 'statemachine-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
+                },
+                contributes: {
+                    languages: [{
+                        id: 'statemachine',
+                        extensions: ['.statemachine'],
+                        aliases: ['statemachine', 'Statemachine'],
+                        configuration: `./${params.languageServerId}-statemachine-configuration.json`
+                    }],
+                    grammars: [{
+                        language: 'statemachine',
+                        scopeName: 'source.statemachine',
+                        path: `./${params.languageServerId}-statemachine-grammar.json`
+                    }]
+                }
+            },
+            filesOrContents: extensionFilesOrContents
+        }],
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main
             },
-            useDiffEditor: false,
-            extensions: [{
-                config: {
-                    name: 'statemachine-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    },
-                    contributes: {
-                        languages: [{
-                            id: 'statemachine',
-                            extensions: ['.statemachine'],
-                            aliases: ['statemachine', 'Statemachine'],
-                            configuration: `./${params.languageServerId}-statemachine-configuration.json`
-                        }],
-                        grammars: [{
-                            language: 'statemachine',
-                            scopeName: 'source.statemachine',
-                            path: `./${params.languageServerId}-statemachine-grammar.json`
-                        }]
-                    }
-                },
-                filesOrContents: extensionFilesOrContents
-            }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs
     };

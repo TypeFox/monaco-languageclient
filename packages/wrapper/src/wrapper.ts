@@ -4,22 +4,29 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
+import { DisposableStore } from 'vscode/monaco';
 import { LogLevel } from 'vscode/services';
+import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from 'vscode/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { VscodeApiConfig, initServices } from 'monaco-languageclient/vscode/services';
+import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
-import { checkServiceConsistency, configureVscodeApi } from './vscode/services.js';
-import { EditorAppConfigExtended, EditorAppExtended } from './editorAppExtended.js';
-import { EditorAppClassic, EditorAppConfigClassic } from './editorAppClassic.js';
-import { CodeResources, ModelRefs, TextContents, TextModels } from './editorAppBase.js';
+import { augmentVscodeApiConfig, checkServiceConsistency, OverallConfigType, VscodeServicesConfig } from './vscode/services.js';
+import { CodeResources, EditorApp, EditorAppConfig, ModelRefs, TextContents, TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
 import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
-import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+
+export interface ExtensionConfig {
+    config: IExtensionManifest | object;
+    filesOrContents?: Map<string, string | URL>;
+}
 
 export interface WrapperConfig {
+    $type: OverallConfigType;
+    htmlContainer?: HTMLElement;
     id?: string;
     logLevel?: LogLevel | number;
+    extensions?: ExtensionConfig[];
     vscodeApiConfig?: VscodeApiConfig;
-    editorAppConfig: EditorAppConfigExtended | EditorAppConfigClassic;
+    editorAppConfig?: EditorAppConfig;
     languageClientConfigs?: Record<string, LanguageClientConfig>;
 }
 
@@ -31,8 +38,11 @@ export interface WrapperConfig {
 export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
-    private editorApp: EditorAppClassic | EditorAppExtended | undefined;
+    private editorApp?: EditorApp;
+    private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
+    private disposableStore?: DisposableStore;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
+    private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
     private initDone = false;
     private starting?: Promise<void>;
@@ -50,55 +60,51 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         const editorAppConfig = wrapperConfig.editorAppConfig;
-        if ((editorAppConfig.useDiffEditor ?? false) && !editorAppConfig.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig.codeResources?.main} codeOriginal: ${editorAppConfig.codeResources?.original}`);
+        if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.main} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
         }
 
         const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType ?? 'EditorService';
-        if ((viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService') && editorAppConfig.$type === 'classic') {
+        if (wrapperConfig.$type === 'classic' && (viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService')) {
             throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
         }
 
-        // Always dispose old instances before start
+        // Always dispose old instances before start and
+        // ensure disposable store is available again after dispose
         this.dispose(false);
-        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
-        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
+        this.disposableStore = new DisposableStore();
 
-        if (typeof wrapperConfig.editorAppConfig.monacoWorkerFactory === 'function') {
+        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+
+        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
+        if (typeof wrapperConfig.editorAppConfig?.monacoWorkerFactory === 'function') {
             wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
         }
 
-        if (editorAppConfig.$type === 'classic') {
-            this.editorApp = new EditorAppClassic(this.id, wrapperConfig.editorAppConfig as EditorAppConfigClassic, this.logger);
-        } else {
-            this.editorApp = new EditorAppExtended(this.id, wrapperConfig.editorAppConfig as EditorAppConfigExtended, this.logger);
+        if (!(wrapperConfig.vscodeApiConfig?.vscodeApiInitPerformExternally === true)) {
+            wrapperConfig.vscodeApiConfig = await configureAndInitVscodeApi(wrapperConfig.$type, {
+                vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
+                logLevel: this.logger.getLevel(),
+                // workaround for classic monaco-editor not applying semanticHighlighting
+                semanticHighlighting: wrapperConfig.editorAppConfig?.editorOptions?.['semanticHighlighting.enabled'] === true
+            }, {
+                htmlContainer: wrapperConfig.htmlContainer,
+                caller: `monaco-editor (${this.id})`,
+                performServiceConsistencyChecks: checkServiceConsistency,
+                logger: this.logger
+            });
         }
+        this.wrapperConfig = wrapperConfig;
 
-        // editorApps init their own service thats why they have to be created first
-        const specificServices = await this.editorApp.specifyServices();
-        const vscodeApiConfig = await configureVscodeApi({
-            vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
-            specificServices,
-            logLevel: this.logger.getLevel(),
-            // workaround for classic monaco-editor not applying semanticHighlighting
-            semanticHighlighting: wrapperConfig.editorAppConfig.editorOptions?.['semanticHighlighting.enabled'] === true
-        });
-        wrapperConfig.vscodeApiConfig = vscodeApiConfig;
-        await initServices({
-            userServices: vscodeApiConfig.userServices,
-            enableExtHostWorker: vscodeApiConfig.enableExtHostWorker,
-            workspaceConfig: vscodeApiConfig.workspaceConfig,
-            userConfiguration: vscodeApiConfig.userConfiguration,
-            viewsConfig: vscodeApiConfig.viewsConfig,
-            htmlContainer: editorAppConfig.htmlContainer,
-            caller: `monaco-editor (${this.id})`,
-            performServiceConsistencyChecks: checkServiceConsistency,
-            logger: this.logger
-        });
+        await this.initLanguageClients();
+        await this.initExtensions();
+        this.editorApp = new EditorApp(this.id, wrapperConfig.$type, wrapperConfig.editorAppConfig, this.logger);
 
-        await updateUserConfiguration(vscodeApiConfig.userConfiguration?.json ?? JSON.stringify({}));
+        this.initDone = true;
+    }
 
-        const lccEntries = Object.entries(wrapperConfig.languageClientConfigs ?? {});
+    async initLanguageClients() {
+        const lccEntries = Object.entries(this.wrapperConfig?.languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
                 const lcw = new LanguageClientWrapper({
@@ -108,11 +114,38 @@ export class MonacoEditorLanguageClientWrapper {
                 this.languageClientWrappers.set(languageId, lcw);
             }
         }
+    }
 
-        await this.editorApp.init();
-        this.initDone = true;
+    async initExtensions() {
+        const vscodeApiConfig = this.wrapperConfig?.vscodeApiConfig;
+        if (this.wrapperConfig?.$type === 'extended' && (vscodeApiConfig?.loadThemes === undefined ? true : vscodeApiConfig.loadThemes === true)) {
+            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
+        }
 
-        return wrapperConfig;
+        const extensions = this.wrapperConfig?.extensions;
+        if (this.wrapperConfig?.extensions) {
+            const allPromises: Array<Promise<void>> = [];
+            for (const extensionConfig of extensions ?? []) {
+                const manifest = extensionConfig.config as IExtensionManifest;
+                const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
+                this.extensionRegisterResults.set(manifest.name, extRegResult);
+                if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+                    for (const entry of extensionConfig.filesOrContents) {
+                        this.disposableStore?.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
+                    }
+                }
+                allPromises.push(extRegResult.whenReady());
+            }
+            await Promise.all(allPromises);
+        }
+    };
+
+    getWrapperConfig() {
+        return this.wrapperConfig;
+    }
+
+    getExtensionRegisterResult(extensionName: string) {
+        return this.extensionRegisterResults.get(extensionName);
     }
 
     /**
@@ -126,13 +159,18 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start() {
+    async start(htmlContainer?: HTMLElement) {
         if (!this.initDone) {
             throw new Error('No init was performed. Please call init() before start()');
         }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        await this.editorApp?.createEditors();
+        const html = htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : htmlContainer;
+        if (html === undefined) {
+            throw new Error('No html container provided. Unable to start monaco-editor.');
+        } else {
+            await this.editorApp?.createEditors(html);
+        }
 
         await this.startLanguageClients();
 
@@ -250,28 +288,21 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(disposeLanguageClients: boolean = true) {
+    async dispose(doDisposeLanguageClients: boolean = true) {
         this.markStopping();
 
         this.editorApp?.disposeApp();
         this.editorApp = undefined;
 
-        if (disposeLanguageClients) {
-            await this.disposeLanguageClients();
+        this.extensionRegisterResults.forEach((k) => k.dispose());
+        this.disposableStore?.dispose();
+
+        if (doDisposeLanguageClients) {
+            await disposeLanguageClients(this.languageClientWrappers.values(), false);
         }
 
         this.initDone = false;
         this.markStopped();
-    }
-
-    async disposeLanguageClients() {
-        const allPromises: Array<Promise<void>> = [];
-        for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClient()) {
-                allPromises.push(lcw.disposeLanguageClient(false));
-            }
-        }
-        return Promise.all(allPromises);
     }
 
     private markStopping() {
@@ -294,3 +325,19 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
 }
+
+export const configureAndInitVscodeApi = async ($type: OverallConfigType, config: VscodeServicesConfig, initInstructions: InitServicesInstructions) => {
+    const vscodeApiConfigAugmented = await augmentVscodeApiConfig($type, config);
+    await initServices(vscodeApiConfigAugmented, initInstructions);
+    return vscodeApiConfigAugmented;
+};
+
+export const disposeLanguageClients = async (languageClientWrappers: LanguageClientWrapper[] | MapIterator<LanguageClientWrapper>, keepWorker: boolean) => {
+    const allPromises: Array<Promise<void>> = [];
+    for (const lcw of languageClientWrappers) {
+        if (lcw.haveLanguageClient()) {
+            allPromises.push(lcw.disposeLanguageClient(keepWorker));
+        }
+    }
+    return Promise.all(allPromises);
+};

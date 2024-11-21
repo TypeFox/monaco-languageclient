@@ -9,16 +9,17 @@ import React from 'react';
 import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, TextChanges, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureMonacoWorkers, createMonacoEditorDiv, updateExtendedAppPrototyp } from './helper.js';
+import { configureMonacoWorkers } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -42,18 +43,19 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update onTextChanged', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
                     main: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -69,18 +71,19 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update codeResources', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
                     main: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };

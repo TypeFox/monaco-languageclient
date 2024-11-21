@@ -21,9 +21,11 @@ export const runEclipseJdtLsClient = () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const userConfig: WrapperConfig = {
+        $type: 'extended',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -36,16 +38,13 @@ export const runEclipseJdtLsClient = () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
                     text: helloJavaCode,
                     uri: `${eclipseJdtLsConfig.basePath}/workspace/hello.java`
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             java: {

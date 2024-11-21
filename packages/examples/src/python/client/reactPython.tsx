@@ -22,7 +22,7 @@ export const runPythonReact = async () => {
         console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.text}\ntextOriginal: ${textChanges.textOriginal}`);
     };
     const wrapperConfig = createUserConfig('/workspace', badPyCode, '/workspace/bad.py');
-    const root = ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer);
+    const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {

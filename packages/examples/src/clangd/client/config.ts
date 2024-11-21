@@ -28,6 +28,8 @@ export const createWrapperConfig = async (config: {
     lsMessageLocalPort: MessagePort
 }): Promise<WrapperConfig> => {
     return {
+        $type: 'extended',
+        htmlContainer: config.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
             LANGUAGE_ID: {
@@ -55,7 +57,7 @@ export const createWrapperConfig = async (config: {
             }
         },
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
@@ -107,20 +109,18 @@ export const createWrapperConfig = async (config: {
                 })
             }
         },
-        editorAppConfig: {
-            $type: 'extended',
-            extensions: [{
-                config: {
-                    name: 'mlc-clangd-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    }
+        extensions: [{
+            config: {
+                name: 'mlc-clangd-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
                 }
-            }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: config.htmlContainer
+            }
+        }],
+        editorAppConfig: {
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 };

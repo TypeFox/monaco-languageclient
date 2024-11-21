@@ -56,8 +56,8 @@ const run = async () => {
   const wrapper = new MonacoEditorLanguageClientWrapper();
   const userConfig = {
     wrapperConfig: {
+      $type: 'extendend',
       editorAppConfig: {
-        $type: 'extendend',
         codeResources: {
           main: {
             text: 'print("Hello, World!")',

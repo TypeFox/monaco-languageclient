@@ -5,7 +5,7 @@
 
 import { MonacoLanguageClient } from './client.js';
 
-export type ConnetionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
+export type ConnectionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
 
 export interface WebSocketCallOptions {
     /** Adds handle on languageClient */

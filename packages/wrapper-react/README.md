@@ -25,8 +25,8 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 
 const userConfig: UserConfig = {
   wrapperConfig: {
+    $type: 'extendend',
     editorAppConfig: {
-      $type: 'extendend',
       codeResources: {
         main: {
           text: 'print("Hello, World!")',
@@ -37,7 +37,6 @@ const userConfig: UserConfig = {
   }
 };
 
-const htmlElement = document.getElementById('monaco-editor-root') as HTMLElement;
 const comp = <MonacoEditorReactComp
     userConfig={userConfig}
     style={{
@@ -45,7 +44,7 @@ const comp = <MonacoEditorReactComp
         'height': '80vh'
     }}
 />;
-ReactDOM.createRoot(htmlElement!).render(comp);
+ReactDOM.createRoot(document.getElementById('react-root')!).render(comp);
 
 ```
 

@@ -5,6 +5,7 @@
 
 import * as vscode from 'vscode';
 import { LogLevel } from 'vscode/services';
+import { RegisterLocalProcessExtensionResult } from 'vscode/extensions';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
@@ -23,7 +24,7 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import { EditorAppExtended, MonacoEditorLanguageClientWrapper, RegisterLocalProcessExtensionResult, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
@@ -36,10 +37,12 @@ export const runApplicationPlayground = async () => {
     const workspaceFile = vscode.Uri.file('/workspace/.vscode/workspace.code-workspace');
 
     const wrapperConfig: WrapperConfig = {
+        $type: 'extended',
         id: 'AAP',
         logLevel: LogLevel.Debug,
+        htmlContainer: document.body,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
@@ -94,20 +97,18 @@ export const runApplicationPlayground = async () => {
                 })
             },
         },
-        editorAppConfig: {
-            $type: 'extended',
-            extensions: [{
-                config: {
-                    name: 'mlc-app-playground',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    }
+        extensions: [{
+            config: {
+                name: 'mlc-app-playground',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
                 }
-            }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.body
+            }
+        }],
+        editorAppConfig: {
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 
@@ -124,7 +125,7 @@ export const runApplicationPlayground = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     await wrapper.init(wrapperConfig);
-    const result = (wrapper.getMonacoEditorApp() as EditorAppExtended).getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
+    const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
 
     await Promise.all([

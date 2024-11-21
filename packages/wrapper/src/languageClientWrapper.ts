@@ -5,12 +5,12 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { MonacoLanguageClient, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
+import { ConnectionConfigOptions, MonacoLanguageClient, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
 import { createUrl, Logger } from 'monaco-languageclient/tools';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export interface ConnectionConfig {
-    options: ConnetionConfigOptions;
+    options: ConnectionConfigOptions;
     messageTransports?: MessageTransports;
 }
 
@@ -260,8 +260,8 @@ export class LanguageClientWrapper {
 
     async disposeLanguageClient(keepWorker: boolean): Promise<void> {
         try {
-            if (this.languageClient !== undefined && this.languageClient.isRunning()) {
-                await this.languageClient.dispose();
+            if (this.isStarted()) {
+                await this.languageClient?.dispose();
                 this.languageClient = undefined;
                 this.logger?.info('monaco-languageclient and monaco-editor were successfully disposed.');
             }
@@ -277,7 +277,6 @@ export class LanguageClientWrapper {
                 this.disposeWorker();
             }
         }
-        return Promise.resolve();
     }
 
     reportStatus() {

@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.0.1",
-    "monaco-editor-wrapper": "~6.0.0-next.7",
-    "monaco-languageclient-examples": "~2024.10.6",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.0.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.1",
+    "monaco-editor-wrapper": "~6.0.0-next.8",
+    "monaco-languageclient-examples": "~2024.11.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.1"
   },
   "devDependencies": {
     "@types/vscode": "~1.94.0",
@@ -20,8 +20,8 @@
     "webpack-cli": "~5.1.4"
   },
   "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+    "node": "22.11.0",
+    "npm": "10.9.0"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",
