@@ -5,13 +5,6 @@
 
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
-export const createMonacoEditorDiv = () => {
-    const div = document.createElement('div');
-    div.id = 'monaco-editor-root';
-    document.body.insertAdjacentElement('beforeend', div);
-    return div;
-};
-
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
         workerOverrides: {

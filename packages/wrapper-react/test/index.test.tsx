@@ -9,13 +9,12 @@ import React from 'react';
 import { LogLevel } from 'vscode/services';
 import { MonacoEditorLanguageClientWrapper, TextChanges, WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureMonacoWorkers, createMonacoEditorDiv } from './helper.js';
+import { configureMonacoWorkers } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
         const wrapperConfig: WrapperConfig = {
             $type: 'extended',
-            htmlContainer: createMonacoEditorDiv(),
             logLevel: LogLevel.Debug,
             vscodeApiConfig: {
                 loadThemes: false
@@ -46,7 +45,6 @@ describe('Test MonacoEditorReactComp', () => {
     test('update onTextChanged', async () => {
         const wrapperConfig: WrapperConfig = {
             $type: 'extended',
-            htmlContainer: createMonacoEditorDiv(),
             logLevel: LogLevel.Debug,
             vscodeApiConfig: {
                 loadThemes: false
@@ -75,7 +73,6 @@ describe('Test MonacoEditorReactComp', () => {
     test('update codeResources', async () => {
         const wrapperConfig: WrapperConfig = {
             $type: 'extended',
-            htmlContainer: createMonacoEditorDiv(),
             logLevel: LogLevel.Debug,
             vscodeApiConfig: {
                 loadThemes: false
