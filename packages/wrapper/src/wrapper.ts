@@ -21,7 +21,7 @@ export interface ExtensionConfig {
 
 export interface WrapperConfig {
     $type: OverallConfigType;
-    htmlContainer: HTMLElement;
+    htmlContainer?: HTMLElement;
     id?: string;
     logLevel?: LogLevel | number;
     extensions?: ExtensionConfig[];
@@ -165,8 +165,12 @@ export class MonacoEditorLanguageClientWrapper {
         }
 
         this.logger.info(`Starting monaco-editor (${this.id})`);
-        const html = htmlContainer === undefined ? this.wrapperConfig!.htmlContainer : htmlContainer;
-        await this.editorApp?.createEditors(html);
+        const html = htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : htmlContainer;
+        if (html === undefined) {
+            throw new Error('No html container provided. Unable to start monaco-editor.');
+        } else {
+            await this.editorApp?.createEditors(html);
+        }
 
         await this.startLanguageClients();
 

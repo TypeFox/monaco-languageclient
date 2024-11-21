@@ -18,7 +18,7 @@ export const runStatemachineReact = async () => {
         worker: loadStatemachineWorkerRegular(),
         htmlContainer: document.getElementById('monaco-editor-root')!
     });
-    const root = ReactDOM.createRoot(wrapperConfig.htmlContainer);
+    const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {

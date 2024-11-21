@@ -45,7 +45,7 @@ export interface VscodeApiConfig {
 }
 
 export interface InitServicesInstructions {
-    htmlContainer: HTMLElement;
+    htmlContainer?: HTMLElement;
     caller?: string;
     performServiceConsistencyChecks?: () => boolean;
     logger?: Logger;
