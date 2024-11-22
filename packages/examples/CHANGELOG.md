@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.11.3] - 2024-11-22
+
+- Updated to `monaco-languageclient@9.0.0-next.9`, `monaco-editor-wrapper@6.0.0-next.9` and `@typefox/monaco-editor-react@6.0.0-next.9`.
+  - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
+
 ## [2024.11.2] - 2024-11-21
 
 - Updated to `monaco-languageclient@9.0.0-next.8`, `monaco-editor-wrapper@6.0.0-next.8` and `@typefox/monaco-editor-react@6.0.0-next.8`.

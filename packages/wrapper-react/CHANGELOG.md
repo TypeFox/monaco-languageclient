@@ -2,8 +2,9 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.8] - 2024-11-21
+## [6.0.0-next.9] - 2024-11-22
 
+- Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
 - Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
   - Internal functions clean-up. `containerRef.current` is directly passed to editor start.
 - Use `didModelContentChange` from `monaco-editor-wrapper` for model content verifications.
@@ -12,7 +13,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - On startup the current containerRef is passed to the interal editor app/monaco-editor
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated to `monaco-editor-wrapper@9.0.0-next.8` and `monaco-languageclient@6.0.0-next.8`. Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
+  - Updated to `monaco-editor-wrapper@9.0.0-next.9` and `monaco-languageclient@6.0.0-next.9`. Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
 - Turned react component from class to function [#739](https://github.com/TypeFox/monaco-languageclient/pull/739)

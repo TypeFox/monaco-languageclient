@@ -2,8 +2,9 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.8] - 2024-11-21
+## [9.0.0-next.9] - 2024-11-22
 
+- Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
 - Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
   - API and internal functions clean-up
 - Function naming adjustments
