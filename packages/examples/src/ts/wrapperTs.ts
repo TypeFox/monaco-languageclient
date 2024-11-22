@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '@codingame/monaco-vscode-stypescript-basics-default-extension';
+import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { LogLevel } from 'vscode/services';
 import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
