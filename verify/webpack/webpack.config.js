@@ -37,7 +37,11 @@ const config = {
     },
     target: 'web',
     resolve: {
-        extensions: ['.ts', '.js', '.json', '.ttf']
+        extensions: ['.ts', '.js', '.json', '.ttf'],
+        fallback: {
+            fs: false,
+            vm: false
+        }
     },
     mode: 'development',
     devtool: 'source-map'

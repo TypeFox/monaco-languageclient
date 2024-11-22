@@ -17,7 +17,7 @@ import {
     MonacoEditorLanguageClientWrapper,
     TextChanges,
     TextModels,
-    WrapperConfig , didModelContentChange
+    WrapperConfig, didModelContentChange
 } from 'monaco-editor-wrapper';
 
 @Component({
@@ -30,7 +30,7 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     @Output() onTextChanged = new EventEmitter<string>();
     wrapperConfig = input<WrapperConfig>();
     monacoEditorId = input<string>();
-    editorInlineStyle   = input<string>();
+    editorInlineStyle = input<string>();
     private wrapper: MonacoEditorLanguageClientWrapper =
         new MonacoEditorLanguageClientWrapper();
     private _subscription: monaco.IDisposable | null = null;
@@ -85,11 +85,11 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
         }
     }
 
-    emitCodeChange(textModels:  TextModels , wrapperConfig: WrapperConfig ) {
-        const  onTextChanged = (textChanges: TextChanges) => {
+    emitCodeChange(textModels: TextModels, wrapperConfig: WrapperConfig) {
+        const onTextChanged = (textChanges: TextChanges) => {
             this.onTextChanged.emit(textChanges.text);
         };
-        didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
+        didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
     }
 
 }
