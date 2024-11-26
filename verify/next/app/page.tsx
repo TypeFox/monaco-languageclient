@@ -5,21 +5,25 @@
 
 'use client';
 
+import React from 'react';
 import dynamic from 'next/dynamic';
-import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 
-const DynamicMonacoEditorReact = dynamic(() => import('@typefox/monaco-editor-react').then(mod => mod.MonacoEditorReactComp), {
-    ssr: false,
+const DynamicMonacoEditorReact = dynamic(async () => {
+    const { buildJsonClientUserConfig } = await import('monaco-languageclient-examples/json-client');
+    const comp = await import('@typefox/monaco-editor-react');
+    const wrapperConfig = buildJsonClientUserConfig();
+    return () => <comp.MonacoEditorReactComp
+        style={{ 'height': '100%' }}
+        wrapperConfig={wrapperConfig} />
+}, {
+    ssr: false
 });
 
+
 export default function Page() {
-    // const wrapperConfig = buildWrapperConfig();
-    const wrapperConfig = buildJsonClientUserConfig();
     return (
         <div style={{ 'height': '80vh', padding: '5px' }} >
-            <DynamicMonacoEditorReact
-                style={{ 'height': '100%' }}
-                wrapperConfig={wrapperConfig} />
+            <DynamicMonacoEditorReact />
         </div>
     );
 }

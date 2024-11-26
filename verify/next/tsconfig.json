@@ -8,7 +8,7 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -26,10 +26,11 @@
     "noEmit": true
   },
   "include": [
+    "dist/types/**/*.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/next-env.d.ts",
-    "dist/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "dist/**/*",

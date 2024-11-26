@@ -7,7 +7,7 @@ import pluginTypescriptEslint from '@typescript-eslint/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
 import pluginUnusedImports from 'eslint-plugin-unused-imports';
 import pluginHeader from 'eslint-plugin-header';
-import pluginStylistic from '@stylistic/eslint-plugin'
+import pluginStylistic from '@stylistic/eslint-plugin';
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,7 +32,9 @@ export default [{
         '**/out/**/*',
         '**/bin/**/*',
         '**/resources/**/*',
-        '**/production/**/*'
+        '**/production/**/*',
+        '**/.next/**/*',
+        '**/*env.d.ts',
     ],
 }, ...compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended'), {
     files: [
