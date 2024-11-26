@@ -15,12 +15,10 @@ const text = `{
     "line_endings": {"value": "unix"}
 }`;
 
-export const buildJsonClientUserConfig = (params: {
-    htmlContainer: HTMLElement
-}): WrapperConfig => {
+export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperConfig => {
     return {
         $type: 'extended',
-        htmlContainer: params.htmlContainer,
+        htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
             serviceOverrides: {
@@ -78,9 +76,7 @@ export const runJsonWrapper = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            const config = buildJsonClientUserConfig({
-                htmlContainer: document.getElementById('monaco-editor-root')!
-            });
+            const config = buildJsonClientUserConfig(document.getElementById('monaco-editor-root')!);
             await wrapper.initAndStart(config);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

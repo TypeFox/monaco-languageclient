@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "scripts": {
+    "verify": "npm install && npm run dev",
+    "verify:ci": "npm install && npm run build -d",
+    "dev": "next dev -p 8084",
+    "dev:turbo": "next dev --turbopack -p 8084",
+    "build": "next build",
+    "start": "next start",
+    "clean": "shx rm -fr dist .next *.tsbuildinfo"
+  },
+  "type": "module",
+  "dependencies": {
+    "@codingame/monaco-vscode-keybindings-service-override": "~11.1.1",
+    "@typefox/monaco-editor-react": "~6.0.0-next.9",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.1",
+    "monaco-editor-wrapper": "~6.0.0-next.9",
+    "monaco-languageclient-examples": "~2024.11.4",
+    "next": "~15.0.3",
+    "react": "~18.3.1",
+    "react-dom": "~18.3.1",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "~22.10.0",
+    "@types/react": "~18.3.12",
+    "@types/react-dom": "~18.3.1",
+    "shx": "~0.3.4",
+    "typescript": "~5.6.3"
+  },
+  "volta": {
+    "node": "22.11.0",
+    "npm": "10.9.0"
+  }
+}
