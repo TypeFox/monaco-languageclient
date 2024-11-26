@@ -28,9 +28,7 @@ export class AppComponent implements AfterViewInit {
     async ngAfterViewInit(): Promise<void> {
         const editorDom = document.getElementById(this.editorId);
         if (editorDom) {
-            const config = buildJsonClientUserConfig({
-                htmlContainer: editorDom,
-            });
+            const config = buildJsonClientUserConfig(editorDom);
             this.wrapperConfig.set(config);
         }
     }

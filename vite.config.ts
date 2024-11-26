@@ -14,7 +14,7 @@ const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm'
 
 export const definedViteConfig = defineConfig({
     build: {
-        target: 'esnext',
+        target: 'ES2022',
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
