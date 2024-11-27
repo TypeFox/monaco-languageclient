@@ -3,12 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { AfterViewInit, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-angular-wrapper.component';
 import { SaveCodeService } from '../save-code.service';
 import { firstValueFrom } from 'rxjs';
 import { getGroovyClientConfig } from '../config/groovy.config';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -16,9 +17,8 @@ import { getGroovyClientConfig } from '../config/groovy.config';
     standalone: true,
     imports: [MonacoAngularWrapperComponent],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
     private saveCodeService = inject(SaveCodeService);
-    wrapperConfig = signal<WrapperConfig | undefined>(undefined); // this can be updated at runtime
     groovyWrapperConfig = signal<WrapperConfig | undefined>(undefined); // this can be updated at runtime
     title = 'angular demo for saving code';
     editorId = 'monaco-editor-root'; // this can be parameterized or it can be in a loop to support multiple editors
@@ -26,13 +26,8 @@ export class AppComponent implements AfterViewInit {
     editorInlineStyle = signal('height: 50vh;');
     readonly codeText = signal('');
 
-    async ngAfterViewInit(): Promise<void> {
-        const groovyEditorDom = document.getElementById(this.groovyEditorId);
-
-        if (groovyEditorDom) {
-            const groovyConfig = getGroovyClientConfig(this.groovyEditorId);
-            this.groovyWrapperConfig.set(groovyConfig);
-        }
+    constructor() {
+        this.groovyWrapperConfig.set(getGroovyClientConfig());
     }
 
     onTextChanged(text: string) {

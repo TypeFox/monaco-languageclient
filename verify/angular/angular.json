@@ -17,14 +17,17 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.json",
-            // "plugins": ["./node_modules/@codingame/esbuild-import-meta-url-plugin/dist/esbuildImportMetaUrlPlugin.js"],
-            "polyfills": [
-              "zone.js"
-            ],
+            "plugins": ["./node_modules/@codingame/esbuild-import-meta-url-plugin/dist/esbuildImportMetaUrlPlugin.js"],
+            // "plugins": ["./esbuild/plugins.ts", {
+            //   "path": "./esbuild/define-env.ts",
+            //   "options": { "stage": "development" }
+            // }],
             "styles": [],
             "scripts": [],
             "aot": false,
             "optimization": false,
+            "ssr": false,
+            "prerender": false,
             "sourceMap": true,
             "namedChunks": false,
             "extractLicenses": false,

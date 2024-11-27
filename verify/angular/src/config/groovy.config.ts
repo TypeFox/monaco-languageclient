@@ -4,14 +4,19 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from 'vscode';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import '@codingame/monaco-vscode-groovy-default-extension';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from 'monaco-languageclient-examples';
-export function getGroovyClientConfig(htmlContainerId: string) {
-    const userConfig: WrapperConfig = {
+
+export const getGroovyClientConfig: () => WrapperConfig = () => {
+    return {
+        $type: 'extended',
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
+                ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -24,20 +29,20 @@ export function getGroovyClientConfig(htmlContainerId: string) {
             },
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
                 main: {
-                    text: '',
-                    fileExt: 'groovy',
+                    text: 'System.out.println("Hello, World!");',
+                    fileExt: 'groovy'
                 },
             },
             useDiffEditor: false,
             monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById(htmlContainerId)!,
         },
         languageClientConfigs: {
             groovy: {
-                languageId: 'groovy',
+                clientOptions: {
+                    documentSelector: ['groovy'],
+                },
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -47,5 +52,4 @@ export function getGroovyClientConfig(htmlContainerId: string) {
             },
         },
     };
-    return userConfig;
-}
+};

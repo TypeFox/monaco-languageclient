@@ -3,22 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import {
-    Component,
-    effect,
-    EventEmitter,
-    input,
-    OnDestroy,
-    Output,
-} from '@angular/core';
-
 import * as monaco from 'monaco-editor';
-import {
-    MonacoEditorLanguageClientWrapper,
-    TextChanges,
-    TextModels,
-    WrapperConfig, didModelContentChange
-} from 'monaco-editor-wrapper';
+import { Component, effect, ElementRef, EventEmitter, input, OnDestroy, Output } from '@angular/core';
+import { MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig, didModelContentChange } from 'monaco-editor-wrapper';
 
 @Component({
     standalone: true,
@@ -31,18 +18,19 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     wrapperConfig = input<WrapperConfig>();
     monacoEditorId = input<string>();
     editorInlineStyle = input<string>();
-    private wrapper: MonacoEditorLanguageClientWrapper =
-        new MonacoEditorLanguageClientWrapper();
+    private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
+    private myElement: ElementRef;
 
-    constructor() {
+    constructor(myElement: ElementRef) {
+        this.myElement = myElement;
         effect(async () => {
             try {
                 if (this.wrapperConfig() !== undefined) {
-                    await this.wrapper.initAndStart(
-                        this.wrapperConfig() as WrapperConfig
-                    );
+                    await this.wrapper.init(this.wrapperConfig() as WrapperConfig);
+                    const div = this.myElement.nativeElement.querySelector('div') as HTMLElement;
+                    await this.wrapper.start(div.children[0] as HTMLElement);
                     this.handleOnTextChanged();
                 }
             } catch (e) {

@@ -6,6 +6,11 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+
 bootstrapApplication(AppComponent, {
-    providers: [provideHttpClient()],
+    providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideHttpClient()
+    ]
 });
