@@ -98,17 +98,13 @@ describe('Test MonacoEditorReactComp', () => {
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+            await wrapper.updateCodeResources({
+                main: {
+                    text: 'goodbye world',
+                    fileExt: 'js'
+                }
+            });
             count++;
-
-            setTimeout(async () => {
-                await wrapper.updateCodeResources({
-                    main: {
-                        text: 'goodbye world',
-                        fileExt: 'js'
-                    }
-                });
-            }, 100);
-
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} onTextChanged={textReceiver} />);
     });

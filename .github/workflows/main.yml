@@ -49,4 +49,5 @@ jobs:
       shell: bash
       run: |
         npm run report:versions
+        npm run test:install
         npm run test:run
