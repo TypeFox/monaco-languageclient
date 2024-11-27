@@ -37,7 +37,7 @@ describe('createUrl', () => {
     });
 
     test('test configureServices logLevel development mismatch', async () => {
-        expect(async () => {
+        await expect(async () => {
             await augmentVscodeApiConfig('extended', {
                 vscodeApiConfig: {
                     loadThemes: false,

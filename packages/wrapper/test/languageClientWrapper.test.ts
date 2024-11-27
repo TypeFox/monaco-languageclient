@@ -123,7 +123,7 @@ describe('Test LanguageClientWrapper', () => {
         const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
-        await expect(languageClientWrapper!.start()).rejects.toEqual({
+        await expect(languageClientWrapper?.start()).rejects.toEqual({
             message: 'languageClientWrapper (test-unreachable): Websocket connection failed.',
             error: 'No error was provided.'
         });
