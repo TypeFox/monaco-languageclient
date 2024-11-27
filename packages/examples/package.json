@@ -106,7 +106,7 @@
     "mini-coi": "~0.4.2",
     "langium-cli": "~3.3.0",
     "ts-node": "~10.9.1",
-    "vite-plugin-static-copy": "~2.1.0",
+    "vite-plugin-static-copy": "~2.2.0",
     "vscode-languageserver-types": "~3.17.5"
   },
   "volta": {
