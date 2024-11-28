@@ -29,8 +29,7 @@
     "typescript": "~5.7.2",
     "vite": "~6.0.1",
     "vite-node": "~2.1.6",
-    "vitest": "~2.1.6",
-    "webdriverio": "~9.4.1"
+    "vitest": "~2.1.6"
   },
   "volta": {
     "node": "22.11.0",
@@ -60,10 +59,8 @@
     "reset:repo": "git clean -f -X -d",
     "test": "npm run test:playwright",
     "test:run": "npm run test:playwright:run",
-    "test:webdriverio": "vitest",
-    "test:webdriverio:run": "vitest --run",
-    "test:playwright": "vitest --config vitest.debug.config.ts",
-    "test:playwright:run": "vitest --config vitest.debug.config.ts --run",
+    "test:playwright": "vitest --config vitest.config.ts",
+    "test:playwright:run": "vitest --config vitest.config.ts --run",
     "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
     "test:install": "playwright install --with-deps chromium"
   },

@@ -43,7 +43,7 @@
           "request": "launch",
           "name": "Run Vitest Browser Debug",
           "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
-          "args": ["--config", "vitest.debug.config.ts", "--inspect-brk=20222", "--browser", "--no-file-parallelism"],
+          "args": ["--config", "vitest.config.ts", "--inspect-brk=20222", "--browser", "--no-file-parallelism"],
           "console": "integratedTerminal"
         },
         {
