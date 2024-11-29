@@ -19,8 +19,8 @@ export const vitestBaseConfig = {
         browser: {
             enabled: true,
             headless: true,
-            name: 'chrome',
-            provider: 'webdriverio',
+            name: 'chromium',
+            provider: 'playwright',
             api: {
                 port: 20101,
             }
