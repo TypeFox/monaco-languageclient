@@ -191,10 +191,12 @@ export class LanguageClientWrapper {
         const conOptions = this.languageClientConfig.connection.options;
         this.initRestartConfiguration(messageTransports, this.languageClientConfig.restartOptions);
 
+        const isWebSocket = conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'WebSocketDirect';
+
         messageTransports.reader.onClose(async () => {
             await this.languageClient?.stop();
 
-            if ((conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') && conOptions.stopOptions !== undefined) {
+            if (isWebSocket && conOptions.stopOptions !== undefined) {
                 const stopOptions = conOptions.stopOptions;
                 stopOptions.onCall(this.getLanguageClient());
                 if (stopOptions.reportStatus !== undefined) {
@@ -206,7 +208,7 @@ export class LanguageClientWrapper {
         try {
             await this.languageClient.start();
 
-            if ((conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') && conOptions.startOptions !== undefined) {
+            if (isWebSocket && conOptions.startOptions !== undefined) {
                 const startOptions = conOptions.startOptions;
                 startOptions.onCall(this.getLanguageClient());
                 if (startOptions.reportStatus !== undefined) {
