@@ -23,31 +23,28 @@ jobs:
     - name: Volta
       uses: volta-cli/action@v4
 
-    - name: Use pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 9
-
     - name: Install
       shell: bash
       run: |
         npm ci
 
-    - name: Build
+    - name: Versions Report
       shell: bash
       run: |
         npm run report:versions
+
+    - name: Build
+      shell: bash
+      run: |
         npm run build
 
     - name: Lint
       shell: bash
       run: |
-        npm run report:versions
         npm run lint
 
     - name: Test
       shell: bash
       run: |
-        npm run report:versions
         npm run test:install
         npm run test:run

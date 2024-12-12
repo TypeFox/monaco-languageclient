@@ -57,10 +57,8 @@
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test:run",
     "reset:repo": "git clean -f -X -d",
-    "test": "npm run test:playwright",
-    "test:run": "npm run test:playwright:run",
-    "test:playwright": "vitest --config vitest.config.ts",
-    "test:playwright:run": "vitest --config vitest.config.ts --run",
+    "test": "npm run test:install && vitest --config vitest.config.ts",
+    "test:run": "npm run test:install && vitest --config vitest.config.ts --run",
     "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
     "test:install": "playwright install --with-deps chromium"
   },
@@ -70,5 +68,8 @@
     "packages/wrapper",
     "packages/wrapper-react",
     "packages/examples"
-  ]
+  ],
+  "overrides": {
+    "vite": "$vite"
+  }
 }
