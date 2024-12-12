@@ -1,0 +1,16 @@
+services:
+  debugger:
+    image: ghcr.io/typefox/monaco-languageclient/debugger:latest
+    build:
+      dockerfile: ./packages/examples/resources/debugger/Dockerfile
+      context: ../../../..
+      # only linux/amd64 for now
+      platforms:
+        - "linux/amd64"
+    platform: linux/amd64
+    command: []
+    tty: true
+    ports:
+      - 30004:30004
+    working_dir: /home/mlc
+    container_name: debugger
