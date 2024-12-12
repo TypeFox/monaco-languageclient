@@ -45,10 +45,12 @@ export class MonacoEditorLanguageClientWrapper {
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
     private initDone = false;
-    private starting?: Promise<void>;
-    private startAwait: (value: void | PromiseLike<void>) => void;
-    private stopping?: Promise<void>;
-    private stopAwait: (value: void | PromiseLike<void>) => void;
+
+    private startingAwait?: Promise<void>;
+    private startingResolve: (value: void | PromiseLike<void>) => void;
+
+    private stoppingAwait?: Promise<void>;
+    private stoppingResolve: (value: void | PromiseLike<void>) => void;
 
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
@@ -186,18 +188,18 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     private markStarting() {
-        this.starting = new Promise<void>((resolve) => {
-            this.startAwait = resolve;
+        this.startingAwait = new Promise<void>((resolve) => {
+            this.startingResolve = resolve;
         });
     }
 
     private markStarted() {
-        this.startAwait();
-        this.starting = undefined;
+        this.startingResolve();
+        this.startingAwait = undefined;
     }
 
     isStarting() {
-        return this.starting;
+        return this.startingAwait;
     }
 
     isInitDone() {
@@ -306,18 +308,18 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     private markStopping() {
-        this.stopping = new Promise<void>((resolve) => {
-            this.stopAwait = resolve;
+        this.stoppingAwait = new Promise<void>((resolve) => {
+            this.stoppingResolve = resolve;
         });
     }
 
     private markStopped() {
-        this.stopAwait();
-        this.stopping = undefined;
+        this.stoppingResolve();
+        this.stoppingAwait = undefined;
     }
 
     isStopping() {
-        return this.stopping;
+        return this.stoppingAwait;
     }
 
     updateLayout() {
