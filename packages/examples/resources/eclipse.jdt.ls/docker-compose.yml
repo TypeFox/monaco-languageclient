@@ -4,11 +4,9 @@ services:
     build:
       dockerfile: ./packages/examples/resources/eclipse.jdt.ls/Dockerfile
       context: ../../../..
-      # requires "Use containerd for pulling and storing images" in Docker Desktop
+      # only linux/amd64 for now
       platforms:
         - "linux/amd64"
-        # pre-built volta binaries are currently unavailable for linux/arm64, will change with v2.0.0
-        # - "linux/arm64"
     platform: linux/amd64
     command: [
       "bash", "-c", "npm run start:example:server:jdtls"

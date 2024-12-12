@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.9] - 2024-11-22
+## [9.0.0-next.10] - 2024-11-2
 
 - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
 - Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
@@ -13,7 +13,7 @@ All notable changes to this npm module are documented in this file.
 - Updated to eslint 9
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
+  - Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Pass MessageTransports directly
