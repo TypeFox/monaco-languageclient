@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.12.1] - 2024-12-12
+
+- Updated to `monaco-languageclient@9.0.0-next.10`, `monaco-editor-wrapper@6.0.0-next.10` and `@typefox/monaco-editor-react@6.0.0-next.10`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+
 ## [2024.11.4] - 2024-11-26
 
 - `buildJsonClientUserConfig` can now called without a parameter.
