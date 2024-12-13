@@ -5,8 +5,3 @@
 
 export const HOME_DIR = '/home/web_user';
 export const WORKSPACE_PATH = `${HOME_DIR}/workspace`;
-
-export interface VolatileInput {
-    ignoreSubDirectories?: string[];
-    useDefaultGlob: boolean;
-}
