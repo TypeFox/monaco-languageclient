@@ -7,13 +7,20 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js';
 import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
-import { VolatileInput, WORKSPACE_PATH } from '../definitions.js';
+import { WORKSPACE_PATH } from '../definitions.js';
 import { JsonStream } from './json_stream.js';
 import { WorkerRemoteMessageChannelFs } from './workerRemoteMessageChannelFs.js';
 import { fsReadAllFiles } from './memfs-tools.js';
 import clangdConfig from '../../../resources/clangd/workspace/.clangd?raw';
+import JSZip from 'jszip';
 
 declare const self: DedicatedWorkerGlobalScope;
+
+interface RequiredResources {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ClangdJsModule: any;
+    wasmDataUrl: string;
+}
 
 export class ClangdInteractionWorker implements ComRouter {
 
@@ -27,19 +34,31 @@ export class ClangdInteractionWorker implements ComRouter {
 
     private emscriptenFS?: typeof FS;
     private remoteFs?: WorkerRemoteMessageChannelFs;
-    private loadWorkspace: boolean;
-    private volatile?: VolatileInput;
+
+    private clearIndexedDb: boolean;
+    private useCompressedWorkspace: boolean;
+    private compressedWorkspaceUrl?: string;
+
+    private startingAwait?: Promise<void>;
+    private startingResolve: (value: void | PromiseLike<void>) => void;
+
+    private synchingFSAwait?: Promise<void>;
+    private synchingFSResolve: (value: void | PromiseLike<void>) => void;
 
     setComChannelEndpoint(comChannelEndpoint: ComChannelEndpoint): void {
         this.endpointWorker = comChannelEndpoint;
     }
 
+    /**
+     * Triggered by worker message
+     */
     async clangd_init(message: WorkerMessage) {
         const rawPayload = (message.payloads![0] as RawPayload).message.raw;
         this.lsMessagePort = rawPayload.lsMessagePort as MessagePort;
         this.fsMessagePort = rawPayload.fsMessagePort as MessagePort;
-        this.loadWorkspace = rawPayload.loadWorkspace as boolean;
-        this.volatile = rawPayload.volatile as VolatileInput;
+        this.clearIndexedDb = rawPayload.clearIndexedDb as boolean;
+        this.useCompressedWorkspace = rawPayload.useCompressedWorkspace as boolean;
+        this.compressedWorkspaceUrl = rawPayload.compressedWorkspaceUrl as string;
 
         this.reader = new BrowserMessageReader(this.lsMessagePort);
         this.writer = new BrowserMessageWriter(this.lsMessagePort);
@@ -51,29 +70,40 @@ export class ClangdInteractionWorker implements ComRouter {
         });
     }
 
+    /**
+     * Triggered by worker message
+     */
     async clangd_launch(message: WorkerMessage) {
-        await this.runClangdLanguageServer();
+        // load everything needed beforehand
+        const requiredResurces = await this.loadRequiredResources();
 
+        // start the clangd language server
+        const clangd = await this.runClangdLanguageServer(requiredResurces);
+
+        // perform all file system updates
+        this.emscriptenFS = clangd.FS as typeof FS;
+        await this.updateWorkerFilesystem(requiredResurces);
+        await this.updateRemoteFilesystem();
+
+        // run main clangd
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (clangd as any).callMain([]);
+
+        // send the launch complete message to the client
         this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
                 overrideCmd: 'clangd_launch_complete'
             })
         });
-        if (this.emscriptenFS !== undefined) {
-            await this.updateFilesystem(this.emscriptenFS);
-        } else {
-            console.error('Emscripten FS is not available');
-        }
     }
 
-    private async runClangdLanguageServer() {
+    private async loadRequiredResources(): Promise<RequiredResources> {
         const clangdWasmUrl = new URL('../../../resources/clangd/wasm/clangd.wasm', import.meta.url);
         const clangdJsUrl = new URL('../../../resources/clangd/wasm/clangd.js', import.meta.url);
-        const jsModule = import(`${clangdJsUrl}`);
 
-        // Pre-fetch wasm, and report progress to main
-        const wasmResponse = await fetch(clangdWasmUrl);
-        const wasmReader = wasmResponse.body!.getReader();
+        // Pre-fetch wasm file
+        const wasmReader = (await fetch(clangdWasmUrl)).body!.getReader();
+
         const chunks: Uint8Array[] = [];
         let loadingComplete = false;
         while (!loadingComplete) {
@@ -86,7 +116,29 @@ export class ClangdInteractionWorker implements ComRouter {
         const wasmBlob = new Blob(chunks, { type: 'application/wasm' });
         const wasmDataUrl = URL.createObjectURL(wasmBlob);
 
-        const { default: Clangd } = await jsModule;
+        const jsModule = import(`${clangdJsUrl}`);
+        const { default: ClangdJsModule } = await jsModule;
+
+        return { ClangdJsModule, wasmDataUrl };
+    }
+
+    private markStarting() {
+        this.startingAwait = new Promise<void>((resolve) => {
+            this.startingResolve = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startingResolve();
+        this.startingAwait = undefined;
+    }
+
+    /**
+     * Prepares & starts up a clangd language server instance
+     * @returns
+     */
+    private async runClangdLanguageServer(requiredResurces: RequiredResources) {
+        this.markStarting();
 
         const textEncoder = new TextEncoder();
         let resolveStdinReady = () => { };
@@ -147,10 +199,16 @@ export class ClangdInteractionWorker implements ComRouter {
             });
         };
 
-        const clangd = await Clangd({
+        const onRuntimeInitialized = async () => {
+            console.log('%c%s', 'color: green', 'Clangd runtime initialized');
+            this.markStarted();
+            return Promise.resolve();
+        };
+
+        const clangd = await requiredResurces.ClangdJsModule({
             thisProgram: '/usr/bin/clangd',
             locateFile: (path: string, prefix: string) => {
-                return path.endsWith('.wasm') ? wasmDataUrl : `${prefix}${path}`;
+                return path.endsWith('.wasm') ? requiredResurces.wasmDataUrl : `${prefix}${path}`;
             },
             stdinReady,
             stdin,
@@ -158,26 +216,10 @@ export class ClangdInteractionWorker implements ComRouter {
             stderr,
             onExit: onAbort,
             onAbort,
+            onRuntimeInitialized
         });
 
-        this.emscriptenFS = clangd.FS as typeof FS;
-        this.emscriptenFS.mkdir(WORKSPACE_PATH);
-        this.emscriptenFS.writeFile(`${WORKSPACE_PATH}/.clangd`, clangdConfig);
-
-        if (this.loadWorkspace) {
-            const mainFiles = import.meta.glob('../../../resources/clangd/workspace/*.{cpp,c,h,hpp}', { query: '?raw' });
-            await this.processInputFiles(this.emscriptenFS, mainFiles, '../../../resources/clangd/workspace', []);
-        }
-        if (this.volatile !== undefined) {
-            const volatileFiles = this.readVolatileFiles(this.volatile.useDefaultGlob);
-            await this.processInputFiles(this.emscriptenFS, volatileFiles, '../../../resources/clangd/workspace/volatile/', this.volatile.ignoreSubDirectories ?? []);
-        }
-        function startServer() {
-            console.log('%c%s', 'font-size: 2em; color: green', 'clangd started');
-            clangd.callMain([]);
-        }
-        startServer();
-
+        // listen for messages from the language server
         this.reader?.listen((data) => {
             // non-ASCII characters cause bad Content-Length. Just escape them.
             const body = JSON.stringify(data).replace(/[\u007F-\uFFFF]/g, (ch) => {
@@ -189,64 +231,175 @@ export class ClangdInteractionWorker implements ComRouter {
             resolveStdinReady();
             // console.log("%c%s", "color: red", `${header}${delimiter}${body}`);
         });
+
+        await this.startingAwait;
+
+        return clangd;
+    }
+
+    private markSynchingFS() {
+        this.synchingFSAwait = new Promise<void>((resolve) => {
+            this.synchingFSResolve = resolve;
+        });
+    }
+
+    private markSynchingFSDone() {
+        this.synchingFSResolve();
+        this.synchingFSAwait = undefined;
     }
 
     /**
-     * Helper function to create extra directories and files from a given input
-     * to the home directory.
+     * Initialize the filesystem using the fs's persistent source. Invoked on start-up
      */
-    private readVolatileFiles(useDefaultGlob: boolean) {
-        // Use glob expression to get all files from input directory.
-        let files: Record<string, () => Promise<unknown>> = {};
-        // variable input currently not supported by vite, therefore this will not work
-        // const files = import.meta.glob(volatile.inputGlob, { query: '?raw' });
-        if (useDefaultGlob) {
-            files = import.meta.glob('../../../resources/clangd/workspace/volatile/**/*.{cpp,c,h,hpp}', { query: '?raw' });
-        } else {
-            files = import.meta.glob('!../../../resources/clangd/workspace/volatile/**/*', { query: '?raw' });
-        }
-        return files;
+    private async populateFS() {
+        console.log('Populating filesystem: Start');
+        this.markSynchingFS();
+        this.syncFS(true);
+        await this.synchingFSAwait;
+        console.log('Populating filesystem: End');
     }
 
-    private async processInputFiles(fs: typeof FS, files: Record<string, () => Promise<unknown>>, dirReplacer: string, ignoreSubDirectories: string[]) {
-        const dirsToCreate = new Set<string>();
-        const filesToUse: Record<string, () => Promise<unknown>> = {};
-        for (const [sourceFile, content] of Object.entries(files)) {
+    /**
+     * Persist the filesystem to IndexedDB. Can be invoked on shutdown or periodically
+     */
+    private async persistFS() {
+        console.log('Persisting filesystem: Start');
+        this.markSynchingFS();
+        this.syncFS(false);
+        await this.synchingFSAwait;
+        console.log('Persisting filesystem: End');
+    }
 
-            const targetFile = `${WORKSPACE_PATH}/${sourceFile.replace(dirReplacer, '')}`;
-            const targetDir = targetFile.substring(0, targetFile.lastIndexOf('/'));
-            const foundIgnoredDir = ignoreSubDirectories.find((ignore) => {
-                return targetDir.includes(ignore);
-            });
+    /**
+     * Used to sync the filesystem from memory to IndexedDB or vice versa:
+     * populate fs = true; persist fs = false
+     * @param readOrWrite Whether to read or write the filesystem
+     */
+    private async syncFS(readOrWrite: boolean) {
+        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
 
-            // only use unignored directories
-            if (foundIgnoredDir === undefined) {
-                // store only un-ignore target files
-                filesToUse[targetFile] = content;
+        this.emscriptenFS.syncfs(readOrWrite, (err) => {
+            if (err !== null) {
+                console.error(`Error syncing filesystem: ${err}`);
+            }
+            this.markSynchingFSDone();
+        });
+    }
 
-                // List all parent directories
-                let dirToCreate = '';
-                const targetDirParts = targetDir.split('/');
-                for (const part of targetDirParts) {
+    private async updateWorkerFilesystem(requiredResurces: RequiredResources) {
+        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
 
-                    if (part.length > 0) {
-                        dirToCreate = `${dirToCreate}/${part}`;
-                        // set reduces to unique directories
-                        dirsToCreate.add(dirToCreate);
+        const t0 = performance.now();
+        console.log('Updating Worker FS');
+
+        // Clear the IndexedDB filesystem if requested
+        if (this.clearIndexedDb) {
+            indexedDB.deleteDatabase(WORKSPACE_PATH);
+        }
+
+        this.emscriptenFS.createPreloadedFile('/', 'clangd.wasm', requiredResurces.wasmDataUrl, true, true);
+
+        await this.loadWorkspaceFiles();
+
+        const t1 = performance.now();
+        const msg = `Worker FS: File loading completed in ${t1 - t0}ms.`;
+        console.log(msg);
+    }
+
+    /**
+     * Loads workspace files separately or the compressed workspace from a zip archive
+     */
+    private async loadWorkspaceFiles() {
+        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+
+        // setup & prepare the filesystem
+        this.emscriptenFS.mkdir(WORKSPACE_PATH);
+
+        // Mounting IndexedDB filesystem
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.emscriptenFS.mount((this.emscriptenFS as any).filesystems.IDBFS, {}, WORKSPACE_PATH);
+
+        // Synchronize the filesystem from IndexedDB to memory
+        await this.populateFS();
+
+        // Determines whether the workspace is already loaded from IndexedDB
+        let isWorkspaceLoaded = true;
+        try {
+            this.emscriptenFS.lookupPath(`${WORKSPACE_PATH}/.clangd`, { parent: false });
+            console.log('Workspace FOUND');
+        } catch (e) {
+            console.warn('Workspace NOT found: ' + e);
+            isWorkspaceLoaded = false;
+        }
+
+        if (!isWorkspaceLoaded) {
+            let mainFiles: Record<string, () => Promise<string | unknown>> = {};
+            if (this.useCompressedWorkspace && this.compressedWorkspaceUrl !== undefined) {
+
+                // Fetches a compressed workspace from a given URL (zip file)
+                // The additional conversion to array buffer is necessary for JSZip to work correctly
+                // It is expected that there is a workspace directory at top level in the zip file
+                const compressedWorkspace = await (await fetch(this.compressedWorkspaceUrl)).arrayBuffer();
+                const zip = await JSZip.loadAsync(compressedWorkspace);
+
+                for (const [relativePath, file] of Object.entries(zip.files)) {
+                    if (/\.(cpp|c|h|hpp|)|.clangd$/.test(relativePath)) {
+                        // trim off the leading 'workspace' directory part of the path, the rest is okay to have
+                        const rpath = relativePath.replace(/^workspace/, '');
+                        mainFiles[rpath] = () => file.async('string');
                     }
                 }
 
+                await this.processInputFiles(mainFiles, '../../../resources/clangd/workspace');
             } else {
-                console.log(`Ignoring directory ${foundIgnoredDir} and file: ${targetFile}`);
+                // write clang config
+                this.emscriptenFS.writeFile(`${WORKSPACE_PATH}/.clangd`, clangdConfig);
+
+                mainFiles = import.meta.glob('../../../resources/clangd/workspace/*.{cpp,c,h,hpp}', { query: '?raw' });
+                await this.processInputFiles(mainFiles, '../../../resources/clangd/workspace');
+            }
+        }
+
+        // save the workspace to IndexedDB
+        await this.persistFS();
+    }
+
+    private async processInputFiles(files: Record<string, () => Promise<string | unknown>>, dirReplacer: string) {
+        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+
+        const dirsToCreate = new Set<string>();
+        const filesToUse: Record<string, () => Promise<string | unknown>> = {};
+        for (const [sourceFile, content] of Object.entries(files)) {
+
+            let shortSourceFile = sourceFile.replace(dirReplacer, '');
+            if (!shortSourceFile.startsWith('//')) {
+                shortSourceFile = shortSourceFile.substring(1);
+            }
+            const targetFile = `${WORKSPACE_PATH}/${shortSourceFile}`;
+            const targetDir = targetFile.substring(0, targetFile.lastIndexOf('/'));
+
+            // store only un-ignore target files
+            filesToUse[targetFile] = content;
+
+            // List all parent directories
+            let dirToCreate = '';
+            const targetDirParts = targetDir.split('/');
+            for (const part of targetDirParts) {
+
+                if (part.length > 0) {
+                    dirToCreate = `${dirToCreate}/${part}`;
+                    // set reduces to unique directories
+                    dirsToCreate.add(dirToCreate);
+                }
             }
         }
 
         // create unique directories
         for (const dirToCreate of dirsToCreate) {
             try {
-                fs.mkdir(dirToCreate);
-                const { mode } = fs.lookupPath(dirToCreate, { parent: false }).node;
-                if (fs.isDir(mode)) {
+                this.emscriptenFS.mkdir(dirToCreate);
+                const { mode } = this.emscriptenFS.lookupPath(dirToCreate, { parent: false }).node;
+                if (this.emscriptenFS.isDir(mode)) {
                     console.log(`Create dir: ${dirToCreate} mode: ${mode}`);
                 }
             } catch (e) {
@@ -259,9 +412,14 @@ export class ClangdInteractionWorker implements ComRouter {
         // write out files
         type RawContent = { default: string };
         for (const [targetFile, content] of Object.entries(filesToUse)) {
-            const rawContent: RawContent = await content() as RawContent;
             try {
-                fs.writeFile(targetFile, rawContent.default);
+                let contentAsString: string;
+                if (this.useCompressedWorkspace) {
+                    contentAsString = await content() as string;
+                } else {
+                    contentAsString = (await content() as RawContent).default;
+                }
+                this.emscriptenFS.writeFile(targetFile, contentAsString);
                 console.log(`Wrote file: ${targetFile}`);
             } catch (e) {
                 console.error(`Error writing ${targetFile}: ${e}`);
@@ -269,46 +427,41 @@ export class ClangdInteractionWorker implements ComRouter {
         }
     }
 
-    private async updateFilesystem(fs: typeof FS) {
-        if (this.fsMessagePort !== undefined) {
-            const t0 = performance.now();
-            const allFilesAndDirectories = fsReadAllFiles(fs, '/');
+    private async updateRemoteFilesystem() {
+        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (!this.fsMessagePort) throw new Error('MessagePort is not available! Aborting ...');
 
-            this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, fs);
-            this.remoteFs.init();
-            // console.log(String.fromCharCode.apply(null, test2));
+        const t0 = performance.now();
 
-            const allPromises = [];
-            for (const filename of allFilesAndDirectories.files) {
-                try {
-                    const content = fs.readFile(filename, { encoding: 'binary' });
-                    allPromises.push(this.remoteFs.syncFile({
-                        resourceUri: filename,
-                        content: content
-                    }));
+        console.log('Updating Remote FS');
+        const allFilesAndDirectories = fsReadAllFiles(this.emscriptenFS, '/');
 
-                } catch (_error) {
-                    // don't care currently
-                }
+        this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, this.emscriptenFS);
+        this.remoteFs.init();
+
+        const allPromises = [];
+        for (const filename of allFilesAndDirectories.files) {
+            try {
+                // just push the binary content to the client
+                const content = this.emscriptenFS.readFile(filename, { encoding: 'binary' });
+                allPromises.push(this.remoteFs.syncFile({
+                    resourceUri: filename,
+                    content: content
+                }));
+
+            } catch (e) {
+                console.error(`Unexpected error when reading file ${filename}: ${e}`);
             }
-
-            await Promise.all(allPromises);
-
-            // allFilesAndDirectories.files.forEach(file => {
-            //     console.log(file);
-            // });
-            // allFilesAndDirectories.directories.forEach(directory => {
-            //     console.log(directory);
-            // });
-            this.remoteFs.ready();
-
-            const t1 = performance.now();
-            const msg = `File loading completed in ${t1 - t0}ms.`;
-            console.log(msg);
-        } else {
-            return Promise.reject(new Error('No filesystem is available. Aborting...'));
         }
 
+        await Promise.all(allPromises);
+
+        // signal the client everything is ready
+        this.remoteFs.ready();
+
+        const t1 = performance.now();
+        const msg = `Remote FS: File loading completed in ${t1 - t0}ms.`;
+        console.log(msg);
     }
 }
 

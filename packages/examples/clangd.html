@@ -13,8 +13,9 @@
     <div class="exampleHeadelineDiv">
         <b class="exampleHeadeline">Cpp Language Client & Clangd Language Server (Worker/Wasm)</b> - [<a href="../../index.html">Back to Index</a>]
         <br>
-        <b>Heads up:</b> This is a prototype and still evolving.<br>
-        The clangd language server worker has been derived from: <a href="https://github.com/guyutongxue/clangd-in-browser">clangd-in-browser</a><br>
+        <button type="button" id="button-start">Start</button>
+        <button type="button" id="button-start-fresh">Start (Reset DB)</button>
+        The clangd language server worker has been derived from: <a href="https://github.com/guyutongxue/clangd-in-browser">clangd-in-browser</a>
     </div>
     <script type="module">
         import { runClangdWrapper } from "./src/clangd/client/main.ts";

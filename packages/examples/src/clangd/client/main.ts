@@ -12,8 +12,8 @@ import { createWrapperConfig } from './config.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
 import { defaultViewsHtml } from 'monaco-editor-wrapper/vscode/services';
-import { createDefaultWorkspaceFile } from '../../common/client/utils.js';
-import { WORKSPACE_PATH } from '../definitions.js';
+import { createDefaultWorkspaceFile, disableButton } from '../../common/client/utils.js';
+import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 
@@ -22,7 +22,7 @@ export const runClangdWrapper = async () => {
     const channelFs = new MessageChannel();
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    const workspaceFileUri = vscode.Uri.file(`${WORKSPACE_PATH}/.vscode/workspace.code-workspace`);
+    const workspaceFileUri = vscode.Uri.file(`${HOME_DIR}/workspace.code-workspace`);
     fileSystemProvider.registerFile(createDefaultWorkspaceFile(workspaceFileUri, WORKSPACE_PATH));
     registerFileSystemOverlay(1, fileSystemProvider);
 
@@ -46,17 +46,34 @@ export const runClangdWrapper = async () => {
     });
 
     await wrapper.init(userConfig);
-
-    await clangdWorkerHandler.init({
+    const initConfig = {
         lsMessagePort: channelLs.port2,
         fsMessagePort: channelFs.port2,
-        loadWorkspace: true,
-        // allows to load additional files from resources/clangd/workspace/volatile/**/*.{cpp,c,h,hpp}
-        // volatile: {
-        //     useDefaultGlob: true
-        // }
-    });
-    await clangdWorkerHandler.launch();
+        clearIndexedDb: false,
+        // set to true to use the compressed workspace at the specified URL
+        useCompressedWorkspace: false,
+        compressedWorkspaceUrl: new URL('../../../resources/clangd/workspace.zip', import.meta.url).href
+    };
 
-    await wrapper.startLanguageClients();
+    const startWrapper = async () => {
+        await clangdWorkerHandler.init(initConfig);
+        await clangdWorkerHandler.launch();
+        await wrapper.startLanguageClients();
+    };
+
+    try {
+        document.querySelector('#button-start')?.addEventListener('click', async () => {
+            disableButton('button-start', true);
+            disableButton('button-start-fresh', true);
+            await startWrapper();
+        });
+        document.querySelector('#button-start-fresh')?.addEventListener('click', async () => {
+            initConfig.clearIndexedDb = true;
+            disableButton('button-start', true);
+            disableButton('button-start-fresh', true);
+            await startWrapper();
+        });
+    } catch (e) {
+        console.error(e);
+    }
 };
