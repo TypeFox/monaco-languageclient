@@ -22,7 +22,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: '',
                     fileExt: 'js'
                 }
@@ -41,7 +41,7 @@ export const createWrapperConfigClassicApp = (): WrapperConfig => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: '',
                     fileExt: 'js'
                 }

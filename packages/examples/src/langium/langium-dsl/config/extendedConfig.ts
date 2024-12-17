@@ -69,7 +69,7 @@ export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
         }],
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text,
                     fileExt: 'langium'
                 }

@@ -19,7 +19,7 @@ export const runPythonReact = async () => {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const onTextChanged = (textChanges: TextChanges) => {
-        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.text}\ntextOriginal: ${textChanges.textOriginal}`);
+        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
     };
     const wrapperConfig = createUserConfig('/workspace', badPyCode, '/workspace/bad.py');
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);

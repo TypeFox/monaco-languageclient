@@ -76,17 +76,17 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             containerRef.current.className = className ?? '';
             try {
                 wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
-                    if (textModels.text !== undefined || textModels.textOriginal !== undefined) {
+                    if (textModels.modified !== undefined || textModels.original !== undefined) {
                         const newSubscriptions: monaco.IDisposable[] = [];
 
-                        if (textModels.text !== undefined) {
-                            newSubscriptions.push(textModels.text.onDidChangeContent(() => {
+                        if (textModels.modified !== undefined) {
+                            newSubscriptions.push(textModels.modified.onDidChangeContent(() => {
                                 didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
                             }));
                         }
 
-                        if (textModels.textOriginal !== undefined) {
-                            newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
+                        if (textModels.original !== undefined) {
+                            newSubscriptions.push(textModels.original.onDidChangeContent(() => {
                                 didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
                             }));
                         }

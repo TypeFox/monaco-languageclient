@@ -35,7 +35,7 @@ const userConfig: WrapperConfig = {
     },
     editorAppConfig: {
         codeResources: {
-            main: {
+            modified: {
                 text: code,
                 fileExt: 'groovy'
             }

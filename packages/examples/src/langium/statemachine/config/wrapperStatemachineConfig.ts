@@ -28,9 +28,9 @@ export const createLangiumGlobalConfig = async (params: {
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
-    let main;
+    let modified;
     if (params.text !== undefined) {
-        main = {
+        modified = {
             text: params.text,
             fileExt: 'statemachine'
         };
@@ -97,7 +97,7 @@ export const createLangiumGlobalConfig = async (params: {
         }],
         editorAppConfig: {
             codeResources: {
-                main
+                modified
             },
             monacoWorkerFactory: configureMonacoWorkers
         },

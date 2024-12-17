@@ -56,7 +56,7 @@ describe('Test EditorAppBase', () => {
     test('config defaults', () => {
         const wrapperConfig = createWrapperConfigClassicApp();
         const app = new EditorApp('config defaults', wrapperConfig.$type, wrapperConfig.editorAppConfig);
-        expect(app.getConfig().codeResources?.main?.text).toEqual('');
+        expect(app.getConfig().codeResources?.modified?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();
         expect(app.getConfig().readOnly).toBeFalsy();
@@ -77,7 +77,7 @@ describe('Test EditorAppBase', () => {
     test('config defaults', () => {
         const wrapperConfig = createWrapperConfigExtendedApp();
         const app = new EditorApp('config defaults', wrapperConfig.$type, wrapperConfig.editorAppConfig);
-        expect(app.getConfig().codeResources?.main?.text).toEqual('');
+        expect(app.getConfig().codeResources?.modified?.text).toEqual('');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();
         expect(app.getConfig().readOnly).toBeFalsy();

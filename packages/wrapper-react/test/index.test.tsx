@@ -51,7 +51,7 @@ describe('Test MonacoEditorReactComp', () => {
             },
             editorAppConfig: {
                 codeResources: {
-                    main: {
+                    modified: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
@@ -61,11 +61,11 @@ describe('Test MonacoEditorReactComp', () => {
         };
 
         const textReceiverHello = (textChanges: TextChanges) => {
-            expect(textChanges.text).toEqual('hello world');
+            expect(textChanges.modified).toEqual('hello world');
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-            expect(wrapper.getTextModels()?.text?.getValue()).toEqual('hello world');
+            expect(wrapper.getTextModels()?.modified?.getValue()).toEqual('hello world');
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} onLoad={handleOnLoad} />);
     });
@@ -79,7 +79,7 @@ describe('Test MonacoEditorReactComp', () => {
             },
             editorAppConfig: {
                 codeResources: {
-                    main: {
+                    modified: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
@@ -90,21 +90,23 @@ describe('Test MonacoEditorReactComp', () => {
 
         let count = 0;
         const textReceiver = (textChanges: TextChanges) => {
+            // initial call
             if (count === 0) {
-                expect(textChanges.text).toBe('hello world');
+                expect(textChanges.modified).toBe('hello world');
             } else {
-                expect(textChanges.text).toBe('goodbye world');
+                expect(textChanges.modified).toBe('goodbye world');
             }
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+            count++;
             await wrapper.updateCodeResources({
-                main: {
+                modified: {
                     text: 'goodbye world',
                     fileExt: 'js'
                 }
             });
-            count++;
+
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} onTextChanged={textReceiver} />);
     });

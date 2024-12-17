@@ -36,7 +36,7 @@ export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperC
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text,
                     fileExt: 'json'
                 }

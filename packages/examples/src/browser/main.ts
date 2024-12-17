@@ -47,7 +47,7 @@ export const runBrowserEditor = async () => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     uri: codeUri
                 }
@@ -157,7 +157,7 @@ export const runBrowserEditor = async () => {
 
     await wrapper.start();
 
-    wrapper.getTextModels()?.text?.onDidChangeContent(() => {
+    wrapper.getTextModels()?.modified?.onDidChangeContent(() => {
         validate();
     });
 };

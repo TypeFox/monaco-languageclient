@@ -39,7 +39,7 @@ export const runEclipseJdtLsClient = () => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: helloJavaCode,
                     uri: `${eclipseJdtLsConfig.basePath}/workspace/hello.java`
                 }

@@ -79,7 +79,7 @@ export const createUserConfig = (workspaceRoot: string, code: string, codeUri: s
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     uri: codeUri
                 }
