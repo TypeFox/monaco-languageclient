@@ -52,9 +52,9 @@ const startEditor = async () => {
 
     // here the modelReference is created manually and given to the updateEditorModels of the wrapper
     const uri = vscode.Uri.parse('/workspace/statemachine-mod.statemachine');
-    const modelRef = await createModelReference(uri, text);
+    const modelRefModified = await createModelReference(uri, text);
     wrapper.updateEditorModels({
-        modelRef
+        modelRefModified
     });
 
     // start the second wrapper without any languageclient config

@@ -46,7 +46,7 @@ export const runTsWrapper = async () => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     uri: codeUri
                 },
@@ -76,9 +76,9 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
             const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
-            if ((codeResources?.main as CodePlusUri).uri === codeUri) {
+            if ((codeResources?.modified as CodePlusUri).uri === codeUri) {
                 wrapper.updateCodeResources({
-                    main: {
+                    modified: {
                         text: codeOriginal,
                         uri: codeOriginalUri
                     },
@@ -89,7 +89,7 @@ export const runTsWrapper = async () => {
                 });
             } else {
                 wrapper.updateCodeResources({
-                    main: {
+                    modified: {
                         text: code,
                         uri: codeUri
                     },

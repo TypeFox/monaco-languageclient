@@ -27,7 +27,7 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     fileExt: 'langium',
                     enforceLanguageId: 'langium'

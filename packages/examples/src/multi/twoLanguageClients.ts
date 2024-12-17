@@ -58,7 +58,7 @@ print("Hello Moon!")
         },
         editorAppConfig: {
             codeResources: {
-                main: {
+                modified: {
                     text: currentText,
                     fileExt: currenFileExt
                 }
@@ -101,9 +101,9 @@ print("Hello Moon!")
             }
 
             await wrapper.initAndStart(wrapperConfig);
-            if (wrapperConfig.editorAppConfig?.codeResources?.main !== undefined) {
-                (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).text = currentText;
-                (wrapperConfig.editorAppConfig.codeResources.main as CodePlusFileExt).fileExt = currenFileExt;
+            if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
+                (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).text = currentText;
+                (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;
             }
 
             disableButton('button-flip', false);
@@ -121,7 +121,7 @@ print("Hello Moon!")
             currentText = currentText === textJson ? textPython : textJson;
             currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
             wrapper.updateCodeResources({
-                main: {
+                modified: {
                     text: currentText,
                     fileExt: currenFileExt
                 }

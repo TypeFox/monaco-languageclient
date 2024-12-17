@@ -63,7 +63,7 @@ export class MonacoEditorLanguageClientWrapper {
 
         const editorAppConfig = wrapperConfig.editorAppConfig;
         if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.main} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
+            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.modified} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
         }
 
         const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType ?? 'EditorService';
