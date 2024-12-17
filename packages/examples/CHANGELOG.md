@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.12.2] - 2024-12-17
+
+- Clangd example improvements: IndexedDB usage and possibility to load workspace from zip file [#807](https://github.com/TypeFox/monaco-languageclient/pull/807)
+- Updated to `monaco-languageclient@9.0.0-next.11`, `monaco-editor-wrapper@6.0.0-next.11` and `@typefox/monaco-editor-react@6.0.0-next.11`.
+
 ## [2024.12.1] - 2024-12-12
 
 - Updated to `monaco-languageclient@9.0.0-next.10`, `monaco-editor-wrapper@6.0.0-next.10` and `@typefox/monaco-editor-react@6.0.0-next.10`.
