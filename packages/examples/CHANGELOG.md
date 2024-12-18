@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.12.3] - 2024-12-18
+
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
+- Updated to `monaco-languageclient@9.0.0-next.12`, `vscode-ws-jsonrpc@3.4.0-next.12`, `monaco-editor-wrapper@6.0.0-next.12` and `@typefox/monaco-editor-react@6.0.0-next.12`.
+
 ## [2024.12.2] - 2024-12-17
 
 - Clangd example improvements: IndexedDB usage and possibility to load workspace from zip file [#807](https://github.com/TypeFox/monaco-languageclient/pull/807)

@@ -3,17 +3,13 @@
   "version": "0.0.0",
   "private": "true",
   "type": "module",
-  "scripts": {
-    "verify": "npm install && npm run start",
-    "verify:ci": "npm install && npm run build",
-    "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
-    "build:msg": "echo Building angular-client example:",
-    "build": "npm run build:msg && npm run clean && ng build",
-    "build:production": "npm run build:msg && npm run clean && ng build --configuration production",
-    "start": "npm run clean && ng serve",
-    "start:production": "npm run clean && ng serve --configuration production",
-    "watch": "npm run clean && ng build --watch --configuration development",
-    "reset:repo": "git clean -f -X -d"
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.12.0",
+    "npm": "10.9.0"
   },
   "dependencies": {
     "@angular/compiler": "~18.2.8",
@@ -21,8 +17,8 @@
     "@angular/platform-browser": "~18.2.8",
     "@angular/platform-browser-dynamic": "~18.2.8",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.11",
-    "monaco-languageclient-examples": "~2024.12.2",
+    "monaco-editor-wrapper": "~6.0.0-next.12",
+    "monaco-languageclient-examples": "~2024.12.3",
     "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
@@ -39,8 +35,16 @@
     "style-loader": "~4.0.0",
     "typescript": "~5.5.4"
   },
-  "volta": {
-    "node": "22.12.0",
-    "npm": "10.9.0"
-  }
+  "scripts": {
+    "verify": "npm install && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
+    "build:msg": "echo Building angular-client example:",
+    "build": "npm run build:msg && npm run clean && ng build",
+    "build:production": "npm run build:msg && npm run clean && ng build --configuration production",
+    "start": "npm run clean && ng serve",
+    "start:production": "npm run clean && ng serve --configuration production",
+    "watch": "npm run clean && ng build --watch --configuration development",
+    "reset:repo": "git clean -f -X -d"
+  },
 }

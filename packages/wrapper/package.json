@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "6.0.0-next.11",
+  "version": "6.0.0-next.12",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -80,13 +80,19 @@
     "build:workers:esbuild": "vite-node ./build/buildAllWorkers.mts",
     "build": "npm run clean && npm run compile && npm run build:workers:esbuild && npm run build:workers:vite"
   },
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
   "volta": {
     "node": "22.12.0",
     "npm": "10.9.0"
   },
   "dependencies": {
+    "@codingame/monaco-vscode-api": "~11.1.2",
     "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "~11.1.2",
     "@codingame/monaco-vscode-configuration-service-override": "~11.1.2",
+    "@codingame/monaco-vscode-editor-api": "~11.1.2",
     "@codingame/monaco-vscode-editor-service-override": "~11.1.2",
     "@codingame/monaco-vscode-language-pack-cs": "~11.1.2",
     "@codingame/monaco-vscode-language-pack-de": "~11.1.2",
@@ -109,10 +115,11 @@
     "@codingame/monaco-vscode-views-service-override": "~11.1.2",
     "@codingame/monaco-vscode-workbench-service-override": "~11.1.2",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "monaco-languageclient": "~9.0.0-next.12",
     "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
-    "vscode-ws-jsonrpc": "~3.3.2"
+    "vscode-ws-jsonrpc": "~3.4.0-next.12"
   },
   "devDependencies": {
     "@codingame/monaco-vscode-standalone-languages": "~11.1.2",
@@ -122,18 +129,22 @@
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~11.1.2"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-languageclient": "~9.0.0-next.11",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "@codingame/monaco-vscode-api": "~11.1.2",
+    "@codingame/monaco-vscode-editor-api": "~11.1.2",
+    "monaco-languageclient": "~9.0.0-next.12",
+    "vscode-ws-jsonrpc": "~3.4.0-next.12"
   },
   "peerDependenciesMeta": {
-    "monaco-editor": {
+    "@codingame/monaco-vscode-api": {
+      "optional": false
+    },
+    "@codingame/monaco-vscode-editor-api": {
       "optional": false
     },
     "monaco-languageclient": {
       "optional": false
     },
-    "vscode": {
+    "vscode-ws-jsonrpc": {
       "optional": false
     }
   },

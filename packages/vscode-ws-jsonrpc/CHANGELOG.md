@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.4.0] - 2024-12-18
+
+- Align required engine versions with other packages: Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
+
 ## [3.3.2] - 2024-06-04
 
 - Updated to `vscode-jsonrpc@8.2.1`

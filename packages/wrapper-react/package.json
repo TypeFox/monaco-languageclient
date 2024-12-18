@@ -1,6 +1,6 @@
 {
   "name": "@typefox/monaco-editor-react",
-  "version": "6.0.0-next.11",
+  "version": "6.0.0-next.12",
   "license": "MIT",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
@@ -37,35 +37,45 @@
     "compile": " tsc --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
   },
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
   "volta": {
     "node": "22.12.0",
     "npm": "10.9.0"
   },
   "dependencies": {
+    "@codingame/monaco-vscode-api": "~11.1.2",
+    "@codingame/monaco-vscode-editor-api": "~11.1.2",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.11",
-    "monaco-languageclient": "~9.0.0-next.11",
+    "monaco-editor-wrapper": "~6.0.0-next.12",
+    "monaco-languageclient": "~9.0.0-next.12",
     "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
+    "vscode-ws-jsonrpc": "~3.4.0-next.12"
   },
   "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.11",
-    "monaco-languageclient": "~9.0.0-next.11",
-    "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "@codingame/monaco-vscode-api": "~11.1.2",
+    "@codingame/monaco-vscode-editor-api": "~11.1.2",
+    "monaco-editor-wrapper": "~6.0.0-next.12",
+    "monaco-languageclient": "~9.0.0-next.12",
+    "vscode-ws-jsonrpc": "~3.4.0-next.12"
   },
   "peerDependenciesMeta": {
-    "monaco-editor": {
+    "@codingame/monaco-vscode-api": {
+      "optional": false
+    },
+    "@codingame/monaco-vscode-editor-api": {
+      "optional": false
+    },
+    "monaco-languageclient": {
       "optional": false
     },
     "monaco-editor-wrapper": {
       "optional": false
     },
-    "react": {
-      "optional": false
-    },
-    "vscode": {
+    "vscode-ws-jsonrpc": {
       "optional": false
     }
   },

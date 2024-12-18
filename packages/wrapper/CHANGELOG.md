@@ -2,9 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.0.0-next.11] - 2024-12-17
+## [6.0.0-next.12] - 2024-12-18
 
-- Updated to `monaco-languageclient@9.0.0-next.11`. Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+- Updated to `monaco-languageclient@9.0.0-next.12` and `vscode-ws-jsonrpc@3.4.0-next.12`. Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
 - Bugfix: Wrapper: Text model content is not properly updated with updateCodeResource [#808](https://github.com/TypeFox/monaco-languageclient/pull/808)
 - Fixed WebSocket type checking error [#800](https://github.com/TypeFox/monaco-languageclient/pull/800)
 - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem

@@ -2,8 +2,9 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.11] - 2024-11-2
+## [9.0.0-next.12] - 2024-12-18
 
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
 - Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
 - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
 - Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
