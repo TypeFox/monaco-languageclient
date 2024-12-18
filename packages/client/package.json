@@ -82,6 +82,7 @@
     "@codingame/monaco-vscode-base-service-override": "~11.1.2",
     "@codingame/monaco-vscode-bat-default-extension": "~11.1.2",
     "@codingame/monaco-vscode-chat-extensions-notebook-common": "~11.1.2",
+    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "~11.1.2",
     "@codingame/monaco-vscode-chat-service-override": "~11.1.2",
     "@codingame/monaco-vscode-clojure-default-extension": "~11.1.2",
     "@codingame/monaco-vscode-coffeescript-default-extension": "~11.1.2",
@@ -245,6 +246,9 @@
       "optional": true
     },
     "@codingame/monaco-vscode-chat-extensions-notebook-common": {
+      "optional": true
+    },
+    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": {
       "optional": true
     },
     "@codingame/monaco-vscode-chat-service-override": {
