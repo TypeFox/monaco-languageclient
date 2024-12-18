@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.13",
-    "monaco-languageclient-examples": "~2024.12.4",
+    "monaco-editor-wrapper": "~6.0.0-next.14",
+    "monaco-languageclient-examples": "~2024.12.5",
     "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
   },
   "devDependencies": {

@@ -2,10 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.13] - 2024-12-18
+## [6.0.0-next.14] - 2024-12-18
 
+- Only `monaco-editor-wrapper` is a `peerDependencies`
 - Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
-- Updated to `monaco-editor-wrapper@9.0.0-next.13` and `monaco-languageclient@6.0.0-next.13`. Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+- Updated to `monaco-editor-wrapper@9.0.0-next.14` and `monaco-languageclient@6.0.0-next.14`. Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
 - Bugfix: Wrapper: Text model content is not properly updated with updateCodeResource [#808](https://github.com/TypeFox/monaco-languageclient/pull/808)
 - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
 - Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
