@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "6.0.0-next.12",
+  "version": "6.0.0-next.13",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -89,10 +89,8 @@
     "npm": "10.9.0"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~11.1.2",
     "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "~11.1.2",
     "@codingame/monaco-vscode-configuration-service-override": "~11.1.2",
-    "@codingame/monaco-vscode-editor-api": "~11.1.2",
     "@codingame/monaco-vscode-editor-service-override": "~11.1.2",
     "@codingame/monaco-vscode-language-pack-cs": "~11.1.2",
     "@codingame/monaco-vscode-language-pack-de": "~11.1.2",
@@ -114,15 +112,11 @@
     "@codingame/monaco-vscode-theme-service-override": "~11.1.2",
     "@codingame/monaco-vscode-views-service-override": "~11.1.2",
     "@codingame/monaco-vscode-workbench-service-override": "~11.1.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-languageclient": "~9.0.0-next.12",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-languageclient": "~9.0.1",
-    "vscode-languageserver-protocol": "~3.17.5",
-    "vscode-ws-jsonrpc": "~3.4.0-next.12"
+    "vscode-languageserver-protocol": "~3.17.5"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-standalone-languages": "~11.1.2",
+    "@codingame/monaco-vscode-standalone-languages": "~11.0.2",
     "@codingame/monaco-vscode-standalone-css-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-html-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-json-language-features": "~11.1.2",
@@ -131,8 +125,10 @@
   "peerDependencies": {
     "@codingame/monaco-vscode-api": "~11.1.2",
     "@codingame/monaco-vscode-editor-api": "~11.1.2",
-    "monaco-languageclient": "~9.0.0-next.12",
-    "vscode-ws-jsonrpc": "~3.4.0-next.12"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "monaco-languageclient": "~9.0.0-next.13",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
+    "vscode-ws-jsonrpc": "~3.4.0-next.13"
   },
   "peerDependenciesMeta": {
     "@codingame/monaco-vscode-api": {
@@ -141,7 +137,13 @@
     "@codingame/monaco-vscode-editor-api": {
       "optional": false
     },
+    "monaco-editor": {
+      "optional": false
+    },
     "monaco-languageclient": {
+      "optional": false
+    },
+    "vscode": {
       "optional": false
     },
     "vscode-ws-jsonrpc": {

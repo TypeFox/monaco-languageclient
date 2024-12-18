@@ -1,0 +1,18 @@
+{
+  "name": "@typefox/peer-check",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.12.0",
+    "npm": "10.9.0"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-extensions-service-override": "^10",
+    "monaco-editor-wrapper": "~6.0.0-next.13"
+  }
+}

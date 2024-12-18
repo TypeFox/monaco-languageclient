@@ -1,6 +1,6 @@
 {
   "name": "@typefox/monaco-editor-react",
-  "version": "6.0.0-next.12",
+  "version": "6.0.0-next.13",
   "license": "MIT",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
@@ -46,21 +46,16 @@
     "npm": "10.9.0"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~11.1.2",
-    "@codingame/monaco-vscode-editor-api": "~11.1.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.12",
-    "monaco-languageclient": "~9.0.0-next.12",
-    "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
-    "vscode-ws-jsonrpc": "~3.4.0-next.12"
+    "react": "~18.3.1"
   },
   "peerDependencies": {
     "@codingame/monaco-vscode-api": "~11.1.2",
     "@codingame/monaco-vscode-editor-api": "~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.12",
-    "monaco-languageclient": "~9.0.0-next.12",
-    "vscode-ws-jsonrpc": "~3.4.0-next.12"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "monaco-editor-wrapper": "~6.0.0-next.13",
+    "monaco-languageclient": "~9.0.0-next.13",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
+    "vscode-ws-jsonrpc": "~3.4.0-next.13"
   },
   "peerDependenciesMeta": {
     "@codingame/monaco-vscode-api": {
@@ -69,10 +64,16 @@
     "@codingame/monaco-vscode-editor-api": {
       "optional": false
     },
-    "monaco-languageclient": {
+    "monaco-editor": {
       "optional": false
     },
     "monaco-editor-wrapper": {
+      "optional": false
+    },
+    "monaco-languageclient": {
+      "optional": false
+    },
+    "vscode": {
       "optional": false
     },
     "vscode-ws-jsonrpc": {
