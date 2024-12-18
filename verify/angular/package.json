@@ -46,5 +46,5 @@
     "start:production": "npm run clean && ng serve --configuration production",
     "watch": "npm run clean && ng build --watch --configuration development",
     "reset:repo": "git clean -f -X -d"
-  },
+  }
 }

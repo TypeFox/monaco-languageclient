@@ -40,6 +40,7 @@ const config = {
         extensions: ['.ts', '.js', '.json', '.ttf'],
         fallback: {
             fs: false,
+            module: false,
             vm: false
         }
     },

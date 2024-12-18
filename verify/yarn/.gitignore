@@ -4,5 +4,4 @@ lib
 node_modules
 *.tsbuildinfo
 .yarn
-yarn.lock
 .pnp*

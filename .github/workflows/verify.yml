@@ -23,6 +23,16 @@ jobs:
       with:
         version: 9
 
+    - name: Install
+      shell: bash
+      run: |
+        npm ci
+
+    - name: Versions Report
+      shell: bash
+      run: |
+        npm run report:versions
+
     - name: Execute verification
       shell: bash
       run: |

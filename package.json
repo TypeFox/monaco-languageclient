@@ -7,7 +7,9 @@
   },
   "volta": {
     "node": "22.12.0",
-    "npm": "10.9.0"
+    "npm": "10.9.0",
+    "pnpm": "9.15.0",
+    "yarn": "4.5.3"
   },
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
@@ -50,7 +52,10 @@
     "production:preview": "npm run production:preview --workspace packages/examples",
     "dev": "vite",
     "dev:debug": "vite --debug --force",
-    "report:versions": "echo Reporting versions: && echo tsc: && tsc --version && echo npm: && npm --version && echo node: && node --version && echo eslint: && eslint --version && echo vite: && vite --version  && echo vitest: && vitest --version",
+    "report:versions:vite": "echo vite: && vite --version && echo vitest: && vitest --version",
+    "report:versions:node": "echo npm: && npm --version && echo node: && node --version && echo eslint: && eslint --version",
+    "report:versions:tools": "echo tsc: && tsc --version && echo eslint: && eslint --version && echo pnpm: && pnpm --version && echo yarn: && yarn --version",
+    "report:versions": "echo Reporting versions: && npm run report:versions:node && npm run report:versions:vite && npm run report:versions:tools",
     "build": "npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
     "build:vscode-ws-jsonrpc": "npm run build --workspace packages/vscode-ws-jsonrpc",
