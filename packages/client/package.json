@@ -69,6 +69,8 @@
     "LICENSE"
   ],
   "dependencies": {
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-languageclient": "~9.0.1"
   },
   "peerDependencies": {
@@ -218,9 +220,7 @@
     "@codingame/monaco-vscode-welcome-service-override": "~11.1.2",
     "@codingame/monaco-vscode-workbench-service-override": "~11.1.2",
     "@codingame/monaco-vscode-xml-default-extension": "~11.1.2",
-    "@codingame/monaco-vscode-yaml-default-extension": "~11.1.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "@codingame/monaco-vscode-yaml-default-extension": "~11.1.2"
   },
   "peerDependenciesMeta": {
     "@codingame/monaco-vscode-accessibility-service-override": {
@@ -663,12 +663,6 @@
     },
     "@codingame/monaco-vscode-yaml-default-extension": {
       "optional": true
-    },
-    "monaco-editor": {
-      "optional": false
-    },
-    "vscode": {
-      "optional": false
     }
   },
   "scripts": {

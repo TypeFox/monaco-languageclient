@@ -112,6 +112,8 @@
     "@codingame/monaco-vscode-theme-service-override": "~11.1.2",
     "@codingame/monaco-vscode-views-service-override": "~11.1.2",
     "@codingame/monaco-vscode-workbench-service-override": "~11.1.2",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5"
   },
@@ -123,27 +125,11 @@
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~11.1.2"
   },
   "peerDependencies": {
-    "@codingame/monaco-vscode-api": "~11.1.2",
-    "@codingame/monaco-vscode-editor-api": "~11.1.2",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
     "monaco-languageclient": "~9.0.0-next.13",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-ws-jsonrpc": "~3.4.0-next.13"
   },
   "peerDependenciesMeta": {
-    "@codingame/monaco-vscode-api": {
-      "optional": false
-    },
-    "@codingame/monaco-vscode-editor-api": {
-      "optional": false
-    },
-    "monaco-editor": {
-      "optional": false
-    },
     "monaco-languageclient": {
-      "optional": false
-    },
-    "vscode": {
       "optional": false
     },
     "vscode-ws-jsonrpc": {

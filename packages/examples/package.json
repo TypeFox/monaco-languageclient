@@ -95,18 +95,24 @@
     "@codingame/monaco-vscode-remote-agent-service-override": "~11.1.2",
     "@codingame/monaco-vscode-environment-service-override": "~11.1.2",
     "@codingame/monaco-vscode-secret-storage-service-override": "~11.1.2",
+    "@typefox/monaco-editor-react": "~6.0.0-next.13",
     "cors": "^2.8.5",
     "express": "~4.21.2",
     "jszip": "~3.10.1",
     "langium": "~3.3.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
+    "monaco-editor-wrapper": "~6.0.0-next.13",
+    "monaco-languageclient": "~9.0.0-next.13",
     "pyright": "~1.1.391",
     "react": "~18.3.1",
     "react-dom": "~18.3.1",
     "request-light": "~0.8.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "vscode-json-languageservice": "~5.4.2",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
+    "vscode-ws-jsonrpc": "~3.4.0-next.13",
     "ws": "~8.18.0",
     "wtd-core": "~4.0.1"
   },
@@ -120,42 +126,6 @@
     "ts-node": "~10.9.1",
     "vite-plugin-static-copy": "~2.2.0",
     "vscode-languageserver-types": "~3.17.5"
-  },
-  "peerDependencies": {
-    "@codingame/monaco-vscode-api": "~11.1.2",
-    "@codingame/monaco-vscode-editor-api": "~11.1.2",
-    "@typefox/monaco-editor-react": "~6.0.0-next.13",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.13",
-    "monaco-languageclient": "~9.0.0-next.13",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
-    "vscode-ws-jsonrpc": "~3.4.0-next.13"
-  },
-  "peerDependenciesMeta": {
-    "@codingame/monaco-vscode-editor-api": {
-      "optional": false
-    },
-    "@codingame/monaco-vscode-api": {
-      "optional": false
-    },
-    "@typefox/monaco-editor-react": {
-      "optional": false
-    },
-    "monaco-editor": {
-      "optional": false
-    },
-    "monaco-editor-wrapper": {
-      "optional": false
-    },
-    "monaco-languageclient": {
-      "optional": false
-    },
-    "vscode": {
-      "optional": false
-    },
-    "vscode-ws-jsonrpc": {
-      "optional": false
-    }
   },
   "scripts": {
     "clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths dist *.tsbuildinfo resources/vsix",
