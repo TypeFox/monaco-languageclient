@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2024.12.6] - 2024-12-18
+
+- Use final release of `monaco-languageclient@9.0.0`, `vscode-ws-jsonrpc@3.4.0`, `monaco-editor-wrapper@6.0.0` and `@typefox/monaco-editor-react@6.0.0`.
+
 ## [2024.12.5] - 2024-12-18
 
 - Remove all `peerDependencies` and only use regular `dependencies.

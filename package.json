@@ -14,8 +14,8 @@
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
     "@codingame/monaco-vscode-rollup-vsix-plugin": "~11.1.2",
-    "@eslint/js": "~9.17.0",
     "@eslint/eslintrc": "~3.2.0",
+    "@eslint/js": "~9.17.0",
     "@stylistic/eslint-plugin": "~2.12.1",
     "@testing-library/react": "~16.1.0",
     "@types/node": "~22.10.2",

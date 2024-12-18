@@ -49,27 +49,25 @@ Monaco Editor with TypeScript language support in web worker and relying on clas
 
 ```ts
 import '@codingame/monaco-vscode-python-default-extension';
-import { MonacoEditorLanguageClientWrapper, UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 
 // no top-level await
 const run = async () => {
   const wrapper = new MonacoEditorLanguageClientWrapper();
-  const userConfig = {
-    wrapperConfig: {
-      $type: 'extendend',
-      editorAppConfig: {
-        codeResources: {
-          main: {
-            text: 'print("Hello, World!")',
-            uri: '/workspace/hello.py'
-          }
+  const wrapperConfig: WrapperConfig = {
+    $type: 'extendend',
+    htmlContainer: document.getElementById('monaco-editor-root')!,
+    editorAppConfig: {
+      codeResources: {
+        main: {
+          text: 'print("Hello, World!")',
+          uri: '/workspace/hello.py'
         }
       }
     }
   };
 
-  const htmlElement = document.getElementById('monaco-editor-root');
-  await wrapper.initAndStart(userConfig, htmlElement);
+  await wrapper.initAndStart(userConfig);
 }
 ```
 

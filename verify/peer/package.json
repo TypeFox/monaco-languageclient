@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@codingame/monaco-vscode-extensions-service-override": "^10",
-    "monaco-editor-wrapper": "~6.0.0-next.14"
+    "monaco-editor-wrapper": "~6.0.0"
   }
 }
