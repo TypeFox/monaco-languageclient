@@ -28,7 +28,7 @@
           "request": "launch",
           "url": "http://localhost:20001",
           "webRoot": "${workspaceFolder}",
-          "userDataDir": "${workspaceFolder}/.vscode/profile"
+          "userDataDir": "${workspaceFolder/.chrome/profile"
         },
         {
           "name": "Chrome Preview",
@@ -36,7 +36,7 @@
           "request": "launch",
           "url": "http://localhost:20002",
           "webRoot": "${workspaceFolder}/packages/examples/production",
-          "userDataDir": "${workspaceFolder}/.vscode/profile"
+          "userDataDir": "${workspaceFolder}/.chrome/profile"
         },
         {
           "type": "node",

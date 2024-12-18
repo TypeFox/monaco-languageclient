@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "2024.12.2",
+  "version": "2024.12.5",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -53,6 +53,23 @@
       ]
     }
   },
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.12.0",
+    "npm": "10.9.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "*.html",
+    "*.ts",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~11.1.2",
     "@codingame/monaco-vscode-cpp-default-extension": "~11.1.2",
@@ -78,15 +95,15 @@
     "@codingame/monaco-vscode-remote-agent-service-override": "~11.1.2",
     "@codingame/monaco-vscode-environment-service-override": "~11.1.2",
     "@codingame/monaco-vscode-secret-storage-service-override": "~11.1.2",
-    "@typefox/monaco-editor-react": "~6.0.0-next.11",
+    "@typefox/monaco-editor-react": "~6.0.0-next.14",
     "cors": "^2.8.5",
     "express": "~4.21.2",
     "jszip": "~3.10.1",
     "langium": "~3.3.0",
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0-next.11",
-    "monaco-languageclient": "~9.0.0-next.11",
-    "pyright": "~1.1.390",
+    "monaco-editor-wrapper": "~6.0.0-next.14",
+    "monaco-languageclient": "~9.0.0-next.14",
+    "pyright": "~1.1.391",
     "react": "~18.3.1",
     "react-dom": "~18.3.1",
     "request-light": "~0.8.0",
@@ -95,7 +112,7 @@
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.0.8",
-    "vscode-ws-jsonrpc": "~3.3.2",
+    "vscode-ws-jsonrpc": "~3.4.0-next.14",
     "ws": "~8.18.0",
     "wtd-core": "~4.0.1"
   },
@@ -110,19 +127,6 @@
     "vite-plugin-static-copy": "~2.2.0",
     "vscode-languageserver-types": "~3.17.5"
   },
-  "volta": {
-    "node": "22.12.0",
-    "npm": "10.9.0"
-  },
-  "files": [
-    "dist",
-    "src",
-    "*.html",
-    "*.ts",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
   "scripts": {
     "clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths dist *.tsbuildinfo resources/vsix",
     "compile": "tsc --build tsconfig.src.json",
