@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "shx": "~0.3.4",
-    "vite": "~5.4.11"
+    "vite": "~6.0.3"
   },
   "scripts": {
     "verify": "pnpm install && pnpm run build && pnpm run start",
