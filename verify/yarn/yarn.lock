@@ -1017,21 +1017,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typefox/monaco-editor-react@npm:~6.0.0-next.14":
-  version: 6.0.0-next.14
-  resolution: "@typefox/monaco-editor-react@npm:6.0.0-next.14"
+"@typefox/monaco-editor-react@npm:~6.0.0":
+  version: 6.0.0
+  resolution: "@typefox/monaco-editor-react@npm:6.0.0"
   dependencies:
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-languageclient: "npm:~9.0.0-next.14"
+    monaco-languageclient: "npm:~9.0.0"
     react: "npm:~18.3.1"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
-    vscode-ws-jsonrpc: "npm:~3.4.0-next.14"
+    vscode-ws-jsonrpc: "npm:~3.4.0"
   peerDependencies:
-    monaco-editor-wrapper: ~6.0.0-next.14
+    monaco-editor-wrapper: ~6.0.0
   peerDependenciesMeta:
     monaco-editor-wrapper:
       optional: false
-  checksum: 10c0/2a45f60d6ed7e37fca63aa6433b9cb9f8c186912fc29531f95df64d0dad7a920a3c0a4a72a20de1315661a721fac969512bb73874689b635070f09b28f9ddc21
+  checksum: 10c0/4a0dc2730d55844515d2a1e994fa29abc0158407228bd56854ca85ac2a34a47e4c05d1de69f7256b2f005e706f042de71364daab8c600b7f06f4c7b82c82dd89
   languageName: node
   linkType: hard
 
@@ -2223,21 +2223,21 @@ __metadata:
     "@codingame/monaco-vscode-localization-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-log-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-model-service-override": "npm:~11.1.2"
-    "@typefox/monaco-editor-react": "npm:~6.0.0-next.14"
+    "@typefox/monaco-editor-react": "npm:~6.0.0"
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-editor-wrapper: "npm:~6.0.0-next.14"
-    monaco-languageclient: "npm:~9.0.0-next.14"
-    monaco-languageclient-examples: "npm:~2024.12.5"
+    monaco-editor-wrapper: "npm:~6.0.0"
+    monaco-languageclient: "npm:~9.0.0"
+    monaco-languageclient-examples: "npm:~2024.12.6"
     shx: "npm:~0.3.4"
     vite: "npm:~6.0.3"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
-    vscode-ws-jsonrpc: "npm:~3.4.0-next.14"
+    vscode-ws-jsonrpc: "npm:~3.4.0"
   languageName: unknown
   linkType: soft
 
-"monaco-editor-wrapper@npm:~6.0.0-next.14":
-  version: 6.0.0-next.14
-  resolution: "monaco-editor-wrapper@npm:6.0.0-next.14"
+"monaco-editor-wrapper@npm:~6.0.0":
+  version: 6.0.0
+  resolution: "monaco-editor-wrapper@npm:6.0.0"
   dependencies:
     "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "npm:~11.1.2"
     "@codingame/monaco-vscode-configuration-service-override": "npm:~11.1.2"
@@ -2267,20 +2267,20 @@ __metadata:
     vscode-languageclient: "npm:~9.0.1"
     vscode-languageserver-protocol: "npm:~3.17.5"
   peerDependencies:
-    monaco-languageclient: ~9.0.0-next.14
-    vscode-ws-jsonrpc: ~3.4.0-next.14
+    monaco-languageclient: ~9.0.0
+    vscode-ws-jsonrpc: ~3.4.0
   peerDependenciesMeta:
     monaco-languageclient:
       optional: false
     vscode-ws-jsonrpc:
       optional: false
-  checksum: 10c0/a1e825e6c106c4f6129769a1ae6dd542ffb3f3fcb9367dc1efb1c1610eb8f5de040230e3e3a5503e2c9bb21862347d06403c71d82ca1c56c43d9f6ee9171e988
+  checksum: 10c0/e9bdb9bddc9e7c94099abc1f926722afb83d5f18b52650dc751cf4ec582c771aa635a532e6c823b72b50c2929c90d025dbf688044ba17e96c2a25354a2d2f89e
   languageName: node
   linkType: hard
 
-"monaco-languageclient-examples@npm:~2024.12.5":
-  version: 2024.12.5
-  resolution: "monaco-languageclient-examples@npm:2024.12.5"
+"monaco-languageclient-examples@npm:~2024.12.6":
+  version: 2024.12.6
+  resolution: "monaco-languageclient-examples@npm:2024.12.6"
   dependencies:
     "@codingame/monaco-vscode-configuration-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-cpp-default-extension": "npm:~11.1.2"
@@ -2306,14 +2306,14 @@ __metadata:
     "@codingame/monaco-vscode-typescript-basics-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-views-service-override": "npm:~11.1.2"
-    "@typefox/monaco-editor-react": "npm:~6.0.0-next.14"
+    "@typefox/monaco-editor-react": "npm:~6.0.0"
     cors: "npm:^2.8.5"
     express: "npm:~4.21.2"
     jszip: "npm:~3.10.1"
     langium: "npm:~3.3.0"
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-editor-wrapper: "npm:~6.0.0-next.14"
-    monaco-languageclient: "npm:~9.0.0-next.14"
+    monaco-editor-wrapper: "npm:~6.0.0"
+    monaco-languageclient: "npm:~9.0.0"
     pyright: "npm:~1.1.391"
     react: "npm:~18.3.1"
     react-dom: "npm:~18.3.1"
@@ -2323,16 +2323,16 @@ __metadata:
     vscode-languageclient: "npm:~9.0.1"
     vscode-languageserver: "npm:~9.0.1"
     vscode-uri: "npm:~3.0.8"
-    vscode-ws-jsonrpc: "npm:~3.4.0-next.14"
+    vscode-ws-jsonrpc: "npm:~3.4.0"
     ws: "npm:~8.18.0"
     wtd-core: "npm:~4.0.1"
-  checksum: 10c0/7faa0f5af93598a95e122e3470be72fad67e3758d08850e6fa75e85ec45ec7e9f2db5b8712556e72f464807315235f484d249b12a0c922e60d64711129737c18
+  checksum: 10c0/cd07732df789622a42966b815a119dc787964ba1a6457006aefef69c7ca35968c9bd299b21460b7bd56dcfe33fc2e3837d378c0d942b31afb17c5c8757873c8b
   languageName: node
   linkType: hard
 
-"monaco-languageclient@npm:~9.0.0-next.14":
-  version: 9.0.0-next.14
-  resolution: "monaco-languageclient@npm:9.0.0-next.14"
+"monaco-languageclient@npm:~9.0.0":
+  version: 9.0.0
+  resolution: "monaco-languageclient@npm:9.0.0"
   dependencies:
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
@@ -2346,6 +2346,7 @@ __metadata:
     "@codingame/monaco-vscode-base-service-override": ~11.1.2
     "@codingame/monaco-vscode-bat-default-extension": ~11.1.2
     "@codingame/monaco-vscode-chat-extensions-notebook-common": ~11.1.2
+    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": ~11.1.2
     "@codingame/monaco-vscode-chat-service-override": ~11.1.2
     "@codingame/monaco-vscode-clojure-default-extension": ~11.1.2
     "@codingame/monaco-vscode-coffeescript-default-extension": ~11.1.2
@@ -2501,6 +2502,8 @@ __metadata:
     "@codingame/monaco-vscode-bat-default-extension":
       optional: true
     "@codingame/monaco-vscode-chat-extensions-notebook-common":
+      optional: true
+    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common":
       optional: true
     "@codingame/monaco-vscode-chat-service-override":
       optional: true
@@ -2780,7 +2783,7 @@ __metadata:
       optional: true
     "@codingame/monaco-vscode-yaml-default-extension":
       optional: true
-  checksum: 10c0/5f6622e0db223a5a9640fabb9689d84f0dd36760f630a65c380da9cc35acfe3fbd3731a8857d8341c6ef3a1cd0d96960adf21b870391fbce12283e99e3e8b322
+  checksum: 10c0/ec0a2736b69358ebd481e993dd086976a0de412799a89487d23f33417579c4251a4caed6d41f12eabe3fb7937d119a0f9bdd47dec1a07617a952fd28116b724e
   languageName: node
   linkType: hard
 
@@ -3732,12 +3735,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vscode-ws-jsonrpc@npm:~3.4.0-next.14":
-  version: 3.4.0-next.14
-  resolution: "vscode-ws-jsonrpc@npm:3.4.0-next.14"
+"vscode-ws-jsonrpc@npm:~3.4.0":
+  version: 3.4.0
+  resolution: "vscode-ws-jsonrpc@npm:3.4.0"
   dependencies:
     vscode-jsonrpc: "npm:~8.2.1"
-  checksum: 10c0/3eb7cdfc3925774886e57ce9d4cbc4ed616605b9a8e478618a8809076130707b1de9225e4d936790ace2c0c69589b613354b3ee0f26fd31cec3d8d480f9f3db6
+  checksum: 10c0/04c47b26ea3c826d34ebbcd6a6be4f82a0d300e4db3d38c46a990ba0328158272cbe6b3a563cabda840eb7f2b974f637f05d68c0f14896a0d45ffba0ad27792b
   languageName: node
   linkType: hard
 

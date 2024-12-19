@@ -121,7 +121,7 @@
     "@codingame/monaco-vscode-standalone-css-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-html-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-json-language-features": "~11.1.2",
-    "@codingame/monaco-vscode-standalone-languages": "~11.0.2",
+    "@codingame/monaco-vscode-standalone-languages": "~11.1.2",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~11.1.2"
   },
   "peerDependencies": {

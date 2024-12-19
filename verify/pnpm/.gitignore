@@ -3,5 +3,3 @@ dist
 lib
 node_modules
 *.tsbuildinfo
-package-lock.json
-pnpm-lock.yaml

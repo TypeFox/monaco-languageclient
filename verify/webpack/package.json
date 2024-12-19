@@ -12,13 +12,9 @@
     "npm": "10.9.0"
   },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0",
-    "monaco-languageclient-examples": "~2024.12.6",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "monaco-languageclient-examples": "~2024.12.6"
   },
   "devDependencies": {
-    "@types/vscode": "~1.94.0",
     "css-loader": "~7.1.2",
     "http-server": "~14.1.1",
     "shx": "~0.3.4",

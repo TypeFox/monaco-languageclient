@@ -19,7 +19,6 @@
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
     "monaco-editor-wrapper": "~6.0.0",
     "monaco-languageclient-examples": "~2024.12.6",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
   },

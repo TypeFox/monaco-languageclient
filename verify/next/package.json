@@ -11,15 +11,11 @@
   },
   "type": "module",
   "dependencies": {
-    "@codingame/monaco-vscode-keybindings-service-override": "~11.1.2",
     "@typefox/monaco-editor-react": "~6.0.0",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
-    "monaco-editor-wrapper": "~6.0.0",
     "monaco-languageclient-examples": "~2024.12.6",
     "next": "~15.0.3",
     "react": "~18.3.1",
-    "react-dom": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~11.1.2"
+    "react-dom": "~18.3.1"
   },
   "devDependencies": {
     "@types/node": "~22.10.0",
