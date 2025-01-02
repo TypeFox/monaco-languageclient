@@ -212,7 +212,7 @@ For the **java-client** example you need to ensure the **java-server** example i
 
 None of the verification examples is part of the npm workspace. Some bring substantial amount of npm dependencies that pollute the main node_modules dependencies and therefore these examples need to be build and started independently. All verifaction examples re-uses the code form the json client example and therefore require the json server to be started.
 
-- [angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
+- [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
 
 - [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8081>.
 
@@ -220,7 +220,9 @@ None of the verification examples is part of the npm workspace. Some bring subst
 
 - [pnpm verification example](./verify/pnpm) demonstrates that the project can be build with vite, but pnpm is used instead of npm. Please do: `cd verify/pnpm && pnpm run verify`. It serves the client here: <http://localhost:8083>.
 
-- [yarn verification example](./verify/yarn)demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
+- [yarn verification example](./verify/yarn) demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
+
+- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8084>.
 
 ### VSCode integration
 
