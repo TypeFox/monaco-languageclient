@@ -300,6 +300,14 @@ import { loader } from "@monaco-editor/react";
 loader.config({ monaco });
 ```
 
+Because `@codingame/monaco-vscode-api` relies on it own build of `monaco-editor` it may be required to enforce the `monaco-editor` version via `overrides` (npm/pnpm) or `resolutions` (yarn):
+
+```json
+"overrides": {
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
+}
+```
+
 ### pnpm
 
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (you find the [compatibility table here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table), otherwise the installation will fail.
