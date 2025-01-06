@@ -136,8 +136,8 @@ export const runApplicationPlayground = async () => {
     // currently unused
     await getService(IWorkbenchLayoutService);
 
-    // show explorer and not search
-    await vscode.commands.executeCommand('workbench.view.explorer');
+    // WA: Force show explorer and not search
+    // await vscode.commands.executeCommand('workbench.view.explorer');
 
     await Promise.all([
         await vscode.window.showTextDocument(helloTsUri),
