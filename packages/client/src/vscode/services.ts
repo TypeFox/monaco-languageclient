@@ -17,7 +17,7 @@ import { EnvironmentOverride } from 'vscode/workbench';
 import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 import { setUnexpectedErrorHandler } from 'vscode/monaco';
-import { initUserConfiguration, updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import { getUserConfiguration, initUserConfiguration, updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -98,21 +98,26 @@ export const initServices = async (vscodeApiConfig: VscodeApiConfig, instruction
     const envEnhanced = initEnhancedMonacoEnvironment();
 
     if (!(envEnhanced.vscodeInitialising ?? false)) {
+
         if (envEnhanced.vscodeApiInitialised ?? false) {
             instructions.logger?.debug('Initialization of vscode services can only performed once!');
-
             if (vscodeApiConfig.userConfiguration?.json !== undefined) {
-                await updateUserConfiguration(vscodeApiConfig.userConfiguration?.json);
+                const userConfig = {
+                    ...JSON.parse(await getUserConfiguration()),
+                    ...JSON.parse(vscodeApiConfig.userConfiguration.json)
+                };
+
+                await updateUserConfiguration(JSON.stringify(userConfig));
             }
         } else {
             envEnhanced.vscodeInitialising = true;
             instructions.logger?.debug(`Initializing vscode services. Caller: ${instructions.caller ?? 'unknown'}`);
 
             if (vscodeApiConfig.userConfiguration?.json !== undefined) {
-                await initUserConfiguration(vscodeApiConfig.userConfiguration?.json);
+                await initUserConfiguration(vscodeApiConfig.userConfiguration.json);
             }
-
             await importAllServices(vscodeApiConfig, instructions);
+
             vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
             instructions.logger?.debug('Initialization of vscode services completed successfully.');
 

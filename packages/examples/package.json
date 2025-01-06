@@ -89,6 +89,7 @@
     "@codingame/monaco-vscode-standalone-json-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-languages": "~11.1.2",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~11.1.2",
+    "@codingame/monaco-vscode-storage-service-override": "~11.1.2",
     "@codingame/monaco-vscode-textmate-service-override": "~11.1.2",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~11.1.2",
     "@codingame/monaco-vscode-theme-service-override": "~11.1.2",
