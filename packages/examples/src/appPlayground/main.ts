@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { LogLevel } from 'vscode/services';
+import { getService, IWorkbenchLayoutService, LogLevel } from 'vscode/services';
 import { RegisterLocalProcessExtensionResult } from 'vscode/extensions';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
@@ -19,9 +19,11 @@ import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent
 import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
 import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
+import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import '@codingame/monaco-vscode-search-result-default-extension';
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
@@ -55,7 +57,8 @@ export const runApplicationPlayground = async () => {
                 ...getRemoteAgentServiceOverride(),
                 ...getEnvironmentServiceOverride(),
                 ...getSecretStorageServiceOverride(),
-                ...getStorageServiceOverride()
+                ...getStorageServiceOverride(),
+                ...getSearchServiceOverride()
             },
             enableExtHostWorker: true,
             viewsConfig: {
@@ -129,6 +132,12 @@ export const runApplicationPlayground = async () => {
     await wrapper.init(wrapperConfig);
     const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
+
+    // currently unused
+    await getService(IWorkbenchLayoutService);
+
+    // show explorer and not search
+    await vscode.commands.executeCommand('workbench.view.explorer');
 
     await Promise.all([
         await vscode.window.showTextDocument(helloTsUri),
