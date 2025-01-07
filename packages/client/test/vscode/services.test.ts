@@ -30,6 +30,7 @@ describe('VSCde services Tests', () => {
         expect(envEnhanced.vscodeInitialising).toBeTruthy();
         expect(envEnhanced.vscodeApiInitialised).toBeFalsy();
 
+        // try a second time and expect that the api init is ongoing but not completed
         const secondCallResult = await initServices(vscodeApiConfig);
 
         expect(secondCallResult).toBeFalsy();
@@ -37,8 +38,8 @@ describe('VSCde services Tests', () => {
         expect(envEnhanced.vscodeInitialising).toBeTruthy();
         expect(envEnhanced.vscodeApiInitialised).toBeFalsy();
 
+        // wait for the initial promise to complete and expect that api init was completed and is no longer ongoing
         const initialCallResult = await promise;
-
         expect(initialCallResult).toBeTruthy();
         envEnhanced = (self as Window).MonacoEnvironment as MonacoEnvironmentEnhanced;
         expect(envEnhanced.vscodeInitialising).toBeFalsy();
