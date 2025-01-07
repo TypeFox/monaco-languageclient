@@ -28,7 +28,7 @@
           "request": "launch",
           "url": "http://localhost:20001",
           "webRoot": "${workspaceFolder}",
-          "userDataDir": "${workspaceFolder/.chrome/profile"
+          "userDataDir": "${workspaceFolder}/.chrome/profile"
         },
         {
           "name": "Chrome Preview",

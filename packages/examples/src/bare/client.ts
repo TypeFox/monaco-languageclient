@@ -15,7 +15,6 @@ import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
-import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
@@ -23,15 +22,16 @@ export const runClient = async () => {
     await initServices({
         serviceOverrides: {
             ...getConfigurationServiceOverride()
-        }
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'editor.experimental.asyncTokenization': true
+            })
+        },
     }, {
         htmlContainer,
         logger
     });
-
-    updateUserConfiguration(JSON.stringify({
-        'editor.experimental.asyncTokenization': true
-    }));
 
     // register the JSON language with Monaco
     monaco.languages.register({

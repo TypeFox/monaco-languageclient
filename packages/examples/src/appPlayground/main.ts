@@ -18,6 +18,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
 import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
+import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
@@ -53,7 +54,8 @@ export const runApplicationPlayground = async () => {
                 ...getExplorerServiceOverride(),
                 ...getRemoteAgentServiceOverride(),
                 ...getEnvironmentServiceOverride(),
-                ...getSecretStorageServiceOverride()
+                ...getSecretStorageServiceOverride(),
+                ...getStorageServiceOverride()
             },
             enableExtHostWorker: true,
             viewsConfig: {
