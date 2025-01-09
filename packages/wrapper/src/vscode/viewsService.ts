@@ -65,3 +65,9 @@ export const defaultViewsHtml = `<div id="workbench-container">
     <div id="panel"></div>
     <div id="statusBar"></div>
 </div>`;
+
+export const defaultHtmlAugmentationInstructions = (htmlElement: HTMLElement | null | undefined) => {
+    const htmlContainer = document.createElement('div', { is: 'app' });
+    htmlContainer.innerHTML = defaultViewsHtml;
+    htmlElement?.append(htmlContainer);
+};

@@ -8,7 +8,7 @@ import * as vscode from 'vscode';
 import '@codingame/monaco-vscode-python-default-extension';
 import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createUserConfig } from './config.js';
+import { createWrapperConfig } from './config.js';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 
@@ -21,7 +21,7 @@ export const runPythonWrapper = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(hello2PyUri, hello2PyCode));
 
     registerFileSystemOverlay(1, fileSystemProvider);
-    const userConfig = createUserConfig('/workspace', helloPyCode, '/workspace/hello.py');
+    const wrapperConfig = createWrapperConfig('/workspace', helloPyCode, '/workspace/hello.py');
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
     try {
@@ -29,7 +29,7 @@ export const runPythonWrapper = async () => {
             if (wrapper.isStarted()) {
                 console.warn('Editor was already started!');
             } else {
-                await wrapper.init(userConfig);
+                await wrapper.init(wrapperConfig);
 
                 // open files, so the LS can pick it up
                 await vscode.workspace.openTextDocument(hello2PyUri);

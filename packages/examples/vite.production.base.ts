@@ -16,6 +16,7 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
                     appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),
                     browser: path.resolve(__dirname, 'ghp_browser.html'),
                     tsExtHost: path.resolve(__dirname, 'ghp_tsExtHost.html'),
+                    reactAppPlayground: path.resolve(__dirname, 'ghp_react_appPlayground.html'),
                     reactStatemachine: path.resolve(__dirname, 'ghp_react_statemachine.html')
                 }
             },

@@ -30,6 +30,7 @@ export interface UserConfiguration {
 export interface ViewsConfig {
     viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
     openEditorFunc?: OpenEditor;
+    htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
     viewsInitFunc?: () => void;
 }
 
@@ -110,6 +111,7 @@ export const initServices = async (vscodeApiConfig: VscodeApiConfig, instruction
             }
             await importAllServices(vscodeApiConfig, instructions);
 
+            vscodeApiConfig.viewsConfig?.htmlAugmentationInstructions?.(instructions?.htmlContainer);
             vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
             instructions?.logger?.debug('Initialization of vscode services completed successfully.');
 

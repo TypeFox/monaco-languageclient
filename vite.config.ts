@@ -28,6 +28,7 @@ export const definedViteConfig = defineConfig({
                 clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),
                 appPlayground: path.resolve(__dirname, 'packages/examples/appPlayground.html'),
                 twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
+                reactAppPlayground: path.resolve(__dirname, 'packages/examples/react_appPlayground.html'),
                 reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
                 tsExtHost: path.resolve(__dirname, 'packages/examples/ts.html')
@@ -41,6 +42,9 @@ export const definedViteConfig = defineConfig({
     server: {
         origin: 'http://localhost:20001',
         port: 20001,
+        cors: {
+            origin: '*'
+        },
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp',

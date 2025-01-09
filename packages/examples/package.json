@@ -85,6 +85,8 @@
     "@codingame/monaco-vscode-localization-service-override": "~11.1.2",
     "@codingame/monaco-vscode-python-default-extension": "~11.1.2",
     "@codingame/monaco-vscode-remote-agent-service-override": "~11.1.2",
+    "@codingame/monaco-vscode-search-result-default-extension": "~11.1.2",
+    "@codingame/monaco-vscode-search-service-override": "~11.1.2",
     "@codingame/monaco-vscode-secret-storage-service-override": "~11.1.2",
     "@codingame/monaco-vscode-standalone-json-language-features": "~11.1.2",
     "@codingame/monaco-vscode-standalone-languages": "~11.1.2",

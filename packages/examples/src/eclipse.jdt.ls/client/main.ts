@@ -20,7 +20,7 @@ export const runEclipseJdtLsClient = () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(helloJavaUri, helloJavaCode));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const userConfig: WrapperConfig = {
+    const wrapperConfig: WrapperConfig = {
         $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
@@ -70,7 +70,7 @@ export const runEclipseJdtLsClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.init(userConfig);
+            await wrapper.init(wrapperConfig);
 
             // open files, so the LS can pick it up
             await vscode.workspace.openTextDocument(helloJavaUri);
