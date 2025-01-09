@@ -4,7 +4,6 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { getService, IWorkbenchLayoutService } from 'vscode/services';
 import { RegisterLocalProcessExtensionResult } from 'vscode/extensions';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { ConfigResult } from './config.js';
@@ -12,9 +11,6 @@ import { ConfigResult } from './config.js';
 export const configurePostStart = async (wrapper: MonacoEditorLanguageClientWrapper, configResult: ConfigResult) => {
     const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
-
-    // currently unused
-    await getService(IWorkbenchLayoutService);
 
     // WA: Force show explorer and not search
     // await vscode.commands.executeCommand('workbench.view.explorer');

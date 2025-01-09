@@ -102,7 +102,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 });
 
                 const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType;
-                if (viewServiceType === 'EditorService') {
+                if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
                     await wrapperRef.current.start();
                 }
                 onLoad?.(wrapperRef.current);
