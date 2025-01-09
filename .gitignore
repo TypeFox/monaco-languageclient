@@ -5,4 +5,4 @@ node_modules
 *.tsbuildinfo
 .angular
 __screenshots__
-.chrome/profile
+.chrome
