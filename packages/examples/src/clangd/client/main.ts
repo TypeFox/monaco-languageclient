@@ -11,7 +11,6 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
-import { defaultViewsHtml } from 'monaco-editor-wrapper/vscode/services';
 import { createDefaultWorkspaceFile, disableButton } from '../../common/client/utils.js';
 import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
 
@@ -32,12 +31,8 @@ export const runClangdWrapper = async () => {
     };
     new MainRemoteMessageChannelFs(fileSystemProvider, channelFs.port1, readiness);
 
-    const htmlContainer = document.createElement('div', { is: 'app' });
-    htmlContainer.innerHTML = defaultViewsHtml;
-    document.body.append(htmlContainer);
-
     const clangdWorkerHandler = new ClangdWorkerHandler();
-    const userConfig = await createWrapperConfig({
+    const wrapperConfig = await createWrapperConfig({
         htmlContainer: document.body,
         workspaceUri: vscode.Uri.file(WORKSPACE_PATH),
         workspaceFileUri,
@@ -45,7 +40,7 @@ export const runClangdWrapper = async () => {
         lsMessageLocalPort: channelLs.port1
     });
 
-    await wrapper.init(userConfig);
+    await wrapper.init(wrapperConfig);
     const initConfig = {
         lsMessagePort: channelLs.port2,
         fsMessagePort: channelFs.port2,

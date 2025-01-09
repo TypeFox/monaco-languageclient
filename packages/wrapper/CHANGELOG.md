@@ -2,6 +2,11 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.1.0] - 2025-01-09
+
+- `@typefox/monaco-editor-react` now works with views service [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)
+- Ensure configuration is init before service init [#820](https://github.com/TypeFox/monaco-languageclient/pull/820)
+
 ## [6.0.0] - 2024-12-18
 
 - Only `monaco-languageclient` and `vscode-ws-jsonrpc` are `peerDependencies`.

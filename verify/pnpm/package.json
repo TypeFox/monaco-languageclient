@@ -12,7 +12,7 @@
     "pnpm": "9.15.0"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2024.12.6"
+    "monaco-languageclient-examples": "~2025.1.1"
   },
   "devDependencies": {
     "shx": "~0.3.4",

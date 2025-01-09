@@ -9,11 +9,16 @@
     <link rel="stylesheet" href="./resources/styles/views.css">
 </head>
 
-<body>
+<!-- body style of vscode theme are not applied when embedded in react -->
+<body style="background-color: #1f1f1f; color: #cccccc;">
     <div class="exampleHeadelineDiv">
         <b class="exampleHeadeline">Application Playground</b> - [<a href="../../index.html">Back to Index</a>] <b>Heads up:</b> This is a prototype and still evolving.
+        <br>
+        <button type="button" id="button-start">Start</button>
+        <label>Enable Strict mode:</label><input type="checkbox" id="checkbox-strictmode" />
     </div>
-    <script type="module" rel="modulepreload" src="./src/appPlayground/launcher"></script>
+    <div id="react-root"></div>
+    <script type="module" rel="modulepreload" src="./src/appPlayground/reactLauncher"></script>
 </body>
 
 </html>

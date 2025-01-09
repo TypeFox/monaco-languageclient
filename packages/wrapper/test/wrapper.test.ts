@@ -56,8 +56,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('code resources main', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const userConfig = createWrapperConfigClassicApp();
-        await wrapper.initAndStart(userConfig);
+        const wrapperConfig = createWrapperConfigClassicApp();
+        await wrapper.initAndStart(wrapperConfig);
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();

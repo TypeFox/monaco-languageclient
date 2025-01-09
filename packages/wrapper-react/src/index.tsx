@@ -48,6 +48,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.className = className ?? '';
+            wrapperConfig.htmlContainer = containerRef.current;
         }
     }, [className]);
 
@@ -68,12 +69,16 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [wrapperConfig]);
 
     const initMonaco = useCallback(async () => {
-        await wrapperRef.current.init(wrapperConfig);
+        if (containerRef.current) {
+            wrapperConfig.htmlContainer = containerRef.current;
+            await wrapperRef.current.init(wrapperConfig);
+        } else {
+            throw new Error('No htmlContainer found! Aborting...');
+        }
     }, [wrapperConfig]);
 
     const startMonaco = useCallback(async () => {
         if (containerRef.current) {
-            containerRef.current.className = className ?? '';
             try {
                 wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
                     if (textModels.modified !== undefined || textModels.original !== undefined) {
@@ -96,7 +101,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     }
                 });
 
-                await wrapperRef.current.start(containerRef.current);
+                const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType;
+                if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
+                    await wrapperRef.current.start();
+                }
                 onLoad?.(wrapperRef.current);
                 handleOnTextChanged();
             } catch (e) {
@@ -107,9 +115,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 }
             }
         } else {
-            throw new Error('No htmlContainer found');
+            throw new Error('No htmlContainer found! Aborting...');
         }
-    }, [className, onError, onLoad, onTextChanged]);
+    }, [onError, onLoad, onTextChanged]);
 
     const handleOnTextChanged = useCallback(() => {
         disposeOnTextChanged();

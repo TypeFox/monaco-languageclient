@@ -16,7 +16,7 @@ import java.io.File;
 File file = new File("E:/Example.txt");
 `;
 
-const userConfig: WrapperConfig = {
+const wrapperConfig: WrapperConfig = {
     $type: 'extended',
     htmlContainer: document.getElementById('monaco-editor-root')!,
     logLevel: LogLevel.Debug,
@@ -62,7 +62,7 @@ export const runGroovyClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig);
+            await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

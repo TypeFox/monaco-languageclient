@@ -13,7 +13,7 @@ import { WrapperConfig } from 'monaco-editor-wrapper';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 
-export const createUserConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
+export const createWrapperConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
     const url = createUrl({
         secured: false,
         host: 'localhost',

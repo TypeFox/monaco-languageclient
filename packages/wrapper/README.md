@@ -67,7 +67,7 @@ const run = async () => {
     }
   };
 
-  await wrapper.initAndStart(userConfig);
+  await wrapper.initAndStart(wrapperConfig);
 }
 ```
 
