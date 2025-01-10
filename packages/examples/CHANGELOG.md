@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.1.1] - 2025-01-09
+## [2025.1.1] - 2025-01-10
 
 - Updated to `monaco-languageclient@9.1.0`, `monaco-editor-wrapper@6.1.0` and `@typefox/monaco-editor-react@6.1.0`.
 - Added a react version of the app playground to verify PR "`@typefox/monaco-editor-react` now works with views service" [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)

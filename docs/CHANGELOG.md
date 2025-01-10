@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.1.0] - 2025-01-09
+## [9.1.0] - 2025-01-10
 
 - `@typefox/monaco-editor-react` now works with views service `initialize` [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)
 - Ensure configuration is init before service init [#820](https://github.com/TypeFox/monaco-languageclient/pull/820)
