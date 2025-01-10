@@ -9,15 +9,15 @@ importers:
   .:
     dependencies:
       monaco-languageclient-examples:
-        specifier: ~2024.12.6
-        version: 2024.12.6(tx6icb6bjuicw7xrhsz6wq7a6e)
+        specifier: ~2025.1.1
+        version: 2025.1.1(tx6icb6bjuicw7xrhsz6wq7a6e)
     devDependencies:
       shx:
         specifier: ~0.3.4
         version: 0.3.4
       vite:
-        specifier: ~6.0.3
-        version: 6.0.3
+        specifier: ~6.0.7
+        version: 6.0.7
 
 packages:
 
@@ -56,6 +56,21 @@ packages:
 
   '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@11.1.2':
     resolution: {integrity: sha512-aDGr6tPwQiyGJMCI8kdMDkl+V21TBXt3jDJJq7RXH5pAjhDsf7JtR2CgJLOVHSvc9EZE/43KuUQpSsYOvkHRGg==}
+
+  '@codingame/monaco-vscode-chat-interactive-notebook-search-common@11.1.2':
+    resolution: {integrity: sha512-ZUKj9eWPm24j/2vZI3hpG5ynr64FV3lSWFOcaZrtmuSeKm8a+ZW4xJpWF98v4dcdPO7Uq+RukjcRy1nS8euSGg==}
+
+  '@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common@11.1.2':
+    resolution: {integrity: sha512-2PkTzkbQ04JBDbky1bUyQPneWKyIiwrtz6IQjVm0q3C27nWGM6rGMBgXgvwdwK89rNIO6hWRmkmf9+QMKNUyUQ==}
+
+  '@codingame/monaco-vscode-chat-notebook-common@11.1.2':
+    resolution: {integrity: sha512-Xa2ydE2mHEz5o4w7G34pztiG/aFYq7h+9ItK5z8mAw82uHfC/v3WEPd3HhwllObSYSLq/vVf35/UUkBm6FJYRw==}
+
+  '@codingame/monaco-vscode-chat-notebook-terminal-common@11.1.2':
+    resolution: {integrity: sha512-vlgAY8n7G054MEv2bV3EZLbllKlwq/mCk2MDnGSJlpwDAcFAQNsYaygaDiH3tb/AvGhjPH0w1hMA5vhz/leSEw==}
+
+  '@codingame/monaco-vscode-chat-notebook-terminal-testing-common@11.1.2':
+    resolution: {integrity: sha512-vpJgB0mb3mnHYp55e8Zj9BNKfeHtIp9N1l/b3Ql6qEEW8lH8ZwBZoNs1oWbI52wTgNl3ibhtqbLFOZyq3NNhRw==}
 
   '@codingame/monaco-vscode-comments-extensions-common@11.1.2':
     resolution: {integrity: sha512-bQvEYaCgzwyjFEP4zEHHxj3vQBMoG3dt0cJDVKb+b9UkU06LUPhTIwRaMF9GiA3j+KvGRIaVulOkLB/vpEoBxg==}
@@ -180,6 +195,12 @@ packages:
   '@codingame/monaco-vscode-remote-agent-service-override@11.1.2':
     resolution: {integrity: sha512-W4uwDp5sJg5dDINrESX6xOqVgLT+kP0t4a4CTbI8+WyiiU0tqdd2QunRbwpfq2VC7lgJclnmhSdgMAvLcmcBsg==}
 
+  '@codingame/monaco-vscode-search-result-default-extension@11.1.2':
+    resolution: {integrity: sha512-QmrcuEkxozWY2byVpJlf9eOk+WmVyJkRVJOYVVHkSH4ja+SnRpXNAfAw7KWhYK+Yag8SrApnh6UwRhCitiVZYg==}
+
+  '@codingame/monaco-vscode-search-service-override@11.1.2':
+    resolution: {integrity: sha512-JYvJwUEo90bcCsSe7G704Af3nORsEXiJYkMVmHkyAM3hTXzDvQy9Lt/aMlri8h1mnX5PvSnriU+9m3L5X0PWPQ==}
+
   '@codingame/monaco-vscode-secret-storage-service-override@11.1.2':
     resolution: {integrity: sha512-tKji5tMF+O6MUBBYmjbnqGwUlrQR1R017pf7MJtXND/A3w3NGcmijQqrUdxPZzpKd6IB+ePhNFKowsvTNTlvyA==}
 
@@ -191,6 +212,9 @@ packages:
 
   '@codingame/monaco-vscode-standalone-typescript-language-features@11.1.2':
     resolution: {integrity: sha512-6XbJgMGH1C5VJxBfVgWzqBoV5jr22q4ecncsdhP1G6C5sIgEiQFRHcyXb0HWkBJVgfJ/TOH7R8fB+WVeaAznmg==}
+
+  '@codingame/monaco-vscode-storage-service-override@11.1.2':
+    resolution: {integrity: sha512-RgmhQK0SQFn+uR97dk/RYHy3MxOmi8L+IP3i7aTFFKFDqOZSckH7yyqSKFukkAaQebI0zV1/7mKKsZrF536Jeg==}
 
   '@codingame/monaco-vscode-textmate-service-override@11.1.2':
     resolution: {integrity: sha512-XYifKsm7QCW0GQQrZbstBPK5z8HSi5hT52ViIvMf/w910kvswW2KDiasEAGEGyyG3WaqTGjtwyNkuo6tlBftlQ==}
@@ -228,146 +252,152 @@ packages:
   '@codingame/monaco-vscode-workbench-service-override@11.1.2':
     resolution: {integrity: sha512-E+SWwMiVN/cTmqHWw/1rmkI+zPUxkujGJoC0fqQ3LjUfsLsifoHCt3vKIL9yNFqmSP/jO3OJQ1ZB81pCgDjg7Q==}
 
-  '@esbuild/aix-ppc64@0.24.0':
-    resolution: {integrity: sha512-WtKdFM7ls47zkKHFVzMz8opM7LkcsIp9amDUBIAWirg70RM71WRSjdILPsY5Uv1D42ZpUfaPILDlfactHgsRkw==}
+  '@esbuild/aix-ppc64@0.24.2':
+    resolution: {integrity: sha512-thpVCb/rhxE/BnMLQ7GReQLLN8q9qbHmI55F4489/ByVg2aQaQ6kbcLb6FHkocZzQhxc4gx0sCk0tJkKBFzDhA==}
     engines: {node: '>=18'}
     cpu: [ppc64]
     os: [aix]
 
-  '@esbuild/android-arm64@0.24.0':
-    resolution: {integrity: sha512-Vsm497xFM7tTIPYK9bNTYJyF/lsP590Qc1WxJdlB6ljCbdZKU9SY8i7+Iin4kyhV/KV5J2rOKsBQbB77Ab7L/w==}
+  '@esbuild/android-arm64@0.24.2':
+    resolution: {integrity: sha512-cNLgeqCqV8WxfcTIOeL4OAtSmL8JjcN6m09XIgro1Wi7cF4t/THaWEa7eL5CMoMBdjoHOTh/vwTO/o2TRXIyzg==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [android]
 
-  '@esbuild/android-arm@0.24.0':
-    resolution: {integrity: sha512-arAtTPo76fJ/ICkXWetLCc9EwEHKaeya4vMrReVlEIUCAUncH7M4bhMQ+M9Vf+FFOZJdTNMXNBrWwW+OXWpSew==}
+  '@esbuild/android-arm@0.24.2':
+    resolution: {integrity: sha512-tmwl4hJkCfNHwFB3nBa8z1Uy3ypZpxqxfTQOcHX+xRByyYgunVbZ9MzUUfb0RxaHIMnbHagwAxuTL+tnNM+1/Q==}
     engines: {node: '>=18'}
     cpu: [arm]
     os: [android]
 
-  '@esbuild/android-x64@0.24.0':
-    resolution: {integrity: sha512-t8GrvnFkiIY7pa7mMgJd7p8p8qqYIz1NYiAoKc75Zyv73L3DZW++oYMSHPRarcotTKuSs6m3hTOa5CKHaS02TQ==}
+  '@esbuild/android-x64@0.24.2':
+    resolution: {integrity: sha512-B6Q0YQDqMx9D7rvIcsXfmJfvUYLoP722bgfBlO5cGvNVb5V/+Y7nhBE3mHV9OpxBf4eAS2S68KZztiPaWq4XYw==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [android]
 
-  '@esbuild/darwin-arm64@0.24.0':
-    resolution: {integrity: sha512-CKyDpRbK1hXwv79soeTJNHb5EiG6ct3efd/FTPdzOWdbZZfGhpbcqIpiD0+vwmpu0wTIL97ZRPZu8vUt46nBSw==}
+  '@esbuild/darwin-arm64@0.24.2':
+    resolution: {integrity: sha512-kj3AnYWc+CekmZnS5IPu9D+HWtUI49hbnyqk0FLEJDbzCIQt7hg7ucF1SQAilhtYpIujfaHr6O0UHlzzSPdOeA==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [darwin]
 
-  '@esbuild/darwin-x64@0.24.0':
-    resolution: {integrity: sha512-rgtz6flkVkh58od4PwTRqxbKH9cOjaXCMZgWD905JOzjFKW+7EiUObfd/Kav+A6Gyud6WZk9w+xu6QLytdi2OA==}
+  '@esbuild/darwin-x64@0.24.2':
+    resolution: {integrity: sha512-WeSrmwwHaPkNR5H3yYfowhZcbriGqooyu3zI/3GGpF8AyUdsrrP0X6KumITGA9WOyiJavnGZUwPGvxvwfWPHIA==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [darwin]
 
-  '@esbuild/freebsd-arm64@0.24.0':
-    resolution: {integrity: sha512-6Mtdq5nHggwfDNLAHkPlyLBpE5L6hwsuXZX8XNmHno9JuL2+bg2BX5tRkwjyfn6sKbxZTq68suOjgWqCicvPXA==}
+  '@esbuild/freebsd-arm64@0.24.2':
+    resolution: {integrity: sha512-UN8HXjtJ0k/Mj6a9+5u6+2eZ2ERD7Edt1Q9IZiB5UZAIdPnVKDoG7mdTVGhHJIeEml60JteamR3qhsr1r8gXvg==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [freebsd]
 
-  '@esbuild/freebsd-x64@0.24.0':
-    resolution: {integrity: sha512-D3H+xh3/zphoX8ck4S2RxKR6gHlHDXXzOf6f/9dbFt/NRBDIE33+cVa49Kil4WUjxMGW0ZIYBYtaGCa2+OsQwQ==}
+  '@esbuild/freebsd-x64@0.24.2':
+    resolution: {integrity: sha512-TvW7wE/89PYW+IevEJXZ5sF6gJRDY/14hyIGFXdIucxCsbRmLUcjseQu1SyTko+2idmCw94TgyaEZi9HUSOe3Q==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [freebsd]
 
-  '@esbuild/linux-arm64@0.24.0':
-    resolution: {integrity: sha512-TDijPXTOeE3eaMkRYpcy3LarIg13dS9wWHRdwYRnzlwlA370rNdZqbcp0WTyyV/k2zSxfko52+C7jU5F9Tfj1g==}
+  '@esbuild/linux-arm64@0.24.2':
+    resolution: {integrity: sha512-7HnAD6074BW43YvvUmE/35Id9/NB7BeX5EoNkK9obndmZBUk8xmJJeU7DwmUeN7tkysslb2eSl6CTrYz6oEMQg==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [linux]
 
-  '@esbuild/linux-arm@0.24.0':
-    resolution: {integrity: sha512-gJKIi2IjRo5G6Glxb8d3DzYXlxdEj2NlkixPsqePSZMhLudqPhtZ4BUrpIuTjJYXxvF9njql+vRjB2oaC9XpBw==}
+  '@esbuild/linux-arm@0.24.2':
+    resolution: {integrity: sha512-n0WRM/gWIdU29J57hJyUdIsk0WarGd6To0s+Y+LwvlC55wt+GT/OgkwoXCXvIue1i1sSNWblHEig00GBWiJgfA==}
     engines: {node: '>=18'}
     cpu: [arm]
     os: [linux]
 
-  '@esbuild/linux-ia32@0.24.0':
-    resolution: {integrity: sha512-K40ip1LAcA0byL05TbCQ4yJ4swvnbzHscRmUilrmP9Am7//0UjPreh4lpYzvThT2Quw66MhjG//20mrufm40mA==}
+  '@esbuild/linux-ia32@0.24.2':
+    resolution: {integrity: sha512-sfv0tGPQhcZOgTKO3oBE9xpHuUqguHvSo4jl+wjnKwFpapx+vUDcawbwPNuBIAYdRAvIDBfZVvXprIj3HA+Ugw==}
     engines: {node: '>=18'}
     cpu: [ia32]
     os: [linux]
 
-  '@esbuild/linux-loong64@0.24.0':
-    resolution: {integrity: sha512-0mswrYP/9ai+CU0BzBfPMZ8RVm3RGAN/lmOMgW4aFUSOQBjA31UP8Mr6DDhWSuMwj7jaWOT0p0WoZ6jeHhrD7g==}
+  '@esbuild/linux-loong64@0.24.2':
+    resolution: {integrity: sha512-CN9AZr8kEndGooS35ntToZLTQLHEjtVB5n7dl8ZcTZMonJ7CCfStrYhrzF97eAecqVbVJ7APOEe18RPI4KLhwQ==}
     engines: {node: '>=18'}
     cpu: [loong64]
     os: [linux]
 
-  '@esbuild/linux-mips64el@0.24.0':
-    resolution: {integrity: sha512-hIKvXm0/3w/5+RDtCJeXqMZGkI2s4oMUGj3/jM0QzhgIASWrGO5/RlzAzm5nNh/awHE0A19h/CvHQe6FaBNrRA==}
+  '@esbuild/linux-mips64el@0.24.2':
+    resolution: {integrity: sha512-iMkk7qr/wl3exJATwkISxI7kTcmHKE+BlymIAbHO8xanq/TjHaaVThFF6ipWzPHryoFsesNQJPE/3wFJw4+huw==}
     engines: {node: '>=18'}
     cpu: [mips64el]
     os: [linux]
 
-  '@esbuild/linux-ppc64@0.24.0':
-    resolution: {integrity: sha512-HcZh5BNq0aC52UoocJxaKORfFODWXZxtBaaZNuN3PUX3MoDsChsZqopzi5UupRhPHSEHotoiptqikjN/B77mYQ==}
+  '@esbuild/linux-ppc64@0.24.2':
+    resolution: {integrity: sha512-shsVrgCZ57Vr2L8mm39kO5PPIb+843FStGt7sGGoqiiWYconSxwTiuswC1VJZLCjNiMLAMh34jg4VSEQb+iEbw==}
     engines: {node: '>=18'}
     cpu: [ppc64]
     os: [linux]
 
-  '@esbuild/linux-riscv64@0.24.0':
-    resolution: {integrity: sha512-bEh7dMn/h3QxeR2KTy1DUszQjUrIHPZKyO6aN1X4BCnhfYhuQqedHaa5MxSQA/06j3GpiIlFGSsy1c7Gf9padw==}
+  '@esbuild/linux-riscv64@0.24.2':
+    resolution: {integrity: sha512-4eSFWnU9Hhd68fW16GD0TINewo1L6dRrB+oLNNbYyMUAeOD2yCK5KXGK1GH4qD/kT+bTEXjsyTCiJGHPZ3eM9Q==}
     engines: {node: '>=18'}
     cpu: [riscv64]
     os: [linux]
 
-  '@esbuild/linux-s390x@0.24.0':
-    resolution: {integrity: sha512-ZcQ6+qRkw1UcZGPyrCiHHkmBaj9SiCD8Oqd556HldP+QlpUIe2Wgn3ehQGVoPOvZvtHm8HPx+bH20c9pvbkX3g==}
+  '@esbuild/linux-s390x@0.24.2':
+    resolution: {integrity: sha512-S0Bh0A53b0YHL2XEXC20bHLuGMOhFDO6GN4b3YjRLK//Ep3ql3erpNcPlEFed93hsQAjAQDNsvcK+hV90FubSw==}
     engines: {node: '>=18'}
     cpu: [s390x]
     os: [linux]
 
-  '@esbuild/linux-x64@0.24.0':
-    resolution: {integrity: sha512-vbutsFqQ+foy3wSSbmjBXXIJ6PL3scghJoM8zCL142cGaZKAdCZHyf+Bpu/MmX9zT9Q0zFBVKb36Ma5Fzfa8xA==}
+  '@esbuild/linux-x64@0.24.2':
+    resolution: {integrity: sha512-8Qi4nQcCTbLnK9WoMjdC9NiTG6/E38RNICU6sUNqK0QFxCYgoARqVqxdFmWkdonVsvGqWhmm7MO0jyTqLqwj0Q==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [linux]
 
-  '@esbuild/netbsd-x64@0.24.0':
-    resolution: {integrity: sha512-hjQ0R/ulkO8fCYFsG0FZoH+pWgTTDreqpqY7UnQntnaKv95uP5iW3+dChxnx7C3trQQU40S+OgWhUVwCjVFLvg==}
+  '@esbuild/netbsd-arm64@0.24.2':
+    resolution: {integrity: sha512-wuLK/VztRRpMt9zyHSazyCVdCXlpHkKm34WUyinD2lzK07FAHTq0KQvZZlXikNWkDGoT6x3TD51jKQ7gMVpopw==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [netbsd]
+
+  '@esbuild/netbsd-x64@0.24.2':
+    resolution: {integrity: sha512-VefFaQUc4FMmJuAxmIHgUmfNiLXY438XrL4GDNV1Y1H/RW3qow68xTwjZKfj/+Plp9NANmzbH5R40Meudu8mmw==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [netbsd]
 
-  '@esbuild/openbsd-arm64@0.24.0':
-    resolution: {integrity: sha512-MD9uzzkPQbYehwcN583yx3Tu5M8EIoTD+tUgKF982WYL9Pf5rKy9ltgD0eUgs8pvKnmizxjXZyLt0z6DC3rRXg==}
+  '@esbuild/openbsd-arm64@0.24.2':
+    resolution: {integrity: sha512-YQbi46SBct6iKnszhSvdluqDmxCJA+Pu280Av9WICNwQmMxV7nLRHZfjQzwbPs3jeWnuAhE9Jy0NrnJ12Oz+0A==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [openbsd]
 
-  '@esbuild/openbsd-x64@0.24.0':
-    resolution: {integrity: sha512-4ir0aY1NGUhIC1hdoCzr1+5b43mw99uNwVzhIq1OY3QcEwPDO3B7WNXBzaKY5Nsf1+N11i1eOfFcq+D/gOS15Q==}
+  '@esbuild/openbsd-x64@0.24.2':
+    resolution: {integrity: sha512-+iDS6zpNM6EnJyWv0bMGLWSWeXGN/HTaF/LXHXHwejGsVi+ooqDfMCCTerNFxEkM3wYVcExkeGXNqshc9iMaOA==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [openbsd]
 
-  '@esbuild/sunos-x64@0.24.0':
-    resolution: {integrity: sha512-jVzdzsbM5xrotH+W5f1s+JtUy1UWgjU0Cf4wMvffTB8m6wP5/kx0KiaLHlbJO+dMgtxKV8RQ/JvtlFcdZ1zCPA==}
+  '@esbuild/sunos-x64@0.24.2':
+    resolution: {integrity: sha512-hTdsW27jcktEvpwNHJU4ZwWFGkz2zRJUz8pvddmXPtXDzVKTTINmlmga3ZzwcuMpUvLw7JkLy9QLKyGpD2Yxig==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [sunos]
 
-  '@esbuild/win32-arm64@0.24.0':
-    resolution: {integrity: sha512-iKc8GAslzRpBytO2/aN3d2yb2z8XTVfNV0PjGlCxKo5SgWmNXx82I/Q3aG1tFfS+A2igVCY97TJ8tnYwpUWLCA==}
+  '@esbuild/win32-arm64@0.24.2':
+    resolution: {integrity: sha512-LihEQ2BBKVFLOC9ZItT9iFprsE9tqjDjnbulhHoFxYQtQfai7qfluVODIYxt1PgdoyQkz23+01rzwNwYfutxUQ==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [win32]
 
-  '@esbuild/win32-ia32@0.24.0':
-    resolution: {integrity: sha512-vQW36KZolfIudCcTnaTpmLQ24Ha1RjygBo39/aLkM2kmjkWmZGEJ5Gn9l5/7tzXA42QGIoWbICfg6KLLkIw6yw==}
+  '@esbuild/win32-ia32@0.24.2':
+    resolution: {integrity: sha512-q+iGUwfs8tncmFC9pcnD5IvRHAzmbwQ3GPS5/ceCyHdjXubwQWI12MKWSNSMYLJMq23/IUCvJMS76PDqXe1fxA==}
     engines: {node: '>=18'}
     cpu: [ia32]
     os: [win32]
 
-  '@esbuild/win32-x64@0.24.0':
-    resolution: {integrity: sha512-7IAFPrjSQIJrGsK6flwg7NFmwBoSTyF3rl7If0hNUFQU4ilTsEPL6GuMuU9BfIWVVGuRnuIidkSMC+c0Otu8IA==}
+  '@esbuild/win32-x64@0.24.2':
+    resolution: {integrity: sha512-7VTgWzgMGvup6aSqDPLiW5zHaxYJGTO4OokMjIlrCtf+VpEL+cXKtCvg723iguPYI5oaUNdS+/V7OU2gvXVWEg==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
@@ -467,11 +497,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@typefox/monaco-editor-react@6.0.0':
-    resolution: {integrity: sha512-zJuswje4vSctEcrDJ923yp4WV3RK5I4nlcCeZTQ7EzKcoFSA3QCynzT2CIWsrc6tThuSn7B27hmPOXIp+W9xSg==}
+  '@typefox/monaco-editor-react@6.1.0':
+    resolution: {integrity: sha512-/EhTUl+YxJZ3vWDZ1ANJDwIS7DIPGosPAvyHLC/UgU9zpucfT7C8xBsAhOnXDUIzSmJBGEhews2YU6jnIzA5nA==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
     peerDependencies:
-      monaco-editor-wrapper: ~6.0.0
+      monaco-editor-wrapper: ~6.1.0
+      react: '>=18.0.0 || <20.0.0'
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
@@ -481,6 +512,39 @@ packages:
 
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+
+  '@xterm/addon-clipboard@0.2.0-beta.79':
+    resolution: {integrity: sha512-zpwf43fzBG01fA8E75JQ/jsm/85bHCtFMOcURNAEbCoj0RSpZaq4rE5cPoy49IhYnctPZdYNxEU/+PzgtsSQ6Q==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/addon-image@0.9.0-beta.96':
+    resolution: {integrity: sha512-LDA03uA5gTBfFeEIUdHXoCpxGHuPIke03aSXZc6cllRRp9jCaOK2kbWwTOoXfzRvjreKK6pxD0vJcepwdKaNcw==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/addon-search@0.16.0-beta.96':
+    resolution: {integrity: sha512-AEEXqxkT6OgDOII4SxQJFKn7NhM7PnFeMLxQwrRQzZyrtFPg5peCesA07xHYvYzh0aKQ1PVvgycfrPgbPEeQDQ==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/addon-serialize@0.14.0-beta.96':
+    resolution: {integrity: sha512-+00J2K3WsbMPy02UlehNumen//Opmr5B0MBrS4KFqhRwVaO8RD0hMPfr8IuhY3YqPaVny4HMOU88yaWtscxl7A==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/addon-unicode11@0.9.0-beta.96':
+    resolution: {integrity: sha512-jBUSErJtrf6Jhz3itT5JXLeIIl5BkJ1ii8/YdzZQMh9602ZLYvqwS+7ih2FzYYjk0pZ+E1y4sYbT5FpBlVOM5w==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/addon-webgl@0.19.0-beta.96':
+    resolution: {integrity: sha512-iAno2CMYRBHasr5aE3I7WN6DZ0mlHsEAIYAhvdhH+be1YxX4/DceBAtN0Ak7nFcQ70ZbtYzs1aNLTVKtli2TKA==}
+    peerDependencies:
+      '@xterm/xterm': ^5.6.0-beta.96
+
+  '@xterm/xterm@5.6.0-beta.96':
+    resolution: {integrity: sha512-XdOZyAaqOW67J3kJGJDgVb5skTD2nDQLmBICyhQ0cEqThTKrX5CzB11RswG6rZE8dI+nDE+pc93NjAMXSrQgFg==}
 
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -590,8 +654,8 @@ packages:
     resolution: {integrity: sha512-MZ4iQ6JwHOBQjahnjwaC1ZtIBH+2ohjamzAO3oaHcXYup7qxjF2fixyH+Q71voWHeOkI2q/TnJao/KfXYIZWbw==}
     engines: {node: '>= 0.4'}
 
-  esbuild@0.24.0:
-    resolution: {integrity: sha512-FuLPevChGDshgSicjisSooU0cemp/sGXR841D5LHMB7mTVOmsEHcAxaH3irL53+8YDIeVNQEySh4DaYU/iuPqQ==}
+  esbuild@0.24.2:
+    resolution: {integrity: sha512-+9egpBW8I3CD5XPe0n6BfT5fxLzxrlDzqydF3aviG+9ni1lDC/OvMHcxqEFV0+LANZG5R1bFMWfUrjVsdwxJvA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -682,8 +746,8 @@ packages:
   isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
 
-  js-tokens@4.0.0:
-    resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+  js-base64@3.7.7:
+    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
   jschardet@3.1.4:
     resolution: {integrity: sha512-/kmVISmrwVwtyYU40iQUOp3SUPk2dhNCMsZBQX0R1/jZ8maaXJ/oZIzUOiyOqcgtLnETFKYChbJ5iDC/eWmFHg==}
@@ -704,10 +768,6 @@ packages:
 
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-
-  loose-envify@1.4.0:
-    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
-    hasBin: true
 
   marked@14.0.0:
     resolution: {integrity: sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==}
@@ -752,19 +812,19 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monaco-editor-wrapper@6.0.0:
-    resolution: {integrity: sha512-1x4cMjyB+WhmNqQiZa+s+fHqQAsx7PaOEYS052KvjRRgWjAVRTi1lbXson+Bo0KGSR26AaNv3bwzFlCG9VJWXQ==}
+  monaco-editor-wrapper@6.1.0:
+    resolution: {integrity: sha512-CvCBOKNYjS0X399trkg1a070Lzktd2SJUDRtf7rJBtJKcMOwJ6Myvhb0GmAJkeoiTV8s59cw9geaF85xgQM/0Q==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
     peerDependencies:
-      monaco-languageclient: ~9.0.0
+      monaco-languageclient: ~9.1.0
       vscode-ws-jsonrpc: ~3.4.0
 
-  monaco-languageclient-examples@2024.12.6:
-    resolution: {integrity: sha512-EF+EX/hHthgvKu2nSsQCCzitZF+jNwxDK+OZYzCyTXdspMaqcF843Ev7JILpJKYLjGPJUOxpX/FFSTbdsMrVWg==}
+  monaco-languageclient-examples@2025.1.1:
+    resolution: {integrity: sha512-VaNWZdqpeZTfDe2lpJAeD9PoJmvO87o0iuLapW2+hviMENtyIi1r2EuGmUHWFpRoRtAjyeNTjTnZVDzW8f50sQ==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
-  monaco-languageclient@9.0.0:
-    resolution: {integrity: sha512-JiyzQe1AEoVQLsjLBgHQIA2jeGVPzqehtRehYC8FefjKQwMtHqtQ9ZR2of1riaqopiGQjw5DP/CSR8z5JmizXQ==}
+  monaco-languageclient@9.1.0:
+    resolution: {integrity: sha512-n6NCu3XSdiFbOSraczT1CazEQYFUguEEFkSVwnOz/iJa6kDRr8uPirrYLbVg/SibiOpvU+AwEX2kGhJZsu5VHQ==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
     peerDependencies:
       '@codingame/monaco-vscode-accessibility-service-override': ~11.1.2
@@ -1275,13 +1335,13 @@ packages:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
     engines: {node: '>= 0.8'}
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+  react-dom@19.0.0:
+    resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
-      react: ^18.3.1
+      react: ^19.0.0
 
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+  react@19.0.0:
+    resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
     engines: {node: '>=0.10.0'}
 
   readable-stream@2.3.8:
@@ -1312,8 +1372,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
+  scheduler@0.25.0:
+    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
@@ -1398,8 +1458,8 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vite@6.0.3:
-    resolution: {integrity: sha512-Cmuo5P0ENTN6HxLSo6IHsjCLn/81Vgrp81oaiFFMRa8gGDj5xEjIcEpf2ZymZtZR8oU0P2JX5WuUp/rlXcHkAw==}
+  vite@6.0.7:
+    resolution: {integrity: sha512-RDt8r/7qx9940f8FcOIAH9PTViRrghKaK2K1jY3RaAURrEUbm9Du1mJ72G+jlhtG3WwodnfzY8ORQZbBavZEAQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -1554,6 +1614,54 @@ snapshots:
   '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@11.1.2':
     dependencies:
       vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-chat-interactive-notebook-search-common@11.1.2':
+    dependencies:
+      '@codingame/monaco-vscode-chat-comments-extensions-interactive-notebook-search-common': 11.1.2
+      '@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common': 11.1.2
+      marked: 14.0.0
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common@11.1.2':
+    dependencies:
+      '@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-notebook-common': 11.1.2
+      marked: 14.0.0
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-chat-notebook-common@11.1.2':
+    dependencies:
+      '@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-extensions-notebook-common': 11.1.2
+      '@codingame/monaco-vscode-chat-interactive-notebook-search-common': 11.1.2
+      '@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-notebook-terminal-common': 11.1.2
+      marked: 14.0.0
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-chat-notebook-terminal-common@11.1.2':
+    dependencies:
+      '@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common': 11.1.2
+      '@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common': 11.1.2
+      '@codingame/monaco-vscode-chat-notebook-terminal-testing-common': 11.1.2(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-serialize': 0.14.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-webgl': 0.19.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/xterm': 5.6.0-beta.96
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-chat-notebook-terminal-testing-common@11.1.2(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/addon-clipboard': 0.2.0-beta.79(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-image': 0.9.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-search': 0.16.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-serialize': 0.14.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-unicode11': 0.9.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      '@xterm/addon-webgl': 0.19.0-beta.96(@xterm/xterm@5.6.0-beta.96)
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+    transitivePeerDependencies:
+      - '@xterm/xterm'
 
   '@codingame/monaco-vscode-comments-extensions-common@11.1.2':
     dependencies:
@@ -1729,6 +1837,15 @@ snapshots:
       '@codingame/monaco-vscode-environment-service-override': 11.1.2
       vscode: '@codingame/monaco-vscode-api@11.1.2'
 
+  '@codingame/monaco-vscode-search-result-default-extension@11.1.2':
+    dependencies:
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
+  '@codingame/monaco-vscode-search-service-override@11.1.2':
+    dependencies:
+      '@codingame/monaco-vscode-chat-interactive-notebook-search-common': 11.1.2
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
+
   '@codingame/monaco-vscode-secret-storage-service-override@11.1.2':
     dependencies:
       vscode: '@codingame/monaco-vscode-api@11.1.2'
@@ -1744,6 +1861,10 @@ snapshots:
   '@codingame/monaco-vscode-standalone-typescript-language-features@11.1.2':
     dependencies:
       monaco-editor: '@codingame/monaco-vscode-editor-api@11.1.2'
+
+  '@codingame/monaco-vscode-storage-service-override@11.1.2':
+    dependencies:
+      vscode: '@codingame/monaco-vscode-api@11.1.2'
 
   '@codingame/monaco-vscode-textmate-service-override@11.1.2':
     dependencies:
@@ -1813,76 +1934,79 @@ snapshots:
       '@codingame/monaco-vscode-view-title-bar-service-override': 11.1.2
       vscode: '@codingame/monaco-vscode-api@11.1.2'
 
-  '@esbuild/aix-ppc64@0.24.0':
+  '@esbuild/aix-ppc64@0.24.2':
     optional: true
 
-  '@esbuild/android-arm64@0.24.0':
+  '@esbuild/android-arm64@0.24.2':
     optional: true
 
-  '@esbuild/android-arm@0.24.0':
+  '@esbuild/android-arm@0.24.2':
     optional: true
 
-  '@esbuild/android-x64@0.24.0':
+  '@esbuild/android-x64@0.24.2':
     optional: true
 
-  '@esbuild/darwin-arm64@0.24.0':
+  '@esbuild/darwin-arm64@0.24.2':
     optional: true
 
-  '@esbuild/darwin-x64@0.24.0':
+  '@esbuild/darwin-x64@0.24.2':
     optional: true
 
-  '@esbuild/freebsd-arm64@0.24.0':
+  '@esbuild/freebsd-arm64@0.24.2':
     optional: true
 
-  '@esbuild/freebsd-x64@0.24.0':
+  '@esbuild/freebsd-x64@0.24.2':
     optional: true
 
-  '@esbuild/linux-arm64@0.24.0':
+  '@esbuild/linux-arm64@0.24.2':
     optional: true
 
-  '@esbuild/linux-arm@0.24.0':
+  '@esbuild/linux-arm@0.24.2':
     optional: true
 
-  '@esbuild/linux-ia32@0.24.0':
+  '@esbuild/linux-ia32@0.24.2':
     optional: true
 
-  '@esbuild/linux-loong64@0.24.0':
+  '@esbuild/linux-loong64@0.24.2':
     optional: true
 
-  '@esbuild/linux-mips64el@0.24.0':
+  '@esbuild/linux-mips64el@0.24.2':
     optional: true
 
-  '@esbuild/linux-ppc64@0.24.0':
+  '@esbuild/linux-ppc64@0.24.2':
     optional: true
 
-  '@esbuild/linux-riscv64@0.24.0':
+  '@esbuild/linux-riscv64@0.24.2':
     optional: true
 
-  '@esbuild/linux-s390x@0.24.0':
+  '@esbuild/linux-s390x@0.24.2':
     optional: true
 
-  '@esbuild/linux-x64@0.24.0':
+  '@esbuild/linux-x64@0.24.2':
     optional: true
 
-  '@esbuild/netbsd-x64@0.24.0':
+  '@esbuild/netbsd-arm64@0.24.2':
     optional: true
 
-  '@esbuild/openbsd-arm64@0.24.0':
+  '@esbuild/netbsd-x64@0.24.2':
     optional: true
 
-  '@esbuild/openbsd-x64@0.24.0':
+  '@esbuild/openbsd-arm64@0.24.2':
     optional: true
 
-  '@esbuild/sunos-x64@0.24.0':
+  '@esbuild/openbsd-x64@0.24.2':
     optional: true
 
-  '@esbuild/win32-arm64@0.24.0':
+  '@esbuild/sunos-x64@0.24.2':
     optional: true
 
-  '@esbuild/win32-ia32@0.24.0':
+  '@esbuild/win32-arm64@0.24.2':
     optional: true
 
-  '@esbuild/win32-x64@0.24.0':
+  '@esbuild/win32-ia32@0.24.2':
+    optional: true
+
+  '@esbuild/win32-x64@0.24.2':
     optional: true
 
   '@rollup/rollup-android-arm-eabi@4.28.1':
@@ -1942,12 +2066,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.28.1':
     optional: true
 
-  '@typefox/monaco-editor-react@6.0.0(q5mrfy5d4bksqugxdscd5bloie)':
+  '@typefox/monaco-editor-react@6.1.0(b5cnq73zfgrtsaz6a72bso4jc4)':
     dependencies:
       monaco-editor: '@codingame/monaco-vscode-editor-api@11.1.2'
-      monaco-editor-wrapper: 6.0.0(monaco-languageclient@9.0.0(6szhng2mtxvvfhgpczrdcarufm))(vscode-ws-jsonrpc@3.4.0)
-      monaco-languageclient: 9.0.0(6szhng2mtxvvfhgpczrdcarufm)
-      react: 18.3.1
+      monaco-editor-wrapper: 6.1.0(monaco-languageclient@9.1.0(5vklpi3hwh7lg7vjor2c5xdvra))(vscode-ws-jsonrpc@3.4.0)
+      monaco-languageclient: 9.1.0(5vklpi3hwh7lg7vjor2c5xdvra)
+      react: 19.0.0
       vscode: '@codingame/monaco-vscode-api@11.1.2'
       vscode-ws-jsonrpc: 3.4.0
     transitivePeerDependencies:
@@ -2106,6 +2230,33 @@ snapshots:
 
   '@vscode/l10n@0.0.18': {}
 
+  '@xterm/addon-clipboard@0.2.0-beta.79(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+      js-base64: 3.7.7
+
+  '@xterm/addon-image@0.9.0-beta.96(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+
+  '@xterm/addon-search@0.16.0-beta.96(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+
+  '@xterm/addon-serialize@0.14.0-beta.96(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+
+  '@xterm/addon-unicode11@0.9.0-beta.96(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+
+  '@xterm/addon-webgl@0.19.0-beta.96(@xterm/xterm@5.6.0-beta.96)':
+    dependencies:
+      '@xterm/xterm': 5.6.0-beta.96
+
+  '@xterm/xterm@5.6.0-beta.96': {}
+
   accepts@1.3.8:
     dependencies:
       mime-types: 2.1.35
@@ -2214,32 +2365,33 @@ snapshots:
     dependencies:
       es-errors: 1.3.0
 
-  esbuild@0.24.0:
+  esbuild@0.24.2:
     optionalDependencies:
-      '@esbuild/aix-ppc64': 0.24.0
-      '@esbuild/android-arm': 0.24.0
-      '@esbuild/android-arm64': 0.24.0
-      '@esbuild/android-x64': 0.24.0
-      '@esbuild/darwin-arm64': 0.24.0
-      '@esbuild/darwin-x64': 0.24.0
-      '@esbuild/freebsd-arm64': 0.24.0
-      '@esbuild/freebsd-x64': 0.24.0
-      '@esbuild/linux-arm': 0.24.0
-      '@esbuild/linux-arm64': 0.24.0
-      '@esbuild/linux-ia32': 0.24.0
-      '@esbuild/linux-loong64': 0.24.0
-      '@esbuild/linux-mips64el': 0.24.0
-      '@esbuild/linux-ppc64': 0.24.0
-      '@esbuild/linux-riscv64': 0.24.0
-      '@esbuild/linux-s390x': 0.24.0
-      '@esbuild/linux-x64': 0.24.0
-      '@esbuild/netbsd-x64': 0.24.0
-      '@esbuild/openbsd-arm64': 0.24.0
-      '@esbuild/openbsd-x64': 0.24.0
-      '@esbuild/sunos-x64': 0.24.0
-      '@esbuild/win32-arm64': 0.24.0
-      '@esbuild/win32-ia32': 0.24.0
-      '@esbuild/win32-x64': 0.24.0
+      '@esbuild/aix-ppc64': 0.24.2
+      '@esbuild/android-arm': 0.24.2
+      '@esbuild/android-arm64': 0.24.2
+      '@esbuild/android-x64': 0.24.2
+      '@esbuild/darwin-arm64': 0.24.2
+      '@esbuild/darwin-x64': 0.24.2
+      '@esbuild/freebsd-arm64': 0.24.2
+      '@esbuild/freebsd-x64': 0.24.2
+      '@esbuild/linux-arm': 0.24.2
+      '@esbuild/linux-arm64': 0.24.2
+      '@esbuild/linux-ia32': 0.24.2
+      '@esbuild/linux-loong64': 0.24.2
+      '@esbuild/linux-mips64el': 0.24.2
+      '@esbuild/linux-ppc64': 0.24.2
+      '@esbuild/linux-riscv64': 0.24.2
+      '@esbuild/linux-s390x': 0.24.2
+      '@esbuild/linux-x64': 0.24.2
+      '@esbuild/netbsd-arm64': 0.24.2
+      '@esbuild/netbsd-x64': 0.24.2
+      '@esbuild/openbsd-arm64': 0.24.2
+      '@esbuild/openbsd-x64': 0.24.2
+      '@esbuild/sunos-x64': 0.24.2
+      '@esbuild/win32-arm64': 0.24.2
+      '@esbuild/win32-ia32': 0.24.2
+      '@esbuild/win32-x64': 0.24.2
 
   escape-html@1.0.3: {}
 
@@ -2365,7 +2517,7 @@ snapshots:
 
   isarray@1.0.0: {}
 
-  js-tokens@4.0.0: {}
+  js-base64@3.7.7: {}
 
   jschardet@3.1.4: {}
 
@@ -2391,10 +2543,6 @@ snapshots:
       immediate: 3.0.6
 
   lodash-es@4.17.21: {}
-
-  loose-envify@1.4.0:
-    dependencies:
-      js-tokens: 4.0.0
 
   marked@14.0.0: {}
 
@@ -2424,7 +2572,7 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monaco-editor-wrapper@6.0.0(monaco-languageclient@9.0.0(6szhng2mtxvvfhgpczrdcarufm))(vscode-ws-jsonrpc@3.4.0):
+  monaco-editor-wrapper@6.1.0(monaco-languageclient@9.1.0(5vklpi3hwh7lg7vjor2c5xdvra))(vscode-ws-jsonrpc@3.4.0):
     dependencies:
       '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common': 11.1.2
       '@codingame/monaco-vscode-configuration-service-override': 11.1.2
@@ -2450,13 +2598,13 @@ snapshots:
       '@codingame/monaco-vscode-views-service-override': 11.1.2
       '@codingame/monaco-vscode-workbench-service-override': 11.1.2
       monaco-editor: '@codingame/monaco-vscode-editor-api@11.1.2'
-      monaco-languageclient: 9.0.0(6szhng2mtxvvfhgpczrdcarufm)
+      monaco-languageclient: 9.1.0(5vklpi3hwh7lg7vjor2c5xdvra)
       vscode: '@codingame/monaco-vscode-api@11.1.2'
       vscode-languageclient: 9.0.1
       vscode-languageserver-protocol: 3.17.5
       vscode-ws-jsonrpc: 3.4.0
 
-  monaco-languageclient-examples@2024.12.6(tx6icb6bjuicw7xrhsz6wq7a6e):
+  monaco-languageclient-examples@2025.1.1(tx6icb6bjuicw7xrhsz6wq7a6e):
     dependencies:
       '@codingame/monaco-vscode-configuration-service-override': 11.1.2
       '@codingame/monaco-vscode-cpp-default-extension': 11.1.2
@@ -2472,27 +2620,30 @@ snapshots:
       '@codingame/monaco-vscode-localization-service-override': 11.1.2
       '@codingame/monaco-vscode-python-default-extension': 11.1.2
       '@codingame/monaco-vscode-remote-agent-service-override': 11.1.2
+      '@codingame/monaco-vscode-search-result-default-extension': 11.1.2
+      '@codingame/monaco-vscode-search-service-override': 11.1.2
       '@codingame/monaco-vscode-secret-storage-service-override': 11.1.2
       '@codingame/monaco-vscode-standalone-json-language-features': 11.1.2
       '@codingame/monaco-vscode-standalone-languages': 11.1.2
       '@codingame/monaco-vscode-standalone-typescript-language-features': 11.1.2
+      '@codingame/monaco-vscode-storage-service-override': 11.1.2
       '@codingame/monaco-vscode-textmate-service-override': 11.1.2
       '@codingame/monaco-vscode-theme-defaults-default-extension': 11.1.2
       '@codingame/monaco-vscode-theme-service-override': 11.1.2
       '@codingame/monaco-vscode-typescript-basics-default-extension': 11.1.2
       '@codingame/monaco-vscode-typescript-language-features-default-extension': 11.1.2
       '@codingame/monaco-vscode-views-service-override': 11.1.2
-      '@typefox/monaco-editor-react': 6.0.0(q5mrfy5d4bksqugxdscd5bloie)
+      '@typefox/monaco-editor-react': 6.1.0(b5cnq73zfgrtsaz6a72bso4jc4)
       cors: 2.8.5
       express: 4.21.2
       jszip: 3.10.1
       langium: 3.3.0
       monaco-editor: '@codingame/monaco-vscode-editor-api@11.1.2'
-      monaco-editor-wrapper: 6.0.0(monaco-languageclient@9.0.0(6szhng2mtxvvfhgpczrdcarufm))(vscode-ws-jsonrpc@3.4.0)
-      monaco-languageclient: 9.0.0(6szhng2mtxvvfhgpczrdcarufm)
+      monaco-editor-wrapper: 6.1.0(monaco-languageclient@9.1.0(5vklpi3hwh7lg7vjor2c5xdvra))(vscode-ws-jsonrpc@3.4.0)
+      monaco-languageclient: 9.1.0(5vklpi3hwh7lg7vjor2c5xdvra)
       pyright: 1.1.391
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
       request-light: 0.8.0
       vscode: '@codingame/monaco-vscode-api@11.1.2'
       vscode-json-languageservice: 5.4.2
@@ -2596,8 +2747,6 @@ snapshots:
       - '@codingame/monaco-vscode-ruby-default-extension'
       - '@codingame/monaco-vscode-rust-default-extension'
       - '@codingame/monaco-vscode-scss-default-extension'
-      - '@codingame/monaco-vscode-search-result-default-extension'
-      - '@codingame/monaco-vscode-search-service-override'
       - '@codingame/monaco-vscode-server'
       - '@codingame/monaco-vscode-shaderlab-default-extension'
       - '@codingame/monaco-vscode-share-service-override'
@@ -2607,7 +2756,6 @@ snapshots:
       - '@codingame/monaco-vscode-sql-default-extension'
       - '@codingame/monaco-vscode-standalone-css-language-features'
       - '@codingame/monaco-vscode-standalone-html-language-features'
-      - '@codingame/monaco-vscode-storage-service-override'
       - '@codingame/monaco-vscode-swift-default-extension'
       - '@codingame/monaco-vscode-task-service-override'
       - '@codingame/monaco-vscode-terminal-service-override'
@@ -2634,7 +2782,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  monaco-languageclient@9.0.0(6szhng2mtxvvfhgpczrdcarufm):
+  monaco-languageclient@9.1.0(5vklpi3hwh7lg7vjor2c5xdvra):
     dependencies:
       '@codingame/monaco-vscode-api': 11.1.2
       '@codingame/monaco-vscode-configuration-service-override': 11.1.2
@@ -2682,9 +2830,12 @@ snapshots:
       '@codingame/monaco-vscode-monarch-service-override': 11.1.2
       '@codingame/monaco-vscode-python-default-extension': 11.1.2
       '@codingame/monaco-vscode-quickaccess-service-override': 11.1.2
+      '@codingame/monaco-vscode-search-result-default-extension': 11.1.2
+      '@codingame/monaco-vscode-search-service-override': 11.1.2
       '@codingame/monaco-vscode-standalone-json-language-features': 11.1.2
       '@codingame/monaco-vscode-standalone-languages': 11.1.2
       '@codingame/monaco-vscode-standalone-typescript-language-features': 11.1.2
+      '@codingame/monaco-vscode-storage-service-override': 11.1.2
       '@codingame/monaco-vscode-textmate-service-override': 11.1.2
       '@codingame/monaco-vscode-theme-defaults-default-extension': 11.1.2
       '@codingame/monaco-vscode-theme-service-override': 11.1.2
@@ -2754,15 +2905,12 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  react-dom@18.3.1(react@18.3.1):
+  react-dom@19.0.0(react@19.0.0):
     dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
+      react: 19.0.0
+      scheduler: 0.25.0
 
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
+  react@19.0.0: {}
 
   readable-stream@2.3.8:
     dependencies:
@@ -2817,9 +2965,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
+  scheduler@0.25.0: {}
 
   semver@7.6.3: {}
 
@@ -2918,9 +3064,9 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@6.0.3:
+  vite@6.0.7:
     dependencies:
-      esbuild: 0.24.0
+      esbuild: 0.24.2
       postcss: 8.4.49
       rollup: 4.28.1
     optionalDependencies:

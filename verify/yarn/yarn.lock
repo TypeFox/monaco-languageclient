@@ -112,12 +112,83 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@npm:~11.1.2":
+"@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@npm:11.1.2, @codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@npm:~11.1.2":
   version: 11.1.2
   resolution: "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common@npm:11.1.2"
   dependencies:
     vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
   checksum: 10c0/a16b4b84fce57a464bd2d7128e6a9911f46f6732331baa4779d5dbda8229b37a42d97e0df5f7b4f9279a5855e5f18cae44f595acf4e932906058a60d3d32ad35
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-chat-interactive-notebook-search-common@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-chat-interactive-notebook-search-common@npm:11.1.2"
+  dependencies:
+    "@codingame/monaco-vscode-chat-comments-extensions-interactive-notebook-search-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    marked: "npm:~14.0.0"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/a4cf84a8b668d353371e3aa27de103d8574196e35fa1b7c62916ba9b3a8a99f179e250844a1ac434e8856ec77b1ecddbdc89c64d8c1c8f47eae1bede51efa805
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common@npm:11.1.2"
+  dependencies:
+    "@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-notebook-common": "npm:11.1.2"
+    marked: "npm:~14.0.0"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/476ea6e0eb3818179767fbbe68c9d6af6d6fef06bb8d20b0d8557cf7d19263234656389f70b49670878b8f6beaa776f308c7cf7d28edb65d93409f48ef9128be
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-chat-notebook-common@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-chat-notebook-common@npm:11.1.2"
+  dependencies:
+    "@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-extensions-notebook-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-interactive-notebook-search-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-notebook-terminal-common": "npm:11.1.2"
+    marked: "npm:~14.0.0"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/e08e0d7857fe91f4c2c990e4d8ea73f2ca9637c4d0897684a72a6be922cda14bf968f75dbc5d2ca67be99a03143eb9e878d0365e409253743adc3b092ba2dc49
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-chat-notebook-terminal-common@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-chat-notebook-terminal-common@npm:11.1.2"
+  dependencies:
+    "@codingame/monaco-vscode-chat-extensions-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-interactive-notebook-search-terminal-common": "npm:11.1.2"
+    "@codingame/monaco-vscode-chat-notebook-terminal-testing-common": "npm:11.1.2"
+    "@xterm/addon-serialize": "npm:^0.14.0-beta.65"
+    "@xterm/addon-webgl": "npm:^0.19.0-beta.65"
+    "@xterm/xterm": "npm:^5.6.0-beta.65"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/bed250d083e64972f9507b5df02bf18d7bf6855dc8ffd35de1fb563a6a2f93cc7bc4b66ad88888c33ec0dd6cee40b7b624b8a405cf0f6f995c0a77b90a8f95b4
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-chat-notebook-terminal-testing-common@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-chat-notebook-terminal-testing-common@npm:11.1.2"
+  dependencies:
+    "@xterm/addon-clipboard": "npm:^0.2.0-beta.48"
+    "@xterm/addon-image": "npm:^0.9.0-beta.65"
+    "@xterm/addon-search": "npm:^0.16.0-beta.65"
+    "@xterm/addon-serialize": "npm:^0.14.0-beta.65"
+    "@xterm/addon-unicode11": "npm:^0.9.0-beta.65"
+    "@xterm/addon-webgl": "npm:^0.19.0-beta.65"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/b95b675119d66f9f4d9d6e3795d5501bd4016ff1e0da403129c5963332f92a3a4e2ab0d5d7b63de2384363556c704dda73159cd36fe1870385d8cfaeaa2265ae
   languageName: node
   linkType: hard
 
@@ -500,6 +571,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codingame/monaco-vscode-search-result-default-extension@npm:~11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-search-result-default-extension@npm:11.1.2"
+  dependencies:
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/76191af162157f3f78f74fc1d52f464490c729225fe15f4a7f3f3731b71600baf83ec30276d0da85762a4ee8365832c89095ee863c2b0a999c6094dfa6b389a0
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-search-service-override@npm:~11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-search-service-override@npm:11.1.2"
+  dependencies:
+    "@codingame/monaco-vscode-chat-interactive-notebook-search-common": "npm:11.1.2"
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/ce82af7e1d919ebea72ebb47849f0d02b0f12249f0130ef9033fce2598c9ac7eca61d28cb5d7382cd82750b9aa97fceca3d65edcb578a69691339f73fb938d6b
+  languageName: node
+  linkType: hard
+
 "@codingame/monaco-vscode-secret-storage-service-override@npm:~11.1.2":
   version: 11.1.2
   resolution: "@codingame/monaco-vscode-secret-storage-service-override@npm:11.1.2"
@@ -533,6 +623,15 @@ __metadata:
   dependencies:
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@11.1.2"
   checksum: 10c0/91f2d1123280236b47c63aa654e85972cd44557eb1a95d8acd585486d92aa2aced73fef22127009935ee25888897a72c7a179da8c3fc21e12fbd0da266d6ae03
+  languageName: node
+  linkType: hard
+
+"@codingame/monaco-vscode-storage-service-override@npm:~11.1.2":
+  version: 11.1.2
+  resolution: "@codingame/monaco-vscode-storage-service-override@npm:11.1.2"
+  dependencies:
+    vscode: "npm:@codingame/monaco-vscode-api@11.1.2"
+  checksum: 10c0/49b1dc50c460225a55174e7aecb23a151e32480c421e16957a90677600771b0783a9333eb102299859a630bddb1f9a792c31fa62c7dac8f6c6b2c4968cbec80a
   languageName: node
   linkType: hard
 
@@ -664,170 +763,177 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild/aix-ppc64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/aix-ppc64@npm:0.24.0"
+"@esbuild/aix-ppc64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/aix-ppc64@npm:0.24.2"
   conditions: os=aix & cpu=ppc64
   languageName: node
   linkType: hard
 
-"@esbuild/android-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/android-arm64@npm:0.24.0"
+"@esbuild/android-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-arm64@npm:0.24.2"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/android-arm@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/android-arm@npm:0.24.0"
+"@esbuild/android-arm@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-arm@npm:0.24.2"
   conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
-"@esbuild/android-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/android-x64@npm:0.24.0"
+"@esbuild/android-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/android-x64@npm:0.24.2"
   conditions: os=android & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/darwin-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/darwin-arm64@npm:0.24.0"
+"@esbuild/darwin-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/darwin-arm64@npm:0.24.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/darwin-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/darwin-x64@npm:0.24.0"
+"@esbuild/darwin-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/darwin-x64@npm:0.24.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/freebsd-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/freebsd-arm64@npm:0.24.0"
+"@esbuild/freebsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/freebsd-arm64@npm:0.24.2"
   conditions: os=freebsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/freebsd-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/freebsd-x64@npm:0.24.0"
+"@esbuild/freebsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/freebsd-x64@npm:0.24.2"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/linux-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-arm64@npm:0.24.0"
+"@esbuild/linux-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-arm64@npm:0.24.2"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/linux-arm@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-arm@npm:0.24.0"
+"@esbuild/linux-arm@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-arm@npm:0.24.2"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@esbuild/linux-ia32@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-ia32@npm:0.24.0"
+"@esbuild/linux-ia32@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-ia32@npm:0.24.2"
   conditions: os=linux & cpu=ia32
   languageName: node
   linkType: hard
 
-"@esbuild/linux-loong64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-loong64@npm:0.24.0"
+"@esbuild/linux-loong64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-loong64@npm:0.24.2"
   conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
 
-"@esbuild/linux-mips64el@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-mips64el@npm:0.24.0"
+"@esbuild/linux-mips64el@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-mips64el@npm:0.24.2"
   conditions: os=linux & cpu=mips64el
   languageName: node
   linkType: hard
 
-"@esbuild/linux-ppc64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-ppc64@npm:0.24.0"
+"@esbuild/linux-ppc64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-ppc64@npm:0.24.2"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
 
-"@esbuild/linux-riscv64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-riscv64@npm:0.24.0"
+"@esbuild/linux-riscv64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-riscv64@npm:0.24.2"
   conditions: os=linux & cpu=riscv64
   languageName: node
   linkType: hard
 
-"@esbuild/linux-s390x@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-s390x@npm:0.24.0"
+"@esbuild/linux-s390x@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-s390x@npm:0.24.2"
   conditions: os=linux & cpu=s390x
   languageName: node
   linkType: hard
 
-"@esbuild/linux-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/linux-x64@npm:0.24.0"
+"@esbuild/linux-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/linux-x64@npm:0.24.2"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/netbsd-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/netbsd-x64@npm:0.24.0"
+"@esbuild/netbsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/netbsd-arm64@npm:0.24.2"
+  conditions: os=netbsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/netbsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/netbsd-x64@npm:0.24.2"
   conditions: os=netbsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/openbsd-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/openbsd-arm64@npm:0.24.0"
+"@esbuild/openbsd-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/openbsd-arm64@npm:0.24.2"
   conditions: os=openbsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/openbsd-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/openbsd-x64@npm:0.24.0"
+"@esbuild/openbsd-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/openbsd-x64@npm:0.24.2"
   conditions: os=openbsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/sunos-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/sunos-x64@npm:0.24.0"
+"@esbuild/sunos-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/sunos-x64@npm:0.24.2"
   conditions: os=sunos & cpu=x64
   languageName: node
   linkType: hard
 
-"@esbuild/win32-arm64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/win32-arm64@npm:0.24.0"
+"@esbuild/win32-arm64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-arm64@npm:0.24.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@esbuild/win32-ia32@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/win32-ia32@npm:0.24.0"
+"@esbuild/win32-ia32@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-ia32@npm:0.24.2"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@esbuild/win32-x64@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@esbuild/win32-x64@npm:0.24.0"
+"@esbuild/win32-x64@npm:0.24.2":
+  version: 0.24.2
+  resolution: "@esbuild/win32-x64@npm:0.24.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -1017,21 +1123,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typefox/monaco-editor-react@npm:~6.0.0":
-  version: 6.0.0
-  resolution: "@typefox/monaco-editor-react@npm:6.0.0"
+"@typefox/monaco-editor-react@npm:~6.1.0":
+  version: 6.1.0
+  resolution: "@typefox/monaco-editor-react@npm:6.1.0"
   dependencies:
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-languageclient: "npm:~9.0.0"
-    react: "npm:~18.3.1"
+    monaco-languageclient: "npm:~9.1.0"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
     vscode-ws-jsonrpc: "npm:~3.4.0"
   peerDependencies:
-    monaco-editor-wrapper: ~6.0.0
+    monaco-editor-wrapper: ~6.1.0
+    react: ">=18.0.0 || <20.0.0"
   peerDependenciesMeta:
     monaco-editor-wrapper:
       optional: false
-  checksum: 10c0/4a0dc2730d55844515d2a1e994fa29abc0158407228bd56854ca85ac2a34a47e4c05d1de69f7256b2f005e706f042de71364daab8c600b7f06f4c7b82c82dd89
+  checksum: 10c0/a568db67d4d7eeddc82235bfd5d708b437686cb7098a05e2f52fc79eaecc0c9d41d7d062304529dbf0b6a702602f989e9ce657f8e17cf8e699e11b06c7d834af
   languageName: node
   linkType: hard
 
@@ -1053,6 +1159,69 @@ __metadata:
   version: 0.0.18
   resolution: "@vscode/l10n@npm:0.0.18"
   checksum: 10c0/d1fc797001f7d508ab3fa91175f7a50ea98516c4e47830ff2be79163cde9279279514a167a3bad15b7ab7fc243e7808d8f32d3eb41f4a7d6721d9dfdbb38d89e
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-clipboard@npm:^0.2.0-beta.48":
+  version: 0.2.0-beta.79
+  resolution: "@xterm/addon-clipboard@npm:0.2.0-beta.79"
+  dependencies:
+    js-base64: "npm:^3.7.5"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/ed6628e88ede475eb55264cc21adfe930b3ddff6a349e688793807388c5b4f33cbb49362b17b66c9b3b318f908bd8aef87224b915b692091f908bbc5f9e654d8
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-image@npm:^0.9.0-beta.65":
+  version: 0.9.0-beta.96
+  resolution: "@xterm/addon-image@npm:0.9.0-beta.96"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/33a62fd0a39cb04e0d011428186825b4d4cb7d88b47333b770efa591062a79749e045eb7b7519ffc6604456efc20f688076de9349b26ef2aff6f788f8cfb3d27
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-search@npm:^0.16.0-beta.65":
+  version: 0.16.0-beta.96
+  resolution: "@xterm/addon-search@npm:0.16.0-beta.96"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/2f5bcbb72fa88acb7af95cc147cd6e7716061e5f01e9973de9dfbc87187f24e63fe25cbeed34d9e3c6374a2bc555429026489cc38e7ddb8b33ea8d425fc7da4f
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-serialize@npm:^0.14.0-beta.65":
+  version: 0.14.0-beta.96
+  resolution: "@xterm/addon-serialize@npm:0.14.0-beta.96"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/b652bb7f31b165d706961749c26e7e5409c86710958972a16fe31855b233aa8f8b566be67073e0a4aafd7d6e82fb2ddf190e3c57c33adf8638ec19a53e6fe09d
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-unicode11@npm:^0.9.0-beta.65":
+  version: 0.9.0-beta.96
+  resolution: "@xterm/addon-unicode11@npm:0.9.0-beta.96"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/24ee7988ec301681404cd92e1b80f9b6c991bbbe720a622343a93917e04edd3018077c081c12587e4951dcea3b3b9a733f5698646c58793a654dfa11ea14b9ae
+  languageName: node
+  linkType: hard
+
+"@xterm/addon-webgl@npm:^0.19.0-beta.65":
+  version: 0.19.0-beta.96
+  resolution: "@xterm/addon-webgl@npm:0.19.0-beta.96"
+  peerDependencies:
+    "@xterm/xterm": ^5.6.0-beta.96
+  checksum: 10c0/a3538169975985cc397ba09ea9ad0f92431d94bc5f4ba1ed1e4e1c8b0c01e8e0d1e32e7dfe8f1b28379fdc80e256be68cf94a4eb98dd74553777b197a66bff8e
+  languageName: node
+  linkType: hard
+
+"@xterm/xterm@npm:^5.6.0-beta.65":
+  version: 5.6.0-beta.96
+  resolution: "@xterm/xterm@npm:5.6.0-beta.96"
+  checksum: 10c0/abc941525ab7641d4724d0ea167eaf6df0c053881b11179a9c1a3b0fe0c59144080e02a4b2588c162c3cfea5a02b8285b45fdcb0f07d1a823d27d38c22a94a6d
   languageName: node
   linkType: hard
 
@@ -1457,34 +1626,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "esbuild@npm:0.24.0"
+"esbuild@npm:^0.24.2":
+  version: 0.24.2
+  resolution: "esbuild@npm:0.24.2"
   dependencies:
-    "@esbuild/aix-ppc64": "npm:0.24.0"
-    "@esbuild/android-arm": "npm:0.24.0"
-    "@esbuild/android-arm64": "npm:0.24.0"
-    "@esbuild/android-x64": "npm:0.24.0"
-    "@esbuild/darwin-arm64": "npm:0.24.0"
-    "@esbuild/darwin-x64": "npm:0.24.0"
-    "@esbuild/freebsd-arm64": "npm:0.24.0"
-    "@esbuild/freebsd-x64": "npm:0.24.0"
-    "@esbuild/linux-arm": "npm:0.24.0"
-    "@esbuild/linux-arm64": "npm:0.24.0"
-    "@esbuild/linux-ia32": "npm:0.24.0"
-    "@esbuild/linux-loong64": "npm:0.24.0"
-    "@esbuild/linux-mips64el": "npm:0.24.0"
-    "@esbuild/linux-ppc64": "npm:0.24.0"
-    "@esbuild/linux-riscv64": "npm:0.24.0"
-    "@esbuild/linux-s390x": "npm:0.24.0"
-    "@esbuild/linux-x64": "npm:0.24.0"
-    "@esbuild/netbsd-x64": "npm:0.24.0"
-    "@esbuild/openbsd-arm64": "npm:0.24.0"
-    "@esbuild/openbsd-x64": "npm:0.24.0"
-    "@esbuild/sunos-x64": "npm:0.24.0"
-    "@esbuild/win32-arm64": "npm:0.24.0"
-    "@esbuild/win32-ia32": "npm:0.24.0"
-    "@esbuild/win32-x64": "npm:0.24.0"
+    "@esbuild/aix-ppc64": "npm:0.24.2"
+    "@esbuild/android-arm": "npm:0.24.2"
+    "@esbuild/android-arm64": "npm:0.24.2"
+    "@esbuild/android-x64": "npm:0.24.2"
+    "@esbuild/darwin-arm64": "npm:0.24.2"
+    "@esbuild/darwin-x64": "npm:0.24.2"
+    "@esbuild/freebsd-arm64": "npm:0.24.2"
+    "@esbuild/freebsd-x64": "npm:0.24.2"
+    "@esbuild/linux-arm": "npm:0.24.2"
+    "@esbuild/linux-arm64": "npm:0.24.2"
+    "@esbuild/linux-ia32": "npm:0.24.2"
+    "@esbuild/linux-loong64": "npm:0.24.2"
+    "@esbuild/linux-mips64el": "npm:0.24.2"
+    "@esbuild/linux-ppc64": "npm:0.24.2"
+    "@esbuild/linux-riscv64": "npm:0.24.2"
+    "@esbuild/linux-s390x": "npm:0.24.2"
+    "@esbuild/linux-x64": "npm:0.24.2"
+    "@esbuild/netbsd-arm64": "npm:0.24.2"
+    "@esbuild/netbsd-x64": "npm:0.24.2"
+    "@esbuild/openbsd-arm64": "npm:0.24.2"
+    "@esbuild/openbsd-x64": "npm:0.24.2"
+    "@esbuild/sunos-x64": "npm:0.24.2"
+    "@esbuild/win32-arm64": "npm:0.24.2"
+    "@esbuild/win32-ia32": "npm:0.24.2"
+    "@esbuild/win32-x64": "npm:0.24.2"
   dependenciesMeta:
     "@esbuild/aix-ppc64":
       optional: true
@@ -1520,6 +1690,8 @@ __metadata:
       optional: true
     "@esbuild/linux-x64":
       optional: true
+    "@esbuild/netbsd-arm64":
+      optional: true
     "@esbuild/netbsd-x64":
       optional: true
     "@esbuild/openbsd-arm64":
@@ -1536,7 +1708,7 @@ __metadata:
       optional: true
   bin:
     esbuild: bin/esbuild
-  checksum: 10c0/9f1aadd8d64f3bff422ae78387e66e51a5e09de6935a6f987b6e4e189ed00fdc2d1bc03d2e33633b094008529c8b6e06c7ad1a9782fb09fec223bf95998c0683
+  checksum: 10c0/5a25bb08b6ba23db6e66851828d848bd3ff87c005a48c02d83e38879058929878a6baa5a414e1141faee0d1dece3f32b5fbc2a87b82ed6a7aa857cf40359aeb5
   languageName: node
   linkType: hard
 
@@ -1922,10 +2094,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-tokens@npm:^3.0.0 || ^4.0.0":
-  version: 4.0.0
-  resolution: "js-tokens@npm:4.0.0"
-  checksum: 10c0/e248708d377aa058eacf2037b07ded847790e6de892bbad3dac0abba2e759cb9f121b00099a65195616badcb6eca8d14d975cb3e89eb1cfda644756402c8aeed
+"js-base64@npm:^3.7.5":
+  version: 3.7.7
+  resolution: "js-base64@npm:3.7.7"
+  checksum: 10c0/3c905a7e78b601e4751b5e710edd0d6d045ce2d23eb84c9df03515371e1b291edc72808dc91e081cb9855aef6758292a2407006f4608ec3705373dd8baf2f80f
   languageName: node
   linkType: hard
 
@@ -1988,17 +2160,6 @@ __metadata:
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 10c0/fb407355f7e6cd523a9383e76e6b455321f0f153a6c9625e21a8827d10c54c2a2341bd2ae8d034358b60e07325e1330c14c224ff582d04612a46a4f0479ff2f2
-  languageName: node
-  linkType: hard
-
-"loose-envify@npm:^1.1.0":
-  version: 1.4.0
-  resolution: "loose-envify@npm:1.4.0"
-  dependencies:
-    js-tokens: "npm:^3.0.0 || ^4.0.0"
-  bin:
-    loose-envify: cli.js
-  checksum: 10c0/655d110220983c1a4b9c0c679a2e8016d4b67f6e9c7b5435ff5979ecdb20d0813f4dec0a08674fcbdd4846a3f07edbb50a36811fd37930b94aaa0d9daceb017e
   languageName: node
   linkType: hard
 
@@ -2223,21 +2384,21 @@ __metadata:
     "@codingame/monaco-vscode-localization-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-log-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-model-service-override": "npm:~11.1.2"
-    "@typefox/monaco-editor-react": "npm:~6.0.0"
+    "@typefox/monaco-editor-react": "npm:~6.1.0"
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-editor-wrapper: "npm:~6.0.0"
-    monaco-languageclient: "npm:~9.0.0"
-    monaco-languageclient-examples: "npm:~2024.12.6"
+    monaco-editor-wrapper: "npm:~6.1.0"
+    monaco-languageclient: "npm:~9.1.0"
+    monaco-languageclient-examples: "npm:~2025.1.1"
     shx: "npm:~0.3.4"
-    vite: "npm:~6.0.3"
+    vite: "npm:~6.0.7"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
     vscode-ws-jsonrpc: "npm:~3.4.0"
   languageName: unknown
   linkType: soft
 
-"monaco-editor-wrapper@npm:~6.0.0":
-  version: 6.0.0
-  resolution: "monaco-editor-wrapper@npm:6.0.0"
+"monaco-editor-wrapper@npm:~6.1.0":
+  version: 6.1.0
+  resolution: "monaco-editor-wrapper@npm:6.1.0"
   dependencies:
     "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "npm:~11.1.2"
     "@codingame/monaco-vscode-configuration-service-override": "npm:~11.1.2"
@@ -2267,20 +2428,20 @@ __metadata:
     vscode-languageclient: "npm:~9.0.1"
     vscode-languageserver-protocol: "npm:~3.17.5"
   peerDependencies:
-    monaco-languageclient: ~9.0.0
+    monaco-languageclient: ~9.1.0
     vscode-ws-jsonrpc: ~3.4.0
   peerDependenciesMeta:
     monaco-languageclient:
       optional: false
     vscode-ws-jsonrpc:
       optional: false
-  checksum: 10c0/e9bdb9bddc9e7c94099abc1f926722afb83d5f18b52650dc751cf4ec582c771aa635a532e6c823b72b50c2929c90d025dbf688044ba17e96c2a25354a2d2f89e
+  checksum: 10c0/71d32e3ea83e036851f5d6c01af09283c6165b64452176fee1356ad34c55751c35d35e7670e80d87edff79e92c1689dd8e61805730491d9473e4f604d4abf7a9
   languageName: node
   linkType: hard
 
-"monaco-languageclient-examples@npm:~2024.12.6":
-  version: 2024.12.6
-  resolution: "monaco-languageclient-examples@npm:2024.12.6"
+"monaco-languageclient-examples@npm:~2025.1.1":
+  version: 2025.1.1
+  resolution: "monaco-languageclient-examples@npm:2025.1.1"
   dependencies:
     "@codingame/monaco-vscode-configuration-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-cpp-default-extension": "npm:~11.1.2"
@@ -2296,27 +2457,30 @@ __metadata:
     "@codingame/monaco-vscode-localization-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-python-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-remote-agent-service-override": "npm:~11.1.2"
+    "@codingame/monaco-vscode-search-result-default-extension": "npm:~11.1.2"
+    "@codingame/monaco-vscode-search-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-secret-storage-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-standalone-json-language-features": "npm:~11.1.2"
     "@codingame/monaco-vscode-standalone-languages": "npm:~11.1.2"
     "@codingame/monaco-vscode-standalone-typescript-language-features": "npm:~11.1.2"
+    "@codingame/monaco-vscode-storage-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-textmate-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-theme-defaults-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-theme-service-override": "npm:~11.1.2"
     "@codingame/monaco-vscode-typescript-basics-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "npm:~11.1.2"
     "@codingame/monaco-vscode-views-service-override": "npm:~11.1.2"
-    "@typefox/monaco-editor-react": "npm:~6.0.0"
+    "@typefox/monaco-editor-react": "npm:~6.1.0"
     cors: "npm:^2.8.5"
     express: "npm:~4.21.2"
     jszip: "npm:~3.10.1"
     langium: "npm:~3.3.0"
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
-    monaco-editor-wrapper: "npm:~6.0.0"
-    monaco-languageclient: "npm:~9.0.0"
+    monaco-editor-wrapper: "npm:~6.1.0"
+    monaco-languageclient: "npm:~9.1.0"
     pyright: "npm:~1.1.391"
-    react: "npm:~18.3.1"
-    react-dom: "npm:~18.3.1"
+    react: "npm:~19.0.0"
+    react-dom: "npm:~19.0.0"
     request-light: "npm:~0.8.0"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
     vscode-json-languageservice: "npm:~5.4.2"
@@ -2326,13 +2490,13 @@ __metadata:
     vscode-ws-jsonrpc: "npm:~3.4.0"
     ws: "npm:~8.18.0"
     wtd-core: "npm:~4.0.1"
-  checksum: 10c0/cd07732df789622a42966b815a119dc787964ba1a6457006aefef69c7ca35968c9bd299b21460b7bd56dcfe33fc2e3837d378c0d942b31afb17c5c8757873c8b
+  checksum: 10c0/f96da5a720e288c42f5cf51794be95dd462f79ac7e3d20f1edd513c8fbe1e17be274b500bc3989e50e837511ebd102d96dfb5c3a40f21172423c6bd24746e5d1
   languageName: node
   linkType: hard
 
-"monaco-languageclient@npm:~9.0.0":
-  version: 9.0.0
-  resolution: "monaco-languageclient@npm:9.0.0"
+"monaco-languageclient@npm:~9.1.0":
+  version: 9.1.0
+  resolution: "monaco-languageclient@npm:9.1.0"
   dependencies:
     monaco-editor: "npm:@codingame/monaco-vscode-editor-api@~11.1.2"
     vscode: "npm:@codingame/monaco-vscode-api@~11.1.2"
@@ -2783,7 +2947,7 @@ __metadata:
       optional: true
     "@codingame/monaco-vscode-yaml-default-extension":
       optional: true
-  checksum: 10c0/ec0a2736b69358ebd481e993dd086976a0de412799a89487d23f33417579c4251a4caed6d41f12eabe3fb7937d119a0f9bdd47dec1a07617a952fd28116b724e
+  checksum: 10c0/17baaf233d3e526f01622bd197400f4125fcb2de793661922c17ec3c1b3c0b794364909040e788996e3edc2d1b96b8b55ec44b11a00bb98a800eb9d378a96f68
   languageName: node
   linkType: hard
 
@@ -3048,24 +3212,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:~18.3.1":
-  version: 18.3.1
-  resolution: "react-dom@npm:18.3.1"
+"react-dom@npm:~19.0.0":
+  version: 19.0.0
+  resolution: "react-dom@npm:19.0.0"
   dependencies:
-    loose-envify: "npm:^1.1.0"
-    scheduler: "npm:^0.23.2"
+    scheduler: "npm:^0.25.0"
   peerDependencies:
-    react: ^18.3.1
-  checksum: 10c0/a752496c1941f958f2e8ac56239172296fcddce1365ce45222d04a1947e0cc5547df3e8447f855a81d6d39f008d7c32eab43db3712077f09e3f67c4874973e85
+    react: ^19.0.0
+  checksum: 10c0/a36ce7ab507b237ae2759c984cdaad4af4096d8199fb65b3815c16825e5cfeb7293da790a3fc2184b52bfba7ba3ff31c058c01947aff6fd1a3701632aabaa6a9
   languageName: node
   linkType: hard
 
-"react@npm:~18.3.1":
-  version: 18.3.1
-  resolution: "react@npm:18.3.1"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/283e8c5efcf37802c9d1ce767f302dd569dd97a70d9bb8c7be79a789b9902451e0d16334b05d73299b20f048cbc3c7d288bbbde10b701fa194e2089c237dbea3
+"react@npm:~19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0"
+  checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
   languageName: node
   linkType: hard
 
@@ -3237,12 +3398,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.2":
-  version: 0.23.2
-  resolution: "scheduler@npm:0.23.2"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/26383305e249651d4c58e6705d5f8425f153211aef95f15161c151f7b8de885f24751b377e4a0b3dd42cce09aad3f87a61dab7636859c0d89b7daf1a1e2a5c78
+"scheduler@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "scheduler@npm:0.25.0"
+  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
   languageName: node
   linkType: hard
 
@@ -3589,11 +3748,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:~6.0.3":
-  version: 6.0.3
-  resolution: "vite@npm:6.0.3"
+"vite@npm:~6.0.7":
+  version: 6.0.7
+  resolution: "vite@npm:6.0.7"
   dependencies:
-    esbuild: "npm:^0.24.0"
+    esbuild: "npm:^0.24.2"
     fsevents: "npm:~2.3.3"
     postcss: "npm:^8.4.49"
     rollup: "npm:^4.23.0"
@@ -3637,7 +3796,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/764ebed14770426a638575b23a51127c630ace873999ab896b0184484d8107e7255cdf64cfb36c65c1ef1d583e44b70a1d14c0f05b89612e834a5806e3964475
+  checksum: 10c0/ae81047b4290a7206b9394a39a782d509e9610462e7946422ba22d5bc615b5a322c07e33d7bf9dd0b3312ec3f5c63353b725913d1519324bfdf539b4f1e03f52
   languageName: node
   linkType: hard
 

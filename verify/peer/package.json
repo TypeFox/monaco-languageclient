@@ -8,8 +8,8 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.12.0",
-    "npm": "10.9.0"
+    "node": "22.13.0",
+    "npm": "10.9.2"
   },
   "dependencies": {
     "@codingame/monaco-vscode-extensions-service-override": "^10",

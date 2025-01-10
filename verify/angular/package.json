@@ -8,8 +8,8 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.12.0",
-    "npm": "10.9.0"
+    "node": "22.13.0",
+    "npm": "10.9.2"
   },
   "dependencies": {
     "@angular/compiler": "~18.2.8",
@@ -27,8 +27,8 @@
     "@angular/cli": "~18.2.8",
     "@angular/compiler-cli": "~18.2.8",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@types/node": "~20.16.11",
-    "@types/vscode": "~1.94.0",
+    "@types/node": "~22.10.5",
+    "@types/vscode": "~1.95.0",
     "css-loader": "~7.1.2",
     "shx": "~0.3.4",
     "style-loader": "~4.0.0",
