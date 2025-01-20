@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -125,7 +125,7 @@
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~11.1.2"
   },
   "peerDependencies": {
-    "monaco-languageclient": "~9.1.0",
+    "monaco-languageclient": "~9.1.1",
     "vscode-ws-jsonrpc": "~3.4.0"
   },
   "peerDependenciesMeta": {

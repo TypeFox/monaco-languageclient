@@ -3,9 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Parts, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, Position, onDidChangeSideBarPosition } from '@codingame/monaco-vscode-views-service-override';
-
-export const defaultViewsInit = () => {
+export const defaultViewsInit = async () => {
+    const { Parts, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, Position, onDidChangeSideBarPosition } = await import('@codingame/monaco-vscode-views-service-override');
     for (const config of [
         { part: Parts.TITLEBAR_PART, element: '#titleBar' },
         { part: Parts.BANNER_PART, element: '#banner' },

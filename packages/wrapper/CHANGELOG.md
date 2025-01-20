@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.1.1] - 2025-01-20
+
+- View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
+
 ## [6.1.0] - 2025-01-10
 
 - `@typefox/monaco-editor-react` now works with views service [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)

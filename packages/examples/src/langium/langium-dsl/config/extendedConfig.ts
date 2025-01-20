@@ -4,25 +4,22 @@
  * ------------------------------------------------------------------------------------------ */
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import '../../../../resources/vsix/github-vscode-theme.vsix';
-
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { LogLevel } from 'vscode/services';
+import '../../../../resources/vsix/github-vscode-theme.vsix';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { WrapperConfig } from 'monaco-editor-wrapper';
-import { loadLangiumWorker } from '../wrapperLangium.js';
 import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../../../../resources/langium/langium-dsl//example.langium?raw';
 
-export const setupLangiumClientExtended = async (): Promise<WrapperConfig> => {
+export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise<WrapperConfig> => {
 
     const extensionFilesOrContents = new Map<string, string | URL>();
     // vite build is easier with string content
     extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
     extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
 
-    const langiumWorker = loadLangiumWorker();
     const reader = new BrowserMessageReader(langiumWorker);
     const writer = new BrowserMessageWriter(langiumWorker);
 

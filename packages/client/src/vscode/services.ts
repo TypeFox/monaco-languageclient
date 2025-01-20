@@ -6,7 +6,7 @@
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
 import { initialize, IWorkbenchConstructionOptions } from 'vscode/services';
-import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
+import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
@@ -31,7 +31,7 @@ export interface ViewsConfig {
     viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
     openEditorFunc?: OpenEditor;
     htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
-    viewsInitFunc?: () => void;
+    viewsInitFunc?: () => Promise<void>;
 }
 
 export interface VscodeApiConfig {
@@ -112,7 +112,7 @@ export const initServices = async (vscodeApiConfig: VscodeApiConfig, instruction
             await importAllServices(vscodeApiConfig, instructions);
 
             vscodeApiConfig.viewsConfig?.htmlAugmentationInstructions?.(instructions?.htmlContainer);
-            vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
+            await vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
             instructions?.logger?.debug('Initialization of vscode services completed successfully.');
 
             envEnhanced.vscodeApiInitialised = true;
