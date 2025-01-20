@@ -9,12 +9,10 @@ import { LogLevel } from 'vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
-import { loadLangiumWorker } from '../wrapperLangium.js';
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
 
-export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
-    const langiumWorker = loadLangiumWorker();
+export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<WrapperConfig> => {
     return {
         $type: 'classic',
         htmlContainer: document.getElementById('monaco-editor-root')!,

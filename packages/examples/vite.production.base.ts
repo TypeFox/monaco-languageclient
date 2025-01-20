@@ -10,7 +10,8 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
-                    langium: path.resolve(__dirname, 'ghp_langium.html'),
+                    langiumClassic: path.resolve(__dirname, 'ghp_langium_classic.html'),
+                    langiumExtended: path.resolve(__dirname, 'ghp_langium_extended.html'),
                     statemachine: path.resolve(__dirname, 'ghp_statemachine.html'),
                     clangd: path.resolve(__dirname, 'ghp_clangd.html'),
                     appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),

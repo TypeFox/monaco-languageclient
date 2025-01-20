@@ -42,6 +42,7 @@
     "**/build/**/*.mts",
     "*.js",
     "*.ts",
+    "*.d.ts",
   ],
   "exclude": [
     "dist/**/*",

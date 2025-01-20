@@ -106,7 +106,7 @@
     "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~11.1.2",
     "monaco-editor-wrapper": "~6.1.0",
     "monaco-languageclient": "~9.1.0",
-    "pyright": "~1.1.391",
+    "pyright": "~1.1.392",
     "react": "~19.0.0",
     "react-dom": "~19.0.0",
     "request-light": "~0.8.0",

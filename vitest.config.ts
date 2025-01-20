@@ -19,11 +19,15 @@ export const vitestBaseConfig = {
         browser: {
             enabled: true,
             headless: true,
-            name: 'chromium',
             provider: 'playwright',
             api: {
                 port: 20101,
-            }
+            },
+            instances: [
+                {
+                    browser: 'chromium'
+                }
+            ]
         },
         include: [
             '**/client/test/fs/emptyEndpoint.test.ts',
