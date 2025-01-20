@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.1.2] - 2025-01-20
+
+- Updated to `monaco-languageclient@9.1.1`, `monaco-editor-wrapper@6.1.1` and `@typefox/monaco-editor-react@6.1.1`.
+- View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
+  - Separated Langium DSL example into Extended and Classic Mode versions
+
 ## [2025.1.1] - 2025-01-10
 
 - Updated to `monaco-languageclient@9.1.0`, `monaco-editor-wrapper@6.1.0` and `@typefox/monaco-editor-react@6.1.0`.
