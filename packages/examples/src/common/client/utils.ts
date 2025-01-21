@@ -4,10 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { Uri } from 'vscode';
-import { Logger } from 'monaco-languageclient/tools';
-import { useWorkerFactory, WorkerLoader } from 'monaco-languageclient/workerFactory';
+import type { Logger } from 'monaco-languageclient/tools';
+import { useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
-import { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
+import type { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 
 export const disableElement = (id: string, disabled: boolean) => {
     const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;

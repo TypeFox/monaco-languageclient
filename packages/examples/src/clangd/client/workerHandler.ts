@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
+import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 import clangdWorkerUrl from '../worker/clangd-server?worker&url';
 
 class ClangdInteractionMain implements ComRouter {

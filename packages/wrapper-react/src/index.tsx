@@ -4,8 +4,8 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import React, { CSSProperties, useCallback, useEffect, useRef } from 'react';
-import { didModelContentChange, MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
+import React, { type CSSProperties, useCallback, useEffect, useRef } from 'react';
+import { didModelContentChange, MonacoEditorLanguageClientWrapper, type TextChanges, type TextModels, type WrapperConfig } from 'monaco-editor-wrapper';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;

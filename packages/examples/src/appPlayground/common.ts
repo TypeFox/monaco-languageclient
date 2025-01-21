@@ -4,9 +4,9 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import type { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { ConfigResult } from './config.js';
+import type { ConfigResult } from './config.js';
 
 export const configurePostStart = async (wrapper: MonacoEditorLanguageClientWrapper, configResult: ConfigResult) => {
     const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;

@@ -7,8 +7,8 @@ import * as net from 'node:net';
 import * as stream from 'node:stream';
 import * as cp from 'node:child_process';
 import { StreamMessageReader, StreamMessageWriter, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node.js';
-import { IConnection, createConnection } from './connection.js';
-import { IWebSocket, IWebSocketConnection } from '../socket/socket.js';
+import { type IConnection, createConnection } from './connection.js';
+import type { IWebSocket, IWebSocketConnection } from '../socket/socket.js';
 import { WebSocketMessageReader } from '../socket/reader.js';
 import { WebSocketMessageWriter } from '../socket/writer.js';
 

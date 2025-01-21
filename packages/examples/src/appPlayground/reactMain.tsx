@@ -5,7 +5,7 @@
 
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';

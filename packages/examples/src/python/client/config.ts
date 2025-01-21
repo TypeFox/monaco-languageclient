@@ -9,7 +9,7 @@ import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { createUrl } from 'monaco-languageclient/tools';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 

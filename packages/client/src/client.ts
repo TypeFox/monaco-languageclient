@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { BaseLanguageClient, MessageTransports, LanguageClientOptions } from 'vscode-languageclient/browser.js';
+import { BaseLanguageClient, MessageTransports, type LanguageClientOptions } from 'vscode-languageclient/browser.js';
 
 export type MonacoLanguageClientOptions = {
     name: string;

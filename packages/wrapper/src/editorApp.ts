@@ -5,11 +5,11 @@
 
 import * as vscode from 'vscode';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { createModelReference, ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
+import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
 import { ConfigurationTarget, IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
-import { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { Logger } from 'monaco-languageclient/tools';
-import { OverallConfigType } from './vscode/services.js';
+import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
+import type { Logger } from 'monaco-languageclient/tools';
+import type { OverallConfigType } from './vscode/services.js';
 
 export interface ModelRefs {
     modelRefModified?: IReference<ITextFileEditorModel>;

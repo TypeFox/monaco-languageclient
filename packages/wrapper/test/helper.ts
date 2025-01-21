@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');

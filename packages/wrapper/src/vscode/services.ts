@@ -5,9 +5,9 @@
 
 import * as vscode from 'vscode';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
+import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { mergeServices, ViewsConfig, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
+import { mergeServices, type ViewsConfig, type VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 
 export type OverallConfigType = 'extended' | 'classic';
 

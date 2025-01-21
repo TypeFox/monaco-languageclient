@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
+import type { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
 
 export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';

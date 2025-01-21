@@ -2,16 +2,16 @@
  * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { WebSocketServer, ServerOptions } from 'ws';
+import { WebSocketServer, type ServerOptions } from 'ws';
 import { IncomingMessage, Server } from 'node:http';
 import { URL } from 'node:url';
 import { Socket } from 'node:net';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as cp from 'node:child_process';
-import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { type IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
-import { Message, InitializeRequest, InitializeParams, RequestMessage, ResponseMessage } from 'vscode-languageserver-protocol';
+import { Message, InitializeRequest, type InitializeParams, type RequestMessage, type ResponseMessage } from 'vscode-languageserver-protocol';
 
 export enum LanguageName {
     /** https://nodejs.org/api/cli.html  */

@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { LanguageClientConfig } from 'monaco-editor-wrapper';
+import type { LanguageClientConfig } from 'monaco-editor-wrapper';
 
 export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => {
     return {

@@ -8,7 +8,7 @@ import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-serv
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';

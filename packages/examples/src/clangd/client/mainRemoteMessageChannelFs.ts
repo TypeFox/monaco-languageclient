@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
-import { ComChannelEndpoint, RawPayload, WorkerMessage, ComRouter } from 'wtd-core';
+import { ComChannelEndpoint, RawPayload, WorkerMessage, type ComRouter } from 'wtd-core';
 
 /**
  * Answer the file create request

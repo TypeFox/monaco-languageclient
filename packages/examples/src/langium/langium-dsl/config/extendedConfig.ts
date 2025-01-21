@@ -7,7 +7,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../../../common/client/utils.js';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
-import { Logger } from 'monaco-languageclient/tools';
+import type { Logger } from 'monaco-languageclient/tools';
 
 export type WorkerLoader = (() => Worker) | undefined;
 

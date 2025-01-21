@@ -6,9 +6,9 @@
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { Logger } from 'monaco-languageclient/tools';
+import type { Logger } from 'monaco-languageclient/tools';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
 import { defineDefaultWorkerLoaders } from '../../../common/client/utils.js';

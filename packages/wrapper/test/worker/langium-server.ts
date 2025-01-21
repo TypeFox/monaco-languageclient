@@ -5,7 +5,7 @@
 /// <reference lib="WebWorker" />
 
 import { EmptyFileSystem } from 'langium';
-import { DefaultSharedModuleContext, startLanguageServer } from 'langium/lsp';
+import { type DefaultSharedModuleContext, startLanguageServer } from 'langium/lsp';
 import { createLangiumGrammarServices } from 'langium/grammar';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
 

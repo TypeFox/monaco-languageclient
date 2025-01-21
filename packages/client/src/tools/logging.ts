@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ConsoleLogger as VSCodeConsoleLogger, ILogger } from '@codingame/monaco-vscode-log-service-override';
+import { ConsoleLogger as VSCodeConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
 export interface Logger extends ILogger {
