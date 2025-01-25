@@ -41,7 +41,14 @@ export const vitestBaseConfig = {
             '**/wrapper/test/wrapper.test.ts',
             '**/wrapper-react/test/index.test.tsx'
         ]
-    }
+    },
+    optimizeDeps: {
+        include: [
+            'vscode/localExtensionHost',
+            'vscode-textmate',
+            'vscode-oniguruma'
+        ]
+    },
 };
 
 const definedVitestConfig = defineVitestConfig(vitestBaseConfig);

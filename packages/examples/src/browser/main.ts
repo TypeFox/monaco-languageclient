@@ -10,7 +10,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api/services';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 

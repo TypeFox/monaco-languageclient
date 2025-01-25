@@ -4,9 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from 'monaco-editor';
-import { DisposableStore } from 'vscode/monaco';
-import { LogLevel } from 'vscode/services';
-import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from 'vscode/extensions';
+import { DisposableStore } from '@codingame/monaco-vscode-api/monaco';
+import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';

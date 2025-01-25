@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import 'vscode/localExtensionHost';
-import { initialize, IWorkbenchConstructionOptions } from 'vscode/services';
+import { initialize, IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api/services';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
@@ -13,10 +13,10 @@ import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-serv
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
-import { EnvironmentOverride } from 'vscode/workbench';
+import { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench';
 import { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
-import { setUnexpectedErrorHandler } from 'vscode/monaco';
+import { setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
@@ -162,7 +162,7 @@ export const importAllServices = async (vscodeApiConfig: VscodeApiConfig, instru
  */
 export const configureExtHostWorker = async (enableExtHostWorker: boolean, userServices: monaco.editor.IEditorOverrideServices) => {
     if (enableExtHostWorker) {
-        const fakeWorker = new Worker(new URL('vscode/workers/extensionHost.worker', import.meta.url), { type: 'module' });
+        const fakeWorker = new Worker(new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url), { type: 'module' });
         const workerConfig: WorkerConfig = {
             url: fakeWorker.url.toString(),
             options: fakeWorker.options

@@ -5,7 +5,7 @@
 
 import * as monaco from 'monaco-editor';
 import { initServices } from 'monaco-languageclient/vscode/services';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api/services';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';

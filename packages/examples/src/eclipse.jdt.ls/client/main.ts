@@ -9,7 +9,7 @@ import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemO
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api/services';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
