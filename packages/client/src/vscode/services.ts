@@ -132,6 +132,7 @@ export const initServices = async (vscodeApiConfig: VscodeApiConfig, instruction
  *  - quickAccess
  * monaco-languageclient always adds the following services:
  *   - languages
+ *   - log
  *   - model
  */
 export const importAllServices = async (vscodeApiConfig: VscodeApiConfig, instructions?: InitServicesInstructions) => {

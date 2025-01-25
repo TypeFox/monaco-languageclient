@@ -11,7 +11,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@typefox/monaco-editor-react": "~6.1.1",
+    "@typefox/monaco-editor-react": "~6.2.0-next.0",
     "monaco-languageclient-examples": "~2025.1.2",
     "next": "~15.1.4",
     "react": "~19.0.0",
@@ -25,7 +25,7 @@
     "typescript": "~5.7.3"
   },
   "volta": {
-    "node": "22.13.0",
+    "node": "22.13.1",
     "npm": "10.9.2"
   }
 }

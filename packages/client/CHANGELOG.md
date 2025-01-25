@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [9.2.0-next.0] - 2025-01-20
+
+- Updated all `@codingame/monaco-vscode` packages to `13.0.0`.
+
 ## [9.1.1] - 2025-01-20
 
 - View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
