@@ -4,9 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { createModelReference, ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
-import { ConfigurationTarget, IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api/services';
+import { ConfigurationTarget, IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { Logger } from 'monaco-languageclient/tools';
 import { OverallConfigType } from './vscode/services.js';

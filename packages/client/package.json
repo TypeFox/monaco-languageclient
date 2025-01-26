@@ -76,19 +76,25 @@
     "@codingame/monaco-vscode-localization-service-override": "13.0.0",
     "@codingame/monaco-vscode-log-service-override": "13.0.0",
     "@codingame/monaco-vscode-model-service-override": "13.0.0",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@13.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@13.0.0",
-    "vscode-languageclient": "~9.0.1"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@13.0.0"
   },
   "peerDependencies": {
     "@codingame/monaco-vscode-api": "13.0.0",
-    "@codingame/monaco-vscode-editor-api": "13.0.0"
+    "@codingame/monaco-vscode-editor-api": "13.0.0",
+    "@codingame/monaco-vscode-extension-api": "13.0.0",
+    "vscode-languageclient": "~9.0.1"
   },
   "peerDependenciesMeta": {
     "@codingame/monaco-vscode-api": {
       "optional": false
     },
     "@codingame/monaco-vscode-editor-api": {
+      "optional": false
+    },
+    "@codingame/monaco-vscode-extension-api": {
+      "optional": false
+    },
+    "vscode-languageclient": {
       "optional": false
     }
   },

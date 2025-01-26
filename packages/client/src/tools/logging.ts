@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { ConsoleLogger as VSCodeConsoleLogger, ILogger } from '@codingame/monaco-vscode-log-service-override';
-import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 
 export interface Logger extends ILogger {
     createErrorAndLog(message: string, ...params: unknown[]): Error;

@@ -5,7 +5,7 @@
 
 import { describe, expect, test } from 'vitest';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
-import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 
 describe('Logger', () => {
 

@@ -3,9 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import 'vscode/localExtensionHost';
-import { initialize, IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api/services';
+import { initialize, IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';

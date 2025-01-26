@@ -7,7 +7,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';

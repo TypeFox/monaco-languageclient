@@ -3,9 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { DisposableStore } from '@codingame/monaco-vscode-api/monaco';
-import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { LogLevel } from '@codingame/monaco-vscode-api/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { WrapperConfig } from 'monaco-editor-wrapper';

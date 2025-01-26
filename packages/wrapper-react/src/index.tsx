@@ -3,7 +3,7 @@
 * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { didModelContentChange, MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
 
