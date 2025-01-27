@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       monaco-languageclient:
-        specifier: ~9.2.0-next.1
-        version: 9.2.0-next.1(bkuntufubynzkc7vtfclyrdmvi)
+        specifier: ~9.2.0-next.2
+        version: 9.2.0-next.2(n43yudoypqwz63wufidwwu4a24)
       vscode:
         specifier: npm:@codingame/monaco-vscode-extension-api@13.0.0
         version: '@codingame/monaco-vscode-extension-api@13.0.0(25guydv2l2jaadj2tj5mqdqtye)'
@@ -999,14 +999,439 @@ packages:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
 
-  monaco-languageclient@9.2.0-next.1:
-    resolution: {integrity: sha512-ykVZZaDGaUxQi2bAQIETvkLY4KMjd85lr/wGhcevDZTz+mcldVAvkzmB/nOLSKrGKaiI62EJhMAh96f3cwAXNw==}
+  monaco-languageclient@9.2.0-next.2:
+    resolution: {integrity: sha512-3Oo4sKUgUFNIm+MeHqJyBOEMNOpH7pdhHAyBoz5zkR7bsS++jFhB9pY7oUyobAJOUiuFRryghWLHFn3QbDyM1A==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
     peerDependencies:
-      '@codingame/monaco-vscode-api': 13.0.0
-      '@codingame/monaco-vscode-editor-api': 13.0.0
+      '@codingame/monaco-vscode-accessibility-service-override': ~13.0.0
+      '@codingame/monaco-vscode-all-default-extensions': ~13.0.0
+      '@codingame/monaco-vscode-all-language-default-extensions': ~13.0.0
+      '@codingame/monaco-vscode-all-language-feature-default-extensions': ~13.0.0
+      '@codingame/monaco-vscode-api': ~13.0.0
+      '@codingame/monaco-vscode-base-service-override': ~13.0.0
+      '@codingame/monaco-vscode-bat-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-chat-extensions-notebook-common': ~13.0.0
+      '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common': ~13.0.0
+      '@codingame/monaco-vscode-chat-service-override': ~13.0.0
+      '@codingame/monaco-vscode-clojure-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-coffeescript-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-comments-extensions-common': ~13.0.0
+      '@codingame/monaco-vscode-configuration-editing-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-configuration-service-override': ~13.0.0
+      '@codingame/monaco-vscode-cpp-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-csharp-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-css-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-css-language-features-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-dart-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-debug-service-override': ~13.0.0
+      '@codingame/monaco-vscode-dialogs-service-override': ~13.0.0
+      '@codingame/monaco-vscode-diff-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-docker-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-editor-api': ~13.0.0
+      '@codingame/monaco-vscode-editor-service-override': ~13.0.0
+      '@codingame/monaco-vscode-emmet-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-environment-service-override': ~13.0.0
+      '@codingame/monaco-vscode-explorer-service-override': ~13.0.0
       '@codingame/monaco-vscode-extension-api': 13.0.0
+      '@codingame/monaco-vscode-extension-editing-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-extensions-service-override': ~13.0.0
+      '@codingame/monaco-vscode-files-service-override': ~13.0.0
+      '@codingame/monaco-vscode-fsharp-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-git-base-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-github-authentication-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-go-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-groovy-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-handlebars-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-hlsl-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-host-service-override': ~13.0.0
+      '@codingame/monaco-vscode-html-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-html-language-features-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-ini-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-ipynb-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-java-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-javascript-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-json-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-json-language-features-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-julia-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-keybindings-service-override': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-cs': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-de': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-es': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-fr': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-it': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-ja': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-ko': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-pl': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-pt-br': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-qps-ploc': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-ru': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-tr': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-zh-hans': ~13.0.0
+      '@codingame/monaco-vscode-language-pack-zh-hant': ~13.0.0
+      '@codingame/monaco-vscode-languages-service-override': ~13.0.0
+      '@codingame/monaco-vscode-latex-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-layout-service-override': ~13.0.0
+      '@codingame/monaco-vscode-less-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-lifecycle-service-override': ~13.0.0
+      '@codingame/monaco-vscode-localization-service-override': ~13.0.0
+      '@codingame/monaco-vscode-log-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-log-service-override': ~13.0.0
+      '@codingame/monaco-vscode-lua-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-make-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-markdown-basics-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-markdown-language-features-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-markdown-math-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-markers-service-override': ~13.0.0
+      '@codingame/monaco-vscode-media-preview-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-merge-conflict-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-microsoft-authentication-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-model-service-override': ~13.0.0
+      '@codingame/monaco-vscode-monarch-service-override': ~13.0.0
+      '@codingame/monaco-vscode-notebook-renderers-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-notebook-service-override': ~13.0.0
+      '@codingame/monaco-vscode-notifications-service-override': ~13.0.0
+      '@codingame/monaco-vscode-npm-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-objective-c-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-outline-service-override': ~13.0.0
+      '@codingame/monaco-vscode-output-service-override': ~13.0.0
+      '@codingame/monaco-vscode-perl-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-php-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-powershell-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-preferences-service-override': ~13.0.0
+      '@codingame/monaco-vscode-pug-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-python-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-quickaccess-service-override': ~13.0.0
+      '@codingame/monaco-vscode-r-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-razor-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-references-view-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-restructuredtext-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-rollup-extension-directory-plugin': ~13.0.0
+      '@codingame/monaco-vscode-rollup-vsix-plugin': ~13.0.0
+      '@codingame/monaco-vscode-ruby-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-rust-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-scss-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-search-result-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-search-service-override': ~13.0.0
+      '@codingame/monaco-vscode-server': ~13.0.0
+      '@codingame/monaco-vscode-shaderlab-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-share-service-override': ~13.0.0
+      '@codingame/monaco-vscode-shellscript-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-simple-browser-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-snippets-service-override': ~13.0.0
+      '@codingame/monaco-vscode-sql-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-standalone-css-language-features': ~13.0.0
+      '@codingame/monaco-vscode-standalone-html-language-features': ~13.0.0
+      '@codingame/monaco-vscode-standalone-json-language-features': ~13.0.0
+      '@codingame/monaco-vscode-standalone-languages': ~13.0.0
+      '@codingame/monaco-vscode-standalone-typescript-language-features': ~13.0.0
+      '@codingame/monaco-vscode-storage-service-override': ~13.0.0
+      '@codingame/monaco-vscode-swift-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-task-service-override': ~13.0.0
+      '@codingame/monaco-vscode-terminal-service-override': ~13.0.0
+      '@codingame/monaco-vscode-testing-service-override': ~13.0.0
+      '@codingame/monaco-vscode-textmate-service-override': ~13.0.0
+      '@codingame/monaco-vscode-theme-abyss-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-defaults-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-kimbie-dark-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-monokai-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-monokai-dimmed-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-quietlight-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-red-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-service-override': ~13.0.0
+      '@codingame/monaco-vscode-theme-seti-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-solarized-dark-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-solarized-light-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-theme-tomorrow-night-blue-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-timeline-service-override': ~13.0.0
+      '@codingame/monaco-vscode-typescript-basics-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-typescript-language-features-default-extens': ~13.0.0
+      '@codingame/monaco-vscode-update-service-override': ~13.0.0
+      '@codingame/monaco-vscode-vb-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-views-service-override': ~13.0.0
+      '@codingame/monaco-vscode-welcome-service-override': ~13.0.0
+      '@codingame/monaco-vscode-workbench-service-override': ~13.0.0
+      '@codingame/monaco-vscode-xml-default-extension': ~13.0.0
+      '@codingame/monaco-vscode-yaml-default-extension': ~13.0.0
       vscode-languageclient: ~9.0.1
+    peerDependenciesMeta:
+      '@codingame/monaco-vscode-accessibility-service-override':
+        optional: true
+      '@codingame/monaco-vscode-all-default-extensions':
+        optional: true
+      '@codingame/monaco-vscode-all-language-default-extensions':
+        optional: true
+      '@codingame/monaco-vscode-all-language-feature-default-extensions':
+        optional: true
+      '@codingame/monaco-vscode-base-service-override':
+        optional: true
+      '@codingame/monaco-vscode-bat-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-chat-extensions-notebook-common':
+        optional: true
+      '@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common':
+        optional: true
+      '@codingame/monaco-vscode-chat-service-override':
+        optional: true
+      '@codingame/monaco-vscode-clojure-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-coffeescript-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-comments-extensions-common':
+        optional: true
+      '@codingame/monaco-vscode-configuration-editing-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-cpp-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-csharp-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-css-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-css-language-features-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-dart-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-debug-service-override':
+        optional: true
+      '@codingame/monaco-vscode-dialogs-service-override':
+        optional: true
+      '@codingame/monaco-vscode-diff-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-docker-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-emmet-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-environment-service-override':
+        optional: true
+      '@codingame/monaco-vscode-explorer-service-override':
+        optional: true
+      '@codingame/monaco-vscode-extension-editing-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-files-service-override':
+        optional: true
+      '@codingame/monaco-vscode-fsharp-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-git-base-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-github-authentication-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-go-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-groovy-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-handlebars-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-hlsl-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-host-service-override':
+        optional: true
+      '@codingame/monaco-vscode-html-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-html-language-features-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-ini-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-ipynb-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-java-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-javascript-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-json-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-json-language-features-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-julia-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-keybindings-service-override':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-cs':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-de':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-es':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-fr':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-it':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-ja':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-ko':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-pl':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-pt-br':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-qps-ploc':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-ru':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-tr':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-zh-hans':
+        optional: true
+      '@codingame/monaco-vscode-language-pack-zh-hant':
+        optional: true
+      '@codingame/monaco-vscode-latex-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-layout-service-override':
+        optional: true
+      '@codingame/monaco-vscode-less-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-lifecycle-service-override':
+        optional: true
+      '@codingame/monaco-vscode-log-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-lua-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-make-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-markdown-basics-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-markdown-language-features-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-markdown-math-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-markers-service-override':
+        optional: true
+      '@codingame/monaco-vscode-media-preview-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-merge-conflict-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-microsoft-authentication-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-monarch-service-override':
+        optional: true
+      '@codingame/monaco-vscode-notebook-renderers-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-notebook-service-override':
+        optional: true
+      '@codingame/monaco-vscode-notifications-service-override':
+        optional: true
+      '@codingame/monaco-vscode-npm-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-objective-c-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-outline-service-override':
+        optional: true
+      '@codingame/monaco-vscode-output-service-override':
+        optional: true
+      '@codingame/monaco-vscode-perl-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-php-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-powershell-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-preferences-service-override':
+        optional: true
+      '@codingame/monaco-vscode-pug-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-python-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-quickaccess-service-override':
+        optional: true
+      '@codingame/monaco-vscode-r-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-razor-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-references-view-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-restructuredtext-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-rollup-extension-directory-plugin':
+        optional: true
+      '@codingame/monaco-vscode-rollup-vsix-plugin':
+        optional: true
+      '@codingame/monaco-vscode-ruby-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-rust-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-scss-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-search-result-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-search-service-override':
+        optional: true
+      '@codingame/monaco-vscode-server':
+        optional: true
+      '@codingame/monaco-vscode-shaderlab-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-share-service-override':
+        optional: true
+      '@codingame/monaco-vscode-shellscript-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-simple-browser-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-snippets-service-override':
+        optional: true
+      '@codingame/monaco-vscode-sql-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-standalone-css-language-features':
+        optional: true
+      '@codingame/monaco-vscode-standalone-html-language-features':
+        optional: true
+      '@codingame/monaco-vscode-standalone-json-language-features':
+        optional: true
+      '@codingame/monaco-vscode-standalone-languages':
+        optional: true
+      '@codingame/monaco-vscode-standalone-typescript-language-features':
+        optional: true
+      '@codingame/monaco-vscode-storage-service-override':
+        optional: true
+      '@codingame/monaco-vscode-swift-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-task-service-override':
+        optional: true
+      '@codingame/monaco-vscode-terminal-service-override':
+        optional: true
+      '@codingame/monaco-vscode-testing-service-override':
+        optional: true
+      '@codingame/monaco-vscode-textmate-service-override':
+        optional: true
+      '@codingame/monaco-vscode-theme-abyss-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-defaults-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-kimbie-dark-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-monokai-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-monokai-dimmed-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-quietlight-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-red-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-service-override':
+        optional: true
+      '@codingame/monaco-vscode-theme-seti-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-solarized-dark-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-solarized-light-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-theme-tomorrow-night-blue-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-timeline-service-override':
+        optional: true
+      '@codingame/monaco-vscode-typescript-basics-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-typescript-language-features-default-extens':
+        optional: true
+      '@codingame/monaco-vscode-update-service-override':
+        optional: true
+      '@codingame/monaco-vscode-vb-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-views-service-override':
+        optional: true
+      '@codingame/monaco-vscode-welcome-service-override':
+        optional: true
+      '@codingame/monaco-vscode-workbench-service-override':
+        optional: true
+      '@codingame/monaco-vscode-xml-default-extension':
+        optional: true
+      '@codingame/monaco-vscode-yaml-default-extension':
+        optional: true
 
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
@@ -1994,7 +2419,7 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  monaco-languageclient@9.2.0-next.1(bkuntufubynzkc7vtfclyrdmvi):
+  monaco-languageclient@9.2.0-next.2(n43yudoypqwz63wufidwwu4a24):
     dependencies:
       '@codingame/monaco-vscode-api': 13.0.0(dgbrbbynd52w3pwy5lfk65sbsy)
       '@codingame/monaco-vscode-configuration-service-override': 13.0.0(@codingame/monaco-vscode-1d9dbcb3-6f53-58ad-b0a4-92b1ef1fd6a8-common@13.0.0)(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-base-service-override@13.0.0)(@codingame/monaco-vscode-c3c61c00-c254-5856-9dc9-d7929c1f9062-common@13.0.0)
@@ -2008,26 +2433,26 @@ snapshots:
       '@codingame/monaco-vscode-model-service-override': 13.0.0(@codingame/monaco-vscode-api@13.0.0)
       vscode: '@codingame/monaco-vscode-extension-api@13.0.0(25guydv2l2jaadj2tj5mqdqtye)'
       vscode-languageclient: 9.0.1
+    optionalDependencies:
+      '@codingame/monaco-vscode-base-service-override': 13.0.0(@codingame/monaco-vscode-99f24462-c56d-5407-83fb-2ea9dd33cc8c-common@13.0.0)(@codingame/monaco-vscode-a4683c2b-a0d2-5112-96ba-eedc605346d2-common@13.0.0)(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-bd6ad8b7-9db3-51a8-9895-0046508c029d-common@13.0.0)(@codingame/monaco-vscode-c3c61c00-c254-5856-9dc9-d7929c1f9062-common@13.0.0)(@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common@13.0.0)
+      '@codingame/monaco-vscode-environment-service-override': 13.0.0(@codingame/monaco-vscode-1d9dbcb3-6f53-58ad-b0a4-92b1ef1fd6a8-common@13.0.0)(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common@13.0.0)
+      '@codingame/monaco-vscode-files-service-override': 13.0.0(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-base-service-override@13.0.0)
+      '@codingame/monaco-vscode-host-service-override': 13.0.0(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common@13.0.0)
+      '@codingame/monaco-vscode-layout-service-override': 13.0.0(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common@13.0.0)
+      '@codingame/monaco-vscode-quickaccess-service-override': 13.0.0(@codingame/monaco-vscode-4a36e358-d94d-55e0-86ee-3bcd543d9d3f-common@13.0.0)(@codingame/monaco-vscode-api@13.0.0)(@codingame/monaco-vscode-c3c61c00-c254-5856-9dc9-d7929c1f9062-common@13.0.0)(@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common@13.0.0)
     transitivePeerDependencies:
-      - '@codingame/monaco-vscode-0139c6af-2375-559c-af57-b738f2fd6d8e-common'
       - '@codingame/monaco-vscode-039b5553-0838-562a-97c2-30d6e54a7b42-common'
       - '@codingame/monaco-vscode-0c06bfba-d24d-5c4d-90cd-b40cefb7f811-common'
       - '@codingame/monaco-vscode-1b4486de-4fe4-59c4-9e6d-34f265ff6625-common'
-      - '@codingame/monaco-vscode-1d9dbcb3-6f53-58ad-b0a4-92b1ef1fd6a8-common'
       - '@codingame/monaco-vscode-3dd5b442-bfbc-5b1d-8f4a-7567530c75f5-common'
       - '@codingame/monaco-vscode-55ed5668-e8ca-5335-a587-790bcf1200c0-common'
       - '@codingame/monaco-vscode-56402b83-4a60-5b15-86f9-71fe99c32744-common'
       - '@codingame/monaco-vscode-6f9bc782-77e0-5716-93bd-b05210c768c5-common'
       - '@codingame/monaco-vscode-7bbc9e7d-eeae-55fc-8bf9-dc2f66e0dc73-common'
-      - '@codingame/monaco-vscode-7f39b6f1-3542-5430-8760-0f404d7a7cee-common'
       - '@codingame/monaco-vscode-82e231ca-6ed7-5920-b2b8-1874ccc0be07-common'
       - '@codingame/monaco-vscode-9d0168a3-519b-57f3-9bcc-89efc41f951a-common'
       - '@codingame/monaco-vscode-a2719803-af40-5ae9-a29f-8a2231c33056-common'
-      - '@codingame/monaco-vscode-b8988f79-16c1-5bff-b0e7-699bab3431da-common'
-      - '@codingame/monaco-vscode-base-service-override'
-      - '@codingame/monaco-vscode-c3c61c00-c254-5856-9dc9-d7929c1f9062-common'
       - '@codingame/monaco-vscode-c465110a-57c0-59d7-a6b2-be0a4db7e517-common'
-      - '@codingame/monaco-vscode-chat-service-override'
       - '@codingame/monaco-vscode-comments-service-override'
       - '@codingame/monaco-vscode-d7f659f5-da33-5ea8-a3b8-9b94f2cf5f33-common'
       - '@codingame/monaco-vscode-e28ac690-06d5-5ee9-92d1-02df70296354-common'
@@ -2036,13 +2461,8 @@ snapshots:
       - '@codingame/monaco-vscode-fab30422-b487-5f4e-8d30-8b4d266e3fcd-common'
       - '@codingame/monaco-vscode-fc985c90-0334-5b62-88bc-73e2efa0b80b-common'
       - '@codingame/monaco-vscode-ff9fa663-eae3-5274-8573-c2b918871e4b-common'
-      - '@codingame/monaco-vscode-lifecycle-service-override'
-      - '@codingame/monaco-vscode-notebook-service-override'
       - '@codingame/monaco-vscode-remote-agent-service-override'
-      - '@codingame/monaco-vscode-search-service-override'
       - '@codingame/monaco-vscode-secret-storage-service-override'
-      - '@codingame/monaco-vscode-terminal-service-override'
-      - '@codingame/monaco-vscode-update-service-override'
       - '@codingame/monaco-vscode-view-common-service-override'
       - '@types/vscode'
 

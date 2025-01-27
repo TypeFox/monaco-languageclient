@@ -13,8 +13,15 @@
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "13.0.0",
+    "@codingame/monaco-vscode-configuration-service-override": "13.0.0",
     "@codingame/monaco-vscode-editor-api": "13.0.0",
+    "@codingame/monaco-vscode-editor-service-override": "13.0.0",
     "@codingame/monaco-vscode-extension-api": "13.0.0",
+    "@codingame/monaco-vscode-extensions-service-override": "13.0.0",
+    "@codingame/monaco-vscode-languages-service-override": "13.0.0",
+    "@codingame/monaco-vscode-localization-service-override": "13.0.0",
+    "@codingame/monaco-vscode-log-service-override": "13.0.0",
+    "@codingame/monaco-vscode-model-service-override": "13.0.0",
     "monaco-languageclient": "~9.2.0-next.2",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@13.0.0",
     "vscode-languageclient": "~9.0.1"
