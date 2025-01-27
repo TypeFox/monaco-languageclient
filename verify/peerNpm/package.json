@@ -12,7 +12,11 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-extensions-service-override": "^10",
-    "monaco-editor-wrapper": "~6.2.0-next.0"
+    "monaco-languageclient": "~9.2.0-next.1"
+  },
+  "overrides": {
+    "vscode": {
+      "@codingame/monaco-vscode-extension-api": "13.0.0"
+    }
   }
 }
