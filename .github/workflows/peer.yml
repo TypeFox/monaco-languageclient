@@ -1,18 +1,13 @@
-name: Build, Lint and Test
+name: Verification Peer Builds
 
 on:
   push:
     branches:
-      - 'main'
-    tags-ignore:
-      - '**'
-  pull_request:
-    branches:
-      - main
+      - 'peer'
   workflow_dispatch:
 
 jobs:
-  build:
+  peerVerify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -38,18 +33,7 @@ jobs:
       run: |
         npm run report:versions
 
-    - name: Build
+    - name: Execute peer verification
       shell: bash
       run: |
-        npm run build
-
-    - name: Lint
-      shell: bash
-      run: |
-        npm run lint
-
-    - name: Test
-      shell: bash
-      run: |
-        npm run test:install
-        npm run test:run
+        bash ./verify/buildPeers.sh

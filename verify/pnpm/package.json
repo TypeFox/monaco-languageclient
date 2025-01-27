@@ -9,10 +9,10 @@
   },
   "volta": {
     "node": "22.13.1",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.1.4"
+    "monaco-languageclient-examples": "~2025.1.5"
   },
   "devDependencies": {
     "shx": "~0.3.4",
