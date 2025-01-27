@@ -1,5 +1,5 @@
 {
-  "name": "@typefox/peer-check",
+  "name": "@typefox/peer-check-yarn",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,9 +9,23 @@
   },
   "volta": {
     "node": "22.13.1",
-    "npm": "10.9.2"
+    "yarn": "4.6.0"
   },
   "dependencies": {
-    "monaco-languageclient": "~9.2.0-next.1"
+    "@codingame/monaco-vscode-api": "13.0.0",
+    "@codingame/monaco-vscode-editor-api": "13.0.0",
+    "@codingame/monaco-vscode-extension-api": "13.0.0",
+    "monaco-languageclient": "~9.2.0-next.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@13.0.0",
+    "vscode-languageclient": "~9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "~1.96.0",
+    "typescript": "~5.7.3"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "showconfig": "tsc --showconfig",
+    "verify:ci": "yarn install && yarn run build"
   }
 }

@@ -53,3 +53,8 @@ jobs:
       run: |
         npm run test:install
         npm run test:run
+
+    - name: Execute peer verification
+      shell: bash
+      run: |
+        bash ./verify/buildPeers.sh

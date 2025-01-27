@@ -1,5 +1,5 @@
 {
-  "name": "@typefox/peer-check",
+  "name": "@typefox/peer-check-pnpm",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,14 +9,18 @@
   },
   "volta": {
     "node": "22.13.1",
-    "npm": "10.9.2"
+    "pnpm": "9.15.4"
   },
   "dependencies": {
-    "monaco-languageclient": "~9.2.0-next.1"
+    "monaco-languageclient": "~9.2.0-next.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@13.0.0"
   },
-  "overrides": {
-    "vscode": {
-      "@codingame/monaco-vscode-extension-api": "13.0.0"
-    }
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "showconfig": "tsc --showconfig",
+    "verify:ci": "pnpm install && pnpm run build"
   }
 }
