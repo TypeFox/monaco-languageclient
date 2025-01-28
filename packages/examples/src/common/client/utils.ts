@@ -9,8 +9,8 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 
-export const disableButton = (id: string, disabled: boolean) => {
-    const button = document.getElementById(id) as HTMLButtonElement | null;
+export const disableElement = (id: string, disabled: boolean) => {
+    const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;
     if (button !== null) {
         button.disabled = disabled;
     }

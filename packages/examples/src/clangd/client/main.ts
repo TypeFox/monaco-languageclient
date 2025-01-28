@@ -11,7 +11,7 @@ import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
-import { createDefaultWorkspaceFile, disableButton } from '../../common/client/utils.js';
+import { createDefaultWorkspaceFile, disableElement } from '../../common/client/utils.js';
 import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -58,14 +58,14 @@ export const runClangdWrapper = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            disableButton('button-start', true);
-            disableButton('button-start-fresh', true);
+            disableElement('button-start', true);
+            disableElement('button-start-fresh', true);
             await startWrapper();
         });
         document.querySelector('#button-start-fresh')?.addEventListener('click', async () => {
             initConfig.clearIndexedDb = true;
-            disableButton('button-start', true);
-            disableButton('button-start-fresh', true);
+            disableElement('button-start', true);
+            disableElement('button-start-fresh', true);
             await startWrapper();
         });
     } catch (e) {

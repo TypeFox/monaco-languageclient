@@ -9,6 +9,7 @@ import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wr
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';
+import { disableElement } from '../common/client/utils.js';
 
 export const runApplicationPlaygroundReact = async () => {
 
@@ -43,6 +44,7 @@ export const runApplicationPlaygroundReact = async () => {
             } else {
                 root.render(<App />);
             }
+            disableElement('checkbox-strictmode', true);
         });
     } catch (e) {
         console.error(e);
