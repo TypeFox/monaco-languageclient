@@ -5,6 +5,7 @@
   "type": "module",
   "engines": {
     "node": ">=18.19.0",
+    "npm": ">=10.2.3",
     "yarn": ">=4.6.0"
   },
   "volta": {
@@ -13,24 +14,25 @@
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "13.1.1",
-    "@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common": "13.1.1",
     "@codingame/monaco-vscode-configuration-service-override": "13.1.1",
     "@codingame/monaco-vscode-editor-api": "13.1.1",
+    "@codingame/monaco-vscode-editor-service-override": "13.1.1",
+    "@codingame/monaco-vscode-extension-api": "13.1.1",
     "@codingame/monaco-vscode-extensions-service-override": "13.1.1",
     "@codingame/monaco-vscode-languages-service-override": "13.1.1",
     "@codingame/monaco-vscode-localization-service-override": "13.1.1",
     "@codingame/monaco-vscode-log-service-override": "13.1.1",
     "@codingame/monaco-vscode-model-service-override": "13.1.1",
-    "@typefox/monaco-editor-react": "~6.1.0",
-    "monaco-editor-wrapper": "~6.1.0",
-    "monaco-languageclient": "~9.1.0",
-    "monaco-languageclient-examples": "~2025.1.1",
+    "@typefox/monaco-editor-react": "~6.2.0-next.5",
+    "monaco-editor-wrapper": "~6.2.0-next.5",
+    "monaco-languageclient": "~9.2.0-next.5",
+    "monaco-languageclient-examples": "~2025.1.8",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@13.1.1",
     "vscode-ws-jsonrpc": "~3.4.0"
   },
   "devDependencies": {
     "shx": "~0.3.4",
-    "vite": "~6.0.7"
+    "vite": "~6.0.11"
   },
   "scripts": {
     "verify": "yarn install && yarn run build && yarn run start",

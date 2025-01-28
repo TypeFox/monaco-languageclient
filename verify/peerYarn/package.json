@@ -5,7 +5,8 @@
   "type": "module",
   "engines": {
     "node": ">=18.19.0",
-    "npm": ">=10.2.3"
+    "npm": ">=10.2.3",
+    "yarn": ">=4.6.0"
   },
   "volta": {
     "node": "22.13.1",
@@ -27,7 +28,6 @@
     "vscode-languageclient": "~9.0.1"
   },
   "devDependencies": {
-    "@types/vscode": "~1.96.0",
     "typescript": "~5.7.3"
   },
   "scripts": {
