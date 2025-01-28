@@ -4,7 +4,7 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { RegisterLocalProcessExtensionResult } from 'vscode/extensions';
+import { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { ConfigResult } from './config.js';
 

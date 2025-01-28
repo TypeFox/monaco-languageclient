@@ -6,7 +6,7 @@
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
-import { disableButton } from '../../common/client/utils.js';
+import { disableElement } from '../../common/client/utils.js';
 
 import workerUrl from './worker/langium-server?worker&url';
 
@@ -32,7 +32,7 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
 
         const startLangiumClient = async () => {
             if (checkStarted()) return;
-            disableButton('button-start', true);
+            disableElement('button-start', true);
 
             const langiumWorker = loadLangiumWorker();
 
@@ -52,7 +52,7 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
             wrapper.reportStatus();
             await wrapper.dispose();
             wrapper = undefined;
-            disableButton('button-start', false);
+            disableElement('button-start', false);
         };
 
         document.querySelector('#button-start')?.addEventListener('click', startLangiumClient);

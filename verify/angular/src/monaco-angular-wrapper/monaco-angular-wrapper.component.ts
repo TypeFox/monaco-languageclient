@@ -12,7 +12,7 @@ import {
     Output,
 } from '@angular/core';
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import {
     MonacoEditorLanguageClientWrapper,
     TextChanges,

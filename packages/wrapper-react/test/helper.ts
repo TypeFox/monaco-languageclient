@@ -7,11 +7,8 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({
-        workerOverrides: {
-            ignoreMapping: true,
-            workerLoaders: {
-                TextEditorWorker: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-            }
+        workerLoaders: {
+            TextEditorWorker: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
         }
     });
 };

@@ -8,11 +8,11 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.13.0",
+    "node": "22.13.1",
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.1.2"
+    "monaco-languageclient-examples": "~2025.1.8"
   },
   "devDependencies": {
     "shx": "~0.3.4",

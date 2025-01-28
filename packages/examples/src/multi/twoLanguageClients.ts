@@ -8,13 +8,13 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { CodePlusFileExt, configureAndInitVscodeApi, disposeLanguageClients, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers, disableButton } from '../common/client/utils.js';
+import { configureMonacoWorkers, disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 
 export const runMultipleLanguageClientsExample = async () => {
-    disableButton('button-flip', true);
+    disableElement('button-flip', true);
 
     const textJson = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -106,10 +106,11 @@ print("Hello Moon!")
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;
             }
 
-            disableButton('button-flip', false);
+            disableElement('button-flip', false);
+            disableElement('checkbox-extlc', true);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            disableButton('button-flip', true);
+            disableElement('button-flip', true);
 
             wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
             if (wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally === true) {

@@ -9,6 +9,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
+import { disableElement } from '../../common/client/utils.js';
 
 export const runStatemachineReact = async () => {
     const wrapperConfig = await createLangiumGlobalConfig({
@@ -49,6 +50,7 @@ export const runStatemachineReact = async () => {
             } else {
                 root.render(<App />);
             }
+            disableElement('checkbox-strictmode', true);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {
             root.render([]);

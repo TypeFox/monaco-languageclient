@@ -2,10 +2,14 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [6.2.0-next.5] - 2025-01-28
+
+- Updated to `monaco-editor-wrapper@9.2.0-next.5` and `monaco-languageclient@6.2.0-next.5`. Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+
 ## [6.1.1] - 2025-01-20
 
 - View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
--
+
 ## [6.1.0] - 2025-01-10
 
 - `@typefox/monaco-editor-react` now works with views service [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)

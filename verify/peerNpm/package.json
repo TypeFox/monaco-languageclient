@@ -1,0 +1,26 @@
+{
+  "name": "@typefox/peer-check-npm",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.13.1",
+    "npm": "10.9.2"
+  },
+  "dependencies": {
+    "monaco-languageclient": "~9.2.0-next.5",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@13.1.1"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "showconfig": "tsc --showconfig",
+    "verify:ci": "npm install && npm run build"
+  }
+}

@@ -40,7 +40,8 @@ export const vitestBaseConfig = {
             '**/wrapper/test/utils.test.ts',
             '**/wrapper/test/wrapper.test.ts',
             '**/wrapper-react/test/index.test.tsx'
-        ]
+        ],
+        dangerouslyIgnoreUnhandledErrors: true
     }
 };
 

@@ -4,11 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { createModelReference } from 'vscode/monaco';
+import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import { describe, expect, test } from 'vitest';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
-import { IConfigurationService, StandaloneServices } from 'vscode/services';
+import { IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 

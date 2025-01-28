@@ -11,6 +11,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import badPyCode from '../../../resources/python/bad.py?raw';
+import { disableElement } from '../../common/client/utils.js';
 
 export const runPythonReact = async () => {
     const badPyUri = vscode.Uri.file('/workspace/bad.py');
@@ -50,6 +51,7 @@ export const runPythonReact = async () => {
             } else {
                 root.render(<App />);
             }
+            disableElement('checkbox-strictmode', true);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {
             root.render([]);

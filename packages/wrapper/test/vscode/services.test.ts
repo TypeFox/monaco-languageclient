@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { augmentVscodeApiConfig } from 'monaco-editor-wrapper/vscode/services';
 
 describe('createUrl', () => {

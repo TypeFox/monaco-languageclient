@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { createUrl } from 'monaco-languageclient/tools';
 import { WrapperConfig } from 'monaco-editor-wrapper';

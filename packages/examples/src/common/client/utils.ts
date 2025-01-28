@@ -9,8 +9,8 @@ import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 
-export const disableButton = (id: string, disabled: boolean) => {
-    const button = document.getElementById(id) as HTMLButtonElement | null;
+export const disableElement = (id: string, disabled: boolean) => {
+    const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;
     if (button !== null) {
         button.disabled = disabled;
     }
@@ -18,12 +18,9 @@ export const disableButton = (id: string, disabled: boolean) => {
 
 export const configureMonacoWorkers = (logger?: Logger) => {
     useWorkerFactory({
-        workerOverrides: {
-            ignoreMapping: true,
-            workerLoaders: {
-                TextEditorWorker: () => new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-                TextMateWorker: () => new Worker(new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url), { type: 'module' })
-            }
+        workerLoaders: {
+            TextEditorWorker: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
+            TextMateWorker: () => new Worker(new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url), { type: 'module' })
         },
         logger
     });

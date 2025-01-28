@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { createModelReference } from 'vscode/monaco';
+import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';

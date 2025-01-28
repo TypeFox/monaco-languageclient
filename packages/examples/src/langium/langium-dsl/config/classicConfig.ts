@@ -5,7 +5,7 @@
 
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { Logger } from 'monaco-languageclient/tools';
 import { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
@@ -42,6 +42,9 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
             },
             monacoWorkerFactory: (logger?: Logger) => {
                 useWorkerFactory({
+                    workerLoaders: {
+                        TextEditorWorker: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
+                    },
                     logger
                 });
             }
