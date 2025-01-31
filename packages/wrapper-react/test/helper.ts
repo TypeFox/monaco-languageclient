@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 
 export const configureMonacoWorkers = () => {
     useWorkerFactory({

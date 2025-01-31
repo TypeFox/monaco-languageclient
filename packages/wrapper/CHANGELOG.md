@@ -2,6 +2,11 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.2.1] - 2025-01-31
+
+- Moved workerFactory from `monaco-editor-wrapper` to `monaco-languageclient`
+- Updated to `monaco-languageclient@9.2.1`.
+
 ## [6.2.0] - 2025-01-31
 
 - Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)

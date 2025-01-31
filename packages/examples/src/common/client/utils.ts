@@ -5,7 +5,7 @@
 
 import { Uri } from 'vscode';
 import { Logger } from 'monaco-languageclient/tools';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
+import { useWorkerFactory, WorkerLoader } from 'monaco-languageclient/workerFactory';
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 
@@ -16,35 +16,28 @@ export const disableElement = (id: string, disabled: boolean) => {
     }
 };
 
+export const defineDefaultWorkerLoaders: () => Record<string, WorkerLoader> = () => {
+    return {
+        // if you import monaco api as 'monaco-editor': monaco-editor/esm/vs/editor/editor.worker.js
+        TextEditorWorker: () => new Worker(
+            new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
+            { type: 'module' }
+        ),
+        TextMateWorker: () => new Worker(
+            new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
+            { type: 'module' }
+        ),
+        // these are other possible workers not configured by default
+        OutputLinkDetectionWorker: undefined,
+        LanguageDetectionWorker: undefined,
+        NotebookEditorWorker: undefined,
+        LocalFileSearchWorker: undefined
+    }
+};
+
 export const configureMonacoWorkers = (logger?: Logger) => {
     useWorkerFactory({
-        workerLoaders: {
-            // if you import monaco api as 'monaco-editor': monaco-editor/esm/vs/editor/editor.worker.js
-            TextEditorWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
-                { type: 'module' }
-            ),
-            TextMateWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
-                { type: 'module' }
-            ),
-            OutputLinkDetectionWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-output-service-override/worker', import.meta.url),
-                { type: 'module' }
-            ),
-            LanguageDetectionWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-language-detection-worker-service-override/worker', import.meta.url),
-                { type: 'module' }
-            ),
-            NotebookEditorWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-notebook-service-override/worker', import.meta.url),
-                { type: 'module' }
-            ),
-            LocalFileSearchWorker: () => new Worker(
-                new URL('@codingame/monaco-vscode-search-service-override/worker', import.meta.url),
-                { type: 'module' }
-            )
-        },
+        workerLoaders: defineDefaultWorkerLoaders(),
         logger
     });
 };

@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { WrapperConfig } from 'monaco-editor-wrapper';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');

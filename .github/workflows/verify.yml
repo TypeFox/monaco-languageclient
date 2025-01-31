@@ -36,4 +36,5 @@ jobs:
     - name: Execute verification
       shell: bash
       run: |
+        bash ./verify/buildPeers.sh
         bash ./verify/buildAll.sh

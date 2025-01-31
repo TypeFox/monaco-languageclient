@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "9.2.0",
+  "version": "9.2.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -35,6 +35,10 @@
     "./fs": {
       "types": "./lib/fs/index.d.ts",
       "default": "./lib/fs/index.js"
+    },
+    "./workerFactory": {
+      "types": "./lib/workerFactory.d.ts",
+      "default": "./lib/workerFactory.js"
     }
   },
   "typesVersions": {
@@ -50,6 +54,9 @@
       ],
       "fs": [
         "lib/fs/index"
+      ],
+      "workerFactory": [
+        "lib/workerFactory"
       ]
     }
   },

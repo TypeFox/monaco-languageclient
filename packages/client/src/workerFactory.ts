@@ -6,10 +6,10 @@
 import { initEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
 import { Logger } from 'monaco-languageclient/tools';
 
-export type WorkerLoader = () => Worker;
+export type WorkerLoader = (() => Worker) | undefined;
 
 export interface WorkerFactoryConfig {
-    workerLoaders: Partial<Record<string, WorkerLoader>>;
+    workerLoaders: Record<string, WorkerLoader>;
     logger?: Logger;
 }
 
@@ -20,11 +20,12 @@ export const useWorkerFactory = (config: WorkerFactoryConfig) => {
         config.logger?.info(`getWorker: moduleId: ${moduleId} label: ${label}`);
 
         const workerFunc = config.workerLoaders[label];
-        if (workerFunc !== undefined) {
-            return workerFunc();
-        } else {
+        if (workerFunc === undefined) {
             throw new Error(`Unimplemented worker ${label} (${moduleId})`);
         }
+        return workerFunc();
     };
-    envEnhanced.getWorker = getWorker;
+    if (getWorker !== undefined) {
+        envEnhanced.getWorker = getWorker;
+    }
 };

@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.1.10] - 2025-01-31
+
+- Removed unneeded workers, but kept the names in the default definition without a Worker definition
+- Updated to `monaco-languageclient@9.2.1`, `monaco-editor-wrapper@6.2.1` and `@typefox/monaco-editor-react@6.2.1`.
+
 ## [2025.1.9] - 2025-01-31
 
 - Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)

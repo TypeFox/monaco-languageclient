@@ -2,6 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [6.2.1] - 2025-01-31
+
+- Moved workerFactory from `monaco-editor-wrapper` to `monaco-languageclient`
+- Updated to `monaco-languageclient@9.2.1` and `monaco-editor-wrapper@6.2.1`.
+
 ## [6.2.0] - 2025-01-31
 
 - Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)
@@ -12,7 +17,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
     - Some imports should be updated:
       - `vscode/*` => `@codingame/monaco-vscode-api/*`
       - `vscode/services` => `@codingame/monaco-vscode-api`
-- Updated to `monaco-languageclient@9.2.0` and `monaco-languageclient@6.2.0`.
+- Updated to `monaco-languageclient@9.2.0` and `monaco-editor-wrapper@6.2.0`.
 
 ## [6.1.1] - 2025-01-20
 
