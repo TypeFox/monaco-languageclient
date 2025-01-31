@@ -2265,14 +2265,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typefox/monaco-editor-react@npm:~6.2.0-next.5":
-  version: 6.2.0-next.5
-  resolution: "@typefox/monaco-editor-react@npm:6.2.0-next.5"
+"@typefox/monaco-editor-react@npm:~6.2.1":
+  version: 6.2.1
+  resolution: "@typefox/monaco-editor-react@npm:6.2.1"
   dependencies:
     "@codingame/monaco-vscode-editor-api": "npm:13.1.1"
-    monaco-editor-wrapper: "npm:~6.2.0-next.5"
+    monaco-editor-wrapper: "npm:~6.2.1"
     react: "npm:>=18.0.0 || <20.0.0"
-  checksum: 10c0/6386a1ad96d4774d720e02c123054d84904fcd57ffae4fc34e9e92660b409a7e1fec69245d8f50bedebaa793d0d2c170945cfee43c21b5dcb0c1814c689b7a38
+  checksum: 10c0/a00c91195b64866de02ec7698b1c706f296f99f9d9a9fcb978f91818ab085fc8d7dc89aafd7ad09211f36721f3209dbcc317238b4a89aa8438a4ae89d6f020fc
   languageName: node
   linkType: hard
 
@@ -3460,10 +3460,10 @@ __metadata:
     "@codingame/monaco-vscode-localization-service-override": "npm:13.1.1"
     "@codingame/monaco-vscode-log-service-override": "npm:13.1.1"
     "@codingame/monaco-vscode-model-service-override": "npm:13.1.1"
-    "@typefox/monaco-editor-react": "npm:~6.2.0-next.5"
-    monaco-editor-wrapper: "npm:~6.2.0-next.5"
-    monaco-languageclient: "npm:~9.2.0-next.5"
-    monaco-languageclient-examples: "npm:~2025.1.8"
+    "@typefox/monaco-editor-react": "npm:~6.2.1"
+    monaco-editor-wrapper: "npm:~6.2.1"
+    monaco-languageclient: "npm:~9.2.1"
+    monaco-languageclient-examples: "npm:~2025.1.10"
     shx: "npm:~0.3.4"
     vite: "npm:~6.0.11"
     vscode: "npm:@codingame/monaco-vscode-extension-api@13.1.1"
@@ -3471,9 +3471,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"monaco-editor-wrapper@npm:~6.2.0-next.5":
-  version: 6.2.0-next.5
-  resolution: "monaco-editor-wrapper@npm:6.2.0-next.5"
+"monaco-editor-wrapper@npm:~6.2.1":
+  version: 6.2.1
+  resolution: "monaco-editor-wrapper@npm:6.2.1"
   dependencies:
     "@codingame/monaco-vscode-api": "npm:13.1.1"
     "@codingame/monaco-vscode-configuration-service-override": "npm:13.1.1"
@@ -3500,18 +3500,18 @@ __metadata:
     "@codingame/monaco-vscode-theme-service-override": "npm:13.1.1"
     "@codingame/monaco-vscode-views-service-override": "npm:13.1.1"
     "@codingame/monaco-vscode-workbench-service-override": "npm:13.1.1"
-    monaco-languageclient: "npm:~9.2.0-next.5"
+    monaco-languageclient: "npm:~9.2.1"
     vscode: "npm:@codingame/monaco-vscode-extension-api@13.1.1"
     vscode-languageclient: "npm:~9.0.1"
     vscode-languageserver-protocol: "npm:~3.17.5"
     vscode-ws-jsonrpc: "npm:~3.4.0"
-  checksum: 10c0/c3d8af6510e993dfc0762d70a629919ee0191c325dc3c7bd563f02799ce5bbe885d4ea5de1b87c5068d3bd9e7d8ba61675bebb06b2b66fcc1b0ff8fd1b61e7ee
+  checksum: 10c0/5eedf9dad6533710e0709369d75dd1bc6b87b33e7867084489bf11a09a655529469880864284df4f7c26c25bf927540c9bc01d7ad0879ef891e5ab15155be4e7
   languageName: node
   linkType: hard
 
-"monaco-languageclient-examples@npm:~2025.1.8":
-  version: 2025.1.8
-  resolution: "monaco-languageclient-examples@npm:2025.1.8"
+"monaco-languageclient-examples@npm:~2025.1.10":
+  version: 2025.1.10
+  resolution: "monaco-languageclient-examples@npm:2025.1.10"
   dependencies:
     "@codingame/monaco-vscode-configuration-service-override": "npm:13.1.1"
     "@codingame/monaco-vscode-cpp-default-extension": "npm:13.1.1"
@@ -3541,14 +3541,14 @@ __metadata:
     "@codingame/monaco-vscode-typescript-basics-default-extension": "npm:13.1.1"
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "npm:13.1.1"
     "@codingame/monaco-vscode-views-service-override": "npm:13.1.1"
-    "@typefox/monaco-editor-react": "npm:~6.2.0-next.5"
+    "@typefox/monaco-editor-react": "npm:~6.2.1"
     cors: "npm:^2.8.5"
     express: "npm:~4.21.2"
     jszip: "npm:~3.10.1"
     langium: "npm:~3.3.1"
-    monaco-editor-wrapper: "npm:~6.2.0-next.5"
-    monaco-languageclient: "npm:~9.2.0-next.5"
-    pyright: "npm:~1.1.392"
+    monaco-editor-wrapper: "npm:~6.2.1"
+    monaco-languageclient: "npm:~9.2.1"
+    pyright: "npm:~1.1.393"
     react: "npm:~19.0.0"
     react-dom: "npm:~19.0.0"
     request-light: "npm:~0.8.0"
@@ -3560,13 +3560,13 @@ __metadata:
     vscode-ws-jsonrpc: "npm:~3.4.0"
     ws: "npm:~8.18.0"
     wtd-core: "npm:~4.0.1"
-  checksum: 10c0/003cc07103925fc787b1ddf957b4f7231d3bd00d2606aa2a8a81ad265225a8078bf595ac309d096ab7206d2dd3da0310d9a9372e8ec4a60130592151d9afa897
+  checksum: 10c0/eea02a660e0812cce4495696761aef05a398f8fd0d4cc13a8a6355b41783070551a8f356c6ca62408e33d12a22a23f22269e299f17cd510770f2a65ce7120efb
   languageName: node
   linkType: hard
 
-"monaco-languageclient@npm:~9.2.0-next.5":
-  version: 9.2.0-next.5
-  resolution: "monaco-languageclient@npm:9.2.0-next.5"
+"monaco-languageclient@npm:~9.2.1":
+  version: 9.2.1
+  resolution: "monaco-languageclient@npm:9.2.1"
   dependencies:
     "@codingame/monaco-vscode-api": "npm:~13.1.1"
     "@codingame/monaco-vscode-configuration-service-override": "npm:~13.1.1"
@@ -3580,7 +3580,7 @@ __metadata:
     "@codingame/monaco-vscode-model-service-override": "npm:~13.1.1"
     vscode: "npm:@codingame/monaco-vscode-extension-api@13.1.1"
     vscode-languageclient: "npm:~9.0.1"
-  checksum: 10c0/0ce0498e53786243a361d9486b92689844488b4559d01a110bc13bf37c644c09d1fd0a989af74a17b8ce7cfbbb22a64e120265e43da5920bce66efca7d4c668a
+  checksum: 10c0/fb1f574a681e2ee64ce3f60a098a2688d1cb522eaef8711de37feff96672e790bc1bf97afa26634574747af39cb27a99ed9ff39d026bf3163d913ffb660db36a
   languageName: node
   linkType: hard
 
@@ -3802,9 +3802,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pyright@npm:~1.1.392":
-  version: 1.1.392
-  resolution: "pyright@npm:1.1.392"
+"pyright@npm:~1.1.393":
+  version: 1.1.393
+  resolution: "pyright@npm:1.1.393"
   dependencies:
     fsevents: "npm:~2.3.3"
   dependenciesMeta:
@@ -3813,7 +3813,7 @@ __metadata:
   bin:
     pyright: index.js
     pyright-langserver: langserver.index.js
-  checksum: 10c0/f2d51519b6f1b8fa219b4a09621959408e8d3ba13e8e87eea7d47e224f5dc961716b509aa9da39e49cefa25423eefebb052bc369ae7b0abc9f36e9fe522c40db
+  checksum: 10c0/ecd9b1c2a8343ffa16bd918e19df108bb1db60af82e4e51e3f5558c0345d9f941bb226c75bd9d499ddc36d075780ac12206c9b4e0d8f3e2f6c1e1f6dacbf9045
   languageName: node
   linkType: hard
 

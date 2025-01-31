@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       monaco-languageclient-examples:
-        specifier: ~2025.1.8
-        version: 2025.1.8
+        specifier: ~2025.1.10
+        version: 2025.1.10
     devDependencies:
       shx:
         specifier: ~0.3.4
@@ -752,8 +752,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@typefox/monaco-editor-react@6.2.0-next.5':
-    resolution: {integrity: sha512-VtDtnxeDA/03eycTfMzCZS/Oay/+204z3JmGJd39X9LCWuCPUirRAfDVHIV4bohLjG79cADIf29gy5ZWQOX2rg==}
+  '@typefox/monaco-editor-react@6.2.1':
+    resolution: {integrity: sha512-fVvnBZZRw/TK0Kxjeq0YUoRRa9gNOpjCouBKOUs7H8kft3akl7oo7W13vP6R/QiJOQtOC5LY8qayHX1mfAqjcA==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
   '@types/estree@1.0.6':
@@ -1028,16 +1028,16 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monaco-editor-wrapper@6.2.0-next.5:
-    resolution: {integrity: sha512-lEF1Je+WqiAjfgFsxKF0dZL3u26dmkPqUAcNIcMuiLiBo00up7NQjuX0cCGrE0vGLFoAfBOscLfo2RA9O9SIcQ==}
+  monaco-editor-wrapper@6.2.1:
+    resolution: {integrity: sha512-god7F6fEbcVICRZ+OlCVAhzmbHk6TaP3/lf5BxmmifOqiEeziU7LRHSxKLdhSzFp86XU2CtXoVyTGkD7wA632w==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
-  monaco-languageclient-examples@2025.1.8:
-    resolution: {integrity: sha512-OIkwweCnv12VHchRXcCQZTcYZv/GH6U1jgFFDeX9tthrmxUdiSesMKSD0f0qlWNeA6yDNtfXI5uQYs5y9WfnJw==}
+  monaco-languageclient-examples@2025.1.10:
+    resolution: {integrity: sha512-0Dc58sWaVJ7fLRJ20iFtWuSFxdmG3mZewYKogwIxVEVVGepPHUB53kAVqY8qkrCWl/Ifa+a1vgjR2hFY4X/EjQ==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
-  monaco-languageclient@9.2.0-next.5:
-    resolution: {integrity: sha512-STIVS9KKT7OoxjF3SXMygcr4HPqDPNPSJT1NsigMUCZHbOIuIjxfWBF30e49UMy9bJ/j5gDrDSZWQhrVCzFKmw==}
+  monaco-languageclient@9.2.1:
+    resolution: {integrity: sha512-mMFs9lWRRPQsL8PmQZM1LFMDwINc8ODADgfa5Y8G4u+v9uENzRzrTyosSt/j05atpgx9CpdYlWSDLhdoZYQQiQ==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
   ms@2.0.0:
@@ -1101,8 +1101,8 @@ packages:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
 
-  pyright@1.1.392:
-    resolution: {integrity: sha512-ilLW65Qh7h+PxxDY5M7REv8fPw2of9RRlTLEKUJnovxD9pVoImf1Q8h4nUoHNkxOLTurvTRA/HGcZhwAB9L5IA==}
+  pyright@1.1.393:
+    resolution: {integrity: sha512-v/pB9W2RXelj7Ye+3xTmsJdrgojcp77fQqE0Y+uXsSaRq5WQKgtLcuAE4tXF7YKSwSKmc4YiqlliZvp7OFh71w==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -2564,10 +2564,10 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.28.1':
     optional: true
 
-  '@typefox/monaco-editor-react@6.2.0-next.5':
+  '@typefox/monaco-editor-react@6.2.1':
     dependencies:
       '@codingame/monaco-vscode-editor-api': 13.1.1
-      monaco-editor-wrapper: 6.2.0-next.5
+      monaco-editor-wrapper: 6.2.1
       react: 19.0.0
 
   '@types/estree@1.0.6': {}
@@ -2889,7 +2889,7 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monaco-editor-wrapper@6.2.0-next.5:
+  monaco-editor-wrapper@6.2.1:
     dependencies:
       '@codingame/monaco-vscode-api': 13.1.1
       '@codingame/monaco-vscode-configuration-service-override': 13.1.1
@@ -2916,13 +2916,13 @@ snapshots:
       '@codingame/monaco-vscode-theme-service-override': 13.1.1
       '@codingame/monaco-vscode-views-service-override': 13.1.1
       '@codingame/monaco-vscode-workbench-service-override': 13.1.1
-      monaco-languageclient: 9.2.0-next.5
+      monaco-languageclient: 9.2.1
       vscode: '@codingame/monaco-vscode-extension-api@13.1.1'
       vscode-languageclient: 9.0.1
       vscode-languageserver-protocol: 3.17.5
       vscode-ws-jsonrpc: 3.4.0
 
-  monaco-languageclient-examples@2025.1.8:
+  monaco-languageclient-examples@2025.1.10:
     dependencies:
       '@codingame/monaco-vscode-configuration-service-override': 13.1.1
       '@codingame/monaco-vscode-cpp-default-extension': 13.1.1
@@ -2952,14 +2952,14 @@ snapshots:
       '@codingame/monaco-vscode-typescript-basics-default-extension': 13.1.1
       '@codingame/monaco-vscode-typescript-language-features-default-extension': 13.1.1
       '@codingame/monaco-vscode-views-service-override': 13.1.1
-      '@typefox/monaco-editor-react': 6.2.0-next.5
+      '@typefox/monaco-editor-react': 6.2.1
       cors: 2.8.5
       express: 4.21.2
       jszip: 3.10.1
       langium: 3.3.1
-      monaco-editor-wrapper: 6.2.0-next.5
-      monaco-languageclient: 9.2.0-next.5
-      pyright: 1.1.392
+      monaco-editor-wrapper: 6.2.1
+      monaco-languageclient: 9.2.1
+      pyright: 1.1.393
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       request-light: 0.8.0
@@ -2976,7 +2976,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  monaco-languageclient@9.2.0-next.5:
+  monaco-languageclient@9.2.1:
     dependencies:
       '@codingame/monaco-vscode-api': 13.1.1
       '@codingame/monaco-vscode-configuration-service-override': 13.1.1
@@ -3036,7 +3036,7 @@ snapshots:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
-  pyright@1.1.392:
+  pyright@1.1.393:
     optionalDependencies:
       fsevents: 2.3.3
 

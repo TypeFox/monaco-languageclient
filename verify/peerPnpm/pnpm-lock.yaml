@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       monaco-languageclient:
-        specifier: ~9.2.0-next.5
-        version: 9.2.0-next.5
+        specifier: ~9.2.1
+        version: 9.2.1
       vscode:
         specifier: npm:@codingame/monaco-vscode-extension-api@13.1.1
         version: '@codingame/monaco-vscode-extension-api@13.1.1'
@@ -301,8 +301,8 @@ packages:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
 
-  monaco-languageclient@9.2.0-next.5:
-    resolution: {integrity: sha512-STIVS9KKT7OoxjF3SXMygcr4HPqDPNPSJT1NsigMUCZHbOIuIjxfWBF30e49UMy9bJ/j5gDrDSZWQhrVCzFKmw==}
+  monaco-languageclient@9.2.1:
+    resolution: {integrity: sha512-mMFs9lWRRPQsL8PmQZM1LFMDwINc8ODADgfa5Y8G4u+v9uENzRzrTyosSt/j05atpgx9CpdYlWSDLhdoZYQQiQ==}
     engines: {node: '>=18.19.0', npm: '>=10.2.3'}
 
   semver@7.6.3:
@@ -916,7 +916,7 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  monaco-languageclient@9.2.0-next.5:
+  monaco-languageclient@9.2.1:
     dependencies:
       '@codingame/monaco-vscode-api': 13.1.1
       '@codingame/monaco-vscode-configuration-service-override': 13.1.1
