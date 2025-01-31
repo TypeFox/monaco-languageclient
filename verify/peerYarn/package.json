@@ -23,7 +23,7 @@
     "@codingame/monaco-vscode-localization-service-override": "13.1.1",
     "@codingame/monaco-vscode-log-service-override": "13.1.1",
     "@codingame/monaco-vscode-model-service-override": "13.1.1",
-    "monaco-languageclient": "~9.2.0-next.5",
+    "monaco-languageclient": "~9.2.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@13.1.1",
     "vscode-languageclient": "~9.0.1"
   },

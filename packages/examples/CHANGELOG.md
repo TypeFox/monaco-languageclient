@@ -2,6 +2,18 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.1.9] - 2025-01-31
+
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)
+  - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+  - Breaking changes not in this API, but when using `@monaco-vscode-api`:
+    - `@codingame/monaco-vscode-api` should not be installed as vscode anymore
+    - `@codingame/monaco-vscode-extension-api` can optionally be installed as `vscode` to use the extension api from the main thread
+    - Some imports should be updated:
+      - `vscode/*` => `@codingame/monaco-vscode-api/*`
+      - `vscode/services` => `@codingame/monaco-vscode-api`
+- Updated to `monaco-languageclient@9.2.0`, `monaco-editor-wrapper@6.2.0` and `@typefox/monaco-editor-react@6.2.0`.
+
 ## [2025.1.8] - 2025-01-28
 
 - Updated to `monaco-languageclient@9.2.0-next.5`, `monaco-editor-wrapper@6.2.0-next.5` and `@typefox/monaco-editor-react@6.2.0-next.5`.

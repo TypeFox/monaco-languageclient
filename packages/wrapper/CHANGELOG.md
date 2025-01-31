@@ -2,9 +2,18 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.2.0-next.5] - 2025-01-28
+## [6.2.0] - 2025-01-31
 
-- Updated to `monaco-languageclient@9.2.0-next.5`. Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)
+  - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+  - Breaking changes not in this API, but when using `@monaco-vscode-api`:
+    - `@codingame/monaco-vscode-api` should not be installed as vscode anymore
+    - `@codingame/monaco-vscode-extension-api` can optionally be installed as `vscode` to use the extension api from the main thread
+    - Some imports should be updated:
+      - `vscode/*` => `@codingame/monaco-vscode-api/*`
+      - `vscode/services` => `@codingame/monaco-vscode-api`
+- Updated to `monaco-languageclient@9.2.0`.
+- Removed the pre-bundled workers and the corresponding export `monaco-editor-wrapper/workers/module/*`. You have to define your own imports as done [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/src/common/client/utils.ts#L19).
 
 ## [6.1.1] - 2025-01-20
 
