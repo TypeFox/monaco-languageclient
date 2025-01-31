@@ -35,6 +35,7 @@ export default [{
         '**/production/**/*',
         '**/.next/**/*',
         '**/*env.d.ts',
+        '**/.pnp.cjs'
     ],
 }, ...compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended'), {
     files: [

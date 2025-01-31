@@ -32,7 +32,7 @@ export const defineDefaultWorkerLoaders: () => Record<string, WorkerLoader> = ()
         LanguageDetectionWorker: undefined,
         NotebookEditorWorker: undefined,
         LocalFileSearchWorker: undefined
-    }
+    };
 };
 
 export const configureMonacoWorkers = (logger?: Logger) => {

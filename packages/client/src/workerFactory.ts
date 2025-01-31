@@ -25,7 +25,5 @@ export const useWorkerFactory = (config: WorkerFactoryConfig) => {
         }
         return workerFunc();
     };
-    if (getWorker !== undefined) {
-        envEnhanced.getWorker = getWorker;
-    }
+    envEnhanced.getWorker = getWorker;
 };

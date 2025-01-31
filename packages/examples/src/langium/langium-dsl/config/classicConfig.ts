@@ -15,7 +15,7 @@ import { defineDefaultWorkerLoaders } from '../../../common/client/utils.js';
 
 export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<WrapperConfig> => {
     const workerLoaders = defineDefaultWorkerLoaders();
-    workerLoaders.TextMateWorker = undefined
+    workerLoaders.TextMateWorker = undefined;
     return {
         $type: 'classic',
         htmlContainer: document.getElementById('monaco-editor-root')!,
