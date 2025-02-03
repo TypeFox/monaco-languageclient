@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.2.1] - 2025-02-03
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.2`.
+- Updated to `monaco-languageclient@9.2.2`, `monaco-editor-wrapper@6.2.2` and `@typefox/monaco-editor-react@6.2.2`.
+
 ## [2025.1.10] - 2025-01-31
 
 - Removed unneeded workers, but kept the names in the default definition without a Worker definition
