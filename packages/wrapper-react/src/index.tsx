@@ -4,7 +4,7 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useRef } from 'react';
 import { didModelContentChange, MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
 
 export type MonacoEditorProps = {
@@ -29,7 +29,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
-    const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
+    const onTextChangedSubscriptions = useRef<monaco.IDisposable[]>([]);
 
     useEffect(() => {
         return () => {
@@ -95,7 +95,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                                 didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
                             }));
                         }
-                        setOnTextChangedSubscriptions(newSubscriptions);
+                        onTextChangedSubscriptions.current = newSubscriptions;
                         // do it initially
                         didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
                     }
@@ -137,10 +137,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, []);
 
     const disposeOnTextChanged = useCallback(() => {
-        for (const subscription of onTextChangedSubscriptions) {
+        for (const subscription of onTextChangedSubscriptions.current) {
             subscription.dispose();
         }
-        setOnTextChangedSubscriptions([]);
+        onTextChangedSubscriptions.current = [];
     }, []);
 
     return (
