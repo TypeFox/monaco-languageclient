@@ -5,7 +5,7 @@
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import 'vscode/localExtensionHost';
-import { initialize, IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api';
+import { initialize, type IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
@@ -13,8 +13,8 @@ import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-serv
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
-import { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench';
-import { Logger } from 'monaco-languageclient/tools';
+import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench';
+import type { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 import { setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';

@@ -7,7 +7,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-groovy-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 

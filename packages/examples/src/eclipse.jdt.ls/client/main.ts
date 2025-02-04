@@ -8,7 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';

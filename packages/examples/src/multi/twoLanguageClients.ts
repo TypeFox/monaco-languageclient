@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { CodePlusFileExt, configureAndInitVscodeApi, disposeLanguageClients, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { type CodePlusFileExt, configureAndInitVscodeApi, disposeLanguageClients, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers, disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 

@@ -6,7 +6,7 @@
 /// <reference lib="WebWorker" />
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js';
-import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
+import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 import { WORKSPACE_PATH } from '../definitions.js';
 import { JsonStream } from './json_stream.js';
 import { WorkerRemoteMessageChannelFs } from './workerRemoteMessageChannelFs.js';

@@ -8,7 +8,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper, TextChanges } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import { disableElement } from '../../common/client/utils.js';

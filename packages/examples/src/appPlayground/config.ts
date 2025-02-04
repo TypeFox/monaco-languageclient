@@ -31,7 +31,7 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/s
 import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 
 export type ConfigResult = {

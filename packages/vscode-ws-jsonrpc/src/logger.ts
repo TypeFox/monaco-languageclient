@@ -2,7 +2,7 @@
  * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { Logger } from 'vscode-jsonrpc';
+import type { Logger } from 'vscode-jsonrpc';
 
 export class ConsoleLogger implements Logger {
     public error(message: string): void {

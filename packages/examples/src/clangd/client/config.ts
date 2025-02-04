@@ -15,7 +15,7 @@ import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent
 import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';

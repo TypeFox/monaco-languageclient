@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { Disposable } from 'vscode-jsonrpc';
-import { DataCallback, AbstractMessageReader, MessageReader } from 'vscode-jsonrpc/lib/common/messageReader.js';
-import { IWebSocket } from './socket.js';
+import { type DataCallback, AbstractMessageReader, MessageReader } from 'vscode-jsonrpc/lib/common/messageReader.js';
+import type { IWebSocket } from './socket.js';
 
 export class WebSocketMessageReader extends AbstractMessageReader implements MessageReader {
     protected readonly socket: IWebSocket;

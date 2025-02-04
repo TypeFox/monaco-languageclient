@@ -6,13 +6,13 @@
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { DisposableStore } from '@codingame/monaco-vscode-api/monaco';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { registerExtension, IExtensionManifest, ExtensionHostKind, RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import { registerExtension, type IExtensionManifest, ExtensionHostKind, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
-import { initServices, InitServicesInstructions, VscodeApiConfig } from 'monaco-languageclient/vscode/services';
-import { Logger, ConsoleLogger } from 'monaco-languageclient/tools';
-import { augmentVscodeApiConfig, checkServiceConsistency, OverallConfigType, VscodeServicesConfig } from './vscode/services.js';
-import { CodeResources, EditorApp, EditorAppConfig, ModelRefs, TextContents, TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
-import { LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+import { initServices, type InitServicesInstructions, type VscodeApiConfig } from 'monaco-languageclient/vscode/services';
+import { type Logger, ConsoleLogger } from 'monaco-languageclient/tools';
+import { augmentVscodeApiConfig, checkServiceConsistency, type OverallConfigType, type VscodeServicesConfig } from './vscode/services.js';
+import { type CodeResources, EditorApp, type EditorAppConfig, type ModelRefs, type TextContents, type TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
+import { type LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 
 export interface ExtensionConfig {
     config: IExtensionManifest | object;

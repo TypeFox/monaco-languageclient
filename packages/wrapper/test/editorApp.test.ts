@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { EditorApp, verifyUrlOrCreateDataUrl, EditorAppConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, verifyUrlOrCreateDataUrl, type EditorAppConfig, type WrapperConfig } from 'monaco-editor-wrapper';
 import { createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 
 const buildConfig = (): WrapperConfig => {

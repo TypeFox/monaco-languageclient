@@ -2,6 +2,12 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [6.2.3] - 2025-02-04
+
+- clean subscriptions in react [#839](https://github.com/TypeFox/monaco-languageclient/pull/839)
+- Updated to `monaco-languageclient@9.2.3` and `monaco-editor-wrapper@6.2.3`.
+- Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
+
 ## [6.2.2] - 2025-02-03
 
 - Updated to `monaco-languageclient@9.2.2` and `monaco-editor-wrapper@6.2.2`.
@@ -14,7 +20,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [6.2.0] - 2025-01-31
 
-- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/836)
   - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
   - Breaking changes not in this API, but when using `@monaco-vscode-api`:
     - `@codingame/monaco-vscode-api` should not be installed as vscode anymore

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [9.2.3] - 2025-02-04
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
+
 ## [9.2.2] - 2025-02-03
 
 - Updated all `@codingame/monaco-vscode` packages to `13.1.2`.
@@ -12,7 +16,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [9.2.0] - 2025-01-31
 
-- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/829)
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/836)
   - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
   - Breaking changes not in this API, but when using `@monaco-vscode-api`:
     - `@codingame/monaco-vscode-api` should not be installed as vscode anymore

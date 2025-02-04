@@ -3,8 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageConnection, createMessageConnection, Logger } from 'vscode-jsonrpc';
-import { IWebSocket } from './socket.js';
+import type { MessageConnection, Logger } from 'vscode-jsonrpc';
+import { createMessageConnection } from 'vscode-jsonrpc';
+import type { IWebSocket } from './socket.js';
 import { WebSocketMessageReader } from './reader.js';
 import { WebSocketMessageWriter } from './writer.js';
 

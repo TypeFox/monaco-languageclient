@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { initServices, MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscode/services';
+import { initServices, type MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscode/services';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 
 describe('VSCde services Tests', () => {
