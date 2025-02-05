@@ -73,6 +73,7 @@
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~13.1.6",
     "@codingame/monaco-vscode-cpp-default-extension": "~13.1.6",
+    "@codingame/monaco-vscode-debug-service-override": "~13.1.6",
     "@codingame/monaco-vscode-editor-api": "~13.1.6",
     "@codingame/monaco-vscode-environment-service-override": "~13.1.6",
     "@codingame/monaco-vscode-explorer-service-override": "~13.1.6",

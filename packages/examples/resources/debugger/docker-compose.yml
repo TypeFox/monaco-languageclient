@@ -11,7 +11,8 @@ services:
     platform: linux/amd64
     volumes:
       - ../python:/home/mlc/workspace
-      - ../../src/debugger:/home/mlc/server/src
+      # allow to override the server sources
+      - ../../src/debugger/server:/home/mlc/server/src
     ports:
       - 55555:5555
     tty: true

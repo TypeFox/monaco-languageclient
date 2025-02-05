@@ -39,6 +39,6 @@
     "tsx": "~4.19.2"
   },
   "scripts": {
-    "start": "npm i && vite-node src/debugServer.ts"
+    "start": "npm i && tsx src/debugServer.ts"
   }
 }

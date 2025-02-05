@@ -4,16 +4,85 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
+import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
+import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
+import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
+import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
+import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
+import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
+import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
+import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
+import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
+import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { createUrl } from 'monaco-languageclient/tools';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { configureMonacoWorkers } from '../../common/client/utils.js';
+import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../../common/client/utils.js';
+import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
+import helloPyCode from '../../../resources/python/hello.py?raw';
+import hello2PyCode from '../../../resources/python/hello2.py?raw';
+import badPyCode from '../../../resources/python/bad.py?raw';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 
-export const createWrapperConfig = (workspaceRoot: string, code: string, codeUri: string): WrapperConfig => {
+export type FileDefinition = {
+    uri: vscode.Uri;
+    code: string;
+}
+
+export type ConfigParams = {
+    languageId: string;
+    homeDir: string;
+    workspaceRoot: string;
+    workspaceFile: vscode.Uri;
+    htmlContainer?: HTMLElement;
+    debuggerUrl: string;
+    files: Map<string, FileDefinition>;
+}
+
+export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
+    return {
+        languageId: 'python',
+        homeDir,
+        workspaceRoot: `${homeDir}/workspace`,
+        workspaceFile: vscode.Uri.file(`${homeDir}/.vscode/workspace.code-workspace`),
+        htmlContainer,
+        debuggerUrl: 'ws://localhost:55555',
+        files: new Map<string, FileDefinition>()
+    };
+};
+
+export type PythonAppConfig = {
+    wrapperConfig: WrapperConfig;
+    configParams: ConfigParams;
+}
+
+export const createWrapperConfig = (): PythonAppConfig => {
+    const configParams = createDefaultConfigParams('/home/mlc', document.body);
+    const helloPyUri = vscode.Uri.file(`${configParams.workspaceRoot}/hello.py`);
+    const hello2PyUri = vscode.Uri.file(`${configParams.workspaceRoot}/hello2.py`);
+    const badPyUri = vscode.Uri.file(`${configParams.workspaceRoot}/bad.py`);
+
+    configParams.files.set('hello.py', { code: helloPyCode, uri: helloPyUri });
+    configParams.files.set('hello2.py', { code: hello2PyCode, uri: hello2PyUri });
+    configParams.files.set('bad.py', { code: badPyCode, uri: badPyUri });
+
+    const fileSystemProvider = new RegisteredFileSystemProvider(false);
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(helloPyUri, helloPyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(hello2PyUri, hello2PyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
+    fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, configParams.workspaceRoot));
+
+    registerFileSystemOverlay(1, fileSystemProvider);
+
     const url = createUrl({
         secured: false,
         host: 'localhost',
@@ -28,9 +97,9 @@ export const createWrapperConfig = (workspaceRoot: string, code: string, codeUri
     const reader = new WebSocketMessageReader(iWebSocket);
     const writer = new WebSocketMessageWriter(iWebSocket);
 
-    return {
+    const wrapperConfig: WrapperConfig = {
         $type: 'extended',
-        htmlContainer: document.getElementById('monaco-editor-root')!,
+        htmlContainer: configParams.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
             python: {
@@ -55,18 +124,36 @@ export const createWrapperConfig = (workspaceRoot: string, code: string, codeUri
                     messageTransports: { reader, writer }
                 },
                 clientOptions: {
-                    documentSelector: ['python'],
+                    documentSelector: [configParams.languageId],
                     workspaceFolder: {
                         index: 0,
-                        name: 'workspace',
-                        uri: vscode.Uri.parse(workspaceRoot)
+                        name: configParams.workspaceRoot,
+                        uri: vscode.Uri.parse(configParams.workspaceRoot)
                     },
                 }
             }
         },
         vscodeApiConfig: {
             serviceOverrides: {
-                ...getKeybindingsServiceOverride()
+                ...getConfigurationServiceOverride(),
+                ...getKeybindingsServiceOverride(),
+                ...getLifecycleServiceOverride(),
+                ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
+                ...getBannerServiceOverride(),
+                ...getStatusBarServiceOverride(),
+                ...getTitleBarServiceOverride(),
+                ...getExplorerServiceOverride(),
+                ...getRemoteAgentServiceOverride(),
+                ...getEnvironmentServiceOverride(),
+                ...getSecretStorageServiceOverride(),
+                ...getStorageServiceOverride(),
+                ...getSearchServiceOverride(),
+                ...getDebugServiceOverride()
+            },
+            viewsConfig: {
+                viewServiceType: 'ViewsService',
+                htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
+                viewsInitFunc: defaultViewsInit
             },
             userConfiguration: {
                 json: JSON.stringify({
@@ -75,16 +162,53 @@ export const createWrapperConfig = (workspaceRoot: string, code: string, codeUri
                     'editor.wordBasedSuggestions': 'off',
                     'editor.experimental.asyncTokenization': true
                 })
-            }
-        },
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: code,
-                    uri: codeUri
+            },
+            workspaceConfig: {
+                enableWorkspaceTrust: true,
+                windowIndicator: {
+                    label: 'mlc-python-example',
+                    tooltip: '',
+                    command: ''
+                },
+                workspaceProvider: {
+                    trusted: true,
+                    async open() {
+                        window.open(window.location.href);
+                        return true;
+                    },
+                    workspace: {
+                        workspaceUri: configParams.workspaceFile
+                    }
+                },
+                configurationDefaults: {
+                    'window.title': 'mlc-python-example${separator}${dirty}${activeEditorShort}'
+                },
+                productConfiguration: {
+                    nameShort: 'mlc-python-example',
+                    nameLong: 'mlc-python-example'
                 }
             },
+        },
+        extensions: [
+            {
+                config: {
+                    name: 'mlc-python-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    }
+                }
+            },
+            provideDebuggerExtensionConfig(configParams)
+        ],
+        editorAppConfig: {
             monacoWorkerFactory: configureMonacoWorkers
         }
+    };
+
+    return {
+        wrapperConfig,
+        configParams: configParams
     };
 };

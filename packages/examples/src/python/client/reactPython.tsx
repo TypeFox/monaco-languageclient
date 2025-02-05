@@ -1,28 +1,23 @@
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
- * ------------------------------------------------------------------------------------------ */
+* ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
-import { createWrapperConfig } from './config.js';
-import badPyCode from '../../../resources/python/bad.py?raw';
+import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
+import { createWrapperConfig  } from './config.js';
 import { disableElement } from '../../common/client/utils.js';
 
 export const runPythonReact = async () => {
-    const badPyUri = vscode.Uri.file('/workspace/bad.py');
-    const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
-    registerFileSystemOverlay(1, fileSystemProvider);
-
+    const appConfig = createWrapperConfig();
+    
     const onTextChanged = (textChanges: TextContents) => {
         console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
     };
-    const wrapperConfig = createWrapperConfig('/workspace', badPyCode, '/workspace/bad.py');
+
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
     try {
@@ -31,11 +26,13 @@ export const runPythonReact = async () => {
                 return (
                     <div style={{ 'height': '80vh', padding: '5px' }} >
                         <MonacoEditorReactComp
-                            wrapperConfig={wrapperConfig}
+                            wrapperConfig={appConfig.wrapperConfig}
                             style={{ 'height': '100%' }}
                             onTextChanged={onTextChanged}
-                            onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
+                            onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
                                 console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
+
+                                await vscode.commands.executeCommand('workbench.view.explorer');
                             }}
                             onError={(e) => {
                                 console.error(e);
@@ -45,7 +42,6 @@ export const runPythonReact = async () => {
             };
 
             const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;
-
             if (strictMode) {
                 root.render(<StrictMode><App /></StrictMode>);
             } else {

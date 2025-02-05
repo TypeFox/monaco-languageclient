@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-// this is derived from:
+// This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/debugServer.ts
 // the major difference is that the debug server runs already inside the container
 
@@ -125,6 +125,7 @@ wss.on('connection', (ws) => {
     ws.on(
         'message',
         sequential(async (message: string) => {
+            console.log('Received message', message);
             if (!initialized) {
                 try {
                     initialized = true;
@@ -184,5 +185,5 @@ wss.on('connection', (ws) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+    console.log(`Server started on port ${PORT}!`);
 });
