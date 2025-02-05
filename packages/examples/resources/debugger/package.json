@@ -1,0 +1,44 @@
+{
+  "name": "graalpy-debugger",
+  "version": "2025.2.1",
+  "description": "Monaco Language client Graalpy Debugger",
+  "author": {
+    "name": "TypeFox GmbH",
+    "url": "http://www.typefox.io"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/debugServer.js",
+  "module": "./dist/debugServer.js",
+  "exports": {
+    ".": {
+      "types": "./dist/debugServer.d.ts",
+      "default": "./dist/debugServer.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/debugServer"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22.13.1",
+    "npm": ">=10.9.2"
+  },
+  "volta": {
+    "node": "22.13.1",
+    "npm": "10.9.2"
+  },
+  "dependencies": {
+    "express": "~4.21.2",
+    "ws": "~8.18.0"
+  },
+  "devDependencies": {
+    "tsx": "~4.19.2"
+  },
+  "scripts": {
+    "start": "npm i && vite-node src/debugServer.ts"
+  }
+}

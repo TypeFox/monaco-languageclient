@@ -1,6 +1,7 @@
 services:
   debugger:
-    image: ghcr.io/typefox/monaco-languageclient/debugger:latest
+    container_name: debugger-py
+    image: ghcr.io/typefox/monaco-languageclient/debugger-py:latest
     build:
       dockerfile: ./packages/examples/resources/debugger/Dockerfile
       context: ../../../..
@@ -8,9 +9,13 @@ services:
       platforms:
         - "linux/amd64"
     platform: linux/amd64
-    command: []
-    tty: true
+    volumes:
+      - ../python:/home/mlc/workspace
+      - ../../src/debugger:/home/mlc/server/src
     ports:
-      - 30004:30004
-    working_dir: /home/mlc
-    container_name: debugger
+      - 55555:5555
+    tty: true
+    working_dir: /home/mlc/server
+    command: [
+      "bash", "-c", "npm run start"
+    ]
