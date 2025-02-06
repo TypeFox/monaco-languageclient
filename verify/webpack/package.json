@@ -12,7 +12,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.2.2"
+    "monaco-languageclient-examples": "~2025.2.3"
   },
   "devDependencies": {
     "css-loader": "~7.1.2",

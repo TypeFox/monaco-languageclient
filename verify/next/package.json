@@ -11,8 +11,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@typefox/monaco-editor-react": "~6.2.3",
-    "monaco-languageclient-examples": "~2025.2.2",
+    "@typefox/monaco-editor-react": "~6.2.4",
+    "monaco-languageclient-examples": "~2025.2.3",
     "next": "~15.1.6",
     "react": "~19.0.0",
     "react-dom": "~19.0.0"
