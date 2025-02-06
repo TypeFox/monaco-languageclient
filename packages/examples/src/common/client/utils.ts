@@ -58,3 +58,25 @@ export const createDefaultWorkspaceFile = (workspaceFile: Uri, workspacePath: st
         )
     );
 };
+
+export const createDefaultLaunchConfigFile = (workspacePath: string, type: string, port: number) => {
+    return new RegisteredMemoryFile(
+        Uri.file(`${workspacePath}/.vscode/launch.json`),
+        JSON.stringify(
+            {
+                version: '0.2.0',
+                configurations: [
+                    {
+                        name: 'Debugger: Attach',
+                        type,
+                        request: 'attach',
+                        port,
+                        host: 'localhost',
+                    }
+                ]
+            },
+            null,
+            2
+        )
+    );
+};

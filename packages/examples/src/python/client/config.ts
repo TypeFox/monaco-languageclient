@@ -26,7 +26,7 @@ import { createUrl } from 'monaco-languageclient/tools';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../../common/client/utils.js';
+import { configureMonacoWorkers, createDefaultLaunchConfigFile, createDefaultWorkspaceFile } from '../../common/client/utils.js';
 import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
@@ -40,7 +40,9 @@ export type ConfigParams = {
     workspaceRoot: string;
     workspaceFile: vscode.Uri;
     htmlContainer?: HTMLElement;
-    debuggerUrl: string;
+    protocol: 'ws' | 'wss';
+    hostname: string;
+    port: number;
     files: Map<string, FileDefinition>;
 }
 
@@ -51,7 +53,9 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
         workspaceRoot: `${homeDir}/workspace`,
         workspaceFile: vscode.Uri.file(`${homeDir}/.vscode/workspace.code-workspace`),
         htmlContainer,
-        debuggerUrl: 'ws://localhost:55555',
+        protocol: 'ws',
+        hostname: 'localhost',
+        port: 55555,
         files: new Map<string, FileDefinition>()
     };
 };
@@ -76,6 +80,7 @@ export const createWrapperConfig = (): PythonAppConfig => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(hello2PyPath), hello2PyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(badPyPath), badPyCode));
     fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, configParams.workspaceRoot));
+    fileSystemProvider.registerFile(createDefaultLaunchConfigFile(configParams.workspaceRoot, configParams.languageId, configParams.port));
 
     registerFileSystemOverlay(1, fileSystemProvider);
 

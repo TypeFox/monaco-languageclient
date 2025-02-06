@@ -79,12 +79,12 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
 
     api.debug.registerDebugAdapterDescriptorFactory(config.languageId, {
         async createDebugAdapterDescriptor() {
-            const websocket = new WebSocket(config.debuggerUrl);
+            const websocket = new WebSocket(`ws://${config.hostname}:${config.port}`);
 
             await new Promise((resolve, reject) => {
                 websocket.onopen = resolve;
                 websocket.onerror = () =>
-                    reject(new Error('Unable to connect to debugger server. Run `npm run start:debugServer`'));
+                    reject(new Error('Unable to connect to debugger server. Run `docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d`'));
             });
 
             const initMessage: InitMessage = {
