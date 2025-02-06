@@ -74,6 +74,7 @@ class DAPSocket {
     }
 
     public sendMessage(message: string) {
+        console.log(`Client->DAP: ${message}`);
         this.socket.write(
             `Content-Length: ${Buffer.byteLength(message, 'utf8')}${TWO_CRLF}${message}`,
             'utf8'
@@ -108,7 +109,11 @@ function sequential<T, P extends unknown[]>(
 }
 
 wss.on('connection', (ws) => {
-    const socket = new DAPSocket((message) => ws.send(message));
+    const onWsMessage = (message: string) => {
+        console.log(`DAP->Client: ${message}`);
+        ws.send(message);
+    };
+    const socket = new DAPSocket(onWsMessage);
 
     let initialized = false;
 
@@ -128,7 +133,29 @@ wss.on('connection', (ws) => {
                         initialized = true;
 
                         console.log(`Using default file "${defaultFile}" for debugging.`);
-                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${defaultFile}`);
+
+                        const sendOutput = (category: 'stdout' | 'stderr', output: string | null | undefined) => {
+                            onWsMessage(
+                                JSON.stringify({
+                                    type: 'event',
+                                    event: 'output',
+                                    body: {
+                                        category,
+                                        output
+                                    }
+                                })
+                            );
+                        };
+                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${defaultFile} 2>&1 | tee /home/mlc/server/graalpy.log`);
+                        execGraalpy.stdout?.on('data', (data) => {
+                            sendOutput('stdout', data);
+                        });
+                        execGraalpy.stderr?.on('data', (data) => {
+                            sendOutput('stderr', data);
+                        });
+                        execGraalpy.on('error', (err) => {
+                            sendOutput('stderr', err.message);
+                        });
                         execGraalpy.on('end', () => {
                             ws.close();
                         });
