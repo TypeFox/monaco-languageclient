@@ -12,3 +12,5 @@ RUN mkdir -p /home/mlc/server/src
 
 COPY ./packages/examples/resources/debugger/package.json /home/mlc/server
 COPY ./packages/examples/src/debugger/server/debugServer.ts /home/mlc/server/src
+
+WORKDIR /home/mlc/server

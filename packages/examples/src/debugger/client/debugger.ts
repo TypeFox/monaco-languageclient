@@ -6,6 +6,7 @@
 import * as vscode from 'vscode';
 import type { ExtensionConfig } from 'monaco-editor-wrapper';
 import type { ConfigParams } from '../../python/client/config.js';
+import type { InitMessage } from '../common/definitions.js';
 
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/features/debugger.ts
@@ -86,24 +87,18 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
                     reject(new Error('Unable to connect to debugger server. Run `npm run start:debugServer`'));
             });
 
-            const file = config.files.get('hello.py');
-            if (file === undefined) {
-                throw new Error('No file found');
-            } else {
-                console.log(`Sending file: ${file.uri.path}`);
-                websocket.send(
-                    JSON.stringify({
-                        main: file.uri.path,
-                        files: {
-                            file: new TextDecoder().decode(
-                                await api.workspace.fs.readFile(
-                                    file.uri
-                                )
-                            )
-                        }
-                    })
-                );
+            const initMessage: InitMessage = {
+                id: 'init',
+                files: {} as Record<string, { code: string; path: string }>
+            };
+            for (const [name, fileDef] of config.files.entries()) {
+                console.log(`Found: ${name} Sending file: ${fileDef.path}`);
+                initMessage.files[name] = {
+                    path: fileDef.path,
+                    code: fileDef.code
+                };
             }
+            websocket.send(JSON.stringify(initMessage));
             const adapter = new WebsocketDebugAdapter(websocket);
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

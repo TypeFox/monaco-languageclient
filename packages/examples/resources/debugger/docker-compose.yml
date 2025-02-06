@@ -9,13 +9,10 @@ services:
       platforms:
         - "linux/amd64"
     platform: linux/amd64
-    volumes:
-      - ../python:/home/mlc/workspace
-      # allow to override the server sources
-      - ../../src/debugger/server:/home/mlc/server/src
     ports:
       - 55555:5555
     tty: true
+    # just for completness. Is already set in the Dockerfile
     working_dir: /home/mlc/server
     command: [
       "bash", "-c", "npm run start"

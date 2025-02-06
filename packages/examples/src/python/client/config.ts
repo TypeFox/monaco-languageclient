@@ -32,11 +32,7 @@ import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-
-export type FileDefinition = {
-    uri: vscode.Uri;
-    code: string;
-}
+import type { FileDefinition } from '../../debugger/common/definitions.js';
 
 export type ConfigParams = {
     languageId: string;
@@ -67,18 +63,18 @@ export type PythonAppConfig = {
 
 export const createWrapperConfig = (): PythonAppConfig => {
     const configParams = createDefaultConfigParams('/home/mlc', document.body);
-    const helloPyUri = vscode.Uri.file(`${configParams.workspaceRoot}/hello.py`);
-    const hello2PyUri = vscode.Uri.file(`${configParams.workspaceRoot}/hello2.py`);
-    const badPyUri = vscode.Uri.file(`${configParams.workspaceRoot}/bad.py`);
+    const helloPyPath = `${configParams.workspaceRoot}/hello.py`;
+    const hello2PyPath = `${configParams.workspaceRoot}/hello2.py`;
+    const badPyPath = `${configParams.workspaceRoot}/bad.py`;
 
-    configParams.files.set('hello.py', { code: helloPyCode, uri: helloPyUri });
-    configParams.files.set('hello2.py', { code: hello2PyCode, uri: hello2PyUri });
-    configParams.files.set('bad.py', { code: badPyCode, uri: badPyUri });
+    configParams.files.set('hello.py', { code: helloPyCode, path: helloPyPath });
+    configParams.files.set('hello2.py', { code: hello2PyCode, path: hello2PyPath });
+    configParams.files.set('bad.py', { code: badPyCode, path: badPyPath });
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(helloPyUri, helloPyCode));
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(hello2PyUri, hello2PyCode));
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(helloPyPath), helloPyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(hello2PyPath), hello2PyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(badPyPath), badPyCode));
     fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, configParams.workspaceRoot));
 
     registerFileSystemOverlay(1, fileSystemProvider);

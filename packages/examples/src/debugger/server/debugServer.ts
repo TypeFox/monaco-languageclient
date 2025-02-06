@@ -12,6 +12,8 @@ import { WebSocketServer } from 'ws';
 import * as http from 'node:http';
 import * as net from 'node:net';
 import * as fs from 'node:fs';
+import type { InitMessage } from '../common/definitions.js';
+import { exec } from 'node:child_process';
 
 async function exitHandler() {
     console.log('Exiting...');
@@ -85,20 +87,8 @@ const HEADER_FIELDSEPARATOR = /: */;
 
 const PORT = 5555;
 const app = express();
-
 const server = http.createServer(app);
-
 const wss = new WebSocketServer({ server });
-
-// async function findPortFree() {
-//     return await new Promise<number>((resolve) => {
-//         const srv = net.createServer();
-//         srv.listen(0, () => {
-//             const port = (srv.address() as net.AddressInfo).port;
-//             srv.close(() => resolve(port));
-//         });
-//     });
-// }
 
 function sequential<T, P extends unknown[]>(
     fn: (...params: P) => Promise<T>
@@ -125,56 +115,29 @@ wss.on('connection', (ws) => {
     ws.on(
         'message',
         sequential(async (message: string) => {
-            console.log('Received message', message);
             if (!initialized) {
                 try {
-                    initialized = true;
-                    const init: { main: string; files: Record<string, string> } = JSON.parse(message);
-                    for (const [file, content] of Object.entries(init.files)) {
-                        await fs.promises.writeFile('/tmp/' + file, content);
+                    const parsed = JSON.parse(message);
+                    if (parsed.id === 'init') {
+                        const initMesssage = parsed as InitMessage;
+                        let file;
+                        for (const [name, fileDef] of Object.entries(initMesssage.files)) {
+                            console.log(`Found: ${name} Received file: ${fileDef.path}`);
+                            await fs.promises.writeFile(fileDef.path, fileDef.code);
+                            file = fileDef.path;
+                        }
+                        initialized = true;
+
+                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${file}`);
+                        execGraalpy.on('end', () => {
+                            ws.close();
+                        });
+
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                        // 4711 is the default port of the GraalPy debugger
+                        socket.connect(4711);
+                        return;
                     }
-                    // const debuggerPort = await findPortFree();
-                    // const exec = await exec({
-                    //     Cmd: [
-                    //         'node',
-                    //         `--dap=${debuggerPort}`,
-                    //         '--dap.WaitAttached',
-                    //         '--dap.Suspend=false',
-                    //         `${init.main}`
-                    //     ],
-                    //     AttachStdout: true,
-                    //     AttachStderr: true
-                    // });
-
-                    // const execStream = await exec.start({
-                    //     hijack: true
-                    // });
-                    // const stdout = new stream.PassThrough();
-                    // const stderr = new stream.PassThrough();
-                    // container.modem.demuxStream(execStream, stdout, stderr);
-                    // function sendOutput(category: 'stdout' | 'stderr', output: Buffer) {
-                    //     ws.send(
-                    //         JSON.stringify({
-                    //             type: 'event',
-                    //             event: 'output',
-                    //             body: {
-                    //                 category,
-                    //                 output: output.toString()
-                    //             }
-                    //         })
-                    //     );
-                    // }
-                    // stdout.on('data', sendOutput.bind(undefined, 'stdout'));
-                    // stderr.on('data', sendOutput.bind(undefined, 'stderr'));
-
-                    // execStream.on('end', () => {
-                    //     ws.close();
-                    // });
-
-                    // await new Promise((resolve) => setTimeout(resolve, 1000));
-                    // socket.connect(debuggerPort);
-
-                    return;
                 } catch (err) {
                     console.error('Failed to initialize', err);
                 }
