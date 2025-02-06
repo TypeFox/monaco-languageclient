@@ -5,7 +5,6 @@
 
 import * as vscode from 'vscode';
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
@@ -18,6 +17,8 @@ import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
 import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
 import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
+import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
+import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-override';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
@@ -35,6 +36,7 @@ import type { WrapperConfig } from 'monaco-editor-wrapper';
 import type { FileDefinition } from '../../debugger/common/definitions.js';
 
 export type ConfigParams = {
+    extensionName: string;
     languageId: string;
     homeDir: string;
     workspaceRoot: string;
@@ -44,10 +46,15 @@ export type ConfigParams = {
     hostname: string;
     port: number;
     files: Map<string, FileDefinition>;
+    defaultFile: string;
+    helpContainerCmd: string;
 }
 
 export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
-    return {
+    const files = new Map<string, FileDefinition>();
+    const workspaceRoot = `${homeDir}/workspace`;
+    const configParams: ConfigParams = {
+        extensionName: 'debugger-py-client',
         languageId: 'python',
         homeDir,
         workspaceRoot: `${homeDir}/workspace`,
@@ -56,8 +63,27 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
         protocol: 'ws',
         hostname: 'localhost',
         port: 55555,
-        files: new Map<string, FileDefinition>()
+        files,
+        defaultFile: `${workspaceRoot}/hello.py`,
+        helpContainerCmd: 'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d'
     };
+    const helloPyPath = configParams.defaultFile;
+    const hello2PyPath = `${workspaceRoot}/hello2.py`;
+    const badPyPath = `${workspaceRoot}/bad.py`;
+
+    files.set('hello.py', { code: helloPyCode, path: helloPyPath, uri: vscode.Uri.file(helloPyPath) });
+    files.set('hello2.py', { code: hello2PyCode, path: hello2PyPath, uri: vscode.Uri.file(hello2PyPath) });
+    files.set('bad.py', { code: badPyCode, path: badPyPath, uri: vscode.Uri.file(badPyPath) });
+
+    const fileSystemProvider = new RegisteredFileSystemProvider(false);
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello.py')!.uri, helloPyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello2.py')!.uri, hello2PyCode));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('bad.py')!.uri, badPyCode));
+    fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, workspaceRoot));
+    fileSystemProvider.registerFile(createDefaultLaunchConfigFile(workspaceRoot, configParams.languageId, configParams.port));
+    registerFileSystemOverlay(1, fileSystemProvider);
+
+    return configParams;
 };
 
 export type PythonAppConfig = {
@@ -67,22 +93,6 @@ export type PythonAppConfig = {
 
 export const createWrapperConfig = (): PythonAppConfig => {
     const configParams = createDefaultConfigParams('/home/mlc', document.body);
-    const helloPyPath = `${configParams.workspaceRoot}/hello.py`;
-    const hello2PyPath = `${configParams.workspaceRoot}/hello2.py`;
-    const badPyPath = `${configParams.workspaceRoot}/bad.py`;
-
-    configParams.files.set('hello.py', { code: helloPyCode, path: helloPyPath });
-    configParams.files.set('hello2.py', { code: hello2PyCode, path: hello2PyPath });
-    configParams.files.set('bad.py', { code: badPyCode, path: badPyPath });
-
-    const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(helloPyPath), helloPyCode));
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(hello2PyPath), hello2PyCode));
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file(badPyPath), badPyCode));
-    fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, configParams.workspaceRoot));
-    fileSystemProvider.registerFile(createDefaultLaunchConfigFile(configParams.workspaceRoot, configParams.languageId, configParams.port));
-
-    registerFileSystemOverlay(1, fileSystemProvider);
 
     const url = createUrl({
         secured: false,
@@ -149,7 +159,8 @@ export const createWrapperConfig = (): PythonAppConfig => {
                 ...getSecretStorageServiceOverride(),
                 ...getStorageServiceOverride(),
                 ...getSearchServiceOverride(),
-                ...getDebugServiceOverride()
+                ...getDebugServiceOverride(),
+                ...getTestingServiceOverride()
             },
             viewsConfig: {
                 viewServiceType: 'ViewsService',

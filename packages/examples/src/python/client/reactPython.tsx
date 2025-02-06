@@ -24,7 +24,7 @@ export const runPythonReact = async () => {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             const App = () => {
                 return (
-                    <div style={{ 'height': '80vh', padding: '5px' }} >
+                    <div style={{ 'backgroundColor': '#1f1f1f' }} >
                         <MonacoEditorReactComp
                             wrapperConfig={appConfig.wrapperConfig}
                             style={{ 'height': '100%' }}

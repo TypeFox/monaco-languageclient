@@ -120,15 +120,15 @@ wss.on('connection', (ws) => {
                     const parsed = JSON.parse(message);
                     if (parsed.id === 'init') {
                         const initMesssage = parsed as InitMessage;
-                        let file;
+                        const defaultFile = initMesssage.defaultFile;
                         for (const [name, fileDef] of Object.entries(initMesssage.files)) {
-                            console.log(`Found: ${name} Received file: ${fileDef.path}`);
+                            console.log(`Found file: ${name} path: ${fileDef.path}`);
                             await fs.promises.writeFile(fileDef.path, fileDef.code);
-                            file = fileDef.path;
                         }
                         initialized = true;
 
-                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${file}`);
+                        console.log(`Using default file "${defaultFile}" for debugging.`);
+                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${defaultFile}`);
                         execGraalpy.on('end', () => {
                             ws.close();
                         });

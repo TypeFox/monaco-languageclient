@@ -93,6 +93,7 @@
     "@codingame/monaco-vscode-standalone-json-language-features": "~13.1.6",
     "@codingame/monaco-vscode-standalone-languages": "~13.1.6",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~13.1.6",
+    "@codingame/monaco-vscode-testing-service-override": "~13.1.6",
     "@codingame/monaco-vscode-storage-service-override": "~13.1.6",
     "@codingame/monaco-vscode-textmate-service-override": "~13.1.6",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~13.1.6",

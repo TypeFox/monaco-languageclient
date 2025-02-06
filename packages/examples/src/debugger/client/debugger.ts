@@ -10,6 +10,7 @@ import type { InitMessage } from '../common/definitions.js';
 
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/features/debugger.ts
+// The client configuration is generic and can be used for a another language
 
 export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionConfig => {
     const filesOrContents = new Map<string, string | URL>();
@@ -17,7 +18,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
 
     return {
         config: {
-            name: 'debugger-py-client',
+            name: config.extensionName,
             publisher: 'TypeFox',
             version: '1.0.0',
             engines: {
@@ -79,27 +80,31 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
 
     api.debug.registerDebugAdapterDescriptorFactory(config.languageId, {
         async createDebugAdapterDescriptor() {
-            const websocket = new WebSocket(`ws://${config.hostname}:${config.port}`);
+            const websocket = new WebSocket(`${config.protocol}://${config.hostname}:${config.port}`);
 
             await new Promise((resolve, reject) => {
                 websocket.onopen = resolve;
                 websocket.onerror = () =>
-                    reject(new Error('Unable to connect to debugger server. Run `docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d`'));
+                    reject(new Error(`Unable to connect to debugger server. Run "${config.helpContainerCmd}"`));
             });
+
+            const adapter = new WebsocketDebugAdapter(websocket);
 
             const initMessage: InitMessage = {
                 id: 'init',
-                files: {} as Record<string, { code: string; path: string }>
+                files: {},
+                // the default file is the one that will be used by the debugger
+                defaultFile: config.defaultFile
             };
             for (const [name, fileDef] of config.files.entries()) {
                 console.log(`Found: ${name} Sending file: ${fileDef.path}`);
                 initMessage.files[name] = {
                     path: fileDef.path,
-                    code: fileDef.code
+                    code: fileDef.code,
+                    uri: fileDef.uri
                 };
             }
             websocket.send(JSON.stringify(initMessage));
-            const adapter = new WebsocketDebugAdapter(websocket);
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             adapter.onDidSendMessage((message: any) => {

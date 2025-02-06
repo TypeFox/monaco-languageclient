@@ -13,30 +13,22 @@ export const runPythonWrapper = async () => {
     const appConfig = createWrapperConfig();
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            if (wrapper.isStarted()) {
-                console.warn('Editor was already started!');
-            } else {
-                await wrapper.init(appConfig.wrapperConfig);
+    if (wrapper.isStarted()) {
+        console.warn('Editor was already started!');
+    } else {
+        await wrapper.init(appConfig.wrapperConfig);
 
-                const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
-                result.setAsDefaultApi();
+        const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
+        result.setAsDefaultApi();
 
-                const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
-                if (initResult !== undefined) {
-                    confiugureDebugging(await initResult.getApi(), appConfig.configParams);
-                }
+        const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
+        if (initResult !== undefined) {
+            confiugureDebugging(await initResult.getApi(), appConfig.configParams);
+        }
 
-                await vscode.commands.executeCommand('workbench.view.explorer');
+        await vscode.commands.executeCommand('workbench.view.explorer');
+        await vscode.window.showTextDocument(appConfig.configParams.files.get('hello.py')!.uri);
 
-                await wrapper.start();
-            }
-        });
-        document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await wrapper.dispose();
-        });
-    } catch (e) {
-        console.error(e);
+        await wrapper.start();
     }
 };
