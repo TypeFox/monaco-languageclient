@@ -166,12 +166,17 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error('No init was performed. Please call init() before start()');
         }
 
-        this.logger.info(`Starting monaco-editor (${this.id})`);
-        const html = htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : htmlContainer;
-        if (html === undefined) {
-            throw new Error('No html container provided. Unable to start monaco-editor.');
+        const viewServiceType = this.wrapperConfig?.vscodeApiConfig?.viewsConfig?.viewServiceType;
+        if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
+            this.logger.info(`Starting monaco-editor (${this.id})`);
+            const html = htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : htmlContainer;
+            if (html === undefined) {
+                throw new Error('No html container provided. Unable to start monaco-editor.');
+            } else {
+                await this.editorApp?.createEditors(html);
+            }
         } else {
-            await this.editorApp?.createEditors(html);
+            this.logger.info('No EditorService configured. monaco-editor will not be started.');
         }
 
         await this.startLanguageClients();

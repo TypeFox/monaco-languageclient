@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.2.3] - 2025-02-06
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.4`.
+- Updated to `monaco-languageclient@9.2.4`, `monaco-editor-wrapper@6.2.4` and `@typefox/monaco-editor-react@6.2.4`.
+
 ## [2025.2.2] - 2025-02-04
 
 - Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
