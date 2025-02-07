@@ -19,6 +19,7 @@ import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-
 import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
 import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
 import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-override';
+import getPreferencesServiceOverride from '@codingame/monaco-vscode-preferences-service-override';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
@@ -54,7 +55,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
         helpContainerCmd: 'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d',
         debuggerExecCall: 'graalpy --dap --dap.WaitAttached --dap.Suspend=true'
     };
-    const helloPyPath = `${workspaceRoot}/hello2.py`;
+    const helloPyPath = `${workspaceRoot}/hello.py`;
     const hello2PyPath = configParams.defaultFile;
     const badPyPath = `${workspaceRoot}/bad.py`;
 
@@ -67,7 +68,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello2.py')!.uri, hello2PyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('bad.py')!.uri, badPyCode));
     fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, workspaceRoot));
-    fileSystemProvider.registerFile(createDebugLaunchConfigFile(workspaceRoot, configParams.languageId, configParams.port));
+    fileSystemProvider.registerFile(createDebugLaunchConfigFile(workspaceRoot, configParams.languageId));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     return configParams;
@@ -147,7 +148,8 @@ export const createWrapperConfig = (): PythonAppConfig => {
                 ...getStorageServiceOverride(),
                 ...getSearchServiceOverride(),
                 ...getDebugServiceOverride(),
-                ...getTestingServiceOverride()
+                ...getTestingServiceOverride(),
+                ...getPreferencesServiceOverride()
             },
             viewsConfig: {
                 viewServiceType: 'ViewsService',

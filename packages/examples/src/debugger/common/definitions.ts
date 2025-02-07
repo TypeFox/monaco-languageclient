@@ -36,7 +36,7 @@ export type ConfigParams = {
     debuggerExecCall: string;
 }
 
-export const createDebugLaunchConfigFile = (workspacePath: string, type: string, port: number) => {
+export const createDebugLaunchConfigFile = (workspacePath: string, type: string) => {
     return new RegisteredMemoryFile(
         Uri.file(`${workspacePath}/.vscode/launch.json`),
         JSON.stringify(
@@ -46,9 +46,7 @@ export const createDebugLaunchConfigFile = (workspacePath: string, type: string,
                     {
                         name: 'Debugger: Lauch',
                         type,
-                        request: 'launch',
-                        port,
-                        host: 'localhost',
+                        request: 'attach',
                     }
                 ]
             },

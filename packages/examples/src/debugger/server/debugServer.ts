@@ -3,88 +3,26 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as http from 'node:http';
+import * as fs from 'node:fs';
+import { exec } from 'node:child_process';
+import express from 'express';
+import { WebSocketServer } from 'ws';
+import type { InitMessage } from '../common/definitions.js';
+import { DAPSocket } from './DAPSocket.js';
+
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/debugServer.ts
 // the major difference is that the debug server runs already inside the container
 
-import express from 'express';
-import { WebSocketServer } from 'ws';
-import * as http from 'node:http';
-import * as net from 'node:net';
-import * as fs from 'node:fs';
-import type { InitMessage } from '../common/definitions.js';
-import { exec } from 'node:child_process';
-
-async function exitHandler() {
+const exitHandler = async () => {
     console.log('Exiting...');
-}
+};
 process.on('exit', exitHandler);
 process.on('SIGINT', exitHandler);
 process.on('SIGUSR1', exitHandler);
 process.on('SIGUSR2', exitHandler);
 process.on('uncaughtException', exitHandler);
-
-class DAPSocket {
-    private socket: net.Socket;
-    private rawData = Buffer.allocUnsafe(0);
-    private contentLength = -1;
-    private onMessage: (message: string) => void;
-
-    constructor(onMessage: (message: string) => void) {
-        this.onMessage = onMessage;
-        this.socket = new net.Socket();
-        this.socket.on('data', this.onData);
-    }
-
-    private onData = (data: Buffer) => {
-        this.rawData = Buffer.concat([this.rawData, data]);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        while (true) {
-            if (this.contentLength >= 0) {
-                if (this.rawData.length >= this.contentLength) {
-                    const message = this.rawData.toString('utf8', 0, this.contentLength);
-                    this.rawData = this.rawData.subarray(this.contentLength);
-                    this.contentLength = -1;
-                    if (message.length > 0) {
-                        this.onMessage(message);
-                    }
-                    continue;
-                }
-            } else {
-                const idx = this.rawData.indexOf(TWO_CRLF);
-                if (idx !== -1) {
-                    const header = this.rawData.toString('utf8', 0, idx);
-                    const lines = header.split(HEADER_LINESEPARATOR);
-                    for (const h of lines) {
-                        const kvPair = h.split(HEADER_FIELDSEPARATOR);
-                        if (kvPair[0] === 'Content-Length') {
-                            this.contentLength = Number(kvPair[1]);
-                        }
-                    }
-                    this.rawData = this.rawData.subarray(idx + TWO_CRLF.length);
-                    continue;
-                }
-            }
-            break;
-        }
-    };
-
-    public connect(port: number) {
-        this.socket.connect(port);
-    }
-
-    public sendMessage(message: string) {
-        console.log(`Client->DAP: ${message}`);
-        this.socket.write(
-            `Content-Length: ${Buffer.byteLength(message, 'utf8')}${TWO_CRLF}${message}`,
-            'utf8'
-        );
-    }
-}
-
-const TWO_CRLF = '\r\n\r\n';
-const HEADER_LINESEPARATOR = /\r?\n/;
-const HEADER_FIELDSEPARATOR = /: */;
 
 // the port is fixed, it can be remapped via the docker compose config
 const PORT = 5555;
@@ -92,9 +30,9 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-function sequential<T, P extends unknown[]>(
+const sequential = <T, P extends unknown[]>(
     fn: (...params: P) => Promise<T>
-): (...params: P) => Promise<T> {
+): (...params: P) => Promise<T> => {
     let promise = Promise.resolve();
     return (...params: P) => {
         const result = promise.then(() => {
@@ -107,7 +45,7 @@ function sequential<T, P extends unknown[]>(
         );
         return result;
     };
-}
+};
 
 wss.on('connection', (ws) => {
     const onWsMessage = (message: string) => {
@@ -148,7 +86,10 @@ wss.on('connection', (ws) => {
                                 })
                             );
                         };
-                        const execGraalpy = await exec(`${debuggerExecCall} ${defaultFile} 2>&1 | tee /home/mlc/server/debugger.log`);
+
+                        const cmd = `${debuggerExecCall} ${defaultFile} 2>&1 | tee /home/mlc/server/debugger.log`;
+                        console.log(`Executing the debugger: ${cmd}`);
+                        const execGraalpy = await exec(cmd);
                         execGraalpy.stdout?.on('data', (data) => {
                             sendOutput('stdout', data);
                         });

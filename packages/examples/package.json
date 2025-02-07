@@ -85,6 +85,7 @@
     "@codingame/monaco-vscode-keybindings-service-override": "~13.1.6",
     "@codingame/monaco-vscode-lifecycle-service-override": "~13.1.6",
     "@codingame/monaco-vscode-localization-service-override": "~13.1.6",
+    "@codingame/monaco-vscode-preferences-service-override": "~13.1.6", 
     "@codingame/monaco-vscode-python-default-extension": "~13.1.6",
     "@codingame/monaco-vscode-remote-agent-service-override": "~13.1.6",
     "@codingame/monaco-vscode-search-result-default-extension": "~13.1.6",
