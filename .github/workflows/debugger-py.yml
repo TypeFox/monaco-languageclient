@@ -13,7 +13,7 @@ env:
   CONTAINER_NAME: debugger-py
 
 jobs:
-  image-groovyls:
+  image-debugger-py:
     name: Build & Deploy Python Debugger
     runs-on: ubuntu-latest
 

@@ -50,12 +50,12 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
         hostname: 'localhost',
         port: 55555,
         files,
-        defaultFile: `${workspaceRoot}/hello.py`,
+        defaultFile: `${workspaceRoot}/hello2.py`,
         helpContainerCmd: 'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d',
-        debuggerExecCall: 'graalpy --dap --dap.WaitAttached --dap.Suspend=false'
+        debuggerExecCall: 'graalpy --dap --dap.WaitAttached --dap.Suspend=true'
     };
-    const helloPyPath = configParams.defaultFile;
-    const hello2PyPath = `${workspaceRoot}/hello2.py`;
+    const helloPyPath = `${workspaceRoot}/hello2.py`;
+    const hello2PyPath = configParams.defaultFile;
     const badPyPath = `${workspaceRoot}/bad.py`;
 
     files.set('hello.py', { code: helloPyCode, path: helloPyPath, uri: vscode.Uri.file(helloPyPath) });
