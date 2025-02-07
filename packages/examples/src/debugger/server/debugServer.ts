@@ -86,6 +86,7 @@ const TWO_CRLF = '\r\n\r\n';
 const HEADER_LINESEPARATOR = /\r?\n/;
 const HEADER_FIELDSEPARATOR = /: */;
 
+// the port is fixed, it can be remapped via the docker compose config
 const PORT = 5555;
 const app = express();
 const server = http.createServer(app);
@@ -126,6 +127,7 @@ wss.on('connection', (ws) => {
                     if (parsed.id === 'init') {
                         const initMesssage = parsed as InitMessage;
                         const defaultFile = initMesssage.defaultFile;
+                        const debuggerExecCall = initMesssage.debuggerExecCall;
                         for (const [name, fileDef] of Object.entries(initMesssage.files)) {
                             console.log(`Found file: ${name} path: ${fileDef.path}`);
                             await fs.promises.writeFile(fileDef.path, fileDef.code);
@@ -146,7 +148,7 @@ wss.on('connection', (ws) => {
                                 })
                             );
                         };
-                        const execGraalpy = await exec(`graalpy --dap --dap.WaitAttached --dap.Suspend=false ${defaultFile} 2>&1 | tee /home/mlc/server/graalpy.log`);
+                        const execGraalpy = await exec(`${debuggerExecCall} ${defaultFile} 2>&1 | tee /home/mlc/server/debugger.log`);
                         execGraalpy.stdout?.on('data', (data) => {
                             sendOutput('stdout', data);
                         });

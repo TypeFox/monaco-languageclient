@@ -27,28 +27,13 @@ import { createUrl } from 'monaco-languageclient/tools';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { configureMonacoWorkers, createDefaultLaunchConfigFile, createDefaultWorkspaceFile } from '../../common/client/utils.js';
+import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../../common/client/utils.js';
 import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-import type { FileDefinition } from '../../debugger/common/definitions.js';
-
-export type ConfigParams = {
-    extensionName: string;
-    languageId: string;
-    homeDir: string;
-    workspaceRoot: string;
-    workspaceFile: vscode.Uri;
-    htmlContainer?: HTMLElement;
-    protocol: 'ws' | 'wss';
-    hostname: string;
-    port: number;
-    files: Map<string, FileDefinition>;
-    defaultFile: string;
-    helpContainerCmd: string;
-}
+import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
 export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
     const files = new Map<string, FileDefinition>();
@@ -56,6 +41,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
     const configParams: ConfigParams = {
         extensionName: 'debugger-py-client',
         languageId: 'python',
+        documentSelector: ['python', 'py'],
         homeDir,
         workspaceRoot: `${homeDir}/workspace`,
         workspaceFile: vscode.Uri.file(`${homeDir}/.vscode/workspace.code-workspace`),
@@ -65,7 +51,8 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
         port: 55555,
         files,
         defaultFile: `${workspaceRoot}/hello.py`,
-        helpContainerCmd: 'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d'
+        helpContainerCmd: 'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d',
+        debuggerExecCall: 'graalpy --dap --dap.WaitAttached --dap.Suspend=false'
     };
     const helloPyPath = configParams.defaultFile;
     const hello2PyPath = `${workspaceRoot}/hello2.py`;
@@ -80,7 +67,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello2.py')!.uri, hello2PyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('bad.py')!.uri, badPyCode));
     fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, workspaceRoot));
-    fileSystemProvider.registerFile(createDefaultLaunchConfigFile(workspaceRoot, configParams.languageId, configParams.port));
+    fileSystemProvider.registerFile(createDebugLaunchConfigFile(workspaceRoot, configParams.languageId, configParams.port));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     return configParams;

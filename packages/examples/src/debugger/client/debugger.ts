@@ -5,8 +5,7 @@
 
 import * as vscode from 'vscode';
 import type { ExtensionConfig } from 'monaco-editor-wrapper';
-import type { ConfigParams } from '../../python/client/config.js';
-import type { InitMessage } from '../common/definitions.js';
+import type { ConfigParams, InitMessage } from '../common/definitions.js';
 
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/features/debugger.ts
@@ -68,16 +67,6 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
         }
     }
 
-    api.debug.registerDebugConfigurationProvider(config.languageId, {
-        resolveDebugConfiguration() {
-            return {
-                name: 'Test debugger',
-                type: config.languageId,
-                request: 'launch'
-            };
-        }
-    });
-
     api.debug.registerDebugAdapterDescriptorFactory(config.languageId, {
         async createDebugAdapterDescriptor() {
             const websocket = new WebSocket(`${config.protocol}://${config.hostname}:${config.port}`);
@@ -94,7 +83,8 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
                 id: 'init',
                 files: {},
                 // the default file is the one that will be used by the debugger
-                defaultFile: config.defaultFile
+                defaultFile: config.defaultFile,
+                debuggerExecCall: config.debuggerExecCall
             };
             for (const [name, fileDef] of config.files.entries()) {
                 console.log(`Found: ${name} Sending file: ${fileDef.path}`);
