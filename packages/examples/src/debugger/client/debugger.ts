@@ -38,7 +38,10 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
                         language: config.languageId
                     }
                 ]
-            }
+            },
+            activationEvents: [
+                'onDebug'
+            ]
         },
         filesOrContents
     };
@@ -59,7 +62,8 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
         onDidSendMessage = this._onDidSendMessage.event;
 
         handleMessage(message: vscode.DebugProtocolMessage): void {
-            this.websocket.send(JSON.stringify(message));
+            const msg = JSON.stringify(message).replaceAll('\\\\', '/');
+            this.websocket.send(msg);
         }
 
         dispose() {
