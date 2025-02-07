@@ -62,6 +62,8 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
         onDidSendMessage = this._onDidSendMessage.event;
 
         handleMessage(message: vscode.DebugProtocolMessage): void {
+            // path with on Windows (Chrome/Firefox) arrive here with \\ and not like expected with /
+            // Chrome on Ubuntu behaves as expected
             const msg = JSON.stringify(message).replaceAll('\\\\', '/');
             this.websocket.send(msg);
         }
