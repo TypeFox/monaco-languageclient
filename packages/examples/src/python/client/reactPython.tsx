@@ -4,12 +4,13 @@
 * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import React, { StrictMode } from 'react';
+import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
 import { createWrapperConfig  } from './config.js';
-import { disableElement } from '../../common/client/utils.js';
+import { confiugureDebugging } from '../../debugger/client/debugger.js';
 
 export const runPythonReact = async () => {
     const appConfig = createWrapperConfig();
@@ -20,39 +21,30 @@ export const runPythonReact = async () => {
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            const App = () => {
-                return (
-                    <div style={{ 'backgroundColor': '#1f1f1f' }} >
-                        <MonacoEditorReactComp
-                            wrapperConfig={appConfig.wrapperConfig}
-                            style={{ 'height': '100%' }}
-                            onTextChanged={onTextChanged}
-                            onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
-                                console.log(`Loaded ${wrapper.reportStatus().join('\n').toString()}`);
+    const App = () => {
+        return (
+            <div style={{ 'backgroundColor': '#1f1f1f' }} >
+                <MonacoEditorReactComp
+                    wrapperConfig={appConfig.wrapperConfig}
+                    style={{ 'height': '100%' }}
+                    onTextChanged={onTextChanged}
+                    onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
+                        const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
+                        result.setAsDefaultApi();
 
-                                await vscode.commands.executeCommand('workbench.view.explorer');
-                            }}
-                            onError={(e) => {
-                                console.error(e);
-                            }} />
-                    </div>
-                );
-            };
+                        const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
+                        if (initResult !== undefined) {
+                            confiugureDebugging(await initResult.getApi(), appConfig.configParams);
+                        }
 
-            const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;
-            if (strictMode) {
-                root.render(<StrictMode><App /></StrictMode>);
-            } else {
-                root.render(<App />);
-            }
-            disableElement('checkbox-strictmode', true);
-        });
-        document.querySelector('#button-dispose')?.addEventListener('click', () => {
-            root.render([]);
-        });
-    } catch (e) {
-        console.error(e);
-    }
+                        await vscode.commands.executeCommand('workbench.view.explorer');
+                        await vscode.window.showTextDocument(appConfig.configParams.files.get('hello2.py')!.uri);
+                    }}
+                    onError={(e) => {
+                        console.error(e);
+                    }} />
+            </div>
+        );
+    };
+    root.render(<App />);
 };
