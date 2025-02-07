@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "13.1.4",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "~13.1.6",
     "@eslint/eslintrc": "~3.2.0",
     "@eslint/js": "~9.19.0",
     "@stylistic/eslint-plugin": "~3.0.1",
@@ -25,7 +25,7 @@
     "@typescript-eslint/parser": "~8.23.0",
     "@vitejs/plugin-react": "~4.3.4",
     "@vitest/browser": "~3.0.5",
-    "editorconfig": "~2.0.0",
+    "editorconfig": "~2.0.1",
     "esbuild": "~0.24.2",
     "eslint": "~9.19.0",
     "eslint-plugin-header": "~3.1.1",
