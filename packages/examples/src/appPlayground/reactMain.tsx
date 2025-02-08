@@ -5,7 +5,7 @@
 
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';
@@ -13,9 +13,6 @@ import { disableElement } from '../common/client/utils.js';
 
 export const runApplicationPlaygroundReact = async () => {
 
-    const onTextChanged = (textChanges: TextChanges) => {
-        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
-    };
     const configResult = configure();
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
@@ -26,7 +23,6 @@ export const runApplicationPlaygroundReact = async () => {
                     <div style={{ 'backgroundColor': '#1f1f1f' }}>
                         <MonacoEditorReactComp
                             wrapperConfig={configResult.wrapperConfig}
-                            onTextChanged={onTextChanged}
                             onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
                                 await configurePostStart(wrapper, configResult);
                             }}

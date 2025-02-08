@@ -26,11 +26,6 @@ export interface TextContents {
     original?: string;
 }
 
-export type TextChanges = TextContents & {
-    isDirty: boolean;
-    isDirtyOriginal: boolean;
-}
-
 export interface CodeContent {
     text: string;
     enforceLanguageId?: string;
@@ -315,15 +310,11 @@ export const getEditorUri = (id: string, original: boolean, code: CodePlusUri | 
     }
 };
 
-export const didModelContentChange = (textModels: TextModels, codeResources?: CodeResources, onTextChanged?: (textChanges: TextChanges) => void) => {
+export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {
     const modified = textModels.modified?.getValue() ?? '';
     const original = textModels.original?.getValue() ?? '';
-    const isDirty = modified !== codeResources?.modified?.text;
-    const isDirtyOriginal = original !== codeResources?.original?.text;
     onTextChanged?.({
         modified,
-        original,
-        isDirty,
-        isDirtyOriginal
+        original
     });
 };
