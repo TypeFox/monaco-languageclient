@@ -250,7 +250,7 @@ There are [Volta](https://volta.sh/) instructions in the `package.json` files. W
 
 ### Vite dev server troubleshooting
 
-When you are using vite for development please be aware of [this recommendation](https://github.com/CodinGame/monaco-vscode-api#if-you-use-vite).
+When you are using the vite dev server there are some issues with imports, please [read this recommendation](https://github.com/CodinGame/monaco-vscode-api/wiki/Troubleshooting#if-you-use-vite).
 
 If you see the problem *Assertion failed (There is already an extension with this id)* you likely have mismatching dependencies defined for `vscode` / `@codingame/monaco-vscode-api`. You should fix this or add the following entry to your vite config:
 
