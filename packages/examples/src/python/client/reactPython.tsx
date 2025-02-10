@@ -8,15 +8,24 @@ import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vsco
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig  } from './config.js';
 import { confiugureDebugging } from '../../debugger/client/debugger.js';
 
 export const runPythonReact = async () => {
     const appConfig = createWrapperConfig();
-    
-    const onTextChanged = (textChanges: TextContents) => {
-        console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+
+    const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+        const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
+        result.setAsDefaultApi();
+
+        const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
+        if (initResult !== undefined) {
+            confiugureDebugging(await initResult.getApi(), appConfig.configParams);
+        }
+
+        await vscode.commands.executeCommand('workbench.view.explorer');
+        await vscode.window.showTextDocument(appConfig.configParams.files.get('hello2.py')!.uri);
     };
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
@@ -27,19 +36,7 @@ export const runPythonReact = async () => {
                 <MonacoEditorReactComp
                     wrapperConfig={appConfig.wrapperConfig}
                     style={{ 'height': '100%' }}
-                    onTextChanged={onTextChanged}
-                    onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
-                        const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
-                        result.setAsDefaultApi();
-
-                        const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
-                        if (initResult !== undefined) {
-                            confiugureDebugging(await initResult.getApi(), appConfig.configParams);
-                        }
-
-                        await vscode.commands.executeCommand('workbench.view.explorer');
-                        await vscode.window.showTextDocument(appConfig.configParams.files.get('hello2.py')!.uri);
-                    }}
+                    onLoad={onLoad}
                     onError={(e) => {
                         console.error(e);
                     }} />

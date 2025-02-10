@@ -15,7 +15,7 @@ import {
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import {
     MonacoEditorLanguageClientWrapper,
-    TextChanges,
+    TextContents,
     TextModels,
     WrapperConfig, didModelContentChange
 } from 'monaco-editor-wrapper';
@@ -86,7 +86,7 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     }
 
     emitCodeChange(textModels: TextModels, wrapperConfig: WrapperConfig) {
-        const onTextChanged = (textChanges: TextChanges) => {
+        const onTextChanged = (textChanges: TextContents) => {
             this.onTextChanged.emit(textChanges.modified);
         };
         didModelContentChange(textModels, wrapperConfig.editorAppConfig?.codeResources, onTextChanged);
