@@ -73,6 +73,7 @@
   "dependencies": {
     "@codingame/monaco-vscode-configuration-service-override": "~13.1.6",
     "@codingame/monaco-vscode-cpp-default-extension": "~13.1.6",
+    "@codingame/monaco-vscode-debug-service-override": "~13.1.6",
     "@codingame/monaco-vscode-editor-api": "~13.1.6",
     "@codingame/monaco-vscode-environment-service-override": "~13.1.6",
     "@codingame/monaco-vscode-explorer-service-override": "~13.1.6",
@@ -84,6 +85,7 @@
     "@codingame/monaco-vscode-keybindings-service-override": "~13.1.6",
     "@codingame/monaco-vscode-lifecycle-service-override": "~13.1.6",
     "@codingame/monaco-vscode-localization-service-override": "~13.1.6",
+    "@codingame/monaco-vscode-preferences-service-override": "~13.1.6", 
     "@codingame/monaco-vscode-python-default-extension": "~13.1.6",
     "@codingame/monaco-vscode-remote-agent-service-override": "~13.1.6",
     "@codingame/monaco-vscode-search-result-default-extension": "~13.1.6",
@@ -92,6 +94,7 @@
     "@codingame/monaco-vscode-standalone-json-language-features": "~13.1.6",
     "@codingame/monaco-vscode-standalone-languages": "~13.1.6",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~13.1.6",
+    "@codingame/monaco-vscode-testing-service-override": "~13.1.6",
     "@codingame/monaco-vscode-storage-service-override": "~13.1.6",
     "@codingame/monaco-vscode-textmate-service-override": "~13.1.6",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~13.1.6",

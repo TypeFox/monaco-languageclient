@@ -5,6 +5,7 @@
 
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
+import type { TextContents } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
@@ -21,6 +22,9 @@ export const runStatemachineReact = async () => {
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
+    const onTextChanged = (textChanges: TextContents) => {
+        console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+    };
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             const App = () => {
@@ -40,7 +44,8 @@ export const runStatemachineReact = async () => {
                     <div style={{ 'height': height }} >
                         <MonacoEditorReactComp
                             style={{ 'height': '100%' }}
-                            wrapperConfig={wrapperConfig} />
+                            wrapperConfig={wrapperConfig}
+                            onTextChanged={onTextChanged} />
                     </div>
                 );
             };
