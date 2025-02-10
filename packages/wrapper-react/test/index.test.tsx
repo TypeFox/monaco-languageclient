@@ -7,7 +7,7 @@ import { describe, expect, test } from 'vitest';
 import { render, type RenderResult } from '@testing-library/react';
 import React from 'react';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, type TextChanges, type WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configureMonacoWorkers } from './helper.js';
 
@@ -60,7 +60,7 @@ describe('Test MonacoEditorReactComp', () => {
             }
         };
 
-        const textReceiverHello = (textChanges: TextChanges) => {
+        const textReceiverHello = (textChanges: TextContents) => {
             expect(textChanges.modified).toEqual('hello world');
         };
 
@@ -89,7 +89,7 @@ describe('Test MonacoEditorReactComp', () => {
         };
 
         let count = 0;
-        const textReceiver = (textChanges: TextChanges) => {
+        const textReceiver = (textChanges: TextContents) => {
             // initial call
             if (count === 0) {
                 expect(textChanges.modified).toBe('hello world');

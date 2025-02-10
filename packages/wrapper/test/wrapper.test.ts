@@ -5,10 +5,15 @@
 
 import * as vscode from 'vscode';
 import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
-import { describe, expect, test } from 'vitest';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { describe, expect, test, vi } from 'vitest';
+import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 import { IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
+
+const createMewModelReference = async () => {
+    const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
+    return await createModelReference(uri, 'text');
+};
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 
@@ -53,7 +58,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
     });
 
-    test('code resources main', async () => {
+    test('Code resources main', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
@@ -66,7 +71,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         app?.disposeApp();
     });
 
-    test('code resources original', async () => {
+    test('Code resources original', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
@@ -85,7 +90,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         app?.disposeApp();
     });
 
-    test('code resources main and original', async () => {
+    test('Code resources main and original', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
@@ -110,7 +115,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         app?.disposeApp();
     });
 
-    test('code resources empty', async () => {
+    test('Code resources empty', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
@@ -123,7 +128,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
     });
 
-    test('code resources model direct', async () => {
+    test('Code resources model direct', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
@@ -133,10 +138,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const app = wrapper.getMonacoEditorApp();
 
         // here the modelReference is created manually and given to the updateEditorModels of the wrapper
-        const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
-        const modelRefModified = await createModelReference(uri, 'text');
         wrapper.updateEditorModels({
-            modelRefModified
+            modelRefModified: await createMewModelReference()
         });
 
         const modelRefs = app?.getModelRefs();
@@ -273,5 +276,39 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(textContents?.modified).toEqual('console.log("Goodbye World");');
 
         expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
+    });
+
+    test('Verify registerTextChangeCallback', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const wrapperConfig = createWrapperConfigExtendedApp();
+
+        const onTextChanged = (textChanges: TextContents) => {
+            console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+        };
+
+        await wrapper.init(wrapperConfig);
+
+        // eslint-disable-next-line dot-notation
+        const disposableStoreMonaco = wrapper['disposableStoreMonaco'];
+        expect(disposableStoreMonaco).toBeDefined();
+
+        wrapper.registerTextChangeCallback(onTextChanged);
+
+        // eslint-disable-next-line dot-notation
+        const spyModelUpdateCallback = vi.spyOn(wrapper['editorApp'], 'modelUpdateCallback');
+        const spyDisposableStoreMonaco = vi.spyOn(disposableStoreMonaco, 'clear');
+
+        await wrapper.start();
+
+        expect(spyModelUpdateCallback).toHaveBeenCalledTimes(1);
+        expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(1);
+
+        wrapper.updateEditorModels({
+            modelRefModified: await createMewModelReference()
+        });
+
+        expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);
+        expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(2);
     });
 });

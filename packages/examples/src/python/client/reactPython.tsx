@@ -8,7 +8,7 @@ import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemo
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper, type TextChanges } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import { disableElement } from '../../common/client/utils.js';
@@ -19,8 +19,8 @@ export const runPythonReact = async () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(badPyUri, badPyCode));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const onTextChanged = (textChanges: TextChanges) => {
-        console.log(`Dirty? ${textChanges.isDirty}\ntext: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+    const onTextChanged = (textChanges: TextContents) => {
+        console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
     };
     const wrapperConfig = createWrapperConfig('/workspace', badPyCode, '/workspace/bad.py');
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
