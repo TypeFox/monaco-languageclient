@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { type CodePlusFileExt, configureAndInitVscodeApi, disposeLanguageClients, LanguageClientWrapper, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { type CodePlusFileExt, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers, disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 
@@ -29,15 +29,6 @@ print("Hello Moon!")
 
     let currentText = textJson;
     let currenFileExt = 'json';
-
-    const lccJson = createJsonLanguageClientConfig();
-    const lcwJson = new LanguageClientWrapper({
-        languageClientConfig: lccJson
-    });
-    const lccPython = createPythonLanguageClientConfig();
-    const lcwPython = new LanguageClientWrapper({
-        languageClientConfig: lccPython
-    });
 
     const wrapperConfig: WrapperConfig = {
         id: '42',
@@ -64,71 +55,54 @@ print("Hello Moon!")
                 }
             },
             monacoWorkerFactory: configureMonacoWorkers
+        },
+        languageClientConfigs: {
+            json: createJsonLanguageClientConfig(),
+            python: createPythonLanguageClientConfig()
         }
     };
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
 
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
-            if (wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally === true) {
+    document.querySelector('#button-start')?.addEventListener('click', async () => {
+        try {
+            disableElement('button-start', true);
+            disableElement('button-flip', false);
+            disableElement('checkbox-extlc', true);
 
-                const logger = wrapper.getLogger();
-                logger.setLevel(wrapperConfig.logLevel!);
-                await configureAndInitVscodeApi(wrapperConfig.$type, {
-                    vscodeApiConfig: wrapperConfig.vscodeApiConfig!,
-                    logLevel: wrapperConfig.logLevel!,
-                }, {
-                    htmlContainer: wrapperConfig.htmlContainer,
-                    caller: 'runMultipleLanguageClientsExample',
-                    logger
-                });
+            const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
 
-                const allPromises: Array<Promise<void>> = [];
-                if (!lcwJson.isStarted()) {
-                    allPromises.push(lcwJson.start());
-                }
-                if (!lcwPython.isStarted()) {
-                    allPromises.push(lcwPython.start());
-                }
-                await Promise.all(allPromises);
-            } else {
-                wrapperConfig.languageClientConfigs = {
-                    json: lccJson,
-                    python: lccPython
-                };
-            }
-
-            await wrapper.initAndStart(wrapperConfig);
+            await wrapper.initAndStart(wrapperConfig, !externalLc);
             if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).text = currentText;
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;
             }
 
-            disableElement('button-flip', false);
-            disableElement('checkbox-extlc', true);
-        });
-        document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            disableElement('button-flip', true);
-
-            wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
-            if (wrapperConfig.vscodeApiConfig!.vscodeApiInitPerformExternally === true) {
-                disposeLanguageClients([lcwJson, lcwPython], false);
+            // init language clients after start
+            if (externalLc === true) {
+                wrapper.initLanguageClients();
+                await wrapper.startLanguageClients();
             }
-            await wrapper.dispose();
+        } catch (e) {
+            console.error(e);
+        }
+    });
+    document.querySelector('#button-dispose')?.addEventListener('click', async () => {
+        disableElement('button-flip', true);
+        disableElement('button-dispose', true);
+        disableElement('button-start', false);
+
+        await wrapper.dispose();
+    });
+    document.querySelector('#button-flip')?.addEventListener('click', async () => {
+        currentText = currentText === textJson ? textPython : textJson;
+        currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
+        wrapper.updateCodeResources({
+            modified: {
+                text: currentText,
+                fileExt: currenFileExt
+            }
         });
-        document.querySelector('#button-flip')?.addEventListener('click', async () => {
-            currentText = currentText === textJson ? textPython : textJson;
-            currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
-            wrapper.updateCodeResources({
-                modified: {
-                    text: currentText,
-                    fileExt: currenFileExt
-                }
-            });
-        });
-    } catch (e) {
-        console.error(e);
-    }
+    });
+
 };

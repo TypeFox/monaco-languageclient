@@ -56,7 +56,7 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
-    async init(wrapperConfig: WrapperConfig) {
+    async init(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
         this.markStarting();
         if (this.initDone) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
@@ -100,14 +100,16 @@ export class MonacoEditorLanguageClientWrapper {
         }
         this.wrapperConfig = wrapperConfig;
 
-        await this.initLanguageClients();
+        if (includeLanguageClients === true) {
+            this.initLanguageClients();
+        }
         await this.initExtensions();
         this.editorApp = new EditorApp(this.id, wrapperConfig.$type, wrapperConfig.editorAppConfig, this.logger);
 
         this.initDone = true;
     }
 
-    async initLanguageClients() {
+    initLanguageClients() {
         const lccEntries = Object.entries(this.wrapperConfig?.languageClientConfigs ?? {});
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
@@ -155,15 +157,18 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(wrapperConfig: WrapperConfig) {
-        await this.init(wrapperConfig);
-        await this.start();
+    async initAndStart(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
+        await this.init(wrapperConfig, includeLanguageClients);
+        await this.start({ includeLanguageClients });
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(htmlContainer?: HTMLElement) {
+    async start(startConfig?: {
+        htmlContainer?: HTMLElement,
+        includeLanguageClients?: boolean
+    }) {
         if (!this.initDone) {
             throw new Error('No init was performed. Please call init() before start()');
         }
@@ -171,7 +176,7 @@ export class MonacoEditorLanguageClientWrapper {
         const viewServiceType = this.wrapperConfig?.vscodeApiConfig?.viewsConfig?.viewServiceType;
         if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
             this.logger.info(`Starting monaco-editor (${this.id})`);
-            const html = htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : htmlContainer;
+            const html = startConfig?.htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : startConfig.htmlContainer;
             if (html === undefined) {
                 throw new Error('No html container provided. Unable to start monaco-editor.');
             } else {
@@ -181,7 +186,9 @@ export class MonacoEditorLanguageClientWrapper {
             this.logger.info('No EditorService configured. monaco-editor will not be started.');
         }
 
-        await this.startLanguageClients();
+        if (startConfig?.includeLanguageClients === true) {
+            await this.startLanguageClients();
+        }
 
         this.markStarted();
     }
@@ -317,7 +324,7 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(doDisposeLanguageClients: boolean = true) {
+    async dispose(includeLanguageClients: boolean = true) {
         this.markStopping();
 
         this.editorApp?.disposeApp();
@@ -327,7 +334,7 @@ export class MonacoEditorLanguageClientWrapper {
         this.disposableStoreExtensions?.dispose();
         this.disposableStoreMonaco?.dispose();
 
-        if (doDisposeLanguageClients) {
+        if (includeLanguageClients) {
             await disposeLanguageClients(this.languageClientWrappers.values(), false);
         }
 
