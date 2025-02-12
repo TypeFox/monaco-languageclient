@@ -2,10 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.2.5] - 2025-02-1x
+## [2025.2.5] - 2025-02-12
 
+- Update to monaco-vscode-api 14.0.2 and incremented versions to x.3.0 [#852](https://github.com/TypeFox/monaco-languageclient/pull/852)
+  - Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+- wrapper: start() never resolves if lsp websocket fails, and use of editor must wait for lsp websocket connection. [#851](https://github.com/TypeFox/monaco-languageclient/issues/851)
+  - Two language clients example makes use of those changes
 - Integrate python debugger [#842](https://github.com/TypeFox/monaco-languageclient/pull/842)
-- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
 - Updated to `monaco-languageclient@9.3.0`, `monaco-editor-wrapper@6.3.0` and `@typefox/monaco-editor-react@6.3.0`.
 
 ## [2025.2.4] - 2025-02-08

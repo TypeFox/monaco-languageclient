@@ -2,10 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.3.0] - 2025-02-1x
+## [6.3.0] - 2025-02-12
 
+- Update to monaco-vscode-api 14.0.2 and incremented versions to x.3.0 [#852](https://github.com/TypeFox/monaco-languageclient/pull/852)
+  - Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+- wrapper: start() never resolves if lsp websocket fails, and use of editor must wait for lsp websocket connection. [#851](https://github.com/TypeFox/monaco-languageclient/issues/851)
 - Move text changes handling from react component to the wrapper [#849](https://github.com/TypeFox/monaco-languageclient/pull/849)
-- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
 - Updated to `monaco-languageclient@9.3.0`.
 
 ## [6.2.5] - 2025-02-08

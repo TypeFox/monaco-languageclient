@@ -109,7 +109,7 @@
     "langium": "~3.3.1",
     "monaco-editor-wrapper": "~6.3.0",
     "monaco-languageclient": "~9.3.0",
-    "pyright": "~1.1.393",
+    "pyright": "~1.1.394",
     "react": "~19.0.0",
     "react-dom": "~19.0.0",
     "request-light": "~0.8.0",
