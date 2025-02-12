@@ -2,6 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.3.0] - 2025-02-1x
+
+- Move text changes handling from react component to the wrapper [#849](https://github.com/TypeFox/monaco-languageclient/pull/849)
+- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+- Updated to `monaco-languageclient@9.3.0`.
+
 ## [6.2.5] - 2025-02-08
 
 - Updated all `@codingame/monaco-vscode` packages to `13.1.6`.

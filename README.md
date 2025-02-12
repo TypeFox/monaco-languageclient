@@ -306,7 +306,7 @@ Because `@codingame/monaco-vscode-api` relies on it own build of `monaco-editor`
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~13.1.6"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~14.0.2"
 }
 ```
 
@@ -315,7 +315,7 @@ Because `@codingame/monaco-vscode-api` relies on it own build of `monaco-editor`
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (you find the [compatibility table here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@~13.1.6"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2"
 ```
 
 ## Licenses

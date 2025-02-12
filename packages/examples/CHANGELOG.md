@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.2.5] - 2025-02-1x
+
+- Integrate python debugger [#842](https://github.com/TypeFox/monaco-languageclient/pull/842)
+- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+- Updated to `monaco-languageclient@9.3.0`, `monaco-editor-wrapper@6.3.0` and `@typefox/monaco-editor-react@6.3.0`.
+
 ## [2025.2.4] - 2025-02-08
 
 - Updated all `@codingame/monaco-vscode` packages to `13.1.6`.
