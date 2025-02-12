@@ -8,7 +8,7 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.13.1",
+    "node": "22.14.0",
     "npm": "10.9.2"
   },
   "dependencies": {
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "shx": "~0.3.4",
-    "vite": "~6.0.11"
+    "vite": "~6.1.0"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",

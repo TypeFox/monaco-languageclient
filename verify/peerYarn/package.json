@@ -9,7 +9,7 @@
     "yarn": ">=4.6.0"
   },
   "volta": {
-    "node": "22.13.1",
+    "node": "22.14.0",
     "yarn": "4.6.0"
   },
   "dependencies": {
@@ -23,7 +23,7 @@
     "@codingame/monaco-vscode-localization-service-override": "~14.0.2",
     "@codingame/monaco-vscode-log-service-override": "~14.0.2",
     "@codingame/monaco-vscode-model-service-override": "~14.0.2",
-    "monaco-languageclient": "~9.3.0",
+    "monaco-languageclient-examples": "~2025.2.5",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2",
     "vscode-languageclient": "~9.0.1"
   },
