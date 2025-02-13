@@ -10,8 +10,8 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { LogLevel } from 'vscode/services';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 
 export const runBrowserEditor = async () => {
@@ -29,9 +29,11 @@ export const runBrowserEditor = async () => {
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
     const jsonClientUserConfig: WrapperConfig = {
+        $type: 'extended',
+        htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -44,16 +46,13 @@ export const runBrowserEditor = async () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     uri: codeUri
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
     await wrapper.init(jsonClientUserConfig);
@@ -158,7 +157,7 @@ export const runBrowserEditor = async () => {
 
     await wrapper.start();
 
-    wrapper.getTextModels()?.text?.onDidChangeContent(() => {
+    wrapper.getTextModels()?.modified?.onDidChangeContent(() => {
         validate();
     });
 };

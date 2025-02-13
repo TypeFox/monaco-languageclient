@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>Python Language Client & Pyright Language Server (Web Socket)</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./resources/styles/views.css">
 </head>
 
 <body>
-    <h2>Python Language Client & Pyright Language Server (Web Socket)</h2>
-    <button type="button" id="button-start">Start</button>
-    <button type="button" id="button-dispose">Dispose</button>
-    <div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
-    <script type="module">
+    <div class="exampleHeadelineDiv">
+        <b class="exampleHeadeline">Python Language Client & Pyright Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+    </div>
+    <script type="module" rel="modulepreload">
         import { runPythonWrapper } from "./src/python/client/main.ts";
 
         runPythonWrapper();

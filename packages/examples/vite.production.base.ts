@@ -6,16 +6,19 @@ import path from 'path';
 export const buildBaseProductionConfig: () => UserConfig = () => {
     return {
         build: {
-            target: 'esnext',
+            target: 'ES2022',
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
-                    browser: path.resolve(__dirname, 'browser.html'),
-                    langium: path.resolve(__dirname, 'langium.html'),
-                    statemachine: path.resolve(__dirname, 'statemachine.html'),
-                    clangd: path.resolve(__dirname, 'clangd.html'),
-                    reactStatemachine: path.resolve(__dirname, 'react_statemachine.html'),
-                    tsExtHost: path.resolve(__dirname, 'tsExtHost.html')
+                    langiumClassic: path.resolve(__dirname, 'ghp_langium_classic.html'),
+                    langiumExtended: path.resolve(__dirname, 'ghp_langium_extended.html'),
+                    statemachine: path.resolve(__dirname, 'ghp_statemachine.html'),
+                    clangd: path.resolve(__dirname, 'ghp_clangd.html'),
+                    appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),
+                    browser: path.resolve(__dirname, 'ghp_browser.html'),
+                    tsExtHost: path.resolve(__dirname, 'ghp_tsExtHost.html'),
+                    reactAppPlayground: path.resolve(__dirname, 'ghp_react_appPlayground.html'),
+                    reactStatemachine: path.resolve(__dirname, 'ghp_react_statemachine.html')
                 }
             },
             emptyOutDir: false,

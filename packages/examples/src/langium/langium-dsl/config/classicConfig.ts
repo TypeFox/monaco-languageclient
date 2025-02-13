@@ -5,34 +5,35 @@
 
 import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { LogLevel } from 'vscode/services';
-import { Logger } from 'monaco-languageclient/tools';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { Logger } from 'monaco-languageclient/tools';
+import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
-import { loadLangiumWorker } from '../wrapperLangium.js';
-import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
+import { defineDefaultWorkerLoaders } from '../../../common/client/utils.js';
 
-export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
-    const langiumWorker = loadLangiumWorker();
+export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<WrapperConfig> => {
+    const workerLoaders = defineDefaultWorkerLoaders();
+    workerLoaders.TextMateWorker = undefined;
     return {
+        $type: 'classic',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()
             }
         },
         editorAppConfig: {
-            $type: 'classic',
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     fileExt: 'langium',
                     enforceLanguageId: 'langium'
                 }
             },
-            useDiffEditor: false,
             editorOptions: {
                 'semanticHighlighting.enabled': true,
                 wordBasedSuggestions: 'off',
@@ -44,14 +45,16 @@ export const setupLangiumClientClassic = async (): Promise<WrapperConfig> => {
             },
             monacoWorkerFactory: (logger?: Logger) => {
                 useWorkerFactory({
+                    workerLoaders,
                     logger
                 });
-            },
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            }
         },
         languageClientConfigs: {
             langium: {
-                languageId: 'langium',
+                clientOptions: {
+                    documentSelector: ['langium']
+                },
                 connection: {
                     options: {
                         $type: 'WorkerDirect',

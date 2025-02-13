@@ -12,12 +12,12 @@ import {
     Output,
 } from '@angular/core';
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import {
     MonacoEditorLanguageClientWrapper,
-    TextChanges,
+    TextContents,
     TextModels,
-    WrapperConfig , didModelContentChange
+    WrapperConfig, didModelContentChange
 } from 'monaco-editor-wrapper';
 
 @Component({
@@ -30,7 +30,7 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     @Output() onTextChanged = new EventEmitter<string>();
     wrapperConfig = input<WrapperConfig>();
     monacoEditorId = input<string>();
-    editorInlineStyle   = input<string>();
+    editorInlineStyle = input<string>();
     private wrapper: MonacoEditorLanguageClientWrapper =
         new MonacoEditorLanguageClientWrapper();
     private _subscription: monaco.IDisposable | null = null;
@@ -74,22 +74,22 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     handleOnTextChanged() {
         const wrapperConfig = this.wrapperConfig();
         const textModels = this.wrapper.getTextModels();
-        if (textModels?.text !== undefined && wrapperConfig !== undefined) {
+        if (textModels?.modified !== undefined && wrapperConfig !== undefined) {
             const newSubscriptions: monaco.IDisposable[] = [];
-            this.emitCodeChange(textModels, wrapperConfig);
+            this.emitCodeChange(textModels);
             newSubscriptions.push(
-                textModels.text.onDidChangeContent(() => {
-                    this.emitCodeChange(textModels, wrapperConfig);
+                textModels.modified.onDidChangeContent(() => {
+                    this.emitCodeChange(textModels);
                 })
             );
         }
     }
 
-    emitCodeChange(textModels:  TextModels , wrapperConfig: WrapperConfig ) {
-        const  onTextChanged = (textChanges: TextChanges) => {
-            this.onTextChanged.emit(textChanges.text);
+    emitCodeChange(textModels: TextModels) {
+        const onTextChanged = (textChanges: TextContents) => {
+            this.onTextChanged.emit(textChanges.modified);
         };
-        didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
+        didModelContentChange(textModels, onTextChanged);
     }
 
 }

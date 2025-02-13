@@ -2,15 +2,75 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.0.0-next.5] - 2024-10-23
+## [6.3.0] - 2025-02-12
 
+- Move text changes handling from react component to the wrapper [#849](https://github.com/TypeFox/monaco-languageclient/pull/849)
+- Updated to `monaco-languageclient@9.3.0` and `monaco-editor-wrapper@6.3.0`.
+- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+
+## [6.2.5] - 2025-02-08
+
+- Updated to `monaco-languageclient@9.2.5` and `monaco-editor-wrapper@6.2.5`.
+- Updated all `@codingame/monaco-vscode` packages to `13.1.6`.
+
+## [6.2.4] - 2025-02-06
+
+- Fix non dynamic import of @codingame/monaco-vscode-views-service-override [#844](https://github.com/TypeFox/monaco-languageclient/pull/844)
+- Updated to `monaco-languageclient@9.2.4` and `monaco-editor-wrapper@6.2.4`.
+- Updated all `@codingame/monaco-vscode` packages to `13.1.4`.
+
+## [6.2.3] - 2025-02-04
+
+- clean subscriptions in react [#839](https://github.com/TypeFox/monaco-languageclient/pull/839)
+- Updated to `monaco-languageclient@9.2.3` and `monaco-editor-wrapper@6.2.3`.
+- Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
+
+## [6.2.2] - 2025-02-03
+
+- Updated to `monaco-languageclient@9.2.2` and `monaco-editor-wrapper@6.2.2`.
+- Updated all `@codingame/monaco-vscode` packages to `13.1.2`.
+
+## [6.2.1] - 2025-01-31
+
+- Moved workerFactory from `monaco-editor-wrapper` to `monaco-languageclient`
+- Updated to `monaco-languageclient@9.2.1` and `monaco-editor-wrapper@6.2.1`.
+
+## [6.2.0] - 2025-01-31
+
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/836)
+  - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+  - Breaking changes not in this API, but when using `@monaco-vscode-api`:
+    - `@codingame/monaco-vscode-api` should not be installed as vscode anymore
+    - `@codingame/monaco-vscode-extension-api` can optionally be installed as `vscode` to use the extension api from the main thread
+    - Some imports should be updated:
+      - `vscode/*` => `@codingame/monaco-vscode-api/*`
+      - `vscode/services` => `@codingame/monaco-vscode-api`
+- Updated to `monaco-languageclient@9.2.0` and `monaco-editor-wrapper@6.2.0`.
+
+## [6.1.1] - 2025-01-20
+
+- View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
+
+## [6.1.0] - 2025-01-10
+
+- `@typefox/monaco-editor-react` now works with views service [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)
+- Ensure configuration is init before service init [#820](https://github.com/TypeFox/monaco-languageclient/pull/820)
+
+## [6.0.0] - 2024-12-18
+
+- Only `monaco-editor-wrapper` is a `peerDependencies`
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
+- Updated to `monaco-editor-wrapper@9.0.0` and `monaco-languageclient@6.0.0`. Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+- Bugfix: Wrapper: Text model content is not properly updated with updateCodeResource [#808](https://github.com/TypeFox/monaco-languageclient/pull/808)
+- Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
+- Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
+  - Internal functions clean-up. `containerRef.current` is directly passed to editor start.
 - Use `didModelContentChange` from `monaco-editor-wrapper` for model content verifications.
 - Updated to eslint 9
 - Clean-up and allow registering a registerModelUpdate callback. This is used to properly handle `onTextChanged`
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
   - On startup the current containerRef is passed to the interal editor app/monaco-editor
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated to `monaco-editor-wrapper@9.0.0-next.5` and `monaco-languageclient@6.0.0-next.5`. Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
 - Turned react component from class to function [#739](https://github.com/TypeFox/monaco-languageclient/pull/739)

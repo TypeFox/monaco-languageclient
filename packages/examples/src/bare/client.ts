@@ -3,39 +3,35 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { initServices } from 'monaco-languageclient/vscode/services';
-import { LogLevel } from 'vscode/services';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
-import '@codingame/monaco-vscode-theme-defaults-default-extension';
 import '@codingame/monaco-vscode-json-default-extension';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
-import { updateUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     await initServices({
-        userServices: {
-            ...getConfigurationServiceOverride(),
-            ...getThemeServiceOverride(),
-            ...getTextmateServiceOverride(),
+        serviceOverrides: {
+            ...getConfigurationServiceOverride()
         },
+        userConfiguration: {
+            json: JSON.stringify({
+                'editor.experimental.asyncTokenization': true
+            })
+        },
+    }, {
         htmlContainer,
         logger
     });
-
-    updateUserConfiguration(JSON.stringify({
-        'editor.experimental.asyncTokenization': true
-    }));
 
     // register the JSON language with Monaco
     monaco.languages.register({

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { LanguageClientConfig, LanguageClientWrapper, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { LanguageClientWrapper, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfigExtendedApp } from './helper.js';
 
 describe('Test LanguageClientWrapper', () => {
@@ -18,44 +18,43 @@ describe('Test LanguageClientWrapper', () => {
     });
 
     test('Constructor: no config', async () => {
-        // create a web worker to pass to the wrapper
-        const worker = new Worker('./worker/langium-server.ts', {
-            type: 'module',
-            name: 'Langium LS',
-        });
-        const languageClientConfig: LanguageClientConfig = {
-            languageId: 'javascript',
-            connection: {
-                options: {
-                    $type: 'WorkerDirect',
-                    worker
+        const languageClientWrapper = new LanguageClientWrapper({
+            languageClientConfig: {
+                clientOptions: {
+                    documentSelector: ['javascript']
+                },
+                connection: {
+                    options: {
+                        $type: 'WorkerDirect',
+                        // create a web worker to pass to the wrapper
+                        worker: new Worker('./worker/langium-server.ts', {
+                            type: 'module',
+                            name: 'Langium LS',
+                        })
+                    }
                 }
             }
-        };
-
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig
         });
         expect(languageClientWrapper).toBeDefined();
         expect(languageClientWrapper.haveLanguageClient).toBeTruthy();
     });
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {
-        // create a web worker to pass to the wrapper
-        const worker = new Worker('./worker/langium-server.ts', {
-            type: 'module',
-            name: 'Langium LS',
-        });
-
         // setup the wrapper
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptions: {
+                    documentSelector: ['javascript']
+                },
                 connection: {
                     options: {
                         $type: 'WorkerDirect',
-                        worker
+                        // create a web worker to pass to the wrapper
+                        worker: new Worker('./worker/langium-server.ts', {
+                            type: 'module',
+                            name: 'Langium LS',
+                        })
                     }
                 }
             }
@@ -84,7 +83,9 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptions: {
+                    documentSelector: ['javascript']
+                },
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -104,7 +105,9 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptions: {
+                    documentSelector: ['javascript']
+                },
                 name: 'test-unreachable',
                 connection: {
                     options: {
@@ -120,7 +123,7 @@ describe('Test LanguageClientWrapper', () => {
         const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
-        await expect(languageClientWrapper!.start()).rejects.toEqual({
+        await expect(languageClientWrapper?.start()).rejects.toEqual({
             message: 'languageClientWrapper (test-unreachable): Websocket connection failed.',
             error: 'No error was provided.'
         });
@@ -141,7 +144,9 @@ describe('Test LanguageClientWrapper', () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
             javascript: {
-                languageId: 'javascript',
+                clientOptions: {
+                    documentSelector: ['javascript']
+                },
                 connection: {
                     options: {
                         $type: 'WorkerConfig',
@@ -157,7 +162,7 @@ describe('Test LanguageClientWrapper', () => {
         const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
 
-        await expect(languageClientWrapper!.start()).rejects.toEqual({
+        await expect(languageClientWrapper?.start()).rejects.toEqual({
             message: 'languageClientWrapper (unnamed): Illegal worker configuration detected.',
             error: 'No error was provided.'
         });

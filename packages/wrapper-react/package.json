@@ -1,6 +1,6 @@
 {
   "name": "@typefox/monaco-editor-react",
-  "version": "6.0.0-next.5",
+  "version": "6.3.0",
   "license": "MIT",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
@@ -37,37 +37,18 @@
     "compile": " tsc --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
   },
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
   "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+    "node": "22.14.0",
+    "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "monaco-editor-wrapper": "~6.0.0-next.5",
-    "monaco-languageclient": "~9.0.0-next.5",
-    "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1"
-  },
-  "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "monaco-editor-wrapper": "~6.0.0-next.5",
-    "monaco-languageclient": "~9.0.0-next.5",
-    "react": "~18.3.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1"
-  },
-  "peerDependenciesMeta": {
-    "monaco-editor": {
-      "optional": false
-    },
-    "monaco-editor-wrapper": {
-      "optional": false
-    },
-    "react": {
-      "optional": false
-    },
-    "vscode": {
-      "optional": false
-    }
+    "@codingame/monaco-vscode-editor-api": "~14.0.2",
+    "monaco-editor-wrapper": "~6.3.0",
+    "react": ">=18.0.0 || <20.0.0"
   },
   "repository": {
     "type": "git",

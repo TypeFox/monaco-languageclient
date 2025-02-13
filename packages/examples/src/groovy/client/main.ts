@@ -6,8 +6,8 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-groovy-default-extension';
-import { LogLevel } from 'vscode/services';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { groovyConfig } from '../config.js';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 
@@ -16,10 +16,12 @@ import java.io.File;
 File file = new File("E:/Example.txt");
 `;
 
-const userConfig: WrapperConfig = {
+const wrapperConfig: WrapperConfig = {
+    $type: 'extended',
+    htmlContainer: document.getElementById('monaco-editor-root')!,
     logLevel: LogLevel.Debug,
     vscodeApiConfig: {
-        userServices: {
+        serviceOverrides: {
             ...getKeybindingsServiceOverride(),
         },
         userConfiguration: {
@@ -32,20 +34,19 @@ const userConfig: WrapperConfig = {
         }
     },
     editorAppConfig: {
-        $type: 'extended',
         codeResources: {
-            main: {
+            modified: {
                 text: code,
                 fileExt: 'groovy'
             }
         },
-        useDiffEditor: false,
-        monacoWorkerFactory: configureMonacoWorkers,
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        monacoWorkerFactory: configureMonacoWorkers
     },
     languageClientConfigs: {
         groovy: {
-            languageId: 'groovy',
+            clientOptions: {
+                documentSelector: ['groovy']
+            },
             connection: {
                 options: {
                     $type: 'WebSocketUrl',
@@ -61,7 +62,7 @@ export const runGroovyClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(userConfig);
+            await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await wrapper.dispose();

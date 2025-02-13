@@ -2,14 +2,64 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.0.0-next.5] - 2024-10-23
+## [9.3.0] - 2025-02-12
 
+- Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+
+## [9.2.5] - 2025-02-08
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.6`.
+
+## [9.2.4] - 2025-02-06
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.4`.
+
+## [9.2.3] - 2025-02-04
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
+
+## [9.2.2] - 2025-02-03
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.2`.
+
+## [9.2.2] - 2025-01-31
+
+- Moved workerFactory from `monaco-editor-wrapper` to `monaco-languageclient`.
+
+## [9.2.0] - 2025-01-31
+
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/836)
+  - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+  - Breaking changes not in this API, but when using `@monaco-vscode-api`:
+    - `@codingame/monaco-vscode-api` should not be installed as vscode anymore
+    - `@codingame/monaco-vscode-extension-api` can optionally be installed as `vscode` to use the extension api from the main thread
+    - Some imports should be updated:
+      - `vscode/*` => `@codingame/monaco-vscode-api/*`
+      - `vscode/services` => `@codingame/monaco-vscode-api`
+
+## [9.1.1] - 2025-01-20
+
+- View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
+
+## [9.1.0] - 2025-01-10
+
+- `@typefox/monaco-editor-react` now works with views service `initialize` [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)
+- Ensure configuration is init before service init [#820](https://github.com/TypeFox/monaco-languageclient/pull/820)
+
+## [9.0.0] - 2024-12-18
+
+- Include all `@codingame/monaco-vscode` packages as peerDependencies. Mark only required ones as non-optional.
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
+- Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+- Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
+- Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
+  - API and internal functions clean-up
+- Function naming adjustments
 - Prototype: File system endpoint.
 - Added `createUrl` to `monaco-languageclient/tools`. Moved it here from `monaco-editor-wrapper`.
 - Updated to eslint 9
 - Support all arguments for monaco-vscode-api `initialize` [#756](https://github.com/TypeFox/monaco-languageclient/pull/756)
 - Update to monaco-vscode-api 9.0.x [#749](https://github.com/TypeFox/monaco-languageclient/pull/749)
-  - Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
   - Enhancements to logging
 - monaco-languageclient config improvement, wrapper+languageclientwrapper improvements [#741](https://github.com/TypeFox/monaco-languageclient/pull/741)
   - Pass MessageTransports directly

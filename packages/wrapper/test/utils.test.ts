@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from 'monaco-languageclient';
+import type { WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from 'monaco-languageclient';
 import { createUrl } from 'monaco-languageclient/tools';
 
 describe('createUrl', () => {

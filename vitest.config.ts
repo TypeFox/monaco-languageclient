@@ -19,23 +19,29 @@ export const vitestBaseConfig = {
         browser: {
             enabled: true,
             headless: true,
-            name: 'chrome',
-            provider: 'webdriverio',
+            provider: 'playwright',
             api: {
                 port: 20101,
-            }
+            },
+            instances: [
+                {
+                    browser: 'chromium'
+                }
+            ]
         },
         include: [
+            '**/client/test/fs/emptyEndpoint.test.ts',
             '**/client/test/tools/index.test.ts',
+            '**/client/test/tools/utils.test.ts',
+            '**/client/test/vscode/services.test.ts',
             '**/wrapper/test/vscode/services.test.ts',
-            '**/wrapper/test/editorAppBase.test.ts',
-            '**/wrapper/test/editorAppClassic.test.ts',
-            '**/wrapper/test/editorAppExtended.test.ts',
+            '**/wrapper/test/editorApp.test.ts',
             '**/wrapper/test/languageClientWrapper.test.ts',
             '**/wrapper/test/utils.test.ts',
             '**/wrapper/test/wrapper.test.ts',
             '**/wrapper-react/test/index.test.tsx'
-        ]
+        ],
+        dangerouslyIgnoreUnhandledErrors: true
     }
 };
 

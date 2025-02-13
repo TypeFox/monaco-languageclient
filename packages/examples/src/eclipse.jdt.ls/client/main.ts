@@ -8,8 +8,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-java-default-extension';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
-import { LogLevel } from 'vscode/services';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { eclipseJdtLsConfig } from '../config.js';
 import helloJavaCode from '../../../resources/eclipse.jdt.ls/workspace/hello.java?raw';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
@@ -20,10 +20,12 @@ export const runEclipseJdtLsClient = () => {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(helloJavaUri, helloJavaCode));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const userConfig: WrapperConfig = {
+    const wrapperConfig: WrapperConfig = {
+        $type: 'extended',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -36,20 +38,16 @@ export const runEclipseJdtLsClient = () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
-                main: {
+                modified: {
                     text: helloJavaCode,
                     uri: `${eclipseJdtLsConfig.basePath}/workspace/hello.java`
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             java: {
-                languageId: 'java',
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -72,7 +70,7 @@ export const runEclipseJdtLsClient = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.init(userConfig);
+            await wrapper.init(wrapperConfig);
 
             // open files, so the LS can pick it up
             await vscode.workspace.openTextDocument(helloJavaUri);

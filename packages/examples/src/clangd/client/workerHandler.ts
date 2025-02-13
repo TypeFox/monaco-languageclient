@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ComChannelEndpoint, ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
+import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 import clangdWorkerUrl from '../worker/clangd-server?worker&url';
 
 class ClangdInteractionMain implements ComRouter {
@@ -42,12 +42,18 @@ export class ClangdWorkerHandler {
 
     async init(config: {
         lsMessagePort: MessagePort,
-        fsMessagePort: MessagePort
+        fsMessagePort: MessagePort,
+        clearIndexedDb: boolean,
+        useCompressedWorkspace: boolean,
+        compressedWorkspaceUrl?: string
     }) {
         await this.endpointMain?.sentMessage({
             message: WorkerMessage.fromPayload(new RawPayload({
                 lsMessagePort: config.lsMessagePort,
-                fsMessagePort: config.fsMessagePort
+                fsMessagePort: config.fsMessagePort,
+                clearIndexedDb: config.clearIndexedDb,
+                useCompressedWorkspace: config.useCompressedWorkspace,
+                compressedWorkspaceUrl: config.compressedWorkspaceUrl
             }), 'clangd_init'),
             transferables: [config.lsMessagePort, config.fsMessagePort],
             awaitAnswer: true,

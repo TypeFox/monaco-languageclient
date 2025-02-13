@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { Disposable } from 'vscode-jsonrpc';
-import { IConnection } from '../server/connection.js';
+import type { IConnection } from '../server/connection.js';
 
 export interface IWebSocket extends Disposable {
     send(content: string): void;

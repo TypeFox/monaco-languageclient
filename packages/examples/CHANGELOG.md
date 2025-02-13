@@ -2,9 +2,143 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2024.10.5] - 2024-10-2x
+## [2025.2.5] - 2025-02-12
 
+- Update to monaco-vscode-api 14.0.2 and incremented versions to x.3.0 [#852](https://github.com/TypeFox/monaco-languageclient/pull/852)
+  - Updated all `@codingame/monaco-vscode` packages to `14.0.2`.
+- wrapper: start() never resolves if lsp websocket fails, and use of editor must wait for lsp websocket connection. [#851](https://github.com/TypeFox/monaco-languageclient/issues/851)
+  - Two language clients example makes use of those changes
+- Integrate python debugger [#842](https://github.com/TypeFox/monaco-languageclient/pull/842)
+- Updated to `monaco-languageclient@9.3.0`, `monaco-editor-wrapper@6.3.0` and `@typefox/monaco-editor-react@6.3.0`.
+
+## [2025.2.4] - 2025-02-08
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.6`.
+- Updated to `monaco-languageclient@9.2.5`, `monaco-editor-wrapper@6.2.5` and `@typefox/monaco-editor-react@6.2.5`.
+
+## [2025.2.3] - 2025-02-06
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.4`.
+- Updated to `monaco-languageclient@9.2.4`, `monaco-editor-wrapper@6.2.4` and `@typefox/monaco-editor-react@6.2.4`.
+
+## [2025.2.2] - 2025-02-04
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.3`.
+- Updated to `monaco-languageclient@9.2.3`, `monaco-editor-wrapper@6.2.3` and `@typefox/monaco-editor-react@6.2.3`.
+
+## [2025.2.1] - 2025-02-03
+
+- Updated all `@codingame/monaco-vscode` packages to `13.1.2`.
+- Updated to `monaco-languageclient@9.2.2`, `monaco-editor-wrapper@6.2.2` and `@typefox/monaco-editor-react@6.2.2`.
+
+## [2025.1.10] - 2025-01-31
+
+- Removed unneeded workers, but kept the names in the default definition without a Worker definition
+- Updated to `monaco-languageclient@9.2.1`, `monaco-editor-wrapper@6.2.1` and `@typefox/monaco-editor-react@6.2.1`.
+
+## [2025.1.9] - 2025-01-31
+
+- Update to monaco-vscode-api v13 [#836](https://github.com/TypeFox/monaco-languageclient/pull/836)
+  - Updated all `@codingame/monaco-vscode` packages to `13.1.1`.
+  - Breaking changes not in this API, but when using `@monaco-vscode-api`:
+    - `@codingame/monaco-vscode-api` should not be installed as vscode anymore
+    - `@codingame/monaco-vscode-extension-api` can optionally be installed as `vscode` to use the extension api from the main thread
+    - Some imports should be updated:
+      - `vscode/*` => `@codingame/monaco-vscode-api/*`
+      - `vscode/services` => `@codingame/monaco-vscode-api`
+- Updated to `monaco-languageclient@9.2.0`, `monaco-editor-wrapper@6.2.0` and `@typefox/monaco-editor-react@6.2.0`.
+
+## [2025.1.8] - 2025-01-28
+
+- Updated to `monaco-languageclient@9.2.0-next.5`, `monaco-editor-wrapper@6.2.0-next.5` and `@typefox/monaco-editor-react@6.2.0-next.5`.
+
+## [2025.1.7] - 2025-01-28
+
+- Updated to `monaco-languageclient@9.2.0-next.4`, `monaco-editor-wrapper@6.2.0-next.4` and `@typefox/monaco-editor-react@6.2.0-next.4`.
+
+## [2025.1.6] - 2025-01-27
+
+- Updated to `monaco-languageclient@9.2.0-next.3`, `monaco-editor-wrapper@6.2.0-next.3` and `@typefox/monaco-editor-react@6.2.0-next.3`.
+
+## [2025.1.5] - 2025-01-27
+
+- Updated to `monaco-languageclient@9.2.0-next.2`, `monaco-editor-wrapper@6.2.0-next.2` and `@typefox/monaco-editor-react@6.2.0-next.2`.
+
+## [2025.1.4] - 2025-01-27
+
+- Updated to `monaco-languageclient@9.2.0-next.1`, `monaco-editor-wrapper@6.2.0-next.1` and `@typefox/monaco-editor-react@6.2.0-next.1`.
+
+## [2025.1.3] - 2025-01-24
+
+- Updated to `monaco-languageclient@9.2.0-next.0`, `monaco-editor-wrapper@6.2.0-next.0` and `@typefox/monaco-editor-react@6.2.0-next.0`.
+
+## [2025.1.2] - 2025-01-20
+
+- Updated to `monaco-languageclient@9.1.1`, `monaco-editor-wrapper@6.1.1` and `@typefox/monaco-editor-react@6.1.1`.
+- View service related imports are made dynamically [#829](https://github.com/TypeFox/monaco-languageclient/pull/829)
+  - Separated Langium DSL example into Extended and Classic Mode versions
+
+## [2025.1.1] - 2025-01-10
+
+- Updated to `monaco-languageclient@9.1.0`, `monaco-editor-wrapper@6.1.0` and `@typefox/monaco-editor-react@6.1.0`.
+- Added a react version of the app playground to verify PR "`@typefox/monaco-editor-react` now works with views service" [#823](https://github.com/TypeFox/monaco-languageclient/pull/823)
+
+## [2024.12.6] - 2024-12-18
+
+- Use final release of `monaco-languageclient@9.0.0`, `vscode-ws-jsonrpc@3.4.0`, `monaco-editor-wrapper@6.0.0` and `@typefox/monaco-editor-react@6.0.0`.
+
+## [2024.12.5] - 2024-12-18
+
+- Remove all `peerDependencies` and only use regular `dependencies.
+- Updated to `monaco-languageclient@9.0.0-next.14`, `vscode-ws-jsonrpc@3.4.0-next.14`, `monaco-editor-wrapper@6.0.0-next.14` and `@typefox/monaco-editor-react@6.0.0-next.14`.
+
+## [2024.12.4] - 2024-12-18
+
+- Updated to `monaco-languageclient@9.0.0-next.13`, `vscode-ws-jsonrpc@3.4.0-next.13`, `monaco-editor-wrapper@6.0.0-next.13` and `@typefox/monaco-editor-react@6.0.0-next.13`.
+
+## [2024.12.3] - 2024-12-18
+
+- Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)
+- Updated to `monaco-languageclient@9.0.0-next.12`, `vscode-ws-jsonrpc@3.4.0-next.12`, `monaco-editor-wrapper@6.0.0-next.12` and `@typefox/monaco-editor-react@6.0.0-next.12`.
+
+## [2024.12.2] - 2024-12-17
+
+- Clangd example improvements: IndexedDB usage and possibility to load workspace from zip file [#807](https://github.com/TypeFox/monaco-languageclient/pull/807)
+- Updated to `monaco-languageclient@9.0.0-next.11`, `monaco-editor-wrapper@6.0.0-next.11` and `@typefox/monaco-editor-react@6.0.0-next.11`.
+
+## [2024.12.1] - 2024-12-12
+
+- Updated to `monaco-languageclient@9.0.0-next.10`, `monaco-editor-wrapper@6.0.0-next.10` and `@typefox/monaco-editor-react@6.0.0-next.10`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.2`.
+
+## [2024.11.4] - 2024-11-26
+
+- `buildJsonClientUserConfig` can now called without a parameter.
+
+## [2024.11.3] - 2024-11-22
+
+- Updated to `monaco-languageclient@9.0.0-next.9`, `monaco-editor-wrapper@6.0.0-next.9` and `@typefox/monaco-editor-react@6.0.0-next.9`.
+  - Workaround for `@codingame/monaco-vscode-chat-extensions-notebook-task-terminal-testing-common` dependency problem
+
+## [2024.11.2] - 2024-11-21
+
+- Updated to `monaco-languageclient@9.0.0-next.8`, `monaco-editor-wrapper@6.0.0-next.8` and `@typefox/monaco-editor-react@6.0.0-next.8`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.1`.
+- Run language clients independent of wrapper lifecycle [#784](https://github.com/TypeFox/monaco-languageclient/pull/784)
+  - Aligned examples with API changes
+  - Two language clients example can now be launch with both language clients initialized by the wrapper or externally
+
+## [2024.10.6] - 2024-11-13
+
+- Updated to `monaco-languageclient@9.0.0-next.7`, `monaco-editor-wrapper@6.0.0-next.7` and `@typefox/monaco-editor-react@6.0.0-next.7`.
+- Updated all `@codingame/monaco-vscode` packages to `11.1.0`.
+
+## [2024.10.5] - 2024-10-31
+
+- Updated to `monaco-languageclient@9.0.0-next.6`, `monaco-editor-wrapper@6.0.0-next.6` and `@typefox/monaco-editor-react@6.0.0-next.6`.
+- Updated all `@codingame/monaco-vscode` packages to `10.1.4`.
 - Added clangd example.
+- Added application playground example featuring the views service override.
 
 ## [2024.10.4] - 2024-10-23
 
@@ -14,7 +148,7 @@ Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
 ## [2024.10.3] - 2024-10-21
 
 - Updated to `monaco-languageclient@9.0.0-next.4`, `monaco-editor-wrapper@6.0.0-next.4` and `@typefox/monaco-editor-react@6.0.0-next.4`.
-Updated all `@codingame/monaco-vscode` packages to `10.1.`.
+Updated all `@codingame/monaco-vscode` packages to `10.1.0`.
 - Updated to eslint 9
 
 ## [2024.10.2] - 20241-10-11

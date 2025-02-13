@@ -33,9 +33,13 @@ jobs:
       run: |
         npm ci
 
-    - name: Build
+    - name: Versions Report
+      shell: bash
       run: |
         npm run report:versions
+
+    - name: Build
+      run: |
         npm run build
 
     - name: Build Production

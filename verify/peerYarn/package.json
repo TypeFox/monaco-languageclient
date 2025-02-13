@@ -1,0 +1,38 @@
+{
+  "name": "@typefox/peer-check-yarn",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3",
+    "yarn": ">=4.6.0"
+  },
+  "volta": {
+    "node": "22.14.0",
+    "yarn": "4.6.0"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-api": "~14.0.2",
+    "@codingame/monaco-vscode-configuration-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-editor-api": "~14.0.2",
+    "@codingame/monaco-vscode-editor-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-extension-api": "~14.0.2",
+    "@codingame/monaco-vscode-extensions-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-languages-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-localization-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-log-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-model-service-override": "~14.0.2",
+    "monaco-languageclient-examples": "~2025.2.5",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2",
+    "vscode-languageclient": "~9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "showconfig": "tsc --showconfig",
+    "verify:ci": "yarn install && yarn run build"
+  }
+}

@@ -6,8 +6,8 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
-import { LogLevel } from 'vscode/services';
-import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 const text = `{
@@ -15,13 +15,13 @@ const text = `{
     "line_endings": {"value": "unix"}
 }`;
 
-export const buildJsonClientUserConfig = (params: {
-    htmlContainer: HTMLElement
-}): WrapperConfig => {
+export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperConfig => {
     return {
+        $type: 'extended',
+        htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
             },
             userConfiguration: {
@@ -35,20 +35,19 @@ export const buildJsonClientUserConfig = (params: {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
-                main: {
+                modified: {
                     text,
                     fileExt: 'json'
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs: {
             json: {
-                languageId: 'json',
+                clientOptions: {
+                    documentSelector: ['json']
+                },
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -77,9 +76,7 @@ export const runJsonWrapper = () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            const config = buildJsonClientUserConfig({
-                htmlContainer: document.getElementById('monaco-editor-root')!
-            });
+            const config = buildJsonClientUserConfig(document.getElementById('monaco-editor-root')!);
             await wrapper.initAndStart(config);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

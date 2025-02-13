@@ -6,7 +6,7 @@
 import { WebSocketServer } from 'ws';
 import { Server } from 'node:http';
 import express from 'express';
-import { getLocalDirectory, LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
+import { getLocalDirectory, type LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
 
 /** LSP server runner */
 export const runLanguageServer = (

@@ -7,8 +7,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { LogLevel } from 'vscode/services';
-import { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
@@ -28,9 +28,9 @@ export const createLangiumGlobalConfig = async (params: {
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
-    let main;
+    let modified;
     if (params.text !== undefined) {
-        main = {
+        modified = {
             text: params.text,
             fileExt: 'statemachine'
         };
@@ -38,7 +38,9 @@ export const createLangiumGlobalConfig = async (params: {
 
     const languageClientConfigs: Record<string, LanguageClientConfig> | undefined = params.useLanguageClient && params.worker ? {
         statemachine: {
-            languageId: 'statemachine',
+            clientOptions: {
+                documentSelector: ['statemachine']
+            },
             connection: {
                 options: {
                     $type: 'WorkerDirect',
@@ -51,9 +53,11 @@ export const createLangiumGlobalConfig = async (params: {
     } : undefined;
 
     return {
+        $type: 'extended',
+        htmlContainer: params.htmlContainer,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
@@ -67,38 +71,35 @@ export const createLangiumGlobalConfig = async (params: {
                 })
             },
         },
-        editorAppConfig: {
-            $type: 'extended',
-            codeResources: {
-                main
-            },
-            useDiffEditor: false,
-            extensions: [{
-                config: {
-                    name: 'statemachine-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    },
-                    contributes: {
-                        languages: [{
-                            id: 'statemachine',
-                            extensions: ['.statemachine'],
-                            aliases: ['statemachine', 'Statemachine'],
-                            configuration: `./${params.languageServerId}-statemachine-configuration.json`
-                        }],
-                        grammars: [{
-                            language: 'statemachine',
-                            scopeName: 'source.statemachine',
-                            path: `./${params.languageServerId}-statemachine-grammar.json`
-                        }]
-                    }
+        extensions: [{
+            config: {
+                name: 'statemachine-example',
+                publisher: 'TypeFox',
+                version: '1.0.0',
+                engines: {
+                    vscode: '*'
                 },
-                filesOrContents: extensionFilesOrContents
-            }],
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: params.htmlContainer
+                contributes: {
+                    languages: [{
+                        id: 'statemachine',
+                        extensions: ['.statemachine'],
+                        aliases: ['statemachine', 'Statemachine'],
+                        configuration: `./${params.languageServerId}-statemachine-configuration.json`
+                    }],
+                    grammars: [{
+                        language: 'statemachine',
+                        scopeName: 'source.statemachine',
+                        path: `./${params.languageServerId}-statemachine-grammar.json`
+                    }]
+                }
+            },
+            filesOrContents: extensionFilesOrContents
+        }],
+        editorAppConfig: {
+            codeResources: {
+                modified
+            },
+            monacoWorkerFactory: configureMonacoWorkers
         },
         languageClientConfigs
     };

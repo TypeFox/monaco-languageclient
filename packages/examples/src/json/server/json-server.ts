@@ -6,13 +6,14 @@ import { readFile } from 'node:fs';
 import requestLight from 'request-light';
 import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
-import { createConnection, _Connection, TextDocuments, DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
+import { createConnection, type _Connection, TextDocuments, type DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
 import {
     Diagnostic, Command, CompletionList, CompletionItem, Hover,
     SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
 } from 'vscode-languageserver-types';
-import { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams, TextDocumentSyncKind } from 'vscode-languageserver-protocol';
-import { getLanguageService, LanguageService, JSONDocument } from 'vscode-json-languageservice';
+import type { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams } from 'vscode-languageserver-protocol';
+import { TextDocumentSyncKind } from 'vscode-languageserver-protocol';
+import { getLanguageService, type LanguageService, type JSONDocument } from 'vscode-json-languageservice';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export class JsonServer {

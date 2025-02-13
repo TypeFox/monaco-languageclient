@@ -7,8 +7,8 @@ import * as vscode from 'vscode';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { LogLevel } from 'vscode/services';
-import { CodePlusUri, MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { type CodePlusUri, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureMonacoWorkers } from '../common/client/utils.js';
 
 export const runTsWrapper = async () => {
@@ -23,9 +23,11 @@ export const runTsWrapper = async () => {
 };`;
 
     const wrapperConfig: WrapperConfig = {
+        $type: 'extended',
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
-            userServices: {
+            serviceOverrides: {
                 ...getKeybindingsServiceOverride()
             },
             enableExtHostWorker: true,
@@ -43,9 +45,8 @@ export const runTsWrapper = async () => {
             }
         },
         editorAppConfig: {
-            $type: 'extended',
             codeResources: {
-                main: {
+                modified: {
                     text: code,
                     uri: codeUri
                 },
@@ -54,9 +55,7 @@ export const runTsWrapper = async () => {
                     uri: codeOriginalUri,
                 }
             },
-            useDiffEditor: false,
-            monacoWorkerFactory: configureMonacoWorkers,
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            monacoWorkerFactory: configureMonacoWorkers
         }
     };
 
@@ -77,9 +76,9 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
             const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
-            if ((codeResources?.main as CodePlusUri).uri === codeUri) {
+            if ((codeResources?.modified as CodePlusUri).uri === codeUri) {
                 wrapper.updateCodeResources({
-                    main: {
+                    modified: {
                         text: codeOriginal,
                         uri: codeOriginalUri
                     },
@@ -90,7 +89,7 @@ export const runTsWrapper = async () => {
                 });
             } else {
                 wrapper.updateCodeResources({
-                    main: {
+                    modified: {
                         text: code,
                         uri: codeUri
                     },
@@ -103,8 +102,8 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-diff')?.addEventListener('click', async () => {
             // ensure it is boolean value and not undefined
-            const useDiffEditor = wrapperConfig.editorAppConfig.useDiffEditor ?? false;
-            wrapperConfig.editorAppConfig.useDiffEditor = !useDiffEditor;
+            const useDiffEditor = wrapperConfig.editorAppConfig!.useDiffEditor ?? false;
+            wrapperConfig.editorAppConfig!.useDiffEditor = !useDiffEditor;
             await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {

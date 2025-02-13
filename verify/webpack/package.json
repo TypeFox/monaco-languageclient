@@ -3,25 +3,25 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.14.0",
+    "npm": "10.9.2"
+  },
   "dependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "monaco-editor-wrapper": "~6.0.0-next.5",
-    "monaco-languageclient-examples": "~2024.10.4",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1"
+    "monaco-languageclient-examples": "~2025.2.5"
   },
   "devDependencies": {
-    "@types/vscode": "~1.94.0",
     "css-loader": "~7.1.2",
     "http-server": "~14.1.1",
     "shx": "~0.3.4",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
-    "ts-loader": "~9.5.1",
-    "webpack-cli": "~5.1.4"
-  },
-  "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+    "ts-loader": "~9.5.2",
+    "webpack-cli": "~6.0.1"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",

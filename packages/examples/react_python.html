@@ -6,14 +6,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>React: Python Language Client & Language Server (Web Socket)</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="./resources/styles/views.css">
     </head>
 
     <body>
-        <h2>React: Python Language Client & Language Server (Web Socket)</h2>
-        <button type="button" id="button-start">Start</button>
-        <label>Enable Strict mode:</label><input type="checkbox" id="checkbox-strictmode" />
-        <button type="button" id="button-dispose">Dispose</button>
-        <div id="monaco-editor-root"></div>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">React: Python Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+        </div>
+        <div id="react-root"></div>
         <script type="module">
             import { runPythonReact } from './src/python/client/reactPython.tsx';
 

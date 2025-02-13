@@ -9,9 +9,13 @@
 </head>
 
 <body>
-	<h2>Java Language Client & Language Server (Web Socket)</h2>
-    <button type="button" id="button-start">Start</button>
-    <button type="button" id="button-dispose">Dispose</button>
+    <div class="exampleHeadelineDiv">
+        <b class="exampleHeadeline">Java Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+        <br>
+        <button type="button" id="button-start">Start</button>
+        <button type="button" id="button-dispose">Dispose</button>
+        Launch backend with: <b><code>docker compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d</code></b><br>
+    </div>
 	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
     <script type="module">
         import { runEclipseJdtLsClient } from "./src/eclipse.jdt.ls/client/main.ts";

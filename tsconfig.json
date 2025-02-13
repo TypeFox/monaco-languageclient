@@ -1,10 +1,10 @@
  {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": [
-      "ESNext",
+      "ES2022",
       "DOM",
       "DOM.Iterable"
     ],
@@ -30,7 +30,8 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "experimentalDecorators": true,
-    "jsx": "react"
+    "jsx": "react",
+    "verbatimModuleSyntax": true
   },
   "include": [
     "**/src/**/*.ts",
@@ -42,6 +43,7 @@
     "**/build/**/*.mts",
     "*.js",
     "*.ts",
+    "*.d.ts",
   ],
   "exclude": [
     "dist/**/*",

@@ -1,0 +1,19 @@
+services:
+  debugger:
+    container_name: debugger-py
+    image: ghcr.io/typefox/monaco-languageclient/debugger-py:latest
+    build:
+      dockerfile: ./packages/examples/resources/debugger/Dockerfile
+      context: ../../../..
+      # only linux/amd64 for now
+      platforms:
+        - "linux/amd64"
+    platform: linux/amd64
+    ports:
+      - 55555:5555
+    tty: true
+    # just for completness. Is already set in the Dockerfile
+    working_dir: /home/mlc/server
+    command: [
+      "bash", "-c", "npm run start"
+    ]

@@ -14,42 +14,23 @@ const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm'
 
 export const definedViteConfig = defineConfig({
     build: {
-        target: 'esnext',
+        target: 'ES2022',
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
-
-                // bare monaco-languageclient
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
-
-                // monaco-editor-wrapper
-                // json
                 json: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
-
-                // langium
                 langium: path.resolve(__dirname, 'packages/examples/langium.html'),
                 statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
-
-                // python
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
-
-                // grrovy
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
-
-                // clangd
                 clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),
-
-                // json & python
+                appPlayground: path.resolve(__dirname, 'packages/examples/appPlayground.html'),
                 twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
-
-                // monaco-editor-react
-                // langium
+                reactAppPlayground: path.resolve(__dirname, 'packages/examples/react_appPlayground.html'),
                 reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
-                // python
                 reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
-
-                // other examples
                 tsExtHost: path.resolve(__dirname, 'packages/examples/ts.html')
             }
         }
@@ -61,9 +42,17 @@ export const definedViteConfig = defineConfig({
     server: {
         origin: 'http://localhost:20001',
         port: 20001,
+        cors: {
+            origin: '*'
+        },
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
+        watch: {
+            ignored: [
+                '**/profile/**/*'
+            ]
         }
     },
     optimizeDeps: {
@@ -73,13 +62,15 @@ export const definedViteConfig = defineConfig({
             ]
         },
         include: [
+            '@testing-library/react',
+            'vscode/localExtensionHost',
             'vscode-textmate',
             'vscode-oniguruma'
         ]
     },
     plugins: [
         vsixPlugin(),
-        react(),
+        react()
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname),

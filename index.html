@@ -34,7 +34,7 @@
 
         <h3>Langium</h3>
 
-        <a href="./packages/examples/langium.html">Langium Grammar DSL Language Client & Language Server (Worker)</a>
+        Langium Grammar DSL: <a href="./packages/examples/langium_extended.html">Extended Mode</a> - <a href="./packages/examples/langium_classic.html">Classic Mode</a>
         <br>
         <a href="./packages/examples/statemachine.html">Langium Statemachine Client & Language Server (Worker)</a>
         <br>
@@ -56,7 +56,8 @@
         <br>
 
         <h3>Python</h3>
-        Please execute <b><code>npm run start:example:server:python</code></b> beforehand:<br>
+        Please execute <b><code>npm run start:example:server:python</code></b> beforehand.<br>
+        Debugger requires docker. Please execute <b><code>docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d</code></b> beforehand.<br>
         <a href="./packages/examples/python.html">Python Language Client & Pyright Language Server (Web Socket)</a><br>
 
         <h3>Java / Eclipse JDS LS</h3>
@@ -78,14 +79,20 @@
         <a href="./packages/examples/two_langauge_clients.html">Json & Python Languageclients & Language Server (Web Socket)</a>
         <br>
 
+        <h3>Application Playground</h3>
+        <a href="./packages/examples/appPlayground.html">Application Playground</a>
+
         <h3>TypeScript</h3>
         <a href="./packages/examples/tsExtHost.html">TypeScript Extension Host Worker</a>
         <br>
 
         <h2>Monaco Editor React</h2>
+        Please execute <b><code>npm run start:example:server:python</code></b> beforehand.<br>
+        Debugger requires docker. Please execute <b><code>docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d</code></b> beforehand.<br>
+        <a href="./packages/examples/react_appPlayground.html">React: Application Playground</a>
+        <br>
         <a href="./packages/examples/react_statemachine.html">React: Langium Statemachine Language Client & Language Server (Worker)</a>
-        <br>
-        <br>
+        <br><br>
         Please execute  <b><code>npm run start:example:server:python</code></b> beforehand:<br>
         <a href="./packages/examples/react_python.html">React: Python Language Client & Language Server (Web Socket)</a>
         <br>
@@ -93,7 +100,10 @@
         <h2>Verification</h2>
         <h3>Angular</h2>
         Please start  <b><code>cd verify/angular && npm run verify</code></b> beforehand:<br>
-        <a href="http://localhost:4200">JSON Language Client & Language Server (Web Socket) (Angular)</a>
+        <a href="http://localhost:4200">JSON Language Client & Language Server (Web Socket) (Angular Dev Server)</a>
+        <h3>Next.js</h3>
+        Please start  <b><code>cd verify/next && npm run verify</code></b> beforehand:<br>
+        <a href="http://localhost:8084">JSON Language Client & Language Server (Web Socket) (Next.js Dev Server)</a>
         <h3>Webpack</h3>
         Please start  <b><code>cd verify/webpack && npm run verify</code></b> beforehand:<br>
         <a href="http://localhost:8081">JSON Language Client & Language Server (Web Socket) (webpack build)</a>

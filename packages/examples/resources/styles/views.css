@@ -1,0 +1,79 @@
+:root {
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--vscode-editorWidget-background);
+    color: var(--vscode-editorWidget-foreground);
+    margin: 0;
+  }
+
+  #sidebarDiv,
+  #sidebarRightDiv {
+    display: flex;
+    flex: none;
+    border: 1px solid var(--vscode-editorWidget-border);
+  }
+
+  #sidebar {
+    width: 300px;
+  }
+
+  #editorsDiv {
+     flex: 1;
+     min-width: 0;
+  }
+
+  #editors {
+    position: relative;
+    min-width: 0;
+    height: 99%;
+    border: 1px solid var(--vscode-editorWidget-border);
+  }
+
+  #sidebar-right {
+    max-width: 500px;
+  }
+
+  #auxiliaryBar-left,
+  #auxiliaryBar {
+     max-width: 300px;
+  }
+
+  #panel {
+    display: none;
+    flex: 1;
+    border: 1px solid var(--vscode-editorWidget-border);
+    min-height: 0;
+  }
+
+  #titleBar {
+    position: relative;
+    flex: none;
+  }
+
+  #banner {
+    flex: none;
+  }
+
+  #workbench-container {
+    height: 95vh;
+    display: flex;
+    flex-direction: column
+  }
+
+  #workbench-top {
+    display: flex;
+    gap: 20px;
+    flex: 2;
+    min-height: 0
+  }

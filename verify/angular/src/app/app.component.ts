@@ -27,11 +27,10 @@ export class AppComponent implements AfterViewInit {
     readonly codeText = signal('');
 
     async ngAfterViewInit(): Promise<void> {
-        const groovyEditorDom = document.getElementById(this.groovyEditorId);
-
-        if (groovyEditorDom) {
-            const groovyConfig = getGroovyClientConfig(this.groovyEditorId);
-            this.groovyWrapperConfig.set(groovyConfig);
+        const editorDom = document.getElementById(this.editorId);
+        if (editorDom) {
+            const config = buildJsonClientUserConfig(editorDom);
+            this.wrapperConfig.set(config);
         }
     }
 

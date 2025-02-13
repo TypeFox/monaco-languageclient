@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cpp Language Client & Clangd Language Server (Worker/Wasm)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./mini-coi.js" scope="./"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./resources/styles/views.css">
+</head>
+
+<body>
+    <div class="exampleHeadelineDiv">
+        <b class="exampleHeadeline">Cpp Language Client & Clangd Language Server (Worker/Wasm)</b> - [<a href="./index.html">Back to Index</a>]
+        <br>
+        <button type="button" id="button-start">Start</button>
+        <button type="button" id="button-start-fresh">Start (Reset DB)</button>
+        The clangd language server worker has been derived from: <a href="https://github.com/guyutongxue/clangd-in-browser">clangd-in-browser</a>
+    </div>
+    <script type="module">
+        import { runClangdWrapper } from "./src/clangd/client/main.ts";
+        runClangdWrapper();
+    </script>
+</body>
+
+</html>

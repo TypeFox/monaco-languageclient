@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "9.0.0-next.5",
+  "version": "9.3.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -35,6 +35,10 @@
     "./fs": {
       "types": "./lib/fs/index.d.ts",
       "default": "./lib/fs/index.js"
+    },
+    "./workerFactory": {
+      "types": "./lib/workerFactory.d.ts",
+      "default": "./lib/workerFactory.js"
     }
   },
   "typesVersions": {
@@ -50,16 +54,19 @@
       ],
       "fs": [
         "lib/fs/index"
+      ],
+      "workerFactory": [
+        "lib/workerFactory"
       ]
     }
   },
   "engines": {
-    "node": ">=16.11.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+    "node": "22.14.0",
+    "npm": "10.9.2"
   },
   "files": [
     "lib",
@@ -69,26 +76,18 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-extensions-service-override": "~10.1.1",
-    "@codingame/monaco-vscode-languages-service-override": "~10.1.1",
-    "@codingame/monaco-vscode-localization-service-override": "~10.1.1",
-    "@codingame/monaco-vscode-log-service-override": "~10.1.1",
-    "@codingame/monaco-vscode-model-service-override": "~10.1.1",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1",
+    "@codingame/monaco-vscode-api": "~14.0.2",
+    "@codingame/monaco-vscode-configuration-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-editor-api": "~14.0.2",
+    "@codingame/monaco-vscode-editor-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-extensions-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-extension-api": "~14.0.2",
+    "@codingame/monaco-vscode-languages-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-localization-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-log-service-override": "~14.0.2",
+    "@codingame/monaco-vscode-model-service-override": "~14.0.2",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2",
     "vscode-languageclient": "~9.0.1"
-  },
-  "peerDependencies": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1"
-  },
-  "peerDependenciesMeta": {
-    "monaco-editor": {
-      "optional": false
-    },
-    "vscode": {
-      "optional": false
-    }
   },
   "scripts": {
     "clean": "vite-node ../../scripts/clean.ts --relativePath packages/client --recursive --paths lib *.tsbuildinfo",

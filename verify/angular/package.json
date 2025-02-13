@@ -3,27 +3,22 @@
   "version": "0.0.0",
   "private": "true",
   "type": "module",
-  "scripts": {
-    "verify": "npm install && npm run start",
-    "verify:ci": "npm install && npm run build",
-    "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
-    "build:msg": "echo Building angular-client example:",
-    "build": "npm run build:msg && npm run clean && ng build",
-    "build:production": "npm run build:msg && npm run clean && ng build --configuration production",
-    "start": "npm run clean && ng serve",
-    "start:production": "npm run clean && ng serve --configuration production",
-    "watch": "npm run clean && ng build --watch --configuration development",
-    "reset:repo": "git clean -f -X -d"
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.14.0",
+    "npm": "10.9.2"
   },
   "dependencies": {
     "@angular/compiler": "~18.2.8",
     "@angular/core": "~18.2.8",
     "@angular/platform-browser": "~18.2.8",
     "@angular/platform-browser-dynamic": "~18.2.8",
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~10.1.1",
-    "monaco-editor-wrapper": "~6.0.0-next.5",
-    "monaco-languageclient-examples": "~2024.10.4",
-    "vscode": "npm:@codingame/monaco-vscode-api@~10.1.1",
+    "@codingame/monaco-vscode-editor-api": "~14.0.2",
+    "monaco-editor-wrapper": "~6.3.0",
+    "monaco-languageclient-examples": "~2025.2.5",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10",
     "@codingame/monaco-vscode-configuration-service-override": "~10.1.1",
@@ -50,16 +45,23 @@
     "@angular-builders/custom-esbuild": "~18.0.0",
     "@angular/cli": "~18.2.8",
     "@angular/compiler-cli": "~18.2.8",
-    "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
-    "@types/node": "~20.16.11",
-    "@types/vscode": "~1.94.0",
+    "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
+    "@types/node": "~22.13.1",
     "css-loader": "~7.1.2",
     "shx": "~0.3.4",
     "style-loader": "~4.0.0",
     "typescript": "~5.5.4"
   },
-  "volta": {
-    "node": "20.18.0",
-    "npm": "10.8.3"
+  "scripts": {
+    "verify": "npm install && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
+    "build:msg": "echo Building angular-client example:",
+    "build": "npm run build:msg && npm run clean && ng build",
+    "build:production": "npm run build:msg && npm run clean && ng build --configuration production",
+    "start": "npm run clean && ng serve",
+    "start:production": "npm run clean && ng serve --configuration production",
+    "watch": "npm run clean && ng build --watch --configuration development",
+    "reset:repo": "git clean -f -X -d"
   }
 }

@@ -5,10 +5,12 @@
 
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
+import type { TextContents } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
+import { disableElement } from '../../common/client/utils.js';
 
 export const runStatemachineReact = async () => {
     const wrapperConfig = await createLangiumGlobalConfig({
@@ -18,8 +20,11 @@ export const runStatemachineReact = async () => {
         worker: loadStatemachineWorkerRegular(),
         htmlContainer: document.getElementById('monaco-editor-root')!
     });
-    const root = ReactDOM.createRoot(wrapperConfig.editorAppConfig.htmlContainer);
+    const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
+    const onTextChanged = (textChanges: TextContents) => {
+        console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+    };
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             const App = () => {
@@ -39,7 +44,8 @@ export const runStatemachineReact = async () => {
                     <div style={{ 'height': height }} >
                         <MonacoEditorReactComp
                             style={{ 'height': '100%' }}
-                            wrapperConfig={wrapperConfig} />
+                            wrapperConfig={wrapperConfig}
+                            onTextChanged={onTextChanged} />
                     </div>
                 );
             };
@@ -49,6 +55,7 @@ export const runStatemachineReact = async () => {
             } else {
                 root.render(<App />);
             }
+            disableElement('checkbox-strictmode', true);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {
             root.render([]);

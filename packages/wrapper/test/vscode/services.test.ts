@@ -4,15 +4,16 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { LogLevel } from 'vscode/services';
-import { configureVscodeApi } from '../../src/vscode/services.js';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { augmentVscodeApiConfig } from 'monaco-editor-wrapper/vscode/services';
 
 describe('createUrl', () => {
 
     test('test configureServices logLevel trace', async () => {
-        const vscodeApiConfig = await configureVscodeApi({
-            vscodeApiConfig: {},
-            specificServices: {},
+        const vscodeApiConfig = await augmentVscodeApiConfig('extended', {
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             logLevel: LogLevel.Trace
         });
 
@@ -20,15 +21,15 @@ describe('createUrl', () => {
     });
 
     test('test configureServices logLevel and developmenet info', async () => {
-        const vscodeApiConfig = await configureVscodeApi({
+        const vscodeApiConfig = await augmentVscodeApiConfig('extended', {
             vscodeApiConfig: {
+                loadThemes: false,
                 workspaceConfig: {
                     developmentOptions: {
                         logLevel: LogLevel.Info
                     }
                 }
             },
-            specificServices: {},
             logLevel: LogLevel.Info
         });
 
@@ -36,16 +37,16 @@ describe('createUrl', () => {
     });
 
     test('test configureServices logLevel development mismatch', async () => {
-        expect(async () => {
-            await configureVscodeApi({
+        await expect(async () => {
+            await augmentVscodeApiConfig('extended', {
                 vscodeApiConfig: {
+                    loadThemes: false,
                     workspaceConfig: {
                         developmentOptions: {
                             logLevel: LogLevel.Info
                         }
                     }
                 },
-                specificServices: {},
                 logLevel: LogLevel.Trace
             });
         }).rejects.toThrowError('You have configured mismatching logLevels: 1 (wrapperConfig) 3 (workspaceConfig.developmentOptions)');

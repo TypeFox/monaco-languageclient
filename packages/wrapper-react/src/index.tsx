@@ -3,15 +3,14 @@
 * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from 'monaco-editor';
-import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
-import { didModelContentChange, MonacoEditorLanguageClientWrapper, TextChanges, TextModels, WrapperConfig } from 'monaco-editor-wrapper';
+import React, { type CSSProperties, useCallback, useEffect, useRef } from 'react';
+import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
     wrapperConfig: WrapperConfig,
-    onTextChanged?: (textChanges: TextChanges) => void;
+    onTextChanged?: (textChanges: TextContents) => void;
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: (e: any) => void;
@@ -29,7 +28,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
-    const [onTextChangedSubscriptions, setOnTextChangedSubscriptions] = useState<monaco.IDisposable[]>([]);
 
     useEffect(() => {
         return () => {
@@ -48,6 +46,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.className = className ?? '';
+            wrapperConfig.htmlContainer = containerRef.current;
         }
     }, [className]);
 
@@ -68,36 +67,18 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [wrapperConfig]);
 
     const initMonaco = useCallback(async () => {
-        await wrapperRef.current.init(wrapperConfig);
+        if (containerRef.current) {
+            wrapperConfig.htmlContainer = containerRef.current;
+            await wrapperRef.current.init(wrapperConfig);
+        } else {
+            throw new Error('No htmlContainer found! Aborting...');
+        }
     }, [wrapperConfig]);
 
     const startMonaco = useCallback(async () => {
         if (containerRef.current) {
-            containerRef.current.className = className ?? '';
             try {
-                wrapperRef.current.getMonacoEditorApp()?.updateHtmlContainer(containerRef.current);
-
-                wrapperRef.current.registerModelUpdate((textModels: TextModels) => {
-                    if (textModels.text || textModels.textOriginal) {
-                        const newSubscriptions: monaco.IDisposable[] = [];
-
-                        if (textModels.text) {
-                            newSubscriptions.push(textModels.text.onDidChangeContent(() => {
-                                didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
-                            }));
-                        }
-
-                        if (textModels.textOriginal) {
-                            newSubscriptions.push(textModels.textOriginal.onDidChangeContent(() => {
-                                didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
-                            }));
-                        }
-                        setOnTextChangedSubscriptions(newSubscriptions);
-                        // do it initially
-                        didModelContentChange(textModels, wrapperConfig.editorAppConfig.codeResources, onTextChanged);
-                    }
-                });
-
+                wrapperRef.current.registerTextChangeCallback(onTextChanged);
                 await wrapperRef.current.start();
                 onLoad?.(wrapperRef.current);
                 handleOnTextChanged();
@@ -109,15 +90,12 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 }
             }
         } else {
-            throw new Error('No htmlContainer found');
+            throw new Error('No htmlContainer found! Aborting...');
         }
-    }, [className, onError, onLoad, onTextChanged]);
+    }, [onError, onLoad, onTextChanged]);
 
     const handleOnTextChanged = useCallback(() => {
-        disposeOnTextChanged();
-
         if (!onTextChanged) return;
-
     }, [onTextChanged, wrapperConfig]);
 
     const destroyMonaco = useCallback(async () => {
@@ -127,14 +105,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             // The language client may throw an error during disposal.
             // This should not prevent us from continue working.
         }
-        disposeOnTextChanged();
-    }, []);
-
-    const disposeOnTextChanged = useCallback(() => {
-        for (const subscription of onTextChangedSubscriptions) {
-            subscription.dispose();
-        }
-        setOnTextChangedSubscriptions([]);
     }, []);
 
     return (

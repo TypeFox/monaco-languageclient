@@ -1,10 +1,18 @@
 # Monaco Language Client, VSCode WebSocket Json RPC, Monaco-Editor-Wrapper, Monaco-Editor-React and examples
 
-[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
+[![Github Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://typefox.github.io/monaco-languageclient)
 [![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
-[![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
-[![NPM Download](https://img.shields.io/npm/dt/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
+[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
+<br>
+[![monaco-languageclient Version](https://img.shields.io/npm/v/monaco-languageclient?logo=npm&label=monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
+[![monaco-languageclient Downloads](https://img.shields.io/npm/dt/monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
+[![vscode-ws-jsonrpc Version](https://img.shields.io/npm/v/vscode-ws-jsonrpc?logo=npm&label=vscode-ws-jsonrpc)](https://www.npmjs.com/package/vscode-ws-jsonrpc)
+[![vscode-ws-jsonrpc Downloads](https://img.shields.io/npm/dt/vscode-ws-jsonrpc)](https://www.npmjs.com/package/vscode-ws-jsonrpc)
+[![monaco-editor-wrapper Version](https://img.shields.io/npm/v/monaco-editor-wrapper?logo=npm&label=monaco-editor-wrapper)](https://www.npmjs.com/package/monaco-editor-wrapper)
+[![monaco-editor-wrapper Downloads](https://img.shields.io/npm/dt/monaco-editor-wrapper)](https://www.npmjs.com/package/monaco-editor-wrapper)
+[![monaco-editor-react Version](https://img.shields.io/npm/v/@typefox/monaco-editor-react?logo=npm&label=@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
+[![monaco-editor-react Downloads](https://img.shields.io/npm/dt/@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 
 This repository now host multiple npm packages under one roof:
 
@@ -14,7 +22,7 @@ This repository now host multiple npm packages under one roof:
 - [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) puts a react cloack over `monaco-editor-wrapper`
 - [monaco-languageclient-examples](https://www.npmjs.com/package/monaco-languageclient-examples) provides the examples which allows to use them externally.
 
-Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) for a detail explanation how to connect the Monaco editor to your language server.
+The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
 - [Monaco Language Client, VSCode WebSocket Json RPC, Monaco-Editor-Wrapper, Monaco-Editor-React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-wrapper-monaco-editor-react-and-examples)
   - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
@@ -28,6 +36,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
       - [Groovy Language client and language server example (Location)](#groovy-language-client-and-language-server-example-location)
       - [Java Language client and language server example (Location)](#java-language-client-and-language-server-example-location)
       - [Cpp / Clangd (Location)](#cpp--clangd-location)
+      - [Application Playground (Location)](#application-playground-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
       - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
@@ -46,6 +55,7 @@ Click [here](https://www.typefox.io/blog/teaching-the-language-server-protocol-t
     - [Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api](#dependency-issues-monaco-editor--codingamemonaco-vscode-api--codingamemonaco-vscode-editor-api)
     - [Volta](#volta)
     - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
+    - [SSR frameworks](#ssr-frameworks)
     - [Serve all files required](#serve-all-files-required)
     - [Bad Polyfills](#bad-polyfills)
       - [buffer](#buffer)
@@ -66,6 +76,8 @@ CHANGELOGs for each project are available from the linked location:
 Important Project changes and notes about the project's history are found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes).
 
 You find the `monaco-editor`, `vscode`, `@codingame/monaco-vscode-api` and `@codingame/monaco-vscode-editor-api` compatibility table [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
+
+[This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
 
 ## Getting started
 
@@ -141,7 +153,11 @@ Langium examples (here client and server communicate via `vscode-languageserver-
 
 #### Cpp / Clangd ([Location](./packages/examples/src/clangd))
 
-It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser.
+It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser. <b>Heads up:</b> This is a prototype and still evolving.
+
+#### Application Playground ([Location](./packages/examples/src/appPlayground))
+
+This [example](./packages/examples/src/appPlayground/main.ts) uses the view service provider from `@codingame/monaco-vscode-editor-api` to build an application that utilizes more vscode features. <b>Heads up:</b> This is a prototype and still evolving.
 
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
@@ -163,8 +179,6 @@ It demonstrates how a [monaco-editor-wrapper can be combined with a language ser
 #### Purely monaco-editor related examples
 
 See [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts).
-
-See [Multi-editor usage](./packages/examples/src/ts/wrapperAdvanced.ts).
 
 #### Server processes
 
@@ -198,7 +212,7 @@ For the **java-client** example you need to ensure the **java-server** example i
 
 None of the verification examples is part of the npm workspace. Some bring substantial amount of npm dependencies that pollute the main node_modules dependencies and therefore these examples need to be build and started independently. All verifaction examples re-uses the code form the json client example and therefore require the json server to be started.
 
-- [angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
+- [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
 
 - [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8081>.
 
@@ -206,7 +220,9 @@ None of the verification examples is part of the npm workspace. Some bring subst
 
 - [pnpm verification example](./verify/pnpm) demonstrates that the project can be build with vite, but pnpm is used instead of npm. Please do: `cd verify/pnpm && pnpm run verify`. It serves the client here: <http://localhost:8083>.
 
-- [yarn verification example](./verify/yarn)demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
+- [yarn verification example](./verify/yarn) demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
+
+- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8084>.
 
 ### VSCode integration
 
@@ -234,7 +250,7 @@ There are [Volta](https://volta.sh/) instructions in the `package.json` files. W
 
 ### Vite dev server troubleshooting
 
-When you are using vite for development please be aware of [this recommendation](https://github.com/CodinGame/monaco-vscode-api#if-you-use-vite).
+When you are using the vite dev server there are some issues with imports, please [read this recommendation](https://github.com/CodinGame/monaco-vscode-api/wiki/Troubleshooting#if-you-use-vite).
 
 If you see the problem *Assertion failed (There is already an extension with this id)* you likely have mismatching dependencies defined for `vscode` / `@codingame/monaco-vscode-api`. You should fix this or add the following entry to your vite config:
 
@@ -243,6 +259,10 @@ resolve: {
   dedupe: ['vscode']
 }
 ```
+
+### SSR frameworks
+
+**Important:** Due to its reliance on `monaco-editor` and `@codingame/monaco-vscode-api` this stack will very likely not work with Server-Side Rendering (SSR) frameworks. They client code has to be run in a browser environment.
 
 ### Serve all files required
 
@@ -282,12 +302,20 @@ import { loader } from "@monaco-editor/react";
 loader.config({ monaco });
 ```
 
+Because `@codingame/monaco-vscode-api` relies on it own build of `monaco-editor` it may be required to enforce the `monaco-editor` version via `overrides` (npm/pnpm) or `resolutions` (yarn):
+
+```json
+"overrides": {
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~14.0.2"
+}
+```
+
 ### pnpm
 
 If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (you find the [compatibility table here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table), otherwise the installation will fail.
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-api@~10.1.1"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2"
 ```
 
 ## Licenses

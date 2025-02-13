@@ -33,20 +33,23 @@ jobs:
       run: |
         npm ci
 
-    - name: Build
+    - name: Versions Report
       shell: bash
       run: |
         npm run report:versions
+
+    - name: Build
+      shell: bash
+      run: |
         npm run build
 
     - name: Lint
       shell: bash
       run: |
-        npm run report:versions
         npm run lint
 
     - name: Test
       shell: bash
       run: |
-        npm run report:versions
+        npm run test:install
         npm run test:run

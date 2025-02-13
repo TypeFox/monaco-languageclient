@@ -4,21 +4,20 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { CloseAction, ErrorAction, LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { MonacoLanguageClient, ConnetionConfigOptions, WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from 'monaco-languageclient';
-import { createUrl, Logger } from 'monaco-languageclient/tools';
+import { CloseAction, ErrorAction, type LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
+import { type ConnectionConfigOptions, MonacoLanguageClient, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient';
+import { createUrl, type Logger } from 'monaco-languageclient/tools';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export interface ConnectionConfig {
-    options: ConnetionConfigOptions;
+    options: ConnectionConfigOptions;
     messageTransports?: MessageTransports;
 }
 
 export interface LanguageClientConfig {
     name?: string;
-    languageId: string;
     connection: ConnectionConfig;
-    clientOptions?: LanguageClientOptions;
+    clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
 }
 
@@ -37,7 +36,6 @@ export class LanguageClientWrapper {
 
     private languageClient?: MonacoLanguageClient;
     private languageClientConfig: LanguageClientConfig;
-    private languageId: string;
     private worker?: Worker;
     private port?: MessagePort;
     private name?: string;
@@ -50,7 +48,6 @@ export class LanguageClientWrapper {
         this.languageClientConfig = config.languageClientConfig;
         this.name = this.languageClientConfig.name ?? 'unnamed';
         this.logger = config.logger;
-        this.languageId = this.languageClientConfig.languageId;
     }
 
     haveLanguageClient(): boolean {
@@ -175,30 +172,31 @@ export class LanguageClientWrapper {
             this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
             resolve();
         }
+
         const mlcConfig = {
             name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
-
-            // allow to fully override the clientOptions
-            clientOptions: this.languageClientConfig.clientOptions ?? {
-                documentSelector: [this.languageId],
-                // disable the default error handler
+            clientOptions: {
+                // disable the default error handler...
                 errorHandler: {
                     error: () => ({ action: ErrorAction.Continue }),
                     closed: () => ({ action: CloseAction.DoNotRestart })
-                }
+                },
+                // ...but allowm to override all options
+                ...this.languageClientConfig.clientOptions,
             },
             messageTransports
         };
-
         this.languageClient = new MonacoLanguageClient(mlcConfig);
 
         const conOptions = this.languageClientConfig.connection.options;
         this.initRestartConfiguration(messageTransports, this.languageClientConfig.restartOptions);
 
+        const isWebSocket = conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'WebSocketDirect';
+
         messageTransports.reader.onClose(async () => {
             await this.languageClient?.stop();
 
-            if ((conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') && conOptions.stopOptions !== undefined) {
+            if (isWebSocket && conOptions.stopOptions !== undefined) {
                 const stopOptions = conOptions.stopOptions;
                 stopOptions.onCall(this.getLanguageClient());
                 if (stopOptions.reportStatus !== undefined) {
@@ -210,7 +208,7 @@ export class LanguageClientWrapper {
         try {
             await this.languageClient.start();
 
-            if ((conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') && conOptions.startOptions !== undefined) {
+            if (isWebSocket && conOptions.startOptions !== undefined) {
                 const startOptions = conOptions.startOptions;
                 startOptions.onCall(this.getLanguageClient());
                 if (startOptions.reportStatus !== undefined) {
@@ -264,8 +262,8 @@ export class LanguageClientWrapper {
 
     async disposeLanguageClient(keepWorker: boolean): Promise<void> {
         try {
-            if (this.languageClient !== undefined && this.languageClient.isRunning()) {
-                await this.languageClient.dispose();
+            if (this.isStarted()) {
+                await this.languageClient?.dispose();
                 this.languageClient = undefined;
                 this.logger?.info('monaco-languageclient and monaco-editor were successfully disposed.');
             }
@@ -281,7 +279,6 @@ export class LanguageClientWrapper {
                 this.disposeWorker();
             }
         }
-        return Promise.resolve();
     }
 
     reportStatus() {

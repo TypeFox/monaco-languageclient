@@ -3,9 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageConnection, Logger } from 'vscode-jsonrpc';
+import type { MessageConnection, Logger } from 'vscode-jsonrpc';
 import { createWebSocketConnection } from './socket/connection.js';
-import { IWebSocket } from './socket/socket.js';
+import type { IWebSocket } from './socket/socket.js';
 import { ConsoleLogger } from './logger.js';
 
 export function listen(options: {

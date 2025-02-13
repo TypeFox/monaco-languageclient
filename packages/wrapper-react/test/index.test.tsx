@@ -4,21 +4,22 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { render, RenderResult } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import React from 'react';
-import { LogLevel } from 'vscode/services';
-import { MonacoEditorLanguageClientWrapper, TextChanges, WrapperConfig } from 'monaco-editor-wrapper';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureMonacoWorkers, createMonacoEditorDiv, updateExtendedAppPrototyp } from './helper.js';
+import { configureMonacoWorkers } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
@@ -42,63 +43,65 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update onTextChanged', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
-                    main: {
+                    modified: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
 
-        const textReceiverHello = (textChanges: TextChanges) => {
-            expect(textChanges.text).toEqual('hello world');
+        const textReceiverHello = (textChanges: TextContents) => {
+            expect(textChanges.modified).toEqual('hello world');
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-            expect(wrapper.getTextModels()?.text?.getValue()).toEqual('hello world');
+            expect(wrapper.getTextModels()?.modified?.getValue()).toEqual('hello world');
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} onLoad={handleOnLoad} />);
     });
 
     test('update codeResources', async () => {
-        updateExtendedAppPrototyp();
         const wrapperConfig: WrapperConfig = {
+            $type: 'extended',
             logLevel: LogLevel.Debug,
+            vscodeApiConfig: {
+                loadThemes: false
+            },
             editorAppConfig: {
-                $type: 'extended',
                 codeResources: {
-                    main: {
+                    modified: {
                         text: 'hello world',
                         fileExt: 'js'
                     }
                 },
-                htmlContainer: createMonacoEditorDiv(),
                 monacoWorkerFactory: configureMonacoWorkers
             }
         };
 
         let count = 0;
-        const textReceiver = (textChanges: TextChanges) => {
+        const textReceiver = (textChanges: TextContents) => {
+            // initial call
             if (count === 0) {
-                expect(textChanges.text).toBe('hello world');
+                expect(textChanges.modified).toBe('hello world');
             } else {
-                expect(textChanges.text).toBe('goodbye world');
+                expect(textChanges.modified).toBe('goodbye world');
             }
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
             count++;
-
             await wrapper.updateCodeResources({
-                main: {
+                modified: {
                     text: 'goodbye world',
                     fileExt: 'js'
                 }
