@@ -8,7 +8,6 @@ import { WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-angular-wrapper.component';
 import { SaveCodeService } from '../save-code.service';
 import { firstValueFrom } from 'rxjs';
-import { getGroovyClientConfig } from '../config/groovy.config';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
