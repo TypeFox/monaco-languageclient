@@ -39,7 +39,7 @@ describe('EmptyFileSystemEndpoint Tests', () => {
     });
 
     test('getFileStats', async () => {
-        expect(async () => {
+        await expect(async () => {
             await endpoint.getFileStats({
                 type: 'file',
                 resourceUri: '/tmp/test.js'
@@ -48,7 +48,7 @@ describe('EmptyFileSystemEndpoint Tests', () => {
     });
 
     test('listFiles', async () => {
-        expect(async () => {
+        await expect(async () => {
             await endpoint.listFiles({
                 directoryUri: '/tmp'
             });

@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { Uri } from 'vscode';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
@@ -58,7 +57,6 @@ export const createWrapperConfig = async (config: {
         },
         vscodeApiConfig: {
             serviceOverrides: {
-                ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getBannerServiceOverride(),

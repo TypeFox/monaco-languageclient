@@ -6,7 +6,6 @@
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import '@codingame/monaco-vscode-json-default-extension';
@@ -20,9 +19,6 @@ export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     await initServices({
-        serviceOverrides: {
-            ...getConfigurationServiceOverride()
-        },
         userConfiguration: {
             json: JSON.stringify({
                 'editor.experimental.asyncTokenization': true

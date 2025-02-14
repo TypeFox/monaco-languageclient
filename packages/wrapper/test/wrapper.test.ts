@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import { describe, expect, test, vi } from 'vitest';
 import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
-import { createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
+import { createDefaultLcUnreachableUrlConfig, createMonacoEditorDiv, createWrapperConfigClassicApp, createWrapperConfigExtendedApp } from './helper.js';
 import { IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
 
 const createMewModelReference = async () => {
@@ -176,6 +176,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         }];
         await wrapper.initAndStart(wrapperConfig);
         await wrapper.dispose();
+
         await wrapper.initAndStart(wrapperConfig);
     });
 
@@ -310,5 +311,52 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
         expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);
         expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(2);
+    });
+
+    test('LanguageClientWrapper Not defined after construction without configuration', async () => {
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(createWrapperConfigExtendedApp());
+
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('unknown');
+        expect(languageClientWrapper).toBeUndefined();
+    });
+
+    test('LanguageClientWrapper constructor config works', async () => {
+        const config = createWrapperConfigExtendedApp();
+        config.languageClientConfigs = {
+            javascript: createDefaultLcUnreachableUrlConfig()
+        };
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await wrapper.init(config);
+
+        const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
+        expect(languageClientWrapper).toBeDefined();
+    });
+
+    test('LanguageClientWrapper unreachable rejection handling', async () => {
+        const config = createWrapperConfigExtendedApp();
+        config.languageClientConfigs = {
+            javascript: createDefaultLcUnreachableUrlConfig()
+        };
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await expect(async () => {
+            await wrapper.initAndStart(config);
+        }).rejects.toEqual({
+            message: 'languageClientWrapper (test-ws-unreachable): Websocket connection failed.',
+            error: 'No error was provided.'
+        });
+
+        expect(wrapper.isInitializing()).toBeFalsy();
+        expect(wrapper.isStarting()).toBeFalsy();
+        expect(wrapper.isStopping()).toBeFalsy();
+
+        await wrapper.dispose();
+
+        expect(wrapper.isInitializing()).toBeFalsy();
+        expect(wrapper.isStarting()).toBeFalsy();
+        expect(wrapper.isStopping()).toBeFalsy();
+
+        const config2 = createWrapperConfigExtendedApp();
+        await wrapper.initAndStart(config2);
     });
 });

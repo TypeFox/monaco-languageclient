@@ -25,14 +25,6 @@ export const augmentVscodeApiConfig = async ($type: OverallConfigType, config: V
     // set empty object if undefined
     const services: monaco.editor.IEditorOverrideServices = vscodeApiConfig.serviceOverrides ?? {};
 
-    // import configuration service if it is not available
-    if (services.configurationService === undefined) {
-        const getConfigurationServiceOverride = (await import('@codingame/monaco-vscode-configuration-service-override')).default;
-        mergeServices(services, {
-            ...getConfigurationServiceOverride()
-        });
-    }
-
     await augmentHighlightingServices($type, services);
     await augmentViewsServices(services, vscodeApiConfig.viewsConfig);
 

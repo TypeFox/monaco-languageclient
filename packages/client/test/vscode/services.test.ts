@@ -5,15 +5,11 @@
 
 import { describe, expect, test } from 'vitest';
 import { initServices, type MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscode/services';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 
 describe('VSCde services Tests', () => {
 
     test('initServices', async () => {
         const vscodeApiConfig = {
-            serviceOverrides: {
-                ...getConfigurationServiceOverride()
-            },
             userConfiguration: {
                 json: JSON.stringify({
                     'workbench.colorTheme': 'Default Dark Modern'

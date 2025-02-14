@@ -45,7 +45,9 @@ export class MonacoEditorLanguageClientWrapper {
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
-    private initDone = false;
+
+    private initAwait?: Promise<void>;
+    private initResolve: (value: void | PromiseLike<void>) => void;
 
     private startingAwait?: Promise<void>;
     private startingResolve: (value: void | PromiseLike<void>) => void;
@@ -57,11 +59,9 @@ export class MonacoEditorLanguageClientWrapper {
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
     async init(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
-        this.markStarting();
-        if (this.initDone) {
+        if (this.wrapperConfig !== undefined) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
-
         const editorAppConfig = wrapperConfig.editorAppConfig;
         if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.modified} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
@@ -72,41 +72,49 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
         }
 
-        // Always dispose old instances before start and
-        // ensure disposable store is available again after dispose
-        this.dispose(false);
-        this.disposableStoreExtensions = new DisposableStore();
-        this.disposableStoreMonaco = new DisposableStore();
+        this.markInitializing();
 
-        this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+        try {
+            // Always dispose old instances before start and
+            // ensure disposable store is available again after dispose
+            this.dispose(false);
+            this.disposableStoreExtensions = new DisposableStore();
+            this.disposableStoreMonaco = new DisposableStore();
 
-        this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
-        if (typeof wrapperConfig.editorAppConfig?.monacoWorkerFactory === 'function') {
-            wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
+            this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+
+            this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
+            if (typeof wrapperConfig.editorAppConfig?.monacoWorkerFactory === 'function') {
+                wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
+            }
+
+            if (!(wrapperConfig.vscodeApiConfig?.vscodeApiInitPerformExternally === true)) {
+                wrapperConfig.vscodeApiConfig = await configureAndInitVscodeApi(wrapperConfig.$type, {
+                    vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
+                    logLevel: this.logger.getLevel(),
+                    // workaround for classic monaco-editor not applying semanticHighlighting
+                    semanticHighlighting: wrapperConfig.editorAppConfig?.editorOptions?.['semanticHighlighting.enabled'] === true
+                }, {
+                    htmlContainer: wrapperConfig.htmlContainer,
+                    caller: `monaco-editor (${this.id})`,
+                    performServiceConsistencyChecks: checkServiceConsistency,
+                    logger: this.logger
+                });
+            }
+            this.wrapperConfig = wrapperConfig;
+
+            if (includeLanguageClients === true) {
+                this.initLanguageClients();
+            }
+            await this.initExtensions();
+            this.editorApp = new EditorApp(this.id, wrapperConfig.$type, wrapperConfig.editorAppConfig, this.logger);
+            // eslint-disable-next-line no-useless-catch
+        } catch (e) {
+            throw e;
+        } finally {
+            // in case of rejection, mark as initialized, otherwise the promise will never resolve
+            this.markInitialized();
         }
-
-        if (!(wrapperConfig.vscodeApiConfig?.vscodeApiInitPerformExternally === true)) {
-            wrapperConfig.vscodeApiConfig = await configureAndInitVscodeApi(wrapperConfig.$type, {
-                vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
-                logLevel: this.logger.getLevel(),
-                // workaround for classic monaco-editor not applying semanticHighlighting
-                semanticHighlighting: wrapperConfig.editorAppConfig?.editorOptions?.['semanticHighlighting.enabled'] === true
-            }, {
-                htmlContainer: wrapperConfig.htmlContainer,
-                caller: `monaco-editor (${this.id})`,
-                performServiceConsistencyChecks: checkServiceConsistency,
-                logger: this.logger
-            });
-        }
-        this.wrapperConfig = wrapperConfig;
-
-        if (includeLanguageClients === true) {
-            this.initLanguageClients();
-        }
-        await this.initExtensions();
-        this.editorApp = new EditorApp(this.id, wrapperConfig.$type, wrapperConfig.editorAppConfig, this.logger);
-
-        this.initDone = true;
     }
 
     initLanguageClients() {
@@ -146,6 +154,25 @@ export class MonacoEditorLanguageClientWrapper {
         }
     };
 
+    private markInitializing() {
+        this.initAwait = new Promise<void>((resolve) => {
+            this.initResolve = resolve;
+        });
+    }
+
+    private markInitialized() {
+        this.initResolve();
+        this.initAwait = undefined;
+    }
+
+    isInitializing() {
+        return this.initAwait !== undefined;
+    }
+
+    getInitializingAwait() {
+        return this.initAwait;
+    }
+
     getWrapperConfig() {
         return this.wrapperConfig;
     }
@@ -169,31 +196,37 @@ export class MonacoEditorLanguageClientWrapper {
         htmlContainer?: HTMLElement,
         includeLanguageClients?: boolean
     }) {
-        if (!this.initDone) {
+        if (this.wrapperConfig === undefined) {
             throw new Error('No init was performed. Please call init() before start()');
         }
-
-        const viewServiceType = this.wrapperConfig?.vscodeApiConfig?.viewsConfig?.viewServiceType;
-        if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
-            this.logger.info(`Starting monaco-editor (${this.id})`);
-            const html = startConfig?.htmlContainer === undefined ? this.wrapperConfig?.htmlContainer : startConfig.htmlContainer;
-            if (html === undefined) {
-                throw new Error('No html container provided. Unable to start monaco-editor.');
+        this.markStarting();
+        try {
+            const viewServiceType = this.wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType;
+            if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
+                this.logger.info(`Starting monaco-editor (${this.id})`);
+                const html = startConfig?.htmlContainer === undefined ? this.wrapperConfig.htmlContainer : startConfig.htmlContainer;
+                if (html === undefined) {
+                    throw new Error('No html container provided. Unable to start monaco-editor.');
+                } else {
+                    await this.editorApp?.createEditors(html);
+                }
             } else {
-                await this.editorApp?.createEditors(html);
+                this.logger.info('No EditorService configured. monaco-editor will not be started.');
             }
-        } else {
-            this.logger.info('No EditorService configured. monaco-editor will not be started.');
-        }
 
-        if (startConfig?.includeLanguageClients === true) {
-            await this.startLanguageClients();
+            if (startConfig?.includeLanguageClients === true) {
+                await this.startLanguageClients();
+            }
+            // eslint-disable-next-line no-useless-catch
+        } catch (e) {
+            throw e;
+        } finally {
+            // in case of rejection, mark as started, otherwise the promise will never resolve
+            this.markStarted();
         }
-
-        this.markStarted();
     }
 
-    async startLanguageClients() {
+    async startLanguageClients(): Promise<void[]> {
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
             allPromises.push(lcw.start());
@@ -213,11 +246,11 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     isStarting() {
-        return this.startingAwait;
+        return this.startingAwait !== undefined;
     }
 
-    isInitDone() {
-        return this.initDone;
+    getStartingAwait() {
+        return this.startingAwait;
     }
 
     isStarted(): boolean {
@@ -334,12 +367,19 @@ export class MonacoEditorLanguageClientWrapper {
         this.disposableStoreExtensions?.dispose();
         this.disposableStoreMonaco?.dispose();
 
-        if (includeLanguageClients) {
-            await disposeLanguageClients(this.languageClientWrappers.values(), false);
+        try {
+            if (includeLanguageClients) {
+                await disposeLanguageClients(this.languageClientWrappers.values(), false);
+            }
+            // eslint-disable-next-line no-useless-catch
+        } catch (e) {
+            throw e;
+        } finally {
+            // in case of rejection, mark as stopped, otherwise the promise will never resolve
+            this.languageClientWrappers.clear();
+            this.wrapperConfig = undefined;
+            this.markStopped();
         }
-
-        this.initDone = false;
-        this.markStopped();
     }
 
     private markStopping() {
@@ -354,6 +394,10 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     isStopping() {
+        return this.stoppingAwait !== undefined;
+    }
+
+    getStoppingAwait() {
         return this.stoppingAwait;
     }
 
