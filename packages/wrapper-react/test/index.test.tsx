@@ -6,59 +6,38 @@
 import { describe, expect, test } from 'vitest';
 import { render, type RenderResult } from '@testing-library/react';
 import React from 'react';
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureMonacoWorkers } from './helper.js';
+import { createDefaultWrapperConfig } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
     test('rerender', async () => {
-        const wrapperConfig: WrapperConfig = {
-            $type: 'extended',
-            logLevel: LogLevel.Debug,
-            vscodeApiConfig: {
-                loadThemes: false
-            },
-            editorAppConfig: {
-                monacoWorkerFactory: configureMonacoWorkers
-            }
-        };
+        const wrapperConfig = createDefaultWrapperConfig();
         const { rerender } = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
         rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
-        await Promise.resolve();
         rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
+    });
+
+    test('onLoad', async () => {
+        const wrapperConfig = createDefaultWrapperConfig();
 
         let renderResult: RenderResult;
         // we have to await the full start of the editor with the onLoad callback, then it is save to contine
-        const p = await new Promise<void>(resolve => {
+        await expect(await new Promise<void>(resolve => {
             const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
                 renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
 
+                console.log('onLoad');
                 resolve();
             };
+            // render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
             renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
-        });
         // void promise is undefined after it was awaited
-        expect(p).toBeUndefined();
+        })).toBeUndefined();
     });
 
     test('update onTextChanged', async () => {
-        const wrapperConfig: WrapperConfig = {
-            $type: 'extended',
-            logLevel: LogLevel.Debug,
-            vscodeApiConfig: {
-                loadThemes: false
-            },
-            editorAppConfig: {
-                codeResources: {
-                    modified: {
-                        text: 'hello world',
-                        fileExt: 'js'
-                    }
-                },
-                monacoWorkerFactory: configureMonacoWorkers
-            }
-        };
+        const wrapperConfig = createDefaultWrapperConfig();
 
         const textReceiverHello = (textChanges: TextContents) => {
             expect(textChanges.modified).toEqual('hello world');
@@ -71,22 +50,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update codeResources', async () => {
-        const wrapperConfig: WrapperConfig = {
-            $type: 'extended',
-            logLevel: LogLevel.Debug,
-            vscodeApiConfig: {
-                loadThemes: false
-            },
-            editorAppConfig: {
-                codeResources: {
-                    modified: {
-                        text: 'hello world',
-                        fileExt: 'js'
-                    }
-                },
-                monacoWorkerFactory: configureMonacoWorkers
-            }
-        };
+        const wrapperConfig = createDefaultWrapperConfig();
 
         let count = 0;
         const textReceiver = (textChanges: TextContents) => {

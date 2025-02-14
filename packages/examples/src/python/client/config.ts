@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
@@ -134,7 +133,6 @@ export const createWrapperConfig = (): PythonAppConfig => {
         },
         vscodeApiConfig: {
             serviceOverrides: {
-                ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride(),
                 ...getLifecycleServiceOverride(),
                 ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),

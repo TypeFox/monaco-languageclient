@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -57,4 +57,38 @@ export const configureMonacoWorkers = () => {
             TextEditorWorker: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
         }
     });
+};
+
+export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
+    return {
+        name: 'test-worker-direct',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerDirect',
+                // create a web worker to pass to the wrapper
+                worker: new Worker('./worker/langium-server.ts', {
+                    type: 'module',
+                    name: 'Langium LS'
+                })
+            }
+        }
+    };
+};
+
+export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
+    return {
+        name: 'test-ws-unreachable',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:12345/Tester'
+            }
+        }
+    };
 };

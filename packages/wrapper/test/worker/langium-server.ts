@@ -9,6 +9,8 @@ import { type DefaultSharedModuleContext, startLanguageServer } from 'langium/ls
 import { createLangiumGrammarServices } from 'langium/grammar';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
 
+console.log('Langium Worker started for test');
+
 /* browser specific setup code */
 const messageReader = new BrowserMessageReader(self as DedicatedWorkerGlobalScope);
 const messageWriter = new BrowserMessageWriter(self as DedicatedWorkerGlobalScope);

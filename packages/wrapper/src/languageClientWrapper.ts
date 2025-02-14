@@ -167,6 +167,7 @@ export class LanguageClientWrapper {
     }
 
     protected async performLanguageClientStart(messageTransports: MessageTransports, resolve: () => void, reject: (reason?: unknown) => void) {
+        let starting = true;
         // do not perform another start attempt if already running
         if (this.languageClient?.isRunning() ?? false) {
             this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
@@ -178,7 +179,14 @@ export class LanguageClientWrapper {
             clientOptions: {
                 // disable the default error handler...
                 errorHandler: {
-                    error: () => ({ action: ErrorAction.Continue }),
+                    error: (e: Error) => {
+                        if (starting) {
+                            reject(`Error occurred in language client: ${e}`);
+                            return { action: ErrorAction.Shutdown };
+                        } else {
+                            return { action: ErrorAction.Continue };
+                        }
+                    },
                     closed: () => ({ action: CloseAction.DoNotRestart })
                 },
                 // ...but allowm to override all options
@@ -224,6 +232,7 @@ export class LanguageClientWrapper {
         }
         this.logger?.info(`languageClientWrapper (${this.name}): Started successfully.`);
         resolve();
+        starting = false;
     }
 
     protected initRestartConfiguration(messageTransports: MessageTransports, restartOptions?: LanguageClientRestartOptions) {

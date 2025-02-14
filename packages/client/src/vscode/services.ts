@@ -8,6 +8,7 @@ import 'vscode/localExtensionHost';
 import { initialize, type IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { WorkerConfig } from '@codingame/monaco-vscode-extensions-service-override';
+import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
@@ -17,7 +18,6 @@ import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench
 import type { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 import { setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
-import { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -75,6 +75,7 @@ export const getMonacoEnvironmentEnhanced = () => {
 
 export const supplyRequiredServices = async () => {
     return {
+        ...getConfigurationServiceOverride(),
         ...getLanguagesServiceOverride(),
         ...getLogServiceOverride(),
         ...getModelServiceOverride()

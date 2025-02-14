@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { Logger } from 'monaco-languageclient/tools';
@@ -22,7 +21,6 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
         logLevel: LogLevel.Debug,
         vscodeApiConfig: {
             serviceOverrides: {
-                ...getConfigurationServiceOverride(),
                 ...getKeybindingsServiceOverride()
             }
         },
