@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig } from './helper.js';
+import { CloseAction, ErrorAction } from 'vscode-languageclient';
 
 describe('Test LanguageClientWrapper', () => {
 
@@ -24,22 +25,28 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {
         const languageClientConfig = createDefaultLcWorkerConfig();
+        languageClientConfig.clientOptions.errorHandler = {
+            error: (e) => {
+                expect(e).toEqual(['Error: Writer received error. Reason: unknown']);
+                return { action: ErrorAction.Shutdown };
+            },
+            closed: () => ({ action: CloseAction.DoNotRestart })
+        };
         const languageClientWrapper = new LanguageClientWrapper({
             languageClientConfig
         });
 
         expect(languageClientWrapper.getWorker()).toBeFalsy();
 
-        // WA: for whatever reasons "await" kills the test,
-        // but the languageClientWrapper needs to be fully initialised as otherwise the follow up steps fail
+        // WA: language client in fails due to vitest (reason not clear, yet), therefore not await, but timeout
         languageClientWrapper.start();
 
+        expect(languageClientWrapper.getWorker()).toBeTruthy();
         setTimeout(async () => {
             // dispose & verify
             await languageClientWrapper.disposeLanguageClient(false);
             expect(languageClientWrapper.getWorker()).toBeUndefined();
         }, 250);
-        expect(languageClientWrapper.getWorker()).toBeTruthy();
     });
 
     test('Start: unreachable url', async () => {
