@@ -186,16 +186,13 @@ export class MonacoEditorLanguageClientWrapper {
      */
     async initAndStart(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
         await this.init(wrapperConfig, includeLanguageClients);
-        await this.start({ includeLanguageClients });
+        await this.start(includeLanguageClients);
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(startConfig?: {
-        htmlContainer?: HTMLElement,
-        includeLanguageClients?: boolean
-    }) {
+    async start(includeLanguageClients: boolean = true, htmlContainer?: HTMLElement) {
         if (this.wrapperConfig === undefined) {
             throw new Error('No init was performed. Please call init() before start()');
         }
@@ -204,7 +201,7 @@ export class MonacoEditorLanguageClientWrapper {
             const viewServiceType = this.wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType;
             if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
                 this.logger.info(`Starting monaco-editor (${this.id})`);
-                const html = startConfig?.htmlContainer === undefined ? this.wrapperConfig.htmlContainer : startConfig.htmlContainer;
+                const html = htmlContainer === undefined ? this.wrapperConfig.htmlContainer : htmlContainer;
                 if (html === undefined) {
                     throw new Error('No html container provided. Unable to start monaco-editor.');
                 } else {
@@ -214,7 +211,7 @@ export class MonacoEditorLanguageClientWrapper {
                 this.logger.info('No EditorService configured. monaco-editor will not be started.');
             }
 
-            if (startConfig?.includeLanguageClients === true) {
+            if (includeLanguageClients) {
                 await this.startLanguageClients();
             }
             // eslint-disable-next-line no-useless-catch
