@@ -57,38 +57,30 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [wrapperConfig]);
 
     const initMonaco = useCallback(async () => {
-        if (!wrapperRef.current.isInitializing()) {
-            if (containerRef.current) {
-                wrapperConfig.htmlContainer = containerRef.current;
-                await wrapperRef.current.init(wrapperConfig);
-            } else {
-                throw new Error('No htmlContainer found! Aborting...');
-            }
+        if (containerRef.current) {
+            wrapperConfig.htmlContainer = containerRef.current;
+            await wrapperRef.current.init(wrapperConfig);
         } else {
-            await wrapperRef.current.getInitializingAwait();
+            throw new Error('No htmlContainer found! Aborting...');
         }
     }, [wrapperConfig]);
 
     const startMonaco = useCallback(async () => {
-        if (!wrapperRef.current.isStarting()) {
-            if (containerRef.current) {
-                try {
-                    wrapperRef.current.registerTextChangeCallback(onTextChanged);
-                    await wrapperRef.current.start();
-                    onLoad?.(wrapperRef.current);
-                    handleOnTextChanged();
-                } catch (e) {
-                    if (onError) {
-                        onError(e);
-                    } else {
-                        throw e;
-                    }
+        if (containerRef.current) {
+            try {
+                wrapperRef.current.registerTextChangeCallback(onTextChanged);
+                await wrapperRef.current.start();
+                onLoad?.(wrapperRef.current);
+                handleOnTextChanged();
+            } catch (e) {
+                if (onError) {
+                    onError(e);
+                } else {
+                    throw e;
                 }
-            } else {
-                throw new Error('No htmlContainer found! Aborting...');
             }
         } else {
-            await wrapperRef.current.getStartingAwait();
+            throw new Error('No htmlContainer found! Aborting...');
         }
     }, [onError, onLoad, onTextChanged]);
 
@@ -98,11 +90,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const destroyMonaco = useCallback(async () => {
         try {
-            if (!wrapperRef.current.isStopping()) {
-                await wrapperRef.current.dispose();
-            } else {
-                await wrapperRef.current.getStoppingAwait();
-            }
+            await wrapperRef.current.dispose();
         } catch {
             // The language client may throw an error during disposal.
             // This should not prevent us from continue working.
