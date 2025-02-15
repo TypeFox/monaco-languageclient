@@ -2,6 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.4.0] - 2025-02-1x
+
+- Handle languageclient errors cases more robustly [#859](https://github.com/TypeFox/monaco-languageclient/pull/859)
+- Updated all `@codingame/monaco-vscode` packages to `14.0.4`.
+- Updated to `monaco-languageclient@9.4.0`.
+
 ## [6.3.0] - 2025-02-12
 
 - Update to monaco-vscode-api 14.0.2 and incremented versions to x.3.0 [#852](https://github.com/TypeFox/monaco-languageclient/pull/852)
