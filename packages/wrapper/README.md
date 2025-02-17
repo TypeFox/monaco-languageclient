@@ -55,7 +55,7 @@ import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-
 const run = async () => {
   const wrapper = new MonacoEditorLanguageClientWrapper();
   const wrapperConfig: WrapperConfig = {
-    $type: 'extendend',
+    $type: 'extended',
     htmlContainer: document.getElementById('monaco-editor-root')!,
     editorAppConfig: {
       codeResources: {
