@@ -28,9 +28,9 @@ const wrapperConfig: WrapperConfig = {
   htmlContainer: document.getElementById('monaco-editor-root')!,
   editorAppConfig: {
     codeResources: {
-      main: {
-        text: 'print("Hello, World!")',
-        uri: '/workspace/hello.py'
+      modified: {
+              uri: '/workspace/hello.py',
+              text: 'print("Hello, World!")'
       }
     }
   }
