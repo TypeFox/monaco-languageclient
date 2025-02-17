@@ -3,8 +3,8 @@
   "scripts": {
     "verify": "npm install && npm run dev",
     "verify:ci": "npm install && npm run build -d",
-    "dev": "next dev -p 8084",
-    "dev:turbo": "next dev --turbopack -p 8084",
+    "dev": "next dev -p 8081",
+    "dev:turbo": "next dev --turbopack -p 8081",
     "build": "next build",
     "start": "next start",
     "clean": "shx rm -fr dist .next *.tsbuildinfo"

@@ -32,7 +32,6 @@
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",
-    "showconfig": "tsc --showconfig",
     "verify:ci": "yarn install && yarn run build"
   }
 }

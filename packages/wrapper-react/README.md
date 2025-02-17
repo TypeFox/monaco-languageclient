@@ -24,7 +24,7 @@ import { WrapperConfig } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 
 const wrapperConfig: WrapperConfig = {
-  $type: 'extendend',
+  $type: 'extended',
   htmlContainer: document.getElementById('monaco-editor-root')!,
   editorAppConfig: {
     codeResources: {
