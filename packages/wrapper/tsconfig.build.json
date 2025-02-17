@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./build",
+    "noEmit": true
+  },
+  "include": [
+    "build/**/*.ts",
+    "build/**/*.mts",
+  ]
+}

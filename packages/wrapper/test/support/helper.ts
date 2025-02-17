@@ -3,8 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
+import * as vscode from 'vscode';
+import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+
+export const createMewModelReference = async () => {
+    const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
+    return await createModelReference(uri, 'text');
+};
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -27,36 +34,9 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
                     fileExt: 'js'
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
-};
-
-export const createWrapperConfigClassicApp = (): WrapperConfig => {
-    return {
-        $type: 'classic',
-        htmlContainer: createMonacoEditorDiv(),
-        vscodeApiConfig: {
-            loadThemes: false
-        },
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: '',
-                    fileExt: 'js'
-                }
-            },
-            monacoWorkerFactory: configureMonacoWorkers
-        }
-    };
-};
-
-export const configureMonacoWorkers = () => {
-    useWorkerFactory({
-        workerLoaders: {
-            TextEditorWorker: () => new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' }),
-        }
-    });
 };
 
 export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
@@ -91,4 +71,8 @@ export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
             }
         }
     };
+};
+
+export const delayExecution = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 };

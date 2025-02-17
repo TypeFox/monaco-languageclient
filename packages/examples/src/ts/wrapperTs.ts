@@ -9,7 +9,7 @@ import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type CodePlusUri, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers } from '../common/client/utils.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';
@@ -55,7 +55,7 @@ export const runTsWrapper = async () => {
                     uri: codeOriginalUri,
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
 

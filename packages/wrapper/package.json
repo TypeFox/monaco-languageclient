@@ -24,6 +24,25 @@
     "./vscode/locale": {
       "types": "./dist/vscode/localeLoader.d.ts",
       "default": "./dist/vscode/localeLoader.js"
+    },
+    "./workers/workerLoaders": {
+      "types": "./dist/workers/workerLoaders.d.ts",
+      "default": "./dist/workers/workerLoaders.js"
+    },
+    "./workers/module/editor": {
+      "default": "./dist/workers/editorWorker-es.js"
+    },
+    "./workers/module/ts": {
+      "default": "./dist/workers/tsWorker-es.js"
+    },
+    "./workers/module/html": {
+      "default": "./dist/workers/htmlWorker-es.js"
+    },
+    "./workers/module/css": {
+      "default": "./dist/workers/cssWorker-es.js"
+    },
+    "./workers/module/json": {
+      "default": "./dist/workers/jsonWorker-es.js"
     }
   },
   "typesVersions": {
@@ -36,6 +55,9 @@
       ],
       "vscode/locale": [
         "dist/vscode/localeLoader"
+      ],
+      "workers/workerLoaders": [
+        "dist/workers/workerLoaders"
       ]
     }
   },
@@ -49,7 +71,13 @@
   "scripts": {
     "clean": "vite-node ../../scripts/clean.ts --relativePath packages/wrapper --recursive --paths ./dist ./bundle *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json && tsc --build tsconfig.test.json",
-    "build": "npm run clean && npm run compile"
+    "build:worker:editor": "vite -c ./build/vite.editorWorker.ts build",
+    "build:worker:ts": "vite -c ./build/vite.tsWorker.ts build",
+    "build:worker:html": "vite -c ./build/vite.htmlWorker.ts build",
+    "build:worker:css": "vite -c ./build/vite.cssWorker.ts build",
+    "build:worker:json": "vite -c ./build/vite.jsonWorker.ts build",
+    "build:workers:vite": "npm run build:worker:editor && npm run build:worker:ts && npm run build:worker:html && npm run build:worker:css && npm run build:worker:json",
+    "build": "npm run clean && npm run compile && npm run build:workers:vite"
   },
   "engines": {
     "node": ">=18.19.0",
@@ -89,6 +117,13 @@
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
     "vscode-ws-jsonrpc": "~3.4.0"
+  },
+  "devDependencies": {
+    "@codingame/monaco-vscode-standalone-css-language-features": "~14.0.4",
+    "@codingame/monaco-vscode-standalone-html-language-features": "~14.0.4",
+    "@codingame/monaco-vscode-standalone-json-language-features": "~14.0.4",
+    "@codingame/monaco-vscode-standalone-languages": "~14.0.4",
+    "@codingame/monaco-vscode-standalone-typescript-language-features": "~14.0.4"
   },
   "repository": {
     "type": "git",

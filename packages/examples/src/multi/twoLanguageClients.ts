@@ -10,7 +10,8 @@ import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type CodePlusFileExt, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers, disableElement } from '../common/client/utils.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 
 export const runMultipleLanguageClientsExample = async () => {
@@ -54,7 +55,7 @@ print("Hello Moon!")
                     fileExt: currenFileExt
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
             json: createJsonLanguageClientConfig(),

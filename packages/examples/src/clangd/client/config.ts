@@ -15,9 +15,9 @@ import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers } from '../../common/client/utils.js';
-import { ClangdWorkerHandler } from './workerHandler.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
+import { ClangdWorkerHandler } from './workerHandler.js';
 
 export const createWrapperConfig = async (config: {
     htmlContainer: HTMLElement,
@@ -119,7 +119,7 @@ export const createWrapperConfig = async (config: {
             }
         }],
         editorAppConfig: {
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
 };

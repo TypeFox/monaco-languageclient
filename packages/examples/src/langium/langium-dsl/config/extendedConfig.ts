@@ -8,7 +8,7 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers } from '../../../common/client/utils.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../../../../resources/langium/langium-dsl//example.langium?raw';
@@ -71,7 +71,7 @@ export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise
                     fileExt: 'langium'
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
             langium: {

@@ -8,7 +8,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers } from '../../common/client/utils.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 const text = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -41,7 +41,7 @@ export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperC
                     fileExt: 'json'
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
             json: {

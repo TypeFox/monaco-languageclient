@@ -40,7 +40,6 @@ export const definedViteConfig = defineConfig({
         // dedupe: ['vscode']
     },
     server: {
-        origin: 'http://localhost:20001',
         port: 20001,
         cors: {
             origin: '*'
@@ -51,7 +50,7 @@ export const definedViteConfig = defineConfig({
         },
         watch: {
             ignored: [
-                '**/profile/**/*'
+                '**/.chrome/**/*'
             ]
         }
     },

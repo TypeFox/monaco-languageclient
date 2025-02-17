@@ -27,11 +27,12 @@ import '@codingame/monaco-vscode-search-result-default-extension';
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../common/client/utils.js';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { createDefaultWorkspaceFile } from '../common/client/utils.js';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 
 export type ConfigResult = {
     wrapperConfig: WrapperConfig
@@ -117,7 +118,7 @@ export const configure = (htmlContainer?: HTMLElement): ConfigResult => {
             }
         }],
         editorAppConfig: {
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
 
