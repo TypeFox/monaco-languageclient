@@ -45,7 +45,7 @@ Monarch grammars and themes can only be used in **classic** mode and textmate gr
 
 ## Usage
 
-Monaco Editor with TypeScript language support in web worker and relying on classic mode:
+Monaco Editor with Python language support in web worker and relying on extended mode:
 
 ```ts
 import '@codingame/monaco-vscode-python-default-extension';
@@ -59,9 +59,9 @@ const run = async () => {
     htmlContainer: document.getElementById('monaco-editor-root')!,
     editorAppConfig: {
       codeResources: {
-        main: {
-          text: 'print("Hello, World!")',
-          uri: '/workspace/hello.py'
+        modified: {
+                uri: '/workspace/hello.py',
+                text: 'print("Hello, World!")'
         }
       }
     }
