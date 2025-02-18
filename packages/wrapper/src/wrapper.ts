@@ -59,6 +59,11 @@ export class MonacoEditorLanguageClientWrapper {
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
     async init(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
+        if (this.getInitializingAwait() !== undefined) {
+            await this.getInitializingAwait();
+        }
+
+        // This will throw an error if not disposed before
         if (this.wrapperConfig !== undefined) {
             throw new Error('init was already performed. Please call dispose first if you want to re-start.');
         }
@@ -75,9 +80,7 @@ export class MonacoEditorLanguageClientWrapper {
         this.markInitializing();
 
         try {
-            // Always dispose old instances before start and
             // ensure disposable store is available again after dispose
-            this.dispose(false);
             this.disposableStoreExtensions = new DisposableStore();
             this.disposableStoreMonaco = new DisposableStore();
 
@@ -193,6 +196,10 @@ export class MonacoEditorLanguageClientWrapper {
      * Does not perform any user configuration or other application init and just starts the application.
      */
     async start(includeLanguageClients: boolean = true, htmlContainer?: HTMLElement) {
+        if (this.getStartingAwait() !== undefined) {
+            await this.getStartingAwait();
+        }
+
         if (this.wrapperConfig === undefined) {
             throw new Error('No init was performed. Please call init() before start()');
         }
@@ -355,6 +362,9 @@ export class MonacoEditorLanguageClientWrapper {
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
     async dispose(includeLanguageClients: boolean = true) {
+        if (this.getStoppingAwait() !== undefined) {
+            await this.getStartingAwait();
+        }
         this.markStopping();
 
         this.editorApp?.disposeApp();
