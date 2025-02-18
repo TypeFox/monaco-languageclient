@@ -48,8 +48,7 @@ export const vitestConfig = {
             '**/wrapper-react/test/index.test.tsx'
             // '**/*.ts',
             // '**/*.tsx'
-        ],
-        dangerouslyIgnoreUnhandledErrors: true
+        ]
     }
 };
 
