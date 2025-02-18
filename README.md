@@ -218,9 +218,9 @@ None of the verification examples is part of the npm workspace. Some bring subst
 
 - [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8082>.
 
-- [pnpm verification example](./verify/pnpm) demonstrates that the project can be build with vite, but pnpm is used instead of npm. Please do: `cd verify/pnpm && pnpm run verify`. It serves the client here: <http://localhost:8083>.
+- [pnpm verification example](./verify/peerPnpm) demonstrates that the project can be build with vite, but pnpm is used instead of npm. Please do: `cd verify/pnpm && pnpm run verify`. It serves the client here: <http://localhost:8083>.
 
-- [yarn verification example](./verify/yarn) demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
+- [yarn verification example](./verify/peerYarn) demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
 
 - [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8084>.
 
