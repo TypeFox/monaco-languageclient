@@ -8,8 +8,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-groovy-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { groovyConfig } from '../config.js';
-import { configureMonacoWorkers } from '../../common/client/utils.js';
 
 const code = `package test.org;
 import java.io.File;
@@ -40,7 +40,7 @@ const wrapperConfig: WrapperConfig = {
                 fileExt: 'groovy'
             }
         },
-        monacoWorkerFactory: configureMonacoWorkers
+        monacoWorkerFactory: configureDefaultWorkerFactory
     },
     languageClientConfigs: {
         groovy: {

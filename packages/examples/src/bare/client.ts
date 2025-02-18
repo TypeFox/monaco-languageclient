@@ -9,11 +9,11 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import '@codingame/monaco-vscode-json-default-extension';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
-import { configureMonacoWorkers } from '../common/client/utils.js';
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
+import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
@@ -37,7 +37,7 @@ export const runClient = async () => {
         mimetypes: ['application/json']
     });
 
-    configureMonacoWorkers(logger);
+    configureDefaultWorkerFactory(logger);
 
     // create monaco editor
     monaco.editor.create(htmlContainer, {

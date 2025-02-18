@@ -12,11 +12,15 @@ import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
+import { disableElement } from '../../common/client/utils.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
 
 const startEditor = async () => {
+    disableElement('button-start', true);
+    disableElement('button-dispose', false);
+
     if (wrapper.isStarted() && wrapper2.isStarted()) {
         alert('Editor was already started!');
         return;
@@ -73,6 +77,9 @@ const startEditor = async () => {
 };
 
 const disposeEditor = async () => {
+    disableElement('button-start', false);
+    disableElement('button-dispose', true);
+
     wrapper.reportStatus();
     await wrapper.dispose();
     console.log(wrapper.reportStatus().join('\n'));

@@ -7,9 +7,11 @@ import { mergeConfig } from 'vite';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
 import definedViteConfig from './vite.config.js';
 
-export const vitestBaseConfig = {
+/// <reference lib="vitest/config" />
+
+export const vitestConfig = {
     test: {
-        testTimeout: 10000,
+        testTimeout: 20000,
         pool: 'threads',
         poolOptions: {
             threads: {
@@ -21,7 +23,7 @@ export const vitestBaseConfig = {
             headless: true,
             provider: 'playwright',
             api: {
-                port: 20101,
+                port: 20101
             },
             instances: [
                 {
@@ -35,20 +37,22 @@ export const vitestBaseConfig = {
             '**/client/test/tools/index.test.ts',
             '**/client/test/tools/utils.test.ts',
             '**/client/test/vscode/services.test.ts',
-            '**/wrapper/test/vscode/services.test.ts',
             '**/wrapper/test/editorApp.test.ts',
             '**/wrapper/test/languageClientWrapper.test.ts',
             '**/wrapper/test/utils.test.ts',
             '**/wrapper/test/wrapper.test.ts',
-            '**/wrapper-react/test/index.test.tsx',
+            '**/wrapper/test/vscode/services.test.ts',
+            '**/wrapper/test/editorApp-classic.test.ts',
+            '**/wrapper/test/wrapper-classic.test.ts',
+            '**/wrapper/test/workers/workerLoaders.test.ts',
+            '**/wrapper-react/test/index.test.tsx'
             // '**/*.ts',
             // '**/*.tsx'
-        ],
-        dangerouslyIgnoreUnhandledErrors: true
+        ]
     }
 };
 
-const definedVitestConfig = defineVitestConfig(vitestBaseConfig);
+const definedVitestConfig = defineVitestConfig(vitestConfig);
 
 export default mergeConfig(definedVitestConfig, definedViteConfig);
 

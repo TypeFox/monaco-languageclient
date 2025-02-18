@@ -6,7 +6,7 @@
 import { beforeAll, describe, expect, test } from 'vitest';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
-import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig } from './helper.js';
+import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig } from './support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
 
@@ -75,7 +75,7 @@ describe('Test LanguageClientWrapper', () => {
                 options: {
                     $type: 'WorkerConfig',
                     url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
-                    type: 'classic'
+                    type: 'module'
                 }
             }
         };

@@ -27,6 +27,9 @@ export const runStatemachineReact = async () => {
     };
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
+            disableElement('button-start', true);
+            disableElement('button-dispose', false);
+
             const App = () => {
 
                 const [ height, setHeight ] = useState('80vh');
@@ -58,6 +61,9 @@ export const runStatemachineReact = async () => {
             disableElement('checkbox-strictmode', true);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', () => {
+            disableElement('button-start', false);
+            disableElement('button-dispose', true);
+
             root.render([]);
         });
     } catch (e) {

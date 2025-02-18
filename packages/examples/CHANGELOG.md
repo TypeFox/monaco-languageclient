@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.2.6] - 2025-02-18
+
+- Handle languageclient errors cases more robustly [#859](https://github.com/TypeFox/monaco-languageclient/pull/859)
+- Updated all `@codingame/monaco-vscode` packages to `14.0.4`.
+
 ## [2025.2.5] - 2025-02-12
 
 - Update to monaco-vscode-api 14.0.2 and incremented versions to x.3.0 [#852](https://github.com/TypeFox/monaco-languageclient/pull/852)

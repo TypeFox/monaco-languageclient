@@ -45,6 +45,7 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
       - [Server processes](#server-processes)
         - [JSON Language Server](#json-language-server)
         - [Pyright Language Server](#pyright-language-server)
+        - [Graalpy Debugger](#graalpy-debugger)
         - [Groovy Language Server](#groovy-language-server)
         - [Java Language Server](#java-language-server)
     - [Verification Examples \& Usage](#verification-examples--usage)
@@ -52,6 +53,7 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
   - [Featured projects](#featured-projects)
   - [Troubleshooting](#troubleshooting)
     - [General](#general)
+    - [@codingame/monaco-vscode-editor-api / monaco-editor usage](#codingamemonaco-vscode-editor-api--monaco-editor-usage)
     - [Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api](#dependency-issues-monaco-editor--codingamemonaco-vscode-api--codingamemonaco-vscode-editor-api)
     - [Volta](#volta)
     - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
@@ -60,7 +62,6 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
     - [Bad Polyfills](#bad-polyfills)
       - [buffer](#buffer)
     - [monaco-editor and react](#monaco-editor-and-react)
-    - [pnpm](#pnpm)
   - [Licenses](#licenses)
 
 ## Changelogs, project history and compatibility
@@ -137,7 +138,7 @@ The **json-client** contains the [monaco-editor-wrapper app](./packages/examples
 
 The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
 The **python-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
-   It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server.
+   It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
 
 #### Groovy Language client and language server example ([Location](./packages/examples/src/groovy))
 
@@ -200,6 +201,10 @@ For the **python-client** example you need to ensure the **python-server** examp
 npm run start:example:server:python
 ```
 
+##### Graalpy Debugger
+
+If you want to use the debugger in the **python-client** example you need to the debugger is running. You require **docker-compose** to run it. From the project root run `docker-compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/debugger/docker-compose.yml down` to stop it.
+
 ##### Groovy Language Server
 
 For the **groovy-client** example you need to ensure the **groovy-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Gradle). From the project root run `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/groovy/docker-compose.yml down` to stop it.
@@ -214,15 +219,11 @@ None of the verification examples is part of the npm workspace. Some bring subst
 
 - [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
 
-- [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8081>.
+- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8081>.
 
-- [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8082>.
+- [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8082>.
 
-- [pnpm verification example](./verify/pnpm) demonstrates that the project can be build with vite, but pnpm is used instead of npm. Please do: `cd verify/pnpm && pnpm run verify`. It serves the client here: <http://localhost:8083>.
-
-- [yarn verification example](./verify/yarn) demonstrates that the project can be build with vite, but yarn is used instead of npm. Please do: `cd verify/yarn && yarn run verify`. It serves the client here: <http://localhost:8083>.
-
-- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8084>.
+- [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8083>.
 
 ### VSCode integration
 
@@ -238,11 +239,38 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 ### General
 
-Whenever you used `monaco-editor`, `vscode`, `monaco-languageclient`, `monaco-editor-wrapper` or `@typefox/monaco-editor-react` ensure they are imported before you do any `monaco-editor` or `vscode` api related intialization work or start using it. Please check the [our python language client example](./packages/examples/src/python/client/main.ts) to see how it should be done.
+Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/`@codingame/monaco-vscode-extension-api`, `monaco-languageclient`, `monaco-editor-wrapper` or `@typefox/monaco-editor-react` ensure they are imported before you do any `monaco-editor` or `vscode` api related intialization work or start using it.
+
+If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
+
+```json
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.4"
+```
+
+### @codingame/monaco-vscode-editor-api / monaco-editor usage
+
+When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~14.0.4"` in you `package.json`. You can directly use it like this:
+
+```js
+import * as monaco from '@codingame/monaco-vscode-editor-api';
+```
+
+If your dependency stack already contains a reference `monaco-editor` you must enforce the correct reference to `@codingame/monaco-vscode-editor-api` or you will have problems with mismatching code. Use`overrides` (npm/pnpm) or `resolutions` (yarn) to do so:
+
+```json
+"overrides": {
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~14.0.4"
+}
+```
 
 ### Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api
 
-If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely your `package-lock.json` or `node_modules` are dirty. Remove both and do a fresh `npm install`. Always `npm list monaco-editor` is very useful. If you see different or errornous versions, then this is an indicator something is wrong.
+If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely you have a mismatching dependency definition somewhere in your dependency definitions:
+
+1. Use `npm list @codingame/monaco-vscode-api` to see if there are two different versions are listed in the dependency tree.
+2. If you see a message in the browser console starting with `Another version of monaco-vscode-api has already been loaded. Trying to load` then definetly a version mismatch was detected by `@codingame/monaco-vscode-api`. This error is reported since v14.
+
+If one of the two is true, fix you dependencies, remove `package-lock.json` and `node_modules` and perform a fresh `npm install`.
 
 ### Volta
 
@@ -252,7 +280,7 @@ There are [Volta](https://volta.sh/) instructions in the `package.json` files. W
 
 When you are using the vite dev server there are some issues with imports, please [read this recommendation](https://github.com/CodinGame/monaco-vscode-api/wiki/Troubleshooting#if-you-use-vite).
 
-If you see the problem *Assertion failed (There is already an extension with this id)* you likely have mismatching dependencies defined for `vscode` / `@codingame/monaco-vscode-api`. You should fix this or add the following entry to your vite config:
+If you see the problem *Assertion failed (There is already an extension with this id)* you likely have mismatching dependencies defined for `vscode` / `@codingame/monaco-vscode-extension-api`. You should fix this or add the following entry to your vite config:
 
 ```javascript
 resolve: {
@@ -262,7 +290,7 @@ resolve: {
 
 ### SSR frameworks
 
-**Important:** Due to its reliance on `monaco-editor` and `@codingame/monaco-vscode-api` this stack will very likely not work with Server-Side Rendering (SSR) frameworks. They client code has to be run in a browser environment.
+**Important:** Due to its reliance on `@codingame/monaco-vscode-api` this stack will not directly work with Server-Side Rendering (SSR) frameworks like Next.js. They client code has to be run in a browser environment. Take a look at the [Next.js verification example](./verify/next) to see how to dynamically load the code.
 
 ### Serve all files required
 
@@ -300,22 +328,6 @@ import * as monaco from "monaco-editor";
 import { loader } from "@monaco-editor/react";
 
 loader.config({ monaco });
-```
-
-Because `@codingame/monaco-vscode-api` relies on it own build of `monaco-editor` it may be required to enforce the `monaco-editor` version via `overrides` (npm/pnpm) or `resolutions` (yarn):
-
-```json
-"overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~14.0.2"
-}
-```
-
-### pnpm
-
-If you use pnpm, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency (you find the [compatibility table here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table), otherwise the installation will fail.
-
-```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2"
 ```
 
 ## Licenses

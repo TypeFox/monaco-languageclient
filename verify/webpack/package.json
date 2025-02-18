@@ -12,7 +12,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.2.5"
+    "monaco-languageclient-examples": "~2025.2.6"
   },
   "devDependencies": {
     "css-loader": "~7.1.2",
@@ -29,6 +29,6 @@
     "clean": "shx rm -fr dist *.tsbuildinfo",
     "build:msg": "echo Building client-webpack example:",
     "build": "npm run build:msg && npm run clean && webpack",
-    "start": "http-server ./ --port 8081"
+    "start": "http-server ./ --port 8082"
   }
 }

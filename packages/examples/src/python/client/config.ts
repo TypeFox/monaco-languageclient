@@ -25,14 +25,15 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { createUrl } from 'monaco-languageclient/tools';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { configureMonacoWorkers, createDefaultWorkspaceFile } from '../../common/client/utils.js';
+import type { WrapperConfig } from 'monaco-editor-wrapper';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { createDefaultWorkspaceFile } from '../../common/client/utils.js';
 import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import badPyCode from '../../../resources/python/bad.py?raw';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
 export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
@@ -203,7 +204,7 @@ export const createWrapperConfig = (): PythonAppConfig => {
             provideDebuggerExtensionConfig(configParams)
         ],
         editorAppConfig: {
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
 

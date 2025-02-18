@@ -11,6 +11,7 @@ export type WorkerLoader = (() => Worker) | undefined;
 export interface WorkerFactoryConfig {
     workerLoaders: Record<string, WorkerLoader>;
     logger?: Logger;
+    getWorkerOverride?: (moduleId: string, label: string) => Worker;
 }
 
 export const useWorkerFactory = (config: WorkerFactoryConfig) => {
@@ -25,5 +26,5 @@ export const useWorkerFactory = (config: WorkerFactoryConfig) => {
         }
         return workerFunc();
     };
-    envEnhanced.getWorker = getWorker;
+    envEnhanced.getWorker = config.getWorkerOverride ?? getWorker;
 };

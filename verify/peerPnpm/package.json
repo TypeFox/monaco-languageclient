@@ -12,15 +12,14 @@
     "pnpm": "10.3.0"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.2.5",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.2"
+    "monaco-languageclient-examples": "~2025.2.6",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.4"
   },
   "devDependencies": {
     "typescript": "~5.7.3"
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",
-    "showconfig": "tsc --showconfig",
     "verify:ci": "pnpm install && pnpm run build"
   }
 }

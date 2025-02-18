@@ -12,7 +12,7 @@ import { createConverter as createCodeConverter } from 'vscode-languageclient/li
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureMonacoWorkers } from '../common/client/utils.js';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const runBrowserEditor = async () => {
     const codeConverter = createCodeConverter();
@@ -52,7 +52,7 @@ export const runBrowserEditor = async () => {
                     uri: codeUri
                 }
             },
-            monacoWorkerFactory: configureMonacoWorkers
+            monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
     await wrapper.init(jsonClientUserConfig);
