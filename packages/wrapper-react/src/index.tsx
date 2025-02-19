@@ -5,6 +5,7 @@
 
 import React, { type CSSProperties, useEffect, useRef } from 'react';
 import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
+import { TaskQueue } from './task-queue.js';
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
@@ -27,6 +28,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
+    const taskQueueRef = useRef(new TaskQueue(1));
 
     useEffect(() => {
         const destroyMonaco = async () => {
@@ -65,13 +67,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             }
         };
 
-        (async () => {
+        taskQueueRef.current.push((async () => {
             await initMonaco();
             await startMonaco();
-        })();
+        }));
 
         return () => {
-            destroyMonaco();
+            taskQueueRef.current.push(destroyMonaco);
         };
 
     }, [wrapperConfig]);

@@ -6,7 +6,10 @@
 import { describe, expect, test } from 'vitest';
 import { render, type RenderResult } from '@testing-library/react';
 import React from 'react';
-import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
+import {
+    MonacoEditorLanguageClientWrapper,
+    type TextContents,
+} from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createDefaultWrapperConfig } from './helper.js';
 
@@ -30,7 +33,7 @@ describe('Test MonacoEditorReactComp', () => {
                 console.log('onLoad');
                 resolve();
             };
-            // render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
+
             renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
         // void promise is undefined after it was awaited
         })).toBeUndefined();
@@ -73,5 +76,35 @@ describe('Test MonacoEditorReactComp', () => {
 
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} onTextChanged={textReceiver} />);
+    });
+
+    test('should rerender without error', async () => {
+        const wrapperConfig = createDefaultWrapperConfig();
+
+        let renderResult: RenderResult;
+        expect(await new Promise<void>(resolve => {
+            const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+                renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
+
+                resolve();
+            };
+
+            renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
+        // void promise is undefined after it was awaited
+        })).toBeUndefined();
+
+        expect(await new Promise<void>(resolve => {
+            const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+                renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
+
+                resolve();
+            };
+            const newWrapperConfig = createDefaultWrapperConfig();
+
+            renderResult!.rerender(
+                <MonacoEditorReactComp wrapperConfig={newWrapperConfig} onLoad={handleOnLoad} />
+            );
+        // void promise is undefined after it was awaited
+        })).toBeUndefined();
     });
 });
