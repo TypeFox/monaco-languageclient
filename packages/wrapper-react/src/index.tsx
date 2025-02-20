@@ -66,15 +66,25 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         };
 
         (async () => {
-            await initMonaco();
-            await startMonaco();
+            if (wrapperRef.current.isStopping() === false) {
+                await destroyMonaco();
+                await initMonaco();
+                await startMonaco();
+            }
         })();
 
-        return () => {
-            destroyMonaco();
-        };
+    }, [wrapperConfig, onTextChanged, onLoad, onError]);
 
-    }, [wrapperConfig]);
+    useEffect(()=>{
+        return ()=>{
+            try {
+                wrapperRef.current.dispose();
+            } catch {
+                // The language client may throw an error during disposal.
+                // This should not prevent us from continue working.
+            }
+        };
+    },[]);
 
     return (
         <div
