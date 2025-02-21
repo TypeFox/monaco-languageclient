@@ -11,6 +11,7 @@
     "pnpm": "10.3.0",
     "yarn": "4.6.0"
   },
+  "name": "monaco-languageclient",
   "version": "0.0.1",
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
