@@ -10,18 +10,18 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig  } from './config.js';
-import { confiugureDebugging } from '../../debugger/client/debugger.js';
+import { configureDebugging } from '../../debugger/client/debugger.js';
 
 export const runPythonReact = async () => {
     const appConfig = createWrapperConfig();
 
     const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
         const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
-        result.setAsDefaultApi();
+        await result.setAsDefaultApi();
 
         const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
         if (initResult !== undefined) {
-            confiugureDebugging(await initResult.getApi(), appConfig.configParams);
+            configureDebugging(await initResult.getApi(), appConfig.configParams);
         }
 
         await vscode.commands.executeCommand('workbench.view.explorer');

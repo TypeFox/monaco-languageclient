@@ -19,7 +19,7 @@ export type InitMessage = {
     debuggerExecCall: string;
 };
 
-export type ConfigParams = {
+export interface ConfigParams {
     extensionName: string;
     languageId: string;
     documentSelector: string[];

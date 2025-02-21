@@ -112,13 +112,14 @@ export const initServices = async (vscodeApiConfig: VscodeApiConfig, instruction
             }
             await importAllServices(vscodeApiConfig, instructions);
 
-            vscodeApiConfig.viewsConfig?.htmlAugmentationInstructions?.(instructions?.htmlContainer);
-            await vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
-            instructions?.logger?.debug('Initialization of vscode services completed successfully.');
-
-            envEnhanced.vscodeApiInitialised = true;
             envEnhanced.vscodeInitialising = false;
         }
+
+        vscodeApiConfig.viewsConfig?.htmlAugmentationInstructions?.(instructions?.htmlContainer);
+        await vscodeApiConfig.viewsConfig?.viewsInitFunc?.();
+        instructions?.logger?.debug('Initialization of vscode services completed successfully.');
+
+        envEnhanced.vscodeApiInitialised = true;
     }
 
     return envEnhanced.vscodeApiInitialised;
