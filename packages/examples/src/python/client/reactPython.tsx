@@ -16,8 +16,6 @@ export const runPythonReact = async () => {
     const appConfig = createWrapperConfig();
 
     const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-        console.error('JUSTIN onLoad', wrapper);
-
         const result = wrapper.getExtensionRegisterResult(
             'mlc-python-example'
         ) as RegisterLocalProcessExtensionResult;
@@ -86,7 +84,7 @@ export const runPythonReact = async () => {
 
     const App = () => {
         return (
-            <div style={{ backgroundColor: '#1f1f1f' }}>
+            <div style={{ width: '100%', height: '100%', backgroundColor: '#1f1f1f' }}>
                 <MonacoEditorReactComp
                     wrapperConfig={appConfig.wrapperConfig}
                     style={{ height: '100%' }}
