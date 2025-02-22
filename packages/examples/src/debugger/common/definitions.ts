@@ -5,6 +5,7 @@
 
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { Uri } from 'vscode';
+import type { MonacoFileSystemProvider } from './fileSystemProvider.js';
 
 export type FileDefinition = {
     path: string;
@@ -19,7 +20,7 @@ export type InitMessage = {
     debuggerExecCall: string;
 };
 
-export interface ConfigParams {
+export type ConfigParams = {
     extensionName: string;
     languageId: string;
     documentSelector: string[];
@@ -30,8 +31,8 @@ export interface ConfigParams {
     protocol: 'ws' | 'wss';
     hostname: string;
     port: number;
-    files: Map<string, FileDefinition>;
-    defaultFile: string;
+    fileSystemProvider: MonacoFileSystemProvider;
+    defaultFile: Uri;
     helpContainerCmd: string;
     debuggerExecCall: string;
 }

@@ -13,7 +13,7 @@ export type MonacoLanguageClientOptions = {
 }
 
 export class MonacoLanguageClient extends BaseLanguageClient {
-    protected readonly messageTransports: MessageTransports;
+    public readonly messageTransports: MessageTransports;
 
     constructor({ id, name, clientOptions, messageTransports }: MonacoLanguageClientOptions) {
         super(id ?? name.toLowerCase(), name, clientOptions);

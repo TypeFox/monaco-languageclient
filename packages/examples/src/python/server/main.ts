@@ -17,8 +17,10 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
         runCommand: LanguageName.node,
         runCommandArgs: [
             processRunPath,
-            '--stdio'
+            '--stdio',
+            '--verbose',
         ],
+        spawnOptions: { shell: true },
         wsServerOptions: {
             noServer: true,
             perMessageDeflate: false,

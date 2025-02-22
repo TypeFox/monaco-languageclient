@@ -12,6 +12,7 @@ import * as cp from 'node:child_process';
 import { type IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, type InitializeParams, type RequestMessage, type ResponseMessage } from 'vscode-languageserver-protocol';
+import * as fs from 'node:fs';
 
 export enum LanguageName {
     /** https://nodejs.org/api/cli.html  */
@@ -46,6 +47,33 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
     if (serverConnection !== undefined) {
         forward(socketConnection, serverConnection, message => {
             if (Message.isRequest(message)) {
+                if (message.method === 'fileSync') {
+                    const fileSyncParams = message.params as {
+                        path: string[];
+                        text: string;
+                        updated: number;
+                    };
+
+                    console.error('JUSTIN', fileSyncParams);
+
+                    const path = `/${fileSyncParams.path.join('/')}`;
+                    if (fs.existsSync(path)) {
+                        const mtime = fs.statSync(path).mtimeMs;
+                        console.error('JUSTIN update', mtime);
+                        if (fileSyncParams.updated >= mtime) {
+                            fs.writeFileSync(path, fileSyncParams.text);
+                            fs.utimesSync(path, new Date(fileSyncParams.updated), new Date(fileSyncParams.updated));
+                        }
+                    } else {
+                        const pathParent = `/${fileSyncParams.path.slice(0, -1).join('/')}`;
+                        console.error('JUSTIN mkdirSync', pathParent);
+                        fs.mkdirSync(pathParent, { recursive: true });
+                        fs.writeFileSync(path, fileSyncParams.text);
+                    }
+
+                    return message;
+                }
+
                 if (message.method === InitializeRequest.type.method) {
                     const initializeParams = message.params as InitializeParams;
                     initializeParams.processId = process.pid;

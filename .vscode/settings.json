@@ -4,10 +4,10 @@
   "editor.formatOnSave": false,
   "workbench.editor.revealIfOpen": true,
   "[javascript]": {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
   },
   "[typescript]": {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
   },
   "eslint.codeAction.showDocumentation": {
     "enable": true
