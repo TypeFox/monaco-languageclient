@@ -140,7 +140,7 @@
     "build:msg": "echo Building main examples:",
     "build": "npm run build:msg && npm run clean && npm run resources:download && npm run extract:docker && npm run compile",
     "start:server:json": "vite-node src/json/server/direct.ts",
-    "start:server:python": "vite-node src/python/server/direct.ts",
+    "start:server:python": "npx vite-node src/python/server/direct.ts",
     "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
     "extract:docker": "vite-node ./resources/clangd/scripts/extractDockerFiles.ts",
     "production:clean": "vite-node ../../scripts/clean.ts --relativePath packages/examples --recursive --paths production",

@@ -1,0 +1,1 @@
+web: npm run start:example:server:python

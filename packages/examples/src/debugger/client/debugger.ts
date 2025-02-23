@@ -5,13 +5,15 @@
 
 import * as vscode from 'vscode';
 import type { ExtensionConfig } from 'monaco-editor-wrapper';
-import type { ConfigParams, InitMessage } from '../common/definitions.js';
+import type { ConfigParams } from '../common/definitions.js';
 
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/features/debugger.ts
 // The client configuration is generic and can be used for a another language
 
-export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionConfig => {
+export const provideDebuggerExtensionConfig = (
+    config: ConfigParams,
+): ExtensionConfig => {
     const filesOrContents = new Map<string, string | URL>();
     filesOrContents.set('./extension.js', '// nothing');
 
@@ -21,7 +23,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
             publisher: 'TypeFox',
             version: '1.0.0',
             engines: {
-                vscode: '*'
+                vscode: '*',
             },
             // A browser field is mandatory for the extension to be flagged as `web`
             browser: 'extension.js',
@@ -30,24 +32,25 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
                     {
                         type: config.languageId,
                         label: 'Test',
-                        languages: [config.languageId]
-                    }
+                        languages: [config.languageId],
+                    },
                 ],
                 breakpoints: [
                     {
-                        language: config.languageId
-                    }
-                ]
+                        language: config.languageId,
+                    },
+                ],
             },
-            activationEvents: [
-                'onDebug'
-            ]
+            activationEvents: ['onDebug'],
         },
-        filesOrContents
+        filesOrContents,
     };
 };
 
-export const confiugureDebugging = async (api: typeof vscode, config: ConfigParams) => {
+export const configureDebugging = async (
+    api: typeof vscode,
+    config: ConfigParams,
+) => {
     class WebsocketDebugAdapter implements vscode.DebugAdapter {
         private websocket: WebSocket;
 
@@ -75,32 +78,38 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
 
     api.debug.registerDebugAdapterDescriptorFactory(config.languageId, {
         async createDebugAdapterDescriptor() {
-            const websocket = new WebSocket(`${config.protocol}://${config.hostname}:${config.port}`);
+            const websocket = new WebSocket(
+                `${config.protocol}://${config.hostname}:${config.port}`,
+            );
 
             await new Promise((resolve, reject) => {
                 websocket.onopen = resolve;
                 websocket.onerror = () =>
-                    reject(new Error(`Unable to connect to debugger server. Run "${config.helpContainerCmd}"`));
+                    reject(
+                        new Error(
+                            `Unable to connect to debugger server. Run "${config.helpContainerCmd}"`,
+                        ),
+                    );
             });
 
             const adapter = new WebsocketDebugAdapter(websocket);
 
-            const initMessage: InitMessage = {
-                id: 'init',
-                files: {},
-                // the default file is the one that will be used by the debugger
-                defaultFile: config.defaultFile,
-                debuggerExecCall: config.debuggerExecCall
-            };
-            for (const [name, fileDef] of config.files.entries()) {
-                console.log(`Found: ${name} Sending file: ${fileDef.path}`);
-                initMessage.files[name] = {
-                    path: fileDef.path,
-                    code: fileDef.code,
-                    uri: fileDef.uri
-                };
-            }
-            websocket.send(JSON.stringify(initMessage));
+            // const initMessage: InitMessage = {
+            //     id: 'init',
+            //     files: {},
+            //     // the default file is the one that will be used by the debugger
+            //     defaultFile: config.defaultFile.path,
+            //     debuggerExecCall: config.debuggerExecCall,
+            // };
+            // for (const [name, fileDef] of config.files.entries()) {
+            //     console.log(`Found: ${name} Sending file: ${fileDef.path}`);
+            //     initMessage.files[name] = {
+            //         path: fileDef.path,
+            //         code: fileDef.code,
+            //         uri: fileDef.uri,
+            //     };
+            // }
+            // websocket.send(JSON.stringify(initMessage));
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             adapter.onDidSendMessage((message: any) => {
@@ -109,6 +118,6 @@ export const confiugureDebugging = async (api: typeof vscode, config: ConfigPara
                 }
             });
             return new api.DebugAdapterInlineImplementation(adapter);
-        }
+        },
     });
 };
