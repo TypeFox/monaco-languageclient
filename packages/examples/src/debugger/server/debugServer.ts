@@ -31,8 +31,8 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const sequential = <T, P extends unknown[]>(
-    fn: (...params: P) => Promise<T>
-): (...params: P) => Promise<T> => {
+    fn: (...params: P) => Promise<T>,
+): ((...params: P) => Promise<T>) => {
     let promise = Promise.resolve();
     return (...params: P) => {
         const result = promise.then(() => {
@@ -40,8 +40,8 @@ const sequential = <T, P extends unknown[]>(
         });
 
         promise = result.then(
-            () => { },
-            () => { }
+            () => {},
+            () => {},
         );
         return result;
     };
@@ -66,24 +66,36 @@ wss.on('connection', (ws) => {
                         const initMesssage = parsed as InitMessage;
                         const defaultFile = initMesssage.defaultFile;
                         const debuggerExecCall = initMesssage.debuggerExecCall;
-                        for (const [name, fileDef] of Object.entries(initMesssage.files)) {
-                            console.log(`Found file: ${name} path: ${fileDef.path}`);
-                            await fs.promises.writeFile(fileDef.path, fileDef.code);
+                        for (const [name, fileDef] of Object.entries(
+                            initMesssage.files,
+                        )) {
+                            console.log(
+                                `Found file: ${name} path: ${fileDef.path}`,
+                            );
+                            await fs.promises.writeFile(
+                                fileDef.path,
+                                fileDef.code,
+                            );
                         }
                         initialized = true;
 
-                        console.log(`Using default file "${defaultFile}" for debugging.`);
+                        console.log(
+                            `Using default file "${defaultFile}" for debugging.`,
+                        );
 
-                        const sendOutput = (category: 'stdout' | 'stderr', output: string | null | undefined) => {
+                        const sendOutput = (
+                            category: 'stdout' | 'stderr',
+                            output: string | null | undefined,
+                        ) => {
                             onWsMessage(
                                 JSON.stringify({
                                     type: 'event',
                                     event: 'output',
                                     body: {
                                         category,
-                                        output
-                                    }
-                                })
+                                        output,
+                                    },
+                                }),
                             );
                         };
 
@@ -103,7 +115,9 @@ wss.on('connection', (ws) => {
                             ws.close();
                         });
 
-                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 1000),
+                        );
                         // 4711 is the default port of the GraalPy debugger
                         socket.connect(4711);
                         return;
@@ -113,7 +127,7 @@ wss.on('connection', (ws) => {
                 }
             }
             socket.sendMessage(message);
-        })
+        }),
     );
 });
 

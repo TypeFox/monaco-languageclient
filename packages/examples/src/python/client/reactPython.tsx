@@ -3,82 +3,39 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
-import { configureDebugging } from '../../debugger/client/debugger.js';
+import helloPyCode from '../../../resources/python/hello.py?raw';
+import hello2PyCode from '../../../resources/python/hello2.py?raw';
+import badPyCode from '../../../resources/python/bad.py?raw';
+import type { Files } from '../../debugger/common/serverSyncingFileSystemProvider.js';
+
+const files: Files = {
+    'main.py': {
+        updated: Date.now(),
+        text: helloPyCode,
+    },
+    'hello2.py': {
+        updated: Date.now(),
+        text: hello2PyCode,
+    },
+    'bad.py': { updated: Date.now(), text: badPyCode },
+};
 
 export const runPythonReact = async () => {
-    const appConfig = createWrapperConfig();
-
-    const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-        const result = wrapper.getExtensionRegisterResult(
-            'mlc-python-example'
-        ) as RegisterLocalProcessExtensionResult;
-        await result.setAsDefaultApi();
-
-        const initResult = wrapper.getExtensionRegisterResult(
-            'debugger-py-client'
-        ) as RegisterLocalProcessExtensionResult | undefined;
-        if (initResult !== undefined) {
-            configureDebugging(
-                await initResult.getApi(),
-                appConfig.configParams
-            );
+    const appConfig = createWrapperConfig({
+        files,
+        onFileUpdate: (file) => {
+            console.error('[FILE] file updated', file);
+            return Promise.resolve();
+        },
+        onFileDelete: (path) => {
+            console.error('[FILE] file deleted', path);
+            return Promise.resolve();
         }
-
-        // TODO: Get all languageClients
-        const writer = wrapper
-            .getLanguageClientWrapper('python')
-            ?.getLanguageClient()?.messageTransports.writer;
-
-        if (writer) {
-            // Track changes
-            appConfig.configParams.fileSystemProvider.onFileUpdate = async (
-                file
-            ) => {
-                await writer.write({
-                    jsonrpc: '2.0',
-                    id: 0,
-                    method: 'fileSync',
-                    params: {
-                        path: file.path,
-                        text: file.text,
-                        updated: file.updated,
-                    },
-                } as {
-                    jsonrpc: string;
-                });
-            };
-
-            // Send all current files
-            await Promise.all(
-                appConfig.configParams.fileSystemProvider
-                    .getAllFiles()
-                    .map(async (file) => {
-                        await writer.write({
-                            jsonrpc: '2.0',
-                            id: 0,
-                            method: 'fileSync',
-                            params: {
-                                path: file.path,
-                                text: file.text,
-                                updated: file.updated,
-                            },
-                        } as {
-                            jsonrpc: string;
-                        });
-                    })
-            );
-        }
-
-        await vscode.commands.executeCommand('workbench.view.explorer');
-        await vscode.window.showTextDocument(appConfig.configParams.defaultFile);
-    };
+    });
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
@@ -88,7 +45,7 @@ export const runPythonReact = async () => {
                 <MonacoEditorReactComp
                     wrapperConfig={appConfig.wrapperConfig}
                     style={{ height: '100%' }}
-                    onLoad={onLoad}
+                    onLoad={appConfig.onLoad}
                     onError={(e) => {
                         console.error(e);
                     }}

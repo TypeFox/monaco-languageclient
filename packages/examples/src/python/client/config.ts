@@ -31,64 +31,41 @@ import {
     WebSocketMessageReader,
     WebSocketMessageWriter,
 } from 'vscode-ws-jsonrpc';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type {
+    MonacoEditorLanguageClientWrapper,
+    WrapperConfig,
+} from 'monaco-editor-wrapper';
 import {
     defaultHtmlAugmentationInstructions,
     defaultViewsInit,
 } from 'monaco-editor-wrapper/vscode/services';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
+import {
+    configureDebugging,
+    provideDebuggerExtensionConfig,
+} from '../../debugger/client/debugger.js';
 import { type ConfigParams } from '../../debugger/common/definitions.js';
 import {
-    MonacoFileSystemProvider,
+    isFileText,
+    ServerSyncingFileSystemProvider,
     type Files,
-} from '../../debugger/common/fileSystemProvider.js';
-import helloPyCode from '../../../resources/python/hello.py?raw';
-import hello2PyCode from '../../../resources/python/hello2.py?raw';
-import badPyCode from '../../../resources/python/bad.py?raw';
+    type FlatFile,
+} from '../../debugger/common/serverSyncingFileSystemProvider.js';
+import type { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 
 export const createDefaultConfigParams = (
+    homeDir: string,
     files: Files,
-    htmlContainer?: HTMLElement,
+    defaultFile: vscode.Uri | null,
+    htmlContainer: HTMLElement,
+    onFileUpdate: (file: FlatFile) => Promise<void>,
+    onFileDelete: (path: string[]) => Promise<void>,
 ): ConfigParams => {
-    const homeId = String(Date.now());
-    const homeDir = `/tmp/${homeId}`;
-    const fileSystemProvider = new MonacoFileSystemProvider({
-        type: 'directory',
-        files: {
-            tmp: {
-                type: 'directory',
-                files: {
-                    [homeId]: {
-                        type: 'directory',
-                        files: {
-                            ['.vscode']: {
-                                type: 'directory',
-                                files: {
-                                    ['workspace.code-workspace']: {
-                                        type: 'text',
-                                        updated: Date.now(),
-                                        text: JSON.stringify(
-                                            {
-                                                folders: [
-                                                    {
-                                                        path: `${homeDir}/workspace`,
-                                                    },
-                                                ],
-                                            },
-                                            null,
-                                            2,
-                                        ),
-                                    },
-                                },
-                            },
-                            ['workspace']: files,
-                        },
-                    },
-                },
-            },
-        },
-    });
+    const fileSystemProvider = new ServerSyncingFileSystemProvider(
+        files,
+        onFileUpdate,
+        onFileDelete,
+    );
 
     const configParams: ConfigParams = {
         extensionName: 'debugger-py-client',
@@ -104,7 +81,7 @@ export const createDefaultConfigParams = (
         hostname: 'localhost',
         port: 55555,
         fileSystemProvider,
-        defaultFile: vscode.Uri.file(`${homeDir}/workspace/hello2.py`),
+        defaultFile: defaultFile,
         helpContainerCmd:
             'docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d',
         debuggerExecCall: 'graalpy --dap --dap.WaitAttached --dap.Suspend=true',
@@ -125,27 +102,54 @@ export const createDefaultConfigParams = (
 export type PythonAppConfig = {
     wrapperConfig: WrapperConfig;
     configParams: ConfigParams;
+    onLoad: (wrapper: MonacoEditorLanguageClientWrapper) => Promise<void>;
 };
 
-export const createWrapperConfig = (): PythonAppConfig => {
+export const createWrapperConfig = (input: {
+    files: Files;
+    onFileUpdate: (file: FlatFile) => Promise<void>;
+    onFileDelete: (path: string[]) => Promise<void>;
+}): PythonAppConfig => {
+    const homeId = String(Date.now()); // TODO: this is a terrible unique id
+    const homeDir = `/tmp/${homeId}`;
     const files: Files = {
-        type: 'directory',
-        files: {
-            'hello.py': {
-                type: 'text',
-                updated: Date.now(),
-                text: helloPyCode,
+        tmp: {
+            [homeId]: {
+                ['.vscode']: {
+                    ['workspace.code-workspace']: {
+                        updated: Date.now(),
+                        text: JSON.stringify(
+                            {
+                                folders: [
+                                    {
+                                        path: `${homeDir}/workspace`,
+                                    },
+                                ],
+                            },
+                            null,
+                            2,
+                        ),
+                    },
+                },
+                ['workspace']: input.files,
             },
-            'hello2.py': {
-                type: 'text',
-                updated: Date.now(),
-                text: hello2PyCode,
-            },
-            'bad.py': { type: 'text', updated: Date.now(), text: badPyCode },
         },
     };
+    const workspacePath = ['tmp', homeId, 'workspace'];
 
-    const configParams = createDefaultConfigParams(files, document.body);
+    let defaultFile: vscode.Uri | null;
+    if ('main.py' in input.files) {
+        defaultFile = vscode.Uri.file([...workspacePath, 'main.py'].join('/'));
+    } else {
+        // Find the first file and show it
+        const first = Object.entries(files).find((x) => isFileText(x[1]))?.[0];
+
+        if (first !== undefined) {
+            defaultFile = vscode.Uri.file([...workspacePath, first].join('/'));
+        } else {
+            defaultFile = null;
+        }
+    }
 
     const url = createUrl({
         secured: false,
@@ -156,10 +160,110 @@ export const createWrapperConfig = (): PythonAppConfig => {
             authorization: 'UserAuth',
         },
     });
+
     const webSocket = new WebSocket(url);
     const iWebSocket = toSocket(webSocket);
     const reader = new WebSocketMessageReader(iWebSocket);
     const writer = new WebSocketMessageWriter(iWebSocket);
+
+    const onFileUpdate = async (file: FlatFile) => {
+        await writer.write({
+            jsonrpc: '2.0',
+            id: 0,
+            method: 'fileSync',
+            params: { path: file.path, text: file.text, updated: file.updated },
+        } as {
+            jsonrpc: string;
+        });
+
+        for (let i = 0; i < workspacePath.length; i++) {
+            if (file.path[i] !== workspacePath[i]) {
+                return;
+            }
+        }
+
+        await input.onFileUpdate({
+            path: file.path.slice(workspacePath.length),
+            text: file.text,
+            updated: file.updated,
+        });
+    };
+
+    const onFileDelete = async (path: string[]) => {
+        await writer.write({
+            jsonrpc: '2.0',
+            id: 0,
+            method: 'fileDelete',
+            params: { path: path },
+        } as {
+            jsonrpc: string;
+        });
+
+        for (let i = 0; i < workspacePath.length; i++) {
+            if (path[i] !== workspacePath[i]) {
+                return;
+            }
+        }
+
+        await input.onFileDelete(path.slice(workspacePath.length));
+    };
+
+    const configParams = createDefaultConfigParams(
+        homeDir,
+        files,
+        defaultFile,
+        document.body,
+        onFileUpdate,
+        onFileDelete,
+    );
+
+    const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+        const result = wrapper.getExtensionRegisterResult(
+            'mlc-python-example',
+        ) as RegisterLocalProcessExtensionResult;
+        await result.setAsDefaultApi();
+
+        const initResult = wrapper.getExtensionRegisterResult(
+            'debugger-py-client',
+        ) as RegisterLocalProcessExtensionResult | undefined;
+        if (initResult !== undefined) {
+            configureDebugging(await initResult.getApi(), configParams);
+        }
+
+        // Send all current files
+        await Promise.all(
+            configParams.fileSystemProvider.getAllFiles().map(async (file) => {
+                await writer.write({
+                    jsonrpc: '2.0',
+                    id: 0,
+                    method: 'fileSync',
+                    params: {
+                        path: file.path,
+                        text: file.text,
+                        updated: file.updated,
+                    },
+                } as {
+                    jsonrpc: string;
+                });
+            }),
+        );
+
+        await writer.write({
+            jsonrpc: '2.0',
+            id: 0,
+            method: 'pipInstall',
+            params: {
+                path: workspacePath,
+            },
+        } as {
+            jsonrpc: string;
+        });
+
+        await vscode.commands.executeCommand('workbench.view.explorer');
+        if (configParams.defaultFile) {
+            await vscode.window.showTextDocument(configParams.defaultFile);
+        }
+    };
 
     const wrapperConfig: WrapperConfig = {
         $type: 'extended',
@@ -223,7 +327,11 @@ export const createWrapperConfig = (): PythonAppConfig => {
                 ...getRemoteAgentServiceOverride(),
                 ...getEnvironmentServiceOverride(),
                 ...getSecretStorageServiceOverride(),
-                ...getStorageServiceOverride(),
+                ...getStorageServiceOverride({
+                    fallbackOverride: {
+                        'workbench.activity.showAccounts': false,
+                    },
+                }),
                 ...getSearchServiceOverride(),
                 ...getDebugServiceOverride(),
                 ...getTestingServiceOverride(),
@@ -295,5 +403,6 @@ export const createWrapperConfig = (): PythonAppConfig => {
     return {
         wrapperConfig,
         configParams: configParams,
+        onLoad,
     };
 };
