@@ -7,15 +7,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createWrapperConfig } from './config.js';
-import helloPyCode from '../../../resources/python/hello.py?raw';
+import requirementsCode from '../../../resources/python/requirements.txt?raw';
+import mainPyCode from '../../../resources/python/main.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import type { Files } from '../../debugger/common/serverSyncingFileSystemProvider.js';
 
 const files: Files = {
+    'requirements.txt': {
+        updated: Date.now(),
+        text: requirementsCode,
+    },
     'main.py': {
         updated: Date.now(),
-        text: helloPyCode,
+        text: mainPyCode,
     },
     'hello2.py': {
         updated: Date.now(),
