@@ -105,7 +105,7 @@ export default [{
         '@typescript-eslint/no-empty-object-type': 'error',
         '@typescript-eslint/no-unsafe-function-type': 'error',
         '@typescript-eslint/no-wrapper-object-types': 'error',
-        '@stylistic/indent': 'error',
+        '@stylistic/indent': ['error', 4],
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-misused-new': 'error',
         '@typescript-eslint/no-namespace': 'off',

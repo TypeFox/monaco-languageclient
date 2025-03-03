@@ -1,5 +1,15 @@
 body {
     font-family: Helvetica, Arial, Sans-Serif;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    overflow-y: hidden;
+    overscroll-behavior-y: none;
+    -ms-overflow-style: scrollbar;
 }
 
 .exampleHeadelineDiv {
@@ -9,4 +19,9 @@ body {
 .exampleHeadeline {
     font-weight: bold;
     font-size: 20px;
+}
+
+#react-root {
+    flex: 1;
+    min-height: 0;
 }

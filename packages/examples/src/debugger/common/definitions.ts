@@ -5,16 +5,17 @@
 
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
 import { Uri } from 'vscode';
+import type { ServerSyncingFileSystemProvider } from './serverSyncingFileSystemProvider.js';
 
 export type FileDefinition = {
     path: string;
     code: string;
     uri: Uri;
-}
+};
 
 export type InitMessage = {
-    id: 'init',
-    files: Record<string, FileDefinition>
+    id: 'init';
+    files: Record<string, FileDefinition>;
     defaultFile: string;
     debuggerExecCall: string;
 };
@@ -30,13 +31,16 @@ export type ConfigParams = {
     protocol: 'ws' | 'wss';
     hostname: string;
     port: number;
-    files: Map<string, FileDefinition>;
-    defaultFile: string;
+    fileSystemProvider: ServerSyncingFileSystemProvider;
+    defaultFile: Uri | null;
     helpContainerCmd: string;
     debuggerExecCall: string;
-}
+};
 
-export const createDebugLaunchConfigFile = (workspacePath: string, type: string) => {
+export const createDebugLaunchConfigFile = (
+    workspacePath: string,
+    type: string,
+) => {
     return new RegisteredMemoryFile(
         Uri.file(`${workspacePath}/.vscode/launch.json`),
         JSON.stringify(
@@ -47,12 +51,11 @@ export const createDebugLaunchConfigFile = (workspacePath: string, type: string)
                         name: 'Debugger: Lauch',
                         type,
                         request: 'attach',
-                    }
-                ]
+                    },
+                ],
             },
             null,
-            2
-        )
+            2,
+        ),
     );
 };
-
