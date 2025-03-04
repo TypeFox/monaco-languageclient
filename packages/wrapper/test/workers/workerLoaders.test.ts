@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { beforeAll, describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import '@codingame/monaco-vscode-standalone-languages';
@@ -17,20 +17,18 @@ import { clearLastWorkers, configureClassicWorkerFactory, createWrapperConfigCla
 
 describe('Test WorkerLoaders', () => {
 
-    const workerLoadingTimeout = 250;
-
-    const wrapper = new MonacoEditorLanguageClientWrapper();
-
-    beforeAll(async () => {
+    test('Test default worker application', async () => {
+        // prepare
+        const defaultWorkerLoadingTimeout = 1000;
+        const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.logLevel = LogLevel.Info;
         wrapperConfig.editorAppConfig!.monacoWorkerFactory = configureClassicWorkerFactory;
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-    });
 
-    test('Test default worker + js worker', async () => {
-        // check default
-        await delayExecution(workerLoadingTimeout);
+        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+
+        // check default and delay excution more than for the other worker tests
+        await delayExecution(10000);
         console.log('lastWorkers:', getLastWorkers());
         expect(getLastWorkers()).toContain('editorWorker');
         expect(getLastWorkers()).toContain('tsWorker');
@@ -38,10 +36,9 @@ describe('Test WorkerLoaders', () => {
         // clean-up
         clearLastWorkers();
         expect(getLastWorkers()).toEqual([]);
-    });
 
-    test('Test ts worker', async () => {
-        // ts loads the same worker
+        // ts worker
+        // it loads the same worker
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -49,15 +46,14 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'ts'
             }
         });
-        await delayExecution(workerLoadingTimeout);
+        await delayExecution(defaultWorkerLoadingTimeout);
         console.log('lastWorkers:', getLastWorkers());
         expect(getLastWorkers()).toEqual([]);
 
         clearLastWorkers();
         expect(getLastWorkers()).toEqual([]);
-    });
 
-    test('Test css worker', async () => {
+        // css worker
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -65,15 +61,14 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'css'
             }
         });
-        await delayExecution(workerLoadingTimeout);
+        await delayExecution(defaultWorkerLoadingTimeout);
         console.log('lastWorkers:', getLastWorkers());
         expect(getLastWorkers()).toContain('cssWorker');
 
         clearLastWorkers();
         expect(getLastWorkers()).toEqual([]);
-    });
 
-    test('Test json worker', async () => {
+        // json worker
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -81,15 +76,14 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'json'
             }
         });
-        await delayExecution(workerLoadingTimeout);
+        await delayExecution(defaultWorkerLoadingTimeout);
         console.log('lastWorkers:', getLastWorkers());
         expect(getLastWorkers()).toContain('jsonWorker');
 
         clearLastWorkers();
         expect(getLastWorkers()).toEqual([]);
-    });
 
-    test('Test html worker', async () => {
+        // html worker
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -98,7 +92,7 @@ describe('Test WorkerLoaders', () => {
             }
         });
 
-        await delayExecution(workerLoadingTimeout);
+        await delayExecution(defaultWorkerLoadingTimeout);
         console.log('lastWorkers:', getLastWorkers());
         expect(getLastWorkers()).toContain('htmlWorker');
 

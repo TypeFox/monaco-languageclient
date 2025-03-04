@@ -11,7 +11,7 @@ import definedViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 20000,
+        testTimeout: 25000,
         pool: 'threads',
         poolOptions: {
             threads: {

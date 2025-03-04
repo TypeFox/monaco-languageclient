@@ -11,12 +11,6 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createDefaultWrapperConfig } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
-    test('rerender', async () => {
-        const wrapperConfig = createDefaultWrapperConfig();
-        const { rerender } = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
-        rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
-        rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
-    });
 
     test('onLoad', async () => {
         const wrapperConfig = createDefaultWrapperConfig();
@@ -26,11 +20,8 @@ describe('Test MonacoEditorReactComp', () => {
         await expect(await new Promise<void>(resolve => {
             const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
                 renderResult.rerender(<MonacoEditorReactComp wrapperConfig={wrapperConfig} />);
-
-                console.log('onLoad');
                 resolve();
             };
-            // render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
             renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
         // void promise is undefined after it was awaited
         })).toBeUndefined();
@@ -73,5 +64,32 @@ describe('Test MonacoEditorReactComp', () => {
 
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} onTextChanged={textReceiver} />);
+    });
+
+    test('rerender without error', async () => {
+        let error = false;
+        try {
+            const wrapperConfig = createDefaultWrapperConfig();
+            const newWrapperConfig = createDefaultWrapperConfig();
+            newWrapperConfig.editorAppConfig!.codeResources!.modified!.text = 'hello world 2';
+            let renderResult: RenderResult;
+
+            const result1 = await new Promise<void>(resolve => {
+                const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+                    renderResult.rerender(<MonacoEditorReactComp wrapperConfig={newWrapperConfig} />);
+                    resolve();
+                };
+
+                renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
+            });
+
+            // void promise is undefined after it was awaited
+            expect(result1).toBeUndefined();
+
+            renderResult!.rerender(<MonacoEditorReactComp wrapperConfig={newWrapperConfig} />);
+        } catch (_e) {
+            error = true;
+        }
+        expect(error).toBe(false);
     });
 });
