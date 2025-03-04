@@ -43,14 +43,19 @@ const wrapperConfig: WrapperConfig = {
         monacoWorkerFactory: configureDefaultWorkerFactory
     },
     languageClientConfigs: {
-        groovy: {
-            clientOptions: {
-                documentSelector: ['groovy']
-            },
-            connection: {
-                options: {
-                    $type: 'WebSocketUrl',
-                    url: `ws://localhost:${groovyConfig.port}${groovyConfig.path}`
+        automaticallyInit: true,
+        automaticallyStart: true,
+        automaticallyDispose: true,
+        configs: {
+            groovy: {
+                clientOptions: {
+                    documentSelector: ['groovy']
+                },
+                connection: {
+                    options: {
+                        $type: 'WebSocketUrl',
+                        url: `ws://localhost:${groovyConfig.port}${groovyConfig.path}`
+                    }
                 }
             }
         }

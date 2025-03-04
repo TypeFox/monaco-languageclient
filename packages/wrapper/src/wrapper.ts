@@ -19,6 +19,13 @@ export interface ExtensionConfig {
     filesOrContents?: Map<string, string | URL>;
 }
 
+export interface LanguageClientConfigs {
+    automaticallyInit: boolean;
+    automaticallyStart: boolean;
+    automaticallyDispose: boolean;
+    configs: Record<string, LanguageClientConfig>
+}
+
 export interface WrapperConfig {
     $type: OverallConfigType;
     htmlContainer?: HTMLElement;
@@ -27,7 +34,7 @@ export interface WrapperConfig {
     extensions?: ExtensionConfig[];
     vscodeApiConfig?: VscodeApiConfig;
     editorAppConfig?: EditorAppConfig;
-    languageClientConfigs?: Record<string, LanguageClientConfig>;
+    languageClientConfigs?: LanguageClientConfigs;
 }
 
 /**
@@ -40,8 +47,8 @@ export class MonacoEditorLanguageClientWrapper {
     private id: string;
     private editorApp?: EditorApp;
     private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
-    private disposableStoreExtensions?: DisposableStore;
-    private disposableStoreMonaco?: DisposableStore;
+    private disposableStoreExtensions?: DisposableStore = new DisposableStore();
+    private disposableStoreMonaco?: DisposableStore = new DisposableStore();
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
@@ -58,7 +65,7 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
-    async init(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
+    async init(wrapperConfig: WrapperConfig) {
         if (this.getInitializingAwait() !== undefined) {
             await this.getInitializingAwait();
         }
@@ -80,10 +87,6 @@ export class MonacoEditorLanguageClientWrapper {
         this.markInitializing();
 
         try {
-            // ensure disposable store is available again after dispose
-            this.disposableStoreExtensions = new DisposableStore();
-            this.disposableStoreMonaco = new DisposableStore();
-
             this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
 
             this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
@@ -106,7 +109,7 @@ export class MonacoEditorLanguageClientWrapper {
             }
             this.wrapperConfig = wrapperConfig;
 
-            if (includeLanguageClients === true) {
+            if (wrapperConfig.languageClientConfigs?.automaticallyInit === true) {
                 this.initLanguageClients();
             }
             await this.initExtensions();
@@ -121,7 +124,7 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     initLanguageClients() {
-        const lccEntries = Object.entries(this.wrapperConfig?.languageClientConfigs ?? {});
+        const lccEntries = Object.entries(this.wrapperConfig?.languageClientConfigs?.configs ?? {});
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
                 const lcw = new LanguageClientWrapper({
@@ -187,15 +190,15 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(wrapperConfig: WrapperConfig, includeLanguageClients: boolean = true) {
-        await this.init(wrapperConfig, includeLanguageClients);
-        await this.start(includeLanguageClients);
+    async initAndStart(wrapperConfig: WrapperConfig) {
+        await this.init(wrapperConfig);
+        await this.start();
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(includeLanguageClients: boolean = true, htmlContainer?: HTMLElement) {
+    async start(htmlContainer?: HTMLElement) {
         if (this.getStartingAwait() !== undefined) {
             await this.getStartingAwait();
         }
@@ -218,7 +221,7 @@ export class MonacoEditorLanguageClientWrapper {
                 this.logger.info('No EditorService configured. monaco-editor will not be started.');
             }
 
-            if (includeLanguageClients) {
+            if (this.wrapperConfig.languageClientConfigs?.automaticallyStart === true) {
                 await this.startLanguageClients();
             }
             // eslint-disable-next-line no-useless-catch
@@ -361,7 +364,7 @@ export class MonacoEditorLanguageClientWrapper {
     /**
      * Disposes all application and editor resources, plus the languageclient (if used).
      */
-    async dispose(includeLanguageClients: boolean = true) {
+    async dispose() {
         if (this.getStoppingAwait() !== undefined) {
             await this.getStartingAwait();
         }
@@ -374,8 +377,12 @@ export class MonacoEditorLanguageClientWrapper {
         this.disposableStoreExtensions?.dispose();
         this.disposableStoreMonaco?.dispose();
 
+        // re-create disposable stores
+        this.disposableStoreExtensions = new DisposableStore();
+        this.disposableStoreMonaco = new DisposableStore();
+
         try {
-            if (includeLanguageClients) {
+            if (this.wrapperConfig?.languageClientConfigs?.automaticallyDispose === true) {
                 await disposeLanguageClients(this.languageClientWrappers.values(), false);
             }
             // eslint-disable-next-line no-useless-catch

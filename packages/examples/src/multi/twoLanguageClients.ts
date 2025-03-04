@@ -58,8 +58,13 @@ print("Hello Moon!")
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            json: createJsonLanguageClientConfig(),
-            python: createPythonLanguageClientConfig()
+            automaticallyInit: true,
+            automaticallyStart: true,
+            automaticallyDispose: true,
+            configs: {
+                json: createJsonLanguageClientConfig(),
+                python: createPythonLanguageClientConfig()
+            }
         }
     };
 
@@ -72,8 +77,11 @@ print("Hello Moon!")
             disableElement('checkbox-extlc', true);
 
             const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            wrapperConfig.languageClientConfigs!.automaticallyInit = !externalLc;
+            wrapperConfig.languageClientConfigs!.automaticallyStart = !externalLc;
+            wrapperConfig.languageClientConfigs!.automaticallyDispose = !externalLc;
 
-            await wrapper.initAndStart(wrapperConfig, !externalLc);
+            await wrapper.initAndStart(wrapperConfig);
             if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).text = currentText;
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;

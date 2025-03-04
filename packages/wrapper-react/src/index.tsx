@@ -66,7 +66,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         };
 
         (async () => {
-            if (wrapperRef.current.isStopping() === false) {
+            if (!wrapperRef.current.isStopping()) {
                 await destroyMonaco();
                 await initMonaco();
                 await startMonaco();

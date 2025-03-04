@@ -162,7 +162,12 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('LanguageClientWrapper constructor config works', async () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
-            javascript: createDefaultLcUnreachableUrlConfig()
+            automaticallyInit: true,
+            automaticallyStart: true,
+            automaticallyDispose: true,
+            configs: {
+                javascript: createDefaultLcUnreachableUrlConfig()
+            }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         expect(await wrapper.init(config)).toBeUndefined();
@@ -174,7 +179,12 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('LanguageClientWrapper unreachable rejection handling', async () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
-            javascript: createDefaultLcUnreachableUrlConfig()
+            automaticallyInit: true,
+            automaticallyStart: true,
+            automaticallyDispose: true,
+            configs: {
+                javascript: createDefaultLcUnreachableUrlConfig()
+            }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await expect(async () => {
@@ -206,6 +216,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         wrapperConfig.htmlContainer = undefined;
 
         expect(await wrapper.init(wrapperConfig)).toBeUndefined();
-        expect(await wrapper.start(true, htmlContainer)).toBeUndefined();
+        expect(await wrapper.start(htmlContainer)).toBeUndefined();
     });
 });
