@@ -366,7 +366,7 @@ export class MonacoEditorLanguageClientWrapper {
      */
     async dispose() {
         if (this.getStoppingAwait() !== undefined) {
-            await this.getStartingAwait();
+            await this.getStoppingAwait();
         }
         this.markStopping();
 
