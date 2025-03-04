@@ -44,25 +44,30 @@ export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperC
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            json: {
-                clientOptions: {
-                    documentSelector: ['json']
-                },
-                connection: {
-                    options: {
-                        $type: 'WebSocketUrl',
-                        url: 'ws://localhost:30000/sampleServer',
-                        startOptions: {
-                            onCall: () => {
-                                console.log('Connected to socket.');
+            automaticallyInit: true,
+            automaticallyStart: true,
+            automaticallyDispose: true,
+            configs: {
+                json: {
+                    clientOptions: {
+                        documentSelector: ['json']
+                    },
+                    connection: {
+                        options: {
+                            $type: 'WebSocketUrl',
+                            url: 'ws://localhost:30000/sampleServer',
+                            startOptions: {
+                                onCall: () => {
+                                    console.log('Connected to socket.');
+                                },
+                                reportStatus: true
                             },
-                            reportStatus: true
-                        },
-                        stopOptions: {
-                            onCall: () => {
-                                console.log('Disconnected from socket.');
-                            },
-                            reportStatus: true
+                            stopOptions: {
+                                onCall: () => {
+                                    console.log('Disconnected from socket.');
+                                },
+                                reportStatus: true
+                            }
                         }
                     }
                 }
