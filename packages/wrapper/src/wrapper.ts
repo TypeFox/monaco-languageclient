@@ -6,7 +6,7 @@
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { DisposableStore } from '@codingame/monaco-vscode-api/monaco';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { registerExtension, type IExtensionManifest, ExtensionHostKind, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import { registerExtension, type IExtensionManifest, ExtensionHostKind, type RegisterExtensionResult, getExtensionManifests } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, type InitServicesInstructions, type VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { type Logger, ConsoleLogger } from 'monaco-languageclient/tools';
@@ -15,7 +15,7 @@ import { type CodeResources, didModelContentChange, EditorApp, type EditorAppCon
 import { type LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 
 export interface ExtensionConfig {
-    config: IExtensionManifest | object;
+    config: IExtensionManifest;
     filesOrContents?: Map<string, string | URL>;
 }
 
@@ -145,16 +145,22 @@ export class MonacoEditorLanguageClientWrapper {
         const extensions = this.wrapperConfig?.extensions;
         if (this.wrapperConfig?.extensions) {
             const allPromises: Array<Promise<void>> = [];
+            const extensionIds: string[] = [];
+            getExtensionManifests().forEach((ext) => {
+                extensionIds.push(ext.identifier.id);
+            });
             for (const extensionConfig of extensions ?? []) {
-                const manifest = extensionConfig.config as IExtensionManifest;
-                const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
-                this.extensionRegisterResults.set(manifest.name, extRegResult);
-                if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
-                    for (const entry of extensionConfig.filesOrContents) {
-                        this.disposableStoreExtensions?.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
+                if (!extensionIds.includes(`${extensionConfig.config.publisher}.${extensionConfig.config.name}`)) {
+                    const manifest = extensionConfig.config as IExtensionManifest;
+                    const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
+                    this.extensionRegisterResults.set(manifest.name, extRegResult);
+                    if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+                        for (const entry of extensionConfig.filesOrContents) {
+                            this.disposableStoreExtensions?.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
+                        }
                     }
+                    allPromises.push(extRegResult.whenReady());
                 }
-                allPromises.push(extRegResult.whenReady());
             }
             await Promise.all(allPromises);
         }

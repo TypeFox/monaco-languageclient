@@ -35,6 +35,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapperConfig = createWrapperConfigExtendedApp();
         wrapperConfig.extensions = [{
             config: {
+                name: 'unit-test-extension',
+                publisher: 'TypeFox',
+                version: '1.0.0',
                 engines: {
                     vscode: '*'
                 },
