@@ -12,33 +12,24 @@ import '@codingame/monaco-vscode-standalone-html-language-features';
 import '@codingame/monaco-vscode-standalone-json-language-features';
 import '@codingame/monaco-vscode-standalone-typescript-language-features';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { delayExecution } from '../support/helper.js';
-import { clearLastWorkers, configureClassicWorkerFactory, createWrapperConfigClassicApp, getLastWorkers } from '../support/helper-classic.js';
+import { awaitWorkerPromises, configureClassicWorkerFactory, createWorkerPromises, createWrapperConfigClassicApp } from '../support/helper-classic.js';
 
 describe('Test WorkerLoaders', () => {
 
     test('Test default worker application', async () => {
         // prepare
-        const defaultWorkerLoadingTimeout = 1000;
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.logLevel = LogLevel.Info;
         wrapperConfig.editorAppConfig!.monacoWorkerFactory = configureClassicWorkerFactory;
 
+        // default, expect editor and ts worker to be loaded
+        createWorkerPromises(['editorWorker', 'tsWorker']);
         expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
 
-        // check default and delay excution more than for the other worker tests
-        await delayExecution(10000);
-        console.log('lastWorkers:', getLastWorkers());
-        expect(getLastWorkers()).toContain('editorWorker');
-        expect(getLastWorkers()).toContain('tsWorker');
-
-        // clean-up
-        clearLastWorkers();
-        expect(getLastWorkers()).toEqual([]);
-
-        // ts worker
-        // it loads the same worker
+        // ts worker, expect no worker to be loaded
+        createWorkerPromises([]);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -46,14 +37,10 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'ts'
             }
         });
-        await delayExecution(defaultWorkerLoadingTimeout);
-        console.log('lastWorkers:', getLastWorkers());
-        expect(getLastWorkers()).toEqual([]);
-
-        clearLastWorkers();
-        expect(getLastWorkers()).toEqual([]);
+        expect(await awaitWorkerPromises()).toStrictEqual([]);
 
         // css worker
+        createWorkerPromises(['cssWorker']);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -61,14 +48,12 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'css'
             }
         });
-        await delayExecution(defaultWorkerLoadingTimeout);
-        console.log('lastWorkers:', getLastWorkers());
-        expect(getLastWorkers()).toContain('cssWorker');
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
 
-        clearLastWorkers();
-        expect(getLastWorkers()).toEqual([]);
+        console.log('done');
 
         // json worker
+        createWorkerPromises(['jsonWorker']);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -76,14 +61,10 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'json'
             }
         });
-        await delayExecution(defaultWorkerLoadingTimeout);
-        console.log('lastWorkers:', getLastWorkers());
-        expect(getLastWorkers()).toContain('jsonWorker');
-
-        clearLastWorkers();
-        expect(getLastWorkers()).toEqual([]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
 
         // html worker
+        createWorkerPromises(['htmlWorker']);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
@@ -91,12 +72,6 @@ describe('Test WorkerLoaders', () => {
                 enforceLanguageId: 'html'
             }
         });
-
-        await delayExecution(defaultWorkerLoadingTimeout);
-        console.log('lastWorkers:', getLastWorkers());
-        expect(getLastWorkers()).toContain('htmlWorker');
-
-        clearLastWorkers();
-        expect(getLastWorkers()).toEqual([]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
 });

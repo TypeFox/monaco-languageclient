@@ -8,6 +8,28 @@ import type { Logger } from 'monaco-languageclient/tools';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv } from './helper.js';
 
+const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
+const workerPromises: Map<string, Promise<void>> = new Map();
+export const createWorkerPromises = (keys: string[]) => {
+    workerResolver.clear();
+    workerPromises.clear();
+    for (const key of keys) {
+        const promise = new Promise<void>(resolve => {
+            workerResolver.set(key, resolve);
+        });
+        workerPromises.set(key, promise);
+    }
+};
+
+export const awaitWorkerPromises = () => {
+    return Promise.all([...workerPromises.values()]);
+};
+
+export const pushAndPrintLastWorker = (lastWorker: string) => {
+    console.log(`Called: ${lastWorker}`);
+    workerResolver.get(lastWorker)?.();
+};
+
 const editorWorker = new Worker(
     new URL('monaco-editor-wrapper/workers/module/editor', import.meta.url),
     { type: 'module' }
@@ -32,20 +54,6 @@ const tsWorker = new Worker(
     new URL('monaco-editor-wrapper/workers/module/ts', import.meta.url),
     { type: 'module' }
 );
-
-let lastWorkers: string[] = [];
-export const getLastWorkers = () => {
-    return lastWorkers;
-};
-
-export const clearLastWorkers = () => {
-    lastWorkers = [];
-};
-
-export const pushAndPrintLastWorker = (lastWorker: string) => {
-    lastWorkers.push(lastWorker);
-    console.log(`Called: ${lastWorkers[lastWorkers.length - 1]}`);
-};
 
 export const workerFuncs = {
     editorWorker: () => {
