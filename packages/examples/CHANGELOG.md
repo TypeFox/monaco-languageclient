@@ -2,11 +2,17 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.3.1] - 2025-03-0x
+## [2025.3.2] - 2025-03-04
+
+- Updated to `monaco-languageclient@9.4.1-next.1`, `monaco-editor-wrapper@6.5.0-next.1` and `@typefox/monaco-editor-react@6.5.0-next.1`.
+- Both regular and react statemachine examples log language server communication in the console.
+- Aligend to `WrapperConfig` changes regarding language server configuration.
+
+## [2025.3.1] - 2025-03-04
 
 - Updated to `monaco-languageclient@9.4.1-next.0`, `monaco-editor-wrapper@6.5.0-next.0` and `@typefox/monaco-editor-react@6.5.0-next.0`.
 - Updated all `@codingame/monaco-vscode` packages to `14.0.6`.
-- Fixed bare example syntax highlighting problems
+- Fixed bare example syntax highlighting problems.
 
 ## [2025.2.6] - 2025-02-18
 

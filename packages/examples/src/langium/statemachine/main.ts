@@ -5,8 +5,8 @@
 
 import * as vscode from 'vscode';
 import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
