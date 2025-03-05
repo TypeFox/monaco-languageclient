@@ -90,10 +90,10 @@ export class LanguageClientWrapper {
      * Restart the languageclient with options to control worker handling
      *
      * @param updatedWorker Set a new worker here that should be used. keepWorker has no effect then, as we want to dispose of the prior workers
-     * @param keepWorker Set to true if worker should not be disposed
+     * @param disposeWorker Set to false if worker should not be disposed
      */
-    async restartLanguageClient(updatedWorker?: Worker, keepWorker: boolean = false): Promise<void> {
-        await this.disposeLanguageClient(keepWorker);
+    async restartLanguageClient(updatedWorker?: Worker, disposeWorker: boolean = true): Promise<void> {
+        await this.disposeLanguageClient(disposeWorker);
 
         this.worker = updatedWorker;
         this.logger?.info('Re-Starting monaco-languageclient');
@@ -269,7 +269,7 @@ export class LanguageClientWrapper {
         this.worker = undefined;
     }
 
-    async disposeLanguageClient(keepWorker: boolean): Promise<void> {
+    async disposeLanguageClient(disposeWorker: boolean): Promise<void> {
         try {
             if (this.isStarted()) {
                 await this.languageClient?.dispose();
@@ -284,7 +284,7 @@ export class LanguageClientWrapper {
             return Promise.reject(languageClientError);
         } finally {
             // always terminate the worker if desired
-            if (!keepWorker) {
+            if (disposeWorker) {
                 this.disposeWorker();
             }
         }

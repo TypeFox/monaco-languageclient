@@ -126,7 +126,7 @@
     "@types/cors": "^2.8.17",
     "@types/emscripten": "~1.40.0",
     "@types/express": "~5.0.0",
-    "@types/ws": "~8.5.14",
+    "@types/ws": "~8.18.0",
     "langium-cli": "~3.4.0",
     "mini-coi": "~0.4.2",
     "ts-node": "~10.9.1",

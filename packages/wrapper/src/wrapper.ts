@@ -405,11 +405,11 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     async disposeLanguageClients() {
-        const keepWorker = this.wrapperConfig?.languageClientConfigs?.automaticallyDisposeWorkers ?? false;
+        const disposeWorker = this.wrapperConfig?.languageClientConfigs?.automaticallyDisposeWorkers ?? false;
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
             if (lcw.haveLanguageClient()) {
-                allPromises.push(lcw.disposeLanguageClient(keepWorker));
+                allPromises.push(lcw.disposeLanguageClient(disposeWorker));
             }
         }
         return Promise.all(allPromises);

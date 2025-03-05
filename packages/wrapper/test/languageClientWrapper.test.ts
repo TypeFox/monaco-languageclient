@@ -38,7 +38,7 @@ describe('Test LanguageClientWrapper', () => {
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
         // dispose & verify
-        await languageClientWrapper.disposeLanguageClient(false);
+        await languageClientWrapper.disposeLanguageClient(true);
         expect(languageClientWrapper.getWorker()).toBeUndefined();
     });
 

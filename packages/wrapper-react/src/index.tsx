@@ -65,11 +65,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         };
 
         (async () => {
-            if (!wrapperRef.current.isDisposing()) {
-                await disposeMonaco();
-                await initMonaco();
-                await startMonaco();
-            }
+            await disposeMonaco();
+            await initMonaco();
+            await startMonaco();
         })();
     }, [wrapperConfig, onTextChanged, onLoad, onError]);
 
