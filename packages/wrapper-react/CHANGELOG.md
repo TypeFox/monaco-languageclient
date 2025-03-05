@@ -2,6 +2,13 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [6.5.0-next.1] - 2025-03-05
+
+- Update dependencies, fix tests, language clients config changes [#889](https://github.com/TypeFox/monaco-languageclient/pull/889)
+- fix: old monaco editor instance is not destroyed before a new one init [#873](https://github.com/TypeFox/monaco-languageclient/pull/873)
+- Updated all `@codingame/monaco-vscode` packages to `14.0.6`.
+- Updated to `monaco-languageclient@9.4.1-next.1` and `monaco-editor-wrapper@6.5.0-next.1`.
+
 ## [6.4.0] - 2025-02-18
 
 - refactor: replace all useEffect and useCallback with one useEffect [#862](https://github.com/TypeFox/monaco-languageclient/pull/862)

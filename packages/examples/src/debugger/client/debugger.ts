@@ -47,7 +47,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
     };
 };
 
-export const confiugureDebugging = async (api: typeof vscode, config: ConfigParams) => {
+export const configureDebugging = async (api: typeof vscode, config: ConfigParams) => {
     class WebsocketDebugAdapter implements vscode.DebugAdapter {
         private websocket: WebSocket;
 

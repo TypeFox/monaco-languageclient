@@ -12,11 +12,11 @@
     "pnpm": "10.3.0"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.2.6",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.4"
+    "monaco-languageclient-examples": "~2025.3.2",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.6"
   },
   "devDependencies": {
-    "typescript": "~5.7.3"
+    "typescript": "~5.8.2"
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",

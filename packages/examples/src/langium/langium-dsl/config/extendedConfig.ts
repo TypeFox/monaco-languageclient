@@ -74,16 +74,18 @@ export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            langium: {
-                clientOptions: {
-                    documentSelector: ['langium']
-                },
-                connection: {
-                    options: {
-                        $type: 'WorkerDirect',
-                        worker: langiumWorker
+            configs: {
+                langium: {
+                    clientOptions: {
+                        documentSelector: ['langium']
                     },
-                    messageTransports: { reader, writer }
+                    connection: {
+                        options: {
+                            $type: 'WorkerDirect',
+                            worker: langiumWorker
+                        },
+                        messageTransports: { reader, writer }
+                    }
                 }
             }
         }

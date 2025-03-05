@@ -29,12 +29,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const destroyMonaco = async () => {
+        const disposeMonaco = async () => {
             try {
                 await wrapperRef.current.dispose();
             } catch {
-                // The language client may throw an error during disposal.
-                // This should not prevent us from continue working.
+                // The language client may throw an error during disposal, but we want to continue anyway
             }
         };
 
@@ -66,25 +65,28 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         };
 
         (async () => {
-            if (wrapperRef.current.isStopping() === false) {
-                await destroyMonaco();
-                await initMonaco();
-                await startMonaco();
-            }
+            await disposeMonaco();
+            await initMonaco();
+            await startMonaco();
         })();
-
     }, [wrapperConfig, onTextChanged, onLoad, onError]);
 
-    useEffect(()=>{
-        return ()=>{
+    useEffect(() => {
+        // exact copy of the above function, to prevent declaration in useCallback
+        const disposeMonaco = async () => {
             try {
-                wrapperRef.current.dispose();
+                await wrapperRef.current.dispose();
             } catch {
-                // The language client may throw an error during disposal.
-                // This should not prevent us from continue working.
+                // The language client may throw an error during disposal, but we want to continue anyway
             }
         };
-    },[]);
+
+        return () => {
+            (async () => {
+                await disposeMonaco();
+            })();
+        };
+    }, []);
 
     return (
         <div
