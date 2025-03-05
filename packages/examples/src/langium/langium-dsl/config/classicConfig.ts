@@ -49,9 +49,6 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
             }
         },
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 langium: {
                     clientOptions: {

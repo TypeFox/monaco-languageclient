@@ -13,7 +13,7 @@ import text from '../../../resources/langium/statemachine/example.statemachine?r
 import { disableElement } from '../../common/client/utils.js';
 
 export const runStatemachineReact = async () => {
-    const wrapperConfig = await createLangiumGlobalConfig({
+    const wrapperConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
         useLanguageClient: true,
         text,

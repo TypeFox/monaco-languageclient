@@ -44,7 +44,7 @@ const startEditor = async () => {
     });
 
     // the configuration does not contain any text content
-    const langiumGlobalConfig = await createLangiumGlobalConfig({
+    const langiumGlobalConfig = createLangiumGlobalConfig({
         languageServerId: 'first',
         useLanguageClient: true,
         worker: stateMachineWorkerPort,
@@ -63,7 +63,7 @@ const startEditor = async () => {
 
     // start the second wrapper without any languageclient config
     // => they share the language server and both text contents have different uris
-    const langiumGlobalConfig2 = await createLangiumGlobalConfig({
+    const langiumGlobalConfig2 = createLangiumGlobalConfig({
         languageServerId: 'second',
         useLanguageClient: false,
         text: textMod,

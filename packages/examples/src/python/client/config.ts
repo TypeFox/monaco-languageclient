@@ -101,9 +101,6 @@ export const createWrapperConfig = (): PythonAppConfig => {
         htmlContainer: configParams.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 python: {
                     name: 'Python Language Server Example',

@@ -74,9 +74,6 @@ export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 langium: {
                     clientOptions: {

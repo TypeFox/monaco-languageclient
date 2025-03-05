@@ -44,9 +44,6 @@ export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperC
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 json: {
                     clientOptions: {

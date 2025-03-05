@@ -31,9 +31,6 @@ export const createWrapperConfig = async (config: {
         htmlContainer: config.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 LANGUAGE_ID: {
                     name: 'Clangd WASM Language Server',

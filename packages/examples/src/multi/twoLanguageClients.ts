@@ -58,9 +58,6 @@ print("Hello Moon!")
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 json: createJsonLanguageClientConfig(),
                 python: createPythonLanguageClientConfig()
@@ -76,7 +73,7 @@ print("Hello Moon!")
             disableElement('button-flip', false);
             disableElement('checkbox-extlc', true);
 
-            const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            const externalLc = (document.getElementById('checkbox-extlc') as HTMLInputElement).checked;
             wrapperConfig.languageClientConfigs!.automaticallyInit = !externalLc;
             wrapperConfig.languageClientConfigs!.automaticallyStart = !externalLc;
             wrapperConfig.languageClientConfigs!.automaticallyDispose = !externalLc;
@@ -88,7 +85,7 @@ print("Hello Moon!")
             }
 
             // init language clients after start
-            if (externalLc === true) {
+            if (externalLc) {
                 wrapper.initLanguageClients();
                 await wrapper.startLanguageClients();
             }
@@ -101,7 +98,13 @@ print("Hello Moon!")
         disableElement('button-dispose', true);
         disableElement('button-start', false);
 
+        const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+
         await wrapper.dispose();
+
+        if (externalLc) {
+            wrapper.disposeLanguageClients();
+        }
     });
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;

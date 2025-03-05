@@ -47,9 +47,6 @@ export const runEclipseJdtLsClient = () => {
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 java: {
                     connection: {

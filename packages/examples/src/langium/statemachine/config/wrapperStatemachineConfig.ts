@@ -16,7 +16,7 @@ import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/wor
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 
-export const createLangiumGlobalConfig = async (params: {
+export const createLangiumGlobalConfig = (params: {
     languageServerId: string,
     useLanguageClient: boolean,
     text?: string,
@@ -24,7 +24,7 @@ export const createLangiumGlobalConfig = async (params: {
     messagePort?: MessagePort,
     messageTransports?: MessageTransports,
     htmlContainer: HTMLElement
-}): Promise<WrapperConfig> => {
+}): WrapperConfig => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
@@ -38,9 +38,6 @@ export const createLangiumGlobalConfig = async (params: {
     }
 
     const languageClientConfigs: LanguageClientConfigs | undefined = params.useLanguageClient && params.worker ? {
-        automaticallyInit: true,
-        automaticallyStart: true,
-        automaticallyDispose: true,
         configs: {
             statemachine: {
                 clientOptions: {

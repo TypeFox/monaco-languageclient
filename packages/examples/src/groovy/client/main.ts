@@ -43,9 +43,6 @@ const wrapperConfig: WrapperConfig = {
         monacoWorkerFactory: configureDefaultWorkerFactory
     },
     languageClientConfigs: {
-        automaticallyInit: true,
-        automaticallyStart: true,
-        automaticallyDispose: true,
         configs: {
             groovy: {
                 clientOptions: {

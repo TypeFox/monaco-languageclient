@@ -165,9 +165,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('LanguageClientWrapper constructor config works', async () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 javascript: createDefaultLcUnreachableUrlConfig()
             }
@@ -182,9 +179,6 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('LanguageClientWrapper unreachable rejection handling', async () => {
         const config = createWrapperConfigExtendedApp();
         config.languageClientConfigs = {
-            automaticallyInit: true,
-            automaticallyStart: true,
-            automaticallyDispose: true,
             configs: {
                 javascript: createDefaultLcUnreachableUrlConfig()
             }
@@ -199,13 +193,13 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
         expect(wrapper.isInitializing()).toBeFalsy();
         expect(wrapper.isStarting()).toBeFalsy();
-        expect(wrapper.isStopping()).toBeFalsy();
+        expect(wrapper.isDisposing()).toBeFalsy();
 
         expect(await wrapper.dispose()).toBeUndefined();
 
         expect(wrapper.isInitializing()).toBeFalsy();
         expect(wrapper.isStarting()).toBeFalsy();
-        expect(wrapper.isStopping()).toBeFalsy();
+        expect(wrapper.isDisposing()).toBeFalsy();
 
         const config2 = createWrapperConfigExtendedApp();
         expect(await wrapper.initAndStart(config2)).toBeUndefined();
