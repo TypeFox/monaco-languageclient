@@ -12,7 +12,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient": "~9.4.1-next.´0",
+    "monaco-languageclient-examples": "~2025.3.3",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~14.0.6"
   },
   "devDependencies": {
