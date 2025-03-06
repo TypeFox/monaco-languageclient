@@ -2,7 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.3.2] - 2025-03-04
+## [2025.3.3] - 2025-03-06
+
+- Updated to `monaco-languageclient@9.4.1`, `monaco-editor-wrapper@6.5.0` and `@typefox/monaco-editor-react@6.5.0`.
+
+## [2025.3.2] - 2025-03-05
 
 - Updated to `monaco-languageclient@9.4.1-next.1`, `monaco-editor-wrapper@6.5.0-next.1` and `@typefox/monaco-editor-react@6.5.0-next.1`.
 - Both regular and react statemachine examples log language server communication in the console.
