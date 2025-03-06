@@ -58,8 +58,10 @@ print("Hello Moon!")
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            json: createJsonLanguageClientConfig(),
-            python: createPythonLanguageClientConfig()
+            configs: {
+                json: createJsonLanguageClientConfig(),
+                python: createPythonLanguageClientConfig()
+            }
         }
     };
 
@@ -71,16 +73,19 @@ print("Hello Moon!")
             disableElement('button-flip', false);
             disableElement('checkbox-extlc', true);
 
-            const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+            const externalLc = (document.getElementById('checkbox-extlc') as HTMLInputElement).checked;
+            wrapperConfig.languageClientConfigs!.automaticallyInit = !externalLc;
+            wrapperConfig.languageClientConfigs!.automaticallyStart = !externalLc;
+            wrapperConfig.languageClientConfigs!.automaticallyDispose = !externalLc;
 
-            await wrapper.initAndStart(wrapperConfig, !externalLc);
+            await wrapper.initAndStart(wrapperConfig);
             if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).text = currentText;
                 (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;
             }
 
             // init language clients after start
-            if (externalLc === true) {
+            if (externalLc) {
                 wrapper.initLanguageClients();
                 await wrapper.startLanguageClients();
             }
@@ -93,7 +98,13 @@ print("Hello Moon!")
         disableElement('button-dispose', true);
         disableElement('button-start', false);
 
+        const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
+
         await wrapper.dispose();
+
+        if (externalLc) {
+            wrapper.disposeLanguageClients();
+        }
     });
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;

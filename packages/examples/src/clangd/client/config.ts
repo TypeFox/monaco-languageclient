@@ -31,26 +31,28 @@ export const createWrapperConfig = async (config: {
         htmlContainer: config.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
-            LANGUAGE_ID: {
-                name: 'Clangd WASM Language Server',
-                connection: {
-                    options: {
-                        $type: 'WorkerDirect',
-                        worker: await config.clangdWorkerHandler.createWorker(),
-                        messagePort: config.lsMessageLocalPort
-                    }
-                },
-                restartOptions: {
-                    retries: 5,
-                    timeout: 1000,
-                    keepWorker: true
-                },
-                clientOptions: {
-                    documentSelector: ['cpp'],
-                    workspaceFolder: {
-                        index: 0,
-                        name: 'workspace',
-                        uri: config.workspaceUri
+            configs: {
+                LANGUAGE_ID: {
+                    name: 'Clangd WASM Language Server',
+                    connection: {
+                        options: {
+                            $type: 'WorkerDirect',
+                            worker: await config.clangdWorkerHandler.createWorker(),
+                            messagePort: config.lsMessageLocalPort
+                        }
+                    },
+                    restartOptions: {
+                        retries: 5,
+                        timeout: 1000,
+                        keepWorker: true
+                    },
+                    clientOptions: {
+                        documentSelector: ['cpp'],
+                        workspaceFolder: {
+                            index: 0,
+                            name: 'workspace',
+                            uri: config.workspaceUri
+                        }
                     }
                 }
             }

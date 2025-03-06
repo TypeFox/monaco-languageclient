@@ -101,34 +101,36 @@ export const createWrapperConfig = (): PythonAppConfig => {
         htmlContainer: configParams.htmlContainer,
         logLevel: LogLevel.Debug,
         languageClientConfigs: {
-            python: {
-                name: 'Python Language Server Example',
-                connection: {
-                    options: {
-                        $type: 'WebSocketDirect',
-                        webSocket: webSocket,
-                        startOptions: {
-                            onCall: (languageClient?: MonacoLanguageClient) => {
-                                setTimeout(() => {
-                                    ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                        vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                            languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+            configs: {
+                python: {
+                    name: 'Python Language Server Example',
+                    connection: {
+                        options: {
+                            $type: 'WebSocketDirect',
+                            webSocket: webSocket,
+                            startOptions: {
+                                onCall: (languageClient?: MonacoLanguageClient) => {
+                                    setTimeout(() => {
+                                        ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                                            vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                                languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                            });
                                         });
-                                    });
-                                }, 250);
-                            },
-                            reportStatus: true,
-                        }
+                                    }, 250);
+                                },
+                                reportStatus: true,
+                            }
+                        },
+                        messageTransports: { reader, writer }
                     },
-                    messageTransports: { reader, writer }
-                },
-                clientOptions: {
-                    documentSelector: [configParams.languageId],
-                    workspaceFolder: {
-                        index: 0,
-                        name: configParams.workspaceRoot,
-                        uri: vscode.Uri.parse(configParams.workspaceRoot)
-                    },
+                    clientOptions: {
+                        documentSelector: [configParams.languageId],
+                        workspaceFolder: {
+                            index: 0,
+                            name: configParams.workspaceRoot,
+                            uri: vscode.Uri.parse(configParams.workspaceRoot)
+                        },
+                    }
                 }
             }
         },

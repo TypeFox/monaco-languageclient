@@ -5,6 +5,7 @@
 
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import type { TextContents } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
@@ -13,11 +14,18 @@ import text from '../../../resources/langium/statemachine/example.statemachine?r
 import { disableElement } from '../../common/client/utils.js';
 
 export const runStatemachineReact = async () => {
-    const wrapperConfig = await createLangiumGlobalConfig({
+    const worker = loadStatemachineWorkerRegular();
+    const reader = new BrowserMessageReader(worker);
+    const writer = new BrowserMessageWriter(worker);
+    reader.listen((message) => {
+        console.log('Received message from worker:', message);
+    });
+    const wrapperConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
         useLanguageClient: true,
         text,
-        worker: loadStatemachineWorkerRegular(),
+        worker,
+        messageTransports: { reader, writer },
         htmlContainer: document.getElementById('monaco-editor-root')!
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);

@@ -9,14 +9,14 @@ import getLocalizationServiceOverride from '@codingame/monaco-vscode-localizatio
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MessageTransports } from 'vscode-languageclient';
-import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import type { LanguageClientConfigs, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 
-export const createLangiumGlobalConfig = async (params: {
+export const createLangiumGlobalConfig = (params: {
     languageServerId: string,
     useLanguageClient: boolean,
     text?: string,
@@ -24,7 +24,7 @@ export const createLangiumGlobalConfig = async (params: {
     messagePort?: MessagePort,
     messageTransports?: MessageTransports,
     htmlContainer: HTMLElement
-}): Promise<WrapperConfig> => {
+}): WrapperConfig => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
@@ -37,18 +37,20 @@ export const createLangiumGlobalConfig = async (params: {
         };
     }
 
-    const languageClientConfigs: Record<string, LanguageClientConfig> | undefined = params.useLanguageClient && params.worker ? {
-        statemachine: {
-            clientOptions: {
-                documentSelector: ['statemachine']
-            },
-            connection: {
-                options: {
-                    $type: 'WorkerDirect',
-                    worker: params.worker,
-                    messagePort: params.messagePort,
+    const languageClientConfigs: LanguageClientConfigs | undefined = params.useLanguageClient && params.worker ? {
+        configs: {
+            statemachine: {
+                clientOptions: {
+                    documentSelector: ['statemachine']
                 },
-                messageTransports: params.messageTransports
+                connection: {
+                    options: {
+                        $type: 'WorkerDirect',
+                        worker: params.worker,
+                        messagePort: params.messagePort,
+                    },
+                    messageTransports: params.messageTransports
+                }
             }
         }
     } : undefined;

@@ -47,19 +47,21 @@ export const runEclipseJdtLsClient = () => {
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
         languageClientConfigs: {
-            java: {
-                connection: {
-                    options: {
-                        $type: 'WebSocketUrl',
-                        url: 'ws://localhost:30003/jdtls'
-                    }
-                },
-                clientOptions: {
-                    documentSelector: ['java'],
-                    workspaceFolder: {
-                        index: 0,
-                        name: 'workspace',
-                        uri: vscode.Uri.parse(`${eclipseJdtLsConfig.basePath}/workspace`)
+            configs: {
+                java: {
+                    connection: {
+                        options: {
+                            $type: 'WebSocketUrl',
+                            url: 'ws://localhost:30003/jdtls'
+                        }
+                    },
+                    clientOptions: {
+                        documentSelector: ['java'],
+                        workspaceFolder: {
+                            index: 0,
+                            name: 'workspace',
+                            uri: vscode.Uri.parse(`${eclipseJdtLsConfig.basePath}/workspace`)
+                        }
                     }
                 }
             }

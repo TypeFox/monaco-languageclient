@@ -49,14 +49,16 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
             }
         },
         languageClientConfigs: {
-            langium: {
-                clientOptions: {
-                    documentSelector: ['langium']
-                },
-                connection: {
-                    options: {
-                        $type: 'WorkerDirect',
-                        worker: langiumWorker
+            configs: {
+                langium: {
+                    clientOptions: {
+                        documentSelector: ['langium']
+                    },
+                    connection: {
+                        options: {
+                            $type: 'WorkerDirect',
+                            worker: langiumWorker
+                        }
                     }
                 }
             }
