@@ -24,7 +24,7 @@
     "@typescript-eslint/eslint-plugin": "~8.26.0",
     "@typescript-eslint/parser": "~8.26.0",
     "@vitejs/plugin-react": "~4.3.4",
-    "@vitest/browser": "~3.0.7",
+    "@vitest/browser": "~3.0.8",
     "editorconfig": "~2.0.1",
     "esbuild": "~0.25.0",
     "eslint": "~9.21.0",
@@ -34,11 +34,11 @@
     "globals": "~16.0.0",
     "http-server": "~14.1.1",
     "minimatch": "~10.0.1",
-    "playwright": "~1.50.1",
+    "playwright": "~1.51.0",
     "typescript": "~5.8.2",
-    "vite": "~6.2.0",
-    "vite-node": "~3.0.7",
-    "vitest": "~3.0.7"
+    "vite": "~6.2.1",
+    "vite-node": "~3.0.8",
+    "vitest": "~3.0.8"
   },
   "scripts": {
     "clean": "npm run clean --workspaces",

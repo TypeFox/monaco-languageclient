@@ -18,7 +18,7 @@ export const createDefaultWrapperConfig = (): WrapperConfig => {
             codeResources: {
                 modified: {
                     text: 'hello world',
-                    fileExt: 'js'
+                    uri: '/workspace/test.js'
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
