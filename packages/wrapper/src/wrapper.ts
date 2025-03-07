@@ -20,9 +20,13 @@ export interface ExtensionConfig {
 }
 
 export interface LanguageClientConfigs {
+    // default is true if not specified as it is optional
     automaticallyInit?: boolean;
+    // default is true if not specified as it is optional
     automaticallyStart?: boolean;
+    // default is true if not specified as it is optional
     automaticallyDispose?: boolean;
+    // default is false if not specified as it is optional
     automaticallyDisposeWorkers?: boolean;
     configs: Record<string, LanguageClientConfig>
 }

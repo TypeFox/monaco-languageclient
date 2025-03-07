@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createMewModelReference, createMonacoEditorDiv } from './support/helper.js';
@@ -163,5 +163,19 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             }, 100);
         });
         expect(semHigh).toEqual(true);
+    });
+
+    test('Check current model is globally removed after dispose', async () => {
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            text: 'console.log("test")',
+            uri: '/workspace/testModel.js'
+        });
+        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+
+        const currentModel = wrapper.getEditor()?.getModel();
+        expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
+        wrapper.getEditor()?.getModel()!.dispose();
+        expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
     });
 });
