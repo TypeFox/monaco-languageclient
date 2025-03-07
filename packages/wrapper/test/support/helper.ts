@@ -23,7 +23,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
         editorAppConfig: {
             codeResources: {
                 modified: {
-                    text: '',
+                    text: 'console.log("Hello World!");',
                     uri: '/workspace/test.js'
                 }
             },

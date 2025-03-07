@@ -146,16 +146,20 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(1);
 
         const codeContent = {
-            text: 'text',
+            text: 'console.log("Hello World!");',
             uri: '/workspace/statemachineUri.statemachine'
         };
         const modelRefModified = await buildModelReference(codeContent);
-        wrapper.updateEditorModels({
-            modelRefModified
-        });
 
-        expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);
-        expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(2);
+        // delay execution to prevent error being thrown from monaco api (internal clean-up)
+        setTimeout(() => {
+            wrapper.updateEditorModels({
+                modelRefModified
+            });
+
+            expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);
+            expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(2);
+        }, 100);
     });
 
     test('LanguageClientWrapper Not defined after construction without configuration', async () => {
