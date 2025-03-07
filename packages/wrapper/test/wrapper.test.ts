@@ -78,18 +78,21 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         expect(wrapper.isStarted()).toBeTruthy();
 
-        expect(await wrapper.updateCodeResources({
-            modified: {
-                text: 'console.log("Goodbye World");',
-                uri: '/workspace/test.js',
-                enforceLanguageId: 'javascript'
-            }
-        })).toBeUndefined();
+        // delay execution to prevent error being thrown from monaco api (internal clean-up)
+        setTimeout(async () => {
+            expect(await wrapper.updateCodeResources({
+                modified: {
+                    text: 'console.log("Goodbye World");',
+                    uri: '/workspace/test.js',
+                    enforceLanguageId: 'javascript'
+                }
+            })).toBeUndefined();
 
-        const textContents = wrapper.getTextContents();
-        expect(textContents?.modified).toEqual('console.log("Goodbye World");');
+            const textContents = wrapper.getTextContents();
+            expect(textContents?.modified).toEqual('console.log("Goodbye World");');
 
-        expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
+            expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
+        }, 100);
     });
 
     test('Update code resources after start (different file)', async () => {
@@ -106,17 +109,20 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         expect(wrapper.isStarted()).toBeTruthy();
 
-        expect(await wrapper.updateCodeResources({
-            modified: {
-                text: 'console.log("Goodbye World");',
-                uri: '/workspace/main2.js'
-            }
-        })).toBeUndefined();
+        // delay execution to prevent error being thrown from monaco api (internal clean-up)
+        setTimeout(async () => {
+            expect(await wrapper.updateCodeResources({
+                modified: {
+                    text: 'console.log("Goodbye World");',
+                    uri: '/workspace/main2.js'
+                }
+            })).toBeUndefined();
 
-        const textContents = wrapper.getTextContents();
-        expect(textContents?.modified).toEqual('console.log("Goodbye World");');
+            const textContents = wrapper.getTextContents();
+            expect(textContents?.modified).toEqual('console.log("Goodbye World");');
 
-        expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
+            expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
+        }, 100);
     });
 
     test('Verify registerTextChangeCallback', async () => {
@@ -221,6 +227,10 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         wrapperConfig.htmlContainer = undefined;
 
         expect(await wrapper.init(wrapperConfig)).toBeUndefined();
-        expect(await wrapper.start(htmlContainer)).toBeUndefined();
+
+        // delay execution to prevent error being thrown from monaco api (internal clean-up)
+        setTimeout(async () => {
+            expect(await wrapper.start(htmlContainer)).toBeUndefined();
+        }, 100);
     });
 });
