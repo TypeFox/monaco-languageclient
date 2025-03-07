@@ -205,7 +205,5 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const currentModelMod = wrapper.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModelMod!)).toBeTruthy();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
-
-        // monaco.editor.getModels().forEach(model => console.log(model.uri.toString()));
     });
 });

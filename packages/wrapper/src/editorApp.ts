@@ -217,6 +217,7 @@ export class EditorApp {
     updateEditorModels(modelRefs: ModelRefs) {
         let updateModified = false;
         let updateOriginal = false;
+        const diposeOldModels: string[] = [];
 
         if (modelRefs.modelRefModified !== this.modelRefModified) {
             this.modelRefModified?.dispose();
@@ -232,8 +233,11 @@ export class EditorApp {
         if (this.editor) {
             const textModelModified = this.modelRefModified?.object.textEditorModel;
             if (updateModified && textModelModified !== undefined && textModelModified !== null) {
-                if (this.editor.getModel() !== textModelModified) {
-                    this.editor.getModel()?.dispose();
+                const modifiedUri = this.editor.getModel()?.uri.toString();
+                if (modifiedUri !== textModelModified.uri.toString()) {
+                    if (modifiedUri !== undefined) {
+                        diposeOldModels.push(modifiedUri);
+                    }
                 }
                 this.editor.setModel(textModelModified);
                 this.modelUpdateCallback?.({
@@ -249,11 +253,17 @@ export class EditorApp {
                     original: textModelOriginal,
                     modified: textModelModified
                 };
-                if (this.diffEditor.getModel()?.modified !== textModelModified) {
-                    this.diffEditor.getModel()?.modified.dispose();
+                const modifiedUri = this.diffEditor.getModel()?.modified.uri.toString();
+                const originalUri = this.diffEditor.getModel()?.original.uri.toString();
+                if (modifiedUri !== textModelModified.uri.toString()) {
+                    if (modifiedUri !== undefined) {
+                        diposeOldModels.push(modifiedUri);
+                    }
                 }
-                if (this.diffEditor.getModel()?.original !== textModelOriginal) {
-                    this.diffEditor.getModel()?.original.dispose();
+                if (originalUri !== textModelOriginal.uri.toString()) {
+                    if (originalUri !== undefined) {
+                        diposeOldModels.push(originalUri);
+                    }
                 }
                 this.diffEditor.setModel(textModels);
                 this.modelUpdateCallback?.(textModels);
@@ -261,6 +271,12 @@ export class EditorApp {
                 throw new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.');
             }
         }
+
+        monaco.editor.getModels().forEach(model => {
+            if (diposeOldModels.includes(model.uri.toString())) {
+                model.dispose();
+            }
+        });
     }
 
     updateLayout() {
