@@ -15,7 +15,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
     test('Check default values', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        expect(await wrapper.initAndStart(createWrapperConfigClassicApp())).toBeUndefined();
+        await expect(await wrapper.initAndStart(createWrapperConfigClassicApp())).toBeUndefined();
 
         const app = wrapper.getMonacoEditorApp();
         expect(app).toBeDefined();
@@ -28,7 +28,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -42,7 +42,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await expect(async () => {
             const config = createWrapperConfigClassicApp();
-            expect(await wrapper.init(config)).toBeUndefined();
+            await expect(await wrapper.init(config)).toBeUndefined();
             await wrapper.initAndStart(config);
         }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
     });
@@ -57,7 +57,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             uri: '/workspace/test.js',
         };
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -78,7 +78,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'original',
             uri: '/workspace/test_original.js',
         };
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         const app = wrapper.getMonacoEditorApp();
 
         const modelRefs = app?.getModelRefs();
@@ -99,7 +99,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.editorAppConfig!.codeResources = {};
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
         const app = wrapper.getMonacoEditorApp();
         const modelRefs = app?.getModelRefs();
@@ -112,7 +112,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.editorAppConfig!.codeResources = {};
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
         const app = wrapper.getMonacoEditorApp();
 
@@ -135,9 +135,9 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const wrapperConfig = createWrapperConfigClassicApp();
         wrapperConfig.editorAppConfig!.codeResources = {};
 
-        expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
         const app = wrapper.getMonacoEditorApp();
-        expect(await wrapper.updateCodeResources({
+        await expect(await wrapper.updateCodeResources({
             modified: {
                 text: '// comment',
                 uri: '/workspace/test.statemachine',
@@ -150,7 +150,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(modelRefs?.modelRefModified).toBeDefined();
         expect(modelRefs?.modelRefOriginal).toBeUndefined();
 
-        expect(await wrapper.start()).toBeUndefined();
+        await expect(await wrapper.start()).toBeUndefined();
     });
 
     test('editorConfig semanticHighlighting.enabled workaround', async () => {
@@ -160,7 +160,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         wrapperConfig.editorAppConfig!.editorOptions = {
             'semanticHighlighting.enabled': true,
         };
-        expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
         expect(wrapper.getWrapperConfig()?.vscodeApiConfig?.workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
 
         const semHigh = await new Promise<unknown>(resolve => {
@@ -177,7 +177,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'console.log("test")',
             uri: '/workspace/testModel.js'
         });
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
         const currentModel = wrapper.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
@@ -191,7 +191,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             text: 'console.log("test")',
             uri: '/workspace/testModel.js'
         });
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
         const currentModel = wrapper.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();

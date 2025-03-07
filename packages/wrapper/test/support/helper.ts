@@ -64,7 +64,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
     };
 };
 
-export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
+export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
     return {
         name: 'test-ws-unreachable',
         clientOptions: {
@@ -73,7 +73,7 @@ export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
         connection: {
             options: {
                 $type: 'WebSocketUrl',
-                url: 'ws://localhost:12345/Tester'
+                url: `ws://localhost:${port}/rester`
             },
         }
     };
