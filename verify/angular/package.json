@@ -17,8 +17,8 @@
     "@angular/platform-browser": "~18.2.8",
     "@angular/platform-browser-dynamic": "~18.2.8",
     "@codingame/monaco-vscode-editor-api": "~14.0.6",
-    "monaco-editor-wrapper": "~6.5.0",
-    "monaco-languageclient-examples": "~2025.3.3",
+    "monaco-editor-wrapper": "~6.6.0-next.0",
+    "monaco-languageclient-examples": "~2025.3.4",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
   },

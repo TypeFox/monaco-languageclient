@@ -2,6 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.3.4] - 2025-03-07
+
+- Model handling improvements [#891](https://github.com/TypeFox/monaco-languageclient/pull/891)
+  - Updated to `monaco-editor-wrapper@6.6.0-next.0` and `@typefox/monaco-editor-react@6.6.0-next.0`.
+  - Aligned examples to api changes
+  - Langium examples log messsage exchange between client and language server
+
 ## [2025.3.3] - 2025-03-06
 
 - Updated to `monaco-languageclient@9.4.1`, `monaco-editor-wrapper@6.5.0` and `@typefox/monaco-editor-react@6.5.0`.

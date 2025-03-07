@@ -2,6 +2,10 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [6.6.0-next.0] - 2025-03-07
+
+- Model handling improvements [#891](https://github.com/TypeFox/monaco-languageclient/pull/891)
+
 ## [6.5.0] - 2025-03-06
 
 - Update dependencies, fix tests, language clients config changes [#889](https://github.com/TypeFox/monaco-languageclient/pull/889)
