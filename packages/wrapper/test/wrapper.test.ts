@@ -230,7 +230,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
         // delay execution to prevent error being thrown from monaco api (internal clean-up)
         setTimeout(async () => {
-            expect(await wrapper.start(htmlContainer)).toBeUndefined();
+            await expect(await wrapper.start(htmlContainer)).toBeUndefined();
         }, 100);
     });
 });

@@ -66,8 +66,10 @@
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test:run",
     "reset:chrome": "vite-node ./scripts/clean.ts --relativePath . --recursive --paths .chrome",
     "reset:repo": "git clean -f -d -x --exclude=.chrome",
-    "test": "npm run test:install && vitest --config vitest.config.ts",
-    "test:run": "npm run test:install && vitest --config vitest.config.ts --run",
+    "test": "npm run test:install && npm run test:direct",
+    "test:direct": "vitest --config vitest.config.ts",
+    "test:run": "npm run test:install && npm run test:direct:run",
+    "test:direct:run": "vitest --config vitest.config.ts --run",
     "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
     "test:install": "playwright install --with-deps chromium"
   },

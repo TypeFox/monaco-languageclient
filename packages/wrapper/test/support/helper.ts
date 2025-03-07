@@ -32,7 +32,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     };
 };
 
-export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (worker: Worker): LanguageClientConfig => {
     return {
         name: 'test-worker-direct',
         clientOptions: {
@@ -42,10 +42,23 @@ export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
             options: {
                 $type: 'WorkerDirect',
                 // create a web worker to pass to the wrapper
-                worker: new Worker('./worker/langium-server.ts', {
-                    type: 'module',
-                    name: 'Langium LS'
-                })
+                worker
+            }
+        }
+    };
+};
+
+export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
+    return {
+        name: 'test-worker-unreachable',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerConfig',
+                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
+                type: 'module'
             }
         }
     };
@@ -61,7 +74,7 @@ export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
             options: {
                 $type: 'WebSocketUrl',
                 url: 'ws://localhost:12345/Tester'
-            }
+            },
         }
     };
 };

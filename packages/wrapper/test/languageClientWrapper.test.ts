@@ -4,31 +4,38 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { beforeAll, describe, expect, test } from 'vitest';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
+import { LanguageClientWrapper } from 'monaco-editor-wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
-import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig } from './support/helper.js';
+import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createUnreachableWorkerConfig } from './support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
+
+    const worker = new Worker('../workers/langium-server.ts', {
+        type: 'module',
+        name: 'Langium LS'
+    });
 
     beforeAll(async () => {
         await initServices({});
     });
 
-    test('Constructor: no config', async () => {
-        const languageClientConfig = createDefaultLcWorkerConfig();
+    test('Constructor: no config', () => {
+        const languageClientConfig = createDefaultLcWorkerConfig(worker);
         const languageClientWrapper = new LanguageClientWrapper({
             languageClientConfig
         });
-        expect(languageClientWrapper.haveLanguageClient).toBeTruthy();
+        expect(languageClientWrapper.haveLanguageClient()).toBeFalsy();
     });
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {
-        const languageClientConfig = createDefaultLcWorkerConfig();
+        const languageClientConfig = createDefaultLcWorkerConfig(worker);
         const languageClientWrapper = new LanguageClientWrapper({
             languageClientConfig
         });
 
-        expect(languageClientWrapper.getWorker()).toBeFalsy();
+        // setTimeout(async () => {
+        expect(worker).toBeDefined();
+        expect(languageClientWrapper.getWorker()).toBeUndefined();
 
         // WA: language client in fails due to vitest (reason not clear, yet)
         await expect(async () => {
@@ -40,15 +47,16 @@ describe('Test LanguageClientWrapper', () => {
         // dispose & verify
         await languageClientWrapper.disposeLanguageClient(true);
         expect(languageClientWrapper.getWorker()).toBeUndefined();
+        // }, 1000);
     });
 
     test('Start: unreachable url', async () => {
-        const languageClientConfig: LanguageClientConfig = createDefaultLcUnreachableUrlConfig();
+        const languageClientConfig = createDefaultLcUnreachableUrlConfig();
         const languageClientWrapper = new LanguageClientWrapper({
             languageClientConfig
         });
 
-        await expect(languageClientWrapper.start()).rejects.toEqual({
+        await expect(await languageClientWrapper.start()).rejects.toEqual({
             message: 'languageClientWrapper (test-ws-unreachable): Websocket connection failed.',
             error: 'No error was provided.'
         });
@@ -66,20 +74,7 @@ describe('Test LanguageClientWrapper', () => {
     });
 
     test('Start: unreachable worker url', async () => {
-        const languageClientConfig: LanguageClientConfig = {
-            name: 'test-worker-unreachable',
-            clientOptions: {
-                documentSelector: ['javascript']
-            },
-            connection: {
-                options: {
-                    $type: 'WorkerConfig',
-                    url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
-                    type: 'module'
-                }
-            }
-        };
-
+        const languageClientConfig = createUnreachableWorkerConfig();
         const languageClientWrapper = new LanguageClientWrapper({
             languageClientConfig
         });
