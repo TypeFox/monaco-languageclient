@@ -37,7 +37,7 @@ const wrapperConfig: WrapperConfig = {
         codeResources: {
             modified: {
                 text: code,
-                fileExt: 'groovy'
+                uri: '/workspace/test.groovy'
             }
         },
         monacoWorkerFactory: configureDefaultWorkerFactory

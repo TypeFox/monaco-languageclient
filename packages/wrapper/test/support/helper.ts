@@ -3,15 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-
-export const createMewModelReference = async () => {
-    const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
-    return await createModelReference(uri, 'text');
-};
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -31,7 +24,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
             codeResources: {
                 modified: {
                     text: '',
-                    fileExt: 'js'
+                    uri: '/workspace/test.js'
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
@@ -71,8 +64,4 @@ export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
             }
         }
     };
-};
-
-export const delayExecution = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 };

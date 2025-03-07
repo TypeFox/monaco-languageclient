@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { type CodePlusFileExt, MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
@@ -52,7 +52,7 @@ print("Hello Moon!")
             codeResources: {
                 modified: {
                     text: currentText,
-                    fileExt: currenFileExt
+                    uri: `/workspace/example.${currenFileExt}`
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
@@ -80,8 +80,8 @@ print("Hello Moon!")
 
             await wrapper.initAndStart(wrapperConfig);
             if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
-                (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).text = currentText;
-                (wrapperConfig.editorAppConfig.codeResources.modified as CodePlusFileExt).fileExt = currenFileExt;
+                wrapperConfig.editorAppConfig.codeResources.modified.text = currentText;
+                wrapperConfig.editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
             }
 
             // init language clients after start
@@ -112,7 +112,7 @@ print("Hello Moon!")
         wrapper.updateCodeResources({
             modified: {
                 text: currentText,
-                fileExt: currenFileExt
+                uri: `/workspace/example.${currenFileExt}`
             }
         });
     });

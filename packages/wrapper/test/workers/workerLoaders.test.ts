@@ -33,8 +33,8 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'ts',
-                enforceLanguageId: 'ts'
+                uri: '/workspace/test.ts',
+                enforceLanguageId: 'typescript'
             }
         });
         expect(await awaitWorkerPromises()).toStrictEqual([]);
@@ -44,7 +44,7 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'css',
+                uri: '/workspace/test.css',
                 enforceLanguageId: 'css'
             }
         });
@@ -57,7 +57,7 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'json',
+                uri: '/workspace/test.json',
                 enforceLanguageId: 'json'
             }
         });
@@ -68,7 +68,7 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'html',
+                uri: '/workspace/test.html',
                 enforceLanguageId: 'html'
             }
         });

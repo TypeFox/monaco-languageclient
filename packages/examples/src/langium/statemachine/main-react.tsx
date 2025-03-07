@@ -23,7 +23,10 @@ export const runStatemachineReact = async () => {
     const wrapperConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
         useLanguageClient: true,
-        text,
+        codeContent: {
+            text,
+            uri: '/workspace/example.statemachine'
+        },
         worker,
         messageTransports: { reader, writer },
         htmlContainer: document.getElementById('monaco-editor-root')!

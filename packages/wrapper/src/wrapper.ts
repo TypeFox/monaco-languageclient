@@ -119,7 +119,7 @@ export class MonacoEditorLanguageClientWrapper {
                 this.initLanguageClients();
             }
             await this.initExtensions();
-            this.editorApp = new EditorApp(this.id, this.wrapperConfig.$type, this.wrapperConfig.editorAppConfig, this.logger);
+            this.editorApp = new EditorApp(this.wrapperConfig.$type, this.wrapperConfig.editorAppConfig, this.logger);
             // eslint-disable-next-line no-useless-catch
         } catch (e) {
             throw e;

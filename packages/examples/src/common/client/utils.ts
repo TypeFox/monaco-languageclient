@@ -30,3 +30,7 @@ export const createDefaultWorkspaceFile = (workspaceFile: Uri, workspacePath: st
         )
     );
 };
+
+export const delayExecution = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};

@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test, vi } from 'vitest';
-
-import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
-import { createDefaultLcUnreachableUrlConfig, createMewModelReference, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
+import { buildModelReference, MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
+import { createDefaultLcUnreachableUrlConfig, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 
@@ -64,14 +63,14 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
     });
 
-    test('Update code resources after start (fileExt)', async () => {
+    test('Update code resources after start (same file)', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigExtendedApp();
         wrapperConfig.editorAppConfig!.codeResources = {
             modified: {
                 text: 'console.log("Hello World");',
-                fileExt: 'js',
+                uri: '/workspace/test.js',
                 enforceLanguageId: 'javascript'
             }
         };
@@ -82,7 +81,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(await wrapper.updateCodeResources({
             modified: {
                 text: 'console.log("Goodbye World");',
-                fileExt: 'js',
+                uri: '/workspace/test.js',
                 enforceLanguageId: 'javascript'
             }
         })).toBeUndefined();
@@ -93,7 +92,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
     });
 
-    test('Update code resources after start (uri)', async () => {
+    test('Update code resources after start (different file)', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigExtendedApp();
@@ -110,7 +109,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(await wrapper.updateCodeResources({
             modified: {
                 text: 'console.log("Goodbye World");',
-                uri: '/workspace/main.js'
+                uri: '/workspace/main2.js'
             }
         })).toBeUndefined();
 
@@ -146,8 +145,13 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(spyModelUpdateCallback).toHaveBeenCalledTimes(1);
         expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(1);
 
+        const codeContent = {
+            text: 'text',
+            uri: '/workspace/statemachineUri.statemachine'
+        };
+        const modelRefModified = await buildModelReference(codeContent);
         wrapper.updateEditorModels({
-            modelRefModified: await createMewModelReference()
+            modelRefModified
         });
 
         expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);

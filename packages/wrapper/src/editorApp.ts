@@ -28,20 +28,13 @@ export interface TextContents {
 
 export interface CodeContent {
     text: string;
+    uri: string;
     enforceLanguageId?: string;
 }
 
-export interface CodePlusUri extends CodeContent {
-    uri: string;
-}
-
-export interface CodePlusFileExt extends CodeContent {
-    fileExt: string;
-}
-
 export interface CodeResources {
-    modified?: CodePlusUri | CodePlusFileExt;
-    original?: CodePlusUri | CodePlusFileExt;
+    modified?: CodeContent;
+    original?: CodeContent;
 }
 
 export interface EditorAppConfig {
@@ -72,7 +65,6 @@ export interface EditorAppConfig {
  */
 export class EditorApp {
 
-    private id: string;
     protected logger: Logger | undefined;
 
     private editor: monaco.editor.IStandaloneCodeEditor | undefined;
@@ -84,8 +76,7 @@ export class EditorApp {
     private modelUpdateCallback?: (textModels: TextModels) => void;
     private config: EditorAppConfig;
 
-    constructor(id: string, $type: OverallConfigType, userAppConfig?: EditorAppConfig, logger?: Logger) {
-        this.id = id;
+    constructor($type: OverallConfigType, userAppConfig?: EditorAppConfig, logger?: Logger) {
         this.logger = logger;
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
@@ -156,13 +147,14 @@ export class EditorApp {
     }
 
     async createEditors(htmlContainer: HTMLElement): Promise<void> {
+        const modelRefs = await this.buildModelRefs(this.config.codeResources);
+
         if (this.config.useDiffEditor ?? false) {
             this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
         } else {
             this.editor = monaco.editor.create(htmlContainer, this.config.editorOptions);
         }
 
-        const modelRefs = await this.buildModelRefs(this.config.codeResources);
         this.updateEditorModels(modelRefs);
     }
 
@@ -213,8 +205,8 @@ export class EditorApp {
     }
 
     async buildModelRefs(codeResources?: CodeResources): Promise<ModelRefs> {
-        const modelRefModified = await this.buildModelRef(codeResources?.modified, false);
-        const modelRefOriginal = await this.buildModelRef(codeResources?.original, true);
+        const modelRefModified = await buildModelReference(codeResources?.modified, this.logger);
+        const modelRefOriginal = await buildModelReference(codeResources?.original, this.logger);
 
         return {
             modelRefModified,
@@ -222,61 +214,52 @@ export class EditorApp {
         };
     }
 
-    private async buildModelRef(code?: CodePlusUri | CodePlusFileExt, original?: boolean): Promise<IReference<ITextFileEditorModel> | undefined> {
-        if (code) {
-            const uri = getEditorUri(this.id, original ?? false, code);
-            const modelRef = await createModelReference(uri, code.text);
-            modelRef.object.textEditorModel?.setValue(code.text);
-            this.checkEnforceLanguageId(modelRef, code.enforceLanguageId);
-            return modelRef;
-        }
-        return undefined;
-    }
-
     updateEditorModels(modelRefs: ModelRefs) {
-        let updateMain = false;
+        let updateModified = false;
         let updateOriginal = false;
 
-        if (modelRefs.modelRefModified) {
+        if (modelRefs.modelRefModified !== this.modelRefModified) {
             this.modelRefModified?.dispose();
             this.modelRefModified = modelRefs.modelRefModified;
-            updateMain = true;
+            updateModified = true;
         }
-        if (modelRefs.modelRefOriginal) {
+        if (modelRefs.modelRefOriginal !== this.modelRefOriginal) {
             this.modelRefOriginal?.dispose();
             this.modelRefOriginal = modelRefs.modelRefOriginal;
             updateOriginal = true;
         }
 
         if (this.editor) {
-            const textModel = this.modelRefModified?.object.textEditorModel;
-            if (updateMain && textModel !== undefined && textModel !== null) {
-                this.editor.setModel(textModel);
+            const textModelModified = this.modelRefModified?.object.textEditorModel;
+            if (updateModified && textModelModified !== undefined && textModelModified !== null) {
+                if (this.editor.getModel() !== textModelModified) {
+                    this.editor.getModel()?.dispose();
+                }
+                this.editor.setModel(textModelModified);
                 this.modelUpdateCallback?.({
-                    modified: textModel
+                    modified: textModelModified
                 });
             }
         } else if (this.diffEditor) {
-            const textModel = this.modelRefModified?.object.textEditorModel;
+            const textModelModified = this.modelRefModified?.object.textEditorModel;
             const textModelOriginal = this.modelRefOriginal?.object.textEditorModel;
-            if ((updateMain || updateOriginal) &&
-                textModel !== undefined && textModel !== null && textModelOriginal !== undefined && textModelOriginal !== null) {
+            if ((updateModified || updateOriginal) &&
+                textModelModified !== undefined && textModelModified !== null && textModelOriginal !== undefined && textModelOriginal !== null) {
                 const textModels = {
                     original: textModelOriginal,
-                    modified: textModel
+                    modified: textModelModified
                 };
+                if (this.diffEditor.getModel()?.modified !== textModelModified) {
+                    this.diffEditor.getModel()?.modified.dispose();
+                }
+                if (this.diffEditor.getModel()?.original !== textModelOriginal) {
+                    this.diffEditor.getModel()?.original.dispose();
+                }
                 this.diffEditor.setModel(textModels);
                 this.modelUpdateCallback?.(textModels);
             } else {
                 throw new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.');
             }
-        }
-    }
-
-    private checkEnforceLanguageId(modelRef: IReference<ITextFileEditorModel>, enforceLanguageId?: string) {
-        if (enforceLanguageId !== undefined) {
-            modelRef.object.setLanguageId(enforceLanguageId);
-            this.logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
         }
     }
 
@@ -302,14 +285,6 @@ export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
     return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
 };
 
-export const getEditorUri = (id: string, original: boolean, code: CodePlusUri | CodePlusFileExt, basePath?: string) => {
-    if (Object.hasOwn(code, 'uri')) {
-        return vscode.Uri.parse((code as CodePlusUri).uri);
-    } else {
-        return vscode.Uri.parse(`${basePath ?? '/workspace'}/model${original ? 'Original' : ''}${id}.${(code as CodePlusFileExt).fileExt}`);
-    }
-};
-
 export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {
     const modified = textModels.modified?.getValue() ?? '';
     const original = textModels.original?.getValue() ?? '';
@@ -317,4 +292,21 @@ export const didModelContentChange = (textModels: TextModels, onTextChanged?: (t
         modified,
         original
     });
+};
+
+export const buildModelReference = async (code?: CodeContent, logger?: Logger): Promise<IReference<ITextFileEditorModel> | undefined> => {
+    if (code) {
+        const modelRef = await createModelReference(vscode.Uri.parse(code.uri), code.text);
+        modelRef.object.textEditorModel?.setValue(code.text);
+        checkEnforceLanguageId(modelRef, code.enforceLanguageId, logger);
+        return modelRef;
+    }
+    return undefined;
+};
+
+export const checkEnforceLanguageId = (modelRef: IReference<ITextFileEditorModel>, enforceLanguageId?: string, logger?: Logger) => {
+    if (enforceLanguageId !== undefined) {
+        modelRef.object.setLanguageId(enforceLanguageId);
+        logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
+    }
 };

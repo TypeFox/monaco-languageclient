@@ -6,23 +6,22 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import '../../../../resources/vsix/github-vscode-theme.vsix';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { MessageTransports } from 'vscode-languageclient';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../../../../resources/langium/langium-dsl//example.langium?raw';
 
-export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise<WrapperConfig> => {
+export const setupLangiumClientExtended = async (params: {
+    worker: Worker
+    messageTransports?: MessageTransports,
+}): Promise<WrapperConfig> => {
 
     const extensionFilesOrContents = new Map<string, string | URL>();
     // vite build is easier with string content
     extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
     extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
-
-    const reader = new BrowserMessageReader(langiumWorker);
-    const writer = new BrowserMessageWriter(langiumWorker);
-
     return {
         $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -68,7 +67,7 @@ export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise
             codeResources: {
                 modified: {
                     text,
-                    fileExt: 'langium'
+                    uri: '/workspace/grammar.langium'
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
@@ -82,9 +81,9 @@ export const setupLangiumClientExtended = async (langiumWorker: Worker): Promise
                     connection: {
                         options: {
                             $type: 'WorkerDirect',
-                            worker: langiumWorker
+                            worker: params.worker
                         },
-                        messageTransports: { reader, writer }
+                        messageTransports: params.messageTransports
                     }
                 }
             }

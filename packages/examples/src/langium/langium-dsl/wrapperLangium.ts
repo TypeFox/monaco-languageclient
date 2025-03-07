@@ -3,11 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
-import { disableElement } from '../../common/client/utils.js';
-
+import { delayExecution, disableElement } from '../../common/client/utils.js';
+import text from '../../../resources/langium/langium-dsl/example.langium?raw';
 import workerUrl from './worker/langium-server?worker&url';
 
 export const runLangiumDslWrapper = async (extendedMode: boolean) => {
@@ -34,17 +35,37 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
             if (checkStarted()) return;
             disableElement('button-start', true);
 
-            const langiumWorker = loadLangiumWorker();
+            const worker = loadLangiumWorker();
+            const reader = new BrowserMessageReader(worker);
+            const writer = new BrowserMessageWriter(worker);
+            reader.listen((message) => {
+                console.log('Received message from worker:', message);
+            });
 
             if (extendedMode) {
-                const config = await setupLangiumClientExtended(langiumWorker);
+                const config = await setupLangiumClientExtended({
+                    worker,
+                    messageTransports: { reader, writer }
+                });
                 wrapper = new MonacoEditorLanguageClientWrapper();
-                wrapper.initAndStart(config);
+                await wrapper.initAndStart(config);
             } else {
-                const config = await setupLangiumClientClassic(langiumWorker);
+                const config = await setupLangiumClientClassic({
+                    worker,
+                    messageTransports: { reader, writer }
+                });
                 wrapper = new MonacoEditorLanguageClientWrapper();
                 await wrapper.initAndStart(config);
             }
+
+            await delayExecution(1000);
+            await wrapper.updateCodeResources({
+                modified: {
+                    text: `// modified file\n\n${text}`,
+                    uri: '/workspace/mod.langium',
+                    enforceLanguageId: 'langium'
+                }
+            });
         };
 
         const disposeEditor = async () => {

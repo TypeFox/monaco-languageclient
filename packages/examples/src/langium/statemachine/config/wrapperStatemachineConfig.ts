@@ -9,7 +9,7 @@ import getLocalizationServiceOverride from '@codingame/monaco-vscode-localizatio
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MessageTransports } from 'vscode-languageclient';
-import type { LanguageClientConfigs, WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeContent, LanguageClientConfigs, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 // cannot be imported with assert as json contains comments
@@ -19,7 +19,7 @@ import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw
 export const createLangiumGlobalConfig = (params: {
     languageServerId: string,
     useLanguageClient: boolean,
-    text?: string,
+    codeContent: CodeContent,
     worker?: Worker,
     messagePort?: MessagePort,
     messageTransports?: MessageTransports,
@@ -28,14 +28,6 @@ export const createLangiumGlobalConfig = (params: {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
-
-    let modified;
-    if (params.text !== undefined) {
-        modified = {
-            text: params.text,
-            fileExt: 'statemachine'
-        };
-    }
 
     const languageClientConfigs: LanguageClientConfigs | undefined = params.useLanguageClient && params.worker ? {
         configs: {
@@ -100,7 +92,7 @@ export const createLangiumGlobalConfig = (params: {
         }],
         editorAppConfig: {
             codeResources: {
-                modified
+                modified: params.codeContent
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
         },
