@@ -217,7 +217,7 @@ export class EditorApp {
     updateEditorModels(modelRefs: ModelRefs) {
         let updateModified = false;
         let updateOriginal = false;
-        const diposeOldModels: string[] = [];
+        const diposeOldModels: vscode.Uri[] = [];
 
         if (modelRefs.modelRefModified !== this.modelRefModified) {
             this.modelRefModified?.dispose();
@@ -233,8 +233,8 @@ export class EditorApp {
         if (this.editor) {
             const textModelModified = this.modelRefModified?.object.textEditorModel;
             if (updateModified && textModelModified !== undefined && textModelModified !== null) {
-                const modifiedUri = this.editor.getModel()?.uri.toString();
-                if (modifiedUri !== textModelModified.uri.toString()) {
+                const modifiedUri = this.editor.getModel()?.uri;
+                if (modifiedUri !== textModelModified.uri) {
                     if (modifiedUri !== undefined) {
                         diposeOldModels.push(modifiedUri);
                     }
@@ -253,14 +253,14 @@ export class EditorApp {
                     original: textModelOriginal,
                     modified: textModelModified
                 };
-                const modifiedUri = this.diffEditor.getModel()?.modified.uri.toString();
-                const originalUri = this.diffEditor.getModel()?.original.uri.toString();
-                if (modifiedUri !== textModelModified.uri.toString()) {
+                const modifiedUri = this.diffEditor.getModel()?.modified.uri;
+                const originalUri = this.diffEditor.getModel()?.original.uri;
+                if (modifiedUri !== textModelModified.uri) {
                     if (modifiedUri !== undefined) {
                         diposeOldModels.push(modifiedUri);
                     }
                 }
-                if (originalUri !== textModelOriginal.uri.toString()) {
+                if (originalUri !== textModelOriginal.uri) {
                     if (originalUri !== undefined) {
                         diposeOldModels.push(originalUri);
                     }
@@ -272,10 +272,8 @@ export class EditorApp {
             }
         }
 
-        monaco.editor.getModels().forEach(model => {
-            if (diposeOldModels.includes(model.uri.toString())) {
-                model.dispose();
-            }
+        diposeOldModels.forEach(modelUri => {
+            monaco.editor.getModel(modelUri)?.dispose();
         });
     }
 
