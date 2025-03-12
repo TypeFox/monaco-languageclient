@@ -37,14 +37,23 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         app?.disposeApp();
     });
 
-    test('Expected throw: Call normal start with prior init', async () => {
+    test('Expected throw: Call normal initAndstart with prior init', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const config = createWrapperConfigClassicApp();
+        await expect(await wrapper.init(config)).toBeUndefined();
+        await expect(await wrapper.initAndStart(config)).toBeUndefined();
+    });
+
+    test('Expected throw: Call normal initAndstart with prior init and automaticallyDispose=false', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await expect(async () => {
             const config = createWrapperConfigClassicApp();
+            config.automaticallyDispose = false;
             await expect(await wrapper.init(config)).toBeUndefined();
             await wrapper.initAndStart(config);
-        }).rejects.toThrowError('init was already performed. Please call dispose first if you want to re-start.');
+        }).rejects.toThrowError('You configured the wrapper to not automatically dispose on init, but did not dispose manually. Please call dispose first if you want to re-start.');
     });
 
     test('Code resources original', async () => {

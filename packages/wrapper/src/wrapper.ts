@@ -36,6 +36,7 @@ export interface WrapperConfig {
     htmlContainer?: HTMLElement;
     id?: string;
     logLevel?: LogLevel | number;
+    automaticallyDispose?: boolean;
     extensions?: ExtensionConfig[];
     vscodeApiConfig?: VscodeApiConfig;
     editorAppConfig?: EditorAppConfig;
@@ -75,10 +76,6 @@ export class MonacoEditorLanguageClientWrapper {
             await this.getInitializingAwait();
         }
 
-        // This will throw an error if not disposed before
-        if (this.wrapperConfig !== undefined) {
-            throw new Error('init was already performed. Please call dispose first if you want to re-start.');
-        }
         const editorAppConfig = wrapperConfig.editorAppConfig;
         if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
             throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.modified} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
@@ -89,9 +86,19 @@ export class MonacoEditorLanguageClientWrapper {
             throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
         }
 
-        this.markInitializing();
+        // automatically dispose before re-init, allow to disable this behavior
+        if (wrapperConfig.automaticallyDispose ?? true) {
+            await this.dispose();
+        } else {
+            // This will throw an error if not disposed before
+            if (this.wrapperConfig !== undefined) {
+                throw new Error('You configured the wrapper to not automatically dispose on init, but did not dispose manually. Please call dispose first if you want to re-start.');
+            }
+        }
 
         try {
+            this.markInitializing();
+
             this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
 
             this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
