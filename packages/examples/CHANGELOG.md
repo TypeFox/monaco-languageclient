@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.3.5] - 2025-03-12
+
+- Updated to `monaco-languageclient@9.5.0`, `monaco-editor-wrapper@6.6.0` and `@typefox/monaco-editor-react@6.6.0`.
+- Updated all `@codingame/monaco-vscode` packages to `15.0.2`.
+
 ## [2025.3.4] - 2025-03-07
 
 - Model handling improvements [#891](https://github.com/TypeFox/monaco-languageclient/pull/891)
