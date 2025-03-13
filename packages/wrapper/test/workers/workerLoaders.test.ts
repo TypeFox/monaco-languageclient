@@ -25,30 +25,30 @@ describe('Test WorkerLoaders', () => {
 
         // default, expect editor and ts worker to be loaded
         createWorkerPromises(['editorWorker', 'tsWorker']);
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
 
         // ts worker, expect no worker to be loaded
         createWorkerPromises([]);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'ts',
-                enforceLanguageId: 'ts'
+                uri: '/workspace/test.ts',
+                enforceLanguageId: 'typescript'
             }
         });
-        expect(await awaitWorkerPromises()).toStrictEqual([]);
+        await expect(await awaitWorkerPromises()).toStrictEqual([]);
 
         // css worker
         createWorkerPromises(['cssWorker']);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'css',
+                uri: '/workspace/test.css',
                 enforceLanguageId: 'css'
             }
         });
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
 
         console.log('done');
 
@@ -57,21 +57,21 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'json',
+                uri: '/workspace/test.json',
                 enforceLanguageId: 'json'
             }
         });
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
 
         // html worker
         createWorkerPromises(['htmlWorker']);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                fileExt: 'html',
+                uri: '/workspace/test.html',
                 enforceLanguageId: 'html'
             }
         });
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
 });

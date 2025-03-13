@@ -5,6 +5,7 @@
 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MessageTransports } from 'vscode-languageclient';
 import type { Logger } from 'monaco-languageclient/tools';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
@@ -12,7 +13,10 @@ import { defineDefaultWorkerLoaders } from 'monaco-editor-wrapper/workers/worker
 import { LangiumMonarchContent } from './langium.monarch.js';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
 
-export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<WrapperConfig> => {
+export const setupLangiumClientClassic = async (params: {
+    worker: Worker
+    messageTransports?: MessageTransports,
+}): Promise<WrapperConfig> => {
     const workerLoaders = defineDefaultWorkerLoaders();
     workerLoaders.TextMateWorker = undefined;
     return {
@@ -28,7 +32,7 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
             codeResources: {
                 modified: {
                     text: code,
-                    fileExt: 'langium',
+                    uri: '/workspace/grammar.langium',
                     enforceLanguageId: 'langium'
                 }
             },
@@ -39,7 +43,7 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
             },
             languageDef: {
                 monarchLanguage: LangiumMonarchContent,
-                languageExtensionConfig: { id: 'langium' },
+                languageExtensionConfig: { id: 'langium' }
             },
             monacoWorkerFactory: (logger?: Logger) => {
                 useWorkerFactory({
@@ -57,8 +61,9 @@ export const setupLangiumClientClassic = async (langiumWorker: Worker): Promise<
                     connection: {
                         options: {
                             $type: 'WorkerDirect',
-                            worker: langiumWorker
-                        }
+                            worker: params.worker
+                        },
+                        messageTransports: params.messageTransports
                     }
                 }
             }

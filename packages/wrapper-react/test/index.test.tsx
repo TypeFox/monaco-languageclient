@@ -58,7 +58,7 @@ describe('Test MonacoEditorReactComp', () => {
             await wrapper.updateCodeResources({
                 modified: {
                     text: 'goodbye world',
-                    fileExt: 'js'
+                    uri: '/workspace/test.js'
                 }
             });
 

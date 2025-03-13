@@ -3,15 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-
-export const createMewModelReference = async () => {
-    const uri = vscode.Uri.parse('/workspace/statemachineUri.statemachine');
-    return await createModelReference(uri, 'text');
-};
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -30,8 +23,8 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
         editorAppConfig: {
             codeResources: {
                 modified: {
-                    text: '',
-                    fileExt: 'js'
+                    text: 'console.log("Hello World!");',
+                    uri: '/workspace/test.js'
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
@@ -39,7 +32,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
     };
 };
 
-export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (worker: Worker): LanguageClientConfig => {
     return {
         name: 'test-worker-direct',
         clientOptions: {
@@ -49,16 +42,29 @@ export const createDefaultLcWorkerConfig = (): LanguageClientConfig => {
             options: {
                 $type: 'WorkerDirect',
                 // create a web worker to pass to the wrapper
-                worker: new Worker('./worker/langium-server.ts', {
-                    type: 'module',
-                    name: 'Langium LS'
-                })
+                worker
             }
         }
     };
 };
 
-export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
+export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
+    return {
+        name: 'test-worker-unreachable',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerConfig',
+                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
+                type: 'module'
+            }
+        }
+    };
+};
+
+export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
     return {
         name: 'test-ws-unreachable',
         clientOptions: {
@@ -67,12 +73,8 @@ export const createDefaultLcUnreachableUrlConfig = (): LanguageClientConfig => {
         connection: {
             options: {
                 $type: 'WebSocketUrl',
-                url: 'ws://localhost:12345/Tester'
-            }
+                url: `ws://localhost:${port}/rester`
+            },
         }
     };
-};
-
-export const delayExecution = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 };

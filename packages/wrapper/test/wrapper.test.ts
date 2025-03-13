@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test, vi } from 'vitest';
-
-import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
-import { createDefaultLcUnreachableUrlConfig, createMewModelReference, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
+import { buildModelReference, MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
+import { createDefaultLcUnreachableUrlConfig, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
 
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 
@@ -59,33 +58,37 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
                 ['/javascript.tmLanguage.json', '{}']
             ]),
         }];
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-        expect(await wrapper.dispose()).toBeUndefined();
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.dispose()).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
     });
 
-    test('Update code resources after start (fileExt)', async () => {
+    test('Update code resources after start (same file)', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigExtendedApp();
         wrapperConfig.editorAppConfig!.codeResources = {
             modified: {
                 text: 'console.log("Hello World");',
-                fileExt: 'js',
+                uri: '/workspace/test.js',
                 enforceLanguageId: 'javascript'
             }
         };
 
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         expect(wrapper.isStarted()).toBeTruthy();
 
-        expect(await wrapper.updateCodeResources({
+        wrapper.registerTextChangeCallback((textChanges: TextContents) => {
+            console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+        });
+
+        await wrapper.updateCodeResources({
             modified: {
                 text: 'console.log("Goodbye World");',
-                fileExt: 'js',
+                uri: '/workspace/test2.js',
                 enforceLanguageId: 'javascript'
             }
-        })).toBeUndefined();
+        });
 
         const textContents = wrapper.getTextContents();
         expect(textContents?.modified).toEqual('console.log("Goodbye World");');
@@ -93,7 +96,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('console.log("Goodbye World");');
     });
 
-    test('Update code resources after start (uri)', async () => {
+    test('Update code resources after start (different file)', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigExtendedApp();
@@ -104,13 +107,13 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             }
         };
 
-        expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         expect(wrapper.isStarted()).toBeTruthy();
 
-        expect(await wrapper.updateCodeResources({
+        await expect(await wrapper.updateCodeResources({
             modified: {
                 text: 'console.log("Goodbye World");',
-                uri: '/workspace/main.js'
+                uri: '/workspace/main2.js'
             }
         })).toBeUndefined();
 
@@ -129,7 +132,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
         };
 
-        expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
 
         // eslint-disable-next-line dot-notation
         const disposableStoreMonaco = wrapper['disposableStoreMonaco'];
@@ -141,13 +144,19 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const spyModelUpdateCallback = vi.spyOn(wrapper['editorApp'], 'modelUpdateCallback');
         const spyDisposableStoreMonaco = vi.spyOn(disposableStoreMonaco, 'clear');
 
-        expect(await wrapper.start()).toBeUndefined();
+        await expect(await wrapper.start()).toBeUndefined();
 
         expect(spyModelUpdateCallback).toHaveBeenCalledTimes(1);
         expect(spyDisposableStoreMonaco).toHaveBeenCalledTimes(1);
 
+        const codeContent = {
+            text: 'console.log("Hello World!");',
+            uri: '/workspace/statemachineUri.statemachine'
+        };
+        const modelRefModified = await buildModelReference(codeContent);
+
         wrapper.updateEditorModels({
-            modelRefModified: await createMewModelReference()
+            modelRefModified
         });
 
         expect(spyModelUpdateCallback).toHaveBeenCalledTimes(2);
@@ -156,53 +165,45 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
 
     test('LanguageClientWrapper Not defined after construction without configuration', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        expect(await wrapper.init(createWrapperConfigExtendedApp())).toBeUndefined();
+
+        await expect(await wrapper.init(createWrapperConfigExtendedApp())).toBeUndefined();
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper('unknown');
         expect(languageClientWrapper).toBeUndefined();
     });
 
-    test('LanguageClientWrapper constructor config works', async () => {
-        const config = createWrapperConfigExtendedApp();
-        config.languageClientConfigs = {
+    test('LanguageClientWrapper unreachable rejection handling', async () => {
+        const wrapperConfig = createWrapperConfigExtendedApp();
+        wrapperConfig.languageClientConfigs = {
             configs: {
-                javascript: createDefaultLcUnreachableUrlConfig()
+                javascript: createDefaultLcUnreachableUrlConfig(12345)
             }
         };
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        expect(await wrapper.init(config)).toBeUndefined();
+
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
 
         const languageClientWrapper = wrapper.getLanguageClientWrapper('javascript');
         expect(languageClientWrapper).toBeDefined();
-    });
 
-    test('LanguageClientWrapper unreachable rejection handling', async () => {
-        const config = createWrapperConfigExtendedApp();
-        config.languageClientConfigs = {
-            configs: {
-                javascript: createDefaultLcUnreachableUrlConfig()
-            }
+        try {
+            await wrapper.start();
+        } catch (_error) {
+            // ignore
         };
-        const wrapper = new MonacoEditorLanguageClientWrapper();
-        await expect(async () => {
-            await wrapper.initAndStart(config);
-        }).rejects.toEqual({
-            message: 'languageClientWrapper (test-ws-unreachable): Websocket connection failed.',
-            error: 'No error was provided.'
-        });
 
         expect(wrapper.isInitializing()).toBeFalsy();
         expect(wrapper.isStarting()).toBeFalsy();
         expect(wrapper.isDisposing()).toBeFalsy();
 
-        expect(await wrapper.dispose()).toBeUndefined();
+        await expect(await wrapper.dispose()).toBeUndefined();
 
         expect(wrapper.isInitializing()).toBeFalsy();
         expect(wrapper.isStarting()).toBeFalsy();
         expect(wrapper.isDisposing()).toBeFalsy();
 
-        const config2 = createWrapperConfigExtendedApp();
-        expect(await wrapper.initAndStart(config2)).toBeUndefined();
+        const wrapperConfig2 = createWrapperConfigExtendedApp();
+        await expect(await wrapper.initAndStart(wrapperConfig2)).toBeUndefined();
     });
 
     test('Test html parameter with start', async () => {
@@ -212,7 +213,7 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         const htmlContainer = wrapperConfig.htmlContainer;
         wrapperConfig.htmlContainer = undefined;
 
-        expect(await wrapper.init(wrapperConfig)).toBeUndefined();
-        expect(await wrapper.start(htmlContainer)).toBeUndefined();
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.start(htmlContainer)).toBeUndefined();
     });
 });

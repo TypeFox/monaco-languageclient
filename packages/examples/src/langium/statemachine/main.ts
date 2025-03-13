@@ -4,15 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { buildModelReference, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
-import { disableElement } from '../../common/client/utils.js';
+import { delayExecution, disableElement } from '../../common/client/utils.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
@@ -46,6 +45,10 @@ const startEditor = async () => {
     // the configuration does not contain any text content
     const langiumGlobalConfig = createLangiumGlobalConfig({
         languageServerId: 'first',
+        codeContent: {
+            text,
+            uri: '/workspace/example.statemachine'
+        },
         useLanguageClient: true,
         worker: stateMachineWorkerPort,
         messagePort: channel.port1,
@@ -55,10 +58,11 @@ const startEditor = async () => {
     await wrapper.initAndStart(langiumGlobalConfig);
 
     // here the modelReference is created manually and given to the updateEditorModels of the wrapper
-    const uri = vscode.Uri.parse('/workspace/statemachine-mod.statemachine');
-    const modelRefModified = await createModelReference(uri, text);
     wrapper.updateEditorModels({
-        modelRefModified
+        modelRefModified: await buildModelReference({
+            text,
+            uri: '/workspace/statemachine-mod.statemachine'
+        })
     });
 
     // start the second wrapper without any languageclient config
@@ -66,13 +70,25 @@ const startEditor = async () => {
     const langiumGlobalConfig2 = createLangiumGlobalConfig({
         languageServerId: 'second',
         useLanguageClient: false,
-        text: textMod,
+        codeContent: {
+            text: textMod,
+            uri: '/workspace/example-mod.statemachine'
+        },
         htmlContainer: document.getElementById('monaco-editor-root2')!
     });
     await wrapper2.initAndStart(langiumGlobalConfig2);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);
+    });
+
+    await delayExecution(1000);
+
+    wrapper.updateEditorModels({
+        modelRefModified: await buildModelReference({
+            text: `// modified file\n\n${text}`,
+            uri: '/workspace/statemachine-mod2.statemachine'
+        })
     });
 };
 

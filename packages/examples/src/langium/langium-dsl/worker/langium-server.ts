@@ -13,6 +13,10 @@ import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vs
 const messageReader = new BrowserMessageReader(self as DedicatedWorkerGlobalScope);
 const messageWriter = new BrowserMessageWriter(self as DedicatedWorkerGlobalScope);
 
+messageReader.listen((message) => {
+    console.log('Received message from main thread:', message);
+});
+
 // Inject the shared services and language-specific services
 const context = {
     connection: createConnection(messageReader, messageWriter),

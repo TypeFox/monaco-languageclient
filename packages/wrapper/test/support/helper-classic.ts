@@ -5,7 +5,7 @@
 
 import { useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import type { Logger } from 'monaco-languageclient/tools';
-import type { CodePlusFileExt, CodePlusUri, WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeContent, WrapperConfig } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv } from './helper.js';
 
 const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
@@ -95,7 +95,7 @@ export const configureClassicWorkerFactory = (logger?: Logger) => {
     });
 };
 
-export const createWrapperConfigClassicApp = (modifiedCode?: CodePlusFileExt | CodePlusUri): WrapperConfig => {
+export const createWrapperConfigClassicApp = (modifiedCode?: CodeContent): WrapperConfig => {
     return {
         $type: 'classic',
         htmlContainer: createMonacoEditorDiv(),
@@ -106,7 +106,8 @@ export const createWrapperConfigClassicApp = (modifiedCode?: CodePlusFileExt | C
             codeResources: {
                 modified: modifiedCode ?? {
                     text: '',
-                    fileExt: 'js'
+                    uri: '/workspace/test.js',
+                    enforceLanguageId: 'javascript'
                 }
             },
             editorOptions: {},

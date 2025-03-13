@@ -38,7 +38,7 @@ export const buildJsonClientUserConfig = (htmlContainer?: HTMLElement): WrapperC
             codeResources: {
                 modified: {
                     text,
-                    fileExt: 'json'
+                    uri: '/workspace/test.json',
                 }
             },
             monacoWorkerFactory: configureDefaultWorkerFactory
