@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "shx": "~0.3.4",
-    "vite": "~6.2.0"
+    "vite": "~6.2.1"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",

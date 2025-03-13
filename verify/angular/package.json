@@ -27,7 +27,7 @@
     "@angular/cli": "~18.2.8",
     "@angular/compiler-cli": "~18.2.8",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
-    "@types/node": "~22.13.1",
+    "@types/node": "~22.13.10",
     "css-loader": "~7.1.2",
     "shx": "~0.3.4",
     "style-loader": "~4.0.0",
