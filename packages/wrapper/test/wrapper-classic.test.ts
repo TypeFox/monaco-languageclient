@@ -10,7 +10,7 @@ import { buildModelReference, MonacoEditorLanguageClientWrapper } from 'monaco-e
 import { createMonacoEditorDiv } from './support/helper.js';
 import { createWrapperConfigClassicApp } from './support/helper-classic.js';
 
-describe('Test MonacoEditorLanguageClientWrapper', () => {
+describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
 
     test('Check default values', async () => {
         createMonacoEditorDiv();

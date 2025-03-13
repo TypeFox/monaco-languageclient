@@ -219,7 +219,6 @@ export class EditorApp {
         let updateOriginal = false;
         let modelRefModifiedOld;
         let modelRefOriginalOld;
-        const diposeOldModels: vscode.Uri[] = [];
 
         if (modelRefs.modelRefModified !== this.modelRefModified) {
             modelRefModifiedOld = this.modelRefModified;
@@ -235,18 +234,10 @@ export class EditorApp {
         if (this.editor) {
             const textModelModified = this.modelRefModified?.object.textEditorModel;
             if (updateModified && textModelModified !== undefined && textModelModified !== null) {
-                const modifiedUri = this.editor.getModel()?.uri;
-                if (modifiedUri !== undefined && modifiedUri.toString() !== textModelModified.uri.toString()) {
-                    diposeOldModels.push(modifiedUri);
-                }
-
-                // only update if the uri changed
-                if (diposeOldModels.length > 0) {
-                    this.editor.setModel(textModelModified);
-                    this.modelUpdateCallback?.({
-                        modified: textModelModified
-                    });
-                }
+                this.editor.setModel(textModelModified);
+                this.modelUpdateCallback?.({
+                    modified: textModelModified
+                });
             }
         } else if (this.diffEditor) {
             const textModelModified = this.modelRefModified?.object.textEditorModel;
@@ -257,20 +248,9 @@ export class EditorApp {
                     original: textModelOriginal,
                     modified: textModelModified
                 };
-                const modifiedUri = this.diffEditor.getModel()?.modified.uri;
-                const originalUri = this.diffEditor.getModel()?.original.uri;
-                if (modifiedUri !== undefined && modifiedUri.toString() !== textModelModified.uri.toString()) {
-                    diposeOldModels.push(modifiedUri);
-                }
-                if (originalUri !== undefined && originalUri.toString() !== textModelOriginal.uri.toString()) {
-                    diposeOldModels.push(originalUri);
-                }
 
-                // only update if one of the uris changed
-                if (diposeOldModels.length > 0) {
-                    this.diffEditor.setModel(textModels);
-                    this.modelUpdateCallback?.(textModels);
-                }
+                this.diffEditor.setModel(textModels);
+                this.modelUpdateCallback?.(textModels);
             } else {
                 throw new Error('You cannot update models, because original model ref is not contained, but required for DiffEditor.');
             }
@@ -278,9 +258,6 @@ export class EditorApp {
 
         modelRefModifiedOld?.dispose();
         modelRefOriginalOld?.dispose();
-        diposeOldModels.forEach(modelUri => {
-            monaco.editor.getModel(modelUri)?.dispose();
-        });
     }
 
     updateLayout() {
@@ -317,7 +294,11 @@ export const didModelContentChange = (textModels: TextModels, onTextChanged?: (t
 export const buildModelReference = async (code?: CodeContent, logger?: Logger): Promise<IReference<ITextFileEditorModel> | undefined> => {
     if (code) {
         const modelRef = await createModelReference(vscode.Uri.parse(code.uri), code.text);
-        modelRef.object.textEditorModel?.setValue(code.text);
+
+        // update the text if different
+        if (modelRef.object.textEditorModel?.getValue() !== code.text) {
+            modelRef.object.textEditorModel?.setValue(code.text);
+        }
         checkEnforceLanguageId(modelRef, code.enforceLanguageId, logger);
         return modelRef;
     }
