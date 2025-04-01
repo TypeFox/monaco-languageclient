@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.19.0",
+    "node": ">=20.10.0",
     "npm": ">=10.2.3",
     "yarn": ">=4.6.0"
   },
