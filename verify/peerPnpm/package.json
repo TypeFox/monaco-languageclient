@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "monaco-languageclient-examples": "~2025.3.6",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~15.0.2"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~15.0.3"
   },
   "devDependencies": {
     "typescript": "~5.8.2"
