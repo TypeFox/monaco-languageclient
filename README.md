@@ -344,7 +344,7 @@ loader.config({ monaco });
 
 ### webpack worker issues
 
-When webpackk is used as bundler there are issues with utilizing the undbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of issue #853 [here](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822):
+When webpack is used as bundler there are issues with utilizing the undbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of issue #853 [here](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822):
 
 1. Npm install `webpack-cli` (or webpack will do it for you when you try running this later).
 2. Create a `bundle-monaco-workers.js` file with this content:
