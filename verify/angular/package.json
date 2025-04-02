@@ -4,7 +4,7 @@
   "private": "true",
   "type": "module",
   "engines": {
-    "node": ">=18.19.0",
+    "node": ">=20.10.0",
     "npm": ">=10.2.3"
   },
   "volta": {
@@ -16,9 +16,9 @@
     "@angular/core": "~18.2.8",
     "@angular/platform-browser": "~18.2.8",
     "@angular/platform-browser-dynamic": "~18.2.8",
-    "@codingame/monaco-vscode-editor-api": "~15.0.2",
-    "monaco-editor-wrapper": "~6.6.0",
-    "monaco-languageclient-examples": "~2025.3.6",
+    "@codingame/monaco-vscode-editor-api": "~15.0.3",
+    "monaco-editor-wrapper": "~6.7.0-next.0",
+    "monaco-languageclient-examples": "~2025.4.1",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
   },

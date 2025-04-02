@@ -31,27 +31,27 @@ export const pushAndPrintLastWorker = (lastWorker: string) => {
 };
 
 const editorWorker = new Worker(
-    new URL('monaco-editor-wrapper/workers/module/editor', import.meta.url),
+    new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
     { type: 'module' }
 );
 
 const cssWorker = new Worker(
-    new URL('monaco-editor-wrapper/workers/module/css', import.meta.url),
+    new URL('@codingame/monaco-vscode-standalone-css-language-features', import.meta.url),
     { type: 'module' }
 );
 
 const htmlWorker = new Worker(
-    new URL('monaco-editor-wrapper/workers/module/html', import.meta.url),
+    new URL('@codingame/monaco-vscode-standalone-html-language-features', import.meta.url),
     { type: 'module' }
 );
 
 const jsonWorker = new Worker(
-    new URL('monaco-editor-wrapper/workers/module/json', import.meta.url),
+    new URL('@codingame/monaco-vscode-standalone-json-language-features', import.meta.url),
     { type: 'module' }
 );
 
 const tsWorker = new Worker(
-    new URL('monaco-editor-wrapper/workers/module/ts', import.meta.url),
+    new URL(' @codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url),
     { type: 'module' }
 );
 

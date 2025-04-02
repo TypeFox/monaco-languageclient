@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.19.0",
+    "node": ">=20.10.0",
     "npm": ">=10.2.3"
   },
   "volta": {
@@ -12,7 +12,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.3.6"
+    "monaco-languageclient-examples": "~2025.4.1"
   },
   "devDependencies": {
     "css-loader": "~7.1.2",

@@ -62,6 +62,7 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
     - [Bad Polyfills](#bad-polyfills)
       - [buffer](#buffer)
     - [monaco-editor and react](#monaco-editor-and-react)
+    - [webpack worker issues](#webpack-worker-issues)
   - [Licenses](#licenses)
 
 ## Changelogs, project history and compatibility
@@ -76,7 +77,18 @@ CHANGELOGs for each project are available from the linked location:
 
 Important Project changes and notes about the project's history are found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes).
 
-You find the `monaco-editor`, `vscode`, `@codingame/monaco-vscode-api` and `@codingame/monaco-vscode-editor-api` compatibility table [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
+These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
+
+- **monaco-languageclient**: `9.6.0-next.0` (release date: 2025-04-0x)
+- **monaco-editor-wrapper**: `6.7.0-next.0` (release date: 2025-04-0x)
+- **@typefox/monaco-editor-react**: `6.7.0-next.0` (release date: 2025-04-0x)
+- Aligned with:
+  - **@codingame/monaco-vscode-[editor]-api**: `15.0.3`
+  - **vscode**: `1.98.2`
+  - **monaco-editor**: `0.52.2`
+- **vscode-ws-jsonrpc**: `3.4.0` (release date: 2024-12-18)
+
+You find the full compatibility table with all previous versions [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
 
 [This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
 
@@ -244,12 +256,12 @@ Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@~15.0.2"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~15.0.3"
 ```
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~15.0.2"` in you `package.json`. You can directly use it like this:
+When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~15.0.3"` in you `package.json`. You can directly use it like this:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -259,7 +271,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~15.0.2"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~15.0.3"
 }
 ```
 
@@ -329,6 +341,50 @@ import { loader } from "@monaco-editor/react";
 
 loader.config({ monaco });
 ```
+
+### webpack worker issues
+
+When webpack is used as bundler there are issues with utilizing the undbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of issue #853 [here](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822):
+
+1. Npm install `webpack-cli` (or webpack will do it for you when you try running this later).
+2. Create a `bundle-monaco-workers.js` file with this content:
+
+    ```js
+    // solve: __dirname is not defined in ES module scope
+    import { fileURLToPath } from 'url';
+    import { dirname, resolve } from 'path';
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
+    export default {
+      entry: {
+        editor: './node_modules/@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js',
+        textmate: './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'
+      },
+      output: {
+        filename: '[name].js',
+        path: resolve(__dirname, './src/assets/monaco-workers'),
+        // if this is true (default), webpack will produce code trying to access global `document` variable for the textmate worker, which will fail at runtime due to being a worker
+        chunkLoading: false
+      },
+      mode: 'production',
+      performance: {
+        hints: false
+      }
+    };
+    ```
+
+3. Add this line to your `packages.json` scripts section: `"bundle monaco workers": "webpack --config bundle-monaco-workers.js"`
+4. Run the script `npm run 'bundle monaco workers'`
+5. Configure the `workerLoaders` parameter for `useWorkerFactory` to point to the pre-bundled workers:
+
+    ```js
+    'TextEditorWorker': () => new Worker('/assets/monaco-workers/editor.js', {type: 'module'}),
+    'TextMateWorker': () => new Worker('/assets/monaco-workers/textmate.js', {type: 'module'}),
+    ```
+
+6. Enable `editor.experimental.asyncTokenization` in the monaco-wrapper config, if you want to use the textmate worker.
 
 ## Licenses
 
