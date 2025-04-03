@@ -33,9 +33,6 @@ export const runStatemachineReact = async () => {
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
-    const onTextChanged = (textChanges: TextContents) => {
-        console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
-    };
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
             disableElement('button-start', true);
@@ -44,23 +41,33 @@ export const runStatemachineReact = async () => {
             const App = () => {
 
                 const [ height, setHeight ] = useState('80vh');
+                const [testState, setTestState] = useState<string>('');
+
+                const onTextChanged = (textChanges: TextContents) => {
+                    console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
+                    setTestState(textChanges.modified as string);
+                };
 
                 useEffect(() => {
                     const timer = setTimeout(() => {
                         console.log('Updating styles');
-                        setHeight('85vh');
-                    }, 2000);
+                        setHeight('50vh');
+                    }, 1000);
 
                     return () => clearTimeout(timer);
                 }, []);
 
                 return (
-                    <div style={{ 'height': height }} >
-                        <MonacoEditorReactComp
-                            style={{ 'height': '100%' }}
-                            wrapperConfig={wrapperConfig}
-                            onTextChanged={onTextChanged} />
-                    </div>
+                    <>
+                        <div style={{ 'height': height }} >
+                            <MonacoEditorReactComp
+                                style={{ 'height': '100%' }}
+                                wrapperConfig={wrapperConfig}
+                                onTextChanged={onTextChanged}
+                            />
+                            <b>Debug:</b><br />{testState}
+                        </div>
+                    </>
                 );
             };
             const strictMode = (document.getElementById('checkbox-strictmode')! as HTMLInputElement).checked;

@@ -5,7 +5,7 @@
 
 import { useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import type { Logger } from 'monaco-languageclient/tools';
-import type { CodeContent, WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv } from './helper.js';
 
 const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
@@ -51,7 +51,7 @@ const jsonWorker = new Worker(
 );
 
 const tsWorker = new Worker(
-    new URL(' @codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url),
+    new URL('@codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url),
     { type: 'module' }
 );
 
@@ -84,7 +84,9 @@ export const defineClassisWorkerLoaders: () => Record<string, WorkerLoader> = ()
         css: workerFuncs.cssWorker,
         html: workerFuncs.htmlWorker,
         json: workerFuncs.jsonWorker,
-        javascript: workerFuncs.tsWorker
+        // both have to be defined otherwise this leads to a test error
+        javascript: workerFuncs.tsWorker,
+        typescript: workerFuncs.tsWorker
     };
 };
 
@@ -95,7 +97,7 @@ export const configureClassicWorkerFactory = (logger?: Logger) => {
     });
 };
 
-export const createWrapperConfigClassicApp = (modifiedCode?: CodeContent): WrapperConfig => {
+export const createWrapperConfigClassicApp = (codeResources: CodeResources): WrapperConfig => {
     return {
         $type: 'classic',
         htmlContainer: createMonacoEditorDiv(),
@@ -103,13 +105,7 @@ export const createWrapperConfigClassicApp = (modifiedCode?: CodeContent): Wrapp
             loadThemes: false
         },
         editorAppConfig: {
-            codeResources: {
-                modified: modifiedCode ?? {
-                    text: '',
-                    uri: '/workspace/test.js',
-                    enforceLanguageId: 'javascript'
-                }
-            },
+            codeResources,
             editorOptions: {},
             monacoWorkerFactory: configureClassicWorkerFactory
         }

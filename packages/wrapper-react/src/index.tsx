@@ -49,7 +49,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         const startMonaco = async () => {
             if (containerRef.current) {
                 try {
-                    wrapperRef.current.registerTextChangeCallback(onTextChanged);
+                    wrapperRef.current.registerTextChangedCallback(onTextChanged);
                     await wrapperRef.current.start();
                     onLoad?.(wrapperRef.current);
                 } catch (e) {
@@ -69,7 +69,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             await initMonaco();
             await startMonaco();
         })();
-    }, [wrapperConfig, onTextChanged, onLoad, onError]);
+    }, [wrapperConfig]);
 
     useEffect(() => {
         // exact copy of the above function, to prevent declaration in useCallback

@@ -21,7 +21,7 @@ describe('EmptyFileSystemEndpoint Tests', () => {
     test('writeFile', async () => {
         const result = await endpoint.writeFile({
             resourceUri: '/tmp/test.js',
-            content: 'console.log("Hello World!");'
+            content: 'const text = "Hello World!";'
         });
         expect(result).toEqual({
             status: 'denied'
@@ -31,7 +31,7 @@ describe('EmptyFileSystemEndpoint Tests', () => {
     test('syncFile', async () => {
         const result = await endpoint.syncFile({
             resourceUri: '/tmp/test.js',
-            content: 'console.log("Hello World!");'
+            content: 'const text = "Hello World!";'
         });
         expect(result).toEqual({
             status: 'denied'

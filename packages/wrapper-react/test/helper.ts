@@ -4,10 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
-export const createDefaultWrapperConfig = (): WrapperConfig => {
+export const createDefaultWrapperConfig = (codeResources: CodeResources): WrapperConfig => {
     return {
         $type: 'extended',
         logLevel: LogLevel.Debug,
@@ -15,12 +15,7 @@ export const createDefaultWrapperConfig = (): WrapperConfig => {
             loadThemes: false
         },
         editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: 'hello world',
-                    uri: '/workspace/test.js'
-                }
-            },
+            codeResources,
             monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
