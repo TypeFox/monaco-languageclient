@@ -92,7 +92,6 @@
     "@codingame/monaco-vscode-search-service-override": "~15.0.3",
     "@codingame/monaco-vscode-secret-storage-service-override": "~15.0.3",
     "@codingame/monaco-vscode-standalone-json-language-features": "~15.0.3",
-    "@codingame/monaco-vscode-standalone-languages": "~15.0.3",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~15.0.3",
     "@codingame/monaco-vscode-testing-service-override": "~15.0.3",
     "@codingame/monaco-vscode-storage-service-override": "~15.0.3",

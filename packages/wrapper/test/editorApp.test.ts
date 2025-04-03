@@ -10,7 +10,12 @@ import { createWrapperConfigExtendedApp } from './support/helper.js';
 describe('Test EditorApp', () => {
 
     test('extended type: empty EditorAppConfigExtended', () => {
-        const wrapperConfig = createWrapperConfigExtendedApp();
+        const wrapperConfig = createWrapperConfigExtendedApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
         expect(wrapperConfig.$type).toBe('extended');
     });
 
@@ -37,9 +42,14 @@ describe('Test EditorApp', () => {
     });
 
     test('config defaults', () => {
-        const wrapperConfig = createWrapperConfigExtendedApp();
-        const app = new EditorApp(wrapperConfig.$type, wrapperConfig.editorAppConfig);
-        expect(app.getConfig().codeResources?.modified?.text).toEqual('console.log("Hello World!");');
+        const wrapperConfig = createWrapperConfigExtendedApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+        const app = new EditorApp(wrapperConfig.$type, 'test-config defaults', wrapperConfig.editorAppConfig);
+        expect(app.getConfig().codeResources?.modified?.text).toEqual('const text = "Hello World!";');
         expect(app.getConfig().codeResources?.original).toBeUndefined();
         expect(app.getConfig().useDiffEditor ?? false).toBeFalsy();
         expect(app.getConfig().readOnly).toBeFalsy();

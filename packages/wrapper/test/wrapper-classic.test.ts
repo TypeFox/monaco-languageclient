@@ -3,10 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/* eslint-disable dot-notation */
+
 import { describe, expect, test } from 'vitest';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
-import { buildModelReference, MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
 import { createMonacoEditorDiv } from './support/helper.js';
 import { createWrapperConfigClassicApp } from './support/helper-classic.js';
 
@@ -15,9 +17,15 @@ describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
     test('Check default values', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        await expect(await wrapper.initAndStart(createWrapperConfigClassicApp())).toBeUndefined();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
-        const app = wrapper.getMonacoEditorApp();
+        const app = wrapper.getEditorApp();
         expect(app).toBeDefined();
 
         const appConfig = app!.getConfig();
@@ -27,125 +35,190 @@ describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
     test('Code resources main', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-        const app = wrapper.getMonacoEditorApp();
+        const app = wrapper.getEditorApp();
 
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeDefined();
-        expect(modelRefs?.modelRefOriginal).toBeUndefined();
-        app?.disposeApp();
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeUndefined();
+        app?.dispose();
     });
 
     test('Expected throw: Call normal initAndstart with prior init', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const config = createWrapperConfigClassicApp();
-        await expect(await wrapper.init(config)).toBeUndefined();
-        await expect(await wrapper.initAndStart(config)).toBeUndefined();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
     });
 
     test('Expected throw: Call normal initAndstart with prior init and automaticallyDispose=false', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         await expect(async () => {
-            const config = createWrapperConfigClassicApp();
-            config.automaticallyDispose = false;
-            await expect(await wrapper.init(config)).toBeUndefined();
-            await wrapper.initAndStart(config);
+            const wrapperConfig = createWrapperConfigClassicApp({
+                modified: {
+                    text: 'const text = "Hello World!";',
+                    uri: `/workspace/${expect.getState().testPath}.js`
+                }
+            });
+            wrapperConfig.automaticallyDispose = false;
+            await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+            await wrapper.initAndStart(wrapperConfig);
         }).rejects.toThrowError('You configured the wrapper to not automatically dispose on init, but did not dispose manually. Please call dispose first if you want to re-start.');
     });
 
-    test('Code resources original', async () => {
+    test('Code resources original (regular editor)', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
         const codeResources = wrapperConfig.editorAppConfig?.codeResources ?? {};
         codeResources.modified = undefined;
         codeResources.original = {
             text: 'original',
-            uri: '/workspace/test.js',
+            uri: '/workspace/test-code-resources-original-regular-editor.js',
         };
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-        const app = wrapper.getMonacoEditorApp();
+        const app = wrapper.getEditorApp();
 
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeUndefined();
-        expect(modelRefs?.modelRefOriginal).toBeDefined();
-        app?.disposeApp();
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeUndefined();
+        app?.dispose();
+    });
+
+    test('Code resources original (diff editor)', async () => {
+        createMonacoEditorDiv();
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+        wrapperConfig.editorAppConfig!.useDiffEditor = true;
+        const codeResources = wrapperConfig.editorAppConfig?.codeResources ?? {};
+        codeResources.modified = undefined;
+        codeResources.original = {
+            text: 'original',
+            uri: '/workspace/test-code-resources-original-diff-editor.js',
+        };
+        await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
+        const app = wrapper.getEditorApp();
+
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeDefined();
+        app?.dispose();
     });
 
     test('Code resources main and original', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp({
-            text: 'modified',
-            uri: '/workspace/test_modified.js',
+            modified: {
+                text: 'modified',
+                uri: `/workspace/${expect.getState().testPath}_modified.js`
+            }
         });
         const codeResources = wrapperConfig.editorAppConfig!.codeResources!;
         codeResources.original = {
             text: 'original',
-            uri: '/workspace/test_original.js',
+            uri: `/workspace/${expect.getState().testPath}_original.js`
         };
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
-        const app = wrapper.getMonacoEditorApp();
+        const app = wrapper.getEditorApp();
 
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeDefined();
-        expect(modelRefs?.modelRefOriginal).toBeDefined();
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        // if no diff editor is used, the original modelRef is undefined
+        expect(modelRefs?.original).toBeUndefined();
 
-        const name = modelRefs?.modelRefModified?.object.name;
-        const nameOriginal = modelRefs?.modelRefOriginal?.object.name;
+        const name = modelRefs?.modified.object.name;
+        const nameOriginal = modelRefs?.original?.object.name;
         expect(name).toBeDefined();
-        expect(nameOriginal).toBeDefined();
+        expect(nameOriginal).toBeUndefined();
         expect(name).not.toEqual(nameOriginal);
 
-        app?.disposeApp();
+        app?.dispose();
     });
 
     test('Code resources empty', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
         wrapperConfig.editorAppConfig!.codeResources = {};
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
-        const app = wrapper.getMonacoEditorApp();
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeUndefined();
-        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+        const app = wrapper.getEditorApp();
+        const modelRefs = app?.['modelRefs'];
+        // default modelRef is created with regular editor even if no codeResources are given
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeUndefined();
     });
 
     test('Code resources model direct', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
         wrapperConfig.editorAppConfig!.codeResources = {};
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
-        const app = wrapper.getMonacoEditorApp();
+        const app = wrapper.getEditorApp();
+        app?.setModelRefDisposeTimeout(1000);
 
-        // here the modelReference is created manually and given to the updateEditorModels of the wrapper
-        wrapper.updateEditorModels({
-            modelRefModified: await buildModelReference({
-                text: 'text',
+        wrapper.updateCodeResources({
+            modified: {
+                text: 'const text = "Hello World!";',
                 uri: '/workspace/statemachineUri.statemachine'
-            })
+            }
         });
 
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeDefined();
-        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeUndefined();
     });
 
     test('Early code resources update on wrapper are ok', async () => {
         createMonacoEditorDiv();
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
-        wrapperConfig.editorAppConfig!.codeResources = {};
+        const wrapperConfig = createWrapperConfigClassicApp({});
 
         await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
-        const app = wrapper.getMonacoEditorApp();
+
+        wrapper.registerTextChangedCallback((textChanges: TextContents) => {
+            expect(textChanges.modified).toEqual('// comment');
+        });
+
+        const app = wrapper.getEditorApp();
+        app?.setModelRefDisposeTimeout(1000);
+
         await expect(await wrapper.updateCodeResources({
             modified: {
                 text: '// comment',
@@ -155,16 +228,21 @@ describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
         expect(wrapper.getEditor()).toBeUndefined();
         expect(wrapper.getDiffEditor()).toBeUndefined();
 
-        const modelRefs = app?.getModelRefs();
-        expect(modelRefs?.modelRefModified).toBeDefined();
-        expect(modelRefs?.modelRefOriginal).toBeUndefined();
+        const modelRefs = app?.['modelRefs'];
+        expect(modelRefs?.modified).toBeDefined();
+        expect(modelRefs?.original).toBeUndefined();
 
         await expect(await wrapper.start()).toBeUndefined();
     });
 
     test('editorConfig semanticHighlighting.enabled workaround', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
 
         wrapperConfig.editorAppConfig!.editorOptions = {
             'semanticHighlighting.enabled': true,
@@ -183,8 +261,10 @@ describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
     test('Check current model is globally removed after dispose', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp({
-            text: 'console.log("test")',
-            uri: '/workspace/testModel.js'
+            modified: {
+                text: 'const text = "test";',
+                uri: `/workspace/${expect.getState().testPath}_single-model.js`
+            }
         });
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
@@ -194,25 +274,31 @@ describe('Test MonacoEditorLanguageClientWrapper (classic)', () => {
         expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
     });
 
-    test('Check current model is globally removed after dispose', async () => {
+    test('Check current model is globally removed after dispose (second model)', async () => {
         const wrapper = new MonacoEditorLanguageClientWrapper();
         const wrapperConfig = createWrapperConfigClassicApp({
-            text: 'console.log("test")',
-            uri: '/workspace/testModel.js'
+            modified: {
+                text: 'const text = "test";',
+                uri: `/workspace/${expect.getState().testPath}_second-model.js`
+            }
         });
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
 
         const currentModel = wrapper.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
 
+        const app = wrapper.getEditorApp();
+        app?.setModelRefDisposeTimeout(1000);
+
         await wrapper.updateCodeResources({
             modified: {
-                text: 'console.log("test 2")',
-                uri: '/workspace/testModel2.js'
+                text: 'const text = "test 2";',
+                uri: `/workspace/${expect.getState().testPath}_second-model_2.js`
             }
         });
         const currentModelMod = wrapper.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModelMod!)).toBeTruthy();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
     });
+
 });

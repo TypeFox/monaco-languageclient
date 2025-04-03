@@ -11,7 +11,7 @@ import { MonacoLanguageClient } from 'monaco-languageclient';
 import { initServices, type VscodeApiConfig } from 'monaco-languageclient/vscode/services';
 import { type Logger, ConsoleLogger } from 'monaco-languageclient/tools';
 import { augmentVscodeApiConfig, checkServiceConsistency, type OverallConfigType } from './vscode/services.js';
-import { type CodeResources, didModelContentChange, EditorApp, type EditorAppConfig, type ModelRefs, type TextContents, type TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
+import { type CodeResources, EditorApp, type EditorAppConfig, type TextContents, type TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
 import { type LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
 
 export interface ExtensionConfig {
@@ -53,8 +53,7 @@ export class MonacoEditorLanguageClientWrapper {
     private id: string;
     private editorApp?: EditorApp;
     private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
-    private disposableStoreExtensions?: DisposableStore = new DisposableStore();
-    private disposableStoreMonaco?: DisposableStore = new DisposableStore();
+    private disposableStore: DisposableStore = new DisposableStore();
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
     private wrapperConfig?: WrapperConfig;
     private logger: Logger = new ConsoleLogger();
@@ -99,7 +98,7 @@ export class MonacoEditorLanguageClientWrapper {
         try {
             this.markInitializing();
 
-            this.id = wrapperConfig.id ?? Math.floor(Math.random() * 101).toString();
+            this.id = wrapperConfig.id ?? Math.floor(Math.random() * 1000001).toString();
 
             this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
             if (typeof wrapperConfig.editorAppConfig?.monacoWorkerFactory === 'function') {
@@ -126,7 +125,8 @@ export class MonacoEditorLanguageClientWrapper {
                 this.initLanguageClients();
             }
             await this.initExtensions();
-            this.editorApp = new EditorApp(this.wrapperConfig.$type, this.wrapperConfig.editorAppConfig, this.logger);
+            this.editorApp = new EditorApp(this.wrapperConfig.$type, this.id, this.wrapperConfig.editorAppConfig, this.logger);
+            await this.editorApp.init();
             // eslint-disable-next-line no-useless-catch
         } catch (e) {
             throw e;
@@ -169,7 +169,7 @@ export class MonacoEditorLanguageClientWrapper {
                     this.extensionRegisterResults.set(manifest.name, extRegResult);
                     if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                         for (const entry of extensionConfig.filesOrContents) {
-                            this.disposableStoreExtensions?.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
+                            this.disposableStore.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
                         }
                     }
                     allPromises.push(extRegResult.whenReady());
@@ -300,7 +300,7 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrappers.size > 0;
     }
 
-    getMonacoEditorApp() {
+    getEditorApp() {
         return this.editorApp;
     }
 
@@ -328,10 +328,6 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.getTextModels();
     }
 
-    getModelRefs(): ModelRefs | undefined {
-        return this.editorApp?.getModelRefs();
-    }
-
     getWorker(languageId: string): Worker | undefined {
         return this.languageClientWrappers.get(languageId)?.getWorker();
     }
@@ -344,32 +340,8 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.updateCodeResources(codeResources);
     }
 
-    registerTextChangeCallback(onTextChanged?: (textChanges: TextContents) => void) {
-        this.editorApp?.registerModelUpdate((textModels: TextModels) => {
-            // clear on new registration
-            this.disposableStoreMonaco?.clear();
-
-            if (textModels.modified !== undefined || textModels.original !== undefined) {
-
-                if (textModels.modified !== undefined) {
-                    this.disposableStoreMonaco?.add(textModels.modified.onDidChangeContent(() => {
-                        didModelContentChange(textModels, onTextChanged);
-                    }));
-                }
-
-                if (textModels.original !== undefined) {
-                    this.disposableStoreMonaco?.add(textModels.original.onDidChangeContent(() => {
-                        didModelContentChange(textModels, onTextChanged);
-                    }));
-                }
-                // do it initially
-                didModelContentChange(textModels, onTextChanged);
-            }
-        });
-    }
-
-    updateEditorModels(modelRefs: ModelRefs) {
-        this.editorApp?.updateEditorModels(modelRefs);
+    registerTextChangedCallback(onTextChanged?: (textChanges: TextContents) => void) {
+        this.editorApp?.registerOnTextChangedCallbacks(onTextChanged);
     }
 
     reportStatus() {
@@ -389,16 +361,14 @@ export class MonacoEditorLanguageClientWrapper {
         }
         this.markDisposing();
 
-        this.editorApp?.disposeApp();
+        await this.editorApp?.dispose();
         this.editorApp = undefined;
 
         this.extensionRegisterResults.forEach((k) => k.dispose());
-        this.disposableStoreExtensions?.dispose();
-        this.disposableStoreMonaco?.dispose();
+        this.disposableStore.dispose();
 
         // re-create disposable stores
-        this.disposableStoreExtensions = new DisposableStore();
-        this.disposableStoreMonaco = new DisposableStore();
+        this.disposableStore = new DisposableStore();
 
         try {
             if (this.wrapperConfig?.languageClientConfigs?.automaticallyDispose ?? true) {

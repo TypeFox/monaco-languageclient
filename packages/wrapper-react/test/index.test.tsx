@@ -13,7 +13,12 @@ import { createDefaultWrapperConfig } from './helper.js';
 describe('Test MonacoEditorReactComp', () => {
 
     test('onLoad', async () => {
-        const wrapperConfig = createDefaultWrapperConfig();
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            }
+        });
 
         let renderResult: RenderResult;
         // we have to await the full start of the editor with the onLoad callback, then it is save to contine
@@ -28,28 +33,38 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('update onTextChanged', async () => {
-        const wrapperConfig = createDefaultWrapperConfig();
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            }
+        });
 
         const textReceiverHello = (textChanges: TextContents) => {
-            expect(textChanges.modified).toEqual('hello world');
+            expect(textChanges.modified).toEqual('const text = "Hello World!";');
         };
 
         const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-            expect(wrapper.getTextModels()?.modified?.getValue()).toEqual('hello world');
+            expect(wrapper.getTextModels()?.modified?.getValue()).toEqual('const text = "Hello World!";');
         };
         render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onTextChanged={(textReceiverHello)} onLoad={handleOnLoad} />);
     });
 
     test('update codeResources', async () => {
-        const wrapperConfig = createDefaultWrapperConfig();
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            }
+        });
 
         let count = 0;
         const textReceiver = (textChanges: TextContents) => {
             // initial call
             if (count === 0) {
-                expect(textChanges.modified).toBe('hello world');
+                expect(textChanges.modified).toBe('const text = "Hello World!";');
             } else {
-                expect(textChanges.modified).toBe('goodbye world');
+                expect(textChanges.modified).toBe('const text = "Goodbye World!";');
             }
         };
 
@@ -57,8 +72,8 @@ describe('Test MonacoEditorReactComp', () => {
             count++;
             await wrapper.updateCodeResources({
                 modified: {
-                    text: 'goodbye world',
-                    uri: '/workspace/test.js'
+                    text: 'const text = "Goodbye World!";',
+                    uri: `/workspace/${expect.getState().testPath}_goodbye.js`,
                 }
             });
 
@@ -69,9 +84,18 @@ describe('Test MonacoEditorReactComp', () => {
     test('rerender without error', async () => {
         let error = false;
         try {
-            const wrapperConfig = createDefaultWrapperConfig();
-            const newWrapperConfig = createDefaultWrapperConfig();
-            newWrapperConfig.editorAppConfig!.codeResources!.modified!.text = 'hello world 2';
+            const wrapperConfig = createDefaultWrapperConfig({
+                modified: {
+                    text: 'const text = "Hello World!";',
+                    uri: `/workspace/${expect.getState().testPath}.js`,
+                }
+            });
+            const newWrapperConfig = createDefaultWrapperConfig({
+                modified: {
+                    text: 'const text = "Goodbye World 2!";',
+                    uri: `/workspace/${expect.getState().testPath}_2.js`,
+                }
+            });
             let renderResult: RenderResult;
 
             const result1 = await new Promise<void>(resolve => {

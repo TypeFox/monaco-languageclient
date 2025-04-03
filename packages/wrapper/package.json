@@ -98,6 +98,7 @@
     "vscode-ws-jsonrpc": "~3.4.0"
   },
   "devDependencies": {
+    "@codingame/monaco-vscode-standalone-languages": "~15.0.3",
     "@codingame/monaco-vscode-standalone-css-language-features": "~15.0.3",
     "@codingame/monaco-vscode-standalone-html-language-features": "~15.0.3",
     "@codingame/monaco-vscode-standalone-json-language-features": "~15.0.3",

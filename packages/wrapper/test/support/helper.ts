@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeResources, LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const createMonacoEditorDiv = () => {
@@ -13,7 +13,7 @@ export const createMonacoEditorDiv = () => {
     return div;
 };
 
-export const createWrapperConfigExtendedApp = (): WrapperConfig => {
+export const createWrapperConfigExtendedApp = (codeResources: CodeResources): WrapperConfig => {
     return {
         $type: 'extended',
         htmlContainer: createMonacoEditorDiv(),
@@ -21,12 +21,7 @@ export const createWrapperConfigExtendedApp = (): WrapperConfig => {
             loadThemes: false
         },
         editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: 'console.log("Hello World!");',
-                    uri: '/workspace/test.js'
-                }
-            },
+            codeResources,
             monacoWorkerFactory: configureDefaultWorkerFactory
         }
     };
