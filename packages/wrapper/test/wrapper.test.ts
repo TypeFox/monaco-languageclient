@@ -97,8 +97,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             }
         });
 
-        const textContents = wrapper.getTextContents();
-        expect(textContents?.modified).toEqual('const text = "Goodbye World";');
+        const textModels = wrapper.getTextModels();
+        expect(textModels?.modified?.getValue()).toEqual('const text = "Goodbye World";');
 
         expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
     });
@@ -126,8 +126,8 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
             }
         })).toBeUndefined();
 
-        const textContents = wrapper.getTextContents();
-        expect(textContents?.modified).toEqual('const text = "Goodbye World";');
+        const textModels = wrapper.getTextModels();
+        expect(textModels?.modified?.getValue()).toEqual('const text = "Goodbye World";');
 
         expect(wrapper.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
     });

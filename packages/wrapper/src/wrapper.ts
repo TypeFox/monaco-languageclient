@@ -320,10 +320,6 @@ export class MonacoEditorLanguageClientWrapper {
         return this.languageClientWrappers.get(languageId)?.getLanguageClient();
     }
 
-    getTextContents(): TextContents | undefined {
-        return this.editorApp?.getTextContents();
-    }
-
     getTextModels(): TextModels | undefined {
         return this.editorApp?.getTextModels();
     }
