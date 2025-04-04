@@ -27,6 +27,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
+    const onTextChangedRef = useRef(onTextChanged);
+    onTextChangedRef.current = onTextChanged;
 
     useEffect(() => {
         const disposeMonaco = async () => {
@@ -49,7 +51,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         const startMonaco = async () => {
             if (containerRef.current) {
                 try {
-                    wrapperRef.current.registerTextChangedCallback(onTextChanged);
+                    wrapperRef.current.registerTextChangedCallback((textChanges) => {
+                        if (onTextChangedRef.current !== undefined) {
+                            onTextChangedRef.current(textChanges);
+                        }
+                    });
                     await wrapperRef.current.start();
                     onLoad?.(wrapperRef.current);
                 } catch (e) {
