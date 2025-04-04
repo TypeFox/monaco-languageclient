@@ -19,7 +19,13 @@ describe('Test WorkerLoaders', () => {
     test('Test default worker application', async () => {
         // prepare
         const wrapper = new MonacoEditorLanguageClientWrapper();
-        const wrapperConfig = createWrapperConfigClassicApp();
+        const wrapperConfig = createWrapperConfigClassicApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+                enforceLanguageId: 'javascript'
+            }
+        });
         wrapperConfig.logLevel = LogLevel.Info;
         wrapperConfig.editorAppConfig!.monacoWorkerFactory = configureClassicWorkerFactory;
 
@@ -28,12 +34,15 @@ describe('Test WorkerLoaders', () => {
         await expect(await wrapper.initAndStart(wrapperConfig)).toBeUndefined();
         await expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
 
+        const app = wrapper.getEditorApp();
+        app?.setModelRefDisposeTimeout(1000);
+
         // ts worker, expect no worker to be loaded
         createWorkerPromises([]);
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                uri: '/workspace/test.ts',
+                uri: `/workspace/${expect.getState().testPath}.ts`,
                 enforceLanguageId: 'typescript'
             }
         });
@@ -44,7 +53,7 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                uri: '/workspace/test.css',
+                uri: `/workspace/${expect.getState().testPath}.css`,
                 enforceLanguageId: 'css'
             }
         });
@@ -57,7 +66,7 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                uri: '/workspace/test.json',
+                uri: `/workspace/${expect.getState().testPath}.json`,
                 enforceLanguageId: 'json'
             }
         });
@@ -68,10 +77,11 @@ describe('Test WorkerLoaders', () => {
         await wrapper.updateCodeResources({
             modified: {
                 text: '',
-                uri: '/workspace/test.html',
+                uri: `/workspace/${expect.getState().testPath}.html`,
                 enforceLanguageId: 'html'
             }
         });
         await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
+
 });
