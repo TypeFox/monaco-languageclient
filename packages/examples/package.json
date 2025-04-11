@@ -35,6 +35,14 @@
     "./python-client": {
       "types": "./dist/python/client/main.d.ts",
       "default": "./dist/python/client/main.js"
+    },
+    "./worker/langium": {
+      "types": "./dist/langium/langium-dsl/worker/langium-server.d.ts",
+      "default": "./dist/langium/langium-dsl/worker/langium-server.js"
+    },
+    "./worker/statemachine": {
+      "types": "./dist/langium/statemachine/worker/statemachine-server.d.ts",
+      "default": "./dist/langium/statemachine/worker/statemachine-server.js"
     }
   },
   "typesVersions": {
@@ -48,8 +56,11 @@
       "json-client": [
         "dist/json/client/wrapperWs"
       ],
-      "python-client": [
-        "dist/python/client/main"
+      "worker/langium": [
+        "dist/langium/langium-dsl/worker/langium-server"
+      ],
+      "worker/statemachine": [
+        "dist/langium/statemachine/worker/statemachine-server"
       ]
     }
   },
@@ -71,36 +82,36 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-configuration-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-cpp-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-debug-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-editor-api": "~15.0.3",
-    "@codingame/monaco-vscode-environment-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-explorer-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-files-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-groovy-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-java-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-javascript-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-json-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-keybindings-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-lifecycle-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-localization-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-preferences-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-python-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-remote-agent-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-search-result-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-search-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-secret-storage-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-standalone-json-language-features": "~15.0.3",
-    "@codingame/monaco-vscode-standalone-typescript-language-features": "~15.0.3",
-    "@codingame/monaco-vscode-testing-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-storage-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-textmate-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-theme-service-override": "~15.0.3",
-    "@codingame/monaco-vscode-typescript-basics-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-typescript-language-features-default-extension": "~15.0.3",
-    "@codingame/monaco-vscode-views-service-override": "~15.0.3",
+    "@codingame/monaco-vscode-configuration-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-cpp-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-debug-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-editor-api": "~16.0.2",
+    "@codingame/monaco-vscode-environment-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-explorer-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-files-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-groovy-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-java-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-javascript-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-json-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-keybindings-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-lifecycle-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-localization-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-preferences-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-python-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-remote-agent-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-search-result-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-search-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-secret-storage-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-standalone-json-language-features": "~16.0.2",
+    "@codingame/monaco-vscode-standalone-typescript-language-features": "~16.0.2",
+    "@codingame/monaco-vscode-testing-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-storage-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-textmate-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-theme-defaults-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-theme-service-override": "~16.0.2",
+    "@codingame/monaco-vscode-typescript-basics-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-typescript-language-features-default-extension": "~16.0.2",
+    "@codingame/monaco-vscode-views-service-override": "~16.0.2",
     "@typefox/monaco-editor-react": "~6.7.0-next.0",
     "cors": "^2.8.5",
     "express": "~5.1.0",
@@ -108,11 +119,11 @@
     "langium": "~3.4.0",
     "monaco-editor-wrapper": "~6.7.0-next.0",
     "monaco-languageclient": "~9.6.0-next.0",
-    "pyright": "~1.1.398",
+    "pyright": "~1.1.399",
     "react": "~19.1.0",
     "react-dom": "~19.1.0",
     "request-light": "~0.8.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~15.0.3",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~16.0.2",
     "vscode-json-languageservice": "~5.4.4",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
@@ -129,7 +140,7 @@
     "langium-cli": "~3.4.0",
     "mini-coi": "~0.4.2",
     "ts-node": "~10.9.1",
-    "vite-plugin-static-copy": "~2.3.0",
+    "vite-plugin-static-copy": "~2.3.1",
     "vscode-languageserver-types": "~3.17.5"
   },
   "scripts": {

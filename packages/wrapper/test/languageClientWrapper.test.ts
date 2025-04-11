@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { beforeAll, describe, expect, test } from 'vitest';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createUnreachableWorkerConfig } from './support/helper.js';
@@ -16,11 +17,18 @@ describe('Test LanguageClientWrapper', () => {
     beforeAll(async () => {
         await initServices({});
 
-        worker = new Worker('../workers/langium-server.ts', {
+        const workerUrl = 'monaco-languageclient-examples/worker/langium';
+        worker = new Worker(workerUrl, {
             type: 'module',
             name: 'Langium LS'
         });
-        languageClientConfig = createDefaultLcWorkerConfig(worker);
+
+        const reader = new BrowserMessageReader(worker);
+        const writer = new BrowserMessageWriter(worker);
+        reader.listen((message) => {
+            console.log('Received message from worker:', message);
+        });
+        languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
     });
 
     test('Constructor: no config', () => {

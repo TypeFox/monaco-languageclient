@@ -35,7 +35,8 @@ export const setupLangiumClientExtended = async (params: {
                     'workbench.colorTheme': 'GitHub Dark High Contrast',
                     'editor.guides.bracketPairsHorizontal': 'active',
                     'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
+                    'editor.experimental.asyncTokenization': true,
+                    'vitest.disableWorkspaceWarning': true
                 })
             }
         },

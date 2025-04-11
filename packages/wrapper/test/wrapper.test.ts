@@ -6,9 +6,10 @@
 /* eslint-disable dot-notation */
 
 import { describe, expect, test, vi } from 'vitest';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
-import { createDefaultLcUnreachableUrlConfig, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
-
+import { delayExecution } from 'monaco-languageclient-examples';
+import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createMonacoEditorDiv, createWrapperConfigExtendedApp } from './support/helper.js';
 describe('Test MonacoEditorLanguageClientWrapper', () => {
 
     test('New wrapper has undefined editor', () => {
@@ -249,4 +250,61 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
         await expect(await wrapper.start(htmlContainer)).toBeUndefined();
     });
+
+    test('restart with languageclient', async () => {
+        let error = false;
+
+        const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+        const worker = new Worker(workerUrl, {
+            type: 'module',
+            name: 'Langium LS (Regular Test)'
+        });
+
+        const reader = new BrowserMessageReader(worker);
+        const writer = new BrowserMessageWriter(worker);
+        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
+
+        const wrapperConfig = createWrapperConfigExtendedApp({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            }
+        });
+        wrapperConfig.languageClientConfigs = {
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+        const newWrapperConfig = createWrapperConfigExtendedApp({
+            modified: {
+                text: 'const text = "Goodbye World 2!";',
+                uri: `/workspace/${expect.getState().testPath}_2.js`,
+            }
+        });
+        newWrapperConfig.languageClientConfigs = {
+            automaticallyDisposeWorkers: true,
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        try {
+            await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+            await expect(await wrapper.start()).toBeUndefined();
+            await expect(await wrapper.dispose()).toBeUndefined();
+
+            await delayExecution(1000);
+
+            await expect(await wrapper.init(newWrapperConfig)).toBeUndefined();
+            await expect(await wrapper.start()).toBeUndefined();
+            await expect(await wrapper.dispose()).toBeUndefined();
+        } catch (e) {
+            console.error(`Unexpected error occured: ${e}`);
+            error = true;
+        }
+
+        expect(error).toBe(false);
+    });
+
 });

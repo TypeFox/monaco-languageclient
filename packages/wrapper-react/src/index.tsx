@@ -31,26 +31,21 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     onTextChangedRef.current = onTextChanged;
 
     useEffect(() => {
-        const disposeMonaco = async () => {
-            try {
-                await wrapperRef.current.dispose();
-            } catch {
-                // The language client may throw an error during disposal, but we want to continue anyway
-            }
-        };
 
-        const initMonaco = async () => {
-            if (containerRef.current) {
-                wrapperConfig.htmlContainer = containerRef.current;
-                await wrapperRef.current.init(wrapperConfig);
-            } else {
-                throw new Error('No htmlContainer found! Aborting...');
-            }
-        };
-
-        const startMonaco = async () => {
+        (async () => {
             if (containerRef.current) {
                 try {
+                    wrapperConfig.htmlContainer = containerRef.current;
+                    if (wrapperRef.current.isInitializing() || wrapperRef.current.isStarting() || wrapperRef.current.isDisposing()) {
+                        await Promise.all([
+                            wrapperRef.current.getInitializingAwait(),
+                            wrapperRef.current.getStartingAwait(),
+                            wrapperRef.current.getDisposingAwait()
+                        ]);
+                    }
+
+                    await wrapperRef.current.init(wrapperConfig);
+
                     wrapperRef.current.registerTextChangedCallback((textChanges) => {
                         if (onTextChangedRef.current !== undefined) {
                             onTextChangedRef.current(textChanges);
@@ -68,12 +63,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             } else {
                 throw new Error('No htmlContainer found! Aborting...');
             }
-        };
-
-        (async () => {
-            await disposeMonaco();
-            await initMonaco();
-            await startMonaco();
         })();
     }, [wrapperConfig]);
 

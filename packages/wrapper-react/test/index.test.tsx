@@ -5,10 +5,10 @@
 
 import { describe, expect, test } from 'vitest';
 import { render, type RenderResult } from '@testing-library/react';
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { MonacoEditorLanguageClientWrapper, type TextContents } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { createDefaultWrapperConfig } from './helper.js';
+import { createDefaultLcWorkerConfig, createDefaultWrapperConfig } from './helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
@@ -83,21 +83,40 @@ describe('Test MonacoEditorReactComp', () => {
 
     test('rerender without error', async () => {
         let error = false;
-        try {
-            const wrapperConfig = createDefaultWrapperConfig({
-                modified: {
-                    text: 'const text = "Hello World!";',
-                    uri: `/workspace/${expect.getState().testPath}.js`,
-                }
-            });
-            const newWrapperConfig = createDefaultWrapperConfig({
-                modified: {
-                    text: 'const text = "Goodbye World 2!";',
-                    uri: `/workspace/${expect.getState().testPath}_2.js`,
-                }
-            });
-            let renderResult: RenderResult;
 
+        const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+        const worker = new Worker(workerUrl, {
+            type: 'module',
+            name: 'Langium LS (React Test)'
+        });
+        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium');
+
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            }
+        });
+        wrapperConfig.languageClientConfigs = {
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+        const newWrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Goodbye World 2!";',
+                uri: `/workspace/${expect.getState().testPath}_2.js`,
+            }
+        });
+        newWrapperConfig.languageClientConfigs = {
+            automaticallyDisposeWorkers: true,
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+
+        let renderResult: RenderResult;
+        try {
             const result1 = await new Promise<void>(resolve => {
                 const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
                     renderResult.rerender(<MonacoEditorReactComp wrapperConfig={newWrapperConfig} />);
@@ -116,4 +135,63 @@ describe('Test MonacoEditorReactComp', () => {
         }
         expect(error).toBe(false);
     });
+
+    test('strict-mode: editor only', async () => {
+        let error = false;
+
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.js`,
+            },
+        });
+
+        try {
+            const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+                console.log('onLoad');
+            };
+            render(<StrictMode><MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} /></StrictMode>);
+
+        } catch (e) {
+            console.error(`Unexpected error occured: ${e}`);
+            error = true;
+        }
+        expect(error).toBe(false);
+    });
+
+    test('strict-mode: language server', async () => {
+        let error = false;
+
+        const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+        const worker = new Worker(workerUrl, {
+            type: 'module',
+            name: 'Langium LS (React Test 1)'
+        });
+        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium');
+
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.langium`,
+            },
+        });
+        wrapperConfig.languageClientConfigs = {
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+
+        try {
+            const handleOnLoad = async (_wrapper: MonacoEditorLanguageClientWrapper) => {
+                console.log('onLoad');
+            };
+            render(<StrictMode><MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} /></StrictMode>);
+
+        } catch (e) {
+            console.error(`Unexpected error occured: ${e}`);
+            error = true;
+        }
+        expect(error).toBe(false);
+    });
+
 });

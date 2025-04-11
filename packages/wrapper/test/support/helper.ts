@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { MessageTransports } from 'vscode-languageclient';
 import type { CodeResources, LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
@@ -27,18 +28,20 @@ export const createWrapperConfigExtendedApp = (codeResources: CodeResources): Wr
     };
 };
 
-export const createDefaultLcWorkerConfig = (worker: Worker): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
+    messageTransports?: MessageTransports): LanguageClientConfig => {
     return {
         name: 'test-worker-direct',
         clientOptions: {
-            documentSelector: ['javascript']
+            documentSelector: [languageId]
         },
         connection: {
             options: {
                 $type: 'WorkerDirect',
                 // create a web worker to pass to the wrapper
                 worker
-            }
+            },
+            messageTransports
         }
     };
 };

@@ -24,5 +24,7 @@ const context = {
 } as unknown as DefaultSharedModuleContext;
 const { shared } = createLangiumGrammarServices(context);
 
+console.log('Starting langium-dsl server...');
+
 // Start the language server with the shared services
 startLanguageServer(shared);

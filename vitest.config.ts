@@ -42,8 +42,6 @@ export const vitestConfig = {
             '**/wrapper/test/wrapper-classic.test.ts',
             '**/wrapper/test/workers/workerLoaders.test.ts',
             '**/wrapper-react/test/index.test.tsx'
-            // '**/*.test.ts',
-            // '**/*.test.tsx'
         ]
     }
 };
