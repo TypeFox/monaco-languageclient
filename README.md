@@ -79,12 +79,12 @@ Important Project changes and notes about the project's history are found [here]
 
 These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
 
-- **monaco-languageclient**: `9.6.0-next.0` (release date: 2025-04-0x)
-- **monaco-editor-wrapper**: `6.7.0-next.0` (release date: 2025-04-0x)
-- **@typefox/monaco-editor-react**: `6.7.0-next.0` (release date: 2025-04-0x)
+- **monaco-languageclient**: `9.6.0-next.1` (release date: 2025-04-11)
+- **monaco-editor-wrapper**: `6.7.0-next.1` (release date: 2025-04-11)
+- **@typefox/monaco-editor-react**: `6.7.0-next.1` (release date: 2025-04-11)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `15.0.3`
-  - **vscode**: `1.98.2`
+  - **@codingame/monaco-vscode-[editor]-api**: `16.0.2`
+  - **vscode**: `1.99.2`
   - **monaco-editor**: `0.52.2`
 - **vscode-ws-jsonrpc**: `3.4.0` (release date: 2024-12-18)
 

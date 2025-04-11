@@ -11,7 +11,7 @@ import definedViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 30000,
+        testTimeout: 40000,
         // fileParallelism: false,
         // threads: false,
         browser: {

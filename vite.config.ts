@@ -66,6 +66,7 @@ export const definedViteConfig = defineConfig({
             'vscode-textmate',
             'vscode-oniguruma',
             'vscode-languageclient',
+            'langium',
             'vscode-languageserver/browser.js'
         ]
     },
