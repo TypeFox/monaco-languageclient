@@ -33,7 +33,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean": "tsx ../../scripts/clean.ts --relativePath packages/wrapper-react --recursive --paths ./dist ./bundle *.tsbuildinfo",
+    "clean": "shx rm -fr ./dist ./bundle *.tsbuildinfo",
     "compile": " tsc --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
   },

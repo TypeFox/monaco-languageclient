@@ -90,7 +90,7 @@
     "vscode-languageclient": "~9.0.1"
   },
   "scripts": {
-    "clean": "tsx ../../scripts/clean.ts --relativePath packages/client --recursive --paths lib *.tsbuildinfo",
+    "clean": "shx rm -fr ./lib *.tsbuildinfo",
     "compile": "tsc --build tsconfig.src.json",
     "build:msg": "echo Building monaco-languageclient:",
     "build": "npm run build:msg && npm run clean && npm run compile"

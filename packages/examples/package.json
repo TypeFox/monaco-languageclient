@@ -134,7 +134,7 @@
     "vscode-languageserver-types": "~3.17.5"
   },
   "scripts": {
-    "clean": "tsx ../../scripts/clean.ts --relativePath packages/examples --recursive --paths dist *.tsbuildinfo resources/vsix",
+    "clean": "shx rm -fr dist *.tsbuildinfo ./resources/vsix",
     "compile": "tsc --build tsconfig.src.json",
     "resources:download": "tsx ./resources/scripts/downloadResources.ts",
     "build:msg": "echo Building main examples:",
@@ -143,7 +143,7 @@
     "start:server:python": "tsx src/python/server/direct.ts",
     "langium:generate": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
     "extract:docker": "tsx ./resources/clangd/scripts/extractDockerFiles.ts",
-    "production:clean": "tsx ../../scripts/clean.ts --relativePath packages/examples --recursive --paths production",
+    "production:clean": "shx rm -fr ./production",
     "production:copy:mini-coi": "mini-coi --service-worker production/mini-coi.js",
     "production:build": "npm run production:clean && vite --config vite.config.deploy.ts build && npm run production:copy:mini-coi",
     "production:preview:build": "npm run production:clean && vite --config vite.config.preview.ts build && npm run production:copy:mini-coi",

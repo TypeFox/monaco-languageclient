@@ -64,7 +64,9 @@ export const definedViteConfig = defineConfig({
             '@testing-library/react',
             'vscode/localExtensionHost',
             'vscode-textmate',
-            'vscode-oniguruma'
+            'vscode-oniguruma',
+            'vscode-languageclient',
+            'vscode-languageserver/browser.js'
         ]
     },
     plugins: [

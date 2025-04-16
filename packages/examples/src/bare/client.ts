@@ -11,11 +11,9 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import '@codingame/monaco-vscode-json-default-extension';
-import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient/browser.js';
-import { MonacoLanguageClient } from 'monaco-languageclient';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
-import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
@@ -31,7 +29,6 @@ export const runClient = async () => {
             })
         },
     }, {
-        htmlContainer,
         logger
     });
 
@@ -55,39 +52,22 @@ export const runClient = async () => {
         automaticLayout: true,
         wordBasedSuggestions: 'off'
     });
-    initWebSocketAndStartClient('ws://localhost:30000/sampleServer');
-};
 
-/** parameterized version , support all languageId */
-export const initWebSocketAndStartClient = (url: string): WebSocket => {
-    const webSocket = new WebSocket(url);
-    webSocket.onopen = () => {
-        const socket = toSocket(webSocket);
-        const reader = new WebSocketMessageReader(socket);
-        const writer = new WebSocketMessageWriter(socket);
-        const languageClient = createLanguageClient({
-            reader,
-            writer
-        });
-        languageClient.start();
-        reader.onClose(() => languageClient.stop());
-    };
-    return webSocket;
-};
-
-export const createLanguageClient = (messageTransports: MessageTransports): MonacoLanguageClient => {
-    return new MonacoLanguageClient({
-        name: 'Sample Language Client',
+    const languageClientConfig: LanguageClientConfig = {
         clientOptions: {
-            // use a language id as a document selector
-            documentSelector: ['json'],
-            // disable the default error handler
-            errorHandler: {
-                error: () => ({ action: ErrorAction.Continue }),
-                closed: () => ({ action: CloseAction.DoNotRestart })
-            }
+            documentSelector: ['json']
         },
-        // create a language client connection from the JSON RPC connection on demand
-        messageTransports
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:30000/sampleServer'
+            }
+        }
+    };
+    const languageClientWrapper = new LanguageClientWrapper({
+        languageClientConfig,
+        logger
     });
+
+    await languageClientWrapper.start();
 };
