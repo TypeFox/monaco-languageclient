@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.5.1] - 2025-05-05
+
+- Updated to `monaco-languageclient@9.6.0-next.2`, `monaco-editor-wrapper@6.7.0-next.2` and `@typefox/monaco-editor-react@6.7.0-next.2`.
+
 ## [2025.4.2] - 2025-04-11
 
 - Updated to `monaco-languageclient@9.6.0-next.1`, `monaco-editor-wrapper@6.7.0-next.1` and `@typefox/monaco-editor-react@6.7.0-next.1`.
