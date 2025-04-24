@@ -67,12 +67,12 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [wrapperConfig]);
 
     useEffect(() => {
-        // exact copy of the above function, to prevent declaration in useCallback
         const disposeMonaco = async () => {
             try {
                 await wrapperRef.current.dispose();
-            } catch {
+            } catch (error) {
                 // The language client may throw an error during disposal, but we want to continue anyway
+                console.error(`Unexpected error occurred during disposal of the language client: ${error}`);
             }
         };
 

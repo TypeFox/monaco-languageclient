@@ -36,6 +36,7 @@ export interface WrapperConfig {
     htmlContainer?: HTMLElement;
     id?: string;
     logLevel?: LogLevel | number;
+    // default is true if not specified as it is optional
     automaticallyDispose?: boolean;
     extensions?: ExtensionConfig[];
     vscodeApiConfig?: VscodeApiConfig;

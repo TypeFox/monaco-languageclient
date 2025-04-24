@@ -82,7 +82,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test('rerender without error', async () => {
-        let error = false;
+        let errorOccurred = false;
 
         const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
         const worker = new Worker(workerUrl, {
@@ -130,14 +130,15 @@ describe('Test MonacoEditorReactComp', () => {
             expect(result1).toBeUndefined();
 
             renderResult!.rerender(<MonacoEditorReactComp wrapperConfig={newWrapperConfig} />);
-        } catch (_e) {
-            error = true;
+        } catch (error) {
+            console.error(`Unexpected error occured: ${error}`);
+            errorOccurred = true;
         }
-        expect(error).toBe(false);
+        expect(errorOccurred).toBe(false);
     });
 
     test('strict-mode: editor only', async () => {
-        let error = false;
+        let errorOccurred = false;
 
         const wrapperConfig = createDefaultWrapperConfig({
             modified: {
@@ -152,15 +153,15 @@ describe('Test MonacoEditorReactComp', () => {
             };
             render(<StrictMode><MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} /></StrictMode>);
 
-        } catch (e) {
-            console.error(`Unexpected error occured: ${e}`);
-            error = true;
+        } catch (error) {
+            console.error(`Unexpected error occured: ${error}`);
+            errorOccurred = true;
         }
-        expect(error).toBe(false);
+        expect(errorOccurred).toBe(false);
     });
 
     test('strict-mode: language server', async () => {
-        let error = false;
+        let errorOccurred = false;
 
         const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
         const worker = new Worker(workerUrl, {
@@ -187,11 +188,64 @@ describe('Test MonacoEditorReactComp', () => {
             };
             render(<StrictMode><MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} /></StrictMode>);
 
-        } catch (e) {
-            console.error(`Unexpected error occured: ${e}`);
-            error = true;
+        } catch (error) {
+            console.error(`Unexpected error occured: ${error}`);
+            errorOccurred = true;
         }
-        expect(error).toBe(false);
+        expect(errorOccurred).toBe(false);
     });
 
+    test('strict-mode: language server (re-render)', async () => {
+        let errorOccurred = false;
+
+        const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+        const worker = new Worker(workerUrl, {
+            type: 'module',
+            name: 'Langium LS (React Test 1)'
+        });
+        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium');
+
+        const wrapperConfig = createDefaultWrapperConfig({
+            modified: {
+                text: 'const text = "Hello World!";',
+                uri: `/workspace/${expect.getState().testPath}.langium`,
+            },
+        });
+        wrapperConfig.languageClientConfigs = {
+            automaticallyDisposeWorkers: false,
+            configs: {
+                'langium': languageClientConfig
+            }
+        };
+
+        let renderResult: RenderResult;
+        try {
+            const result1 = await new Promise<void>(resolve => {
+                let called = 0;
+                const handleOnLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
+                    called++;
+                    console.log(`onLoad re-render call: ${called}`);
+
+                    const lcWrapper = wrapper.getLanguageClientWrapper('langium');
+                    console.log(lcWrapper?.reportStatus());
+
+                    if (called === 2) {
+                        renderResult.rerender(<StrictMode>[]</StrictMode>);
+                        resolve();
+                    }
+                };
+
+                renderResult = render(<StrictMode><MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} /></StrictMode>);
+                // renderResult = render(<MonacoEditorReactComp wrapperConfig={wrapperConfig} onLoad={handleOnLoad} />);
+            });
+
+            // void promise is undefined after it was awaited
+            expect(result1).toBeUndefined();
+        } catch (error) {
+            console.error(`Unexpected error occured: ${error}`);
+            errorOccurred = true;
+        }
+
+        expect(errorOccurred).toBe(false);
+    });
 });
