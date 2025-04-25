@@ -22,7 +22,18 @@ describe('Test EditorApp', () => {
     test('verifyUrlorCreateDataUrl: url', async () => {
         const url = new URL('../../../node_modules/langium-statemachine-dsl/syntaxes/statemachine.tmLanguage.json', window.location.href);
         const text = await (await fetch(url)).text();
-        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${btoa(text)}`);
+        const bytes = new TextEncoder().encode(text);
+        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
+        const base64 = btoa(binString);
+        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
+    });
+
+    test('verifyUrlorCreateDataUrl: url', () => {
+        const text = '✓✓';
+        const bytes = new TextEncoder().encode(text);
+        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
+        const base64 = btoa(binString);
+        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
     });
 
     test('config defaults', () => {

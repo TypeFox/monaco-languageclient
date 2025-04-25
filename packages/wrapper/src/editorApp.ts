@@ -279,7 +279,14 @@ export class EditorApp {
 }
 
 export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
-    return (input instanceof URL) ? input.href : new URL(`data:text/plain;base64,${btoa(input)}`).href;
+    if (input instanceof URL) {
+        return input.href;
+    } else {
+        const bytes = new TextEncoder().encode(input);
+        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
+        const base64 = btoa(binString);
+        return new URL(`data:text/plain;base64,${base64}`).href;
+    }
 };
 
 export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {
