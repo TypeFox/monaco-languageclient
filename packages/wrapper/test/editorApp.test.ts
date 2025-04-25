@@ -28,6 +28,14 @@ describe('Test EditorApp', () => {
         expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
     });
 
+    test('verifyUrlorCreateDataUrl: url', () => {
+        const text = '✓✓';
+        const bytes = new TextEncoder().encode(text);
+        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
+        const base64 = btoa(binString);
+        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
+    });
+
     test('config defaults', () => {
         const wrapperConfig = createWrapperConfigExtendedApp();
         const app = new EditorApp(wrapperConfig.$type, wrapperConfig.editorAppConfig);
