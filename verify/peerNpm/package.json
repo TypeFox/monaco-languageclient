@@ -8,8 +8,8 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.16.0",
-    "npm": "10.9.2"
+    "node": "22.18.0",
+    "npm": "10.9.3"
   },
   "dependencies": {
     "monaco-languageclient-examples": "~2025.8.4",

@@ -9,8 +9,8 @@
     "yarn": ">=4.6.0"
   },
   "volta": {
-    "node": "22.16.0",
-    "yarn": "4.6.0"
+    "node": "22.18.0",
+    "yarn": "4.9.3"
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "~20.2.1",

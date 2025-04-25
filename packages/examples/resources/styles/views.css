@@ -9,71 +9,71 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
-  }
+}
 
-  body {
+body {
     background-color: var(--vscode-editorWidget-background);
     color: var(--vscode-editorWidget-foreground);
     margin: 0;
-  }
+}
 
-  #sidebarDiv,
-  #sidebarRightDiv {
+#sidebarDiv,
+#sidebarRightDiv {
     display: flex;
     flex: none;
     border: 1px solid var(--vscode-editorWidget-border);
-  }
+}
 
-  #sidebar {
+#sidebar {
     width: 300px;
-  }
+}
 
-  #editorsDiv {
-     flex: 1;
-     min-width: 0;
-  }
+#editorsDiv {
+    flex: 1;
+    min-width: 0;
+}
 
-  #editors {
+#editors {
     position: relative;
     min-width: 0;
     height: 99%;
     border: 1px solid var(--vscode-editorWidget-border);
-  }
+}
 
-  #sidebar-right {
+#sidebar-right {
     max-width: 500px;
-  }
+}
 
-  #auxiliaryBar-left,
-  #auxiliaryBar {
-     max-width: 300px;
-  }
+#auxiliaryBar-left,
+#auxiliaryBar {
+    max-width: 300px;
+}
 
-  #panel {
+#panel {
     display: none;
     flex: 1;
     border: 1px solid var(--vscode-editorWidget-border);
     min-height: 0;
-  }
+}
 
-  #titleBar {
+#titleBar {
     position: relative;
     flex: none;
-  }
+}
 
-  #banner {
+#banner {
     flex: none;
-  }
+}
 
-  #workbench-container {
+#workbench-container {
     height: 95vh;
     display: flex;
     flex-direction: column
-  }
+}
 
-  #workbench-top {
+#workbench-top {
     display: flex;
     gap: 20px;
     flex: 2;
     min-height: 0
-  }
+}

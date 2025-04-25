@@ -3,48 +3,42 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
-import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import type { IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
+import type { ExampleAppConfig } from 'monaco-languageclient-examples';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import { type MonacoVscodeApiConfig, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import langiumGrammarLangium from '../../../../resources/langium/langium-dsl/langium-grammar.langium?raw';
-import langiumTypesLangium from '../../../../resources/langium/langium-dsl/langium-types.langium?raw';
-import type { ExampleAppConfig } from '../../../common/client/utils.js';
-import workerUrl from '../worker/langium-server?worker&url';
-import langiumLanguageConfig from './langium.configuration.json?raw';
-import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
+import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 
 export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> => {
+
+    // perform all imports dynamically
+    const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
+    const { InMemoryFileSystemProvider, registerFileSystemOverlay } = (await import('@codingame/monaco-vscode-files-service-override'));
+    const { LogLevel } = (await import('@codingame/monaco-vscode-api'));
+    const { Uri } = (await import('vscode'));
+    const { configureDefaultWorkerFactory } = (await import('monaco-languageclient/workerFactory'));
+    const { BrowserMessageReader, BrowserMessageWriter } = (await import('vscode-languageclient/browser.js'));
+
+    // base configurration
     const overallConfigType: OverallConfigType = 'extended';
+    const langiumLanguageConfigResponse = await fetch(new URL('./langium.configuration.json', import.meta.url));
+    const langiumLanguageConfig = await langiumLanguageConfigResponse.text();
+    const langiumTextmateGrammarResponse = await fetch(new URL('./langium.tmLanguage.json', import.meta.url));
+    const langiumTextmateGrammar = await langiumTextmateGrammarResponse.text();
+
     const extensionFilesOrContents = new Map<string, string | URL>();
-    // vite build is easier with string content
-    extensionFilesOrContents.set('/workspace/langium-configuration.json', langiumLanguageConfig);
-    extensionFilesOrContents.set('/workspace/langium-grammar.json', langiumTextmateGrammar);
-
-    const loadLangiumWorker = () => {
-        console.log(`Langium worker URL: ${workerUrl}`);
-        return new Worker(workerUrl, {
-            type: 'module',
-            name: 'Langium LS',
-        });
-    };
-
-    const worker = loadLangiumWorker();
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
-    reader.listen((message) => {
-        console.log('Received message from worker:', message);
-    });
+    extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
+    extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
 
     // prepare all resources that should be preloaded
-    const workspaceUri = vscode.Uri.file('/workspace');
-    const langiumGrammarLangiumUri = vscode.Uri.file('/workspace/langium-grammar.langium');
-    const langiumTypesLangiumUri = vscode.Uri.file('/workspace/langium-types.langium');
+    const exampleLangiumResponse = await fetch(new URL('./langium-grammar.langium', import.meta.url));
+    const exampleLangium = await exampleLangiumResponse.text();
+    const langiumTypesResponse = await fetch(new URL('./langium-types.langium', import.meta.url));
+    const langiumTypesLangium = await langiumTypesResponse.text();
+
+    const workspaceUri = Uri.file('/workspace');
+    const exampleLangiumUri = Uri.file('/workspace/langium-grammar.langium');
+    const langiumTypesLangiumUri = Uri.file('/workspace/langium-types.langium');
     const fileSystemProvider = new InMemoryFileSystemProvider();
     const textEncoder = new TextEncoder();
 
@@ -55,13 +49,21 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
         overwrite: true
     };
     await fileSystemProvider.mkdir(workspaceUri);
-    await fileSystemProvider.writeFile(langiumGrammarLangiumUri, textEncoder.encode(langiumGrammarLangium), options);
+    await fileSystemProvider.writeFile(exampleLangiumUri, textEncoder.encode(exampleLangium), options);
     await fileSystemProvider.writeFile(langiumTypesLangiumUri, textEncoder.encode(langiumTypesLangium), options);
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const editorAppConfig: EditorAppConfig = {
         $type: overallConfigType
     };
+
+    const workerFile = '/workers/langium-server.js';
+    const worker = new Worker(workerFile, {
+        type: 'module',
+        name: 'Langium LS',
+    });
+    const reader = new BrowserMessageReader(worker);
+    const writer = new BrowserMessageWriter(worker);
 
     const innerHtml = `<div id="editorsDiv">
     <div id="editors"></div>
@@ -86,7 +88,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: overallConfigType,
         logLevel: LogLevel.Debug,
-        htmlContainer: document.body,
+        htmlContainer: document.getElementById('monaco-editor-root')!,
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
         },
@@ -122,12 +124,12 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
                         id: 'langium',
                         extensions: ['.langium'],
                         aliases: ['langium', 'LANGIUM'],
-                        configuration: '/workspace/langium-configuration.json'
+                        configuration: './langium-configuration.json'
                     }],
                     grammars: [{
                         language: 'langium',
                         scopeName: 'source.langium',
-                        path: '/workspace/langium-grammar.json'
+                        path: './langium-grammar.json'
                     }]
                 }
             },
@@ -144,7 +146,10 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
                 $type: 'WorkerDirect',
                 worker
             },
-            messageTransports: { reader, writer }
+            messageTransports: {
+                reader,
+                writer
+            }
         }
     };
 

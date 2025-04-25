@@ -7,18 +7,34 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import './views.editorOnly.css';
 
 const DynamicMonacoEditorReact = dynamic(async () => {
-    const { buildJsonClientUserConfig } = await import('monaco-languageclient-examples/json-client');
     const comp = await import('@typefox/monaco-editor-react');
-    const wrapperConfig = buildJsonClientUserConfig();
+    const { window, workspace, Uri } = (await import('vscode'));
+    const { setupLangiumClientExtended } = await import('./langium-dsl/config/extendedConfig');
+    const appConfig = await setupLangiumClientExtended();
+
+    const languageClientConfigs = {
+        configs: {
+            langium: appConfig.languageClientConfig
+        }
+    };
     return () => <comp.MonacoEditorReactComp
         style={{ 'height': '100%' }}
-        wrapperConfig={wrapperConfig} />
+        vscodeApiConfig={appConfig.vscodeApiConfig}
+        editorAppConfig={appConfig.editorAppConfig}
+        languageClientConfigs={languageClientConfigs}
+        onVscodeApiInitDone={async () => {
+            console.log('MonacoEditorReactComp editor started.');
+
+            await workspace.openTextDocument('/workspace/langium-types.langium');
+            await workspace.openTextDocument('/workspace/langium-grammar.langium');
+            await window.showTextDocument(Uri.file('/workspace/langium-grammar.langium'));
+        }} />
 }, {
     ssr: false
 });
-
 
 export default function Page() {
     return (

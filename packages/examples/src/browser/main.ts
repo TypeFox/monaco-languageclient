@@ -11,6 +11,7 @@ import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import '../../resources/vsix/github-vscode-theme.vsix';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -37,7 +38,7 @@ export const runBrowserEditor = async () => {
         },
         userConfiguration: {
             json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
+                'workbench.colorTheme': 'GitHub Dark High Contrast',
                 'editor.guides.bracketPairsHorizontal': 'active',
                 'editor.lightbulb.enabled': 'On',
                 'editor.experimental.asyncTokenization': true

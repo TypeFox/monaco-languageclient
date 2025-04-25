@@ -56,6 +56,11 @@ export const runStatemachineReact = async () => {
                     return () => clearTimeout(timer);
                 }, []);
 
+                const languageClientConfigs = {
+                    configs: {
+                        langium: appConfig.languageClientConfig
+                    }
+                };
                 return (
                     <>
                         <div style={{ 'height': height }} >
@@ -63,6 +68,7 @@ export const runStatemachineReact = async () => {
                                 style={{ 'height': '100%' }}
                                 vscodeApiConfig={appConfig.vscodeApiConfig}
                                 editorAppConfig={appConfig.editorAppConfig}
+                                languageClientConfigs={languageClientConfigs}
                                 onTextChanged={onTextChanged}
                             />
                             <b>Debug:</b><br />{testState}

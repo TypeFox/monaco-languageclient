@@ -8,8 +8,8 @@
     "pnpm": ">=9.15.0"
   },
   "volta": {
-    "node": "22.16.0",
-    "pnpm": "10.3.0"
+    "node": "22.18.0",
+    "pnpm": "10.15.0"
   },
   "dependencies": {
     "monaco-languageclient-examples": "~2025.8.4",

@@ -6,21 +6,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./resources/styles/views.editorOnly.css">
 </head>
 
 <body>
     <div class="exampleHeadelineDiv">
         <b class="exampleHeadeline">Langium Grammar DSL (Extended Mode)</b> - [<a href="../../index.html">Back to Index</a>]
         <br>
-        <button type="button" id="button-start">Start</button>
-        <button type="button" id="button-dispose">Dispose</button>
     </div>
-    <div id="monaco-editor-root" style="height: 80vh; border: 1px solid grey"></div>
     <script type="module">
-        import { runLangiumDslWrapper } from './src/langium/langium-dsl/wrapperLangium.ts';
+        import { runLangiumGrammarDsl } from './src/langium/langium-dsl/main.ts';
 
-        runLangiumDslWrapper(true);
-    </script>;
+        runLangiumGrammarDsl();
+    </script>
 </body>
 
 </html>

@@ -33,6 +33,7 @@ export default [{
         '**/bin/**/*',
         '**/resources/**/*',
         '**/production/**/*',
+        '**/public/**/*',
         '**/.next/**/*',
         '**/*env.d.ts',
         '**/.pnp.cjs'

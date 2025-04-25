@@ -21,7 +21,6 @@ export const definedViteConfig = defineConfig({
                 bare: path.resolve(__dirname, 'packages/examples/bare.html'),
                 json: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
-                langium_classic: path.resolve(__dirname, 'packages/examples/langium_classic.html'),
                 langium_extended: path.resolve(__dirname, 'packages/examples/langium_extended.html'),
                 statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
