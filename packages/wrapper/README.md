@@ -50,6 +50,7 @@ Monaco Editor with Python language support in web worker and relying on extended
 ```ts
 import '@codingame/monaco-vscode-python-default-extension';
 import { MonacoEditorLanguageClientWrapper, WrapperConfig } from 'monaco-editor-wrapper';
+import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 // no top-level await
 const run = async () => {
@@ -63,7 +64,8 @@ const run = async () => {
                 uri: '/workspace/hello.py',
                 text: 'print("Hello, World!")'
         }
-      }
+      },
+      monacoWorkerFactory: configureDefaultWorkerFactory
     }
   };
 
