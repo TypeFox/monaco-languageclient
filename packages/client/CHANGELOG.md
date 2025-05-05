@@ -2,9 +2,9 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.6.0-next.0] - 2025-04-0x
+## [9.6.0-next.1] - 2025-04-1x
 
-- Updated all `@codingame/monaco-vscode` packages to `15.0.3`.
+- Updated all `@codingame/monaco-vscode` packages to `16.0.2`.
 
 ## [9.5.0] - 2025-03-13
 

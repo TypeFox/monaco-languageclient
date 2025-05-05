@@ -4,38 +4,51 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { beforeAll, describe, expect, test } from 'vitest';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { LanguageClientWrapper } from 'monaco-editor-wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createUnreachableWorkerConfig } from './support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
 
-    let worker: Worker;
-    let languageClientConfig: LanguageClientConfig;
-
     beforeAll(async () => {
         await initServices({});
+    });
 
-        worker = new Worker('../workers/langium-server.ts', {
+    const createWorkerAndConfig = () => {
+        const workerUrl = 'monaco-languageclient-examples/worker/langium';
+        const worker = new Worker(workerUrl, {
             type: 'module',
             name: 'Langium LS'
         });
-        languageClientConfig = createDefaultLcWorkerConfig(worker);
-    });
+
+        const reader = new BrowserMessageReader(worker);
+        const writer = new BrowserMessageWriter(worker);
+        reader.listen((message) => {
+            console.log('Received message from worker:', message);
+        });
+        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
+        return {
+            worker,
+            languageClientConfig
+        };
+    };
 
     test('Constructor: no config', () => {
+        const workerAndConfig = createWorkerAndConfig();
         const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig
+            languageClientConfig: workerAndConfig.languageClientConfig
         });
         expect(languageClientWrapper.haveLanguageClient()).toBeFalsy();
     });
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {
+        const workerAndConfig = createWorkerAndConfig();
         const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig
+            languageClientConfig: workerAndConfig.languageClientConfig
         });
 
-        expect(worker).toBeDefined();
+        expect(workerAndConfig.worker).toBeDefined();
         expect(languageClientWrapper.getWorker()).toBeUndefined();
 
         // WA: language client in fails due to vitest (reason not clear, yet)
@@ -89,6 +102,38 @@ describe('Test LanguageClientWrapper', () => {
             message: 'languageClientWrapper (test-worker-unreachable): Illegal worker configuration detected.',
             error: 'No error was provided.'
         });
+    });
+
+    test('Dispose: start, dispose worker and restart', async () => {
+        const workerAndConfig = createWorkerAndConfig();
+        const languageClientWrapper = new LanguageClientWrapper({
+            languageClientConfig: workerAndConfig.languageClientConfig
+        });
+
+        expect(workerAndConfig.worker).toBeDefined();
+        expect(languageClientWrapper.getWorker()).toBeUndefined();
+
+        // WA: language client in fails due to vitest (reason not clear, yet)
+        try {
+            await languageClientWrapper.start();
+        } catch (_error) {
+            // ignore
+            console.error(_error);
+        };
+        expect(languageClientWrapper.getWorker()).toBeTruthy();
+
+        // dispose & verify
+        await languageClientWrapper.disposeLanguageClient(true);
+        expect(languageClientWrapper.getWorker()).toBeUndefined();
+
+        // restart & verify
+        try {
+            await languageClientWrapper.start();
+        } catch (_error) {
+            // ignore
+            console.error(_error);
+        };
+        expect(languageClientWrapper.getWorker()).toBeTruthy();
     });
 
 });

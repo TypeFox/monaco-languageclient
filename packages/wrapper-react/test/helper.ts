@@ -3,25 +3,39 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { MessageTransports } from 'vscode-languageclient';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeResources, LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
-export const createDefaultWrapperConfig = (): WrapperConfig => {
+export const createDefaultWrapperConfig = (codeResources: CodeResources, logLevel?: LogLevel): WrapperConfig => {
     return {
         $type: 'extended',
-        logLevel: LogLevel.Debug,
+        logLevel,
         vscodeApiConfig: {
             loadThemes: false
         },
         editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: 'hello world',
-                    uri: '/workspace/test.js'
-                }
-            },
+            codeResources,
             monacoWorkerFactory: configureDefaultWorkerFactory
+        }
+    };
+};
+
+export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
+    messageTransports?: MessageTransports): LanguageClientConfig => {
+    return {
+        name: 'test-worker-direct',
+        clientOptions: {
+            documentSelector: [languageId]
+        },
+        connection: {
+            options: {
+                $type: 'WorkerDirect',
+                // create a web worker to pass to the wrapper
+                worker
+            },
+            messageTransports
         }
     };
 };

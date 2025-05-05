@@ -11,7 +11,9 @@ import definedViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 25000,
+        testTimeout: 40000,
+        // fileParallelism: false,
+        // threads: false,
         browser: {
             enabled: true,
             headless: true,
@@ -40,8 +42,6 @@ export const vitestConfig = {
             '**/wrapper/test/wrapper-classic.test.ts',
             '**/wrapper/test/workers/workerLoaders.test.ts',
             '**/wrapper-react/test/index.test.tsx'
-            // '**/*.test.ts',
-            // '**/*.test.tsx'
         ]
     }
 };

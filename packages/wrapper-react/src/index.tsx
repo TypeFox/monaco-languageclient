@@ -27,29 +27,30 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
+    const onTextChangedRef = useRef(onTextChanged);
+    onTextChangedRef.current = onTextChanged;
 
     useEffect(() => {
-        const disposeMonaco = async () => {
-            try {
-                await wrapperRef.current.dispose();
-            } catch {
-                // The language client may throw an error during disposal, but we want to continue anyway
-            }
-        };
 
-        const initMonaco = async () => {
-            if (containerRef.current) {
-                wrapperConfig.htmlContainer = containerRef.current;
-                await wrapperRef.current.init(wrapperConfig);
-            } else {
-                throw new Error('No htmlContainer found! Aborting...');
-            }
-        };
-
-        const startMonaco = async () => {
+        (async () => {
             if (containerRef.current) {
                 try {
-                    wrapperRef.current.registerTextChangeCallback(onTextChanged);
+                    wrapperConfig.htmlContainer = containerRef.current;
+                    if (wrapperRef.current.isInitializing() || wrapperRef.current.isStarting() || wrapperRef.current.isDisposing()) {
+                        await Promise.all([
+                            wrapperRef.current.getInitializingAwait(),
+                            wrapperRef.current.getStartingAwait(),
+                            wrapperRef.current.getDisposingAwait()
+                        ]);
+                    }
+
+                    await wrapperRef.current.init(wrapperConfig);
+
+                    wrapperRef.current.registerTextChangedCallback((textChanges) => {
+                        if (onTextChangedRef.current !== undefined) {
+                            onTextChangedRef.current(textChanges);
+                        }
+                    });
                     await wrapperRef.current.start();
                     onLoad?.(wrapperRef.current);
                 } catch (e) {
@@ -62,22 +63,16 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             } else {
                 throw new Error('No htmlContainer found! Aborting...');
             }
-        };
-
-        (async () => {
-            await disposeMonaco();
-            await initMonaco();
-            await startMonaco();
         })();
-    }, [wrapperConfig, onTextChanged, onLoad, onError]);
+    }, [wrapperConfig]);
 
     useEffect(() => {
-        // exact copy of the above function, to prevent declaration in useCallback
         const disposeMonaco = async () => {
             try {
                 await wrapperRef.current.dispose();
-            } catch {
+            } catch (error) {
                 // The language client may throw an error during disposal, but we want to continue anyway
+                console.error(`Unexpected error occurred during disposal of the language client: ${error}`);
             }
         };
 

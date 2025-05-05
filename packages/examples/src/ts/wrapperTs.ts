@@ -11,6 +11,7 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { disableElement } from '../common/client/utils.js';
 
 export const runTsWrapper = async () => {
     const codeUri = '/workspace/hello.ts';
@@ -61,6 +62,7 @@ export const runTsWrapper = async () => {
     };
 
     const wrapper = new MonacoEditorLanguageClientWrapper();
+    disableElement('button-swap-code', true);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
@@ -76,7 +78,7 @@ export const runTsWrapper = async () => {
             await vscode.commands.executeCommand('actions.find');
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
-            const codeResources = wrapper.getMonacoEditorApp()?.getConfig().codeResources;
+            const codeResources = wrapper.getEditorApp()?.getConfig().codeResources;
             if (codeResources?.modified?.uri === codeUri) {
                 wrapper.updateCodeResources({
                     modified: {
@@ -105,6 +107,8 @@ export const runTsWrapper = async () => {
             // ensure it is boolean value and not undefined
             const useDiffEditor = wrapperConfig.editorAppConfig!.useDiffEditor ?? false;
             wrapperConfig.editorAppConfig!.useDiffEditor = !useDiffEditor;
+            disableElement('button-swap-code', !wrapperConfig.editorAppConfig!.useDiffEditor);
+
             await wrapper.initAndStart(wrapperConfig);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
