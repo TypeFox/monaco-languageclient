@@ -29,6 +29,7 @@ export const vitestConfig = {
         },
         // keep an explicit list of tests to run, so they can be commented in case of problems
         include: [
+            '**/client/test/workerFactory.test.ts',
             '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
             '**/client/test/tools/index.test.ts',
             '**/client/test/tools/utils.test.ts',

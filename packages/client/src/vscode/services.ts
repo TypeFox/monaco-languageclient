@@ -18,6 +18,7 @@ import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench
 import type { Logger } from 'monaco-languageclient/tools';
 import { FakeWorker as Worker } from './fakeWorker.js';
 import { setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
+import { useWorkerFactory } from '../workerFactory.js';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeInitialising?: boolean;
@@ -50,11 +51,12 @@ export interface InitServicesInstructions {
     caller?: string;
     performServiceConsistencyChecks?: () => boolean;
     logger?: Logger;
+    monacoWorkerFactory?: (logger?: Logger) => void;
 }
 
-export const initEnhancedMonacoEnvironment = () => {
+export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
     const monWin = (self as Window);
-    if (!monWin.MonacoEnvironment) {
+    if (monWin.MonacoEnvironment === undefined) {
         monWin.MonacoEnvironment = {};
     }
     const envEnhanced = monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
@@ -97,8 +99,15 @@ export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideSer
 };
 
 export const initServices = async (vscodeApiConfig: VscodeApiConfig, instructions?: InitServicesInstructions) => {
-    const envEnhanced = initEnhancedMonacoEnvironment();
+    const envEnhanced = getEnhancedMonacoEnvironment();
 
+    if (typeof instructions?.monacoWorkerFactory === 'function') {
+        instructions.monacoWorkerFactory(instructions.logger);
+    } else {
+        useWorkerFactory({
+            logger: instructions?.logger
+        });
+    }
     if (!(envEnhanced.vscodeInitialising ?? false)) {
 
         if (envEnhanced.vscodeApiInitialised ?? false) {
