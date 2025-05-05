@@ -307,4 +307,18 @@ describe('Test MonacoEditorLanguageClientWrapper', () => {
         expect(error).toBe(false);
     });
 
+    test('monacoWorkerFactory: Nothing', async () => {
+        const wrapperConfig = createWrapperConfigExtendedApp({});
+        wrapperConfig.editorAppConfig!.monacoWorkerFactory = undefined;
+
+        const wrapper = new MonacoEditorLanguageClientWrapper();
+        await expect(await wrapper.init(wrapperConfig)).toBeUndefined();
+
+        const monWin = (self as Window);
+        const getWorker = () => monWin.MonacoEnvironment?.getWorker?.('test', 'TextEditorWorker');
+        expect(getWorker).toThrowError('Unimplemented worker TextEditorWorker (test)');
+
+        await expect(await wrapper.start()).toBeUndefined();
+    });
+
 });

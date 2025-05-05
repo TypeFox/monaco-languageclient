@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { initServices, type MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscode/services';
 
-describe('VSCde services Tests', () => {
+describe('VSCode services Tests', () => {
 
     test('initServices', async () => {
         const vscodeApiConfig = {

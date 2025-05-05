@@ -100,11 +100,7 @@ export class MonacoEditorLanguageClientWrapper {
             this.markInitializing();
 
             this.id = wrapperConfig.id ?? Math.floor(Math.random() * 1000001).toString();
-
             this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
-            if (typeof wrapperConfig.editorAppConfig?.monacoWorkerFactory === 'function') {
-                wrapperConfig.editorAppConfig.monacoWorkerFactory(this.logger);
-            }
 
             if (!(wrapperConfig.vscodeApiConfig?.vscodeApiInitPerformExternally === true)) {
                 wrapperConfig.vscodeApiConfig = await augmentVscodeApiConfig(wrapperConfig.$type, {
@@ -114,6 +110,7 @@ export class MonacoEditorLanguageClientWrapper {
                     semanticHighlighting: wrapperConfig.editorAppConfig?.editorOptions?.['semanticHighlighting.enabled'] === true
                 });
                 await initServices(wrapperConfig.vscodeApiConfig, {
+                    monacoWorkerFactory: wrapperConfig.editorAppConfig?.monacoWorkerFactory,
                     htmlContainer: wrapperConfig.htmlContainer,
                     caller: `monaco-editor (${this.id})`,
                     performServiceConsistencyChecks: checkServiceConsistency,
