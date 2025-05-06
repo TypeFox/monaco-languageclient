@@ -6,10 +6,12 @@
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';
+import { disableElement } from '../common/client/utils.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 
 export const runApplicationPlayground = async () => {
+    disableElement('button-start', true);
     const configResult = configure(document.body);
     await wrapper.init(configResult.wrapperConfig);
     await configurePostStart(wrapper, configResult);

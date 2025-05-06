@@ -13,7 +13,7 @@ export const configurePostStart = async (wrapper: MonacoEditorLanguageClientWrap
     result.setAsDefaultApi();
 
     // WA: Force show explorer and not search
-    // await vscode.commands.executeCommand('workbench.view.explorer');
+    await vscode.commands.executeCommand('workbench.view.explorer');
 
     await Promise.all([
         await vscode.workspace.openTextDocument(configResult.helloTsUri),
