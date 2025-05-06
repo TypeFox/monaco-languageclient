@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-wrapper",
-  "version": "6.10.0",
+  "version": "7.0.0-next.0",
   "license": "MIT",
   "description": "Wrapper for monaco-vscode-editor-api and monaco-languageclient",
   "keywords": [
@@ -91,7 +91,7 @@
     "@codingame/monaco-vscode-theme-service-override": "~19.1.4",
     "@codingame/monaco-vscode-views-service-override": "~19.1.4",
     "@codingame/monaco-vscode-workbench-service-override": "~19.1.4",
-    "monaco-languageclient": "~9.9.0",
+    "monaco-languageclient": "~10.0.0-next.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~19.1.4",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
@@ -103,7 +103,7 @@
     "@codingame/monaco-vscode-standalone-html-language-features": "~19.1.4",
     "@codingame/monaco-vscode-standalone-json-language-features": "~19.1.4",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "~19.1.4",
-    "monaco-languageclient-examples": "~2025.8.1"
+    "monaco-languageclient-examples": "~2025.8.2"
   },
   "repository": {
     "type": "git",

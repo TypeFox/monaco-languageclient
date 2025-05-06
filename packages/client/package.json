@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "9.9.0",
+  "version": "10.0.0-next.0",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -41,8 +41,8 @@
       "default": "./lib/workerFactory.js"
     },
     "./wrapper": {
-      "types": "./lib/languageClientWrapper.test.d.ts",
-      "default": "./lib/languageClientWrapper.test.js"
+      "types": "./lib/languageClientWrapper.d.ts",
+      "default": "./lib/languageClientWrapper.js"
     }
   },
   "typesVersions": {
@@ -94,7 +94,8 @@
     "@codingame/monaco-vscode-log-service-override": "~19.1.4",
     "@codingame/monaco-vscode-model-service-override": "~19.1.4",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~19.1.4",
-    "vscode-languageclient": "~9.0.1"
+    "vscode-languageclient": "~9.0.1",
+    "vscode-ws-jsonrpc": "~3.5.0"
   },
   "scripts": {
     "clean": "shx rm -fr ./lib *.tsbuildinfo",

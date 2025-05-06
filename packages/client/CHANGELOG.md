@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [10.0.0] - 2025-0z-xy
+
+- Move MonacoLanguageClientWrapper to monaco-languageclient [#920](https://github.com/TypeFox/monaco-languageclient/pull/920)
+
 ## [9.9.0] - 2025-08-11
 
 - Updated all `@codingame/monaco-vscode` packages to `19.1.4`.

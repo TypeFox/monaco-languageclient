@@ -4,5 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 export * from './editorApp.js';
-export * from './languageClientWrapper.js';
 export * from './wrapper.js';

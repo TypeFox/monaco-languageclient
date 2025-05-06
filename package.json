@@ -21,6 +21,7 @@
     "@types/node": "~22.15.35",
     "@types/react": "~19.1.9",
     "@types/react-dom": "~19.1.7",
+    "@typescript/native-preview": "7.0.0-dev.20250811.1",
     "@typescript-eslint/eslint-plugin": "~8.39.0",
     "@typescript-eslint/parser": "~8.39.0",
     "@vitejs/plugin-react": "~5.0.0",
@@ -46,6 +47,9 @@
     "compile": "npm run compile --workspaces",
     "watch:clean": "tsc --build tsconfig.build.json --clean",
     "watch": "tsc --build tsconfig.build.json --watch --verbose",
+    "watch:tsgo": "tsgo -p tsconfig.build.json --watch",
+    "build:tsc": "tsc -p tsconfig.build.json --verbose",
+    "build:tsgo": "tsgo -p tsconfig.build.json --verbose",
     "lint": "eslint",
     "production:build": "npm run production:build --workspace packages/examples",
     "production:preview:build": "npm run production:preview:build --workspace packages/examples",
@@ -75,8 +79,8 @@
     "test:install": "playwright install --with-deps chromium"
   },
   "workspaces": [
-    "packages/client",
     "packages/vscode-ws-jsonrpc",
+    "packages/client",
     "packages/wrapper",
     "packages/wrapper-react",
     "packages/examples"

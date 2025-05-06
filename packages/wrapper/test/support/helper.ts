@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MessageTransports } from 'vscode-languageclient';
-import type { CodeResources, LanguageClientConfig, WrapperConfig } from 'monaco-editor-wrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const createMonacoEditorDiv = () => {
@@ -42,22 +43,6 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
                 worker
             },
             messageTransports
-        }
-    };
-};
-
-export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
-    return {
-        name: 'test-worker-unreachable',
-        clientOptions: {
-            documentSelector: ['javascript']
-        },
-        connection: {
-            options: {
-                $type: 'WorkerConfig',
-                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
-                type: 'module'
-            }
         }
     };
 };

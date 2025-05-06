@@ -36,7 +36,7 @@ export const startMockHttpServerForSavingCodeFromEditor = () => {
     app.post('/save-code', (req, res) => {
         const { code } = req.body;
         console.log('Received code:', code);
-        res.json({ success: true, message: code});
+        res.json({ success: true, message: code });
     });
 
     const PORT = 3003;
