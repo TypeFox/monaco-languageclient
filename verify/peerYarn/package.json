@@ -9,7 +9,7 @@
     "yarn": ">=4.6.0"
   },
   "volta": {
-    "node": "22.14.0",
+    "node": "22.15.0",
     "yarn": "4.6.0"
   },
   "dependencies": {
