@@ -2,12 +2,12 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
-## [6.7.0-next.2] - 2025-05-05
+## [6.7.0] - 2025-05-06
 
 - Dependency updates [#902](https://github.com/TypeFox/monaco-languageclient/pull/902)
   - Removed the pre-bundled workers and the corresponding export `monaco-editor-wrapper/workers/module/*` for the second time (now for real). You can create your own definition. See what is done in the [default worker factory](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/src/workers/workerLoaders.ts). A [webpack worker troubleshooting guide](../../README.md#webpack-worker-issues) is now available.
-- Updated to `monaco-languageclient@9.6.0-next.2`.
-- Updated all `@codingame/monaco-vscode` packages to `16.1.0`.
+- Updated to `monaco-languageclient@9.6.0`.
+- Updated all `@codingame/monaco-vscode` packages to `16.1.1`.
 - Always create a getWorker function [#918](https://github.com/TypeFox/monaco-languageclient/pull/918)
 - Fix data URL crash for Unicode characters [#915](https://github.com/TypeFox/monaco-languageclient/pull/915)
 - Update monaco-editor-react README for WorkFactory Usage [#914](https://github.com/TypeFox/monaco-languageclient/pull/914)

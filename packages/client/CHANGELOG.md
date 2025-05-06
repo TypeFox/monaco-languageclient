@@ -2,9 +2,9 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.6.0-next.2] - 2025-05-05
+## [9.6.0] - 2025-05-06
 
-- Updated all `@codingame/monaco-vscode` packages to `16.1.0`.
+- Updated all `@codingame/monaco-vscode` packages to `16.1.1`.
 - Always create a getWorker function [#918](https://github.com/TypeFox/monaco-languageclient/pull/918)
 - Update complete uri and model handling in EditorApp [#904](https://github.com/TypeFox/monaco-languageclient/pull/904)
 

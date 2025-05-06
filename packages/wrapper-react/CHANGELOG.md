@@ -2,9 +2,9 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [6.7.0-next.2] - 2025-05-05
+## [6.7.0] - 2025-05-06
 
-- Updated to `monaco-languageclient@9.6.0-next.2` and `monaco-editor-wrapper@6.7.0-next.2`.
+- Updated to `monaco-languageclient@9.6.0` and `monaco-editor-wrapper@6.7.0`.
 - Update monaco-editor-react README for WorkFactory Usage [#914](https://github.com/TypeFox/monaco-languageclient/pull/914)
 - Update complete uri and model handling in EditorApp [#904](https://github.com/TypeFox/monaco-languageclient/pull/904)
 
