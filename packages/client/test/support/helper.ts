@@ -4,24 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { MessageTransports } from 'vscode-languageclient';
-import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
-import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-
-export const createDefaultWrapperConfig = (codeResources: CodeResources, logLevel?: LogLevel): WrapperConfig => {
-    return {
-        $type: 'extended',
-        logLevel,
-        vscodeApiConfig: {
-            loadThemes: false
-        },
-        editorAppConfig: {
-            codeResources,
-            monacoWorkerFactory: configureDefaultWorkerFactory
-        }
-    };
-};
 
 export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
     messageTransports?: MessageTransports): LanguageClientConfig => {
@@ -37,6 +20,37 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
                 worker
             },
             messageTransports
+        }
+    };
+};
+
+export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
+    return {
+        name: 'test-worker-unreachable',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerConfig',
+                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
+                type: 'module'
+            }
+        }
+    };
+};
+
+export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
+    return {
+        name: 'test-ws-unreachable',
+        clientOptions: {
+            documentSelector: ['javascript']
+        },
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                url: `ws://localhost:${port}/rester`
+            },
         }
     };
 };

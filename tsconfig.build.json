@@ -3,9 +3,9 @@
     // watch everything except for:
     // - verify packages (no own source)
     "references": [
+        { "path": "./packages/vscode-ws-jsonrpc/tsconfig.src.json" },
         { "path": "./packages/client/tsconfig.src.json" },
         { "path": "./packages/client/tsconfig.test.json" },
-        { "path": "./packages/vscode-ws-jsonrpc/tsconfig.src.json" },
         { "path": "./packages/wrapper/tsconfig.src.json" },
         { "path": "./packages/wrapper/tsconfig.test.json" },
         { "path": "./packages/wrapper-react/tsconfig.src.json" },
