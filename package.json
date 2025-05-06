@@ -75,8 +75,8 @@
     "test:install": "playwright install --with-deps chromium"
   },
   "workspaces": [
-    "packages/client",
     "packages/vscode-ws-jsonrpc",
+    "packages/client",
     "packages/wrapper",
     "packages/wrapper-react",
     "packages/examples"

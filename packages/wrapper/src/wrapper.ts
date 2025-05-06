@@ -12,7 +12,7 @@ import { initServices, type VscodeApiConfig } from 'monaco-languageclient/vscode
 import { type Logger, ConsoleLogger } from 'monaco-languageclient/tools';
 import { augmentVscodeApiConfig, checkServiceConsistency, type OverallConfigType } from './vscode/services.js';
 import { type CodeResources, EditorApp, type EditorAppConfig, type TextContents, type TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
-import { type LanguageClientConfig, LanguageClientWrapper } from './languageClientWrapper.js';
+import { type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/wrapper';
 
 export interface ExtensionConfig {
     config: IExtensionManifest;
