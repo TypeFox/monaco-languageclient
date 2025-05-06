@@ -5,7 +5,7 @@
 
 import { beforeAll, describe, expect, test } from 'vitest';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { LanguageClientWrapper } from 'monaco-editor-wrapper';
+import { LanguageClientWrapper } from 'monaco-languageclient/wrapper';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createUnreachableWorkerConfig } from './support/helper.js';
 
