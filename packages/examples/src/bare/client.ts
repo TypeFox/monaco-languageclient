@@ -13,7 +13,7 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import '@codingame/monaco-vscode-json-default-extension';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/wrapper';
 
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
