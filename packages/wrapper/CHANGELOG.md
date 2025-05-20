@@ -2,6 +2,11 @@
 
 All notable changes to npm module [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) are documented in this file.
 
+## [7.0.0-next.0] - 2025-0z-xy
+
+- Updated all `@codingame/monaco-vscode` packages to `17.1.1`.
+- Updated to `monaco-languageclient@10.0.0-next.0`.
+
 ## [6.7.0] - 2025-05-06
 
 - Dependency updates [#902](https://github.com/TypeFox/monaco-languageclient/pull/902)
