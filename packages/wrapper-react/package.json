@@ -42,11 +42,11 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.15.0",
+    "node": "22.16.0",
     "npm": "10.9.2"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-editor-api": "~17.1.1",
+    "@codingame/monaco-vscode-editor-api": "~17.1.2",
     "monaco-editor-wrapper": "~7.0.0-next.0",
     "react": ">=18.0.0 || <20.0.0"
   },

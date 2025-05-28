@@ -83,7 +83,7 @@ These are the current versions of packages from this repository and their alignm
 - **monaco-editor-wrapper**: `7.0.0-next.0` (release date: 2025-0z-xy)
 - **@typefox/monaco-editor-react**: `7.0.0-next.0` (release date: 2025-0z-xy)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `17.1.1`
+  - **@codingame/monaco-vscode-[editor]-api**: `17.1.2`
   - **vscode**: `1.100.2`
   - **monaco-editor**: `0.52.2`
 - **vscode-ws-jsonrpc**: `3.4.0` (release date: 2024-12-18)
@@ -256,12 +256,12 @@ Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@~17.1.1"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~17.1.2"
 ```
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~17.1.1"` in you `package.json`. You can directly use it like this:
+When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~17.1.2"` in you `package.json`. You can directly use it like this:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -271,7 +271,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~17.1.1"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~17.1.2"
 }
 ```
 
