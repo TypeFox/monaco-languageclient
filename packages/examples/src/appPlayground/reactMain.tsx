@@ -5,7 +5,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';
@@ -18,9 +17,10 @@ export const runApplicationPlaygroundReact = async () => {
         return (
             <div style={{ 'backgroundColor': '#1f1f1f' }}>
                 <MonacoEditorReactComp
+                    vscodeApiConfig={configResult.vscodeApiConfig}
                     wrapperConfig={configResult.wrapperConfig}
-                    onLoad={async (wrapper: MonacoEditorLanguageClientWrapper) => {
-                        await configurePostStart(wrapper, configResult);
+                    onGlobalInitDone={async (apiWrapper) => {
+                        await configurePostStart(apiWrapper, configResult);
                     }}
                     onError={(e) => {
                         console.error(e);

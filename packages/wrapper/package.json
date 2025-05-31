@@ -17,14 +17,6 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./vscode/services": {
-      "types": "./dist/vscode/index.d.ts",
-      "default": "./dist/vscode/index.js"
-    },
-    "./vscode/locale": {
-      "types": "./dist/vscode/localeLoader.d.ts",
-      "default": "./dist/vscode/localeLoader.js"
-    },
     "./workers/workerLoaders": {
       "types": "./dist/workers/workerLoaders.d.ts",
       "default": "./dist/workers/workerLoaders.js"
@@ -34,12 +26,6 @@
     "*": {
       ".": [
         "dist/index"
-      ],
-      "vscode/services": [
-        "dist/vscode/services"
-      ],
-      "vscode/locale": [
-        "dist/vscode/localeLoader"
       ],
       "workers/workerLoaders": [
         "dist/workers/workerLoaders"
@@ -71,39 +57,11 @@
     "@codingame/monaco-vscode-editor-api": "~18.1.1",
     "@codingame/monaco-vscode-editor-service-override": "~18.1.1",
     "@codingame/monaco-vscode-extension-api": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-cs": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-de": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-es": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-fr": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-it": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-ja": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-ko": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-pl": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-pt-br": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-qps-ploc": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-ru": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-tr": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-zh-hans": "~18.1.1",
-    "@codingame/monaco-vscode-language-pack-zh-hant": "~18.1.1",
-    "@codingame/monaco-vscode-monarch-service-override": "~18.1.1",
-    "@codingame/monaco-vscode-textmate-service-override": "~18.1.1",
-    "@codingame/monaco-vscode-theme-defaults-default-extension": "~18.1.1",
-    "@codingame/monaco-vscode-theme-service-override": "~18.1.1",
-    "@codingame/monaco-vscode-views-service-override": "~18.1.1",
-    "@codingame/monaco-vscode-workbench-service-override": "~18.1.1",
     "monaco-languageclient": "~10.0.0-next.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~18.1.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
     "vscode-ws-jsonrpc": "~3.4.0"
-  },
-  "devDependencies": {
-    "@codingame/monaco-vscode-standalone-languages": "~18.1.1",
-    "@codingame/monaco-vscode-standalone-css-language-features": "~18.1.1",
-    "@codingame/monaco-vscode-standalone-html-language-features": "~18.1.1",
-    "@codingame/monaco-vscode-standalone-json-language-features": "~18.1.1",
-    "@codingame/monaco-vscode-standalone-typescript-language-features": "~18.1.1",
-    "monaco-languageclient-examples": "~2025.6.3"
   },
   "repository": {
     "type": "git",

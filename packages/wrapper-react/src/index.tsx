@@ -5,13 +5,18 @@
 
 import React, { type CSSProperties, useEffect, useRef } from 'react';
 import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
+import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+
+export type ResolveFc = (value: void | PromiseLike<void>) => void;
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
+    vscodeApiConfig: MonacoVscodeApiConfig;
     wrapperConfig: WrapperConfig,
-    onTextChanged?: (textChanges: TextContents) => void;
+    onGlobalInitDone?: (monacoVscodeApiManager: MonacoVscodeApiWrapper) => void;
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
+    onTextChanged?: (textChanges: TextContents) => void;
     onError?: (e: unknown) => void;
 }
 
@@ -19,23 +24,32 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
         style,
         className,
+        vscodeApiConfig,
         wrapperConfig,
-        onTextChanged,
+        onGlobalInitDone,
         onLoad,
+        onTextChanged,
         onError
     } = props;
 
+    const apiWrapperRef = useRef<MonacoVscodeApiWrapper>(new MonacoVscodeApiWrapper(vscodeApiConfig));
     const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
     const containerRef = useRef<HTMLDivElement>(null);
     const onTextChangedRef = useRef(onTextChanged);
     onTextChangedRef.current = onTextChanged;
+    const initialRenderRef = useRef(true);
 
     useEffect(() => {
-
-        (async () => {
+        const deferRender = async () => {
             if (containerRef.current) {
                 try {
-                    wrapperConfig.htmlContainer = containerRef.current;
+                    // await global init if not completed before doing anything else
+                    const envEnhanced = getEnhancedMonacoEnvironment();
+                    if (envEnhanced.vscodeApiGlobalInitAwait !== undefined) {
+                        apiWrapperRef.current.getLogger().debug('AWAITING GLOBLAL INIT');
+                        await envEnhanced.vscodeApiGlobalInitAwait;
+                    }
+
                     if (wrapperRef.current.isInitializing() || wrapperRef.current.isStarting() || wrapperRef.current.isDisposing()) {
                         await Promise.all([
                             wrapperRef.current.getInitializingAwait(),
@@ -44,6 +58,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                         ]);
                     }
 
+                    apiWrapperRef.current.getLogger().debug('INIT');
+
+                    // always dispose before re-initializing
+                    await wrapperRef.current.dispose();
                     await wrapperRef.current.init(wrapperConfig);
 
                     wrapperRef.current.registerTextChangedCallback((textChanges) => {
@@ -51,7 +69,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                             onTextChangedRef.current(textChanges);
                         }
                     });
-                    await wrapperRef.current.start();
+                    await wrapperRef.current.start(containerRef.current);
+
                     onLoad?.(wrapperRef.current);
                 } catch (e) {
                     if (onError) {
@@ -63,12 +82,29 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             } else {
                 throw new Error('No htmlContainer found! Aborting...');
             }
-        })();
+        };
+        deferRender();
+
     }, [wrapperConfig]);
 
     useEffect(() => {
+        if (containerRef.current) {
+            // init will only performed once
+            if (initialRenderRef.current) {
+                initialRenderRef.current = false;
+
+                (async () => {
+                    await apiWrapperRef.current.init({
+                        caller: className,
+                        htmlContainer: containerRef.current
+                    });
+                    onGlobalInitDone?.(apiWrapperRef.current);
+                })();
+            }
+        }
         const disposeMonaco = async () => {
             try {
+                apiWrapperRef.current.getLogger().debug('DISPOSE');
                 await wrapperRef.current.dispose();
             } catch (error) {
                 // The language client may throw an error during disposal, but we want to continue anyway

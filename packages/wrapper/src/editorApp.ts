@@ -3,17 +3,16 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { LogLevel } from '@codingame/monaco-vscode-api';
+import { ConfigurationTarget, IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
-import { ConfigurationTarget, IConfigurationService, StandaloneServices } from '@codingame/monaco-vscode-api';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import type { Logger } from 'monaco-languageclient/tools';
-import type { OverallConfigType } from './vscode/services.js';
+import { type Logger } from 'monaco-languageclient/common';
+import { type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
+import * as vscode from 'vscode';
 
-export interface ModelRefs {
-    modified: IReference<ITextFileEditorModel>;
+export class ModelRefs {
+    modified?: IReference<ITextFileEditorModel>;
     original?: IReference<ITextFileEditorModel>;
 }
 
@@ -56,7 +55,6 @@ export interface EditorAppConfig {
     overrideAutomaticLayout?: boolean;
     editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
     diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    monacoWorkerFactory?: (logger?: Logger) => void;
     languageDef?: {
         languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
         monarchLanguage?: monaco.languages.IMonarchLanguage;
@@ -84,7 +82,7 @@ export class EditorApp {
     private editor: monaco.editor.IStandaloneCodeEditor | undefined;
     private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
 
-    private modelRefs: ModelRefs;
+    private modelRefs: ModelRefs = new ModelRefs();
 
     private onTextChanged?: (textChanges: TextContents) => void;
     private textChangedDiposeables: CallbackDisposeable = {};
@@ -132,7 +130,7 @@ export class EditorApp {
 
     getTextModels(): TextModels {
         return {
-            modified: this.modelRefs.modified.object.textEditorModel,
+            modified: this.modelRefs.modified?.object.textEditorModel ?? undefined,
             original: this.modelRefs.original?.object.textEditorModel ?? undefined
         };
     }
@@ -184,9 +182,7 @@ export class EditorApp {
             uri: this.config.codeResources?.modified?.uri ?? `default-uri-modified-${this.id}`,
             enforceLanguageId: this.config.codeResources?.modified?.enforceLanguageId ?? undefined
         };
-        this.modelRefs = {
-            modified: await this.buildModelReference(modified, this.logger)
-        };
+        this.modelRefs.modified = await this.buildModelReference(modified, this.logger);
 
         if (this.config.useDiffEditor === true) {
             const original = {
@@ -203,15 +199,19 @@ export class EditorApp {
     async createEditors(htmlContainer: HTMLElement): Promise<void> {
         if (this.config.useDiffEditor === true) {
             this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
-            const model = {
-                modified: this.modelRefs.modified.object.textEditorModel!,
-                original: this.modelRefs.original!.object.textEditorModel!
-            };
-            this.diffEditor.setModel(model);
-            this.announceModelUpdate(model);
+            const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
+            const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
+            if (modified !== undefined && original !== undefined) {
+                const model = {
+                    modified,
+                    original
+                };
+                this.diffEditor.setModel(model);
+                this.announceModelUpdate(model);
+            }
         } else {
             const model = {
-                modified: this.modelRefs.modified.object.textEditorModel
+                modified: this.modelRefs.modified?.object.textEditorModel
             };
             this.editor = monaco.editor.create(htmlContainer, {
                 ...this.config.editorOptions,
@@ -225,7 +225,7 @@ export class EditorApp {
         let updateModified = false;
         let updateOriginal = false;
 
-        if (codeResources?.modified !== undefined && codeResources.modified.uri !== this.modelRefs.modified.object.resource.path) {
+        if (codeResources?.modified !== undefined && codeResources.modified.uri !== this.modelRefs.modified?.object.resource.path) {
             this.modelDisposables.modified = this.modelRefs.modified;
             this.modelRefs.modified = await this.buildModelReference(codeResources.modified, this.logger);
             updateModified = true;
@@ -238,23 +238,28 @@ export class EditorApp {
 
         if (this.config.useDiffEditor === true) {
             if (updateModified && updateOriginal) {
-                const model = {
-                    modified: this.modelRefs.modified.object.textEditorModel!,
-                    original: this.modelRefs.original!.object.textEditorModel!
-                };
-                this.diffEditor?.setModel(model);
-
-                this.announceModelUpdate(model);
+                const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
+                const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
+                if (modified !== undefined && original !== undefined) {
+                    const model = {
+                        modified,
+                        original
+                    };
+                    this.diffEditor?.setModel(model);
+                    this.announceModelUpdate(model);
+                }
             } else {
                 this.logger?.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
             }
         } else {
             if (updateModified) {
                 const model = {
-                    modified: this.modelRefs.modified.object.textEditorModel
+                    modified: this.modelRefs.modified?.object.textEditorModel
                 };
-                this.editor?.setModel(model.modified);
-                this.announceModelUpdate(model);
+                if (model.modified !== undefined && model.modified !== null) {
+                    this.editor?.setModel(model.modified);
+                    this.announceModelUpdate(model);
+                }
             } else {
                 this.logger?.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
             }
@@ -371,17 +376,6 @@ export class EditorApp {
     }
 
 }
-
-export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
-    if (input instanceof URL) {
-        return input.href;
-    } else {
-        const bytes = new TextEncoder().encode(input);
-        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
-        const base64 = btoa(binString);
-        return new URL(`data:text/plain;base64,${base64}`).href;
-    }
-};
 
 export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {
     const modified = textModels.modified?.getValue() ?? '';

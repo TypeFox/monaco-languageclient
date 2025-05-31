@@ -4,28 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { CloseAction, ErrorAction, type LanguageClientOptions, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { type ConnectionConfigOptions, MonacoLanguageClient, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient';
-import { createUrl, type Logger } from 'monaco-languageclient/tools';
+import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
+import { createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-
-export interface ConnectionConfig {
-    options: ConnectionConfigOptions;
-    messageTransports?: MessageTransports;
-}
-
-export interface LanguageClientConfig {
-    name?: string;
-    connection: ConnectionConfig;
-    clientOptions: LanguageClientOptions;
-    restartOptions?: LanguageClientRestartOptions;
-}
-
-export interface LanguageClientRestartOptions {
-    retries: number;
-    timeout: number;
-    keepWorker?: boolean;
-}
+import { MonacoLanguageClient } from 'monaco-languageclient';
+import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 
 export interface LanguageClientError {
     message: string;
@@ -41,13 +24,10 @@ export class LanguageClientWrapper {
     private name?: string;
     private logger: Logger | undefined;
 
-    constructor(config: {
-        languageClientConfig: LanguageClientConfig,
-        logger?: Logger
-    }) {
-        this.languageClientConfig = config.languageClientConfig;
+    constructor(config: LanguageClientConfig, logger?: Logger) {
+        this.languageClientConfig = config;
         this.name = this.languageClientConfig.name ?? 'unnamed';
-        this.logger = config.logger;
+        this.logger = logger;
     }
 
     haveLanguageClient(): boolean {
@@ -92,8 +72,8 @@ export class LanguageClientWrapper {
      * @param updatedWorker Set a new worker here that should be used. keepWorker has no effect then, as we want to dispose of the prior workers
      * @param disposeWorker Set to false if worker should not be disposed
      */
-    async restartLanguageClient(updatedWorker?: Worker, disposeWorker: boolean = true): Promise<void> {
-        await this.disposeLanguageClient(disposeWorker);
+    async restart(updatedWorker?: Worker, forceWorkerDispose?: boolean): Promise<void> {
+        await this.dispose(forceWorkerDispose);
 
         this.worker = updatedWorker;
         this.logger?.info('Re-Starting monaco-languageclient');
@@ -248,14 +228,14 @@ export class LanguageClientWrapper {
                         readerOnError.dispose();
                         readerOnClose.dispose();
 
-                        await this.restartLanguageClient(this.worker, restartOptions.keepWorker);
+                        await this.restart(this.worker, restartOptions.keepWorker);
                     } finally {
                         retry++;
                         if (retry > (restartOptions.retries) && !this.isStarted()) {
                             this.logger?.info('Disabling Language Client. Failed to start clangd after 5 retries');
                         } else {
                             setTimeout(async () => {
-                                await this.restartLanguageClient(this.worker, restartOptions.keepWorker);
+                                await this.restart(this.worker, restartOptions.keepWorker);
                             }, restartOptions.timeout);
                         }
                     }
@@ -269,7 +249,7 @@ export class LanguageClientWrapper {
         this.worker = undefined;
     }
 
-    async disposeLanguageClient(disposeWorker: boolean): Promise<void> {
+    async dispose(forceWorkerDispose?: boolean): Promise<void> {
         try {
             if (this.isStarted()) {
                 await this.languageClient?.dispose();
@@ -284,7 +264,7 @@ export class LanguageClientWrapper {
             return Promise.reject(languageClientError);
         } finally {
             // always terminate the worker if desired
-            if (disposeWorker) {
+            if (this.languageClientConfig.disposeWorker === true || forceWorkerDispose === true) {
                 this.disposeWorker();
             }
         }

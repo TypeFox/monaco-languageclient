@@ -10,9 +10,11 @@ import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientsManager } from 'monaco-languageclient/lcwrapper';
 
 export const runMultipleLanguageClientsExample = async () => {
     disableElement('button-flip', true);
@@ -31,37 +33,46 @@ print("Hello Moon!")
     let currentText = textJson;
     let currenFileExt = 'json';
 
-    const wrapperConfig: WrapperConfig = {
-        id: '42',
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer: document.getElementById('monaco-editor-root')!,
+        htmlContainer,
         logLevel: LogLevel.Debug,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride()
-            },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            }
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride()
         },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    const wrapperConfig: WrapperConfig = {
+        $type: vscodeApiConfig.$type,
+        id: '42',
         editorAppConfig: {
             codeResources: {
                 modified: {
                     text: currentText,
                     uri: `/workspace/example.${currenFileExt}`
                 }
-            },
-            monacoWorkerFactory: configureDefaultWorkerFactory
-        },
-        languageClientConfigs: {
-            configs: {
-                json: createJsonLanguageClientConfig(),
-                python: createPythonLanguageClientConfig()
             }
+        }
+    };
+
+    // perform global init
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.init();
+
+    const lcManager = new LanguageClientsManager();
+    const languageClientConfigs = {
+        configs: {
+            json: createJsonLanguageClientConfig(),
+            python: createPythonLanguageClientConfig()
         }
     };
 
@@ -71,24 +82,16 @@ print("Hello Moon!")
         try {
             disableElement('button-start', true);
             disableElement('button-flip', false);
-            disableElement('checkbox-extlc', true);
 
-            const externalLc = (document.getElementById('checkbox-extlc') as HTMLInputElement).checked;
-            wrapperConfig.languageClientConfigs!.automaticallyInit = !externalLc;
-            wrapperConfig.languageClientConfigs!.automaticallyStart = !externalLc;
-            wrapperConfig.languageClientConfigs!.automaticallyDispose = !externalLc;
-
-            await wrapper.initAndStart(wrapperConfig);
+            await wrapper.initAndStart(wrapperConfig, htmlContainer);
             if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
                 wrapperConfig.editorAppConfig.codeResources.modified.text = currentText;
                 wrapperConfig.editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
             }
 
-            // init language clients after start
-            if (externalLc) {
-                wrapper.initLanguageClients();
-                await wrapper.startLanguageClients();
-            }
+            // init and start language clients after start
+            lcManager.initLanguageClients(languageClientConfigs);
+            await lcManager.startLanguageClients();
         } catch (e) {
             console.error(e);
         }
@@ -98,13 +101,8 @@ print("Hello Moon!")
         disableElement('button-dispose', true);
         disableElement('button-start', false);
 
-        const externalLc = (document.getElementById('checkbox-extlc')! as HTMLInputElement).checked;
-
         await wrapper.dispose();
-
-        if (externalLc) {
-            wrapper.disposeLanguageClients();
-        }
+        await lcManager.disposeLanguageClients();
     });
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;

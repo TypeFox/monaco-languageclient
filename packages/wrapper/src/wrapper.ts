@@ -4,45 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { DisposableStore } from '@codingame/monaco-vscode-api/monaco';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { registerExtension, type IExtensionManifest, ExtensionHostKind, type RegisterExtensionResult, getExtensionManifests } from '@codingame/monaco-vscode-api/extensions';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { initServices, type VscodeApiConfig } from 'monaco-languageclient/vscode/services';
-import { type Logger, ConsoleLogger } from 'monaco-languageclient/tools';
-import { augmentVscodeApiConfig, checkServiceConsistency, type OverallConfigType } from './vscode/services.js';
-import { type CodeResources, EditorApp, type EditorAppConfig, type TextContents, type TextModels, verifyUrlOrCreateDataUrl } from './editorApp.js';
-import { type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/wrapper';
-
-export interface ExtensionConfig {
-    config: IExtensionManifest;
-    filesOrContents?: Map<string, string | URL>;
-}
-
-export interface LanguageClientConfigs {
-    // default is true if not specified as it is optional
-    automaticallyInit?: boolean;
-    // default is true if not specified as it is optional
-    automaticallyStart?: boolean;
-    // default is true if not specified as it is optional
-    automaticallyDispose?: boolean;
-    // default is false if not specified as it is optional
-    automaticallyDisposeWorkers?: boolean;
-    configs: Record<string, LanguageClientConfig>
-}
-
-export interface WrapperConfig {
-    $type: OverallConfigType;
-    htmlContainer?: HTMLElement;
-    id?: string;
-    logLevel?: LogLevel | number;
-    // default is true if not specified as it is optional
-    automaticallyDispose?: boolean;
-    extensions?: ExtensionConfig[];
-    vscodeApiConfig?: VscodeApiConfig;
-    editorAppConfig?: EditorAppConfig;
-    languageClientConfigs?: LanguageClientConfigs;
-}
+import { type Logger, ConsoleLogger } from 'monaco-languageclient/common';
+import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
+import { type CodeResources, EditorApp, type TextContents, type TextModels } from './editorApp.js';
+import type { WrapperConfig } from './config.js';
 
 /**
  * This class is responsible for the overall ochestration.
@@ -53,10 +19,7 @@ export class MonacoEditorLanguageClientWrapper {
 
     private id: string;
     private editorApp?: EditorApp;
-    private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
-    private disposableStore: DisposableStore = new DisposableStore();
-    private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
-    private wrapperConfig?: WrapperConfig;
+
     private logger: Logger = new ConsoleLogger();
 
     private initAwait?: Promise<void>;
@@ -68,6 +31,8 @@ export class MonacoEditorLanguageClientWrapper {
     private disposingAwait?: Promise<void>;
     private disposingResolve: (value: void | PromiseLike<void>) => void;
 
+    private relaxedChecks: boolean;
+
     /**
      * Perform an isolated initialization of the user services and the languageclient wrapper (if used).
      */
@@ -75,55 +40,23 @@ export class MonacoEditorLanguageClientWrapper {
         if (this.isInitializing()) {
             await this.getInitializingAwait();
         }
-
-        const editorAppConfig = wrapperConfig.editorAppConfig;
-        if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.modified} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
-        }
-
-        const viewServiceType = wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType ?? 'EditorService';
-        if (wrapperConfig.$type === 'classic' && (viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService')) {
-            throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
-        }
-
-        // automatically dispose before re-init, allow to disable this behavior
-        if (wrapperConfig.automaticallyDispose ?? true) {
-            await this.dispose();
-        } else {
-            // This will throw an error if not disposed before
-            if (this.wrapperConfig !== undefined) {
-                throw new Error('You configured the wrapper to not automatically dispose on init, but did not dispose manually. Please call dispose first if you want to re-start.');
-            }
-        }
-
         try {
             this.markInitializing();
+            this.relaxedChecks = wrapperConfig.relaxedChecks ?? false;
+
+            if (!this.isDisposed()) {
+                throw new Error('You called init with properly disposing the wrapper.');
+            }
+
+            const editorAppConfig = wrapperConfig.editorAppConfig;
+            if ((editorAppConfig?.useDiffEditor ?? false) && !editorAppConfig?.codeResources?.original) {
+                throw new Error(`Use diff editor was used without a valid config. code: ${editorAppConfig?.codeResources?.modified} codeOriginal: ${editorAppConfig?.codeResources?.original}`);
+            }
 
             this.id = wrapperConfig.id ?? Math.floor(Math.random() * 1000001).toString();
             this.logger.setLevel(wrapperConfig.logLevel ?? LogLevel.Off);
 
-            if (!(wrapperConfig.vscodeApiConfig?.vscodeApiInitPerformExternally === true)) {
-                wrapperConfig.vscodeApiConfig = await augmentVscodeApiConfig(wrapperConfig.$type, {
-                    vscodeApiConfig: wrapperConfig.vscodeApiConfig ?? {},
-                    logLevel: this.logger.getLevel(),
-                    // workaround for classic monaco-editor not applying semanticHighlighting
-                    semanticHighlighting: wrapperConfig.editorAppConfig?.editorOptions?.['semanticHighlighting.enabled'] === true
-                });
-                await initServices(wrapperConfig.vscodeApiConfig, {
-                    monacoWorkerFactory: wrapperConfig.editorAppConfig?.monacoWorkerFactory,
-                    htmlContainer: wrapperConfig.htmlContainer,
-                    caller: `monaco-editor (${this.id})`,
-                    performServiceConsistencyChecks: checkServiceConsistency,
-                    logger: this.logger
-                });
-            }
-
-            this.wrapperConfig = wrapperConfig;
-            if (this.wrapperConfig.languageClientConfigs?.automaticallyInit ?? true) {
-                this.initLanguageClients();
-            }
-            await this.initExtensions();
-            this.editorApp = new EditorApp(this.wrapperConfig.$type, this.id, this.wrapperConfig.editorAppConfig, this.logger);
+            this.editorApp = new EditorApp(wrapperConfig.$type, this.id, editorAppConfig, this.logger);
             await this.editorApp.init();
             // eslint-disable-next-line no-useless-catch
         } catch (e) {
@@ -133,49 +66,6 @@ export class MonacoEditorLanguageClientWrapper {
             this.markInitialized();
         }
     }
-
-    initLanguageClients() {
-        const lccEntries = Object.entries(this.wrapperConfig?.languageClientConfigs?.configs ?? {});
-        if (lccEntries.length > 0) {
-            for (const [languageId, lcc] of lccEntries) {
-                const lcw = new LanguageClientWrapper({
-                    languageClientConfig: lcc,
-                    logger: this.logger
-                });
-                this.languageClientWrappers.set(languageId, lcw);
-            }
-        }
-    }
-
-    async initExtensions() {
-        const vscodeApiConfig = this.wrapperConfig?.vscodeApiConfig;
-        if (this.wrapperConfig?.$type === 'extended' && (vscodeApiConfig?.loadThemes === undefined ? true : vscodeApiConfig.loadThemes === true)) {
-            await import('@codingame/monaco-vscode-theme-defaults-default-extension');
-        }
-
-        const extensions = this.wrapperConfig?.extensions;
-        if (this.wrapperConfig?.extensions) {
-            const allPromises: Array<Promise<void>> = [];
-            const extensionIds: string[] = [];
-            getExtensionManifests().forEach((ext) => {
-                extensionIds.push(ext.identifier.id);
-            });
-            for (const extensionConfig of extensions ?? []) {
-                if (!extensionIds.includes(`${extensionConfig.config.publisher}.${extensionConfig.config.name}`)) {
-                    const manifest = extensionConfig.config as IExtensionManifest;
-                    const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
-                    this.extensionRegisterResults.set(manifest.name, extRegResult);
-                    if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
-                        for (const entry of extensionConfig.filesOrContents) {
-                            this.disposableStore.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
-                        }
-                    }
-                    allPromises.push(extRegResult.whenReady());
-                }
-            }
-            await Promise.all(allPromises);
-        }
-    };
 
     private markInitializing() {
         this.initAwait = new Promise<void>((resolve) => {
@@ -196,50 +86,34 @@ export class MonacoEditorLanguageClientWrapper {
         return this.initAwait;
     }
 
-    getWrapperConfig() {
-        return this.wrapperConfig;
-    }
-
-    getExtensionRegisterResult(extensionName: string) {
-        return this.extensionRegisterResults.get(extensionName);
-    }
-
     /**
      * Performs a full user configuration and the languageclient wrapper (if used) init and then start the application.
      */
-    async initAndStart(wrapperConfig: WrapperConfig) {
+    async initAndStart(wrapperConfig: WrapperConfig, htmlContainer: HTMLElement) {
         await this.init(wrapperConfig);
-        await this.start();
+        await this.start(htmlContainer);
     }
 
     /**
      * Does not perform any user configuration or other application init and just starts the application.
      */
-    async start(htmlContainer?: HTMLElement) {
+    async start(htmlContainer: HTMLElement) {
         if (this.isStarting()) {
             await this.getStartingAwait();
         }
+        this.markStarting();
 
-        if (this.wrapperConfig === undefined) {
+        if (!this.relaxedChecks && this.editorApp === undefined) {
             throw new Error('No init was performed. Please call init() before start()');
         }
-        this.markStarting();
         try {
-            const viewServiceType = this.wrapperConfig.vscodeApiConfig?.viewsConfig?.viewServiceType;
+            const envEnhanced = getEnhancedMonacoEnvironment();
+            const viewServiceType = envEnhanced.viewServiceType;
             if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
                 this.logger.info(`Starting monaco-editor (${this.id})`);
-                const html = htmlContainer === undefined ? this.wrapperConfig.htmlContainer : htmlContainer;
-                if (html === undefined) {
-                    throw new Error('No html container provided. Unable to start monaco-editor.');
-                } else {
-                    await this.editorApp?.createEditors(html);
-                }
+                await this.editorApp?.createEditors(htmlContainer!);
             } else {
                 this.logger.info('No EditorService configured. monaco-editor will not be started.');
-            }
-
-            if (this.wrapperConfig.languageClientConfigs?.automaticallyStart ?? true) {
-                await this.startLanguageClients();
             }
             // eslint-disable-next-line no-useless-catch
         } catch (e) {
@@ -248,14 +122,6 @@ export class MonacoEditorLanguageClientWrapper {
             // in case of rejection, mark as started, otherwise the promise will never resolve
             this.markStarted();
         }
-    }
-
-    async startLanguageClients(): Promise<void[]> {
-        const allPromises: Array<Promise<void>> = [];
-        for (const lcw of this.languageClientWrappers.values()) {
-            allPromises.push(lcw.start());
-        }
-        return Promise.all(allPromises);
     }
 
     private markStarting() {
@@ -278,24 +144,7 @@ export class MonacoEditorLanguageClientWrapper {
     }
 
     isStarted(): boolean {
-        // fast-fail
-        if (!(this.editorApp?.haveEditor() ?? false)) {
-            return false;
-        }
-
-        for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClient()) {
-                // as soon as one is not started return
-                if (!lcw.isStarted()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    haveLanguageClients(): boolean {
-        return this.languageClientWrappers.size > 0;
+        return this.editorApp?.haveEditor() ?? false;
     }
 
     getEditorApp() {
@@ -310,20 +159,8 @@ export class MonacoEditorLanguageClientWrapper {
         return this.editorApp?.getDiffEditor();
     }
 
-    getLanguageClientWrapper(languageId: string): LanguageClientWrapper | undefined {
-        return this.languageClientWrappers.get(languageId);
-    }
-
-    getLanguageClient(languageId: string): MonacoLanguageClient | undefined {
-        return this.languageClientWrappers.get(languageId)?.getLanguageClient();
-    }
-
     getTextModels(): TextModels | undefined {
         return this.editorApp?.getTextModels();
-    }
-
-    getWorker(languageId: string): Worker | undefined {
-        return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
     getLogger() {
@@ -336,6 +173,10 @@ export class MonacoEditorLanguageClientWrapper {
 
     registerTextChangedCallback(onTextChanged?: (textChanges: TextContents) => void) {
         this.editorApp?.registerOnTextChangedCallbacks(onTextChanged);
+    }
+
+    updateLayout() {
+        this.editorApp?.updateLayout();
     }
 
     reportStatus() {
@@ -358,36 +199,11 @@ export class MonacoEditorLanguageClientWrapper {
         await this.editorApp?.dispose();
         this.editorApp = undefined;
 
-        this.extensionRegisterResults.forEach((k) => k.dispose());
-        this.disposableStore.dispose();
-
-        // re-create disposable stores
-        this.disposableStore = new DisposableStore();
-
-        try {
-            if (this.wrapperConfig?.languageClientConfigs?.automaticallyDispose ?? true) {
-                await this.disposeLanguageClients();
-            }
-            // eslint-disable-next-line no-useless-catch
-        } catch (e) {
-            throw e;
-        } finally {
-            // in case of rejection, mark as stopped, otherwise the promise will never resolve
-            this.languageClientWrappers.clear();
-            this.wrapperConfig = undefined;
-            this.markDisposed();
-        }
+        this.markDisposed();
     }
 
-    async disposeLanguageClients() {
-        const disposeWorker = this.wrapperConfig?.languageClientConfigs?.automaticallyDisposeWorkers ?? false;
-        const allPromises: Array<Promise<void>> = [];
-        for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClient()) {
-                allPromises.push(lcw.disposeLanguageClient(disposeWorker));
-            }
-        }
-        return Promise.all(allPromises);
+    isDisposed(): boolean {
+        return this.editorApp === undefined;
     }
 
     private markDisposing() {
@@ -409,7 +225,4 @@ export class MonacoEditorLanguageClientWrapper {
         return this.disposingAwait;
     }
 
-    updateLayout() {
-        this.editorApp?.updateLayout();
-    }
 }

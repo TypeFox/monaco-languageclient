@@ -3,10 +3,36 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageTransports } from 'vscode-languageclient';
-import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
 import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+
+export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
+    return {
+        $type: 'extended',
+        advanced: {
+            loadThemes: false,
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern'
+            })
+        },
+        htmlContainer,
+        serviceOverrides: {},
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+};
+
+export const createWrapperConfigClassicApp = (codeResources: CodeResources): WrapperConfig => {
+    return {
+        $type: 'classic',
+        editorAppConfig: {
+            codeResources,
+            editorOptions: {},
+        }
+    };
+};
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -18,46 +44,9 @@ export const createMonacoEditorDiv = () => {
 export const createWrapperConfigExtendedApp = (codeResources: CodeResources): WrapperConfig => {
     return {
         $type: 'extended',
-        htmlContainer: createMonacoEditorDiv(),
-        vscodeApiConfig: {
-            loadThemes: false
-        },
         editorAppConfig: {
-            codeResources,
-            monacoWorkerFactory: configureDefaultWorkerFactory
+            codeResources
         }
     };
 };
 
-export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
-    messageTransports?: MessageTransports): LanguageClientConfig => {
-    return {
-        name: 'test-worker-direct',
-        clientOptions: {
-            documentSelector: [languageId]
-        },
-        connection: {
-            options: {
-                $type: 'WorkerDirect',
-                // create a web worker to pass to the wrapper
-                worker
-            },
-            messageTransports
-        }
-    };
-};
-
-export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
-    return {
-        name: 'test-ws-unreachable',
-        clientOptions: {
-            documentSelector: ['javascript']
-        },
-        connection: {
-            options: {
-                $type: 'WebSocketUrl',
-                url: `ws://localhost:${port}/rester`
-            },
-        }
-    };
-};

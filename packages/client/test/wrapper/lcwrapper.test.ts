@@ -5,14 +5,20 @@
 
 import { beforeAll, describe, expect, test } from 'vitest';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { LanguageClientWrapper } from 'monaco-languageclient/wrapper';
-import { initServices } from 'monaco-languageclient/vscode/services';
-import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createUnreachableWorkerConfig } from './support/helper.js';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createMonacoEditorDiv, createUnreachableWorkerConfig } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
 
     beforeAll(async () => {
-        await initServices({});
+        const apiConfig: MonacoVscodeApiConfig = {
+            $type: 'extended',
+            htmlContainer: createMonacoEditorDiv(),
+            serviceOverrides: {}
+        };
+        const monacoVscodeApiManager = new MonacoVscodeApiWrapper(apiConfig);
+        await monacoVscodeApiManager.init();
     });
 
     const createWorkerAndConfig = () => {
@@ -28,6 +34,7 @@ describe('Test LanguageClientWrapper', () => {
             console.log('Received message from worker:', message);
         });
         const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
+        languageClientConfig.disposeWorker = true;
         return {
             worker,
             languageClientConfig
@@ -36,17 +43,13 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Constructor: no config', () => {
         const workerAndConfig = createWorkerAndConfig();
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig: workerAndConfig.languageClientConfig
-        });
+        const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
         expect(languageClientWrapper.haveLanguageClient()).toBeFalsy();
     });
 
     test('Dispose: direct worker is cleaned up afterwards', async () => {
         const workerAndConfig = createWorkerAndConfig();
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig: workerAndConfig.languageClientConfig
-        });
+        const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
 
         expect(workerAndConfig.worker).toBeDefined();
         expect(languageClientWrapper.getWorker()).toBeUndefined();
@@ -61,15 +64,13 @@ describe('Test LanguageClientWrapper', () => {
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
         // dispose & verify
-        await languageClientWrapper.disposeLanguageClient(true);
+        await languageClientWrapper.dispose();
         expect(languageClientWrapper.getWorker()).toBeUndefined();
     });
 
     test('Start: unreachable url', async () => {
         const languageClientConfig = createDefaultLcUnreachableUrlConfig(23456);
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig
-        });
+        const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
         try {
             await languageClientWrapper.start();
@@ -94,9 +95,7 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Start: unreachable worker url', async () => {
         const languageClientConfig = createUnreachableWorkerConfig();
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig
-        });
+        const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
         await expect(languageClientWrapper.start()).rejects.toEqual({
             message: 'languageClientWrapper (test-worker-unreachable): Illegal worker configuration detected.',
@@ -106,9 +105,7 @@ describe('Test LanguageClientWrapper', () => {
 
     test('Dispose: start, dispose worker and restart', async () => {
         const workerAndConfig = createWorkerAndConfig();
-        const languageClientWrapper = new LanguageClientWrapper({
-            languageClientConfig: workerAndConfig.languageClientConfig
-        });
+        const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
 
         expect(workerAndConfig.worker).toBeDefined();
         expect(languageClientWrapper.getWorker()).toBeUndefined();
@@ -123,7 +120,7 @@ describe('Test LanguageClientWrapper', () => {
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
         // dispose & verify
-        await languageClientWrapper.disposeLanguageClient(true);
+        await languageClientWrapper.dispose();
         expect(languageClientWrapper.getWorker()).toBeUndefined();
 
         // restart & verify

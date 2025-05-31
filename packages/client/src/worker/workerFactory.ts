@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscode/services';
-import type { Logger } from 'monaco-languageclient/tools';
+import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
+import type { Logger } from 'monaco-languageclient/common';
 
 export type WorkerLoader = (() => Worker) | undefined;
 

@@ -5,20 +5,15 @@
 
 import { MessageTransports } from 'vscode-languageclient';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
 export const createDefaultWrapperConfig = (codeResources: CodeResources, logLevel?: LogLevel): WrapperConfig => {
     return {
         $type: 'extended',
         logLevel,
-        vscodeApiConfig: {
-            loadThemes: false
-        },
         editorAppConfig: {
-            codeResources,
-            monacoWorkerFactory: configureDefaultWorkerFactory
+            codeResources
         }
     };
 };
