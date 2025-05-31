@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { AfterViewInit, Component, inject, signal } from '@angular/core';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import { WrapperConfig } from 'monaco-languageclient/editorApp';
 import { MonacoAngularWrapperComponent } from '../monaco-angular-wrapper/monaco-angular-wrapper.component';
 import { buildJsonClientUserConfig } from 'monaco-languageclient-examples/json-client';
 import { SaveCodeService } from '../save-code.service';

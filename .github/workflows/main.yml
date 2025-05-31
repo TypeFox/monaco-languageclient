@@ -24,8 +24,6 @@ jobs:
 
     - name: Volta
       uses: volta-cli/action@v4
-      with:
-        node-version: 20
 
     - name: Use pnpm
       uses: pnpm/action-setup@v3
@@ -56,4 +54,4 @@ jobs:
       shell: bash
       run: |
         npm run test:install
-        npm run test:run
+        npm run test

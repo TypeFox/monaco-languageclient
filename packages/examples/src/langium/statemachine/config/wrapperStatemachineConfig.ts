@@ -6,65 +6,62 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
-import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MessageTransports } from 'vscode-languageclient';
-import type { CodeContent, LanguageClientConfigs, WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { CodeContent, EditorAppConfig } from 'monaco-languageclient/editorApp';
 
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
 import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
+import type { ExampleAppConfig } from '../../../common/client/utils.js';
 
 export const createLangiumGlobalConfig = (params: {
     languageServerId: string,
-    useLanguageClient: boolean,
     codeContent: CodeContent,
-    worker?: Worker,
+    worker: Worker,
     messagePort?: MessagePort,
     messageTransports?: MessageTransports,
     htmlContainer: HTMLElement
-}): WrapperConfig => {
+}): ExampleAppConfig => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
-    const languageClientConfigs: LanguageClientConfigs | undefined = params.useLanguageClient && params.worker ? {
-        configs: {
-            statemachine: {
-                clientOptions: {
-                    documentSelector: ['statemachine']
-                },
-                connection: {
-                    options: {
-                        $type: 'WorkerDirect',
-                        worker: params.worker,
-                        messagePort: params.messagePort,
-                    },
-                    messageTransports: params.messageTransports
-                }
-            }
+    const languageClientConfig: LanguageClientConfig = {
+        clientOptions: {
+            documentSelector: ['statemachine']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerDirect',
+                worker: params.worker,
+                messagePort: params.messagePort,
+            },
+            messageTransports: params.messageTransports
         }
-    } : undefined;
+    };
 
-    return {
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         htmlContainer: params.htmlContainer,
         logLevel: LogLevel.Debug,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride(),
-                ...getLifecycleServiceOverride(),
-                ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
-            },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true
-                })
-            },
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride(),
+            ...getLifecycleServiceOverride(),
+            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory,
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true
+            })
         },
         extensions: [{
             config: {
@@ -89,13 +86,19 @@ export const createLangiumGlobalConfig = (params: {
                 }
             },
             filesOrContents: extensionFilesOrContents
-        }],
-        editorAppConfig: {
-            codeResources: {
-                modified: params.codeContent
-            },
-            monacoWorkerFactory: configureDefaultWorkerFactory
-        },
-        languageClientConfigs
+        }]
+    };
+
+    const editorAppConfig: EditorAppConfig = {
+        $type: vscodeApiConfig.$type,
+        codeResources: {
+            modified: params.codeContent
+        }
+    };
+
+    return {
+        editorAppConfig,
+        vscodeApiConfig,
+        languageClientConfig
     };
 };

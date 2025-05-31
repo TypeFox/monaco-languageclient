@@ -11,9 +11,7 @@ import definedViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 40000,
-        // fileParallelism: false,
-        // threads: false,
+        testTimeout: 20000,
         browser: {
             enabled: true,
             headless: true,
@@ -27,22 +25,26 @@ export const vitestConfig = {
                 }
             ]
         },
-        // keep an explicit list of tests to run, so they can be commented in case of problems
         include: [
-            '**/client/test/workerFactory.test.ts',
-            '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
-            '**/client/test/tools/index.test.ts',
-            '**/client/test/tools/utils.test.ts',
-            '**/client/test/vscode/services.test.ts',
-            '**/client/test/languageClientWrapper.test.ts',
-            '**/wrapper/test/editorApp.test.ts',
-            '**/wrapper/test/utils.test.ts',
-            '**/wrapper/test/wrapper.test.ts',
-            '**/wrapper/test/vscode/services.test.ts',
-            '**/wrapper/test/editorApp-classic.test.ts',
-            '**/wrapper/test/wrapper-classic.test.ts',
-            '**/wrapper/test/workers/workerLoaders.test.ts',
-            '**/wrapper-react/test/index.test.tsx'
+            // keep also an explicit list of tests to run, so they can be commented in case of problems
+            // '**/client/test/common/logging.test.ts',
+            // '**/client/test/common/utils.test.ts',
+            // '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
+            // '**/client/test/vscode/manager.test.ts',
+            // '**/client/test/wrapper/lcmanager.test.ts',
+            // '**/client/test/wrapper/lcwrapper.test.ts',
+            // '**/client/test/worker/workerFactory.test.ts',
+            // '**/client/test/worker/workerLoaders.test.ts',
+            // '**/client/test/editorApp/editorApp.test.ts',
+            // '**/client/test/editorApp/editorApp-classic.test.ts',
+            // '**/client/test/editorApp/config.test.ts',
+            // '**/wrapper-react/test/index.test.tsx',
+            '**/client/test/**/*',
+            '**/wrapper-react/test/**/*'
+        ],
+        exclude: [
+            '**/support/**/*',
+            '**/__screenshots__/**/*',
         ]
     }
 };
