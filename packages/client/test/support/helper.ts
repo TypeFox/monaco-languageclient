@@ -3,8 +3,18 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageTransports } from 'vscode-languageclient';
-import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { MessageTransports } from 'vscode-languageclient/browser.js';
+
+export const createMonacoEditorDiv = () => {
+    const div = document.createElement('div');
+    div.id = 'monaco-editor-root';
+    document.body.insertAdjacentElement('beforeend', div);
+    return div;
+};
 
 export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
     messageTransports?: MessageTransports): LanguageClientConfig => {
@@ -16,7 +26,6 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
         connection: {
             options: {
                 $type: 'WorkerDirect',
-                // create a web worker to pass to the wrapper
                 worker
             },
             messageTransports
@@ -33,7 +42,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
         connection: {
             options: {
                 $type: 'WorkerConfig',
-                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
+                url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
                 type: 'module'
             }
         }
@@ -52,5 +61,38 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
                 url: `ws://localhost:${port}/rester`
             },
         }
+    };
+};
+
+export const createEditorAppConfigClassic = (codeResources: CodeResources): EditorAppConfig => {
+    return {
+        $type: 'classic',
+        codeResources,
+        editorOptions: {},
+    };
+};
+
+export const createEditorAppConfigClassicExtended = (codeResources: CodeResources): EditorAppConfig => {
+    return {
+        $type: 'extended',
+        codeResources
+    };
+};
+
+export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
+    return {
+        $type: 'extended',
+        advanced: {
+            enforceSemanticHighlighting: true,
+            loadThemes: false
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern'
+            })
+        },
+        htmlContainer,
+        serviceOverrides: {},
+        monacoWorkerFactory: configureDefaultWorkerFactory
     };
 };

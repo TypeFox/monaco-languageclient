@@ -4,16 +4,19 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { delayExecution } from 'monaco-languageclient/common';
+import { EditorApp } from 'monaco-languageclient/editorApp';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
-import { delayExecution, disableElement } from '../../common/client/utils.js';
+import { disableElement, type ExampleAppConfig } from '../../common/client/utils.js';
 import text from '../../../resources/langium/langium-dsl/example.langium?raw';
 import workerUrl from './worker/langium-server?worker&url';
+import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 export const runLangiumDslWrapper = async (extendedMode: boolean) => {
     try {
-        let wrapper: MonacoEditorLanguageClientWrapper | undefined;
+        let editorApp: EditorApp | undefined;
 
         const loadLangiumWorker = () => {
             console.log(`Langium worker URL: ${workerUrl}`);
@@ -24,7 +27,7 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
         };
 
         const checkStarted = () => {
-            if (wrapper?.isStarted() ?? false) {
+            if (editorApp?.isStarted() ?? false) {
                 alert('Editor was already started!\nPlease reload the page to test the alternative editor.');
                 return true;
             }
@@ -42,24 +45,32 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
                 console.log('Received message from worker:', message);
             });
 
+            let appConfig: ExampleAppConfig;
             if (extendedMode) {
-                const config = await setupLangiumClientExtended({
+                appConfig = setupLangiumClientExtended({
                     worker,
                     messageTransports: { reader, writer }
                 });
-                wrapper = new MonacoEditorLanguageClientWrapper();
-                await wrapper.initAndStart(config);
             } else {
-                const config = await setupLangiumClientClassic({
+                appConfig = setupLangiumClientClassic({
                     worker,
                     messageTransports: { reader, writer }
                 });
-                wrapper = new MonacoEditorLanguageClientWrapper();
-                await wrapper.initAndStart(config);
             }
+            // perform global init
+            const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+            await apiWrapper.init();
+
+            // init language client
+            const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+            await lcWrapper.start();
+
+            // run editorApp
+            editorApp = new EditorApp(appConfig.editorAppConfig);
+            await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
 
             await delayExecution(1000);
-            await wrapper.updateCodeResources({
+            await editorApp.updateCodeResources({
                 modified: {
                     text: `// modified file\n\n${text}`,
                     uri: '/workspace/mod.langium',
@@ -69,10 +80,9 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
         };
 
         const disposeEditor = async () => {
-            if (!wrapper) return;
-            wrapper.reportStatus();
-            await wrapper.dispose();
-            wrapper = undefined;
+            editorApp?.reportStatus();
+            await editorApp?.dispose();
+            editorApp = undefined;
             disableElement('button-start', false);
         };
 

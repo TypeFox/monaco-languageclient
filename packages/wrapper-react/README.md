@@ -20,7 +20,7 @@ You can import the monaco react component for easy use in an existing React proj
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@codingame/monaco-vscode-python-default-extension';
-import { WrapperConfig } from 'monaco-editor-wrapper';
+import { WrapperConfig } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 

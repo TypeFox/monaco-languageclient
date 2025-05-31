@@ -1,0 +1,458 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
+import { ConfigurationTarget, IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
+import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
+import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
+import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
+import { getEnhancedMonacoEnvironment, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
+import * as vscode from 'vscode';
+import { ModelRefs, type CallbackDisposeable, type CodeContent, type CodeResources, type DisposableModelRefs, type EditorAppConfig, type TextContents, type TextModels } from './config.js';
+
+/**
+ * This is the base class for both Monaco Ediotor Apps:
+ * - EditorAppClassic
+ * - EditorAppExtended
+ *
+ * It provides the generic functionality for both implementations.
+ */
+export class EditorApp {
+
+    private $type: OverallConfigType;
+    private id: string;
+    private config: EditorAppConfig;
+
+    protected logger: Logger = new ConsoleLogger();
+
+    private editor: monaco.editor.IStandaloneCodeEditor | undefined;
+    private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
+
+    private modelRefs: ModelRefs = new ModelRefs();
+
+    private onTextChanged?: (textChanges: TextContents) => void;
+    private textChangedDiposeables: CallbackDisposeable = {};
+    private modelDisposables: DisposableModelRefs = {};
+
+    private modelRefDisposeTimeout = -1;
+
+    private startingAwait?: Promise<void>;
+    private startingResolve: (value: void | PromiseLike<void>) => void;
+
+    private disposingAwait?: Promise<void>;
+    private disposingResolve: (value: void | PromiseLike<void>) => void;
+
+    constructor(userAppConfig?: EditorAppConfig) {
+        this.$type = userAppConfig?.$type ?? 'extended';
+        this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
+        if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
+        }
+        this.config = {
+            codeResources: userAppConfig?.codeResources ?? undefined,
+            useDiffEditor: userAppConfig?.useDiffEditor ?? false,
+            readOnly: userAppConfig?.readOnly ?? false,
+            domReadOnly: userAppConfig?.domReadOnly ?? false,
+            overrideAutomaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
+        };
+        this.config.editorOptions = {
+            ...userAppConfig?.editorOptions,
+            automaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
+        };
+        this.config.diffEditorOptions = {
+            ...userAppConfig?.diffEditorOptions,
+            automaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
+        };
+        this.config.languageDef = userAppConfig?.languageDef;
+
+        this.logger.setLevel(this.config.logLevel ?? LogLevel.Off);
+    }
+
+    isDiffEditor() {
+        return this.config.useDiffEditor === true;
+    }
+
+    getConfig(): EditorAppConfig {
+        return this.config;
+    }
+
+    getEditor(): monaco.editor.IStandaloneCodeEditor | undefined {
+        return this.editor;
+    }
+
+    getDiffEditor(): monaco.editor.IStandaloneDiffEditor | undefined {
+        return this.diffEditor;
+    }
+
+    getTextModels(): TextModels {
+        return {
+            modified: this.modelRefs.modified?.object.textEditorModel ?? undefined,
+            original: this.modelRefs.original?.object.textEditorModel ?? undefined
+        };
+    }
+
+    getLogger() {
+        return this.logger;
+    }
+
+    registerOnTextChangedCallback(onTextChanged?: (textChanges: TextContents) => void) {
+        this.onTextChanged = onTextChanged;
+    }
+
+    public setModelRefDisposeTimeout(modelRefDisposeTimeout: number) {
+        this.modelRefDisposeTimeout = modelRefDisposeTimeout;
+    }
+
+    private markStarting() {
+        this.startingAwait = new Promise<void>((resolve) => {
+            this.startingResolve = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startingResolve();
+        this.startingAwait = undefined;
+    }
+
+    isStarting() {
+        return this.startingAwait !== undefined;
+    }
+
+    getStartingAwait() {
+        return this.startingAwait;
+    }
+
+    isStarted() {
+        return this.editor !== undefined || this.diffEditor !== undefined;
+    }
+
+    /**
+     * Starts the single editor application.
+     */
+    async start(htmlContainer: HTMLElement) {
+        if (this.isStarting()) {
+            await this.getStartingAwait();
+        }
+        this.markStarting();
+
+        if (!this.isDisposed()) {
+            throw new Error('You called start without properly disposing the EditorApp.');
+        }
+
+        const languageDef = this.config.languageDef;
+        if (languageDef) {
+            if (this.$type === 'extended') {
+                throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
+            }
+            // register own language first
+            monaco.languages.register(languageDef.languageExtensionConfig);
+
+            const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+            if (languageRegistered.length === 0) {
+                // this is only meaningful for languages supported by monaco out of the box
+                monaco.languages.register({
+                    id: languageDef.languageExtensionConfig.id
+                });
+            }
+
+            // apply monarch definitions
+            if (languageDef.monarchLanguage) {
+                monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
+            }
+
+            if (languageDef.theme) {
+                monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
+                monaco.editor.setTheme(languageDef.theme.name);
+            }
+        }
+
+        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+            StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+        }
+
+        // ensure proper default resources are initialized, uris have to be unique
+        const modified = {
+            text: this.config.codeResources?.modified?.text ?? '',
+            uri: this.config.codeResources?.modified?.uri ?? `default-uri-modified-${this.id}`,
+            enforceLanguageId: this.config.codeResources?.modified?.enforceLanguageId ?? undefined
+        };
+        this.modelRefs.modified = await this.buildModelReference(modified, this.logger);
+
+        if (this.isDiffEditor()) {
+            const original = {
+                text: this.config.codeResources?.original?.text ?? '',
+                uri: this.config.codeResources?.original?.uri ?? `default-uri-original-${this.id}`,
+                enforceLanguageId: this.config.codeResources?.original?.enforceLanguageId ?? undefined
+            };
+            this.modelRefs.original = await this.buildModelReference(original, this.logger);
+        }
+
+        try {
+            const envEnhanced = getEnhancedMonacoEnvironment();
+            const viewServiceType = envEnhanced.viewServiceType;
+            if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
+                this.logger.info(`Starting monaco-editor (${this.id})`);
+                await this.createEditors(htmlContainer!);
+            } else {
+                this.logger.info('No EditorService configured. monaco-editor will not be started.');
+            }
+
+            this.logger.info('EditorApp start completed successfully.');
+            // eslint-disable-next-line no-useless-catch
+        } catch (e) {
+            throw e;
+        } finally {
+            // in case of rejection, mark as started, otherwise the promise will never resolve
+            this.markStarted();
+        }
+    }
+
+    async createEditors(htmlContainer: HTMLElement): Promise<void> {
+        if (this.isDiffEditor()) {
+            this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
+            const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
+            const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
+            if (modified !== undefined && original !== undefined) {
+                const model = {
+                    modified,
+                    original
+                };
+                this.diffEditor.setModel(model);
+                this.announceModelUpdate(model);
+            }
+        } else {
+            const model = {
+                modified: this.modelRefs.modified?.object.textEditorModel
+            };
+            this.editor = monaco.editor.create(htmlContainer, {
+                ...this.config.editorOptions,
+                model: model.modified
+            });
+            this.announceModelUpdate(model);
+        }
+    }
+
+    updateCode(code: { modified?: string, original?: string }) {
+        if (this.isDiffEditor()) {
+            if (code.modified !== undefined) {
+                this.diffEditor?.getModifiedEditor().setValue(code.modified);
+            }
+            if (code.original !== undefined) {
+                this.diffEditor?.getOriginalEditor().setValue(code.original);
+            }
+        } else {
+            if (code.modified !== undefined) {
+                this.editor?.setValue(code.modified);
+            }
+
+        }
+    }
+
+    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
+        let updateModified = false;
+        let updateOriginal = false;
+
+        if (codeResources?.modified !== undefined && codeResources.modified.uri !== this.modelRefs.modified?.object.resource.path) {
+            this.modelDisposables.modified = this.modelRefs.modified;
+            this.modelRefs.modified = await this.buildModelReference(codeResources.modified, this.logger);
+            updateModified = true;
+        }
+        if (codeResources?.original !== undefined && codeResources.original.uri !== this.modelRefs.original?.object.resource.path) {
+            this.modelDisposables.original = this.modelRefs.original;
+            this.modelRefs.original = await this.buildModelReference(codeResources.original, this.logger);
+            updateOriginal = true;
+        }
+
+        if (this.isDiffEditor()) {
+            if (updateModified && updateOriginal) {
+                const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
+                const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
+                if (modified !== undefined && original !== undefined) {
+                    const model = {
+                        modified,
+                        original
+                    };
+                    this.diffEditor?.setModel(model);
+                    this.announceModelUpdate(model);
+                }
+            } else {
+                this.logger.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
+            }
+        } else {
+            if (updateModified) {
+                const model = {
+                    modified: this.modelRefs.modified?.object.textEditorModel
+                };
+                if (model.modified !== undefined && model.modified !== null) {
+                    this.editor?.setModel(model.modified);
+                    this.announceModelUpdate(model);
+                }
+            } else {
+                this.logger.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
+            }
+        }
+
+        await this.disposeModelRefs();
+    }
+
+    async buildModelReference(codeContent: CodeContent, logger?: Logger): Promise<IReference<ITextFileEditorModel>> {
+        const code = codeContent.text;
+        const modelRef = await createModelReference(vscode.Uri.parse(codeContent.uri), code);
+
+        // update the text if different
+        if (modelRef.object.textEditorModel?.getValue() !== code) {
+            modelRef.object.textEditorModel?.setValue(code);
+        }
+        const enforceLanguageId = codeContent.enforceLanguageId;
+        if (enforceLanguageId !== undefined) {
+            modelRef.object.setLanguageId(enforceLanguageId);
+            logger?.info(`Main languageId is enforced: ${enforceLanguageId}`);
+        }
+        return modelRef;
+    };
+
+    private announceModelUpdate(textModels: TextModels) {
+        if (this.onTextChanged !== undefined) {
+            let changed = false;
+            if (textModels.modified !== undefined && textModels.modified !== null) {
+                const old = this.textChangedDiposeables.modified;
+                this.textChangedDiposeables.modified = textModels.modified.onDidChangeContent(() => {
+                    didModelContentChange(textModels, this.onTextChanged);
+                });
+                old?.dispose();
+                changed = true;
+            }
+
+            if (textModels.original !== undefined && textModels.original !== null) {
+                const old = this.textChangedDiposeables.original;
+                this.textChangedDiposeables.original = textModels.original.onDidChangeContent(() => {
+                    didModelContentChange(textModels, this.onTextChanged);
+                });
+                old?.dispose();
+                changed = true;
+            }
+
+            if (changed) {
+                // do it initially
+                didModelContentChange(textModels, this.onTextChanged);
+            }
+        }
+    }
+
+    async dispose() {
+        if (this.isDisposing()) {
+            await this.getDisposingAwait();
+        }
+        this.markDisposing();
+
+        if (this.editor) {
+            this.editor.dispose();
+            this.editor = undefined;
+        }
+        if (this.diffEditor) {
+            this.diffEditor.dispose();
+            this.diffEditor = undefined;
+        }
+
+        this.textChangedDiposeables.modified?.dispose();
+        this.textChangedDiposeables.original?.dispose();
+        this.textChangedDiposeables.modified = undefined;
+        this.textChangedDiposeables.original = undefined;
+
+        await this.disposeModelRefs();
+
+        this.markDisposed();
+    }
+
+    isDisposed(): boolean {
+        return this.editor === undefined && this.diffEditor === undefined &&
+            // this.textChangedDiposeables.modified === undefined && this.textChangedDiposeables.original === undefined &&
+            this.modelDisposables.original === undefined && this.modelDisposables.modified === undefined;
+    }
+
+    private markDisposing() {
+        this.disposingAwait = new Promise<void>((resolve) => {
+            this.disposingResolve = resolve;
+        });
+    }
+
+    private markDisposed() {
+        this.disposingResolve();
+        this.disposingAwait = undefined;
+    }
+
+    isDisposing() {
+        return this.disposingAwait !== undefined;
+    }
+
+    getDisposingAwait() {
+        return this.disposingAwait;
+    }
+
+    async disposeModelRefs() {
+        const diposeRefs = () => {
+            if (this.logger.getLevel() === LogLevel.Debug) {
+                const models = monaco.editor.getModels();
+                this.logger.debug('Current model URIs:');
+                models.forEach((model, _index) => {
+                    this.logger.debug(`${model.uri.toString()}`);
+                });
+            }
+
+            if (this.modelDisposables.modified !== undefined && !(this.modelDisposables.modified.object.isDisposed() === true)) {
+                this.modelDisposables.modified.dispose();
+                this.modelDisposables.modified = undefined;
+            }
+            if (this.modelDisposables.original !== undefined && !(this.modelDisposables.original.object.isDisposed() === true)) {
+                this.modelDisposables.original.dispose();
+                this.modelDisposables.original = undefined;
+            }
+
+            if (this.logger.getLevel() === LogLevel.Debug) {
+                if (this.modelDisposables.modified === undefined && this.modelDisposables.original === undefined) {
+                    this.logger.debug('All model references are disposed.');
+                } else {
+                    this.logger.debug('Model references are still available.');
+                }
+            }
+        };
+
+        if (this.modelRefDisposeTimeout > 0) {
+            this.logger.debug('Using async dispose of model references');
+            await new Promise<void>(resolve => setTimeout(() => {
+                diposeRefs();
+                resolve();
+            }, this.modelRefDisposeTimeout));
+        } else {
+            diposeRefs();
+        }
+    }
+
+    updateLayout() {
+        if (this.isDiffEditor()) {
+            this.diffEditor?.layout();
+        } else {
+            this.editor?.layout();
+        }
+    }
+
+    reportStatus() {
+        const status: string[] = [];
+        status.push('EditorApp status:');
+        status.push(`Editor: ${this.editor?.getId()}`);
+        status.push(`DiffEditor: ${this.diffEditor?.getId()}`);
+        return status;
+    }
+}
+
+export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {
+    const modified = textModels.modified?.getValue() ?? '';
+    const original = textModels.original?.getValue() ?? '';
+    onTextChanged?.({
+        modified,
+        original
+    });
+};

@@ -118,7 +118,6 @@
     "express": "~5.1.0",
     "jszip": "~3.10.1",
     "langium": "~4.0.0",
-    "monaco-editor-wrapper": "~7.0.0-next.0",
     "monaco-languageclient": "~10.0.0-next.0",
     "pyright": "~1.1.403",
     "react": "~19.1.1",

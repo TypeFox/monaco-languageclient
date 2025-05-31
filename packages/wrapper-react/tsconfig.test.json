@@ -6,8 +6,6 @@
   },
   "references": [{
     "path": "./tsconfig.src.json"
-  }, {
-    "path": "../examples/tsconfig.src.json",
   }],
   "include": [
     "test/**/*.ts",

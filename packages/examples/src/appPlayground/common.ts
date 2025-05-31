@@ -5,11 +5,11 @@
 
 import * as vscode from 'vscode';
 import type { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import type { ConfigResult } from './config.js';
+import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 
-export const configurePostStart = async (wrapper: MonacoEditorLanguageClientWrapper, configResult: ConfigResult) => {
-    const result = wrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
+export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, configResult: ConfigResult) => {
+    const result = apiWrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
 
     // WA: Force show explorer and not search

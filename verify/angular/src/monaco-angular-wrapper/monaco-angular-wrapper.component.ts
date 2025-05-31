@@ -18,7 +18,7 @@ import {
     TextContents,
     TextModels,
     WrapperConfig, didModelContentChange
-} from 'monaco-editor-wrapper';
+} from 'monaco-languageclient/editorApp';
 
 @Component({
     standalone: true,

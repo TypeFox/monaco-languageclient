@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import type { ExtensionConfig } from 'monaco-editor-wrapper';
+import type { ExtensionConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { ConfigParams, InitMessage } from '../common/definitions.js';
 
 // This is derived from:

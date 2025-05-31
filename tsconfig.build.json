@@ -1,15 +1,11 @@
 {
-    "files": [],
-    // watch everything except for:
-    // - verify packages (no own source)
-    "references": [
-        { "path": "./packages/vscode-ws-jsonrpc/tsconfig.src.json" },
-        { "path": "./packages/client/tsconfig.src.json" },
-        { "path": "./packages/client/tsconfig.test.json" },
-        { "path": "./packages/wrapper/tsconfig.src.json" },
-        { "path": "./packages/wrapper/tsconfig.test.json" },
-        { "path": "./packages/wrapper-react/tsconfig.src.json" },
-        { "path": "./packages/wrapper-react/tsconfig.test.json" },
-        { "path": "./packages/examples/tsconfig.src.json" }
-    ]
- }
+  "files": [],
+  "references": [
+      { "path": "./packages/vscode-ws-jsonrpc/tsconfig.src.json" },
+      { "path": "./packages/client/tsconfig.src.json" },
+      { "path": "./packages/client/tsconfig.test.json" },
+      { "path": "./packages/wrapper-react/tsconfig.src.json" },
+      { "path": "./packages/wrapper-react/tsconfig.test.json" },
+      { "path": "./packages/examples/tsconfig.src.json" }
+  ]
+}

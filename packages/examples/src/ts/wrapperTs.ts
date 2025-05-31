@@ -3,14 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import '@codingame/monaco-vscode-javascript-default-extension';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import * as vscode from 'vscode';
 import { disableElement } from '../common/client/utils.js';
 
 export const runTsWrapper = async () => {
@@ -24,49 +25,55 @@ export const runTsWrapper = async () => {
     return "Goodbye";
 };`;
 
-    const wrapperConfig: WrapperConfig = {
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer: document.getElementById('monaco-editor-root')!,
+        htmlContainer,
         logLevel: LogLevel.Debug,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride()
-            },
-            enableExtHostWorker: true,
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'typescript.tsserver.web.projectWideIntellisense.enabled': true,
-                    'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
-                    'diffEditor.renderSideBySide': false,
-                    'editor.lightbulb.enabled': 'on',
-                    'editor.glyphMargin': true,
-                    'editor.guides.bracketPairsHorizontal': true,
-                    'editor.experimental.asyncTokenization': true
-                })
-            }
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride()
         },
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: code,
-                    uri: codeUri
-                },
-                original: {
-                    text: codeOriginal,
-                    uri: codeOriginalUri,
-                }
+        advanced: {
+            enableExtHostWorker: true,
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'typescript.tsserver.web.projectWideIntellisense.enabled': true,
+                'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
+                'diffEditor.renderSideBySide': false,
+                'editor.lightbulb.enabled': 'on',
+                'editor.glyphMargin': true,
+                'editor.guides.bracketPairsHorizontal': true,
+                'editor.experimental.asyncTokenization': true
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    const editorAppConfig: EditorAppConfig = {
+        $type: vscodeApiConfig.$type,
+        codeResources: {
+            modified: {
+                text: code,
+                uri: codeUri
             },
-            monacoWorkerFactory: configureDefaultWorkerFactory
+            original: {
+                text: codeOriginal,
+                uri: codeOriginalUri,
+            }
         }
     };
 
-    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.init();
+
+    const editorApp = new EditorApp(editorAppConfig);
     disableElement('button-swap-code', true);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(wrapperConfig);
+            await editorApp.start(htmlContainer);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -74,13 +81,13 @@ export const runTsWrapper = async () => {
                 console.log(`Found command: ${finding}`);
             });
 
-            wrapper.getEditor()?.focus();
+            editorApp.getEditor()?.focus();
             await vscode.commands.executeCommand('actions.find');
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
-            const codeResources = wrapper.getEditorApp()?.getConfig().codeResources;
+            const codeResources = editorApp.getConfig().codeResources;
             if (codeResources?.modified?.uri === codeUri) {
-                wrapper.updateCodeResources({
+                editorApp.updateCodeResources({
                     modified: {
                         text: codeOriginal,
                         uri: codeOriginalUri
@@ -91,7 +98,7 @@ export const runTsWrapper = async () => {
                     }
                 });
             } else {
-                wrapper.updateCodeResources({
+                editorApp.updateCodeResources({
                     modified: {
                         text: code,
                         uri: codeUri
@@ -105,14 +112,14 @@ export const runTsWrapper = async () => {
         });
         document.querySelector('#button-diff')?.addEventListener('click', async () => {
             // ensure it is boolean value and not undefined
-            const useDiffEditor = wrapperConfig.editorAppConfig!.useDiffEditor ?? false;
-            wrapperConfig.editorAppConfig!.useDiffEditor = !useDiffEditor;
-            disableElement('button-swap-code', !wrapperConfig.editorAppConfig!.useDiffEditor);
+            const useDiffEditor = editorAppConfig.useDiffEditor ?? false;
+            editorAppConfig.useDiffEditor = !useDiffEditor;
+            disableElement('button-swap-code', !editorAppConfig.useDiffEditor);
 
-            await wrapper.initAndStart(wrapperConfig);
+            await editorApp.start(htmlContainer);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await wrapper.dispose();
+            await editorApp.dispose();
         });
     } catch (e) {
         console.error(e);
