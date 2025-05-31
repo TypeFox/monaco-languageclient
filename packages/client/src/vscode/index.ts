@@ -3,5 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './fakeWorker.js';
-export * from './services.js';
+export * from './config.js';
+export * from './apiWrapper.js';
+export * from './utils.js';
+export * from './viewsService.js';

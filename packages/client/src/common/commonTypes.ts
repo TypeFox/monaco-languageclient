@@ -3,13 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { MonacoLanguageClient } from './client.js';
+import { BaseLanguageClient } from 'vscode-languageclient/browser.js';
 
 export type ConnectionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
 
 export interface WebSocketCallOptions {
     /** Adds handle on languageClient */
-    onCall: (languageClient?: MonacoLanguageClient) => void;
+    onCall: (languageClient?: BaseLanguageClient) => void;
     /** Reports Status Of Language Client */
     reportStatus?: boolean;
 }

@@ -13,6 +13,7 @@ import { createConverter as createProtocolConverter } from 'vscode-languageclien
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 export const runBrowserEditor = async () => {
     const codeConverter = createCodeConverter();
@@ -27,35 +28,39 @@ export const runBrowserEditor = async () => {
 }`;
     const codeUri = '/workspace/model.json';
 
-    const wrapper = new MonacoEditorLanguageClientWrapper();
-    const jsonClientUserConfig: WrapperConfig = {
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         htmlContainer,
         logLevel: LogLevel.Debug,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride(),
-            },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.lightbulb.enabled': 'On',
-                    'editor.experimental.asyncTokenization': true
-                })
-            }
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride(),
         },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.lightbulb.enabled': 'On',
+                'editor.experimental.asyncTokenization': true
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+    const wrapperConfig: WrapperConfig = {
+        $type: vscodeApiConfig.$type,
         editorAppConfig: {
             codeResources: {
                 modified: {
                     text: code,
                     uri: codeUri
                 }
-            },
-            monacoWorkerFactory: configureDefaultWorkerFactory
+            }
         }
     };
-    await wrapper.init(jsonClientUserConfig);
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.init();
+
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+    await wrapper.init(wrapperConfig);
 
     vscode.workspace.onDidOpenTextDocument((_event) => {
         mainVscodeDocument = _event;
@@ -155,7 +160,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await wrapper.start();
+    await wrapper.start(htmlContainer);
 
     wrapper.getTextModels()?.modified?.onDidChangeContent(() => {
         validate();

@@ -6,28 +6,62 @@
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MessageTransports } from 'vscode-languageclient';
-import type { Logger } from 'monaco-languageclient/tools';
-import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { Logger } from 'monaco-languageclient/common';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { defineDefaultWorkerLoaders } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
+import type { ExampleAppConfig } from '../../../common/client/utils.js';
 
-export const setupLangiumClientClassic = async (params: {
+export const setupLangiumClientClassic = (params: {
     worker: Worker
     messageTransports?: MessageTransports,
-}): Promise<WrapperConfig> => {
+}): ExampleAppConfig => {
+
     const workerLoaders = defineDefaultWorkerLoaders();
     workerLoaders.TextMateWorker = undefined;
-    return {
+
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'classic',
-        htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Debug,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride()
-            }
+        htmlContainer: document.getElementById('monaco-editor-root')!,
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride()
         },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'GitHub Dark High Contrast',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true,
+                'vitest.disableWorkspaceWarning': true
+            })
+        },
+        monacoWorkerFactory: (logger?: Logger) => {
+            useWorkerFactory({
+                workerLoaders,
+                logger
+            });
+        }
+    };
+
+    const languageClientConfig: LanguageClientConfig = {
+        clientOptions: {
+            documentSelector: ['langium']
+        },
+        connection: {
+            options: {
+                $type: 'WorkerDirect',
+                worker: params.worker
+            },
+            messageTransports: params.messageTransports
+        }
+    };
+
+    const wrapperConfig: WrapperConfig = {
+        $type: vscodeApiConfig.$type,
         editorAppConfig: {
             codeResources: {
                 modified: {
@@ -45,28 +79,13 @@ export const setupLangiumClientClassic = async (params: {
                 monarchLanguage: LangiumMonarchContent,
                 languageExtensionConfig: { id: 'langium' }
             },
-            monacoWorkerFactory: (logger?: Logger) => {
-                useWorkerFactory({
-                    workerLoaders,
-                    logger
-                });
-            }
-        },
-        languageClientConfigs: {
-            configs: {
-                langium: {
-                    clientOptions: {
-                        documentSelector: ['langium']
-                    },
-                    connection: {
-                        options: {
-                            $type: 'WorkerDirect',
-                            worker: params.worker
-                        },
-                        messageTransports: params.messageTransports
-                    }
-                }
-            }
+
         }
+    };
+
+    return {
+        wrapperConfig,
+        vscodeApiConfig,
+        languageClientConfig
     };
 };

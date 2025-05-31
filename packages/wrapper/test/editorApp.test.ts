@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { describe, expect, test } from 'vitest';
-import { EditorApp, verifyUrlOrCreateDataUrl } from 'monaco-editor-wrapper';
+import { verifyUrlOrCreateDataUrl } from 'monaco-languageclient/common';
+import { EditorApp } from 'monaco-editor-wrapper';
 import { createWrapperConfigExtendedApp } from './support/helper.js';
 
 describe('Test EditorApp', () => {

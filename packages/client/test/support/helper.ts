@@ -3,8 +3,16 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageTransports } from 'vscode-languageclient';
-import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import { MessageTransports } from 'vscode-languageclient/browser.js';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+
+export const createMonacoEditorDiv = () => {
+    const div = document.createElement('div');
+    div.id = 'monaco-editor-root';
+    document.body.insertAdjacentElement('beforeend', div);
+    return div;
+};
 
 export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
     messageTransports?: MessageTransports): LanguageClientConfig => {
@@ -33,7 +41,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
         connection: {
             options: {
                 $type: 'WorkerConfig',
-                url: new URL(`${import.meta.url.split('@fs')[0]}/packages/wrapper/test/worker/langium-server.ts`),
+                url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
                 type: 'module'
             }
         }
@@ -52,5 +60,21 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
                 url: `ws://localhost:${port}/rester`
             },
         }
+    };
+};
+
+export const createDefaultMonacoVscodeApiConfig = (): MonacoVscodeApiConfig => {
+    return {
+        $type: 'extended',
+        advanced: {
+            enforceSemanticHighlighting: true
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern'
+            })
+        },
+        htmlContainer: document.body,
+        serviceOverrides: {}
     };
 };

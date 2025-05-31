@@ -5,7 +5,7 @@
 
 import { describe, expect, test } from 'vitest';
 import { EditorApp } from 'monaco-editor-wrapper';
-import { createWrapperConfigClassicApp } from './support/helper-classic.js';
+import { createWrapperConfigClassicApp } from './support/helper.js';
 
 describe('Test Test EditorApp (classic)', () => {
 

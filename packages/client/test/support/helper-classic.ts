@@ -4,9 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
-import type { Logger } from 'monaco-languageclient/tools';
-import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
-import { createMonacoEditorDiv } from './helper.js';
+import type { Logger } from 'monaco-languageclient/common';
 
 const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
 const workerPromises: Map<string, Promise<void>> = new Map();
@@ -95,19 +93,4 @@ export const configureClassicWorkerFactory = (logger?: Logger) => {
         workerLoaders: defineClassisWorkerLoaders(),
         logger
     });
-};
-
-export const createWrapperConfigClassicApp = (codeResources: CodeResources): WrapperConfig => {
-    return {
-        $type: 'classic',
-        htmlContainer: createMonacoEditorDiv(),
-        vscodeApiConfig: {
-            loadThemes: false
-        },
-        editorAppConfig: {
-            codeResources,
-            editorOptions: {},
-            monacoWorkerFactory: configureClassicWorkerFactory
-        }
-    };
 };

@@ -3,18 +3,18 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
-import { RegisteredFileSystemProvider, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-cpp-default-extension';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createWrapperConfig } from './config.js';
-import { ClangdWorkerHandler } from './workerHandler.js';
-import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
-import { createDefaultWorkspaceFile, disableElement } from '../../common/client/utils.js';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { createDefaultWorkspaceContent, disableElement } from '../../common/client/utils.js';
 import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
-
-const wrapper = new MonacoEditorLanguageClientWrapper();
+import { createClangdAppConfig } from './config.js';
+import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
+import { ClangdWorkerHandler } from './workerHandler.js';
 
 export const runClangdWrapper = async () => {
     const channelLs = new MessageChannel();
@@ -22,7 +22,7 @@ export const runClangdWrapper = async () => {
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     const workspaceFileUri = vscode.Uri.file(`${HOME_DIR}/workspace.code-workspace`);
-    fileSystemProvider.registerFile(createDefaultWorkspaceFile(workspaceFileUri, WORKSPACE_PATH));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(workspaceFileUri, createDefaultWorkspaceContent(WORKSPACE_PATH)));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const readiness = async () => {
@@ -32,7 +32,7 @@ export const runClangdWrapper = async () => {
     new MainRemoteMessageChannelFs(fileSystemProvider, channelFs.port1, readiness);
 
     const clangdWorkerHandler = new ClangdWorkerHandler();
-    const wrapperConfig = await createWrapperConfig({
+    const appConfig = await createClangdAppConfig({
         htmlContainer: document.body,
         workspaceUri: vscode.Uri.file(WORKSPACE_PATH),
         workspaceFileUri,
@@ -40,7 +40,14 @@ export const runClangdWrapper = async () => {
         lsMessageLocalPort: channelLs.port1
     });
 
-    await wrapper.init(wrapperConfig);
+    // perform global init
+    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+    await apiWrapper.init();
+
+    const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+    const wrapper = new MonacoEditorLanguageClientWrapper();
+
+    await wrapper.init(appConfig.wrapperConfig);
     const initConfig = {
         lsMessagePort: channelLs.port2,
         fsMessagePort: channelFs.port2,
@@ -53,7 +60,7 @@ export const runClangdWrapper = async () => {
     const startWrapper = async () => {
         await clangdWorkerHandler.init(initConfig);
         await clangdWorkerHandler.launch();
-        await wrapper.startLanguageClients();
+        await lcWrapper.start();
     };
 
     try {

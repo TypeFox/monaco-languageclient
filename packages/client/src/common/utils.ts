@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { WebSocketUrlParams, WebSocketUrlString } from 'monaco-languageclient';
+import type { WebSocketUrlParams, WebSocketUrlString } from './commonTypes.js';
 
 export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';
@@ -36,4 +36,19 @@ export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
         }
     }
     return buildUrl;
+};
+
+export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
+    if (input instanceof URL) {
+        return input.href;
+    } else {
+        const bytes = new TextEncoder().encode(input);
+        const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
+        const base64 = btoa(binString);
+        return new URL(`data:text/plain;base64,${base64}`).href;
+    }
+};
+
+export const delayExecution = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 };

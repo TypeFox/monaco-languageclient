@@ -4,12 +4,15 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { delayExecution } from 'monaco-languageclient/common';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
-import { delayExecution, disableElement } from '../../common/client/utils.js';
+import { disableElement, type ExampleAppConfig } from '../../common/client/utils.js';
 import text from '../../../resources/langium/langium-dsl/example.langium?raw';
 import workerUrl from './worker/langium-server?worker&url';
+import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 export const runLangiumDslWrapper = async (extendedMode: boolean) => {
     try {
@@ -42,21 +45,29 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
                 console.log('Received message from worker:', message);
             });
 
+            let appConfig: ExampleAppConfig;
             if (extendedMode) {
-                const config = await setupLangiumClientExtended({
+                appConfig = setupLangiumClientExtended({
                     worker,
                     messageTransports: { reader, writer }
                 });
-                wrapper = new MonacoEditorLanguageClientWrapper();
-                await wrapper.initAndStart(config);
             } else {
-                const config = await setupLangiumClientClassic({
+                appConfig = setupLangiumClientClassic({
                     worker,
                     messageTransports: { reader, writer }
                 });
-                wrapper = new MonacoEditorLanguageClientWrapper();
-                await wrapper.initAndStart(config);
             }
+            // perform global init
+            const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+            await apiWrapper.init();
+
+            // init language client
+            const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+            await lcWrapper.start();
+
+            // run wrapper
+            wrapper = new MonacoEditorLanguageClientWrapper();
+            await wrapper.initAndStart(appConfig.wrapperConfig, appConfig.vscodeApiConfig.htmlContainer!);
 
             await delayExecution(1000);
             await wrapper.updateCodeResources({

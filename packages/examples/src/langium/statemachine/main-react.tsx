@@ -20,9 +20,8 @@ export const runStatemachineReact = async () => {
     reader.listen((message) => {
         console.log('Received message from worker:', message);
     });
-    const wrapperConfig = createLangiumGlobalConfig({
+    const appConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
-        useLanguageClient: true,
         codeContent: {
             text,
             uri: '/workspace/example.statemachine'
@@ -62,7 +61,8 @@ export const runStatemachineReact = async () => {
                         <div style={{ 'height': height }} >
                             <MonacoEditorReactComp
                                 style={{ 'height': '100%' }}
-                                wrapperConfig={wrapperConfig}
+                                vscodeApiConfig={appConfig.vscodeApiConfig}
+                                wrapperConfig={appConfig.wrapperConfig}
                                 onTextChanged={onTextChanged}
                             />
                             <b>Debug:</b><br />{testState}

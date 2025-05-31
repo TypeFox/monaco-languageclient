@@ -5,7 +5,7 @@
 
 import { describe, expect, test } from 'vitest';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { ConsoleLogger } from 'monaco-languageclient/tools';
+import { ConsoleLogger } from 'monaco-languageclient/common';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 
 describe('WorkerFactory Tests', () => {

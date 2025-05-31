@@ -11,10 +11,14 @@ import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
-import { delayExecution, disableElement } from '../../common/client/utils.js';
+import { disableElement } from '../../common/client/utils.js';
+import { delayExecution } from 'monaco-languageclient/common';
+import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
 const wrapper2 = new MonacoEditorLanguageClientWrapper();
+let lcWrapper: LanguageClientWrapper;
 
 const startEditor = async () => {
     disableElement('button-start', true);
@@ -43,19 +47,28 @@ const startEditor = async () => {
     });
 
     // the configuration does not contain any text content
-    const langiumGlobalConfig = createLangiumGlobalConfig({
+    const appConfig = createLangiumGlobalConfig({
         languageServerId: 'first',
         codeContent: {
             text,
             uri: '/workspace/example.statemachine'
         },
-        useLanguageClient: true,
         worker: stateMachineWorkerPort,
         messagePort: channel.port1,
         messageTransports: { reader, writer },
         htmlContainer: document.getElementById('monaco-editor-root')!
     });
-    await wrapper.initAndStart(langiumGlobalConfig);
+
+    // perform global init
+    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+    await apiWrapper.init();
+
+    // init language client
+    lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+    await lcWrapper.start();
+
+    // run wrapper
+    await wrapper.initAndStart(appConfig.wrapperConfig, appConfig.vscodeApiConfig.htmlContainer!);
 
     wrapper.updateCodeResources({
         modified: {
@@ -66,16 +79,15 @@ const startEditor = async () => {
 
     // start the second wrapper without any languageclient config
     // => they share the language server and both text contents have different uris
-    const langiumGlobalConfig2 = createLangiumGlobalConfig({
-        languageServerId: 'second',
-        useLanguageClient: false,
-        codeContent: {
-            text: textMod,
-            uri: '/workspace/example-mod.statemachine'
-        },
-        htmlContainer: document.getElementById('monaco-editor-root2')!
-    });
-    await wrapper2.initAndStart(langiumGlobalConfig2);
+    const appConfig2 = appConfig;
+    appConfig2.wrapperConfig.editorAppConfig!.codeResources!.modified = {
+        text: textMod,
+        uri: '/workspace/example-mod.statemachine'
+    };
+    appConfig2.vscodeApiConfig.htmlContainer = document.getElementById('monaco-editor-root2')!;
+
+    // run wrapper
+    await wrapper2.initAndStart(appConfig2.wrapperConfig, appConfig2.vscodeApiConfig.htmlContainer);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);
@@ -94,6 +106,8 @@ const startEditor = async () => {
 const disposeEditor = async () => {
     disableElement('button-start', false);
     disableElement('button-dispose', true);
+
+    lcWrapper.dispose();
 
     wrapper.reportStatus();
     await wrapper.dispose();
