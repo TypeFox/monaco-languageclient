@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "description": "Monaco Language client implementation",
   "author": {
     "name": "TypeFox GmbH",
@@ -83,17 +83,17 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~17.1.2",
-    "@codingame/monaco-vscode-configuration-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-editor-api": "~17.1.2",
-    "@codingame/monaco-vscode-editor-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-extensions-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-extension-api": "~17.1.2",
-    "@codingame/monaco-vscode-languages-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-localization-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-log-service-override": "~17.1.2",
-    "@codingame/monaco-vscode-model-service-override": "~17.1.2",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~17.1.2",
+    "@codingame/monaco-vscode-api": "~17.2.1",
+    "@codingame/monaco-vscode-configuration-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-editor-api": "~17.2.1",
+    "@codingame/monaco-vscode-editor-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-extensions-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-extension-api": "~17.2.1",
+    "@codingame/monaco-vscode-languages-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-localization-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-log-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-model-service-override": "~17.2.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~17.2.1",
     "vscode-languageclient": "~9.0.1"
   },
   "scripts": {

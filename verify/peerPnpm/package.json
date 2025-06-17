@@ -12,8 +12,8 @@
     "pnpm": "10.3.0"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.5.3",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~17.1.2"
+    "monaco-languageclient-examples": "~2025.6.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@~17.2.1"
   },
   "devDependencies": {
     "typescript": "~5.8.2"
