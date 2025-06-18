@@ -4,14 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { RegisteredFileSystemProvider, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-cpp-default-extension';
 import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { createWrapperConfig } from './config.js';
 import { ClangdWorkerHandler } from './workerHandler.js';
 import { MainRemoteMessageChannelFs } from './mainRemoteMessageChannelFs.js';
-import { createDefaultWorkspaceFile, disableElement } from '../../common/client/utils.js';
+import { createDefaultWorkspaceContent, disableElement } from '../../common/client/utils.js';
 import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -22,7 +22,7 @@ export const runClangdWrapper = async () => {
 
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     const workspaceFileUri = vscode.Uri.file(`${HOME_DIR}/workspace.code-workspace`);
-    fileSystemProvider.registerFile(createDefaultWorkspaceFile(workspaceFileUri, WORKSPACE_PATH));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(workspaceFileUri, createDefaultWorkspaceContent(WORKSPACE_PATH)));
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const readiness = async () => {

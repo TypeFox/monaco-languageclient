@@ -12,7 +12,7 @@ import { configurePostStart } from './common.js';
 
 export const runApplicationPlaygroundReact = async () => {
 
-    const configResult = configure();
+    const configResult = await configure();
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
         return (

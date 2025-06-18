@@ -3,37 +3,37 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
+import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
+import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import getPreferencesServiceOverride from '@codingame/monaco-vscode-preferences-service-override';
+import '@codingame/monaco-vscode-python-default-extension';
+import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
+import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
+import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
+import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
+import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-override';
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
-import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
-import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
-import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
-import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-override';
-import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
-import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
-import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-override';
-import getPreferencesServiceOverride from '@codingame/monaco-vscode-preferences-service-override';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
-import '@codingame/monaco-vscode-python-default-extension';
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { createUrl } from 'monaco-languageclient/tools';
-import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { createDefaultWorkspaceFile } from '../../common/client/utils.js';
-import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
+import { MonacoLanguageClient } from 'monaco-languageclient';
+import { createUrl } from 'monaco-languageclient/tools';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
+import * as vscode from 'vscode';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
-import badPyCode from '../../../resources/python/bad.py?raw';
+import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
+import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
 export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
@@ -67,7 +67,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello.py')!.uri, helloPyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello2.py')!.uri, hello2PyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('bad.py')!.uri, badPyCode));
-    fileSystemProvider.registerFile(createDefaultWorkspaceFile(configParams.workspaceFile, workspaceRoot));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(configParams.workspaceFile, createDefaultWorkspaceContent(configParams.workspaceRoot)));
     fileSystemProvider.registerFile(createDebugLaunchConfigFile(workspaceRoot, configParams.languageId));
     registerFileSystemOverlay(1, fileSystemProvider);
 

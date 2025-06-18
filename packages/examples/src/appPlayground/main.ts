@@ -12,7 +12,7 @@ const wrapper = new MonacoEditorLanguageClientWrapper();
 
 export const runApplicationPlayground = async () => {
     disableElement('button-start', true);
-    const configResult = configure(document.body);
+    const configResult = await configure(document.body);
     await wrapper.init(configResult.wrapperConfig);
     await configurePostStart(wrapper, configResult);
 };
