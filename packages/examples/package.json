@@ -112,6 +112,7 @@
     "@codingame/monaco-vscode-typescript-basics-default-extension": "~17.2.1",
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "~17.2.1",
     "@codingame/monaco-vscode-views-service-override": "~17.2.1",
+    "@codingame/monaco-vscode-outline-service-override": "~17.2.1",
     "@typefox/monaco-editor-react": "~6.8.1",
     "cors": "^2.8.5",
     "express": "~5.1.0",

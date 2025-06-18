@@ -17,6 +17,7 @@ import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
+import getOutlineServiceOverride from '@codingame/monaco-vscode-outline-service-override';
 import * as vscode from 'vscode';
 
 // this is required syntax highlighting
@@ -62,7 +63,8 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
                 ...getEnvironmentServiceOverride(),
                 ...getSecretStorageServiceOverride(),
                 ...getStorageServiceOverride(),
-                ...getSearchServiceOverride()
+                ...getSearchServiceOverride(),
+                ...getOutlineServiceOverride()
             },
             enableExtHostWorker: true,
             viewsConfig: {
