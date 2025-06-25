@@ -10,30 +10,30 @@
     "react"
   ],
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
-        "dist/index"
+        "lib/index"
       ]
     }
   },
   "files": [
-    "dist",
+    "lib",
     "src",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
-    "clean": "shx rm -fr ./dist ./bundle *.tsbuildinfo",
+    "clean": "shx rm -fr ./lib ./bundle *.tsbuildinfo",
     "compile": " tsc --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
   },
