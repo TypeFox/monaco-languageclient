@@ -5,4 +5,3 @@
 
 export * from './config.js';
 export * from './editorApp.js';
-export * from './wrapper.js';

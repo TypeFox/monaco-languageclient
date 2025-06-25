@@ -13,17 +13,17 @@ import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-sto
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { Uri } from 'vscode';
 import { ClangdWorkerHandler } from './workerHandler.js';
 
 export type ClangdAppConfig = {
     languageClientConfig: LanguageClientConfig;
     vscodeApiConfig: MonacoVscodeApiConfig;
-    wrapperConfig: WrapperConfig;
+    editorAppConfig: EditorAppConfig;
 }
 
 export const createClangdAppConfig = async (config: {
@@ -125,13 +125,13 @@ export const createClangdAppConfig = async (config: {
         }
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type
     };
 
     return {
         vscodeApiConfig,
         languageClientConfig,
-        wrapperConfig
+        editorAppConfig
     };
 };

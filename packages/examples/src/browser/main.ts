@@ -11,7 +11,7 @@ import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
@@ -45,22 +45,19 @@ export const runBrowserEditor = async () => {
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: code,
-                    uri: codeUri
-                }
+        codeResources: {
+            modified: {
+                text: code,
+                uri: codeUri
             }
         }
     };
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.init();
 
-    const wrapper = new MonacoEditorLanguageClientWrapper();
-    await wrapper.init(wrapperConfig);
+    const editorApp = new EditorApp(editorAppConfig);
 
     vscode.workspace.onDidOpenTextDocument((_event) => {
         mainVscodeDocument = _event;
@@ -160,9 +157,9 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await wrapper.start(htmlContainer);
+    await editorApp.start(htmlContainer);
 
-    wrapper.getTextModels()?.modified?.onDidChangeContent(() => {
+    editorApp.getTextModels().modified?.onDidChangeContent(() => {
         validate();
     });
 };

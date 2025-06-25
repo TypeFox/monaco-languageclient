@@ -3,13 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { configure } from './config.js';
 import { configurePostStart } from './common.js';
 import { disableElement } from '../common/client/utils.js';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
-
-const wrapper = new MonacoEditorLanguageClientWrapper();
 
 export const runApplicationPlayground = async () => {
     disableElement('button-start', true);
@@ -20,6 +17,5 @@ export const runApplicationPlayground = async () => {
     const apiWrapper = new MonacoVscodeApiWrapper(configResult.vscodeApiConfig);
     await apiWrapper.init();
 
-    await wrapper.init(configResult.wrapperConfig);
     await configurePostStart(apiWrapper, configResult);
 };

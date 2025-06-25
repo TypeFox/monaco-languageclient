@@ -7,7 +7,6 @@ import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemO
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-cpp-default-extension';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { createDefaultWorkspaceContent, disableElement } from '../../common/client/utils.js';
@@ -45,9 +44,7 @@ export const runClangdWrapper = async () => {
     await apiWrapper.init();
 
     const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
-    const wrapper = new MonacoEditorLanguageClientWrapper();
 
-    await wrapper.init(appConfig.wrapperConfig);
     const initConfig = {
         lsMessagePort: channelLs.port2,
         fsMessagePort: channelFs.port2,

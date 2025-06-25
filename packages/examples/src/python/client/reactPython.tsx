@@ -15,7 +15,7 @@ import { createPythonAppConfig } from './config.js';
 export const runPythonReact = async () => {
     const appConfig = createPythonAppConfig();
 
-    const onGlobalInitDone = async (apiWrapper: MonacoVscodeApiWrapper) => {
+    const onVscodeApiInitDone = async (apiWrapper: MonacoVscodeApiWrapper) => {
         const result = apiWrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
         result.setAsDefaultApi();
 
@@ -35,9 +35,9 @@ export const runPythonReact = async () => {
             <div style={{ 'backgroundColor': '#1f1f1f' }} >
                 <MonacoEditorReactComp
                     vscodeApiConfig={appConfig.vscodeApiConfig}
-                    wrapperConfig={appConfig.wrapperConfig}
+                    editorAppConfig={appConfig.editorAppConfig}
                     style={{ 'height': '100%' }}
-                    onGlobalInitDone={onGlobalInitDone}
+                    onVscodeApiInitDone={onVscodeApiInitDone}
                     onError={(e) => {
                         console.error(e);
                     }} />

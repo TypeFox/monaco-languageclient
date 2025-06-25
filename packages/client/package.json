@@ -47,6 +47,10 @@
     "./lcwrapper": {
       "types": "./lib/wrapper/index.d.ts",
       "default": "./lib/wrapper/index.js"
+    },
+    "./editorApp": {
+      "types": "./lib/editorApp/index.d.ts",
+      "default": "./lib/editorApp/index.js"
     }
   },
   "typesVersions": {
@@ -71,6 +75,9 @@
       ],
       "lcwrapper": [
         "lib/lrapper/index"
+      ],
+      "editorApp": [
+        "lib/editorApp/index"
       ]
     }
   },

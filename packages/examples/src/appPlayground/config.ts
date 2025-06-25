@@ -28,8 +28,7 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-// import { createDefaultWorkspaceFile } from '../common/client/utils.js';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
@@ -38,7 +37,7 @@ import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 
 export type ConfigResult = {
     vscodeApiConfig: MonacoVscodeApiConfig;
-    wrapperConfig: WrapperConfig
+    editorAppConfig: EditorAppConfig
     workspaceFileUri: vscode.Uri;
     helloTsUri: vscode.Uri;
     testerTsUri: vscode.Uri;
@@ -123,7 +122,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
         id: 'AAP',
     };
@@ -148,7 +147,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
 
     return {
         vscodeApiConfig,
-        wrapperConfig,
+        editorAppConfig,
         workspaceFileUri,
         helloTsUri,
         testerTsUri

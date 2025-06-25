@@ -5,7 +5,7 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { delayExecution } from 'monaco-languageclient/common';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { EditorApp } from 'monaco-languageclient/editorApp';
 import { setupLangiumClientExtended } from './config/extendedConfig.js';
 import { setupLangiumClientClassic } from './config/classicConfig.js';
 import { disableElement, type ExampleAppConfig } from '../../common/client/utils.js';
@@ -16,7 +16,7 @@ import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 export const runLangiumDslWrapper = async (extendedMode: boolean) => {
     try {
-        let wrapper: MonacoEditorLanguageClientWrapper | undefined;
+        let editorApp: EditorApp | undefined;
 
         const loadLangiumWorker = () => {
             console.log(`Langium worker URL: ${workerUrl}`);
@@ -27,7 +27,7 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
         };
 
         const checkStarted = () => {
-            if (wrapper?.isStarted() ?? false) {
+            if (editorApp?.isStarted() ?? false) {
                 alert('Editor was already started!\nPlease reload the page to test the alternative editor.');
                 return true;
             }
@@ -65,12 +65,12 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
             const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
             await lcWrapper.start();
 
-            // run wrapper
-            wrapper = new MonacoEditorLanguageClientWrapper();
-            await wrapper.initAndStart(appConfig.wrapperConfig, appConfig.vscodeApiConfig.htmlContainer!);
+            // run editorApp
+            editorApp = new EditorApp(appConfig.editorAppConfig);
+            await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
 
             await delayExecution(1000);
-            await wrapper.updateCodeResources({
+            await editorApp.updateCodeResources({
                 modified: {
                     text: `// modified file\n\n${text}`,
                     uri: '/workspace/mod.langium',
@@ -80,10 +80,9 @@ export const runLangiumDslWrapper = async (extendedMode: boolean) => {
         };
 
         const disposeEditor = async () => {
-            if (!wrapper) return;
-            wrapper.reportStatus();
-            await wrapper.dispose();
-            wrapper = undefined;
+            editorApp?.reportStatus();
+            await editorApp?.dispose();
+            editorApp = undefined;
             disableElement('button-start', false);
         };
 

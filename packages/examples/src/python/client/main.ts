@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { EditorApp } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
@@ -20,13 +20,11 @@ export const runPythonWrapper = async () => {
 
     const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
 
-    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const editorApp = new EditorApp(appConfig.editorAppConfig);
 
-    if (wrapper.isStarted()) {
+    if (editorApp.isStarted()) {
         console.warn('Editor was already started!');
     } else {
-        await wrapper.init(appConfig.wrapperConfig);
-
         const result = apiWrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
         result.setAsDefaultApi();
 
@@ -40,6 +38,6 @@ export const runPythonWrapper = async () => {
         await vscode.commands.executeCommand('workbench.view.explorer');
         await vscode.window.showTextDocument(appConfig.configParams.files.get('hello2.py')!.uri);
 
-        await wrapper.start(appConfig.vscodeApiConfig.htmlContainer!);
+        await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
     }
 };

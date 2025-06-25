@@ -7,63 +7,10 @@ import { ConfigurationTarget, IConfigurationService, LogLevel, StandaloneService
 import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { type Logger } from 'monaco-languageclient/common';
-import { type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
+import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
+import { getEnhancedMonacoEnvironment, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
-
-export class ModelRefs {
-    modified?: IReference<ITextFileEditorModel>;
-    original?: IReference<ITextFileEditorModel>;
-}
-
-export interface TextModels {
-    modified?: monaco.editor.ITextModel | null;
-    original?: monaco.editor.ITextModel | null;
-}
-
-export interface TextContents {
-    modified?: string;
-    original?: string;
-}
-
-export interface CodeContent {
-    text: string;
-    uri: string;
-    enforceLanguageId?: string;
-}
-
-export interface CodeResources {
-    modified?: CodeContent;
-    original?: CodeContent;
-}
-
-export interface CallbackDisposeable {
-    modified?: monaco.IDisposable;
-    original?: monaco.IDisposable;
-}
-
-export interface DisposableModelRefs {
-    modified?: IReference<ITextFileEditorModel>;
-    original?: IReference<ITextFileEditorModel>;
-}
-
-export interface EditorAppConfig {
-    codeResources?: CodeResources;
-    useDiffEditor?: boolean;
-    domReadOnly?: boolean;
-    readOnly?: boolean;
-    overrideAutomaticLayout?: boolean;
-    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
-    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    languageDef?: {
-        languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
-        monarchLanguage?: monaco.languages.IMonarchLanguage;
-        theme?: {
-            name: monaco.editor.BuiltinTheme | string;
-            data: monaco.editor.IStandaloneThemeData;
-        }
-    }
-}
+import { ModelRefs, type CallbackDisposeable, type CodeContent, type CodeResources, type DisposableModelRefs, type EditorAppConfig, type TextContents, type TextModels } from './config.js';
 
 /**
  * This is the base class for both Monaco Ediotor Apps:
@@ -77,7 +24,8 @@ export class EditorApp {
     private $type: OverallConfigType;
     private id: string;
     private config: EditorAppConfig;
-    protected logger: Logger | undefined;
+
+    protected logger: Logger = new ConsoleLogger();
 
     private editor: monaco.editor.IStandaloneCodeEditor | undefined;
     private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
@@ -90,10 +38,18 @@ export class EditorApp {
 
     private modelRefDisposeTimeout = -1;
 
-    constructor($type: OverallConfigType, id: string, userAppConfig?: EditorAppConfig, logger?: Logger) {
-        this.$type = $type;
-        this.id = id;
-        this.logger = logger;
+    private startingAwait?: Promise<void>;
+    private startingResolve: (value: void | PromiseLike<void>) => void;
+
+    private disposingAwait?: Promise<void>;
+    private disposingResolve: (value: void | PromiseLike<void>) => void;
+
+    constructor(userAppConfig?: EditorAppConfig) {
+        this.$type = userAppConfig?.$type ?? 'extended';
+        this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
+        if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
+            throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
+        }
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
             useDiffEditor: userAppConfig?.useDiffEditor ?? false,
@@ -110,14 +66,12 @@ export class EditorApp {
             automaticLayout: userAppConfig?.overrideAutomaticLayout ?? true
         };
         this.config.languageDef = userAppConfig?.languageDef;
+
+        this.logger.setLevel(this.config.logLevel ?? LogLevel.Off);
     }
 
     getConfig(): EditorAppConfig {
         return this.config;
-    }
-
-    haveEditor() {
-        return this.editor !== undefined || this.diffEditor !== undefined;
     }
 
     getEditor(): monaco.editor.IStandaloneCodeEditor | undefined {
@@ -135,7 +89,11 @@ export class EditorApp {
         };
     }
 
-    registerOnTextChangedCallbacks(onTextChanged?: (textChanges: TextContents) => void) {
+    getLogger() {
+        return this.logger;
+    }
+
+    registerOnTextChangedCallback(onTextChanged?: (textChanges: TextContents) => void) {
         this.onTextChanged = onTextChanged;
     }
 
@@ -143,7 +101,7 @@ export class EditorApp {
         this.modelRefDisposeTimeout = modelRefDisposeTimeout;
     }
 
-    async init(): Promise<void> {
+    private async init(): Promise<void> {
         const languageDef = this.config.languageDef;
         if (languageDef) {
             if (this.$type === 'extended') {
@@ -193,7 +151,63 @@ export class EditorApp {
             this.modelRefs.original = await this.buildModelReference(original, this.logger);
         }
 
-        this.logger?.info('Init of EditorApp was completed.');
+        this.logger.info('Init of EditorApp was completed.');
+    }
+
+    private markStarting() {
+        this.startingAwait = new Promise<void>((resolve) => {
+            this.startingResolve = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startingResolve();
+        this.startingAwait = undefined;
+    }
+
+    isStarting() {
+        return this.startingAwait !== undefined;
+    }
+
+    getStartingAwait() {
+        return this.startingAwait;
+    }
+
+    isStarted() {
+        return this.editor !== undefined || this.diffEditor !== undefined;
+    }
+
+    /**
+     * Starts the single editor application.
+     */
+    async start(htmlContainer: HTMLElement) {
+        if (this.isStarting()) {
+            await this.getStartingAwait();
+        }
+        this.markStarting();
+
+        if (!this.isDisposed()) {
+            throw new Error('You called start without properly disposing the EditorApp.');
+        }
+
+        await this.init();
+
+        try {
+            const envEnhanced = getEnhancedMonacoEnvironment();
+            const viewServiceType = envEnhanced.viewServiceType;
+            if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
+                this.logger.info(`Starting monaco-editor (${this.id})`);
+                await this.createEditors(htmlContainer!);
+            } else {
+                this.logger.info('No EditorService configured. monaco-editor will not be started.');
+            }
+            // eslint-disable-next-line no-useless-catch
+        } catch (e) {
+            throw e;
+        } finally {
+            // in case of rejection, mark as started, otherwise the promise will never resolve
+            this.markStarted();
+        }
     }
 
     async createEditors(htmlContainer: HTMLElement): Promise<void> {
@@ -249,7 +263,7 @@ export class EditorApp {
                     this.announceModelUpdate(model);
                 }
             } else {
-                this.logger?.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
+                this.logger.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
             }
         } else {
             if (updateModified) {
@@ -261,7 +275,7 @@ export class EditorApp {
                     this.announceModelUpdate(model);
                 }
             } else {
-                this.logger?.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
+                this.logger.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
             }
         }
 
@@ -313,6 +327,11 @@ export class EditorApp {
     }
 
     async dispose() {
+        if (this.isDisposing()) {
+            await this.getDisposingAwait();
+        }
+        this.markDisposing();
+
         if (this.editor) {
             this.editor.dispose();
             this.editor = undefined;
@@ -324,30 +343,59 @@ export class EditorApp {
 
         this.textChangedDiposeables.modified?.dispose();
         this.textChangedDiposeables.original?.dispose();
+        this.textChangedDiposeables.modified = undefined;
+        this.textChangedDiposeables.original = undefined;
 
         await this.disposeModelRefs();
+
+        this.markDisposed();
+    }
+
+    isDisposed(): boolean {
+        return this.editor === undefined && this.diffEditor === undefined &&
+            // this.textChangedDiposeables.modified === undefined && this.textChangedDiposeables.original === undefined &&
+            this.modelDisposables.original === undefined && this.modelDisposables.modified === undefined;
+    }
+
+    private markDisposing() {
+        this.disposingAwait = new Promise<void>((resolve) => {
+            this.disposingResolve = resolve;
+        });
+    }
+
+    private markDisposed() {
+        this.disposingResolve();
+        this.disposingAwait = undefined;
+    }
+
+    isDisposing() {
+        return this.disposingAwait !== undefined;
+    }
+
+    getDisposingAwait() {
+        return this.disposingAwait;
     }
 
     async disposeModelRefs() {
         const diposeRefs = () => {
-            if (this.logger?.getLevel() === LogLevel.Debug) {
+            if (this.logger.getLevel() === LogLevel.Debug) {
                 const models = monaco.editor.getModels();
                 this.logger.debug('Current model URIs:');
                 models.forEach((model, _index) => {
-                    this.logger?.debug(`${model.uri.toString()}`);
+                    this.logger.debug(`${model.uri.toString()}`);
                 });
             }
 
-            if (this.modelDisposables.modified !== undefined && !this.modelDisposables.modified.object.isDisposed()) {
+            if (this.modelDisposables.modified !== undefined && !(this.modelDisposables.modified.object.isDisposed() === true)) {
                 this.modelDisposables.modified.dispose();
                 this.modelDisposables.modified = undefined;
             }
-            if (this.modelDisposables.original !== undefined && !this.modelDisposables.original.object.isDisposed()) {
+            if (this.modelDisposables.original !== undefined && !(this.modelDisposables.original.object.isDisposed() === true)) {
                 this.modelDisposables.original.dispose();
                 this.modelDisposables.original = undefined;
             }
 
-            if (this.logger?.getLevel() === LogLevel.Debug) {
+            if (this.logger.getLevel() === LogLevel.Debug) {
                 if (this.modelDisposables.modified === undefined && this.modelDisposables.original === undefined) {
                     this.logger.debug('All model references are disposed.');
                 } else {
@@ -357,7 +405,7 @@ export class EditorApp {
         };
 
         if (this.modelRefDisposeTimeout > 0) {
-            this.logger?.debug('Using async dispose of model references');
+            this.logger.debug('Using async dispose of model references');
             await new Promise<void>(resolve => setTimeout(() => {
                 diposeRefs();
                 resolve();
@@ -375,6 +423,13 @@ export class EditorApp {
         }
     }
 
+    reportStatus() {
+        const status: string[] = [];
+        status.push('EditorApp status:');
+        status.push(`Editor: ${this.editor?.getId()}`);
+        status.push(`DiffEditor: ${this.diffEditor?.getId()}`);
+        return status;
+    }
 }
 
 export const didModelContentChange = (textModels: TextModels, onTextChanged?: (textChanges: TextContents) => void) => {

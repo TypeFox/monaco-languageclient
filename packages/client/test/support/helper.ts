@@ -3,9 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageTransports } from 'vscode-languageclient/browser.js';
+import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { MessageTransports } from 'vscode-languageclient/browser.js';
 
 export const createMonacoEditorDiv = () => {
     const div = document.createElement('div');
@@ -24,7 +26,6 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
         connection: {
             options: {
                 $type: 'WorkerDirect',
-                // create a web worker to pass to the wrapper
                 worker
             },
             messageTransports
@@ -63,18 +64,35 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
     };
 };
 
-export const createDefaultMonacoVscodeApiConfig = (): MonacoVscodeApiConfig => {
+export const createEditorAppConfigClassic = (codeResources: CodeResources): EditorAppConfig => {
+    return {
+        $type: 'classic',
+        codeResources,
+        editorOptions: {},
+    };
+};
+
+export const createEditorAppConfigClassicExtended = (codeResources: CodeResources): EditorAppConfig => {
+    return {
+        $type: 'extended',
+        codeResources
+    };
+};
+
+export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
     return {
         $type: 'extended',
         advanced: {
-            enforceSemanticHighlighting: true
+            enforceSemanticHighlighting: true,
+            loadThemes: false
         },
         userConfiguration: {
             json: JSON.stringify({
                 'workbench.colorTheme': 'Default Dark Modern'
             })
         },
-        htmlContainer: document.body,
-        serviceOverrides: {}
+        htmlContainer,
+        serviceOverrides: {},
+        monacoWorkerFactory: configureDefaultWorkerFactory
     };
 };

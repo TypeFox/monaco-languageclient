@@ -9,9 +9,9 @@ import React, { StrictMode } from 'react';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { delayExecution } from 'monaco-languageclient/common';
-// import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+// import { MonacoEditorLanguageClientWrapper } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { createDefaultWrapperConfig } from './helper.js';
+import { createDefaultEditorAppConfig } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
@@ -33,7 +33,7 @@ describe('Test MonacoEditorReactComp', () => {
     };
 
     test.sequential('test render, manual clean-up', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -43,7 +43,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise = new Promise<void>(resolve => {
             render(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
@@ -54,7 +54,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('test render, unmount', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -64,7 +64,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise = new Promise<void>(resolve => {
             renderResult = render(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
@@ -74,7 +74,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('test render, rerender', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -84,14 +84,14 @@ describe('Test MonacoEditorReactComp', () => {
         const promise = new Promise<void>(resolve => {
             renderResult = render(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
         await expect(await promise).toBeUndefined();
         console.log('RE-RENDER');
 
-        const wrapperConfig2 = createDefaultWrapperConfig({
+        const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World 2!";',
                 uri: `/workspace/${expect.getState().testPath}_2.js`
@@ -100,7 +100,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise2 = new Promise<void>(resolve => {
             renderResult!.rerender(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig2}
+                editorAppConfig={editorAppConfig2}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
@@ -111,7 +111,7 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('test render, unmount and render new', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -121,7 +121,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise = new Promise<void>(resolve => {
             renderResult = render(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
@@ -131,7 +131,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise2 = new Promise<void>(resolve => {
             renderResult = render(<MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/>);
         });
@@ -142,18 +142,17 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('strictMode: test render, manual clean-up', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        wrapperConfig.relaxedChecks = true;
 
         const promise = new Promise<void>(resolve => {
             render(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });
@@ -164,19 +163,18 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('strictMode: test render, unmount', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        wrapperConfig.relaxedChecks = true;
 
         let renderResult: RenderResult;
         const promise = new Promise<void>(resolve => {
             renderResult = render(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });
@@ -186,37 +184,35 @@ describe('Test MonacoEditorReactComp', () => {
     });
 
     test.sequential('strictMode: test render, rerender', async () => {
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        wrapperConfig.relaxedChecks = true;
 
         let renderResult: RenderResult;
         const promise = new Promise<void>(resolve => {
             renderResult = render(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });
         await expect(await promise).toBeUndefined();
         console.log('RE-RENDER');
 
-        const wrapperConfig2 = createDefaultWrapperConfig({
+        const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World 2!";',
                 uri: `/workspace/${expect.getState().testPath}_2.js`
             }
         });
-        wrapperConfig2.relaxedChecks = true;
 
         const promise2 = new Promise<void>(resolve => {
             renderResult!.rerender(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig2}
+                editorAppConfig={editorAppConfig2}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });
@@ -229,19 +225,18 @@ describe('Test MonacoEditorReactComp', () => {
     test.sequential('strictMode: test render, unmount and render new', async () => {
 
         // TODO: strict mode breaks uris. Same are created for both editors
-        const wrapperConfig = createDefaultWrapperConfig({
+        const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        wrapperConfig.relaxedChecks = true;
 
         let renderResult: RenderResult;
         const promise = new Promise<void>(resolve => {
             renderResult = render(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });
@@ -251,7 +246,7 @@ describe('Test MonacoEditorReactComp', () => {
         const promise2 = new Promise<void>(resolve => {
             renderResult = render(<StrictMode><MonacoEditorReactComp
                 vscodeApiConfig={vscodeApiConfig}
-                wrapperConfig={wrapperConfig}
+                editorAppConfig={editorAppConfig}
                 style={{ 'height': '800px' }}
                 onLoad={() => resolve()}/></StrictMode>);
         });

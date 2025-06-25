@@ -18,8 +18,8 @@ export const runApplicationPlaygroundReact = async () => {
             <div style={{ 'backgroundColor': '#1f1f1f' }}>
                 <MonacoEditorReactComp
                     vscodeApiConfig={configResult.vscodeApiConfig}
-                    wrapperConfig={configResult.wrapperConfig}
-                    onGlobalInitDone={async (apiWrapper) => {
+                    editorAppConfig={configResult.editorAppConfig}
+                    onVscodeApiInitDone={async (apiWrapper) => {
                         await configurePostStart(apiWrapper, configResult);
                     }}
                     onError={(e) => {

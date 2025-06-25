@@ -21,7 +21,7 @@ import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createUrl } from 'monaco-languageclient/common';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
@@ -78,7 +78,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
 export type PythonAppConfig = {
     languageClientConfig: LanguageClientConfig;
     vscodeApiConfig: MonacoVscodeApiConfig;
-    wrapperConfig: WrapperConfig;
+    editorAppConfig: EditorAppConfig;
     configParams: ConfigParams;
 }
 
@@ -206,14 +206,14 @@ export const createPythonAppConfig = (): PythonAppConfig => {
         }
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type
     };
 
     return {
         vscodeApiConfig,
         languageClientConfig,
-        wrapperConfig,
+        editorAppConfig,
         configParams: configParams
     };
 };

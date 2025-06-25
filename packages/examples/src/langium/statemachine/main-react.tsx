@@ -6,7 +6,7 @@
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import type { TextContents } from 'monaco-editor-wrapper';
+import type { TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
@@ -62,7 +62,7 @@ export const runStatemachineReact = async () => {
                             <MonacoEditorReactComp
                                 style={{ 'height': '100%' }}
                                 vscodeApiConfig={appConfig.vscodeApiConfig}
-                                wrapperConfig={appConfig.wrapperConfig}
+                                editorAppConfig={appConfig.editorAppConfig}
                                 onTextChanged={onTextChanged}
                             />
                             <b>Debug:</b><br />{testState}

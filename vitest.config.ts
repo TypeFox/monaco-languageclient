@@ -14,7 +14,6 @@ export const vitestConfig = {
         testTimeout: 20000,
         browser: {
             enabled: true,
-            headless: true,
             provider: 'playwright',
             api: {
                 port: 20101
@@ -25,22 +24,26 @@ export const vitestConfig = {
                 }
             ]
         },
-        // keep an explicit list of tests to run, so they can be commented in case of problems
         include: [
-            '**/client/test/common/logging.test.ts',
-            '**/client/test/common/utils.test.ts',
-            '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
-            '**/client/test/vscode/manager.test.ts',
-            '**/client/test/wrapper/lcmanager.test.ts',
-            '**/client/test/wrapper/lcwrapper.test.ts',
-            '**/client/test/worker/workerFactory.test.ts',
-            '**/client/test/worker/workerLoaders.test.ts',
-            '**/wrapper/test/editorApp.test.ts',
-            '**/wrapper/test/utils.test.ts',
-            '**/wrapper/test/wrapper.test.ts',
-            '**/wrapper/test/editorApp-classic.test.ts',
-            '**/wrapper/test/wrapper-classic.test.ts',
-            '**/wrapper-react/test/index.test.tsx'
+            // keep also an explicit list of tests to run, so they can be commented in case of problems
+            // '**/client/test/common/logging.test.ts',
+            // '**/client/test/common/utils.test.ts',
+            // '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
+            // '**/client/test/vscode/manager.test.ts',
+            // '**/client/test/wrapper/lcmanager.test.ts',
+            // '**/client/test/wrapper/lcwrapper.test.ts',
+            // '**/client/test/worker/workerFactory.test.ts',
+            // '**/client/test/worker/workerLoaders.test.ts',
+            // '**/client/test/editorApp/editorApp.test.ts',
+            // '**/client/test/editorApp/editorApp-classic.test.ts',
+            // '**/client/test/editorApp/config.test.ts',
+            // '**/wrapper-react/test/index.test.tsx',
+            '**/client/test/**/*',
+            '**/wrapper-react/test/**/*'
+        ],
+        exclude: [
+            '**/support/**/*',
+            '**/__screenshots__/**/*',
         ]
     }
 };

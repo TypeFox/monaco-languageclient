@@ -10,10 +10,10 @@ import type { Logger } from 'monaco-languageclient/common';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
 import { LangiumMonarchContent } from './langium.monarch.js';
 import code from '../../../../resources/langium/langium-dsl/example.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 
 export const setupLangiumClientClassic = (params: {
     worker: Worker
@@ -60,31 +60,28 @@ export const setupLangiumClientClassic = (params: {
         }
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: code,
-                    uri: '/workspace/grammar.langium',
-                    enforceLanguageId: 'langium'
-                }
-            },
-            editorOptions: {
-                'semanticHighlighting.enabled': true,
-                wordBasedSuggestions: 'off',
-                theme: 'vs-dark'
-            },
-            languageDef: {
-                monarchLanguage: LangiumMonarchContent,
-                languageExtensionConfig: { id: 'langium' }
-            },
-
+        codeResources: {
+            modified: {
+                text: code,
+                uri: '/workspace/grammar.langium',
+                enforceLanguageId: 'langium'
+            }
+        },
+        editorOptions: {
+            'semanticHighlighting.enabled': true,
+            wordBasedSuggestions: 'off',
+            theme: 'vs-dark'
+        },
+        languageDef: {
+            monarchLanguage: LangiumMonarchContent,
+            languageExtensionConfig: { id: 'langium' }
         }
     };
 
     return {
-        wrapperConfig,
+        editorAppConfig,
         vscodeApiConfig,
         languageClientConfig
     };

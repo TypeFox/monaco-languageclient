@@ -10,11 +10,11 @@ import { MessageTransports } from 'vscode-languageclient';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 import text from '../../../../resources/langium/langium-dsl//example.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 
 export const setupLangiumClientExtended = (params: {
     worker: Worker
@@ -82,20 +82,18 @@ export const setupLangiumClientExtended = (params: {
         }
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text,
-                    uri: '/workspace/grammar.langium'
-                }
+        codeResources: {
+            modified: {
+                text,
+                uri: '/workspace/grammar.langium'
             }
         }
     };
 
     return {
-        wrapperConfig,
+        editorAppConfig,
         vscodeApiConfig,
         languageClientConfig
     };

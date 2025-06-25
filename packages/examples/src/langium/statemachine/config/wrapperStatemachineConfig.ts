@@ -12,7 +12,7 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeAp
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import type { CodeContent, WrapperConfig } from 'monaco-editor-wrapper';
+import type { CodeContent, EditorAppConfig } from 'monaco-languageclient/editorApp';
 
 // cannot be imported with assert as json contains comments
 import statemachineLanguageConfig from './language-configuration.json?raw';
@@ -89,17 +89,15 @@ export const createLangiumGlobalConfig = (params: {
         }]
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
-        editorAppConfig: {
-            codeResources: {
-                modified: params.codeContent
-            }
+        codeResources: {
+            modified: params.codeContent
         }
     };
 
     return {
-        wrapperConfig,
+        editorAppConfig,
         vscodeApiConfig,
         languageClientConfig
     };

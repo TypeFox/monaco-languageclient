@@ -19,14 +19,15 @@ import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 describe('Test WorkerLoaders', () => {
 
     let editor: monaco.editor.IStandaloneCodeEditor;
+    const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig();
+        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
         apiConfig.monacoWorkerFactory = configureClassicWorkerFactory;
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
         await apiWrapper.init();
 
-        editor = monaco.editor.create(createMonacoEditorDiv(), {
+        editor = monaco.editor.create(htmlContainer, {
             value: 'const text = "Hello World!";',
             language: 'javascript'
         });

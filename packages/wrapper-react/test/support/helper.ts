@@ -3,18 +3,16 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageTransports } from 'vscode-languageclient';
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import type { CodeResources, WrapperConfig } from 'monaco-editor-wrapper';
+import { MessageTransports } from 'vscode-languageclient';
 
-export const createDefaultWrapperConfig = (codeResources: CodeResources, logLevel?: LogLevel): WrapperConfig => {
+export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLevel?: LogLevel): EditorAppConfig => {
     return {
         $type: 'extended',
         logLevel,
-        editorAppConfig: {
-            codeResources
-        }
+        codeResources
     };
 };
 
@@ -28,7 +26,6 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
         connection: {
             options: {
                 $type: 'WorkerDirect',
-                // create a web worker to pass to the wrapper
                 worker
             },
             messageTransports

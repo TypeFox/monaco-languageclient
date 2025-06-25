@@ -9,7 +9,7 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
@@ -51,15 +51,13 @@ print("Hello Moon!")
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
         id: '42',
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: currentText,
-                    uri: `/workspace/example.${currenFileExt}`
-                }
+        codeResources: {
+            modified: {
+                text: currentText,
+                uri: `/workspace/example.${currenFileExt}`
             }
         }
     };
@@ -76,17 +74,17 @@ print("Hello Moon!")
         }
     };
 
-    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const editorApp = new EditorApp(editorAppConfig);
 
     document.querySelector('#button-start')?.addEventListener('click', async () => {
         try {
             disableElement('button-start', true);
             disableElement('button-flip', false);
 
-            await wrapper.initAndStart(wrapperConfig, htmlContainer);
-            if (wrapperConfig.editorAppConfig?.codeResources?.modified !== undefined) {
-                wrapperConfig.editorAppConfig.codeResources.modified.text = currentText;
-                wrapperConfig.editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
+            await editorApp.start(htmlContainer);
+            if (editorAppConfig.codeResources?.modified !== undefined) {
+                editorAppConfig.codeResources.modified.text = currentText;
+                editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
             }
 
             // init and start language clients after start
@@ -101,13 +99,13 @@ print("Hello Moon!")
         disableElement('button-dispose', true);
         disableElement('button-start', false);
 
-        await wrapper.dispose();
+        await editorApp.dispose();
         await lcManager.disposeLanguageClients();
     });
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;
         currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
-        wrapper.updateCodeResources({
+        editorApp.updateCodeResources({
             modified: {
                 text: currentText,
                 uri: `/workspace/example.${currenFileExt}`

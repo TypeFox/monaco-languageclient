@@ -6,14 +6,15 @@
 import { beforeAll, describe, expect, test } from 'vitest';
 import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { MonacoVscodeApiWrapper, type MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscodeApiWrapper';
-import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
+import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests', () => {
 
     let apiWrapper: MonacoVscodeApiWrapper;
+    const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(() => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig();
+        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
         apiConfig.extensions = [{
             config: {
                 name: 'unit-test-extension',

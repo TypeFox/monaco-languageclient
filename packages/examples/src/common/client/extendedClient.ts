@@ -9,7 +9,7 @@ import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import '@codingame/monaco-vscode-java-default-extension';
-import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -69,14 +69,12 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
         }
     };
 
-    const wrapperConfig: WrapperConfig = {
+    const editorAppConfig: EditorAppConfig = {
         $type: vscodeApiConfig.$type,
-        editorAppConfig: {
-            codeResources: {
-                modified: {
-                    text: helloCode,
-                    uri: helloUri.path
-                }
+        codeResources: {
+            modified: {
+                text: helloCode,
+                uri: helloUri.path
             }
         }
     };
@@ -86,18 +84,18 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     await apiWrapper.init();
 
     const lcWrapper = new LanguageClientWrapper(languageClientConfig);
-    const wrapper = new MonacoEditorLanguageClientWrapper();
+    const editorApp = new EditorApp(editorAppConfig);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await wrapper.initAndStart(wrapperConfig, htmlContainer);
+            await editorApp.start(htmlContainer);
             await lcWrapper.start();
 
             // open files, so the LS can pick it up
             await vscode.workspace.openTextDocument(helloUri);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await wrapper.dispose();
+            await editorApp.dispose();
             await lcWrapper.dispose();
         });
     } catch (e) {

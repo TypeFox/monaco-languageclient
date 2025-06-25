@@ -5,7 +5,7 @@
 
 import * as vscode from 'vscode';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
+import { EditorApp } from 'monaco-languageclient/editorApp';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
@@ -16,15 +16,15 @@ import { delayExecution } from 'monaco-languageclient/common';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
-const wrapper = new MonacoEditorLanguageClientWrapper();
-const wrapper2 = new MonacoEditorLanguageClientWrapper();
+let editorApp: EditorApp | undefined;
+let editorApp2: EditorApp | undefined;
 let lcWrapper: LanguageClientWrapper;
 
 const startEditor = async () => {
     disableElement('button-start', true);
     disableElement('button-dispose', false);
 
-    if (wrapper.isStarted() && wrapper2.isStarted()) {
+    if (editorApp?.isStarted() === true || editorApp2?.isStarted() === true) {
         alert('Editor was already started!');
         return;
     }
@@ -58,6 +58,7 @@ const startEditor = async () => {
         messageTransports: { reader, writer },
         htmlContainer: document.getElementById('monaco-editor-root')!
     });
+    editorApp = new EditorApp(appConfig.editorAppConfig);
 
     // perform global init
     const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
@@ -67,27 +68,28 @@ const startEditor = async () => {
     lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
     await lcWrapper.start();
 
-    // run wrapper
-    await wrapper.initAndStart(appConfig.wrapperConfig, appConfig.vscodeApiConfig.htmlContainer!);
+    // run editorApp
+    await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
 
-    wrapper.updateCodeResources({
+    editorApp.updateCodeResources({
         modified: {
             text,
             uri: '/workspace/statemachine-mod.statemachine'
         }
     });
 
-    // start the second wrapper without any languageclient config
+    // start the second editorApp without any languageclient config
     // => they share the language server and both text contents have different uris
     const appConfig2 = appConfig;
-    appConfig2.wrapperConfig.editorAppConfig!.codeResources!.modified = {
+    appConfig2.editorAppConfig.codeResources!.modified = {
         text: textMod,
         uri: '/workspace/example-mod.statemachine'
     };
     appConfig2.vscodeApiConfig.htmlContainer = document.getElementById('monaco-editor-root2')!;
+    editorApp2 = new EditorApp(appConfig2.editorAppConfig);
 
-    // run wrapper
-    await wrapper2.initAndStart(appConfig2.wrapperConfig, appConfig2.vscodeApiConfig.htmlContainer);
+    // run editorApp
+    await editorApp2.start(appConfig2.vscodeApiConfig.htmlContainer);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);
@@ -95,7 +97,7 @@ const startEditor = async () => {
 
     await delayExecution(1000);
 
-    wrapper.updateCodeResources({
+    editorApp.updateCodeResources({
         modified: {
             text: `// modified file\n\n${text}`,
             uri: '/workspace/statemachine-mod2.statemachine'
@@ -109,13 +111,13 @@ const disposeEditor = async () => {
 
     lcWrapper.dispose();
 
-    wrapper.reportStatus();
-    await wrapper.dispose();
-    console.log(wrapper.reportStatus().join('\n'));
+    editorApp?.reportStatus();
+    await editorApp?.dispose();
+    console.log(editorApp?.reportStatus().join('\n'));
 
-    wrapper2.reportStatus();
-    await wrapper2.dispose();
-    console.log(wrapper2.reportStatus().join('\n'));
+    editorApp2?.reportStatus();
+    await editorApp2?.dispose();
+    console.log(editorApp2?.reportStatus().join('\n'));
 };
 
 export const runStatemachineWrapper = async () => {
