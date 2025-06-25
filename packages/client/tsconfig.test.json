@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.src.json",
   "compilerOptions": {
-    "noEmit": true,
-    "rootDir": "test"
+    "rootDir": "test",
+    "noEmit": true
   },
   "references": [{
     "path": "./tsconfig.src.json"
