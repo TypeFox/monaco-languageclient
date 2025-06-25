@@ -70,6 +70,10 @@ export class EditorApp {
         this.logger.setLevel(this.config.logLevel ?? LogLevel.Off);
     }
 
+    isDiffEditor() {
+        return this.config.useDiffEditor === true;
+    }
+
     getConfig(): EditorAppConfig {
         return this.config;
     }
@@ -101,7 +105,42 @@ export class EditorApp {
         this.modelRefDisposeTimeout = modelRefDisposeTimeout;
     }
 
-    private async init(): Promise<void> {
+    private markStarting() {
+        this.startingAwait = new Promise<void>((resolve) => {
+            this.startingResolve = resolve;
+        });
+    }
+
+    private markStarted() {
+        this.startingResolve();
+        this.startingAwait = undefined;
+    }
+
+    isStarting() {
+        return this.startingAwait !== undefined;
+    }
+
+    getStartingAwait() {
+        return this.startingAwait;
+    }
+
+    isStarted() {
+        return this.editor !== undefined || this.diffEditor !== undefined;
+    }
+
+    /**
+     * Starts the single editor application.
+     */
+    async start(htmlContainer: HTMLElement) {
+        if (this.isStarting()) {
+            await this.getStartingAwait();
+        }
+        this.markStarting();
+
+        if (!this.isDisposed()) {
+            throw new Error('You called start without properly disposing the EditorApp.');
+        }
+
         const languageDef = this.config.languageDef;
         if (languageDef) {
             if (this.$type === 'extended') {
@@ -142,7 +181,7 @@ export class EditorApp {
         };
         this.modelRefs.modified = await this.buildModelReference(modified, this.logger);
 
-        if (this.config.useDiffEditor === true) {
+        if (this.isDiffEditor()) {
             const original = {
                 text: this.config.codeResources?.original?.text ?? '',
                 uri: this.config.codeResources?.original?.uri ?? `default-uri-original-${this.id}`,
@@ -150,47 +189,6 @@ export class EditorApp {
             };
             this.modelRefs.original = await this.buildModelReference(original, this.logger);
         }
-
-        this.logger.info('Init of EditorApp was completed.');
-    }
-
-    private markStarting() {
-        this.startingAwait = new Promise<void>((resolve) => {
-            this.startingResolve = resolve;
-        });
-    }
-
-    private markStarted() {
-        this.startingResolve();
-        this.startingAwait = undefined;
-    }
-
-    isStarting() {
-        return this.startingAwait !== undefined;
-    }
-
-    getStartingAwait() {
-        return this.startingAwait;
-    }
-
-    isStarted() {
-        return this.editor !== undefined || this.diffEditor !== undefined;
-    }
-
-    /**
-     * Starts the single editor application.
-     */
-    async start(htmlContainer: HTMLElement) {
-        if (this.isStarting()) {
-            await this.getStartingAwait();
-        }
-        this.markStarting();
-
-        if (!this.isDisposed()) {
-            throw new Error('You called start without properly disposing the EditorApp.');
-        }
-
-        await this.init();
 
         try {
             const envEnhanced = getEnhancedMonacoEnvironment();
@@ -201,6 +199,8 @@ export class EditorApp {
             } else {
                 this.logger.info('No EditorService configured. monaco-editor will not be started.');
             }
+
+            this.logger.info('EditorApp start completed successfully.');
             // eslint-disable-next-line no-useless-catch
         } catch (e) {
             throw e;
@@ -211,7 +211,7 @@ export class EditorApp {
     }
 
     async createEditors(htmlContainer: HTMLElement): Promise<void> {
-        if (this.config.useDiffEditor === true) {
+        if (this.isDiffEditor()) {
             this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
             const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
             const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
@@ -235,6 +235,22 @@ export class EditorApp {
         }
     }
 
+    updateCode(code: { modified?: string, original?: string }) {
+        if (this.isDiffEditor()) {
+            if (code.modified !== undefined) {
+                this.diffEditor?.getModifiedEditor().setValue(code.modified);
+            }
+            if (code.original !== undefined) {
+                this.diffEditor?.getOriginalEditor().setValue(code.original);
+            }
+        } else {
+            if (code.modified !== undefined) {
+                this.editor?.setValue(code.modified);
+            }
+
+        }
+    }
+
     async updateCodeResources(codeResources?: CodeResources): Promise<void> {
         let updateModified = false;
         let updateOriginal = false;
@@ -250,7 +266,7 @@ export class EditorApp {
             updateOriginal = true;
         }
 
-        if (this.config.useDiffEditor === true) {
+        if (this.isDiffEditor()) {
             if (updateModified && updateOriginal) {
                 const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
                 const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
@@ -416,7 +432,7 @@ export class EditorApp {
     }
 
     updateLayout() {
-        if (this.config.useDiffEditor ?? false) {
+        if (this.isDiffEditor()) {
             this.diffEditor?.layout();
         } else {
             this.editor?.layout();

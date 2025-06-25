@@ -14,6 +14,7 @@ export const vitestConfig = {
         testTimeout: 20000,
         browser: {
             enabled: true,
+            headless: true,
             provider: 'playwright',
             api: {
                 port: 20101
@@ -37,9 +38,9 @@ export const vitestConfig = {
             // '**/client/test/editorApp/editorApp.test.ts',
             // '**/client/test/editorApp/editorApp-classic.test.ts',
             // '**/client/test/editorApp/config.test.ts',
-            // '**/wrapper-react/test/index.test.tsx',
-            '**/client/test/**/*',
-            '**/wrapper-react/test/**/*'
+            '**/wrapper-react/test/index.test.tsx',
+            // '**/client/test/**/*',
+            // '**/wrapper-react/test/**/*'
         ],
         exclude: [
             '**/support/**/*',

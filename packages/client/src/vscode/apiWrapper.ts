@@ -268,9 +268,9 @@ export class MonacoVscodeApiWrapper {
 
     protected markGlobalInitDone() {
         const envEnhanced = getEnhancedMonacoEnvironment();
-        envEnhanced.vscodeApiGlobalInitResolve?.();
-        envEnhanced.vscodeApiGlobalInitAwait = undefined;
-        envEnhanced.vscodeApiGlobalInitResolve = undefined;
+        if (typeof envEnhanced.vscodeApiGlobalInitResolve === 'function') {
+            envEnhanced.vscodeApiGlobalInitResolve();
+        }
         envEnhanced.vscodeApiInitialised = true;
         this.logger.debug('markGlobalInitDone');
     }
@@ -280,11 +280,13 @@ export class MonacoVscodeApiWrapper {
         if (envEnhanced.vscodeApiInitialised === true) {
             this.logger.warn('Initialization of monaco-vscode api can only performed once!');
         } else {
-            if (envEnhanced.vscodeApiGlobalInitAwait === undefined) {
+            if (!(envEnhanced.vscodeApiInitialising === true)) {
+                envEnhanced.vscodeApiInitialising = true;
                 this.markGlobalInit();
                 if (instructions?.htmlContainer !== undefined && instructions.htmlContainer !== null) {
                     this.apiConfig.htmlContainer = instructions.htmlContainer;
                 }
+                console.log(envEnhanced.vscodeApiGlobalInitAwait);
 
                 // ensures "vscodeApiConfig.workspaceConfig" is available
                 this.configureWorkspaceConfig();

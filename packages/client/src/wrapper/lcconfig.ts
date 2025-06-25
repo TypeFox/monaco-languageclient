@@ -27,4 +27,7 @@ export interface LanguageClientRestartOptions {
 
 export interface LanguageClientConfigs {
     configs: Record<string, LanguageClientConfig>
+    overwriteExisting: boolean;
+    disposeExisting?: boolean;
+    enforceDispose?: boolean;
 }

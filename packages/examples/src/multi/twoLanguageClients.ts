@@ -71,7 +71,8 @@ print("Hello Moon!")
         configs: {
             json: createJsonLanguageClientConfig(),
             python: createPythonLanguageClientConfig()
-        }
+        },
+        overwriteExisting: false
     };
 
     const editorApp = new EditorApp(editorAppConfig);
@@ -88,8 +89,8 @@ print("Hello Moon!")
             }
 
             // init and start language clients after start
-            lcManager.initLanguageClients(languageClientConfigs);
-            await lcManager.startLanguageClients();
+            await lcManager.setConfigs(languageClientConfigs);
+            await lcManager.start();
         } catch (e) {
             console.error(e);
         }
@@ -100,7 +101,7 @@ print("Hello Moon!")
         disableElement('button-start', false);
 
         await editorApp.dispose();
-        await lcManager.disposeLanguageClients();
+        await lcManager.dispose();
     });
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;

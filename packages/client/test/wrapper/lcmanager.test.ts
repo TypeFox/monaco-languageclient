@@ -40,19 +40,20 @@ describe('Test LanguageClientWrapper', () => {
         const lcConfigs = {
             configs: {
                 'langium': languageClientConfig
-            }
+            },
+            overwriteExisting: true
         };
 
         try {
-            expect(() => lcManager.initLanguageClients(lcConfigs)).not.toThrowError();
-            await expect(async () => await lcManager.startLanguageClients()).not.toThrowError();
-            await expect(async () => await lcManager.disposeLanguageClients()).not.toThrowError();
+            await expect(async () => await lcManager.setConfigs(lcConfigs)).not.toThrowError();
+            await expect(async () => await lcManager.start()).not.toThrowError();
+            await expect(async () => await lcManager.dispose()).not.toThrowError();
 
             await delayExecution(1000);
 
-            expect(() => lcManager.initLanguageClients(lcConfigs)).not.toThrowError();
-            await expect(async () => await lcManager.startLanguageClients()).not.toThrowError();
-            await expect(async () => await lcManager.disposeLanguageClients()).not.toThrowError();
+            await expect(async () => await lcManager.setConfigs(lcConfigs)).not.toThrowError();
+            await expect(async () => await lcManager.start()).not.toThrowError();
+            await expect(async () => await lcManager.dispose()).not.toThrowError();
         } catch (e) {
             console.error(`Unexpected error occured: ${e}`);
             error = true;

@@ -32,3 +32,18 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
         }
     };
 };
+
+export const createDefaultLanguageClientConfigs = () => {
+    const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+    const worker = new Worker(workerUrl, {
+        type: 'module',
+        name: 'Langium LS (React Test)'
+    });
+    const languageClientConfigs = {
+        configs: {
+            'langium': createDefaultLcWorkerConfig(worker, 'langium')
+        },
+        overwriteExisting: false
+    };
+    return languageClientConfigs;
+};

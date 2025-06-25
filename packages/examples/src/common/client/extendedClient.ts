@@ -83,7 +83,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.init();
 
-    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig, apiWrapper.getLogger());
     const editorApp = new EditorApp(editorAppConfig);
 
     try {

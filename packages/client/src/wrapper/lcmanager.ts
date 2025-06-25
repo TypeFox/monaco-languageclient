@@ -33,39 +33,50 @@ export class LanguageClientsManager {
         return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
-    initLanguageClients(languageClientConfigs?: LanguageClientConfigs) {
+    async setConfigs(languageClientConfigs: LanguageClientConfigs): Promise<void> {
         this.languageClientConfigs = languageClientConfigs;
 
-        const lccEntries = Object.entries(this.languageClientConfigs?.configs ?? {});
+        const lccEntries = Object.entries(this.languageClientConfigs.configs);
         if (lccEntries.length > 0) {
             for (const [languageId, lcc] of lccEntries) {
+                const current = this.languageClientWrappers.get(languageId);
                 const lcw = new LanguageClientWrapper(lcc, this.logger);
+
+                if (current !== undefined) {
+                    if (languageClientConfigs.overwriteExisting) {
+                        if (languageClientConfigs.disposeExisting === true) {
+                            await current.dispose();
+                        }
+                    } else {
+                        throw new Error(`A languageclient config with id "${languageId}" already exists and you confiured to not override.`);
+                    }
+                }
                 this.languageClientWrappers.set(languageId, lcw);
             }
         }
     }
 
-    async startLanguageClients(): Promise<void | void[]> {
+    async start(): Promise<void | void[]> {
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
-            allPromises.push(lcw.start());
+            if (!lcw.isStarted()) {
+                allPromises.push(lcw.start());
+            }
         }
         return Promise.all(allPromises);
     }
 
     isStarted(): boolean {
         for (const lcw of this.languageClientWrappers.values()) {
-            if (lcw.haveLanguageClient()) {
-                // as soon as one is not started return
-                if (!lcw.isStarted()) {
-                    return false;
-                }
+            // as soon as one is not started return
+            if (!lcw.isStarted()) {
+                return false;
             }
         }
         return true;
     }
 
-    async disposeLanguageClients(): Promise<void | void[]> {
+    async dispose(): Promise<void | void[]> {
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
             if (lcw.haveLanguageClient()) {

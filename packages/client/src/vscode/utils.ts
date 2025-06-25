@@ -17,6 +17,9 @@ export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
         monWin.MonacoEnvironment = {};
     }
     const envEnhanced = monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
+    if (envEnhanced.vscodeApiInitialising === undefined) {
+        envEnhanced.vscodeApiInitialising = false;
+    }
     if (envEnhanced.vscodeApiInitialised === undefined) {
         envEnhanced.vscodeApiInitialised = false;
     }

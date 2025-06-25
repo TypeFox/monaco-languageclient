@@ -12,9 +12,10 @@ import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-overrid
 import type { Logger } from 'monaco-languageclient/common';
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
+    vscodeApiInitialising?: boolean;
     vscodeApiInitialised?: boolean;
-    vscodeApiGlobalInitAwait?: Promise<void> | undefined;
-    vscodeApiGlobalInitResolve?: (value: void | PromiseLike<void>) => void;
+    vscodeApiGlobalInitAwait?: Promise<void>;
+    vscodeApiGlobalInitResolve?: ((value: void | PromiseLike<void>) => void);
     viewServiceType?: 'EditorService' | 'ViewsService' | 'WorkspaceService';
 }
 
