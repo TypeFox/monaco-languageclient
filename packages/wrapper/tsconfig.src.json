@@ -1,9 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "noEmit": false,
     "rootDir": "src",
-    "outDir": "dist",
-    "declarationDir": "dist"
+    "outDir": "lib",
+    "declarationDir": "lib"
   },
   "references": [{
     "path": "../client/tsconfig.src.json",
