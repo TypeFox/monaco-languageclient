@@ -3,23 +3,23 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
 import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { MonacoEditorLanguageClientWrapper } from 'monaco-editor-wrapper';
-import { createWrapperConfig  } from './config.js';
+import * as vscode from 'vscode';
 import { configureDebugging } from '../../debugger/client/debugger.js';
+import { createPythonAppConfig } from './config.js';
 
 export const runPythonReact = async () => {
-    const appConfig = createWrapperConfig();
+    const appConfig = createPythonAppConfig();
 
-    const onLoad = async (wrapper: MonacoEditorLanguageClientWrapper) => {
-        const result = wrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
+    const onVscodeApiInitDone = async (apiWrapper: MonacoVscodeApiWrapper) => {
+        const result = apiWrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
         result.setAsDefaultApi();
 
-        const initResult = wrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
+        const initResult = apiWrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
         if (initResult !== undefined) {
             configureDebugging(await initResult.getApi(), appConfig.configParams);
         }
@@ -34,9 +34,10 @@ export const runPythonReact = async () => {
         return (
             <div style={{ 'backgroundColor': '#1f1f1f' }} >
                 <MonacoEditorReactComp
-                    wrapperConfig={appConfig.wrapperConfig}
+                    vscodeApiConfig={appConfig.vscodeApiConfig}
+                    editorAppConfig={appConfig.editorAppConfig}
                     style={{ 'height': '100%' }}
-                    onLoad={onLoad}
+                    onVscodeApiInitDone={onVscodeApiInitDone}
                     onError={(e) => {
                         console.error(e);
                     }} />

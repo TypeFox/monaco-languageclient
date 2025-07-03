@@ -3,22 +3,22 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { initServices } from 'monaco-languageclient/vscode/services';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
 import '@codingame/monaco-vscode-json-default-extension';
-import { ConsoleLogger } from 'monaco-languageclient/tools';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
 export const runClient = async () => {
-    const logger = new ConsoleLogger(LogLevel.Debug);
     const htmlContainer = document.getElementById('monaco-editor-root')!;
-    await initServices({
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
+        $type: 'classic',
+        logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getTextmateServiceOverride(),
             ...getThemeServiceOverride()
@@ -28,9 +28,11 @@ export const runClient = async () => {
                 'editor.experimental.asyncTokenization': true
             })
         },
-    }, {
-        logger
-    });
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.init();
 
     // register the JSON language with Monaco
     monaco.languages.register({
@@ -39,8 +41,6 @@ export const runClient = async () => {
         aliases: ['JSON', 'json'],
         mimetypes: ['application/json']
     });
-
-    configureDefaultWorkerFactory(logger);
 
     // create monaco editor
     monaco.editor.create(htmlContainer, {
@@ -64,10 +64,9 @@ export const runClient = async () => {
             }
         }
     };
-    const languageClientWrapper = new LanguageClientWrapper({
+    const languageClientWrapper = new LanguageClientWrapper(
         languageClientConfig,
-        logger
-    });
-
+        apiWrapper.getLogger()
+    );
     await languageClientWrapper.start();
 };
