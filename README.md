@@ -1,4 +1,4 @@
-# Monaco Language Client, VSCode WebSocket Json RPC, Monaco-Editor-Wrapper, Monaco-Editor-React and examples
+# Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples
 
 [![Github Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://typefox.github.io/monaco-languageclient)
 [![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
@@ -9,8 +9,6 @@
 [![monaco-languageclient Downloads](https://img.shields.io/npm/dt/monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
 [![vscode-ws-jsonrpc Version](https://img.shields.io/npm/v/vscode-ws-jsonrpc?logo=npm&label=vscode-ws-jsonrpc)](https://www.npmjs.com/package/vscode-ws-jsonrpc)
 [![vscode-ws-jsonrpc Downloads](https://img.shields.io/npm/dt/vscode-ws-jsonrpc)](https://www.npmjs.com/package/vscode-ws-jsonrpc)
-[![monaco-editor-wrapper Version](https://img.shields.io/npm/v/monaco-editor-wrapper?logo=npm&label=monaco-editor-wrapper)](https://www.npmjs.com/package/monaco-editor-wrapper)
-[![monaco-editor-wrapper Downloads](https://img.shields.io/npm/dt/monaco-editor-wrapper)](https://www.npmjs.com/package/monaco-editor-wrapper)
 [![monaco-editor-react Version](https://img.shields.io/npm/v/@typefox/monaco-editor-react?logo=npm&label=@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 [![monaco-editor-react Downloads](https://img.shields.io/npm/dt/@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 
@@ -18,13 +16,12 @@ This repository now host multiple npm packages under one roof:
 
 - [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
 - [vscode-ws-jsonrpc](https://www.npmjs.com/package/vscode-ws-jsonrpc) which implements communication between a jsonrpc client and server over WebSocket.
-- [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper) for building monaco editor application driven by configuration
-- [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) puts a react cloack over `monaco-editor-wrapper`
+- [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) makes editor and languageclient available within a react component.
 - [monaco-languageclient-examples](https://www.npmjs.com/package/monaco-languageclient-examples) provides the examples which allows to use them externally.
 
 The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
-- [Monaco Language Client, VSCode WebSocket Json RPC, Monaco-Editor-Wrapper, Monaco-Editor-React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-wrapper-monaco-editor-react-and-examples)
+- [Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-react-and-examples)
   - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
   - [Getting started](#getting-started)
     - [Vite dev server](#vite-dev-server)
@@ -71,7 +68,6 @@ CHANGELOGs for each project are available from the linked location:
 
 - CHANGELOG for `monaco-languageclient` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/CHANGELOG.md)
 - CHANGELOG for `vscode-ws-jsonrpc` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/CHANGELOG.md)
-- CHANGELOG for `monaco-editor-wrapper` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/CHANGELOG.md)
 - CHANGELOG for `@typefox/monaco-editor-react` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/CHANGELOG.md)
 - CHANGELOG for `monaco-languageclient-examples` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/CHANGELOG.md)
 
@@ -79,9 +75,8 @@ Important Project changes and notes about the project's history are found [here]
 
 These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
 
-- **monaco-languageclient**: `10.0.0-next.0` (release date: 2025-0z-xy)
-- **monaco-editor-wrapper**: `7.0.0-next.0` (release date: 2025-0z-xy)
-- **@typefox/monaco-editor-react**: `7.0.0-next.0` (release date: 2025-0z-xy)
+- **monaco-languageclient**: `10.0.0-next.1` (release date: unreleased)
+- **@typefox/monaco-editor-react**: `7.0.0-next.1` (release date: unreleased)
 - Aligned with:
   - **@codingame/monaco-vscode-[editor]-api**: `19.1.4`
   - **vscode**: `1.102.3`
@@ -129,7 +124,6 @@ Please look at the respective section in the packages:
 
 - Usage for `monaco-languageclient` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md#usage)
 - Usage for `vscode-ws-jsonrpc` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md#usage)
-- Usage for `monaco-editor-wrapper` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/README.md#usage)
 - Usage for `@typefox/monaco-editor-react` is found [here](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md#usage)
 
 ## Examples Overview
@@ -144,23 +138,23 @@ The examples demonstrate mutliple things:
 #### JSON Language client and language server example ([Location](./packages/examples/src/json))
 
 The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
-The **json-client** contains the [monaco-editor-wrapper app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-client** contains the [editor app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 #### Python Language client and pyright language server example ([Location](./packages/examples/src/python))
 
 The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
-The **python-client** contains the [monaco-editor-wrapper app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **python-client** contains the [editor app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
    It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
 
 #### Groovy Language client and language server example ([Location](./packages/examples/src/groovy))
 
 The **groovy-server** runs an external [Java app](./packages/examples/src/groovy/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Groovy Language Server](#groovy-language-server)).
-The **groovy-client** contains the [monaco-editor-wrapper app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **groovy-client** contains the [editor app](./packages/examples/src/groovy/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 #### Java Language client and language server example ([Location](./packages/examples/src/eclipse.jdt.ls))
 
 The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
-The **java-client** contains the [monaco-editor-wrapper app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **java-client** contains the [editor app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above
 
@@ -183,11 +177,11 @@ It is also possible to use a [@typefox/monaco-editor-react app](./packages/examp
 
 #### bare monaco-languageclient ([Location](./packages/examples/src/bare))
 
-It demostrate how the `JSON Language client and language server example` can be realised without `monaco-editor-wrapper`. You find the implementation [here](./packages/examples/src/bare/client.ts).
+It demostrate how the `JSON Language client and language server example` can be realized with just pure monaco api and no abstraction via tge `editor app`. You find the implementation [here](./packages/examples/src/bare/client.ts).
 
 #### Browser example ([Location](./packages/examples/src/browser))
 
-It demonstrates how a [monaco-editor-wrapper can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
+It demonstrates how an [editor app can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
 
 #### Purely monaco-editor related examples
 
@@ -251,7 +245,7 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 ### General
 
-Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/`@codingame/monaco-vscode-extension-api`, `monaco-languageclient`, `monaco-editor-wrapper` or `@typefox/monaco-editor-react` ensure they are imported before you do any `monaco-editor` or `vscode` api related intialization work or start using it.
+Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/`@codingame/monaco-vscode-extension-api`, `monaco-languageclient` or `@typefox/monaco-editor-react` ensure they are imported before you do any `monaco-editor` or `vscode` api related intialization work or start using it.
 
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
@@ -390,6 +384,5 @@ When webpack is used as bundler there are issues with utilizing the undbundled w
 
 - monaco-languageclient: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/LICENSE)
 - vscode-ws-jsonrpc: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/LICENSE)
-- monaco-editor-wrapper: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper/LICENSE)
 - @typefox/monaco-editor-react: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/LICENSE)
 - monaco-languageclient-examples: [MIT](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/LICENSE)

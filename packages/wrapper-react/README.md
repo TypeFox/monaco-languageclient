@@ -1,6 +1,6 @@
 # React component for Monaco-Editor and Monaco Languageclient
 
-This packages provides a React component that it based on the [monaco-editor-wrapper](https://www.npmjs.com/package/monaco-editor-wrapper). It behaves nearly the same way as the monaco editor, with the primary difference being that you interact with it through a React component.
+This packages provides a React component that wraps the functionality of [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient). It behaves nearly the same way as the monaco editor, with the primary difference being that you interact with it through a React component.
 
 The [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) can be activated to connect to a language server either via jsonrpc over a websocket to an exernal server process, or via the Language Server Protocol for the browser where the language server runs in a web worker.
 
@@ -14,7 +14,9 @@ This is npm package is part of the [monaco-languageclient mono repo](https://git
 
 ## Usage
 
-You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same `UserConfig` approach which is then applied to `monaco-editor-wrapper`.
+You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same config object approach like `monaco-languageclient`.
+
+TODO: Update Example
 
 ```tsx
 import React from 'react';

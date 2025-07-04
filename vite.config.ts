@@ -70,6 +70,7 @@ export const definedViteConfig = defineConfig({
             'vscode-jsonrpc',
             'vscode-languageclient',
             'vscode-languageserver',
+            'vscode-languageserver/browser.js',
             'vscode-languageserver-protocol',
             'vscode-oniguruma',
             'vscode-textmate'

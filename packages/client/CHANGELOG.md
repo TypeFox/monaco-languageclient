@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.0.0] - 2025-0z-xy
+## [10.0.0] - unreleased
 
 - Move MonacoLanguageClientWrapper to monaco-languageclient [#920](https://github.com/TypeFox/monaco-languageclient/pull/920)
 
