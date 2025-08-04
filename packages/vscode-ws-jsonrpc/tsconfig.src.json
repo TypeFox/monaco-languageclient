@@ -3,10 +3,13 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
+    "declaration": true,
     "declarationDir": "lib",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*.ts",
-  ]
+  "include": ["src/**/*.ts"]
 }
