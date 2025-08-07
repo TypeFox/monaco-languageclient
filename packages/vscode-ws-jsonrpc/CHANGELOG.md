@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [3.5.0] - 2025-08-08
+
+- Use public exports from vscode-jsonrpc instead of deep internal imports #[949](https://github.com/TypeFox/monaco-languageclient/pull/949)
+
 ## [3.4.0] - 2024-12-18
 
 - Align required engine versions with other packages: Updated engine engine requirements for node to (`>=18.19.0`) and for npm to (`>=10.2.3`)

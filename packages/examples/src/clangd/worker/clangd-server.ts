@@ -104,7 +104,7 @@ export class ClangdInteractionWorker implements ComRouter {
         // Pre-fetch wasm file
         const wasmReader = (await fetch(clangdWasmUrl)).body!.getReader();
 
-        const chunks: Uint8Array[] = [];
+        const chunks: BlobPart[] = [];
         let loadingComplete = false;
         while (!loadingComplete) {
             const { done, value } = await wasmReader.read();
@@ -446,7 +446,7 @@ export class ClangdInteractionWorker implements ComRouter {
                 const content = this.emscriptenFS.readFile(filename, { encoding: 'binary' });
                 allPromises.push(this.remoteFs.syncFile({
                     resourceUri: filename,
-                    content: content
+                    content: content as unknown as ArrayBufferLike
                 }));
 
             } catch (e) {
