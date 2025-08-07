@@ -4,6 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { Disposable } from 'vscode-jsonrpc';
+// TODO: Use environment-specific imports (vscode-jsonrpc/browser or vscode-jsonrpc/node)
+// when upgrading to vscode-jsonrpc@9.x.x-next.X which supports proper export maps
 import { type DataCallback, AbstractMessageReader, MessageReader } from 'vscode-jsonrpc';
 import type { IWebSocket } from './socket.js';
 
