@@ -2,10 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [9.9.0] - 2025-08-08
+## [9.9.0] - 2025-08-11
 
-- Updated all `@codingame/monaco-vscode` packages to `19.1.3`.
-- Updated `vscode-ws-jsonrpc` package to `3.5.0-next.0`.
+- Updated all `@codingame/monaco-vscode` packages to `19.1.4`.
+- Updated `vscode-ws-jsonrpc` package to `3.5.0`.
 
 ## [9.8.0] - 2025-06-24
 

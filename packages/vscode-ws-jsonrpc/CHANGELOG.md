@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [3.5.0] - 2025-08-08
+## [3.5.0] - 2025-08-11
 
 - Use public exports from vscode-jsonrpc instead of deep internal imports #[949](https://github.com/TypeFox/monaco-languageclient/pull/949)
 
