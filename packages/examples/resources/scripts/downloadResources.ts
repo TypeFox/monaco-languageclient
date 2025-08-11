@@ -35,5 +35,5 @@ await downloadResource('https://marketplace.visualstudio.com/_apis/public/galler
     resolve(getLocalDirectory(), '../vsix/'), 'github-vscode-theme.vsix');
 
 // not yet used
-await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.2.4/vspackage',
+await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.3.4/vspackage',
     resolve(getLocalDirectory(), '../vsix/'), 'open-collaboration-tools.vsix');

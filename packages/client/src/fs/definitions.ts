@@ -13,12 +13,12 @@ export type FileReadResultStatus = 'success' | 'denied';
 
 export interface FileReadRequestResult {
     status: FileReadResultStatus
-    content: string | ArrayBuffer
+    content: string | ArrayBuffer | ArrayBufferLike | BlobPart
 }
 
 export interface FileUpdate {
     resourceUri: string
-    content: string | ArrayBuffer
+    content: string | ArrayBuffer | ArrayBufferLike | BlobPart
 }
 
 export type FileUpdateResultStatus = 'equal' | 'updated' | 'created' | 'denied';
