@@ -10,6 +10,7 @@ import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteO
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import getOutlineServiceOverride from '@codingame/monaco-vscode-outline-service-override';
 import getRemoteAgentServiceOverride from '@codingame/monaco-vscode-remote-agent-service-override';
 import getSearchServiceOverride from '@codingame/monaco-vscode-search-service-override';
 import getSecretStorageServiceOverride from '@codingame/monaco-vscode-secret-storage-service-override';
@@ -17,7 +18,6 @@ import getStorageServiceOverride from '@codingame/monaco-vscode-storage-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import getOutlineServiceOverride from '@codingame/monaco-vscode-outline-service-override';
 import * as vscode from 'vscode';
 
 // this is required syntax highlighting
@@ -27,16 +27,17 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 
 export type ConfigResult = {
-    wrapperConfig: WrapperConfig
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    editorAppConfig: EditorAppConfig
     workspaceFileUri: vscode.Uri;
     helloTsUri: vscode.Uri;
     testerTsUri: vscode.Uri;
@@ -45,69 +46,65 @@ export type ConfigResult = {
 export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResult> => {
     const workspaceFileUri = vscode.Uri.file('/workspace.code-workspace');
 
-    const wrapperConfig: WrapperConfig = {
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        id: 'AAP',
         logLevel: LogLevel.Debug,
         htmlContainer,
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride(),
-                ...getLifecycleServiceOverride(),
-                ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
-                ...getBannerServiceOverride(),
-                ...getStatusBarServiceOverride(),
-                ...getTitleBarServiceOverride(),
-                ...getExplorerServiceOverride(),
-                ...getRemoteAgentServiceOverride(),
-                ...getEnvironmentServiceOverride(),
-                ...getSecretStorageServiceOverride(),
-                ...getStorageServiceOverride(),
-                ...getSearchServiceOverride(),
-                ...getOutlineServiceOverride()
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride(),
+            ...getLifecycleServiceOverride(),
+            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
+            ...getBannerServiceOverride(),
+            ...getStatusBarServiceOverride(),
+            ...getTitleBarServiceOverride(),
+            ...getExplorerServiceOverride(),
+            ...getRemoteAgentServiceOverride(),
+            ...getEnvironmentServiceOverride(),
+            ...getSecretStorageServiceOverride(),
+            ...getStorageServiceOverride(),
+            ...getSearchServiceOverride(),
+            ...getOutlineServiceOverride()
+        },
+        viewsConfig: {
+            viewServiceType: 'ViewsService',
+            htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
+            viewsInitFunc: defaultViewsInit
+        },
+        workspaceConfig: {
+            enableWorkspaceTrust: true,
+            windowIndicator: {
+                label: 'mlc-app-playground',
+                tooltip: '',
+                command: ''
             },
-            enableExtHostWorker: true,
-            viewsConfig: {
-                viewServiceType: 'ViewsService',
-                htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
-                viewsInitFunc: defaultViewsInit
-            },
-            workspaceConfig: {
-                enableWorkspaceTrust: true,
-                windowIndicator: {
-                    label: 'mlc-app-playground',
-                    tooltip: '',
-                    command: ''
+            workspaceProvider: {
+                trusted: true,
+                async open() {
+                    window.open(window.location.href);
+                    return true;
                 },
-                workspaceProvider: {
-                    trusted: true,
-                    async open() {
-                        window.open(window.location.href);
-                        return true;
-                    },
-                    workspace: {
-                        workspaceUri: workspaceFileUri
-                    }
-                },
-                configurationDefaults: {
-                    'window.title': 'mlc-app-playground${separator}${dirty}${activeEditorShort}'
-                },
-                productConfiguration: {
-                    nameShort: 'mlc-app-playground',
-                    nameLong: 'mlc-app-playground'
+                workspace: {
+                    workspaceUri: workspaceFileUri
                 }
             },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.wordBasedSuggestions': 'off',
-                    'typescript.tsserver.web.projectWideIntellisense.enabled': true,
-                    'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
-                    'editor.guides.bracketPairsHorizontal': true,
-                    'oct.serverUrl': 'https://api.open-collab.tools/',
-                    'editor.experimental.asyncTokenization': false
-                })
+            configurationDefaults: {
+                'window.title': 'mlc-app-playground${separator}${dirty}${activeEditorShort}'
             },
+            productConfiguration: {
+                nameShort: 'mlc-app-playground',
+                nameLong: 'mlc-app-playground'
+            }
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.wordBasedSuggestions': 'off',
+                'typescript.tsserver.web.projectWideIntellisense.enabled': true,
+                'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
+                'editor.guides.bracketPairsHorizontal': true,
+                'oct.serverUrl': 'https://api.open-collab.tools/',
+                'editor.experimental.asyncTokenization': false
+            })
         },
         extensions: [{
             config: {
@@ -119,9 +116,15 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
                 }
             }
         }],
-        editorAppConfig: {
-            monacoWorkerFactory: configureDefaultWorkerFactory
-        }
+        advanced: {
+            enableExtHostWorker: true,
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    const editorAppConfig: EditorAppConfig = {
+        $type: vscodeApiConfig.$type,
+        id: 'AAP',
     };
 
     const workspaceUri = vscode.Uri.file('/workspace');
@@ -143,7 +146,8 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
     registerFileSystemOverlay(1, fileSystemProvider);
 
     return {
-        wrapperConfig,
+        vscodeApiConfig,
+        editorAppConfig,
         workspaceFileUri,
         helloTsUri,
         testerTsUri

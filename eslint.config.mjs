@@ -105,7 +105,6 @@ export default [{
         '@typescript-eslint/no-empty-object-type': 'error',
         '@typescript-eslint/no-unsafe-function-type': 'error',
         '@typescript-eslint/no-wrapper-object-types': 'error',
-        // temporarily disabled due to "Maximum call stack size exceeded" error
         '@stylistic/indent': 'error',
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-misused-new': 'error',
