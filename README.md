@@ -79,12 +79,12 @@ Important Project changes and notes about the project's history are found [here]
 
 These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
 
-- **monaco-languageclient**: `9.9.0` (release date: 2025-08-11)
-- **monaco-editor-wrapper**: `6.10.0` (release date: 2025-08-11)
-- **@typefox/monaco-editor-react**: `6.10.0` (release date: 2025-08-11)
+- **monaco-languageclient**: `9.10.0` (release date: 2025-08-14)
+- **monaco-editor-wrapper**: `6.11.0` (release date: 2025-08-14)
+- **@typefox/monaco-editor-react**: `6.11.0` (release date: 2025-08-14)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `19.1.4`
-  - **vscode**: `1.102.3`
+  - **@codingame/monaco-vscode-[editor]-api**: `20.1.1`
+  - **vscode**: `1.103.1`
   - **monaco-editor**: `0.52.2`
 - **vscode-ws-jsonrpc**: `3.5.0` (release date: 2025-08-11)
 
@@ -256,12 +256,12 @@ Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@~19.1.4"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@~20.1.1"
 ```
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~19.1.4"` in you `package.json`. You can directly use it like this:
+When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~20.1.1"` in you `package.json`. You can directly use it like this:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -271,7 +271,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~19.1.4"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~20.1.1"
 }
 ```
 
