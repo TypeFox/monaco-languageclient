@@ -1,11 +1,11 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
+ * Copyright (c) 2025 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
 /* eslint-disable dot-notation */
 
-import { verifyUrlOrCreateDataUrl } from 'monaco-languageclient/common';
+import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
@@ -33,7 +33,7 @@ describe('Test EditorApp', () => {
 
     test('verifyUrlorCreateDataUrl: url', () => {
         const url = new URL('./editorAppExtended.test.ts', import.meta.url);
-        expect(verifyUrlOrCreateDataUrl(url)).toBe(url.href);
+        expect(encodeStringOrUrlToDataUrl(url)).toBe(url.href);
     });
 
     test('verifyUrlorCreateDataUrl: url', async () => {
@@ -42,7 +42,7 @@ describe('Test EditorApp', () => {
         const bytes = new TextEncoder().encode(text);
         const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
         const base64 = btoa(binString);
-        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
+        expect(encodeStringOrUrlToDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
     });
 
     test('verifyUrlorCreateDataUrl: url', () => {
@@ -50,7 +50,7 @@ describe('Test EditorApp', () => {
         const bytes = new TextEncoder().encode(text);
         const binString = Array.from(bytes, (b) => String.fromCodePoint(b)).join('');
         const base64 = btoa(binString);
-        expect(verifyUrlOrCreateDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
+        expect(encodeStringOrUrlToDataUrl(text)).toBe(`data:text/plain;base64,${base64}`);
     });
 
     test('config defaults', () => {
@@ -154,7 +154,7 @@ describe('Test EditorApp', () => {
         };
         const editorApp = new EditorApp(editorAppConfig);
 
-        let onTextChangedDiposeable = editorApp['textChangedDiposeables'].modified;
+        let onTextChangedDiposeable = editorApp['textChangedDisposables'].modified;
         expect(onTextChangedDiposeable).toBeUndefined();
 
         editorApp.registerOnTextChangedCallback(onTextChanged);
@@ -164,7 +164,7 @@ describe('Test EditorApp', () => {
 
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
-        onTextChangedDiposeable = editorApp['textChangedDiposeables'].modified;
+        onTextChangedDiposeable = editorApp['textChangedDisposables'].modified;
         expect(onTextChangedDiposeable).toBeDefined();
 
         const spyOnTextChangedDiposeable = vi.spyOn(onTextChangedDiposeable, 'dispose');

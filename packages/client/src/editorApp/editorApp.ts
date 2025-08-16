@@ -10,10 +10,11 @@ import type { IReference } from '@codingame/monaco-vscode-editor-service-overrid
 import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
 import { getEnhancedMonacoEnvironment, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
-import { ModelRefs, type CallbackDisposeable, type CodeContent, type CodeResources, type DisposableModelRefs, type EditorAppConfig, type TextContents, type TextModels } from './config.js';
+import type { CallbackDisposeable, CodeContent, CodeResources, DisposableModelRefs, EditorAppConfig, TextContents, TextModels } from './config.js';
+import { ModelRefs } from './config.js';
 
 /**
- * This is the base class for both Monaco Ediotor Apps:
+ * This is the base class for both Monaco Editor Apps:
  * - EditorAppClassic
  * - EditorAppExtended
  *
@@ -33,16 +34,14 @@ export class EditorApp {
     private modelRefs: ModelRefs = new ModelRefs();
 
     private onTextChanged?: (textChanges: TextContents) => void;
-    private textChangedDiposeables: CallbackDisposeable = {};
+    private textChangedDisposables: CallbackDisposeable = {};
     private modelDisposables: DisposableModelRefs = {};
 
     private modelRefDisposeTimeout = -1;
 
     private startingAwait?: Promise<void>;
-    private startingResolve: (value: void | PromiseLike<void>) => void;
 
     private disposingAwait?: Promise<void>;
-    private disposingResolve: (value: void | PromiseLike<void>) => void;
 
     constructor(userAppConfig?: EditorAppConfig) {
         this.$type = userAppConfig?.$type ?? 'extended';
@@ -105,17 +104,6 @@ export class EditorApp {
         this.modelRefDisposeTimeout = modelRefDisposeTimeout;
     }
 
-    private markStarting() {
-        this.startingAwait = new Promise<void>((resolve) => {
-            this.startingResolve = resolve;
-        });
-    }
-
-    private markStarted() {
-        this.startingResolve();
-        this.startingAwait = undefined;
-    }
-
     isStarting() {
         return this.startingAwait !== undefined;
     }
@@ -135,44 +123,74 @@ export class EditorApp {
         if (this.isStarting()) {
             await this.getStartingAwait();
         }
-        this.markStarting();
 
-        if (!this.isDisposed()) {
-            throw new Error('You called start without properly disposing the EditorApp.');
+        let startingResolve: (value: void | PromiseLike<void>) => void = () => { };
+        this.startingAwait = new Promise<void>((resolve) => {
+            startingResolve = resolve;
+        });
+
+        try {
+            const envEnhanced = getEnhancedMonacoEnvironment();
+            const viewServiceType = envEnhanced.viewServiceType;
+
+            // check general error case first
+            if (!(envEnhanced.vscodeApiInitialised ?? false)) {
+                return Promise.reject('monaco-vscode-api was not initialized. Aborting.');
+            }
+            if (viewServiceType !== 'EditorService' && viewServiceType !== undefined) {
+                return Promise.reject('No EditorService configured. monaco-editor will not be started.');
+            }
+            if (!this.isDisposed()) {
+                return Promise.reject('Start was called without properly disposing the EditorApp first.');
+            }
+
+            const languageDef = this.config.languageDef;
+            if (languageDef) {
+                if (this.$type === 'extended') {
+                    throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
+                }
+                // register own language first
+                monaco.languages.register(languageDef.languageExtensionConfig);
+
+                const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+                if (languageRegistered.length === 0) {
+                    // this is only meaningful for languages supported by monaco out of the box
+                    monaco.languages.register({
+                        id: languageDef.languageExtensionConfig.id
+                    });
+                }
+
+                // apply monarch definitions
+                if (languageDef.monarchLanguage) {
+                    monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
+                }
+
+                if (languageDef.theme) {
+                    monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
+                    monaco.editor.setTheme(languageDef.theme.name);
+                }
+            }
+
+            if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
+                StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                    this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+            }
+
+            await this.createEditors(htmlContainer!);
+
+            // everything is fine at this point
+            startingResolve();
+            this.logger.info('EditorApp start completed successfully.');
+        } catch (e) {
+            // in case of further errors (after general ones above)
+            // take the error and build a new rejection to complete the promise
+            return Promise.reject(e);
+        } finally {
+            this.startingAwait = undefined;
         }
+    }
 
-        const languageDef = this.config.languageDef;
-        if (languageDef) {
-            if (this.$type === 'extended') {
-                throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
-            }
-            // register own language first
-            monaco.languages.register(languageDef.languageExtensionConfig);
-
-            const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
-            if (languageRegistered.length === 0) {
-                // this is only meaningful for languages supported by monaco out of the box
-                monaco.languages.register({
-                    id: languageDef.languageExtensionConfig.id
-                });
-            }
-
-            // apply monarch definitions
-            if (languageDef.monarchLanguage) {
-                monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
-            }
-
-            if (languageDef.theme) {
-                monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
-                monaco.editor.setTheme(languageDef.theme.name);
-            }
-        }
-
-        if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-            StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
-                this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
-        }
-
+    async createEditors(htmlContainer: HTMLElement): Promise<void> {
         // ensure proper default resources are initialized, uris have to be unique
         const modified = {
             text: this.config.codeResources?.modified?.text ?? '',
@@ -190,30 +208,10 @@ export class EditorApp {
             this.modelRefs.original = await this.buildModelReference(original, this.logger);
         }
 
-        try {
-            const envEnhanced = getEnhancedMonacoEnvironment();
-            const viewServiceType = envEnhanced.viewServiceType;
-            if (viewServiceType === 'EditorService' || viewServiceType === undefined) {
-                this.logger.info(`Starting monaco-editor (${this.id})`);
-                await this.createEditors(htmlContainer!);
-            } else {
-                this.logger.info('No EditorService configured. monaco-editor will not be started.');
-            }
-
-            this.logger.info('EditorApp start completed successfully.');
-            // eslint-disable-next-line no-useless-catch
-        } catch (e) {
-            throw e;
-        } finally {
-            // in case of rejection, mark as started, otherwise the promise will never resolve
-            this.markStarted();
-        }
-    }
-
-    async createEditors(htmlContainer: HTMLElement): Promise<void> {
+        this.logger.info(`Starting monaco-editor (${this.id})`);
         if (this.isDiffEditor()) {
             this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
-            const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
+            const modified = this.modelRefs.modified.object.textEditorModel ?? undefined;
             const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
             if (modified !== undefined && original !== undefined) {
                 const model = {
@@ -225,7 +223,7 @@ export class EditorApp {
             }
         } else {
             const model = {
-                modified: this.modelRefs.modified?.object.textEditorModel
+                modified: this.modelRefs.modified.object.textEditorModel
             };
             this.editor = monaco.editor.create(htmlContainer, {
                 ...this.config.editorOptions,
@@ -318,8 +316,8 @@ export class EditorApp {
         if (this.onTextChanged !== undefined) {
             let changed = false;
             if (textModels.modified !== undefined && textModels.modified !== null) {
-                const old = this.textChangedDiposeables.modified;
-                this.textChangedDiposeables.modified = textModels.modified.onDidChangeContent(() => {
+                const old = this.textChangedDisposables.modified;
+                this.textChangedDisposables.modified = textModels.modified.onDidChangeContent(() => {
                     didModelContentChange(textModels, this.onTextChanged);
                 });
                 old?.dispose();
@@ -327,8 +325,8 @@ export class EditorApp {
             }
 
             if (textModels.original !== undefined && textModels.original !== null) {
-                const old = this.textChangedDiposeables.original;
-                this.textChangedDiposeables.original = textModels.original.onDidChangeContent(() => {
+                const old = this.textChangedDisposables.original;
+                this.textChangedDisposables.original = textModels.original.onDidChangeContent(() => {
                     didModelContentChange(textModels, this.onTextChanged);
                 });
                 old?.dispose();
@@ -346,7 +344,10 @@ export class EditorApp {
         if (this.isDisposing()) {
             await this.getDisposingAwait();
         }
-        this.markDisposing();
+        let disposingResolve: (value: void | PromiseLike<void>) => void = () => { };
+        this.disposingAwait = new Promise<void>((resolve) => {
+            disposingResolve = resolve;
+        });
 
         if (this.editor) {
             this.editor.dispose();
@@ -357,31 +358,20 @@ export class EditorApp {
             this.diffEditor = undefined;
         }
 
-        this.textChangedDiposeables.modified?.dispose();
-        this.textChangedDiposeables.original?.dispose();
-        this.textChangedDiposeables.modified = undefined;
-        this.textChangedDiposeables.original = undefined;
+        this.textChangedDisposables.modified?.dispose();
+        this.textChangedDisposables.original?.dispose();
+        this.textChangedDisposables.modified = undefined;
+        this.textChangedDisposables.original = undefined;
 
         await this.disposeModelRefs();
 
-        this.markDisposed();
+        disposingResolve();
+        this.disposingAwait = undefined;
     }
 
     isDisposed(): boolean {
         return this.editor === undefined && this.diffEditor === undefined &&
-            // this.textChangedDiposeables.modified === undefined && this.textChangedDiposeables.original === undefined &&
             this.modelDisposables.original === undefined && this.modelDisposables.modified === undefined;
-    }
-
-    private markDisposing() {
-        this.disposingAwait = new Promise<void>((resolve) => {
-            this.disposingResolve = resolve;
-        });
-    }
-
-    private markDisposed() {
-        this.disposingResolve();
-        this.disposingAwait = undefined;
     }
 
     isDisposing() {
@@ -393,7 +383,7 @@ export class EditorApp {
     }
 
     async disposeModelRefs() {
-        const diposeRefs = () => {
+        const disposeRefs = () => {
             if (this.logger.getLevel() === LogLevel.Debug) {
                 const models = monaco.editor.getModels();
                 this.logger.debug('Current model URIs:');
@@ -402,11 +392,11 @@ export class EditorApp {
                 });
             }
 
-            if (this.modelDisposables.modified !== undefined && !(this.modelDisposables.modified.object.isDisposed() === true)) {
+            if (this.modelDisposables.modified !== undefined && !this.modelDisposables.modified.object.isDisposed()) {
                 this.modelDisposables.modified.dispose();
                 this.modelDisposables.modified = undefined;
             }
-            if (this.modelDisposables.original !== undefined && !(this.modelDisposables.original.object.isDisposed() === true)) {
+            if (this.modelDisposables.original !== undefined && !this.modelDisposables.original.object.isDisposed()) {
                 this.modelDisposables.original.dispose();
                 this.modelDisposables.original = undefined;
             }
@@ -423,11 +413,11 @@ export class EditorApp {
         if (this.modelRefDisposeTimeout > 0) {
             this.logger.debug('Using async dispose of model references');
             await new Promise<void>(resolve => setTimeout(() => {
-                diposeRefs();
+                disposeRefs();
                 resolve();
             }, this.modelRefDisposeTimeout));
         } else {
-            diposeRefs();
+            disposeRefs();
         }
     }
 

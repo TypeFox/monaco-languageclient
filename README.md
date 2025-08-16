@@ -177,11 +177,11 @@ It is also possible to use a [@typefox/monaco-editor-react app](./packages/examp
 
 #### bare monaco-languageclient ([Location](./packages/examples/src/bare))
 
-It demostrate how the `JSON Language client and language server example` can be realized with just pure monaco api and no abstraction via tge `editor app`. You find the implementation [here](./packages/examples/src/bare/client.ts).
+This demonstrates how the `JSON Language client and language server example` can be realized with just the pure monaco api and no abstraction via the `editor app`. You find the implementation [here](./packages/examples/src/bare/client.ts).
 
 #### Browser example ([Location](./packages/examples/src/browser))
 
-It demonstrates how an [editor app can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
+This demonstrates how an [editor app can be combined with a language service written in JavaScript](./packages/examples/src/browser/main.ts). This example can now be considered legacy as the web worker option eases client side language server implementation and separation, but it still shows a valid way to achieve the desired outcome.
 
 #### Purely monaco-editor related examples
 

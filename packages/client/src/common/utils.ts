@@ -38,7 +38,7 @@ export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     return buildUrl;
 };
 
-export const verifyUrlOrCreateDataUrl = (input: string | URL) => {
+export const encodeStringOrUrlToDataUrl = (input: string | URL) => {
     if (input instanceof URL) {
         return input.href;
     } else {

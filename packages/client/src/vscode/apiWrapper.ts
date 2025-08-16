@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
+ * Copyright (c) 2025 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
@@ -10,11 +10,11 @@ import getConfigurationServiceOverride, { initUserConfiguration } from '@codinga
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
-import { ConsoleLogger, verifyUrlOrCreateDataUrl, type Logger } from 'monaco-languageclient/common';
+import { ConsoleLogger, encodeStringOrUrlToDataUrl, type Logger } from 'monaco-languageclient/common';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import 'vscode/localExtensionHost';
-import type { MonacoVscodeApiConfig } from './config.js';
+import type { ExtensionConfig, MonacoVscodeApiConfig } from './config.js';
 import { configureExtHostWorker, getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
 
 export interface InitServicesInstructions {
@@ -128,13 +128,13 @@ export class MonacoVscodeApiWrapper {
     }
 
     /**
-     * set the log-level via the development settings
+     * Set the log-level via the development settings.
+     * VSCode developmentOptions are read-only. There are no functions exposed to set options directly.
+     * Therefore the Object properties need to be manipulated directly via Object.assign.
      */
     protected configureDevLogLevel() {
         const devLogLevel = this.apiConfig.workspaceConfig?.developmentOptions?.logLevel;
         if (devLogLevel === undefined) {
-
-            // this needs to be done so complicated, because developmentOptions is read-only
             const devOptions: Record<string, unknown> = {
                 ...this.apiConfig.workspaceConfig!.developmentOptions
             };
@@ -242,18 +242,26 @@ export class MonacoVscodeApiWrapper {
             });
             for (const extensionConfig of extensions ?? []) {
                 if (!extensionIds.includes(`${extensionConfig.config.publisher}.${extensionConfig.config.name}`)) {
-                    const manifest = extensionConfig.config as IExtensionManifest;
-                    const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
-                    this.extensionRegisterResults.set(manifest.name, extRegResult);
-                    if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
-                        for (const entry of extensionConfig.filesOrContents) {
-                            this.disposableStore.add(extRegResult.registerFileUrl(entry[0], verifyUrlOrCreateDataUrl(entry[1])));
-                        }
-                    }
-                    allPromises.push(extRegResult.whenReady());
+                    allPromises.push(this.initExtension(extensionConfig, extensionIds));
                 }
             }
             await Promise.all(allPromises);
+        }
+    }
+
+    protected initExtension(extensionConfig: ExtensionConfig, extensionIds: string[]): Promise<void> {
+        if (!extensionIds.includes(`${extensionConfig.config.publisher}.${extensionConfig.config.name}`)) {
+            const manifest = extensionConfig.config as IExtensionManifest;
+            const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
+            this.extensionRegisterResults.set(manifest.name, extRegResult);
+            if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+                for (const entry of extensionConfig.filesOrContents) {
+                    this.disposableStore.add(extRegResult.registerFileUrl(entry[0], encodeStringOrUrlToDataUrl(entry[1])));
+                }
+            }
+            return extRegResult.whenReady();
+        } else {
+            return Promise.resolve();
         }
     }
 
@@ -304,7 +312,7 @@ export class MonacoVscodeApiWrapper {
                 // ensure one of the three potential view services are configured
                 await this.configureViewsServices();
 
-                // enforece semantic highlighting if configured
+                // enforce semantic highlighting if configured
                 this.configureSemanticHighlighting();
 
                 await this.initUserConfiguration();

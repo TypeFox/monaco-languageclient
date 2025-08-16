@@ -18,11 +18,11 @@ export type MonacoEditorProps = {
     languageClientConfigs?: LanguageClientConfigs;
     onVscodeApiInitDone?: (monacoVscodeApiManager: MonacoVscodeApiWrapper) => void;
     onEditorStartDone?: (editorApp?: EditorApp) => void;
-    onLanguagClientsStartDone?: (lcsManager?: LanguageClientsManager) => void;
+    onLanguageClientsStartDone?: (lcsManager?: LanguageClientsManager) => void;
     onTextChanged?: (textChanges: TextContents) => void;
     onError?: (error: Error) => void;
     onDisposeEditor?: () => void;
-    onDisposeLanguagaeClients?: () => void;
+    onDisposeLanguageClients?: () => void;
     modifiedTextValue?: string;
     originalTextValue?: string;
 }
@@ -36,11 +36,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         languageClientConfigs,
         onVscodeApiInitDone,
         onEditorStartDone,
-        onLanguagClientsStartDone,
+        onLanguageClientsStartDone,
         onTextChanged,
         onError,
         onDisposeEditor,
-        onDisposeLanguagaeClients,
+        onDisposeLanguageClients,
         modifiedTextValue,
         originalTextValue
     } = props;
@@ -91,7 +91,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         const envEnhanced = getEnhancedMonacoEnvironment();
 
         // init will only performed once
-        if (!(envEnhanced.vscodeApiInitialising === true)) {
+        if (envEnhanced.vscodeApiInitialising !== true) {
 
             (async () => {
                 apiWrapperRef.current.getLogger().debug('GLOBAL INIT');
@@ -172,7 +172,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     await lcsManagerRef.current.setConfigs(languageClientConfigs);
                     await lcsManagerRef.current.start();
 
-                    onLanguagClientsStartDone?.(lcsManagerRef.current);
+                    onLanguageClientsStartDone?.(lcsManagerRef.current);
                     apiWrapperRef.current.getLogger().debug('INIT LC DONE');
                 } catch (error) {
                     performErrorHandling(error as Error);
@@ -195,7 +195,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                     if (languageClientConfigs?.enforceDispose === true) {
                         lcsManagerRef.current?.dispose();
-                        onDisposeLanguagaeClients?.();
+                        onDisposeLanguageClients?.();
                     }
                 } catch (error) {
                     // The language client may throw an error during disposal, but we want to continue anyway

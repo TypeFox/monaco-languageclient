@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
+ * Copyright (c) 2025 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
@@ -132,7 +132,7 @@ describe('Test Test EditorApp (classic)', () => {
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
         await expect(async () => {
             await editorApp.start(htmlContainer);
-        }).rejects.toThrowError('You called start without properly disposing the EditorApp.');
+        }).rejects.toThrowError('Start was called without properly disposing the EditorApp first.');
     });
 
     test('Call start twice with prior disposal', async () => {

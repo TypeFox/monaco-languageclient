@@ -7,12 +7,11 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { delayExecution } from 'monaco-languageclient/common';
+import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientsManager } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { StrictMode } from 'react';
 import { describe, expect, test } from 'vitest';
-import type { TextContents } from '../../client/lib/editorApp/config.js';
-import type { EditorApp } from '../../client/lib/editorApp/editorApp.js';
 import { createDefaultEditorAppConfig, createDefaultLanguageClientConfigs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
@@ -260,7 +259,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfigs={languageClientConfigs}
                 style={{ 'height': '800px' }}
-                onLanguagClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }} />);
@@ -291,11 +290,11 @@ describe('Test MonacoEditorReactComp', () => {
                     editorAppConfig={editorAppConfig}
                     languageClientConfigs={languageClientConfigs}
                     style={{ 'height': '800px' }}
-                    onLanguagClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                    onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
                         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                         resolve();
                     }}
-                    onDisposeLanguagaeClients={() => {
+                    onDisposeLanguageClients={() => {
                         resolveLc();
                     }}
                 />);
@@ -326,7 +325,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfigs={languageClientConfigs}
                 style={{ 'height': '800px' }}
-                onLanguagClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }} />);
@@ -379,7 +378,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfigs={languageClientConfigs}
                 style={{ 'height': '800px' }}
-                onLanguagClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }}
@@ -429,12 +428,9 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfigs={languageClientConfigs3}
                 style={{ 'height': '800px' }}
-                onLanguagClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
-                }}
-                onDisposeLanguagaeClients={() => {
-                    console.log('Hello');
                 }}
             />);
         });
