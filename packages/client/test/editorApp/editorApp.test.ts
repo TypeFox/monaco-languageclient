@@ -86,6 +86,7 @@ describe('Test EditorApp', () => {
         const editorAppConfig = createEditorAppConfigClassicExtended({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await editorApp.dispose();
     });
 
     test('Update code resources after start (same file)', async () => {
@@ -117,6 +118,8 @@ describe('Test EditorApp', () => {
         expect(textModels.modified?.getValue()).toEqual('const text = "Goodbye World";');
 
         expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
+
+        await editorApp.dispose();
     });
 
     test('Update code resources after start (different file)', async () => {
@@ -144,6 +147,8 @@ describe('Test EditorApp', () => {
         expect(textModels.modified?.getValue()).toEqual('const text = "Goodbye World";');
 
         expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
+
+        await editorApp.dispose();
     });
 
     test('Verify registerTextChangeCallback', async () => {
@@ -183,6 +188,8 @@ describe('Test EditorApp', () => {
 
         expect(spyAnnounceModelUpdate).toHaveBeenCalledTimes(2);
         expect(spyOnTextChangedDiposeable).toHaveBeenCalledTimes(1);
+
+        await editorApp.dispose();
     });
 
     test('Test editorApp init/start/dispose phase promises', async () => {
@@ -211,6 +218,8 @@ describe('Test EditorApp', () => {
         });
         editorApp = new EditorApp(editorAppConfig);
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
     test('Test html parameter with start', async () => {
@@ -223,6 +232,8 @@ describe('Test EditorApp', () => {
         const editorApp = new EditorApp(editorAppConfig);
 
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
 });

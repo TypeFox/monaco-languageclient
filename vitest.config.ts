@@ -5,7 +5,7 @@
 
 import { mergeConfig } from 'vite';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
-import definedViteConfig from './vite.config.js';
+import externalViteConfig from './vite.config.js';
 
 /// <reference lib="vitest/config" />
 
@@ -53,5 +53,5 @@ export const vitestConfig = {
 
 const definedVitestConfig = defineVitestConfig(vitestConfig);
 
-export default mergeConfig(definedVitestConfig, definedViteConfig);
+export default mergeConfig(definedVitestConfig, externalViteConfig);
 

@@ -101,6 +101,8 @@ describe('Test Test EditorApp (classic)', () => {
 
         const appConfig = editorApp!.getConfig();
         expect(appConfig.overrideAutomaticLayout).toBeTruthy();
+
+        await editorApp.dispose();
     });
 
     test('Code resources main', async () => {
@@ -117,7 +119,8 @@ describe('Test Test EditorApp (classic)', () => {
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
         expect(modelRefs?.original).toBeUndefined();
-        editorApp.dispose();
+
+        await editorApp.dispose();
     });
 
     test('Call start twice without prior disposal', async () => {
@@ -133,6 +136,8 @@ describe('Test Test EditorApp (classic)', () => {
         await expect(async () => {
             await editorApp.start(htmlContainer);
         }).rejects.toThrowError('Start was called without properly disposing the EditorApp first.');
+
+        await editorApp.dispose();
     });
 
     test('Call start twice with prior disposal', async () => {
@@ -147,6 +152,8 @@ describe('Test Test EditorApp (classic)', () => {
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
         await editorApp.dispose();
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
     test('Code resources original (regular editor)', async () => {
@@ -170,7 +177,7 @@ describe('Test Test EditorApp (classic)', () => {
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
         expect(modelRefs?.original).toBeUndefined();
-        editorApp.dispose();
+        await editorApp.dispose();
     });
 
     test('Code resources original (diff editor)', async () => {
@@ -194,7 +201,7 @@ describe('Test Test EditorApp (classic)', () => {
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
         expect(modelRefs?.original).toBeDefined();
-        editorApp.dispose();
+        await editorApp.dispose();
     });
 
     test('Code resources main and original', async () => {
@@ -224,7 +231,7 @@ describe('Test Test EditorApp (classic)', () => {
         expect(nameOriginal).toBeUndefined();
         expect(name).not.toEqual(nameOriginal);
 
-        editorApp.dispose();
+        await editorApp.dispose();
     });
 
     test('Code resources empty', async () => {
@@ -242,6 +249,8 @@ describe('Test Test EditorApp (classic)', () => {
         // default modelRef is created with regular editor even if no codeResources are given
         expect(modelRefs?.modified).toBeDefined();
         expect(modelRefs?.original).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
     test('Code resources model direct', async () => {
@@ -268,6 +277,8 @@ describe('Test Test EditorApp (classic)', () => {
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
         expect(modelRefs?.original).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
     test('Early code resources update on editorApp are ok', async () => {
@@ -300,6 +311,8 @@ describe('Test Test EditorApp (classic)', () => {
         const modelRefsAfter = editorApp['modelRefs'];
         expect(modelRefsAfter?.modified).toBeDefined();
         expect(modelRefsAfter?.original).toBeUndefined();
+
+        await editorApp.dispose();
     });
 
     test('Check current model is globally removed after dispose', async () => {
@@ -316,6 +329,8 @@ describe('Test Test EditorApp (classic)', () => {
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
         editorApp.getEditor()?.getModel()!.dispose();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
+
+        await editorApp.dispose();
     });
 
     test('Check current model is globally removed after dispose (second model)', async () => {
@@ -343,6 +358,8 @@ describe('Test Test EditorApp (classic)', () => {
         const currentModelMod = editorApp.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModelMod!)).toBeTruthy();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
+
+        await editorApp.dispose();
     });
 
 });

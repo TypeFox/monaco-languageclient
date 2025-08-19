@@ -62,6 +62,11 @@ export const definedViteConfig = defineConfig({
             ]
         },
         include: [
+            '@codingame/monaco-vscode-standalone-languages',
+            '@codingame/monaco-vscode-standalone-css-language-features',
+            '@codingame/monaco-vscode-standalone-html-language-features',
+            '@codingame/monaco-vscode-standalone-json-language-features',
+            '@codingame/monaco-vscode-standalone-typescript-language-features',
             '@testing-library/react',
             'langium',
             'langium/lsp',
