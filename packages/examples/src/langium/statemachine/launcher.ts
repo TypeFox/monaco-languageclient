@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { initLocaleLoader } from 'monaco-editor-wrapper/vscode/locale';
+import { initLocaleLoader } from 'monaco-languageclient/vscodeApiLocales';
 await initLocaleLoader();
 
 const { runStatemachineWrapper } = await import('./main.js');

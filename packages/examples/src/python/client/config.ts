@@ -21,13 +21,14 @@ import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import type { WrapperConfig } from 'monaco-editor-wrapper';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit } from 'monaco-editor-wrapper/vscode/services';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { createUrl } from 'monaco-languageclient/tools';
-import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscode/services';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { createUrl } from 'monaco-languageclient/common';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
+import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';
@@ -67,7 +68,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello.py')!.uri, helloPyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('hello2.py')!.uri, hello2PyCode));
     fileSystemProvider.registerFile(new RegisteredMemoryFile(files.get('bad.py')!.uri, badPyCode));
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(configParams.workspaceFile, createDefaultWorkspaceContent(configParams.workspaceRoot)));
+    fileSystemProvider.registerFile(new RegisteredMemoryFile(configParams.workspaceFile, createDefaultWorkspaceContent(workspaceRoot)));
     fileSystemProvider.registerFile(createDebugLaunchConfigFile(workspaceRoot, configParams.languageId));
     registerFileSystemOverlay(1, fileSystemProvider);
 
@@ -75,11 +76,13 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLE
 };
 
 export type PythonAppConfig = {
-    wrapperConfig: WrapperConfig;
+    languageClientConfig: LanguageClientConfig;
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    editorAppConfig: EditorAppConfig;
     configParams: ConfigParams;
 }
 
-export const createWrapperConfig = (): PythonAppConfig => {
+export const createPythonAppConfig = (): PythonAppConfig => {
     const configParams = createDefaultConfigParams('/home/mlc', document.body);
 
     const url = createUrl({
@@ -96,101 +99,65 @@ export const createWrapperConfig = (): PythonAppConfig => {
     const reader = new WebSocketMessageReader(iWebSocket);
     const writer = new WebSocketMessageWriter(iWebSocket);
 
-    const wrapperConfig: WrapperConfig = {
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         htmlContainer: configParams.htmlContainer,
         logLevel: LogLevel.Debug,
-        languageClientConfigs: {
-            configs: {
-                python: {
-                    name: 'Python Language Server Example',
-                    connection: {
-                        options: {
-                            $type: 'WebSocketDirect',
-                            webSocket: webSocket,
-                            startOptions: {
-                                onCall: (languageClient?: MonacoLanguageClient) => {
-                                    setTimeout(() => {
-                                        ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                            vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                                languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
-                                            });
-                                        });
-                                    }, 250);
-                                },
-                                reportStatus: true,
-                            }
-                        },
-                        messageTransports: { reader, writer }
-                    },
-                    clientOptions: {
-                        documentSelector: [configParams.languageId],
-                        workspaceFolder: {
-                            index: 0,
-                            name: configParams.workspaceRoot,
-                            uri: vscode.Uri.parse(configParams.workspaceRoot)
-                        },
-                    }
-                }
-            }
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride(),
+            ...getLifecycleServiceOverride(),
+            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
+            ...getBannerServiceOverride(),
+            ...getStatusBarServiceOverride(),
+            ...getTitleBarServiceOverride(),
+            ...getExplorerServiceOverride(),
+            ...getRemoteAgentServiceOverride(),
+            ...getEnvironmentServiceOverride(),
+            ...getSecretStorageServiceOverride(),
+            ...getStorageServiceOverride(),
+            ...getSearchServiceOverride(),
+            ...getDebugServiceOverride(),
+            ...getTestingServiceOverride(),
+            ...getPreferencesServiceOverride()
         },
-        vscodeApiConfig: {
-            serviceOverrides: {
-                ...getKeybindingsServiceOverride(),
-                ...getLifecycleServiceOverride(),
-                ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
-                ...getBannerServiceOverride(),
-                ...getStatusBarServiceOverride(),
-                ...getTitleBarServiceOverride(),
-                ...getExplorerServiceOverride(),
-                ...getRemoteAgentServiceOverride(),
-                ...getEnvironmentServiceOverride(),
-                ...getSecretStorageServiceOverride(),
-                ...getStorageServiceOverride(),
-                ...getSearchServiceOverride(),
-                ...getDebugServiceOverride(),
-                ...getTestingServiceOverride(),
-                ...getPreferencesServiceOverride()
+        viewsConfig: {
+            viewServiceType: 'ViewsService',
+            htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
+            viewsInitFunc: defaultViewsInit
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.guides.bracketPairsHorizontal': 'active',
+                'editor.wordBasedSuggestions': 'off',
+                'editor.experimental.asyncTokenization': true,
+                'debug.toolBarLocation': 'docked'
+            })
+        },
+        workspaceConfig: {
+            enableWorkspaceTrust: true,
+            windowIndicator: {
+                label: 'mlc-python-example',
+                tooltip: '',
+                command: ''
             },
-            viewsConfig: {
-                viewServiceType: 'ViewsService',
-                htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
-                viewsInitFunc: defaultViewsInit
-            },
-            userConfiguration: {
-                json: JSON.stringify({
-                    'workbench.colorTheme': 'Default Dark Modern',
-                    'editor.guides.bracketPairsHorizontal': 'active',
-                    'editor.wordBasedSuggestions': 'off',
-                    'editor.experimental.asyncTokenization': true,
-                    'debug.toolBarLocation': 'docked'
-                })
-            },
-            workspaceConfig: {
-                enableWorkspaceTrust: true,
-                windowIndicator: {
-                    label: 'mlc-python-example',
-                    tooltip: '',
-                    command: ''
+            workspaceProvider: {
+                trusted: true,
+                async open() {
+                    window.open(window.location.href);
+                    return true;
                 },
-                workspaceProvider: {
-                    trusted: true,
-                    async open() {
-                        window.open(window.location.href);
-                        return true;
-                    },
-                    workspace: {
-                        workspaceUri: configParams.workspaceFile
-                    }
-                },
-                configurationDefaults: {
-                    'window.title': 'mlc-python-example${separator}${dirty}${activeEditorShort}'
-                },
-                productConfiguration: {
-                    nameShort: 'mlc-python-example',
-                    nameLong: 'mlc-python-example'
+                workspace: {
+                    workspaceUri: configParams.workspaceFile
                 }
             },
+            configurationDefaults: {
+                'window.title': 'mlc-python-example${separator}${dirty}${activeEditorShort}'
+            },
+            productConfiguration: {
+                nameShort: 'mlc-python-example',
+                nameLong: 'mlc-python-example'
+            }
         },
         extensions: [
             {
@@ -205,13 +172,48 @@ export const createWrapperConfig = (): PythonAppConfig => {
             },
             provideDebuggerExtensionConfig(configParams)
         ],
-        editorAppConfig: {
-            monacoWorkerFactory: configureDefaultWorkerFactory
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    const languageClientConfig: LanguageClientConfig = {
+        name: 'Python Language Server Example',
+        connection: {
+            options: {
+                $type: 'WebSocketDirect',
+                webSocket: webSocket,
+                startOptions: {
+                    onCall: (languageClient?: BaseLanguageClient) => {
+                        setTimeout(() => {
+                            ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                                vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                    languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                });
+                            });
+                        }, 250);
+                    },
+                    reportStatus: true,
+                }
+            },
+            messageTransports: { reader, writer }
+        },
+        clientOptions: {
+            documentSelector: [configParams.languageId],
+            workspaceFolder: {
+                index: 0,
+                name: configParams.workspaceRoot,
+                uri: vscode.Uri.parse(configParams.workspaceRoot)
+            },
         }
     };
 
+    const editorAppConfig: EditorAppConfig = {
+        $type: vscodeApiConfig.$type
+    };
+
     return {
-        wrapperConfig,
+        vscodeApiConfig,
+        languageClientConfig,
+        editorAppConfig,
         configParams: configParams
     };
 };

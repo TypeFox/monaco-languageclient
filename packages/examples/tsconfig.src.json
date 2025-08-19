@@ -13,9 +13,6 @@
     "path": "../client/tsconfig.src.json",
   },
   {
-    "path": "../wrapper/tsconfig.src.json"
-  },
-  {
     "path": "../wrapper-react/tsconfig.src.json"
   }],
   "include": [

@@ -6,7 +6,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | vscode-ws-jsonrpc | monaco-editor-wrapper | monaco-editor-react | monaco-vscode-api / editor-api | vscode | monaco-editor | release date | comment |
 | :---- | :---- | :---- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 10.0.0 | 3.5.0 | 7.0.0 | 7.0.0 | 20.1.1 | 1.103.1 | 0.52.2 | unreleased | |
+| 10.0.0 | 3.5.0 | 7.0.0 | 7.0.0 | 20.2.1 | 1.103.1 | 0.52.2 | unreleased | |
 | 9.11.0 | 3.5.0 | 6.12.0 | 6.12.0 | 20.2.1 | 1.103.1 | 0.52.2 | 2025-08-21 | |
 | 9.10.0 | 3.5.0 | 6.11.0 | 6.11.0 | 20.1.1 | 1.103.1 | 0.52.2 | 2025-08-14 | |
 | 9.9.0 | 3.5.0 | 6.10.0 | 6.10.0 | 19.1.4 | 1.102.3 | 0.52.2 | 2025-08-11 | |
@@ -81,6 +81,11 @@ The following table describes which version of **monaco-languageclient** and **@
 | 2.0.0 - 2.0.2 | 2.0.2 | | | 1.68.4  | | 0.33.0 | | monaco-editor and vscode incompatible |
 
 ## Important Project Changes
+
+### July 2025 (v10.0.0)
+
+- Dropped `monaco-editor-wrapper`. All required funcitonality was moved back to `monaco-languageclient` and made available as sub exports.
+- `@typefox/monaco-editor-react` lifecycle and robustness improvements.
 
 ### March 2024 (v8.0.0)
 

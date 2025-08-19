@@ -6,7 +6,7 @@
 import React, { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import type { TextContents } from 'monaco-editor-wrapper';
+import type { TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
@@ -20,9 +20,8 @@ export const runStatemachineReact = async () => {
     reader.listen((message) => {
         console.log('Received message from worker:', message);
     });
-    const wrapperConfig = createLangiumGlobalConfig({
+    const appConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
-        useLanguageClient: true,
         codeContent: {
             text,
             uri: '/workspace/example.statemachine'
@@ -62,7 +61,8 @@ export const runStatemachineReact = async () => {
                         <div style={{ 'height': height }} >
                             <MonacoEditorReactComp
                                 style={{ 'height': '100%' }}
-                                wrapperConfig={wrapperConfig}
+                                vscodeApiConfig={appConfig.vscodeApiConfig}
+                                editorAppConfig={appConfig.editorAppConfig}
                                 onTextChanged={onTextChanged}
                             />
                             <b>Debug:</b><br />{testState}

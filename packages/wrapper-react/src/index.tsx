@@ -3,82 +3,204 @@
 * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
-import React, { type CSSProperties, useEffect, useRef } from 'react';
-import { MonacoEditorLanguageClientWrapper, type TextContents, type WrapperConfig } from 'monaco-editor-wrapper';
+import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
+import { type LanguageClientConfigs, LanguageClientsManager } from 'monaco-languageclient/lcwrapper';
+import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import React, { type CSSProperties, useEffect, useRef, useState } from 'react';
+
+export type ResolveFc = (value: void | PromiseLike<void>) => void;
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
     className?: string;
-    wrapperConfig: WrapperConfig,
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    editorAppConfig?: EditorAppConfig;
+    languageClientConfigs?: LanguageClientConfigs;
+    onVscodeApiInitDone?: (monacoVscodeApiManager: MonacoVscodeApiWrapper) => void;
+    onEditorStartDone?: (editorApp?: EditorApp) => void;
+    onLanguageClientsStartDone?: (lcsManager?: LanguageClientsManager) => void;
     onTextChanged?: (textChanges: TextContents) => void;
-    onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
-    onError?: (e: unknown) => void;
+    onError?: (error: Error) => void;
+    onDisposeEditor?: () => void;
+    onDisposeLanguageClients?: () => void;
+    modifiedTextValue?: string;
+    originalTextValue?: string;
 }
 
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
         style,
         className,
-        wrapperConfig,
+        vscodeApiConfig,
+        editorAppConfig,
+        languageClientConfigs,
+        onVscodeApiInitDone,
+        onEditorStartDone,
+        onLanguageClientsStartDone,
         onTextChanged,
-        onLoad,
-        onError
+        onError,
+        onDisposeEditor,
+        onDisposeLanguageClients,
+        modifiedTextValue,
+        originalTextValue
     } = props;
 
-    const wrapperRef = useRef<MonacoEditorLanguageClientWrapper>(new MonacoEditorLanguageClientWrapper());
+    const apiWrapperRef = useRef<MonacoVscodeApiWrapper>(new MonacoVscodeApiWrapper(vscodeApiConfig));
+    const haveEditorService = useRef(true);
+    const editorAppRef = useRef<EditorApp>(null);
+    const lcsManagerRef = useRef<LanguageClientsManager>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const onTextChangedRef = useRef(onTextChanged);
-    onTextChangedRef.current = onTextChanged;
+    const [modifiedCode, setModifiedCode] = useState(modifiedTextValue);
+    const [originalCode, setOriginalCode] = useState(originalTextValue);
+
+    const performErrorHandling = (error: Error) => {
+        if (onError) {
+            onError(error);
+        } else {
+            throw error;
+        }
+    };
 
     useEffect(() => {
+        // this is only available if EditorService is configured
+        if (modifiedTextValue !== undefined && haveEditorService.current) {
+            setModifiedCode(modifiedTextValue);
+            editorAppRef.current?.updateCode({modified: modifiedTextValue});
+        }
+    }, [modifiedTextValue]);
+
+    useEffect(() => {
+        // this is only available if EditorService is configured
+        if (originalTextValue !== undefined && haveEditorService.current) {
+            setOriginalCode(originalTextValue);
+            editorAppRef.current?.updateCode({original: originalTextValue});
+        }
+    }, [originalTextValue]);
+
+    const awaitGlobal = async () => {
+        // await global init if not completed before doing anything else
+        const envEnhanced = getEnhancedMonacoEnvironment();
+        return (envEnhanced.vscodeApiGlobalInitAwait !== undefined) ? envEnhanced.vscodeApiGlobalInitAwait : Promise.resolve();
+    };
+
+    const performGlobalInit = async () => {
+        if (containerRef.current === null) {
+            performErrorHandling(new Error('No htmlContainer found! Aborting...'));
+        }
+        const envEnhanced = getEnhancedMonacoEnvironment();
+
+        // init will only performed once
+        if (envEnhanced.vscodeApiInitialising !== true) {
+
+            (async () => {
+                apiWrapperRef.current.getLogger().debug('GLOBAL INIT');
+                await apiWrapperRef.current.init({
+                    caller: className,
+                    htmlContainer: containerRef.current
+                });
+
+                // set if editor mode is available, otherwise text bindings will not work
+                haveEditorService.current = envEnhanced.viewServiceType === 'EditorService';
+
+                onVscodeApiInitDone?.(apiWrapperRef.current);
+            })();
+        }
+    };
+
+    useEffect(() => {
+        // always try to perform kick global init
+        performGlobalInit();
 
         (async () => {
-            if (containerRef.current) {
-                try {
-                    wrapperConfig.htmlContainer = containerRef.current;
-                    if (wrapperRef.current.isInitializing() || wrapperRef.current.isStarting() || wrapperRef.current.isDisposing()) {
+            try {
+                apiWrapperRef.current.getLogger().debug('INIT');
+                await awaitGlobal();
+
+                // it is possible to run without an editorApp, for example when using the ViewsService
+                if (haveEditorService.current) {
+                    editorAppRef.current = new EditorApp(editorAppConfig);
+                    if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
                         await Promise.all([
-                            wrapperRef.current.getInitializingAwait(),
-                            wrapperRef.current.getStartingAwait(),
-                            wrapperRef.current.getDisposingAwait()
+                            editorAppRef.current.getStartingAwait(),
+                            editorAppRef.current.getDisposingAwait()
                         ]);
                     }
 
-                    await wrapperRef.current.init(wrapperConfig);
-
-                    wrapperRef.current.registerTextChangedCallback((textChanges) => {
+                    editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
+                        if (textChanges.modified !== undefined) {
+                            setModifiedCode(textChanges.modified);
+                        }
+                        if (textChanges.original !== undefined) {
+                            setOriginalCode(textChanges.original);
+                        }
                         if (onTextChangedRef.current !== undefined) {
                             onTextChangedRef.current(textChanges);
                         }
                     });
-                    await wrapperRef.current.start();
-                    onLoad?.(wrapperRef.current);
-                } catch (e) {
-                    if (onError) {
-                        onError(e);
-                    } else {
-                        throw e;
-                    }
+                    await editorAppRef.current.start(containerRef.current!);
+
+                    onEditorStartDone?.(editorAppRef.current);
+
+                    // originalTextValue and modifiedTextValue useEffects may happen before
+                    editorAppRef.current.updateCode({
+                        original: originalCode,
+                        modified: modifiedCode
+                    });
                 }
-            } else {
-                throw new Error('No htmlContainer found! Aborting...');
+                apiWrapperRef.current.getLogger().debug('INIT DONE');
+            } catch (error) {
+                performErrorHandling(error as Error);
             }
         })();
-    }, [wrapperConfig]);
+    }, [editorAppConfig]);
 
     useEffect(() => {
-        const disposeMonaco = async () => {
-            try {
-                await wrapperRef.current.dispose();
-            } catch (error) {
-                // The language client may throw an error during disposal, but we want to continue anyway
-                console.error(`Unexpected error occurred during disposal of the language client: ${error}`);
-            }
-        };
+        // always try to perform kick global init
+        performGlobalInit();
+
+        if (languageClientConfigs !== undefined) {
+            (async () => {
+                try {
+                    apiWrapperRef.current.getLogger().debug('INIT LC');
+                    await awaitGlobal();
+
+                    if (lcsManagerRef.current === null) {
+                        lcsManagerRef.current = new LanguageClientsManager(apiWrapperRef.current.getLogger());
+                    }
+
+                    await lcsManagerRef.current.setConfigs(languageClientConfigs);
+                    await lcsManagerRef.current.start();
+
+                    onLanguageClientsStartDone?.(lcsManagerRef.current);
+                    apiWrapperRef.current.getLogger().debug('INIT LC DONE');
+                } catch (error) {
+                    performErrorHandling(error as Error);
+                }
+            })();
+        }
+    }, [languageClientConfigs]);
+
+    useEffect(() => {
+        // always try to perform kick global init
+        performGlobalInit();
 
         return () => {
             (async () => {
-                await disposeMonaco();
+                // dispose editor id used and languageclient if enforced
+                try {
+                    apiWrapperRef.current.getLogger().debug('DISPOSE');
+                    await editorAppRef.current?.dispose();
+                    onDisposeEditor?.();
+
+                    if (languageClientConfigs?.enforceDispose === true) {
+                        lcsManagerRef.current?.dispose();
+                        onDisposeLanguageClients?.();
+                    }
+                } catch (error) {
+                    // The language client may throw an error during disposal, but we want to continue anyway
+                    performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${error}`));
+                }
             })();
         };
     }, []);

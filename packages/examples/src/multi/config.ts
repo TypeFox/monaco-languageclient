@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import type { LanguageClientConfig } from 'monaco-languageclient/wrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
 
 export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => {
     return {
@@ -38,7 +38,7 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
                     authorization: 'UserAuth'
                 },
                 startOptions: {
-                    onCall: (languageClient?: MonacoLanguageClient) => {
+                    onCall: (languageClient?: BaseLanguageClient) => {
                         setTimeout(() => {
                             ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
                                 vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {

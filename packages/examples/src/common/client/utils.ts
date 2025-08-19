@@ -4,6 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 export const disableElement = (id: string, disabled: boolean) => {
     const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;
@@ -26,6 +29,8 @@ export const createDefaultWorkspaceContent = (workspacePath: string) => {
     );
 };
 
-export const delayExecution = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+export type ExampleAppConfig = {
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    languageClientConfig: LanguageClientConfig;
+    editorAppConfig: EditorAppConfig;
 };

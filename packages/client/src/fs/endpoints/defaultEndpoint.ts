@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Logger } from 'monaco-languageclient/tools';
+import type { Logger } from 'monaco-languageclient/common';
 import type { DirectoryListingRequest, DirectoryListingRequestResult, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from '../definitions.js';
 import { EndpointType } from '../definitions.js';
 
