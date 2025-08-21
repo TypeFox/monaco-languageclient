@@ -12,7 +12,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.8.2"
+    "monaco-languageclient-examples": "~2025.8.3"
   },
   "devDependencies": {
     "shx": "~0.3.4",
