@@ -5,10 +5,13 @@
 
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
-import helloJsonCode from '../../../resources/json/workspace/hello.json?raw';
 import { runExtendedClient } from '../../common/client/extendedClient.js';
 import { jsontLsConfig } from './config.js';
 
 export const runJsonWrapper = async () => {
+    const helloJsonCode = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": {"value": "unix"}
+}`;
     await runExtendedClient(jsontLsConfig, helloJsonCode);
 };

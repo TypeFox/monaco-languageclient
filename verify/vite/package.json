@@ -1,5 +1,5 @@
 {
-  "name": "@typefox/peer-check-npm",
+  "name": "example-client-vite",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,24 +12,18 @@
     "npm": "10.9.3"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.8.6",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~20.2.1"
+    "monaco-languageclient-examples": "~2025.8.6"
   },
   "devDependencies": {
-    "typescript": "~5.9.2",
-    "shx": "~0.4.0",
-    "vite": "~7.1.3"
+    "shx": "~0.3.4",
+    "vite": "~6.2.1"
   },
   "scripts": {
     "verify": "npm install && npm run build && npm run start",
     "verify:ci": "npm install && npm run build",
     "clean": "shx rm -fr dist",
     "build:msg": "echo Building client-vite example:",
-    "build:tsc": "tsc --build tsconfig.json",
-    "build": "npm run build:msg && npm run clean && npm run build:tsc && npm run vite:build",
-    "dev": "vite",
-    "dev:debug": "vite --debug --force",
-    "vite:build": "vite build",
+    "build": "npm run build:msg && npm run clean && vite build",
     "start": "vite preview"
   }
 }

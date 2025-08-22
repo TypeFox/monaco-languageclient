@@ -2185,7 +2185,7 @@ __metadata:
     "@codingame/monaco-vscode-localization-service-override": "npm:~20.2.1"
     "@codingame/monaco-vscode-log-service-override": "npm:~20.2.1"
     "@codingame/monaco-vscode-model-service-override": "npm:~20.2.1"
-    monaco-languageclient-examples: "npm:~2025.8.4"
+    monaco-languageclient-examples: "npm:~2025.8.6"
     typescript: "npm:~5.9.2"
     vscode: "npm:@codingame/monaco-vscode-extension-api@~20.2.1"
     vscode-languageclient: "npm:~9.0.1"
@@ -3310,9 +3310,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-languageclient-examples@npm:~2025.8.4":
-  version: 2025.8.4
-  resolution: "monaco-languageclient-examples@npm:2025.8.4"
+"monaco-languageclient-examples@npm:~2025.8.6":
+  version: 2025.8.6
+  resolution: "monaco-languageclient-examples@npm:2025.8.6"
   dependencies:
     "@codingame/monaco-vscode-configuration-service-override": "npm:~20.2.1"
     "@codingame/monaco-vscode-cpp-default-extension": "npm:~20.2.1"
@@ -3363,7 +3363,7 @@ __metadata:
     vscode-ws-jsonrpc: "npm:~3.5.0"
     ws: "npm:~8.18.3"
     wtd-core: "npm:~4.0.1"
-  checksum: 10c0/93d8d548e15b87ffc7c5d75466fff53b9da2226183dca9540c52bc39b191b7debf7204baa871f7b3f52ab5823b08c409deef5eb55edddc60bae1e962d70e2ca2
+  checksum: 10c0/a47d627f85c9bcb21c353fd84a2114cae701305e1a7bec691266c3401e87f8a71d22c1c1aa39e8f8b8cfe142fc9c08fb1ea9923d572077dc797064b51d077f55
   languageName: node
   linkType: hard
 

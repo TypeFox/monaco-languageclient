@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       monaco-languageclient-examples:
-        specifier: ~2025.8.4
-        version: 2025.8.4(@xterm/xterm@5.6.0-beta.114)
+        specifier: ~2025.8.6
+        version: 2025.8.6(@xterm/xterm@5.6.0-beta.114)
       vscode:
         specifier: npm:@codingame/monaco-vscode-extension-api@~20.2.1
         version: '@codingame/monaco-vscode-extension-api@20.2.1'
@@ -859,8 +859,8 @@ packages:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
 
-  monaco-languageclient-examples@2025.8.4:
-    resolution: {integrity: sha512-uyYtPLK9LgS19YpdTt25uL6LsiZKN1ndvKjVfdkBxBlcwJMfjtF4gOrfzfvPqInOw9McivfGIvo5TpGPSN7jUA==}
+  monaco-languageclient-examples@2025.8.6:
+    resolution: {integrity: sha512-m/0L+W0xE0pKRcCy90d2e0LRZ/ty2nhX3zSV29EX1hDf1c7g1n7pHm3XTmYCOU31YJw6Rua0M3SODhfcsuvgwQ==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
   monaco-languageclient@10.0.0-next.1:
@@ -2635,7 +2635,7 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  monaco-languageclient-examples@2025.8.4(@xterm/xterm@5.6.0-beta.114):
+  monaco-languageclient-examples@2025.8.6(@xterm/xterm@5.6.0-beta.114):
     dependencies:
       '@codingame/monaco-vscode-configuration-service-override': 20.2.1
       '@codingame/monaco-vscode-cpp-default-extension': 20.2.1

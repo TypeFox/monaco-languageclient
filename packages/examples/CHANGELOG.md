@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.8.6] - 2025-08-22
+
+- Makes json-client independent of external resource files.
+
 ## [2025.8.5] - 2025-08-22
 
 - Fixed broken json-client sub-package export.
