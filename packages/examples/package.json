@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "2025.8.4",
+  "version": "2025.8.5",
   "description": "Monaco Language client examples",
   "author": {
     "name": "TypeFox GmbH",
@@ -29,8 +29,8 @@
       "default": "./dist/node.js"
     },
     "./json-client": {
-      "types": "./dist/json/client/wrapperWs.d.ts",
-      "default": "./dist/json/client/wrapperWs.js"
+      "types": "./dist/json/client/client.d.ts",
+      "default": "./dist/json/client/client.js"
     },
     "./python-client": {
       "types": "./dist/python/client/main.d.ts",
@@ -54,7 +54,7 @@
         "dist/node"
       ],
       "json-client": [
-        "dist/json/client/wrapperWs"
+        "dist/json/client/client"
       ],
       "worker/langium": [
         "dist/langium/langium-dsl/worker/langium-server"

@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     preview: {
-        port: 8083
+        port: 8081
     },
     worker: {
         format: 'es'

@@ -12,12 +12,12 @@
     "npm": "10.9.3"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.8.4"
+    "monaco-languageclient-examples": "~2025.8.5"
   },
   "devDependencies": {
     "css-loader": "~7.1.2",
     "http-server": "~14.1.1",
-    "shx": "~0.3.4",
+    "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.5.2",

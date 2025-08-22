@@ -12,15 +12,24 @@
     "npm": "10.9.3"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.8.4",
+    "monaco-languageclient-examples": "~2025.8.5",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@~20.2.1"
-    "vite": "~6.3.5"
   },
   "devDependencies": {
-    "typescript": "~5.8.2"
+    "typescript": "~5.9.2",
+    "shx": "~0.4.0",
+    "vite": "~7.1.3"
   },
   "scripts": {
-    "build": "tsc --build tsconfig.json",
-    "verify:ci": "npm install && npm run build"
+    "verify": "npm install && npm run build && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist",
+    "build:msg": "echo Building client-vite example:",
+    "build:tsc": "tsc --build tsconfig.json",
+    "build": "npm run build:msg && npm run clean && npm run build:tsc && npm run vite:build",
+    "dev": "vite",
+    "dev:debug": "vite --debug --force",
+    "vite:build": "vite build",
+    "start": "vite preview"
   }
 }

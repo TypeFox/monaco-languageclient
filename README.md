@@ -223,13 +223,13 @@ For the **java-client** example you need to ensure the **java-server** example i
 
 None of the verification examples is part of the npm workspace. Some bring substantial amount of npm dependencies that pollute the main node_modules dependencies and therefore these examples need to be build and started independently. All verifaction examples re-uses the code form the json client example and therefore require the json server to be started.
 
-- [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
-
-- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8081>.
+- [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8081>.
 
 - [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8082>.
 
-- [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8083>.
+- [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8083>.
+
+- **Currently broken and not usable until repaired:** [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:4200>.
 
 ### VSCode integration
 

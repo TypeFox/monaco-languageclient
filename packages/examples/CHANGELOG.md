@@ -2,7 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.8.4] - unreleased
+## [2025.8.5] - 2025-08-22
+
+- Fixed broken json-client sub-package export.
+
+## [2025.8.4] - 2025-08-21
 
 - Updated to `monaco-languageclient@10.0.0-next.1`, `monaco-editor-wrapper@7.0.0-next.1` and `@typefox/monaco-editor-react@7.0.0-next.1`.
 
