@@ -7,9 +7,8 @@ Web Workers enable you to run language servers entirely in the browser, providin
 Choose Web Workers for language servers when you need:
 - **Browser-only solutions** without external dependencies
 - **Offline functionality** that works without network access
-- **Better performance** by utilizing multiple CPU cores
 - **Simplified deployment** with no server infrastructure
-- **Custom DSLs** built with tools like Langium
+- **Custom DSLs** built with tools like Langium (which naturally support targeting browser environments)
 
 ## Basic Web Worker Setup
 
@@ -44,7 +43,7 @@ documents.onDidChangeContent(change => {
 function validateDocument(document: TextDocument): void {
     const diagnostics = [];
     const text = document.getText();
-    
+
     // Simple JSON validation example
     try {
         JSON.parse(text);
@@ -59,7 +58,7 @@ function validateDocument(document: TextDocument): void {
             source: 'json-worker'
         });
     }
-    
+
     connection.sendDiagnostics({ uri: document.uri, diagnostics });
 }
 
@@ -87,7 +86,7 @@ connection.onCompletion(() => {
             insertText: '"name": "$1"'
         },
         {
-            label: 'version', 
+            label: 'version',
             kind: 1,
             data: 2,
             insertText: '"version": "$1"'
@@ -118,27 +117,27 @@ import * as vscode from 'vscode';
 async function setupWebWorkerLanguageClient() {
     // Create the Web Worker
     const worker = new Worker('./language-server-worker.js', { type: 'module' });
-    
+
     // Set up message channel communication
     const channel = new MessageChannel();
-    
+
     // Send one port to the worker
     worker.postMessage({ port: channel.port2 }, [channel.port2]);
-    
+
     // Use the other port for client communication
     const reader = new BrowserMessageReader(channel.port1);
     const writer = new BrowserMessageWriter(channel.port1);
-    
+
     // Configure VS Code API wrapper
     const vscodeApiConfig = {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
-    
+
     const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await wrapper.init();
-    
+
     // Configure language client
     const languageClientConfig = {
         connection: {
@@ -157,11 +156,11 @@ async function setupWebWorkerLanguageClient() {
             }
         }
     };
-    
+
     // Initialize language client
     const lcWrapper = new LanguageClientWrapper();
     await lcWrapper.init(languageClientConfig);
-    
+
     // Create editor
     const editorApp = new EditorApp({
         codeResources: {
@@ -172,9 +171,9 @@ async function setupWebWorkerLanguageClient() {
             }
         }
     });
-    
+
     await editorApp.init(wrapper);
-    
+
     console.log('Web Worker language server is ready!');
 }
 
@@ -195,8 +194,8 @@ entry Model:
     entities+=Entity*;
 
 Entity:
-    'entity' name=ID '{' 
-        properties+=Property* 
+    'entity' name=ID '{'
+        properties+=Property*
     '}';
 
 Property:
@@ -267,19 +266,19 @@ For multiple language servers or heavy processing:
 class LanguageWorkerPool {
     private workers: Worker[] = [];
     private currentWorkerIndex = 0;
-    
+
     constructor(workerScript: string, poolSize: number = 4) {
         for (let i = 0; i < poolSize; i++) {
             this.workers.push(new Worker(workerScript, { type: 'module' }));
         }
     }
-    
+
     getNextWorker(): Worker {
         const worker = this.workers[this.currentWorkerIndex];
         this.currentWorkerIndex = (this.currentWorkerIndex + 1) % this.workers.length;
         return worker;
     }
-    
+
     dispose() {
         this.workers.forEach(worker => worker.terminate());
         this.workers = [];
@@ -298,11 +297,11 @@ const connections = new Map();
 // Handle new client connections
 self.addEventListener('connect', (event) => {
     const port = event.ports[0];
-    
+
     // Create unique connection for this client
     const connection = createConnection(/* ... */);
     connections.set(port, connection);
-    
+
     port.onmessage = (e) => {
         // Route messages to appropriate connection
         connection.handleMessage(e.data);
@@ -317,32 +316,32 @@ self.addEventListener('connect', (event) => {
 class WorkerLanguageClient {
     private worker?: Worker;
     private channel?: MessageChannel;
-    
+
     async initialize(workerScript: string) {
         this.worker = new Worker(workerScript, { type: 'module' });
         this.channel = new MessageChannel();
-        
+
         // Enhanced error handling
         this.worker.onerror = (error) => {
             console.error('Worker error:', error);
         };
-        
+
         this.worker.onmessageerror = (error) => {
             console.error('Worker message error:', error);
         };
-        
+
         // Send port to worker
-        this.worker.postMessage({ 
+        this.worker.postMessage({
             command: 'init',
-            port: this.channel.port2 
+            port: this.channel.port2
         }, [this.channel.port2]);
-        
+
         return {
             reader: new BrowserMessageReader(this.channel.port1),
             writer: new BrowserMessageWriter(this.channel.port1)
         };
     }
-    
+
     dispose() {
         this.channel?.port1.close();
         this.channel?.port2.close();
@@ -358,14 +357,14 @@ class WorkerLanguageClient {
 ```typescript
 class LazyWorkerManager {
     private workerPromise?: Promise<Worker>;
-    
+
     async getWorker(): Promise<Worker> {
         if (!this.workerPromise) {
             this.workerPromise = this.createWorker();
         }
         return this.workerPromise;
     }
-    
+
     private async createWorker(): Promise<Worker> {
         // Dynamically import worker
         const workerModule = await import('./language-server-worker?worker&url');
@@ -381,17 +380,17 @@ class LazyWorkerManager {
 class WorkerDocumentManager {
     private documents = new Map<string, TextDocument>();
     private maxDocuments = 100;
-    
+
     addDocument(uri: string, content: string) {
         // Limit memory usage
         if (this.documents.size >= this.maxDocuments) {
             const firstKey = this.documents.keys().next().value;
             this.documents.delete(firstKey);
         }
-        
+
         this.documents.set(uri, TextDocument.create(uri, 'json', 1, content));
     }
-    
+
     getDocument(uri: string): TextDocument | undefined {
         return this.documents.get(uri);
     }
@@ -455,11 +454,11 @@ module.exports = {
 if (typeof importScripts === 'function') {
     // Running in worker context
     console.log('Language server worker started');
-    
+
     // Enable debug logging
     const connection = createConnection(/* ... */);
     connection.console.info('Worker connection established');
-    
+
     // Log all messages in development
     if (process.env.NODE_ENV === 'development') {
         connection.onRequest((method, params) => {
@@ -505,12 +504,12 @@ import init, { LanguageServer } from './language-server.wasm';
 
 async function initializeWasmLanguageServer() {
     await init(); // Initialize WASM module
-    
+
     const languageServer = new LanguageServer();
-    
+
     // Set up LSP communication
     const connection = createConnection(/* ... */);
-    
+
     connection.onCompletion((params) => {
         // Call WASM language server
         const completions = languageServer.getCompletions(
@@ -518,7 +517,7 @@ async function initializeWasmLanguageServer() {
             params.position.line,
             params.position.character
         );
-        
+
         return JSON.parse(completions);
     });
 }
@@ -535,7 +534,7 @@ let parser: Parser;
 async function initializeParser() {
     await Parser.init();
     parser = new Parser();
-    
+
     const Language = await Parser.Language.load('./tree-sitter-json.wasm');
     parser.setLanguage(Language);
 }
