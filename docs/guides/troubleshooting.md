@@ -43,11 +43,23 @@ To ensure all Monaco-related packages use a single, compatible version, you must
 
 ### Dependency Version Mismatches
 
-If you encounter numerous compile errors deep within `monaco-editor` or `vscode` files, you likely have a version mismatch. 
+If you encounter numerous compile errors deep within `monaco-editor` or `vscode` files, you likely have a version mismatch.
 
 1.  **Check for duplicates**: Run `npm list @codingame/monaco-vscode-api` to see if multiple versions are installed.
 2.  **Fix dependencies**: Ensure all `@codingame/monaco-vscode-api` related packages in your `package.json` point to the same version.
 3.  **Reinstall**: After fixing versions, delete `node_modules` and your lock file (`package-lock.json`, `pnpm-lock.yaml`, etc.) and run `npm install` (or equivalent).
+
+### @codingame/monaco-vscode-editor-api / monaco-editor usage
+
+When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~20.2.1"` in you `package.json`. You can directly use it like so:
+
+```js
+import * as monaco from '@codingame/monaco-vscode-editor-api';
+```
+
+### Volta
+
+There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
 
 ## Connection Issues
 
