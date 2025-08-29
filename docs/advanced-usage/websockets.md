@@ -74,21 +74,21 @@ async function connectToLanguageServer() {
     };
 
     // Initialize language client
-    const lcWrapper = new LanguageClientWrapper();
-    await lcWrapper.init(languageClientConfig);
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig, wrapper.getLogger());
+    await lcWrapper.start();
 
     // Create editor application
     const editorApp = new EditorApp({
+        $type: 'extended',
         codeResources: {
             main: {
                 text: '{\n  "name": "example",\n  "version": "1.0.0"\n}',
-                uri: '/workspace/package.json',
-                fileExt: 'json'
+                uri: '/workspace/package.json'
             }
         }
     });
 
-    await editorApp.init(wrapper);
+    await editorApp.start(vscodeApiConfig.htmlContainer!);
     console.log('WebSocket language client ready!');
 }
 
@@ -180,8 +180,8 @@ class ReconnectingWebSocketClient {
 
     async connect(config: any) {
         try {
-            this.lcWrapper = new LanguageClientWrapper();
-            await this.lcWrapper.init(config);
+            this.lcWrapper = new LanguageClientWrapper(config);
+            await this.lcWrapper.start();
 
             this.reconnectAttempts = 0;
             console.log('Language client connected successfully');
@@ -235,9 +235,8 @@ async function setupMultipleLanguageServers() {
 
     const languageClients = await Promise.all(
         servers.map(async (serverConfig) => {
-            const lcWrapper = new LanguageClientWrapper();
-
-            await lcWrapper.init({
+            const config = {
+                name: `${serverConfig.name} Language Server`,
                 connection: {
                     options: {
                         $type: 'WebSocketUrl',
@@ -245,9 +244,17 @@ async function setupMultipleLanguageServers() {
                     }
                 },
                 clientOptions: {
-                    documentSelector: serverConfig.documentSelector
+                    documentSelector: serverConfig.documentSelector,
+                    workspaceFolder: {
+                        index: 0,
+                        name: 'workspace',
+                        uri: vscode.Uri.file('/workspace')
+                    }
                 }
-            });
+            };
+
+            const lcWrapper = new LanguageClientWrapper(config);
+            await lcWrapper.start();
 
             return { name: serverConfig.name, client: lcWrapper };
         })
@@ -277,8 +284,8 @@ class LoadBalancedLanguageClient {
     async createClient() {
         const serverUrl = this.getNextServerUrl();
 
-        const lcWrapper = new LanguageClientWrapper();
-        await lcWrapper.init({
+        const config = {
+            name: 'TypeScript Language Server',
             connection: {
                 options: {
                     $type: 'WebSocketUrl',
@@ -286,9 +293,17 @@ class LoadBalancedLanguageClient {
                 }
             },
             clientOptions: {
-                documentSelector: ['typescript']
+                documentSelector: ['typescript'],
+                workspaceFolder: {
+                    index: 0,
+                    name: 'workspace',
+                    uri: vscode.Uri.file('/workspace')
+                }
             }
-        });
+        };
+
+        const lcWrapper = new LanguageClientWrapper(config);
+        await lcWrapper.start();
 
         return lcWrapper;
     }
@@ -390,30 +405,30 @@ forward(socketConnection, serverConnection, (message: Message) => {
 class MiddlewareLanguageClient {
     private lcWrapper: LanguageClientWrapper;
 
-    constructor() {
-        this.lcWrapper = new LanguageClientWrapper();
-    }
-
     async init(config: any) {
         // Add middleware to the connection
         const originalConfig = {
             ...config,
-            middleware: {
-                // Intercept completion requests
-                provideCompletionItem: (document, position, context, token, next) => {
-                    console.log('Completion requested at:', position);
-                    return next(document, position, context, token);
-                },
+            clientOptions: {
+                ...config.clientOptions,
+                middleware: {
+                    // Intercept completion requests
+                    provideCompletionItem: (document, position, context, token, next) => {
+                        console.log('Completion requested at:', position);
+                        return next(document, position, context, token);
+                    },
 
-                // Intercept hover requests
-                provideHover: (document, position, token, next) => {
-                    console.log('Hover requested at:', position);
-                    return next(document, position, token);
+                    // Intercept hover requests
+                    provideHover: (document, position, token, next) => {
+                        console.log('Hover requested at:', position);
+                        return next(document, position, token);
+                    }
                 }
             }
         };
 
-        await this.lcWrapper.init(originalConfig);
+        this.lcWrapper = new LanguageClientWrapper(originalConfig);
+        await this.lcWrapper.start();
     }
 }
 ```
@@ -434,8 +449,8 @@ class ConnectionPool {
         }
 
         if (this.allConnections.length < this.maxConnections) {
-            const lcWrapper = new LanguageClientWrapper();
-            await lcWrapper.init(connectionConfig);
+            const lcWrapper = new LanguageClientWrapper(connectionConfig);
+            await lcWrapper.start();
             this.allConnections.push(lcWrapper);
             return lcWrapper;
         }
@@ -655,8 +670,53 @@ wss.on('connection', (webSocket, request) => {
 });
 ```
 
+## Examples in This Project
+
+The project includes working WebSocket examples you can run:
+
+### JSON Language Server (`packages/examples/bare.html`)
+**Location**: `packages/examples/src/bare/client.ts`
+**Description**: Basic JSON language server connection via WebSocket using Classic Mode
+
+### Python Language Server (`packages/examples/python.html`)
+**Location**: `packages/examples/src/python/`
+**Description**: Full Python development environment with Pyright server via WebSocket
+
+```bash
+# Run the examples
+npm run dev
+
+# Visit the WebSocket examples:
+# http://localhost:20001/bare.html - JSON server
+# http://localhost:20001/python.html - Python server
+
+# Make sure the corresponding language servers are running:
+npm run start:example:server:json    # For JSON example
+npm run start:example:server:python  # For Python example
+```
+
+### Running the Language Servers
+
+The project includes scripts to start the WebSocket language servers:
+
+```bash
+# Start JSON language server on port 30000
+npm run start:example:server:json
+
+# Start Python language server on port 30001
+npm run start:example:server:python
+
+# Start Groovy language server on port 30002
+npm run start:example:server:groovy
+```
+
+These servers use the exact patterns documented in this guide.
+
 ## Next Steps
 
-- **Learn [Web Workers](web-workers.md)** for in-browser language servers
-- **Try [Classic Mode](classic-mode.md)** for lighter-weight integrations
-- **Check [Examples](../examples/index.md)** for complete WebSocket implementations
+- Compare with [Web Workers](./web-workers.md) for in-browser language servers
+- Try [Classic Mode](./classic-mode.md) or [Extended Mode](./extended-mode.md) integration patterns
+- Explore [Langium Integration](./extended-mode-with-langium.md) for custom DSL language servers
+- Check [Examples](../examples/index.md) for complete WebSocket implementations
+
+WebSocket communication provides the most flexible approach for integrating existing language servers and building scalable language service architectures.
