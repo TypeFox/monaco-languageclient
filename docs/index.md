@@ -1,15 +1,15 @@
 # Monaco Language Client Documentation
 
-Welcome to the official documentation for the monaco-languageclient project! The monaco-languageclient project provides robust integration between the Monaco Editor and Language Server Protocol (LSP) servers. Using the monaco-languageclient, you can build purely web-based editors with full LSP support, enabling features like code completion, diagnostics, and more.
+Welcome to the official documentation for the monaco-languageclient. The monaco-languageclient provides a robust integration between the Monaco Editor and Language Server Protocol (LSP) servers. Using the monaco-languageclient, you can build purely web-based editors with full LSP support, enabling features like code completion, diagnostics, and much more.
 
-This documentation is built to help newcomers to the Monaco language client and experts alike be able to quickly leverage all the capabilities of the Monaco language clients projects fully and effectively.
+This documentation is built to help newcomers and experts to be able to quickly leverage the monaco-languageclient effectively.
 
 In particular, the monaco-languageclient is helpful when you need to:
 - Integrate language server features into web applications using the Monaco Editor.
 - Build custom language support for specific programming languages in a web-based environment.
 - Utilize WebSocket or Web Worker connections to communicate with language servers.
 
-We've setup up the documentation into several sections starting with basic usage and going into advanced usage, and following up with an API reference, examples and specific guides for common use cases.
+We've setup the documentation into several sections that cover everything from what the monaco-languageclient is, to how to get started, to advanced usage and API references.
 
 - [Introduction](introduction.md): Learn what the monaco-languageclient is, its key concepts, and how it fits into the ecosystem.
 - [Installation](installation.md): Step-by-step instructions to get started with the monaco-languageclient, including dependencies and setup.
@@ -33,11 +33,9 @@ We've setup up the documentation into several sections starting with basic usage
   - [JSON Language Server](examples/json-language-server.md): JSON example walkthrough.
   - [Python Pyright](examples/python-pyright.md): Python example walkthrough.
   - [Langium DSL](examples/langium-dsl.md): Langium-based examples.
-  - [Custom Language Server](examples/custom-language-server.md): Building your own language server.
 - [Guides](guides/index.md): In-depth guides on topics like migration, troubleshooting, performance optimization, and deployment.
   - [Migration](guides/migration.md): Migration between versions.
   - [Troubleshooting](guides/troubleshooting.md): Common issues and solutions.
   - [Performance](guides/performance.md): Performance optimization techniques.
-  - [Deployment](guides/deployment.md): Best practices for production deployment.
 - [FAQ](faq.md): Answers to frequently asked questions about the monaco-languageclient.
 - [Versions and History](versions-and-history.md): Information on version compatibility and historical changes.
