@@ -47,7 +47,7 @@ async function createJsonEditor() {
             }
         }
     });
-    
+
     await editorApp.init(wrapper);
 }
 
@@ -151,7 +151,7 @@ async function createMultiLanguageEditor() {
             ts: { text: 'const x: number = 42;', uri: '/workspace/main.ts', fileExt: 'ts' }
         }
     });
-    
+
     await editorApp.init(wrapper);
 }
 ```
@@ -166,11 +166,11 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 async function createWebWorkerClient() {
     // Create worker
     const worker = new Worker('./language-server.js', { type: 'module' });
-    
+
     // Set up message channel
     const channel = new MessageChannel();
     worker.postMessage({ port: channel.port2 }, [channel.port2]);
-    
+
     const reader = new BrowserMessageReader(channel.port1);
     const writer = new BrowserMessageWriter(channel.port1);
 
@@ -203,18 +203,18 @@ const editorConfig = {
             'workbench.colorTheme': 'Default Light Modern',
             'editor.fontSize': 16,
             'editor.fontFamily': 'JetBrains Mono, Consolas',
-            
+
             // Editor behavior
             'editor.wordWrap': 'on',
             'editor.lineNumbers': 'relative',
             'editor.minimap.enabled': false,
             'editor.folding': true,
-            
+
             // Language features
             'editor.quickSuggestions': true,
             'editor.parameterHints.enabled': true,
             'editor.suggest.insertMode': 'replace',
-            
+
             // Advanced features
             'editor.inlineSuggest.enabled': true,
             'editor.bracketPairColorization.enabled': true
