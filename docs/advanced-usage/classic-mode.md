@@ -1,394 +1,389 @@
 # Classic Mode
 
-Classic Mode provides a lightweight integration approach using the standard Monaco Editor with language client features added on top. This mode offers simpler setup, smaller bundle size, and direct access to the Monaco Editor API.
+Classic Mode provides a streamlined language server integration using the Monaco Editor with a simplified VS Code service configuration. While still built on the VS Code API wrapper foundation, it offers reduced complexity and focuses on core language server features without advanced IDE capabilities.
 
 ## When to Use Classic Mode
 
 Choose Classic Mode when you need:
-- **Lightweight integration** with minimal dependencies
-- **Smaller bundle size** for performance-critical applications  
-- **Direct Monaco Editor control** with full access to the Monaco API
-- **Simple language server integration** without VS Code services overhead
-- **Custom editor implementations** that don't need VS Code-like features
+- **Simplified setup** with fewer service dependencies
+- **Core language features** (completions, diagnostics, hover) without advanced IDE features
+- **Monarch syntax highlighting** instead of TextMate semantic highlighting
+- **Focused integration** without workspace services, views, or complex UI elements
+- **Lighter configuration** while maintaining language server capabilities
+
+## Classic vs Extended Mode
+
+| Feature | Classic Mode | Extended Mode |
+|---------|-------------|--------------|
+| Highlighting | Monarch | TextMate |
+| Services | Basic editor services | Full VS Code service stack |
+| Views/UI | Editor only | Explorer, panels, status bar, etc. |
+| Workspace | Limited workspace support | Full workspace awareness |
+| Extensions | Basic language registration | Rich extension system |
+| Setup Complexity | Moderate | Complex |
+| Use Case | Language server integration | Full IDE experience |
 
 ## Basic Classic Mode Setup
 
-Here's a complete example using Classic Mode with a JSON language server:
+Here's a complete working example based on the project's JSON language server:
 
 ```typescript
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { createWebSocketConnection } from 'vscode-ws-jsonrpc';
-import { CloseAction, ErrorAction, MessageTransports } from 'vscode-languageclient';
-import * as monaco from 'monaco-editor';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
+import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
+import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import '@codingame/monaco-vscode-json-default-extension';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
-// Create Monaco Editor
-const editor = monaco.editor.create(document.getElementById('container')!, {
+// 1. Configure the VS Code API in classic mode
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic', // This is the key difference from extended mode
+    logLevel: LogLevel.Debug,
+    serviceOverrides: {
+        ...getTextmateServiceOverride(),
+        ...getThemeServiceOverride()
+    },
+    userConfiguration: {
+        json: JSON.stringify({
+            'editor.experimental.asyncTokenization': true
+        })
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory
+};
+
+// 2. Initialize the VS Code API wrapper
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.init();
+
+// 3. Register the language with Monaco
+monaco.languages.register({
+    id: 'json',
+    extensions: ['.json', '.jsonc'],
+    aliases: ['JSON', 'json'],
+    mimetypes: ['application/json']
+});
+
+// 4. Create the Monaco editor
+const htmlContainer = document.getElementById('monaco-editor-root')!;
+monaco.editor.create(htmlContainer, {
     value: `{
-    "name": "example",
-    "version": "1.0.0",
-    "description": "A simple example"
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
 }`,
     language: 'json',
-    theme: 'vs-dark',
-    automaticLayout: true
+    automaticLayout: true,
+    wordBasedSuggestions: 'off'
 });
 
-// Create WebSocket connection to language server
-const webSocket = new WebSocket('ws://localhost:30000/sampleServer');
-
-// Set up the connection
-const connection = createWebSocketConnection(webSocket, console);
-
-// Configure the language client
-const client = new MonacoLanguageClient({
-    name: 'JSON Language Client',
+// 5. Configure the language client
+const languageClientConfig: LanguageClientConfig = {
     clientOptions: {
-        // Which documents the language client should handle
-        documentSelector: [{ language: 'json' }],
-        
-        // Error handling
-        errorHandler: {
-            error: () => ({ action: ErrorAction.Continue }),
-            closed: () => ({ action: CloseAction.DoNotRestart })
+        documentSelector: ['json']
+    },
+    connection: {
+        options: {
+            $type: 'WebSocketUrl',
+            url: 'ws://localhost:30000/sampleServer'
+        }
+    }
+};
+
+// 6. Start the language client
+const languageClientWrapper = new LanguageClientWrapper(
+    languageClientConfig,
+    apiWrapper.getLogger()
+);
+await languageClientWrapper.start();
+```
+
+## Connection Options
+
+The project supports three connection types for language servers:
+
+### WebSocket URL Connection
+```typescript
+const languageClientConfig: LanguageClientConfig = {
+    clientOptions: {
+        documentSelector: ['json']
+    },
+    connection: {
+        options: {
+            $type: 'WebSocketUrl',
+            url: 'ws://localhost:30000/sampleServer'
+        }
+    }
+};
+```
+
+### Direct WebSocket Connection
+
+As an example, here's how to connect to a Python Pyright server with custom commands:
+
+```typescript
+import { WebSocketMessageReader, WebSocketMessageWriter, toSocket } from 'vscode-ws-jsonrpc';
+import { createUrl } from 'monaco-languageclient/common';
+
+const url = createUrl({
+    secured: false,
+    host: 'localhost',
+    port: 30001,
+    path: 'pyright',
+    extraParams: {
+        authorization: 'UserAuth'
+    }
+});
+
+const webSocket = new WebSocket(url);
+const iWebSocket = toSocket(webSocket);
+const reader = new WebSocketMessageReader(iWebSocket);
+const writer = new WebSocketMessageWriter(iWebSocket);
+
+const languageClientConfig: LanguageClientConfig = {
+    connection: {
+        options: {
+            $type: 'WebSocketDirect',
+            webSocket: webSocket,
+            startOptions: {
+                onCall: (languageClient) => {
+                    // Register custom commands after client starts
+                    setTimeout(() => {
+                        ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+                            vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+                                languageClient?.sendRequest('workspace/executeCommand', {
+                                    command: cmdName,
+                                    arguments: args
+                                });
+                            });
+                        });
+                    }, 250);
+                },
+                reportStatus: true,
+            }
         },
-        
-        // Workspace configuration
+        messageTransports: { reader, writer }
+    }
+};
+```
+
+### Web Worker Connection
+
+You can also run the language server in a Web Worker, much like in extended mode:
+
+```typescript
+const languageClientConfig: LanguageClientConfig = {
+    connection: {
+        options: {
+            $type: 'WorkerDirect',
+            worker: new Worker('./language-server-worker.js', { type: 'module' })
+        }
+    }
+};
+```
+
+## Advanced Configuration
+
+### Custom Service Overrides
+
+Similar to extended mode, you can also add custom service overrides.
+
+```typescript
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
+
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic',
+    serviceOverrides: {
+        ...getTextmateServiceOverride(),
+        ...getThemeServiceOverride(),
+        ...getKeybindingsServiceOverride(),
+        ...getLifecycleServiceOverride()
+    },
+    // ... other config
+};
+```
+
+### Language Registration with Extensions
+```typescript
+import '@codingame/monaco-vscode-json-default-extension';
+import '@codingame/monaco-vscode-python-default-extension';
+
+// The extensions provide language definitions and basic features
+// Register the language ID for your language client
+monaco.languages.register({
+    id: 'python',
+    extensions: ['.py', '.pyi'],
+    aliases: ['Python', 'python'],
+    mimetypes: ['text/x-python']
+});
+```
+
+### User Configuration
+```typescript
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic',
+    userConfiguration: {
+        json: JSON.stringify({
+            'workbench.colorTheme': 'Default Dark Modern',
+            'editor.guides.bracketPairsHorizontal': 'active',
+            'editor.wordBasedSuggestions': 'off',
+            'editor.experimental.asyncTokenization': true
+        })
+    },
+    // ... other config
+};
+```
+
+## Working with Files
+
+### In-Memory File System
+```typescript
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import * as vscode from 'vscode';
+
+// Create file system provider
+const fileSystemProvider = new RegisteredFileSystemProvider(false);
+
+// Register files in memory
+const files = new Map();
+const helloPyPath = '/workspace/hello.py';
+const helloPyCode = 'print("Hello, World!")';
+
+files.set('hello.py', {
+    code: helloPyCode,
+    path: helloPyPath,
+    uri: vscode.Uri.file(helloPyPath)
+});
+
+// Register the file
+fileSystemProvider.registerFile(
+    new RegisteredMemoryFile(files.get('hello.py')!.uri, helloPyCode)
+);
+
+// Register the file system overlay
+registerFileSystemOverlay(1, fileSystemProvider);
+```
+
+### Workspace Configuration
+```typescript
+const languageClientConfig: LanguageClientConfig = {
+    clientOptions: {
+        documentSelector: ['python'],
         workspaceFolder: {
-            uri: 'file:///workspace',
-            name: 'workspace'
+            index: 0,
+            name: 'workspace',
+            uri: vscode.Uri.parse('/workspace')
         }
-    },
-    
-    // Use the WebSocket connection
-    connection
-});
-
-// Start the language client
-client.start().then(() => {
-    console.log('JSON Language Client started');
-}).catch(error => {
-    console.error('Failed to start language client:', error);
-});
-
-// Start listening for messages
-connection.listen();
-```
-
-## Advanced Classic Mode Configuration
-
-### Custom Document Handling
-
-```typescript
-const client = new MonacoLanguageClient({
-    name: 'Multi-Language Client',
-    clientOptions: {
-        // Handle multiple document types
-        documentSelector: [
-            { language: 'json' },
-            { language: 'javascript' },
-            { language: 'typescript' }
-        ],
-        
-        // Custom initialization options for the language server
-        initializationOptions: {
-            preferences: {
-                includeCompletionsForModuleExports: true,
-                includeCompletionsWithInsertText: true
-            }
-        },
-        
-        // Synchronization options
-        synchronize: {
-            // Synchronize configuration changes
-            configurationSection: 'json',
-            
-            // File watchers
-            fileEvents: monaco.workspace.createFileSystemWatcher('**/*.json')
-        }
-    },
-    connection
-});
-```
-
-### Error Handling and Recovery
-
-```typescript
-const client = new MonacoLanguageClient({
-    name: 'Resilient Client',
-    clientOptions: {
-        documentSelector: [{ language: 'json' }],
-        
-        errorHandler: {
-            error: (error, message, count) => {
-                console.error('Language client error:', error, message);
-                // Continue on errors, but log them
-                return { action: ErrorAction.Continue };
-            },
-            
-            closed: () => {
-                console.log('Language client connection closed');
-                // Don't automatically restart
-                return { action: CloseAction.DoNotRestart };
-            }
-        }
-    },
-    connection
-});
-```
-
-### Multiple Language Clients
-
-Classic Mode allows you to run multiple language clients simultaneously:
-
-```typescript
-async function setupMultipleClients() {
-    // JSON Language Client
-    const jsonWebSocket = new WebSocket('ws://localhost:3001/json');
-    const jsonConnection = createWebSocketConnection(jsonWebSocket, console);
-    const jsonClient = new MonacoLanguageClient({
-        name: 'JSON Client',
-        clientOptions: { documentSelector: [{ language: 'json' }] },
-        connection: jsonConnection
-    });
-    
-    // TypeScript Language Client  
-    const tsWebSocket = new WebSocket('ws://localhost:3002/typescript');
-    const tsConnection = createWebSocketConnection(tsWebSocket, console);
-    const tsClient = new MonacoLanguageClient({
-        name: 'TypeScript Client', 
-        clientOptions: { documentSelector: [{ language: 'typescript' }] },
-        connection: tsConnection
-    });
-    
-    // Start both clients
-    await Promise.all([
-        jsonClient.start(),
-        tsClient.start()
-    ]);
-    
-    // Start listening on both connections
-    jsonConnection.listen();
-    tsConnection.listen();
-}
+    }
+    // ... connection config
+};
 ```
 
 ## Monaco Editor Integration
 
-### Custom Monaco Configuration
+Classic mode gives you direct access to the Monaco editor API:
 
 ```typescript
-// Configure Monaco with custom options
-const editor = monaco.editor.create(document.getElementById('editor')!, {
-    value: '',
+// Create editor with custom configuration
+const editor = monaco.editor.create(htmlContainer, {
+    value: initialContent,
     language: 'json',
     theme: 'vs-dark',
-    
-    // Editor behavior
     automaticLayout: true,
     wordWrap: 'on',
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
-    
-    // Language features (enhanced by language client)
     quickSuggestions: true,
     parameterHints: { enabled: true },
-    hover: { enabled: true },
-    
-    // Custom keybindings
-    readOnly: false
+    hover: { enabled: true }
 });
 
-// Add custom commands
+// Listen to content changes
+editor.onDidChangeModelContent(() => {
+    console.log('Editor content changed');
+});
+
+// Access editor state
+const model = editor.getModel();
+const value = model?.getValue();
+const position = editor.getPosition();
+
+// Programmatic content updates
+editor.setValue('{ "new": "content" }');
+editor.setPosition({ lineNumber: 1, column: 1 });
+
+// Add custom keybindings
 editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
     console.log('Save requested');
     // Implement save logic
 });
 ```
 
-### Accessing Monaco APIs
+## Examples in This Project
 
-Classic Mode gives you full access to Monaco Editor APIs:
+The project includes working Classic Mode examples:
 
-```typescript
-// Get current editor state
-const model = editor.getModel();
-const value = model?.getValue();
-const position = editor.getPosition();
+### Bare Client (`packages/examples/bare.html`)
+**Location**: `packages/examples/src/bare/client.ts`
+**Description**: Minimal JSON language client setup demonstrating core Classic Mode patterns
 
-// Listen to editor changes
-editor.onDidChangeModelContent(() => {
-    console.log('Editor content changed');
-});
-
-// Programmatically modify content
-editor.setValue('{"new": "content"}');
-editor.setPosition({ lineNumber: 1, column: 1 });
-
-// Add decorations
-const decorations = editor.deltaDecorations([], [{
-    range: new monaco.Range(1, 1, 1, 10),
-    options: { 
-        className: 'highlight-decoration',
-        hoverMessage: { value: 'Custom hover message' }
-    }
-}]);
+```bash
+# Run the example
+npm run dev
+# Visit http://localhost:20001/bare.html
 ```
 
-## Performance Optimization
+### Python Language Server (Extended Mode)
+**Location**: `packages/examples/src/python/`
+**Note**: While this example uses extended mode (`$type: 'extended'`), it demonstrates the same foundational patterns used in classic mode with additional services.
 
-Classic Mode offers several performance advantages:
+## Key Differences from Standard Monaco
 
-### Minimal Bundle Size
-```typescript
-// Only import what you need
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { createWebSocketConnection } from 'vscode-ws-jsonrpc';
-import * as monaco from 'monaco-editor';
+Unlike vanilla Monaco Editor, this project's Classic Mode:
 
-// No additional VS Code services = smaller bundle
-```
-
-### Memory Management
-```typescript
-class LanguageClientManager {
-    private clients: MonacoLanguageClient[] = [];
-    
-    async addClient(config: any) {
-        const client = new MonacoLanguageClient(config);
-        await client.start();
-        this.clients.push(client);
-        return client;
-    }
-    
-    async dispose() {
-        // Clean up all clients
-        await Promise.all(this.clients.map(client => client.stop()));
-        this.clients = [];
-    }
-}
-```
-
-## Connection Management
-
-### WebSocket Connection with Reconnection
-
-```typescript
-class ReconnectingWebSocketConnection {
-    private webSocket?: WebSocket;
-    private client?: MonacoLanguageClient;
-    
-    async connect(url: string) {
-        this.webSocket = new WebSocket(url);
-        
-        this.webSocket.onopen = () => {
-            console.log('WebSocket connected');
-            this.setupLanguageClient();
-        };
-        
-        this.webSocket.onclose = () => {
-            console.log('WebSocket disconnected, attempting reconnection...');
-            setTimeout(() => this.connect(url), 5000);
-        };
-        
-        this.webSocket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-    }
-    
-    private setupLanguageClient() {
-        if (!this.webSocket) return;
-        
-        const connection = createWebSocketConnection(this.webSocket, console);
-        this.client = new MonacoLanguageClient({
-            name: 'Reconnecting Client',
-            clientOptions: { documentSelector: [{ language: 'json' }] },
-            connection
-        });
-        
-        this.client.start();
-        connection.listen();
-    }
-}
-```
-
-## Comparison with Extended Mode
-
-| Feature | Classic Mode | Extended Mode |
-|---------|-------------|---------------|
-| Bundle Size | Smaller | Larger |
-| Setup Complexity | Simple | More Complex |
-| VS Code Services | Not Available | Full Access |
-| Monaco API Access | Direct | Through Wrapper |
-| Language Features | Basic LSP | Enhanced LSP + VS Code |
-| Performance | Lighter | Heavier |
-| Customization | Full Monaco Control | Service-based |
-
-## Common Use Cases
-
-### Simple Code Editor
-Perfect for applications that need basic language server features without VS Code complexity:
-
-```typescript
-// Minimal setup for a simple JSON editor
-const editor = monaco.editor.create(container, {
-    value: jsonContent,
-    language: 'json'
-});
-
-const client = new MonacoLanguageClient({
-    name: 'Simple JSON Client',
-    clientOptions: { documentSelector: [{ language: 'json' }] },
-    connection: createWebSocketConnection(webSocket, console)
-});
-
-await client.start();
-```
-
-### Custom Language Support
-Ideal for adding language support to existing Monaco Editor applications:
-
-```typescript
-// Add language client to existing Monaco setup
-const existingEditor = monaco.editor.getModel();
-if (existingEditor) {
-    const client = new MonacoLanguageClient({
-        name: 'Custom Language Client',
-        clientOptions: { documentSelector: [{ language: 'mylang' }] },
-        connection: myLanguageServerConnection
-    });
-    
-    await client.start();
-}
-```
+- **Requires VS Code API Wrapper**: Always needs `MonacoVscodeApiWrapper` initialization
+- **Uses VS Code Editor API**: Imports from `@codingame/monaco-vscode-editor-api`, not `monaco-editor`
+- **Language Client Wrapper**: Uses `LanguageClientWrapper` instead of direct language client instantiation
+- **Service Configuration**: Requires worker factory and service overrides
+- **Extension Integration**: Uses VS Code extension system for language definitions
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Language features not working**: Verify WebSocket connection and document selector
-**Performance issues**: Check if multiple clients are properly disposed
-**Connection errors**: Implement proper error handling and reconnection logic
+**Language features not working**:
+- Verify WebSocket connection is established
+- Check document selector matches your language ID
+- Ensure language server is running and accessible
+
+**Import errors**:
+- Use `@codingame/monaco-vscode-editor-api` instead of `monaco-editor`
+- Import service overrides from correct packages
+
+**Worker factory errors**:
+- Always include `configureDefaultWorkerFactory` in configuration
+- Ensure worker factory is configured before API wrapper initialization
 
 ### Debugging
 
 ```typescript
-const client = new MonacoLanguageClient({
-    name: 'Debug Client',
-    clientOptions: {
-        documentSelector: [{ language: 'json' }],
-        // Enable detailed logging
-        outputChannelName: 'JSON Language Server'
-    },
-    connection
-});
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic',
+    logLevel: LogLevel.Debug, // Enable detailed logging
+    // ... other config
+};
 
-// Log all LSP messages
-connection.trace = 2; // Verbose tracing
+// Access logger for debugging
+const logger = apiWrapper.getLogger();
+logger.info('Classic mode initialized');
 ```
 
 ## Next Steps
 
-- **Compare with [Extended Mode](extended-mode.md)** to understand the differences
-- **Learn [WebSocket Communication](websockets.md)** for external language server setup
-- **Try [Examples](../examples/index.md)** for complete implementations
-- **Check [Performance Guide](../guides/performance.md)** for optimization techniques
+- Compare with [Extended Mode](./extended-mode.md) for advanced IDE features
+- Explore [WebSocket Communication](./websockets.md) for external language servers
+- Try [Langium Integration](./extended-mode-with-langium.md) for custom DSL language servers
+- Check [Examples](../examples/index.md) for complete implementations
+
+Classic mode provides a balanced approach between Monaco Editor simplicity and language server integration, making it ideal for applications that need rich language features without full IDE complexity.
