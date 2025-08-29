@@ -1,16 +1,16 @@
 # Basic Usage
 
-This section covers the fundamental concepts and basic usage patterns for Monaco Language Client. These guides are designed to get you up and running quickly with common use cases.
+This section covers the basic concepts and usage patterns for the Monaco Language Client. These guides are designed to get you up and running quickly.
 
 ## Section Contents
 
 - **[Getting Started](getting-started.md)** - Your first Monaco Language Client integration with a minimal working example
-- **[Configuration](configuration.md)** - Understanding basic configuration options and how to customize your setup  
+- **[Configuration](configuration.md)** - Understanding basic configuration options and how to customize your setup
 - **[Examples](examples.md)** - Simple, practical examples demonstrating common integration patterns
 
 ## Quick Overview
 
-Monaco Language Client provides two main integration approaches:
+The Monaco Language Client provides two main integration approaches:
 
 ### Extended Mode (Recommended)
 Uses VS Code services for richer functionality:
@@ -33,10 +33,12 @@ import * as monaco from 'monaco-editor';
 // Direct Monaco editor + language client setup
 ```
 
-## Choose Your Path
+Generally you should start with Extended Mode unless you have specific constraints that require Classic Mode.
 
-- **New to Monaco Language Client?** Start with [Getting Started](getting-started.md)
-- **Need specific configuration help?** Check [Configuration](configuration.md)  
-- **Want to see it in action?** Browse [Examples](examples.md)
+## Next Steps
 
-For more advanced use cases, continue to [Advanced Usage](../advanced-usage/index.md) after completing this section.
+- **New to the Monaco Language Client?** Start with [Getting Started](getting-started.md)
+- **Need specific configuration help?** Check [Configuration](configuration.md)
+- **Jump straight to Practical Usage?** Browse [Examples](examples.md)
+
+For more advanced use cases, you can also directly read the [Advanced Usage](../advanced-usage/index.md) section.
