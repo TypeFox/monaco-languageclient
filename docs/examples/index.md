@@ -8,16 +8,15 @@ This section provides comprehensive, working examples of Monaco Language Client 
 Examples showing how to integrate with specific language servers:
 
 - **[JSON Language Server](json-language-server.md)** - Complete JSON editing with schema validation
-- **[Python Pyright](python-pyright.md)** - Python development with type checking and IntelliSense  
+- **[Python Pyright](python-pyright.md)** - Python development with type checking and IntelliSense
 - **[Langium DSL](langium-dsl.md)** - Custom domain-specific language examples
-- **[Custom Language Server](custom-language-server.md)** - Building your own language server integration
 
 ### Communication Patterns
 - **WebSocket Examples**: External language servers via WebSocket connections
 - **Web Worker Examples**: In-browser language servers using Web Workers
 - **Hybrid Examples**: Combining multiple communication patterns
 
-### Integration Approaches  
+### Integration Approaches
 - **Extended Mode Examples**: Rich VS Code-like functionality
 - **Classic Mode Examples**: Lightweight Monaco Editor integration
 - **React Examples**: Framework-specific integrations
@@ -63,7 +62,7 @@ The examples in this documentation correspond to working implementations in the 
 
 - **New to Monaco Language Client?** → Start with [JSON Language Server](json-language-server.md)
 - **Need Python support?** → See [Python Pyright](python-pyright.md)
-- **Building a custom DSL?** → Check [Langium DSL](langium-dsl.md) and [Custom Language Server](custom-language-server.md)
+- **Building a custom DSL?** → Check out the [Langium DSL](langium-dsl.md) example
 - **Using React?** → Look for React variants in each example
 
 ## Running Examples Locally
@@ -74,7 +73,7 @@ Most examples require language servers to be running. Use these commands:
 # JSON Language Server
 npm run start:example:server:json
 
-# Python Language Server  
+# Python Language Server
 npm run start:example:server:python
 
 # For other examples, see individual example pages
