@@ -14,8 +14,7 @@ describe('Test LanguageClientWrapper', () => {
     beforeAll(async () => {
         const apiConfig: MonacoVscodeApiConfig = {
             $type: 'extended',
-            htmlContainer: createMonacoEditorDiv(),
-            serviceOverrides: {}
+            htmlContainer: createMonacoEditorDiv()
         };
         const monacoVscodeApiManager = new MonacoVscodeApiWrapper(apiConfig);
         await monacoVscodeApiManager.init();

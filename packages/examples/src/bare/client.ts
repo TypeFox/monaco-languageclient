@@ -5,30 +5,22 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-// monaco-editor does not supply json highlighting with the json worker,
-// that's why we use the textmate extension from VSCode
-import '@codingame/monaco-vscode-json-default-extension';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { Logger } from 'monaco-languageclient/common';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
 
 export const runClient = async () => {
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'classic',
         logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getTextmateServiceOverride(),
-            ...getThemeServiceOverride()
-        },
         userConfiguration: {
             json: JSON.stringify({
                 'editor.experimental.asyncTokenization': true
             })
         },
-        monacoWorkerFactory: configureDefaultWorkerFactory
+        monacoWorkerFactory: configureClassicWorkerFactory
     };
 
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -69,4 +61,14 @@ export const runClient = async () => {
         apiWrapper.getLogger()
     );
     await languageClientWrapper.start();
+};
+
+export const configureClassicWorkerFactory = (logger?: Logger) => {
+    const defaultworkerLoaders = defineDefaultWorkerLoaders();
+    // remove textmate worker as it is not compatible with classic mode
+    defaultworkerLoaders.TextMateWorker = undefined;
+    useWorkerFactory({
+        workerLoaders: defaultworkerLoaders,
+        logger
+    });
 };

@@ -39,7 +39,7 @@ export interface ExtensionConfig {
 export interface MonacoVscodeApiConfig {
     $type: OverallConfigType;
     htmlContainer?: HTMLElement;
-    serviceOverrides: monaco.editor.IEditorOverrideServices;
+    serviceOverrides?: monaco.editor.IEditorOverrideServices;
     logLevel?: LogLevel | number;
     workspaceConfig?: IWorkbenchConstructionOptions;
     userConfiguration?: UserConfiguration;

@@ -92,7 +92,6 @@ export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): 
             })
         },
         htmlContainer,
-        serviceOverrides: {},
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 };

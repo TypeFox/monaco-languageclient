@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { initialize, LogLevel } from '@codingame/monaco-vscode-api';
 import { ExtensionHostKind, getExtensionManifests, registerExtension, type IExtensionManifest, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
@@ -23,16 +24,24 @@ export interface InitServicesInstructions {
     htmlContainer?: HTMLElement | null;
 }
 
+export interface MonacoVscodeApiConfigRuntime extends MonacoVscodeApiConfig {
+    serviceOverrides: monaco.editor.IEditorOverrideServices;
+    logLevel: LogLevel | number;
+}
+
 export class MonacoVscodeApiWrapper {
 
     private logger: Logger = new ConsoleLogger();
     private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
     private disposableStore: DisposableStore = new DisposableStore();
-    private apiConfig: MonacoVscodeApiConfig;
+    private apiConfig: MonacoVscodeApiConfigRuntime;
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
-        this.apiConfig = apiConfig;
-        this.apiConfig.logLevel = this.apiConfig.logLevel ?? LogLevel.Off;
+        this.apiConfig = {
+            ...apiConfig,
+            serviceOverrides: apiConfig.serviceOverrides ?? {},
+            logLevel: apiConfig.logLevel ?? LogLevel.Off,
+        };
         this.logger.setLevel(this.apiConfig.logLevel);
     }
 
