@@ -1,10 +1,10 @@
 # Configuration
 
-This guide covers the essential configuration options for Monaco Language Client. We'll explore both Extended and Classic modes, and show you how to customize the editor behavior.
+This guide covers important configuration options for the Monaco Language Client. We'll explore both Extended and Classic modes, and show you how to customize the editor's behavior.
 
 ## Configuration Structure
 
-Monaco Language Client uses a layered configuration approach:
+The Monaco Language Client uses a layered configuration approach:
 
 1. **VS Code API Configuration** - Controls editor services and behavior
 2. **Language Client Configuration** - Manages connection to language servers
@@ -12,7 +12,7 @@ Monaco Language Client uses a layered configuration approach:
 
 ## Extended Mode Configuration
 
-Extended Mode provides the richest feature set by leveraging VS Code services.
+Extended Mode provides a rich feature set by leveraging VS Code services. This is generally the recommended mode for most applications.
 
 ### Basic Extended Configuration
 
@@ -25,7 +25,7 @@ const vscodeApiConfig = {
     $type: 'extended' as const,
     htmlContainer: document.getElementById('editor')!,
     logLevel: LogLevel.Info,
-    
+
     // User settings (like VS Code settings.json)
     userConfiguration: {
         json: JSON.stringify({
@@ -36,7 +36,7 @@ const vscodeApiConfig = {
             'editor.minimap.enabled': false
         })
     },
-    
+
     // Worker configuration for Monaco services
     monacoWorkerFactory: configureDefaultWorkerFactory
 };
@@ -44,7 +44,7 @@ const vscodeApiConfig = {
 
 ### Service Overrides
 
-You can override VS Code services to customize behavior:
+You can also override VS Code services to customize their behavior. For example, to customize keybindings and themes:
 
 ```typescript
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
@@ -53,7 +53,7 @@ import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-over
 const vscodeApiConfig = {
     $type: 'extended' as const,
     htmlContainer: document.getElementById('editor')!,
-    
+
     // Override specific services
     serviceOverrides: {
         ...getKeybindingsServiceOverride(),
@@ -64,7 +64,7 @@ const vscodeApiConfig = {
 
 ### Language Client Configuration
 
-Configure how the editor connects to language servers:
+You can also configure how the editor connects to language servers by setting connection & client options:
 
 ```typescript
 const languageClientConfig = {
@@ -79,18 +79,18 @@ const languageClientConfig = {
             }
         }
     },
-    
+
     clientOptions: {
         // Which files this language server handles
         documentSelector: ['typescript', 'javascript'],
-        
+
         // Workspace configuration
         workspaceFolder: {
             index: 0,
             name: 'my-project',
             uri: vscode.Uri.file('/workspace')
         },
-        
+
         // Custom initialization options for the language server
         initializationOptions: {
             preferences: {
@@ -142,7 +142,7 @@ await client.start();
 
 ### Editor Settings
 
-Configure Monaco Editor behavior through user configuration:
+You can further configure the Monaco Editor through the user configuration object:
 
 ```typescript
 userConfiguration: {
@@ -151,18 +151,18 @@ userConfiguration: {
         'workbench.colorTheme': 'Default Dark Modern',
         'editor.fontSize': 14,
         'editor.fontFamily': 'Consolas, monospace',
-        
-        // Editor behavior  
+
+        // Editor behavior
         'editor.tabSize': 2,
         'editor.wordWrap': 'on',
         'editor.minimap.enabled': true,
         'editor.lineNumbers': 'on',
-        
+
         // Language features
         'editor.quickSuggestions': true,
         'editor.wordBasedSuggestions': 'off',
         'editor.parameterHints.enabled': true,
-        
+
         // Advanced features
         'editor.experimental.asyncTokenization': true,
         'editor.guides.bracketPairsHorizontal': 'active'
@@ -172,7 +172,7 @@ userConfiguration: {
 
 ### File System Configuration
 
-Set up in-memory or remote file systems:
+In most cases you'll need to setup an in-memory or remote file system for the editor to work with.
 
 ```typescript
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
@@ -185,6 +185,8 @@ fileSystemProvider.registerFile(new RegisteredMemoryFile(
 ));
 registerFileSystemOverlay(1, fileSystemProvider);
 ```
+
+You can also setup a file system that leverages the browser's local storage or IndexedDB for persistence as well.
 
 ### Connection Types
 
@@ -200,27 +202,24 @@ connection: {
 }
 ```
 
-#### Web Worker Connection
+#### Worker Config
 ```typescript
 connection: {
     options: {
         $type: 'WorkerConfig',
-        worker: new Worker('./language-server.js', { type: 'module' })
+        url: new URL('./language-server-worker.js', window.location.href),
+        type: 'module', // or 'classic'
+        workerName: 'LanguageServerWorker'
     }
 }
 ```
 
-#### Message Channel (for complex worker setups)
+#### Direct Web Worker Connection
 ```typescript
-const channel = new MessageChannel();
-const reader = new BrowserMessageReader(channel.port1);
-const writer = new BrowserMessageWriter(channel.port1);
-
 connection: {
     options: {
-        $type: 'MessageChannel',
-        reader,
-        writer
+        $type: 'WorkerDirect',
+        worker: new Worker('./language-server.js', { type: 'module' })
     }
 }
 ```
@@ -253,7 +252,7 @@ const tsConfig = {
     clientOptions: { documentSelector: ['typescript'] }
 };
 
-// JSON language client  
+// JSON language client
 const jsonConfig = {
     connection: { options: { $type: 'WebSocketUrl', url: 'ws://localhost:3002/json' }},
     clientOptions: { documentSelector: ['json'] }
