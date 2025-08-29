@@ -140,12 +140,13 @@ async function setupWebWorkerLanguageClient() {
 
     // Configure language client
     const languageClientConfig = {
+        name: 'JSON Language Server',
         connection: {
             options: {
-                $type: 'MessageChannel' as const,
-                reader,
-                writer
-            }
+                $type: 'WorkerDirect',
+                worker: worker
+            },
+            messageTransports: { reader, writer }
         },
         clientOptions: {
             documentSelector: ['json'],
@@ -158,21 +159,21 @@ async function setupWebWorkerLanguageClient() {
     };
 
     // Initialize language client
-    const lcWrapper = new LanguageClientWrapper();
-    await lcWrapper.init(languageClientConfig);
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig, wrapper.getLogger());
+    await lcWrapper.start();
 
     // Create editor
     const editorApp = new EditorApp({
+        $type: 'extended',
         codeResources: {
             main: {
                 text: '{\n  "name": "example"\n}',
-                uri: '/workspace/example.json',
-                fileExt: 'json'
+                uri: '/workspace/example.json'
             }
         }
     });
 
-    await editorApp.init(wrapper);
+    await editorApp.start(vscodeApiConfig.htmlContainer!);
 
     console.log('Web Worker language server is ready!');
 }
@@ -243,15 +244,21 @@ const writer = new BrowserMessageWriter(channel.port1);
 
 // Configure for your DSL
 const languageClientConfig = {
+    name: 'My DSL Language Server',
     connection: {
         options: {
-            $type: 'MessageChannel',
-            reader,
-            writer
-        }
+            $type: 'WorkerDirect',
+            worker: worker
+        },
+        messageTransports: { reader, writer }
     },
     clientOptions: {
-        documentSelector: ['mydsl'] // Your language ID
+        documentSelector: ['mydsl'], // Your language ID
+        workspaceFolder: {
+            index: 0,
+            name: 'workspace',
+            uri: vscode.Uri.file('/workspace')
+        }
     }
 };
 ```
@@ -547,9 +554,79 @@ function analyzeDocument(content: string) {
 }
 ```
 
+## Examples in This Project
+
+The project includes excellent Web Worker examples using Langium:
+
+### Langium Grammar DSL (`packages/examples/langium_extended.html`)
+**Location**: `packages/examples/src/langium/langium-dsl/`
+**Worker**: `packages/examples/src/langium/langium-dsl/worker/langium-server.ts`
+**Description**: Edit Langium grammar files with the Langium grammar language server running in a Web Worker
+
+### Statemachine DSL (`packages/examples/statemachine.html`)
+**Location**: `packages/examples/src/langium/statemachine/`
+**Workers**: Multiple worker variants in `packages/examples/src/langium/statemachine/worker/`
+**Description**: Custom state machine DSL with full language server features in Web Workers
+
+```bash
+# Run the Web Worker examples
+npm run dev
+
+# Visit the examples:
+# http://localhost:20001/langium_extended.html - Langium Grammar DSL
+# http://localhost:20001/statemachine.html - Statemachine DSL
+# http://localhost:20001/react_statemachine.html - React + Statemachine
+```
+
+### Real Implementation Patterns
+
+The project's Langium examples demonstrate the actual patterns documented here:
+
+**Worker Setup** (`langium-server.ts`):
+```typescript
+import { EmptyFileSystem } from 'langium';
+import { startLanguageServer } from 'langium/lsp';
+import { createLangiumGrammarServices } from 'langium/grammar';
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
+
+const messageReader = new BrowserMessageReader(self as DedicatedWorkerGlobalScope);
+const messageWriter = new BrowserMessageWriter(self as DedicatedWorkerGlobalScope);
+
+const context = {
+    connection: createConnection(messageReader, messageWriter),
+    ...EmptyFileSystem
+};
+const { shared } = createLangiumGrammarServices(context);
+
+startLanguageServer(shared);
+```
+
+**Client Integration** (`extendedConfig.ts`):
+```typescript
+const worker = new Worker(workerUrl, {
+    type: 'module',
+    name: 'Langium LS'
+});
+
+const languageClientConfig: LanguageClientConfig = {
+    clientOptions: {
+        documentSelector: ['langium']
+    },
+    connection: {
+        options: {
+            $type: 'WorkerDirect',
+            worker
+        },
+        messageTransports: { reader, writer }
+    }
+};
+```
+
 ## Next Steps
 
-- **Learn [WebSocket Communication](websockets.md)** for external language servers
-- **Try [Extended Mode with Langium](extended-mode-with-langium.md)** for DSL development
-- **Check [Examples](../examples/langium-dsl.md)** for complete Langium implementations
-- **See [Performance Guide](../guides/performance.md)** for optimization techniques
+- Compare with [WebSocket Communication](./websockets.md) for external language servers
+- Learn [Extended Mode with Langium](./extended-mode-with-langium.md) for detailed DSL development
+- Try [Classic Mode](./classic-mode.md) or [Extended Mode](./extended-mode.md) integration patterns
+- Check [Examples](../examples/index.md) for complete Web Worker implementations
+
+Web Workers provide the most seamless way to integrate language servers directly in the browser, especially for custom DSLs built with Langium.

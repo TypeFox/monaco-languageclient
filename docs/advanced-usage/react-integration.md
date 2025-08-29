@@ -1,6 +1,6 @@
 # React Integration
 
-Monaco Language Client provides excellent React integration through the `@typefox/monaco-editor-react` package, making it easy to embed rich language editors in React applications.
+Monaco Language Client provides a React integration through the `@typefox/monaco-editor-react` package, making it easy to embed rich language editors in React applications with full language server support.
 
 ## When to Use React Integration
 
@@ -20,13 +20,18 @@ npm install monaco-languageclient @codingame/monaco-vscode-api
 
 ## Basic React Integration
 
-Here's a complete example of a React component with Monaco Language Client:
+Here's a complete example using the actual React wrapper API:
 
 ```tsx
 // JsonEditorComponent.tsx
 import React, { useCallback } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { WrapperConfig } from 'monaco-languageclient/editorApp';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import * as vscode from 'vscode';
 import '@codingame/monaco-vscode-json-default-extension';
 
 interface JsonEditorProps {
@@ -38,52 +43,82 @@ export const JsonEditorComponent: React.FC<JsonEditorProps> = ({
     initialValue = '{\n  "name": "example"\n}',
     onValueChange
 }) => {
-    const wrapperConfig: WrapperConfig = {
+    // VS Code API configuration
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer: document.getElementById('monaco-editor-root')!,
-        editorAppConfig: {
-            codeResources: {
-                main: {
-                    text: initialValue,
-                    uri: '/workspace/example.json',
-                    fileExt: 'json'
-                }
-            }
+        htmlContainer: document.body,
+        logLevel: LogLevel.Debug,
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.experimental.asyncTokenization': true
+            })
         },
-        languageClientConfig: {
-            connection: {
-                options: {
-                    $type: 'WebSocketUrl',
-                    url: 'ws://localhost:30000/sampleServer'
-                }
-            },
-            clientOptions: {
-                documentSelector: ['json']
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    // Editor configuration
+    const editorAppConfig: EditorAppConfig = {
+        $type: 'extended',
+        codeResources: {
+            main: {
+                text: initialValue,
+                uri: '/workspace/example.json'
             }
         }
     };
 
-    const handleEditorLoad = useCallback((wrapper: any) => {
-        console.log('Monaco editor loaded with language client');
-        
-        // Access the Monaco editor instance
-        const editor = wrapper.getEditor();
-        
-        // Listen to content changes
-        if (editor && onValueChange) {
-            editor.onDidChangeModelContent(() => {
-                const value = editor.getValue();
-                onValueChange(value);
-            });
+    // Language client configuration
+    const languageClientConfig: LanguageClientConfig = {
+        name: 'JSON Language Server',
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:30000/sampleServer'
+            }
+        },
+        clientOptions: {
+            documentSelector: ['json'],
+            workspaceFolder: {
+                index: 0,
+                name: 'workspace',
+                uri: vscode.Uri.file('/workspace')
+            }
+        }
+    };
+
+    // Language client configurations wrapper
+    const languageClientConfigs = {
+        configs: {
+            json: languageClientConfig
+        }
+    };
+
+    const handleTextChanged = useCallback((textChanges: any) => {
+        const { modified } = textChanges;
+        if (modified && onValueChange) {
+            onValueChange(modified.text);
         }
     }, [onValueChange]);
+
+    const handleVscodeApiInitDone = useCallback((apiWrapper: any) => {
+        console.log('VS Code API initialized');
+    }, []);
+
+    const handleError = useCallback((error: Error) => {
+        console.error('Monaco editor error:', error);
+    }, []);
 
     return (
         <div style={{ height: '400px', border: '1px solid #ccc' }}>
             <MonacoEditorReactComp
-                wrapperConfig={wrapperConfig}
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfigs={languageClientConfigs}
                 style={{ height: '100%' }}
-                onLoad={handleEditorLoad}
+                onVscodeApiInitDone={handleVscodeApiInitDone}
+                onTextChanged={handleTextChanged}
+                onError={handleError}
             />
         </div>
     );
@@ -105,9 +140,9 @@ interface UseMonacoLanguageClientOptions {
     onLoad?: (wrapper: MonacoEditorLanguageClientWrapper) => void;
 }
 
-export const useMonacoLanguageClient = ({ 
-    config, 
-    onLoad 
+export const useMonacoLanguageClient = ({
+    config,
+    onLoad
 }: UseMonacoLanguageClientOptions) => {
     const [wrapper, setWrapper] = useState<MonacoEditorLanguageClientWrapper | null>(null);
     const [isReady, setIsReady] = useState(false);
@@ -187,7 +222,7 @@ const getLanguageConfig = (language: Language): Partial<WrapperConfig> => {
             }
         }
     };
-    
+
     return configs[language];
 };
 
@@ -197,7 +232,7 @@ export const MultiLanguageEditor: React.FC<MultiLanguageEditorProps> = ({
     onChange
 }) => {
     const [currentValue, setCurrentValue] = useState(initialValue);
-    
+
     const wrapperConfig: WrapperConfig = {
         $type: 'extended',
         htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -215,7 +250,7 @@ export const MultiLanguageEditor: React.FC<MultiLanguageEditorProps> = ({
 
     const handleEditorLoad = useCallback((wrapper: any) => {
         const editor = wrapper.getEditor();
-        
+
         if (editor) {
             editor.onDidChangeModelContent(() => {
                 const newValue = editor.getValue();
@@ -252,7 +287,7 @@ interface EditorWithReduxProps {
 export const EditorWithRedux: React.FC<EditorWithReduxProps> = ({ editorId }) => {
     const dispatch = useDispatch();
     const { content, isReady } = useSelector((state: any) => state.editor[editorId] || {});
-    
+
     const wrapperConfig = {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -280,7 +315,7 @@ export const EditorWithRedux: React.FC<EditorWithReduxProps> = ({ editorId }) =>
 
     const handleEditorLoad = useCallback((wrapper: any) => {
         dispatch(setEditorReady({ editorId, isReady: true }));
-        
+
         const editor = wrapper.getEditor();
         if (editor) {
             editor.onDidChangeModelContent(() => {
@@ -412,7 +447,7 @@ import React, { useState, useEffect } from 'react';
 
 export const MonacoEditor: React.FC = () => {
     const [isClient, setIsClient] = useState(false);
-    
+
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -423,8 +458,8 @@ export const MonacoEditor: React.FC = () => {
 
     // Dynamically import Monaco components only on client
     const MonacoEditorReactComp = React.lazy(
-        () => import('@typefox/monaco-editor-react').then(mod => ({ 
-            default: mod.MonacoEditorReactComp 
+        () => import('@typefox/monaco-editor-react').then(mod => ({
+            default: mod.MonacoEditorReactComp
         }))
     );
 
@@ -540,7 +575,7 @@ jest.mock('@typefox/monaco-editor-react', () => ({
                 });
             }
         }, [onLoad]);
-        
+
         return <div data-testid="monaco-editor">Monaco Editor</div>;
     })
 }));
@@ -556,7 +591,7 @@ describe('MonacoEditor', () => {
                 style={{ height: '400px' }}
             />
         );
-        
+
         expect(screen.getByTestId('monaco-editor')).toBeInTheDocument();
     });
 });
@@ -629,7 +664,7 @@ import { MonacoErrorBoundary } from './MonacoErrorBoundary';
 
 const App: React.FC = () => {
     const [editorValue, setEditorValue] = useState('{\n  "name": "my-app"\n}');
-    
+
     const defaultServers = [
         {
             name: 'JSON',
@@ -642,14 +677,14 @@ const App: React.FC = () => {
         <MonacoLanguageClientProvider defaultServers={defaultServers}>
             <div className="App">
                 <h1>Monaco Language Client React Example</h1>
-                
+
                 <MonacoErrorBoundary>
                     <JsonEditorComponent
                         initialValue={editorValue}
                         onValueChange={setEditorValue}
                     />
                 </MonacoErrorBoundary>
-                
+
                 <div style={{ marginTop: '20px' }}>
                     <h3>Current Value:</h3>
                     <pre>{editorValue}</pre>
@@ -662,9 +697,117 @@ const App: React.FC = () => {
 export default App;
 ```
 
+## Examples in This Project
+
+The project includes working React examples you can run:
+
+### React Statemachine (`packages/examples/react_statemachine.html`)
+**Location**: `packages/examples/src/langium/statemachine/main-react.tsx`
+**Description**: Langium statemachine DSL with React integration
+
+### React Python Editor (`packages/examples/react_python.html`)
+**Location**: `packages/examples/src/python/client/reactPython.tsx`
+**Description**: Python development environment with React integration
+
+### React Application Playground (`packages/examples/react_appPlayground.html`)
+**Location**: `packages/examples/src/appPlayground/reactMain.tsx`
+**Description**: Application playground example using React
+
+```bash
+# Run the React examples
+npm run dev
+
+# Visit the examples:
+# http://localhost:20001/react_statemachine.html
+# http://localhost:20001/react_python.html
+# http://localhost:20001/react_appPlayground.html
+```
+
+### Next.js Integration
+The project also includes a complete Next.js example in the `verify/next/` directory demonstrating SSR-safe implementation:
+
+```tsx
+// Real Next.js implementation pattern
+const DynamicMonacoEditorReact = dynamic(async () => {
+    const comp = await import('@typefox/monaco-editor-react');
+
+    return () => (
+        <comp.MonacoEditorReactComp
+            style={{ height: '100%' }}
+            vscodeApiConfig={vscodeApiConfig}
+            editorAppConfig={editorAppConfig}
+            languageClientConfigs={languageClientConfigs}
+            onVscodeApiInitDone={handleInit}
+            onError={(e) => console.error(e)}
+        />
+    );
+}, {
+    ssr: false,
+    loading: () => <div>Loading Monaco Editor...</div>
+});
+```
+
+### Real Implementation Patterns
+
+The project's React examples demonstrate proper usage:
+
+**Separate Configurations**:
+```tsx
+// From react_statemachine example
+const vscodeApiConfig = createLangiumGlobalConfig().vscodeApiConfig;
+const editorAppConfig = createLangiumGlobalConfig().editorAppConfig;
+const languageClientConfigs = {
+    configs: {
+        langium: createLangiumGlobalConfig().languageClientConfig
+    }
+};
+```
+
+**Proper Event Handling**:
+```tsx
+<MonacoEditorReactComp
+    vscodeApiConfig={vscodeApiConfig}
+    editorAppConfig={editorAppConfig}
+    languageClientConfigs={languageClientConfigs}
+    onVscodeApiInitDone={async (apiWrapper) => {
+        // Handle API initialization
+    }}
+    onError={(error) => {
+        console.error('React Monaco error:', error);
+    }}
+/>
+```
+
+## API Reference
+
+### MonacoEditorReactComp Props
+
+Based on the actual implementation in `packages/wrapper-react/src/index.tsx`:
+
+```tsx
+interface MonacoEditorProps {
+    style?: CSSProperties;
+    className?: string;
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    editorAppConfig?: EditorAppConfig;
+    languageClientConfigs?: LanguageClientConfigs;
+    onVscodeApiInitDone?: (apiWrapper: MonacoVscodeApiWrapper) => void;
+    onEditorStartDone?: (editorApp?: EditorApp) => void;
+    onLanguageClientsStartDone?: (lcsManager?: LanguageClientsManager) => void;
+    onTextChanged?: (textChanges: TextContents) => void;
+    onError?: (error: Error) => void;
+    onDisposeEditor?: () => void;
+    onDisposeLanguageClients?: () => void;
+    modifiedTextValue?: string;
+    originalTextValue?: string;
+}
+```
+
 ## Next Steps
 
-- **Learn [Extended Mode](extended-mode.md)** for VS Code-like functionality  
-- **Try [WebSocket Communication](websockets.md)** for external language servers
-- **Check [Examples](../examples/index.md)** for complete React implementations
-- **See [Performance Guide](../guides/performance.md)** for optimization techniques
+- Compare with [Extended Mode](./extended-mode.md) for VS Code-like functionality
+- Learn [WebSocket Communication](./websockets.md) for external language servers
+- Try [Web Workers](./web-workers.md) for in-browser language servers
+- Check [Examples](../examples/index.md) for complete React implementations
+
+The React wrapper provides a clean, declarative API for integrating Monaco Language Client into React applications with full language server support.

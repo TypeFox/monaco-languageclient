@@ -12,14 +12,14 @@
 [![monaco-editor-react Version](https://img.shields.io/npm/v/@typefox/monaco-editor-react?logo=npm&label=@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 [![monaco-editor-react Downloads](https://img.shields.io/npm/dt/@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 
-This repository now host multiple npm packages under one roof:
+This repository now hosts multiple npm packages under one roof:
 
 - [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
 - [vscode-ws-jsonrpc](https://www.npmjs.com/package/vscode-ws-jsonrpc) which implements communication between a jsonrpc client and server over WebSocket.
 - [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) makes editor and languageclient available within a react component.
 - [monaco-languageclient-examples](https://www.npmjs.com/package/monaco-languageclient-examples) provides the examples which allows to use them externally.
 
-The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
+Examples that don't require a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
 - [Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-react-and-examples)
   - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
