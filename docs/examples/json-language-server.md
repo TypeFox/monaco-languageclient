@@ -79,11 +79,11 @@ async function runJsonExample() {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Info,
-        
+
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
         },
-        
+
         userConfiguration: {
             json: JSON.stringify({
                 // Theme and appearance
@@ -91,7 +91,7 @@ async function runJsonExample() {
                 'editor.fontSize': 14,
                 'editor.tabSize': 2,
                 'editor.wordWrap': 'on',
-                
+
                 // JSON-specific settings
                 'json.schemas': [
                     {
@@ -101,7 +101,7 @@ async function runJsonExample() {
                 ],
                 'json.format.enable': true,
                 'json.validate.enable': true,
-                
+
                 // Editor enhancements
                 'editor.quickSuggestions': true,
                 'editor.suggest.insertMode': 'replace',
@@ -109,7 +109,7 @@ async function runJsonExample() {
                 'editor.guides.bracketPairsHorizontal': 'active'
             })
         },
-        
+
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 
@@ -141,14 +141,14 @@ async function runJsonExample() {
         clientOptions: {
             // Only handle JSON files
             documentSelector: ['json'],
-            
+
             // Workspace configuration
             workspaceFolder: {
                 index: 0,
                 name: 'json-example-workspace',
                 uri: vscode.Uri.file('/workspace')
             },
-            
+
             // Language server initialization options
             initializationOptions: {
                 provideFormatter: true,
@@ -174,7 +174,7 @@ async function runJsonExample() {
 
     console.log('Starting JSON editor...');
     await editorApp.init(wrapper);
-    
+
     console.log('JSON Language Server example is ready!');
     console.log('Try editing the JSON to see:');
     console.log('- IntelliSense suggestions');
@@ -339,7 +339,7 @@ configFiles.forEach(file => {
 2. Check browser console for WebSocket connection errors
 3. Verify firewall/proxy settings aren't blocking the connection
 
-### No IntelliSense or Validation  
+### No IntelliSense or Validation
 1. Confirm the JSON file has a valid `$schema` property
 2. Check that the schema URL is accessible
 3. Verify the language client is properly initialized
@@ -352,6 +352,5 @@ configFiles.forEach(file => {
 ## Next Steps
 
 - **Try the [Python Pyright Example](python-pyright.md)** for a different language server
-- **Explore [Custom Language Server](custom-language-server.md)** to build your own
 - **Learn about [Extended Mode](../advanced-usage/extended-mode.md)** for more advanced features
 - **Check [WebSocket Communication](../advanced-usage/websockets.md)** for external server details
