@@ -34,10 +34,10 @@ async function connectToLanguageServer() {
         logLevel: LogLevel.Info,
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
-    
+
     const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await wrapper.init();
-    
+
     // Configure WebSocket connection to language server
     const languageClientConfig = {
         connection: {
@@ -72,11 +72,11 @@ async function connectToLanguageServer() {
             }
         }
     };
-    
+
     // Initialize language client
     const lcWrapper = new LanguageClientWrapper();
     await lcWrapper.init(languageClientConfig);
-    
+
     // Create editor application
     const editorApp = new EditorApp({
         codeResources: {
@@ -87,7 +87,7 @@ async function connectToLanguageServer() {
             }
         }
     });
-    
+
     await editorApp.init(wrapper);
     console.log('WebSocket language client ready!');
 }
@@ -110,29 +110,29 @@ const server = app.listen(30000, () => {
 });
 
 // Create WebSocket server
-const wss = new WebSocketServer({ 
+const wss = new WebSocketServer({
     server,
     path: '/sampleServer'
 });
 
 wss.on('connection', (webSocket) => {
     console.log('Client connected');
-    
+
     // Create WebSocket connection wrapper
     const socketConnection = createConnection(webSocket, console);
-    
+
     // Start the actual language server process
     const serverConnection = createServerProcess('JSON Language Server', 'node', [
         './node_modules/vscode-json-languageserver/bin/vscode-json-languageserver',
         '--stdio'
     ]);
-    
+
     // Forward messages between WebSocket and language server
     forward(socketConnection, serverConnection, (message: Message) => {
         console.log('Forwarding message:', message.method);
         return message;
     });
-    
+
     webSocket.on('close', () => {
         console.log('Client disconnected');
     });
@@ -147,18 +147,18 @@ wss.on('connection', (webSocket) => {
 const connectionConfig = {
     $type: 'WebSocketUrl' as const,
     url: 'ws://localhost:3000/languageserver',
-    
+
     // Connection lifecycle hooks
     startOptions: {
         onCall: () => console.log('Starting connection...'),
         reportStatus: true
     },
-    
+
     stopOptions: {
-        onCall: () => console.log('Stopping connection...'),  
+        onCall: () => console.log('Stopping connection...'),
         reportStatus: true
     },
-    
+
     // WebSocket-specific options
     webSocketOptions: {
         protocols: ['lsp'],
@@ -177,28 +177,28 @@ class ReconnectingWebSocketClient {
     private reconnectAttempts = 0;
     private maxReconnectAttempts = 5;
     private reconnectDelay = 1000;
-    
+
     async connect(config: any) {
         try {
             this.lcWrapper = new LanguageClientWrapper();
             await this.lcWrapper.init(config);
-            
+
             this.reconnectAttempts = 0;
             console.log('Language client connected successfully');
-            
+
         } catch (error) {
             console.error('Connection failed:', error);
             this.scheduleReconnect(config);
         }
     }
-    
+
     private scheduleReconnect(config: any) {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.reconnectAttempts++;
             const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-            
+
             console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
-            
+
             setTimeout(() => {
                 this.connect(config);
             }, delay);
@@ -232,11 +232,11 @@ async function setupMultipleLanguageServers() {
             documentSelector: ['python']
         }
     ];
-    
+
     const languageClients = await Promise.all(
         servers.map(async (serverConfig) => {
             const lcWrapper = new LanguageClientWrapper();
-            
+
             await lcWrapper.init({
                 connection: {
                     options: {
@@ -248,11 +248,11 @@ async function setupMultipleLanguageServers() {
                     documentSelector: serverConfig.documentSelector
                 }
             });
-            
+
             return { name: serverConfig.name, client: lcWrapper };
         })
     );
-    
+
     console.log('All language servers connected:', languageClients.map(lc => lc.name));
 }
 ```
@@ -263,20 +263,20 @@ async function setupMultipleLanguageServers() {
 class LoadBalancedLanguageClient {
     private servers: string[];
     private currentIndex = 0;
-    
+
     constructor(serverUrls: string[]) {
         this.servers = serverUrls;
     }
-    
+
     getNextServerUrl(): string {
         const url = this.servers[this.currentIndex];
         this.currentIndex = (this.currentIndex + 1) % this.servers.length;
         return url;
     }
-    
+
     async createClient() {
         const serverUrl = this.getNextServerUrl();
-        
+
         const lcWrapper = new LanguageClientWrapper();
         await lcWrapper.init({
             connection: {
@@ -289,7 +289,7 @@ class LoadBalancedLanguageClient {
                 documentSelector: ['typescript']
             }
         });
-        
+
         return lcWrapper;
     }
 }
@@ -346,7 +346,7 @@ const server = https.createServer({
     key: fs.readFileSync('path/to/key.pem')
 });
 
-const wss = new WebSocketServer({ 
+const wss = new WebSocketServer({
     server,
     path: '/languageserver'
 });
@@ -368,18 +368,18 @@ import { Message } from 'vscode-languageserver';
 forward(socketConnection, serverConnection, (message: Message) => {
     // Log all LSP messages
     console.log(`[${new Date().toISOString()}] ${message.method}`, message);
-    
+
     // Filter or modify messages
     if (message.method === 'textDocument/didChange') {
         // Add custom processing for document changes
         console.log('Document changed');
     }
-    
+
     // Custom error handling
     if (message.method === '$/error') {
         console.error('Language server error:', message);
     }
-    
+
     return message;
 });
 ```
@@ -389,11 +389,11 @@ forward(socketConnection, serverConnection, (message: Message) => {
 ```typescript
 class MiddlewareLanguageClient {
     private lcWrapper: LanguageClientWrapper;
-    
+
     constructor() {
         this.lcWrapper = new LanguageClientWrapper();
     }
-    
+
     async init(config: any) {
         // Add middleware to the connection
         const originalConfig = {
@@ -404,7 +404,7 @@ class MiddlewareLanguageClient {
                     console.log('Completion requested at:', position);
                     return next(document, position, context, token);
                 },
-                
+
                 // Intercept hover requests
                 provideHover: (document, position, token, next) => {
                     console.log('Hover requested at:', position);
@@ -412,7 +412,7 @@ class MiddlewareLanguageClient {
                 }
             }
         };
-        
+
         await this.lcWrapper.init(originalConfig);
     }
 }
@@ -427,24 +427,24 @@ class ConnectionPool {
     private availableConnections: LanguageClientWrapper[] = [];
     private allConnections: LanguageClientWrapper[] = [];
     private maxConnections = 10;
-    
+
     async getConnection(): Promise<LanguageClientWrapper> {
         if (this.availableConnections.length > 0) {
             return this.availableConnections.pop()!;
         }
-        
+
         if (this.allConnections.length < this.maxConnections) {
             const lcWrapper = new LanguageClientWrapper();
             await lcWrapper.init(connectionConfig);
             this.allConnections.push(lcWrapper);
             return lcWrapper;
         }
-        
+
         // Wait for available connection
         await new Promise(resolve => setTimeout(resolve, 100));
         return this.getConnection();
     }
-    
+
     releaseConnection(connection: LanguageClientWrapper) {
         this.availableConnections.push(connection);
     }
@@ -458,17 +458,17 @@ class ConnectionPool {
 class MessageBatcher {
     private batch: Message[] = [];
     private batchTimeout?: NodeJS.Timeout;
-    
+
     addMessage(message: Message) {
         this.batch.push(message);
-        
+
         if (!this.batchTimeout) {
             this.batchTimeout = setTimeout(() => {
                 this.flushBatch();
             }, 10); // 10ms batch window
         }
     }
-    
+
     private flushBatch() {
         if (this.batch.length > 0) {
             // Process all messages in batch
@@ -492,30 +492,30 @@ class HealthMonitor {
     private lcWrapper: LanguageClientWrapper;
     private healthCheckInterval: NodeJS.Timeout;
     private lastPingTime = 0;
-    
+
     constructor(lcWrapper: LanguageClientWrapper) {
         this.lcWrapper = lcWrapper;
         this.startHealthCheck();
     }
-    
+
     private startHealthCheck() {
         this.healthCheckInterval = setInterval(async () => {
             try {
                 this.lastPingTime = Date.now();
-                
+
                 // Send a health check request to the language server
                 const result = await this.lcWrapper.sendRequest('health/ping', {});
-                
+
                 const responseTime = Date.now() - this.lastPingTime;
                 console.log(`Health check OK (${responseTime}ms)`);
-                
+
             } catch (error) {
                 console.error('Health check failed:', error);
                 // Implement reconnection logic
             }
         }, 30000); // Check every 30 seconds
     }
-    
+
     dispose() {
         clearInterval(this.healthCheckInterval);
     }
@@ -527,11 +527,11 @@ class HealthMonitor {
 ```typescript
 class PerformanceMonitor {
     private requestTimes = new Map<string, number>();
-    
+
     onRequest(method: string) {
         this.requestTimes.set(method, Date.now());
     }
-    
+
     onResponse(method: string) {
         const startTime = this.requestTimes.get(method);
         if (startTime) {
@@ -540,7 +540,7 @@ class PerformanceMonitor {
             this.requestTimes.delete(method);
         }
     }
-    
+
     getAverageResponseTime(): number {
         // Calculate average response time
         return 0; // Implementation details
@@ -640,15 +640,15 @@ const debugConnection = {
 ```typescript
 wss.on('connection', (webSocket, request) => {
     console.log(`New connection from ${request.socket.remoteAddress}`);
-    
+
     webSocket.on('message', (data) => {
         console.log('Received message:', data.toString());
     });
-    
+
     webSocket.on('error', (error) => {
         console.error('WebSocket error:', error);
     });
-    
+
     webSocket.on('close', (code, reason) => {
         console.log(`Connection closed: ${code} - ${reason}`);
     });
@@ -660,4 +660,3 @@ wss.on('connection', (webSocket, request) => {
 - **Learn [Web Workers](web-workers.md)** for in-browser language servers
 - **Try [Classic Mode](classic-mode.md)** for lighter-weight integrations
 - **Check [Examples](../examples/index.md)** for complete WebSocket implementations
-- **See [Deployment Guide](../guides/deployment.md)** for production setup
