@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will walk you through creating your first Monaco Language Client integration. We'll build a simple JSON editor with language server support.
+This guide will walk you through creating your first Monaco Language Client application. We'll build a simple JSON editor with language server support.
 
 ## Prerequisites
 
@@ -8,11 +8,13 @@ Before you begin, ensure you have:
 
 - Completed the [Installation](../installation.md) steps
 - A basic understanding of TypeScript and web development
-- A running development server (like Vite, webpack dev server, or similar)
+- A running development server (like Vite, webpack dev server, or something similar)
 
 ## Your First Language Client
 
-We'll create a simple JSON editor that connects to a language server via WebSocket. This example uses Extended Mode for the richest feature set.
+We'll create a simple JSON editor that connects to a language server via WebSocket. In this example, we'll use Extended Mode.
+
+The steps below will outline the process at large, and then further below we'll break down the relevant sections to explain what each part does.
 
 ### Step 1: HTML Setup
 
@@ -68,7 +70,7 @@ async function createJsonEditor() {
 
     // Configure the editor
     const htmlContainer = document.getElementById('monaco-editor-root')!;
-    
+
     // Monaco VS Code API configuration
     const vscodeApiConfig = {
         $type: 'extended' as const,
@@ -133,7 +135,7 @@ createJsonEditor().catch(console.error);
 
 ### Step 3: Language Server Setup
 
-For this example to work, you'll need a JSON language server running on `ws://localhost:30000/sampleServer`. 
+For this example to work, you'll need a JSON language server running on `ws://localhost:30000/sampleServer`.
 
 The easiest way to test this is to use the example from this repository:
 
@@ -171,7 +173,7 @@ const fileSystemProvider = new RegisteredFileSystemProvider(false);
 fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, jsonContent));
 registerFileSystemOverlay(1, fileSystemProvider);
 ```
-Creates an in-memory file system so the editor has a "file" to work with. This is required for language servers to function properly.
+Creates an in-memory file system so the editor has a "file" to work with. This is required for language servers to function properly, as it needs a file system provider to access your files.
 
 ### WebSocket Connection
 ```typescript
@@ -182,14 +184,14 @@ connection: {
     }
 }
 ```
-Connects to an external language server via WebSocket. The language server provides the intelligent features.
+Connects to an external language server via WebSocket. The language server then provides JSON language support.
 
 ## Next Steps
 
-Congratulations! You've created your first Monaco Language Client integration. From here you can:
+Congratulations! If everything worked as expected, then you've created your first Monaco Language Client integration. From here you can:
 
 1. **Explore [Configuration](configuration.md)** to customize the editor behavior
-2. **Check out [Examples](examples.md)** for other language server integrations  
+2. **Check out [Examples](examples.md)** for other language server integrations
 3. **Learn about [Extended Mode](../advanced-usage/extended-mode.md)** for more VS Code-like features
 4. **Try [Web Workers](../advanced-usage/web-workers.md)** for in-browser language servers
 
