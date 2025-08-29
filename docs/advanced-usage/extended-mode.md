@@ -1,6 +1,6 @@
 # Extended Mode
 
-Extended Mode provides the richest Monaco Language Client experience by integrating VS Code services and functionality. This mode gives you access to advanced editor features, themes, keybindings, and extension-like capabilities.
+Extended Mode provides the richest Monaco Language Client experience by integrating VS Code services and functionality. This mode gives you access to advanced editor features, themes, keybindings, and extension-like capabilities. For most applications, using the extended configuration is recommended.
 
 ## When to Use Extended Mode
 
@@ -11,9 +11,11 @@ Choose Extended Mode when you need:
 - **Extension-like capabilities** without full VS Code
 - **Advanced features** like integrated terminal, file explorer, etc.
 
+Additionally, if you already have a VSCode web extension or are using Langium, Extended Mode is definitely a good choice.
+
 ## Basic Extended Mode Setup
 
-Here's a complete example of Extended Mode configuration:
+The following is a complete example of an Extended Mode configuration. This example sets up a Monaco editor with JSON language support via a WebSocket language server.
 
 ```typescript
 import '@codingame/monaco-vscode-json-default-extension';
@@ -30,7 +32,7 @@ async function createExtendedEditor() {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
         logLevel: LogLevel.Info,
-        
+
         // VS Code-style user configuration
         userConfiguration: {
             json: JSON.stringify({
@@ -43,14 +45,14 @@ async function createExtendedEditor() {
                 'editor.guides.bracketPairsHorizontal': 'active'
             })
         },
-        
+
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
-    
+
     // Initialize VS Code API
     const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await wrapper.init();
-    
+
     // Configure language client
     const languageClientConfig = {
         connection: {
@@ -68,11 +70,11 @@ async function createExtendedEditor() {
             }
         }
     };
-    
+
     // Initialize language client
     const lcWrapper = new LanguageClientWrapper();
     await lcWrapper.init(languageClientConfig);
-    
+
     // Create editor app
     const editorApp = new EditorApp({
         codeResources: {
@@ -83,7 +85,7 @@ async function createExtendedEditor() {
             }
         }
     });
-    
+
     await editorApp.init(wrapper);
     console.log('Extended mode editor ready!');
 }
@@ -103,7 +105,7 @@ import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-over
 const vscodeApiConfig = {
     $type: 'extended',
     htmlContainer: document.getElementById('editor')!,
-    
+
     serviceOverrides: {
         ...getKeybindingsServiceOverride(),
         ...getThemeServiceOverride()
@@ -173,7 +175,7 @@ userConfiguration: {
 
 ### Extension Integration
 
-Extended Mode can work with VS Code extension APIs:
+Extended Mode can also work with VS Code extension APIs:
 
 ```typescript
 // Access VS Code API features
@@ -181,7 +183,7 @@ const activeEditor = vscode.window.activeTextEditor;
 if (activeEditor) {
     const document = activeEditor.document;
     const selection = activeEditor.selection;
-    
+
     // Use VS Code APIs
     const workspaceEdit = new vscode.WorkspaceEdit();
     workspaceEdit.replace(document.uri, selection, 'New text');
@@ -191,7 +193,7 @@ if (activeEditor) {
 
 ## File System Integration
 
-Extended Mode provides rich file system integration:
+Extended Mode provides rich file system integration, allowing you to manage files and directories in a straightforward fashion:
 
 ```typescript
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
@@ -216,7 +218,7 @@ registerFileSystemOverlay(1, fileSystemProvider);
 
 ## Multi-Language Support
 
-Extended Mode excels at handling multiple languages:
+Extended Mode also supports handling more than one language, when you need it:
 
 ```typescript
 // Import language extensions
@@ -250,35 +252,14 @@ await Promise.all(clients.map(config => {
 }));
 ```
 
-## Performance Considerations
-
-Extended Mode provides more features but requires careful performance management:
-
-### Worker Configuration
-```typescript
-monacoWorkerFactory: configureDefaultWorkerFactory({
-    // Optimize worker loading
-    workerLoaders: {
-        'TextEditorWorker': () => new Worker('./custom-editor-worker.js'),
-        'TextMateWorker': () => new Worker('./custom-textmate-worker.js')
-    }
-})
-```
-
-### Lazy Service Loading
-```typescript
-// Only load services when needed
-const vscodeApiConfig = {
-    serviceOverrides: {
-        // Load theme service only when themes are used
-        ...getThemeServiceOverride()
-    }
-};
-```
-
 ## Integration with Build Tools
 
+Working with build tools like Vite or Webpack requires some configuration to ensure workers and VS Code services function correctly.
+
 ### Vite Configuration
+
+For vite users, ensure you deduplicate the `vscode` package and set the worker format:
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
@@ -297,23 +278,28 @@ See the [webpack troubleshooting guide](../guides/troubleshooting.md#webpack-wor
 ## Common Patterns
 
 ### Editor Lifecycle Management
+
+Consider how you manage the lifecycle of your editor, language client, and VS Code API wrapper. All of these take up resources and should be tracked & disposed of properly.
+
+For example, having a manager class to encapsulate initialization and disposal is one way to handle this:
+
 ```typescript
 class ExtendedEditorManager {
     private wrapper?: MonacoVscodeApiWrapper;
     private lcWrapper?: LanguageClientWrapper;
     private editorApp?: EditorApp;
-    
+
     async initialize() {
         this.wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
         await this.wrapper.init();
-        
+
         this.lcWrapper = new LanguageClientWrapper();
         await this.lcWrapper.init(languageClientConfig);
-        
+
         this.editorApp = new EditorApp(editorConfig);
         await this.editorApp.init(this.wrapper);
     }
-    
+
     async dispose() {
         await this.editorApp?.dispose();
         await this.lcWrapper?.dispose();
@@ -323,6 +309,9 @@ class ExtendedEditorManager {
 ```
 
 ### Error Handling
+
+It's easy to run into issues during initialization and lose errors due to async operations. Don't forget to wrap initialization logic in try/catch blocks to handle errors gracefully:
+
 ```typescript
 try {
     await wrapper.init();
@@ -332,6 +321,10 @@ try {
     // Fallback to Classic Mode or show error message
 }
 ```
+
+If you're using promises, consider using `.catch()` to handle explicitly errors at each step.
+
+In either case, proper error handling will help you diagnose issues quickly later on.
 
 ## Troubleshooting
 
@@ -343,17 +336,20 @@ try {
 **Worker loading**: Configure workers properly for your build system
 
 ### Debug Configuration
+
+Lastly, don't forget to enable detailed logging during development to help catch issues early on:
+
 ```typescript
 const vscodeApiConfig = {
     logLevel: LogLevel.Debug, // Enable detailed logging
-    // ... other config
+    // ...
 };
 ```
 
 ## Next Steps
 
 - **Learn about [Web Workers](web-workers.md)** for in-browser language servers
-- **Explore [WebSocket Communication](websockets.md)** for external language servers  
+- **Explore [WebSocket Communication](websockets.md)** for external language servers
 - **Try [React Integration](react-integration.md)** for React applications
 - **See [Examples](../examples/index.md)** for complete implementations
 - **Check [Performance Guide](../guides/performance.md)** for optimization tips
