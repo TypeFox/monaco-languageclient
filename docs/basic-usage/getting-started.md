@@ -48,7 +48,7 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
-// VS Code API for file system operations
+// VSCode API for file system operations
 import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
@@ -68,13 +68,13 @@ async function createJsonEditor() {
     fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, jsonContent));
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    // Configure the editor
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
-
-    // Monaco VS Code API configuration
+    // Monaco VSCode API configuration
     const vscodeApiConfig = {
-        $type: 'extended' as const,
-        htmlContainer,
+        $type: 'extended',
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer: document.getElementById('monaco-editor-root')!
+        },
         logLevel: LogLevel.Debug,
         userConfiguration: {
             json: JSON.stringify({
@@ -87,14 +87,11 @@ async function createJsonEditor() {
 
     // Language client configuration
     const languageClientConfig = {
+        languageId: 'json',
         connection: {
             options: {
-                $type: 'WebSocketUrl' as const,
-                url: 'ws://localhost:30000/sampleServer',
-                startOptions: {
-                    onCall: () => console.log('Connected to JSON language server'),
-                    reportStatus: true
-                }
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:30000/sampleServer'
             }
         },
         clientOptions: {
@@ -107,25 +104,26 @@ async function createJsonEditor() {
         }
     };
 
-    // Create the wrapper
-    const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await wrapper.init();
+    // Create the monaco-vscode api Wrapper
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
 
     // Create language client wrapper
-    const lcWrapper = new LanguageClientWrapper();
-    await lcWrapper.init(languageClientConfig);
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
 
     // Create the editor app
     const editorApp = new EditorApp({
         codeResources: {
             main: {
-                uri: fileUri.toString(),
-                fileExt: 'json'
+                text: jsonContent,
+                uri: fileUri.path
             }
         }
     });
 
-    await editorApp.init(wrapper);
+    await editorApp.start(apiWrapper.getHtmlContainer());
+    await lcWrapper.start();
+
     console.log('JSON editor with language client is ready!');
 }
 
@@ -139,7 +137,7 @@ For this example to work, you'll need a JSON language server running on `ws://lo
 
 The easiest way to test this is to use the example from this repository:
 
-```bash
+```shell
 # In the monaco-languageclient repository
 npm install
 npm run start:example:server:json
@@ -162,20 +160,25 @@ Start your development server and open your HTML file. You should see:
 Let's break down what each part does:
 
 ### Extensions Import
+
 ```typescript
 import '@codingame/monaco-vscode-json-default-extension';
 ```
+
 This loads the JSON language support, including syntax highlighting and basic language features.
 
 ### File System Setup
+
 ```typescript
 const fileSystemProvider = new RegisteredFileSystemProvider(false);
 fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, jsonContent));
 registerFileSystemOverlay(1, fileSystemProvider);
 ```
+
 Creates an in-memory file system so the editor has a "file" to work with. This is required for language servers to function properly, as it needs a file system provider to access your files.
 
 ### WebSocket Connection
+
 ```typescript
 connection: {
     options: {
@@ -184,6 +187,7 @@ connection: {
     }
 }
 ```
+
 Connects to an external language server via WebSocket. The language server then provides JSON language support.
 
 ## Next Steps
@@ -192,7 +196,7 @@ Congratulations! If everything worked as expected, then you've created your firs
 
 1. **Explore [Configuration](configuration.md)** to customize the editor behavior
 2. **Check out [Examples](examples.md)** for other language server integrations
-3. **Learn about [Extended Mode](../advanced-usage/extended-mode.md)** for more VS Code-like features
+3. **Learn about [Extended Mode](../advanced-usage/extended-mode.md)** for more VSCode-like features
 4. **Try [Web Workers](../advanced-usage/web-workers.md)** for in-browser language servers
 
 ## Troubleshooting

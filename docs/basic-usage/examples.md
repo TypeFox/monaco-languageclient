@@ -2,30 +2,54 @@
 
 This page provides simple, focused examples that demonstrate core Monaco Language Client functionality. Each example is minimal and self-contained to help you understand specific concepts.
 
-## Example 1: Simple JSON Editor
+## Example 1: JSON Editor (extended mode)
 
-A minimal JSON editor with language server support:
+Using `monaco-languageclient` and `monaco-editor` to connect a JSON language server in extended mode:
 
 ```typescript
+// Import required extensions for JSON support
 import '@codingame/monaco-vscode-json-default-extension';
+
+// Import Monaco Language Client components
 import { EditorApp } from 'monaco-languageclient/editorApp';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+
+// VSCode API for file system operations
 import * as vscode from 'vscode';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 
 async function createJsonEditor() {
-    // Set up VS Code API
-    const wrapper = new MonacoVscodeApiWrapper({
-        $type: 'extended',
-        htmlContainer: document.getElementById('editor')!,
-        monacoWorkerFactory: configureDefaultWorkerFactory
-    });
-    await wrapper.init();
+    const languageId = 'json';
+    // Sample JSON content
+    const code = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
+}`;
+    const codeUri = '/workspace/model.json';
 
-    // Configure language client
-    const lcWrapper = new LanguageClientWrapper();
-    await lcWrapper.init({
+    // Monaco VSCode API configuration
+    const vscodeApiConfig = {
+        $type: 'extended',
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer: document.getElementById('monaco-editor-root')!
+        },
+        logLevel: LogLevel.Debug,
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.wordBasedSuggestions': 'off'
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    // Language client configuration
+    const languageClientConfig = {
+        languageId: 'json',
         connection: {
             options: {
                 $type: 'WebSocketUrl',
@@ -33,58 +57,127 @@ async function createJsonEditor() {
             }
         },
         clientOptions: {
-            documentSelector: ['json']
+            documentSelector: ['json'],
+            workspaceFolder: {
+                index: 0,
+                name: 'workspace',
+                uri: vscode.Uri.file('/workspace')
+            }
         }
-    });
+    };
 
-    // Create editor with JSON content
+    // Create the monaco-vscode api Wrapper
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
+
+    // Create language client wrapper
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+
+    // Create the editor app
     const editorApp = new EditorApp({
         codeResources: {
             main: {
-                text: '{\n  "name": "example",\n  "version": "1.0.0"\n}',
-                uri: '/workspace/package.json',
-                fileExt: 'json'
+                text: jsonContent,
+                uri: fileUri.path
             }
         }
     });
 
-    await editorApp.init(wrapper);
+    await editorApp.start(apiWrapper.getHtmlContainer());
+    await lcWrapper.start();
+
+    console.log('JSON editor with language client is ready!');
 }
 
-createJsonEditor();
+// Start the editor
+createJsonEditor().catch(console.error);
 ```
 
-## Example 2: Classic Mode Integration
+## Example 2: JSON Editor (classic mode)
 
-Using Monaco Language Client with standard Monaco Editor:
+Using `monaco-languageclient` and `monaco-editor` to connect a JSON language server in classic mode see [json_classic example](../../packages/examples/src/json/client/classic.ts):
 
 ```typescript
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { createConnection } from 'vscode-ws-jsonrpc';
-import * as monaco from 'monaco-editor';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { Logger } from 'monaco-languageclient/common';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
 
-// Create Monaco editor
-const editor = monaco.editor.create(document.getElementById('container')!, {
-    value: 'console.log("Hello World");',
-    language: 'javascript'
-});
+export const runClient = async () => {
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
+        $type: 'classic',
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
+        logLevel: LogLevel.Debug,
+        userConfiguration: {
+            json: JSON.stringify({
+                'editor.experimental.asyncTokenization': true
+            })
+        },
+        monacoWorkerFactory: configureClassicWorkerFactory
+    };
 
-// Create WebSocket connection
-const webSocket = new WebSocket('ws://localhost:3000/javascript');
-const connection = createConnection(webSocket);
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
 
-// Create language client
-const client = new MonacoLanguageClient({
-    name: 'JavaScript Client',
-    clientOptions: {
-        documentSelector: [{ language: 'javascript' }]
-    },
-    connection
-});
+    const languageId = 'json';
+    const code = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
+}`;
+    const codeUri = '/workspace/model.json';
+    const editorAppConfig: EditorAppConfig = {
+        codeResources: {
+            modified: {
+                text: code,
+                uri: codeUri
+            }
+        },
+        languageDef: {
+            languageExtensionConfig: {
+                id: languageId,
+                extensions: ['.json', '.jsonc'],
+                aliases: ['JSON', 'json'],
+                mimetypes: ['application/json']
+            }
+        }
+    };
+    const editorApp = new EditorApp(editorAppConfig);
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
-// Start the client
-await client.start();
-connection.listen();
+    const languageClientConfig: LanguageClientConfig = {
+        languageId,
+        clientOptions: {
+            documentSelector: [languageId]
+        },
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                url: 'ws://localhost:30000/sampleServer'
+            }
+        }
+    };
+    const languageClientWrapper = new LanguageClientWrapper(
+        languageClientConfig,
+        apiWrapper.getLogger()
+    );
+    await languageClientWrapper.start();
+};
+
+export const configureClassicWorkerFactory = (logger?: Logger) => {
+    const defaultworkerLoaders = defineDefaultWorkerLoaders();
+    // remove textmate worker as it is not compatible with classic mode
+    defaultworkerLoaders.TextMateWorker = undefined;
+    useWorkerFactory({
+        workerLoaders: defaultworkerLoaders,
+        logger
+    });
+};
 ```
 
 ## Example 3: In-Memory File System
@@ -100,7 +193,9 @@ const fileSystemProvider = new RegisteredFileSystemProvider(false);
 
 // Add files to memory
 const files = [
-    { path: '/workspace/main.ts', content: 'const greeting = "Hello, TypeScript!";' },
+    { path: '/workspace/main.java', content: `public static void main (String[] args) {
+    System.out.println("Hello World!");
+}`,
     { path: '/workspace/package.json', content: '{"name": "my-app", "version": "1.0.0"}' }
 ];
 
@@ -120,15 +215,15 @@ Handling multiple languages in one editor:
 
 ```typescript
 import '@codingame/monaco-vscode-json-default-extension';
-import '@codingame/monaco-vscode-typescript-language-features-default-extension';
+import '@codingame/monacovscode-java-default-extension';
 
 async function createMultiLanguageEditor() {
-    const wrapper = new MonacoVscodeApiWrapper({
+    const apiWrapper = new MonacoVscodeApiWrapper({
         $type: 'extended',
         htmlContainer: document.getElementById('editor')!,
         monacoWorkerFactory: configureDefaultWorkerFactory
     });
-    await wrapper.init();
+    await apiWrapper.start();
 
     // JSON Language Client
     const jsonClient = new LanguageClientWrapper();
@@ -137,14 +232,14 @@ async function createMultiLanguageEditor() {
         clientOptions: { documentSelector: ['json'] }
     });
 
-    // TypeScript Language Client
-    const tsClient = new LanguageClientWrapper();
-    await tsClient.init({
-        connection: { options: { $type: 'WebSocketUrl', url: 'ws://localhost:3002/typescript' }},
-        clientOptions: { documentSelector: ['typescript'] }
+    // Java Language Client
+    const javaClient = new LanguageClientWrapper();
+    await javaClient.init({
+        connection: { options: { $type: 'WebSocketUrl', url: 'ws://localhost:3002/java' }},
+        clientOptions: { documentSelector: ['java'] }
     });
 
-    // Editor can now handle both JSON and TypeScript files
+    // Editor can now handle both JSON and Java files
     const editorApp = new EditorApp({
         codeResources: {
             json: { text: '{"test": true}', uri: '/workspace/config.json', fileExt: 'json' },
@@ -167,12 +262,13 @@ async function createWebWorkerClient() {
     // Create worker
     const worker = new Worker('./language-server.js', { type: 'module' });
 
-    // Set up message channel
-    const channel = new MessageChannel();
-    worker.postMessage({ port: channel.port2 }, [channel.port2]);
+    const reader = new BrowserMessageReader(worker);
+    const writer = new BrowserMessageWriter(worker);
 
-    const reader = new BrowserMessageReader(channel.port1);
-    const writer = new BrowserMessageWriter(channel.port1);
+    // log every message received from the worker
+    reader.listen((message) => {
+        console.log('Received message from worker:', message);
+    });
 
     // Configure language client
     const lcWrapper = new LanguageClientWrapper();
@@ -180,53 +276,15 @@ async function createWebWorkerClient() {
         connection: {
             options: {
                 $type: 'MessageChannel',
-                reader,
-                writer
-            }
+                worker
+            },
+            messageTransports: { reader, writer }
         },
         clientOptions: {
             documentSelector: ['mydsl']
         }
     });
 }
-```
-
-## Example 6: Custom Editor Configuration
-
-Customizing Monaco Editor with language client:
-
-```typescript
-const editorConfig = {
-    userConfiguration: {
-        json: JSON.stringify({
-            // Theme and appearance
-            'workbench.colorTheme': 'Default Light Modern',
-            'editor.fontSize': 16,
-            'editor.fontFamily': 'JetBrains Mono, Consolas',
-
-            // Editor behavior
-            'editor.wordWrap': 'on',
-            'editor.lineNumbers': 'relative',
-            'editor.minimap.enabled': false,
-            'editor.folding': true,
-
-            // Language features
-            'editor.quickSuggestions': true,
-            'editor.parameterHints.enabled': true,
-            'editor.suggest.insertMode': 'replace',
-
-            // Advanced features
-            'editor.inlineSuggest.enabled': true,
-            'editor.bracketPairColorization.enabled': true
-        })
-    }
-};
-
-const wrapper = new MonacoVscodeApiWrapper({
-    $type: 'extended',
-    htmlContainer: document.getElementById('editor')!,
-    ...editorConfig
-});
 ```
 
 ## Running the Examples
@@ -236,12 +294,14 @@ To run these examples:
 1. **Install dependencies** as described in [Installation](../installation.md)
 
 2. **Start language servers** (for WebSocket examples):
-   ```bash
+
+   ```shell
    # From the monaco-languageclient repository
    npm run start:example:server:json  # For JSON examples
    ```
 
 3. **Set up your HTML file**:
+
    ```html
    <div id="editor" style="height: 100vh;"></div>
    <script type="module" src="./your-example.ts"></script>

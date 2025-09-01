@@ -1,10 +1,11 @@
 # Classic Mode
 
-Classic Mode provides a streamlined language server integration using the Monaco Editor with a simplified VS Code service configuration. While still built on the VS Code API wrapper foundation, it offers reduced complexity and focuses on core language server features without advanced IDE capabilities.
+Classic Mode provides a streamlined language server integration using the Monaco Editor with a simplified VSCode service configuration. While still built on the VSCode API wrapper foundation, it offers reduced complexity and focuses on core language server features without advanced IDE capabilities.
 
 ## When to Use Classic Mode
 
 Choose Classic Mode when you need:
+
 - **Simplified setup** with fewer service dependencies
 - **Core language features** (completions, diagnostics, hover) without advanced IDE features
 - **Monarch syntax highlighting** instead of TextMate semantic highlighting
@@ -16,7 +17,7 @@ Choose Classic Mode when you need:
 | Feature | Classic Mode | Extended Mode |
 |---------|-------------|--------------|
 | Highlighting | Monarch | TextMate |
-| Services | Basic editor services | Full VS Code service stack |
+| Services | Basic editor services | Full VSCode service stack |
 | Views/UI | Editor only | Explorer, panels, status bar, etc. |
 | Workspace | Limited workspace support | Full workspace awareness |
 | Extensions | Basic language registration | Rich extension system |
@@ -37,7 +38,7 @@ import '@codingame/monaco-vscode-json-default-extension';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
-// 1. Configure the VS Code API in classic mode
+// 1. Configure the VSCode API in classic mode
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'classic', // This is the key difference from extended mode
     logLevel: LogLevel.Debug,
@@ -53,9 +54,9 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
     monacoWorkerFactory: configureDefaultWorkerFactory
 };
 
-// 2. Initialize the VS Code API wrapper
+// 2. Initialize the VSCode API wrapper
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-await apiWrapper.init();
+await apiWrapper.start();
 
 // 3. Register the language with Monaco
 monaco.languages.register({
@@ -103,6 +104,7 @@ await languageClientWrapper.start();
 The project supports three connection types for language servers:
 
 ### WebSocket URL Connection
+
 ```typescript
 const languageClientConfig: LanguageClientConfig = {
     clientOptions: {
@@ -205,6 +207,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
 ```
 
 ### Language Registration with Extensions
+
 ```typescript
 import '@codingame/monaco-vscode-json-default-extension';
 import '@codingame/monaco-vscode-python-default-extension';
@@ -220,6 +223,7 @@ monaco.languages.register({
 ```
 
 ### User Configuration
+
 ```typescript
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'classic',
@@ -238,6 +242,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
 ## Working with Files
 
 ### In-Memory File System
+
 ```typescript
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
@@ -266,6 +271,7 @@ registerFileSystemOverlay(1, fileSystemProvider);
 ```
 
 ### Workspace Configuration
+
 ```typescript
 const languageClientConfig: LanguageClientConfig = {
     clientOptions: {
@@ -324,17 +330,19 @@ editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
 
 The project includes working Classic Mode examples:
 
-### Bare Client (`packages/examples/bare.html`)
-**Location**: `packages/examples/src/bare/client.ts`
+### Json Classic Client (`packages/examples/json_classic.html`)
+
+**Location**: `packages/examples/src/json/client/classic.ts`
 **Description**: Minimal JSON language client setup demonstrating core Classic Mode patterns
 
-```bash
+```shell
 # Run the example
 npm run dev
-# Visit http://localhost:20001/bare.html
+# Visit http://localhost:20001/json_classic.html
 ```
 
 ### Python Language Server (Extended Mode)
+
 **Location**: `packages/examples/src/python/`
 **Note**: While this example uses extended mode (`$type: 'extended'`), it demonstrates the same foundational patterns used in classic mode with additional services.
 
@@ -342,26 +350,29 @@ npm run dev
 
 Unlike vanilla Monaco Editor, this project's Classic Mode:
 
-- **Requires VS Code API Wrapper**: Always needs `MonacoVscodeApiWrapper` initialization
-- **Uses VS Code Editor API**: Imports from `@codingame/monaco-vscode-editor-api`, not `monaco-editor`
+- **Requires VSCode API Wrapper**: Always needs `MonacoVscodeApiWrapper` initialization
+- **Uses VSCode Editor API**: Imports from `@codingame/monaco-vscode-editor-api`, not `monaco-editor`
 - **Language Client Wrapper**: Uses `LanguageClientWrapper` instead of direct language client instantiation
 - **Service Configuration**: Requires worker factory and service overrides
-- **Extension Integration**: Uses VS Code extension system for language definitions
+- **Extension Integration**: Uses VSCode extension system for language definitions
 
 ## Troubleshooting
 
 ### Common Issues
 
 **Language features not working**:
+
 - Verify WebSocket connection is established
 - Check document selector matches your language ID
 - Ensure language server is running and accessible
 
 **Import errors**:
+
 - Use `@codingame/monaco-vscode-editor-api` instead of `monaco-editor`
 - Import service overrides from correct packages
 
 **Worker factory errors**:
+
 - Always include `configureDefaultWorkerFactory` in configuration
 - Ensure worker factory is configured before API wrapper initialization
 

@@ -36,7 +36,6 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
       - [Application Playground (Location)](#application-playground-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
-      - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
       - [Browser example (Location)](#browser-example-location)
       - [Purely monaco-editor related examples](#purely-monaco-editor-related-examples)
       - [Server processes](#server-processes)
@@ -138,7 +137,8 @@ The examples demonstrate mutliple things:
 #### JSON Language client and language server example ([Location](./packages/examples/src/json))
 
 The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
-The **json-client** contains the [editor app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-client using extended mode** as [editor app](./packages/examples/src/json/client/extended.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-client using classic mode** as [editor app](./packages/examples/src/json/client/classic.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 #### Python Language client and pyright language server example ([Location](./packages/examples/src/python))
 
@@ -174,10 +174,6 @@ It contains both the [language client](./packages/examples/src/langium/langium-d
 
 It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
 It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
-
-#### bare monaco-languageclient ([Location](./packages/examples/src/bare))
-
-This demonstrates how the `JSON Language client and language server example` can be realized with just the pure monaco api and no abstraction via the `editor app`. You find the implementation [here](./packages/examples/src/bare/client.ts).
 
 #### Browser example ([Location](./packages/examples/src/browser))
 

@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { Logger } from 'monaco-languageclient/common';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
@@ -14,15 +14,15 @@ export const runClient = async () => {
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'classic',
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
         logLevel: LogLevel.Debug,
         userConfiguration: {
             json: JSON.stringify({
                 'editor.experimental.asyncTokenization': true
             })
-        },
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer
         },
         monacoWorkerFactory: configureClassicWorkerFactory
     };
@@ -30,29 +30,35 @@ export const runClient = async () => {
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    // register the JSON language with Monaco
-    monaco.languages.register({
-        id: 'json',
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
-
-    // create monaco editor
-    monaco.editor.create(htmlContainer, {
-        value: `{
+    const languageId = 'json';
+    const code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
-}`,
-        language: 'json',
-        automaticLayout: true,
-        wordBasedSuggestions: 'off'
-    });
+}`;
+    const codeUri = '/workspace/model.json';
+    const editorAppConfig: EditorAppConfig = {
+        codeResources: {
+            modified: {
+                text: code,
+                uri: codeUri
+            }
+        },
+        languageDef: {
+            languageExtensionConfig: {
+                id: languageId,
+                extensions: ['.json', '.jsonc'],
+                aliases: ['JSON', 'json'],
+                mimetypes: ['application/json']
+            }
+        }
+    };
+    const editorApp = new EditorApp(editorAppConfig);
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
     const languageClientConfig: LanguageClientConfig = {
-        languageId: 'json',
+        languageId,
         clientOptions: {
-            documentSelector: ['json']
+            documentSelector: [languageId]
         },
         connection: {
             options: {

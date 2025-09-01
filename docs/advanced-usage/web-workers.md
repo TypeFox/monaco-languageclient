@@ -128,15 +128,15 @@ async function setupWebWorkerLanguageClient() {
     const reader = new BrowserMessageReader(channel.port1);
     const writer = new BrowserMessageWriter(channel.port1);
 
-    // Configure VS Code API wrapper
+    // Configure VSCode API wrapper
     const vscodeApiConfig = {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 
-    const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await wrapper.init();
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
 
     // Configure language client
     const languageClientConfig = {
@@ -173,7 +173,7 @@ async function setupWebWorkerLanguageClient() {
         }
     });
 
-    await editorApp.start(vscodeApiConfig.htmlContainer!);
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
     console.log('Web Worker language server is ready!');
 }
@@ -568,7 +568,7 @@ The project includes excellent Web Worker examples using Langium:
 **Workers**: Multiple worker variants in `packages/examples/src/langium/statemachine/worker/`
 **Description**: Custom state machine DSL with full language server features in Web Workers
 
-```bash
+```shell
 # Run the Web Worker examples
 npm run dev
 
@@ -583,6 +583,7 @@ npm run dev
 The project's Langium examples demonstrate the actual patterns documented here:
 
 **Worker Setup** (`langium-server.ts`):
+
 ```typescript
 import { EmptyFileSystem } from 'langium';
 import { startLanguageServer } from 'langium/lsp';
@@ -602,6 +603,7 @@ startLanguageServer(shared);
 ```
 
 **Client Integration** (`extendedConfig.ts`):
+
 ```typescript
 const worker = new Worker(workerUrl, {
     type: 'module',

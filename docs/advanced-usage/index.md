@@ -4,7 +4,7 @@ This section covers advanced usage of the Monaco Language Client. These guides a
 
 ## Section Contents
 
-- **[Extended Mode](extended-mode.md)** - Using VS Code services for rich editor functionality
+- **[Extended Mode](extended-mode.md)** - Using VSCode services for rich editor functionality
 - **[Extended Mode with Langium](extended-mode-with-langium.md)** - Building custom language servers with Langium
 - **[Classic Mode](classic-mode.md)** - Lightweight integration with standalone Monaco Editor
 - **[Web Workers](web-workers.md)** - Running language servers in-browser using Web Workers
@@ -15,12 +15,14 @@ This section covers advanced usage of the Monaco Language Client. These guides a
 
 ### Extended vs Classic Mode
 
-**Extended Mode** leverages `@codingame/monaco-vscode-api` to provide VS Code-like functionality in the web:
-- VS Code service support (themes, keybindings, extensions)
-- Better language server integration
+**Extended Mode** leverages `@codingame/monaco-vscode-api` to provide VSCode-like functionality in the web:
+
+- VSCode service support (themes, keybindings, extensions)
+- Build a "partial" VSCode application with service you want and need
 - Fuller feature set than with the classic configuration
 
 **Classic Mode** uses standalone Monaco Editor with language client features:
+
 - Simpler integration model
 - Smaller bundle size
 - Direct Monaco Editor API access
@@ -29,6 +31,7 @@ This section covers advanced usage of the Monaco Language Client. These guides a
 ### Communication Patterns
 
 **WebSocket Communication**: Connect to external language servers running in separate processes
+
 ```typescript
 connection: {
   options: {
@@ -39,6 +42,7 @@ connection: {
 ```
 
 **Web Worker Communication**: Run language servers via web workers in the browser
+
 ```typescript
 const worker = new Worker('./language-server.js', { type: 'module' });
 // Configure worker communication...
@@ -55,7 +59,7 @@ Monaco Language Client supports various architectural approaches:
 
 ## Choosing the Right Approach
 
-If you're building a VS Code-like experience in the browser, [Extended Mode](extended-mode.md) is recommended.
+If you're building a VSCode-like experience in the browser, [Extended Mode](extended-mode.md) is recommended.
 
 For lightweight setups, direct Monaco Editor access, or applications where the extended mode incurs too much overhead, [Classic Mode](classic-mode.md) may be more suitable. However it's still recommended to start with extended mode first.
 

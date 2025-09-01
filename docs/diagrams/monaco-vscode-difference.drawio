@@ -1,0 +1,96 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Page-1" id="97916047-d0de-89f5-080d-49f4d83e522f">
+    <mxGraphModel dx="1780" dy="1070" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="k4CSAVVTnt-oedxpcEqQ-66" value="&lt;font style=&quot;color: rgb(107, 107, 107); font-size: 30px;&quot;&gt;&lt;b style=&quot;&quot;&gt;VSCode&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(107, 107, 107); font-size: 30px;&quot;&gt;&lt;b style=&quot;&quot;&gt;(Web or Desktop)&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;fontSize=24;fillColor=#fa6800;strokeColor=#C73500;fontColor=default;shadow=0;glass=0;sketch=1;curveFitting=1;jiggle=2;opacity=80;" parent="1" vertex="1">
+          <mxGeometry x="1050" y="450" width="590" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-1" value="&lt;font style=&quot;font-size: 36px; color: rgb(3, 3, 3);&quot;&gt;&lt;b style=&quot;&quot;&gt;monaco-editor&lt;/b&gt;&lt;/font&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;fontSize=24;fillColor=#cdeb8b;strokeColor=#36393d;shadow=0;glass=0;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="1">
+          <mxGeometry x="47" y="440" width="530" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;curved=0;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="PFJihABpT5-H_5MAtVqF-4" target="PFJihABpT5-H_5MAtVqF-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1580" y="120" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="1680" y="106" />
+              <mxPoint x="1680" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-19" value="&lt;span style=&quot;font-size: 32px;&quot;&gt;vscode-&lt;/span&gt;&lt;font style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 32px;&quot;&gt;languageclient&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 32px; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;requires the vscode api&lt;/span&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PFJihABpT5-H_5MAtVqF-11">
+          <mxGeometry x="0.0492" relative="1" as="geometry">
+            <mxPoint x="-181" y="-232" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.998;entryY=0.346;entryDx=0;entryDy=0;strokeColor=default;curved=0;strokeWidth=3;endArrow=block;endFill=1;startArrow=none;startFill=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" edge="1" parent="1" source="PFJihABpT5-H_5MAtVqF-4" target="PFJihABpT5-H_5MAtVqF-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="662" y="300.0000000000002" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="680" y="83" />
+              <mxPoint x="680" y="671" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-4" value="&lt;b&gt;vscode-languageclient&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=24;fillColor=#AD8ECC;strokeColor=#432D57;fontColor=#ffffff;align=center;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1021.25" y="60" width="477.5" height="91.25" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=3;dashed=1;endArrow=none;endFill=0;strokeColor=#808080;curved=0;" edge="1" parent="1" source="PFJihABpT5-H_5MAtVqF-5" target="PFJihABpT5-H_5MAtVqF-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="548" />
+              <mxPoint x="920" y="840" />
+              <mxPoint x="305" y="840" />
+              <mxPoint x="305" y="760" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-7" value="&lt;font style=&quot;font-size: 32px;&quot;&gt;artifcially extracted&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 32px;&quot;&gt;npm package&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PFJihABpT5-H_5MAtVqF-6">
+          <mxGeometry x="-0.198" y="-7" relative="1" as="geometry">
+            <mxPoint x="-143" y="-47" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=3;endArrow=block;endFill=1;curved=0;" edge="1" parent="1" source="PFJihABpT5-H_5MAtVqF-5" target="PFJihABpT5-H_5MAtVqF-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1580" y="548" />
+              <mxPoint x="1580" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-5" value="&lt;font style=&quot;font-size: 36px; color: rgb(0, 0, 0);&quot;&gt;&lt;b style=&quot;&quot;&gt;monaco-editor&lt;/b&gt;&lt;/font&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;fontSize=24;fillColor=#cdeb8b;strokeColor=#36393d;shadow=0;glass=0;textOpacity=80;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="490" width="280" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-9" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;monaco api&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="117" y="650" width="390" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-10" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;vscode api&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="760" width="420" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;curved=0;strokeWidth=3;endArrow=block;endFill=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;startArrow=block;startFill=1;" edge="1" parent="1" source="PFJihABpT5-H_5MAtVqF-4" target="PFJihABpT5-H_5MAtVqF-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="669" y="380.0000000000002" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="720" y="128" />
+              <mxPoint x="720" y="695" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-23" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;monaco to&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 24px;&quot;&gt;language server protocol&lt;/span&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PFJihABpT5-H_5MAtVqF-15">
+          <mxGeometry x="0.03" relative="1" as="geometry">
+            <mxPoint x="140" y="57" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-22" value="&lt;span style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Bi-Directional&lt;/font&gt;&lt;/div&gt;&lt;span style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Api Translation&lt;/font&gt;&lt;/span&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;required&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;align=center;fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="550" y="120" width="310" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="PFJihABpT5-H_5MAtVqF-24" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;language server protocol&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;to&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-size: 24px;&quot;&gt;monaco&lt;/span&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="530" y="360" as="geometry">
+            <mxPoint x="5" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

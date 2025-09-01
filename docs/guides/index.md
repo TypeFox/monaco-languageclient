@@ -11,16 +11,19 @@ This section provides in-depth guides for specific topics related to Monaco Lang
 ## Guide Categories
 
 ### Development Guides
+
 - Migration strategies and version upgrade paths
 - Troubleshooting development environment issues
 - Performance optimization during development
 
 ### Production Guides
+
 - Deployment best practices and infrastructure setup
 - Performance monitoring and optimization
 - Scaling language server infrastructure
 
 ### Maintenance Guides
+
 - Upgrading dependencies and handling breaking changes
 - Debugging production issues
 - Long-term maintenance strategies

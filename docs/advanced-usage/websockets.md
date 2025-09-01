@@ -5,6 +5,7 @@ WebSocket communication enables Monaco Language Client to connect to external la
 ## When to Use WebSockets
 
 Choose WebSocket communication when you need:
+
 - **External language servers** running in Node.js, Python, Java, etc.
 - **Existing language servers** that you want to integrate
 - **Server-side processing** for heavy language operations
@@ -27,7 +28,7 @@ import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
 async function connectToLanguageServer() {
-    // Configure VS Code API wrapper
+    // Configure VSCode API wrapper
     const vscodeApiConfig = {
         $type: 'extended' as const,
         htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -35,8 +36,8 @@ async function connectToLanguageServer() {
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 
-    const wrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await wrapper.init();
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
 
     // Configure WebSocket connection to language server
     const languageClientConfig = {
@@ -88,7 +89,7 @@ async function connectToLanguageServer() {
         }
     });
 
-    await editorApp.start(vscodeApiConfig.htmlContainer!);
+    await editorApp.start(apiWrapper.getHtmlContainer());
     console.log('WebSocket language client ready!');
 }
 
@@ -674,20 +675,22 @@ wss.on('connection', (webSocket, request) => {
 
 The project includes working WebSocket examples you can run:
 
-### JSON Language Server (`packages/examples/bare.html`)
-**Location**: `packages/examples/src/bare/client.ts`
+### JSON Language Server (`packages/examples/json_classic.html`)
+
+**Location**: `packages/examples/src/json/client/classic.ts`
 **Description**: Basic JSON language server connection via WebSocket using Classic Mode
 
 ### Python Language Server (`packages/examples/python.html`)
+
 **Location**: `packages/examples/src/python/`
 **Description**: Full Python development environment with Pyright server via WebSocket
 
-```bash
+```shell
 # Run the examples
 npm run dev
 
 # Visit the WebSocket examples:
-# http://localhost:20001/bare.html - JSON server
+# http://localhost:20001/json_classic.html - JSON server
 # http://localhost:20001/python.html - Python server
 
 # Make sure the corresponding language servers are running:
@@ -699,7 +702,7 @@ npm run start:example:server:python  # For Python example
 
 The project includes scripts to start the WebSocket language servers:
 
-```bash
+```shell
 # Start JSON language server on port 30000
 npm run start:example:server:json
 

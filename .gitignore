@@ -6,3 +6,6 @@ node_modules
 .angular
 __screenshots__
 .chrome
+
+# draw.io backup files
+*.bkp

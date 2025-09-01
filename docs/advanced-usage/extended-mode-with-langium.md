@@ -1,23 +1,23 @@
 # Extended Mode with Langium
 
-This guide demonstrates how to integrate [Langium](https://langium.org/)-based language servers with the `monaco-languageclient` in Extended Mode. Extended mode provides VS Code-compatible services that support powerful features for Langium language servers running in the browser.
+This guide demonstrates how to integrate [Langium](https://langium.org/)-based language servers with the `monaco-languageclient` in Extended Mode. Extended mode provides VSCode-compatible services that support powerful features for Langium language servers running in the browser.
 
 ## Why Use Extended Mode with Langium?
 
 Extended mode brings several key advantages when working with Langium language servers:
 
-- **VS Code Services Integration**: Access to a file system, workspace, keybindings, and other VS Code APIs that Langium language servers expect
+- **VSCode Services Integration**: Access to a file system, workspace, keybindings, and other VSCode APIs that Langium language servers expect
 - **Extension System**: Proper language registration with syntax highlighting, configuration files, and language contributions
 - **Multi-file Workspaces**: Support for complex projects with multiple files and proper workspace management
 - **Advanced Features**: Features like go-to-definition across files, project-wide refactoring, and workspace-wide validation work seamlessly
 
 ## Architecture Overview
 
-In extended mode, Langium language servers run as Web Workers and communicate with the Monaco editor through the VS Code API wrapper:
+In extended mode, Langium language servers run as Web Workers and communicate with the Monaco editor through the VSCode API wrapper:
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
-│   Monaco Editor │◄──►│ VS Code API      │◄──►│ Langium Language    │
+│   Monaco Editor │◄──►│ VSCode API      │◄──►│ Langium Language    │
 │                 │    │ Wrapper          │    │ Server (Web Worker) │
 │   + Extensions  │    │ + Services       │    │                     │
 └─────────────────┘    └──────────────────┘    └─────────────────────┘
@@ -100,7 +100,7 @@ const worker = new Worker(workerUrl, {
 const reader = new BrowserMessageReader(worker);
 const writer = new BrowserMessageWriter(worker);
 
-// 3. Set up VS Code API with extended mode
+// 3. Set up VSCode API with extended mode
 const vscodeApiConfig = {
     $type: 'extended' as const,
     logLevel: LogLevel.Debug,
@@ -145,7 +145,7 @@ const languageClientConfig = {
 
 // 5. Initialize everything
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-await apiWrapper.init();
+await apiWrapper.start();
 
 const lcWrapper = new LanguageClientWrapper(languageClientConfig);
 await lcWrapper.start();
@@ -159,7 +159,7 @@ const editorApp = new EditorApp({
         }
     }
 });
-await editorApp.start(vscodeApiConfig.htmlContainer);
+await editorApp.start(apiWrapper.getHtmlContainer());
 ```
 
 ### File System Integration
@@ -225,7 +225,7 @@ const editorApp2 = new EditorApp({
 
 The project includes working examples you can run immediately:
 
-```bash
+```shell
 # Install dependencies and build
 npm ci && npm run build
 
@@ -246,11 +246,11 @@ Visit `http://localhost:20001` and try:
 
 ## Key Benefits of Extended Mode
 
-1. **Language Registration**: Proper language ID registration with VS Code's extension system
+1. **Language Registration**: Proper language ID registration with VSCode's extension system
 2. **Syntax Highlighting**: TextMate grammar support for rich syntax highlighting
 3. **Configuration Files**: Language-specific settings and configuration
 4. **Workspace Services**: Full workspace awareness with multi-file projects
-5. **VS Code Compatibility**: Features that Langium language servers expect from VS Code
+5. **VSCode Compatibility**: Features that Langium language servers expect from VSCode
 
 ## Next Steps
 
@@ -259,4 +259,4 @@ Visit `http://localhost:20001` and try:
 - See [Web Workers guide](./web-workers.md) for advanced worker patterns
 - Review the [API Reference](../api-reference/monaco-languageclient.md) for detailed configuration options
 
-The extended mode provides the full power of VS Code's architecture for your Langium-based language servers, enabling rich editing experiences that work seamlessly in the browser.
+The extended mode provides the full power of VSCode's architecture for your Langium-based language servers, enabling rich editing experiences that work seamlessly in the browser.

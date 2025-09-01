@@ -1,65 +1,94 @@
 # Configuration
 
-This guide covers important configuration options for the Monaco Language Client. We'll explore both Extended and Classic modes, and show you how to customize the editor's behavior.
+This guide covers important configuration options for `monaco-languageclient`. We'll explore both Extended and Classic modes, and show you how to customize the editor's behavior.
 
 ## Configuration Structure
 
 The Monaco Language Client uses a layered configuration approach:
 
-1. **VS Code API Configuration** - Controls editor services and behavior
+1. **VSCode API Configuration** - Controls editor services and behavior
 2. **Language Client Configuration** - Manages connection to language servers
 3. **Editor App Configuration** - Defines code resources and editor setup
 
+## Monaco VSCode API Config
+
+Independent of the type of configuration (`classic` or `extendend`), you have to configure and start the `MonacoVscodeApiWrapper` first. The most minimal comnfiguration you can apply is this:
+
+```typescript
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+        $type: 'EditorService',
+        htmlContainer: document.getElementById('my-editor-dom-element')!
+    }
+};
+
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.start();
+```
+
 ## Extended Mode Configuration
 
-Extended Mode provides a rich feature set by leveraging VS Code services. This is generally the recommended mode for most applications.
+Extended Mode provides a rich feature set by leveraging VSCode services. This is generally the recommended mode for most applications. If you use extended mode `MonacoVscodeApiWrapper` will automatically initialize Textmate and Themes related services. This disable monarch and language related feature in `monaco-editor` and only allows to build a "partial" VSCode Web application.
 
 ### Basic Extended Configuration
 
 ```typescript
-import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 
-const vscodeApiConfig = {
-    $type: 'extended' as const,
-    htmlContainer: document.getElementById('editor')!,
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+        $type: 'EditorService',
+        htmlContainer: document.getElementById('my-editor-dom-element')!
+    }
     logLevel: LogLevel.Info,
 
-    // User settings (like VS Code settings.json)
+    // User settings (like VSCode settings.json)
     userConfiguration: {
         json: JSON.stringify({
-            'workbench.colorTheme': 'Default Dark Modern',
-            'editor.fontSize': 14,
-            'editor.tabSize': 2,
-            'editor.wordWrap': 'on',
-            'editor.minimap.enabled': false
+            'workbench.colorTheme': 'Default Dark Modern'
         })
     },
 
-    // Worker configuration for Monaco services
+    // spefic features handled by web workers
     monacoWorkerFactory: configureDefaultWorkerFactory
 };
+
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.start();
 ```
 
 ### Service Overrides
 
-You can also override VS Code services to customize their behavior. For example, to customize keybindings and themes:
+You can also override VSCode services to customize their behavior. For example, to customize keybindings and locale configuration:
 
 ```typescript
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
+import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 
-const vscodeApiConfig = {
-    $type: 'extended' as const,
-    htmlContainer: document.getElementById('editor')!,
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+        $type: 'EditorService',
+        htmlContainer: document.getElementById('my-editor-dom-element')!
+    }
 
     // Override specific services
     serviceOverrides: {
         ...getKeybindingsServiceOverride(),
-        ...getThemeServiceOverride()
+        ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
     }
 };
+
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.start();
 ```
 
 ### Language Client Configuration
@@ -67,22 +96,26 @@ const vscodeApiConfig = {
 You can also configure how the editor connects to language servers by setting connection & client options:
 
 ```typescript
-const languageClientConfig = {
+import { type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+
+const languageClientConfig: LanguageClientConfig = {
     connection: {
         options: {
             // WebSocket connection to external server
-            $type: 'WebSocketUrl' as const,
+            $type: 'WebSocketUrl',
             url: 'ws://localhost:3000/languageserver',
             startOptions: {
-                onCall: () => console.log('Language server connected'),
+                onCall: (languageClient?: BaseLanguageClient) => {
+                  console.log(`Language running: ${languageClient?.isRunning()}`):
+                }
                 reportStatus: true
             }
         }
     },
 
     clientOptions: {
-        // Which files this language server handles
-        documentSelector: ['typescript', 'javascript'],
+        // Which file extensions this language server handles
+        documentSelector: ['python'],
 
         // Workspace configuration
         workspaceFolder: {
@@ -93,12 +126,13 @@ const languageClientConfig = {
 
         // Custom initialization options for the language server
         initializationOptions: {
-            preferences: {
-                includeCompletionsForModuleExports: true
-            }
+            mySpecificLSOption: 'foo'
         }
     }
 };
+
+const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+await lcWrapper.start();
 ```
 
 ## Classic Mode Configuration
@@ -106,43 +140,29 @@ const languageClientConfig = {
 Classic Mode uses the standard Monaco Editor with language client features added:
 
 ```typescript
-import { MonacoLanguageClient } from 'monaco-languageclient';
-import { CloseAction, ErrorAction } from 'vscode-languageclient';
-import * as monaco from 'monaco-editor';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
-// Create Monaco editor
-const editor = monaco.editor.create(document.getElementById('container')!, {
-    value: 'console.log("Hello, World!");',
-    language: 'javascript',
-    theme: 'vs-dark'
-});
-
-// Configure language client
-const client = new MonacoLanguageClient({
-    name: 'JavaScript Language Client',
-    clientOptions: {
-        documentSelector: ['javascript'],
-        errorHandler: {
-            error: () => ({ action: ErrorAction.Continue }),
-            closed: () => ({ action: CloseAction.DoNotRestart })
-        }
-    },
-    connection: {
-        options: {
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:3001/javascript'
-        }
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic',
+    viewsConfig: {
+        $type: 'EditorService',
+        htmlContainer: document.getElementById('my-editor-dom-element')!
     }
-});
+};
 
-await client.start();
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.start();
+
+const editorAppConfig: EditorAppConfig = {};
+const editorApp = new EditorApp(editorAppConfig);
+editorApp.start(apiWrapper.getHtmlContainer());
 ```
 
 ## Common Configuration Options
 
-### Editor Settings
+### VSCode Settings
 
-You can further configure the Monaco Editor through the user configuration object:
+You can further configure VSCode related settings through the user configuration object:
 
 ```typescript
 userConfiguration: {
@@ -193,6 +213,7 @@ You can also setup a file system that leverages the browser's local storage or I
 Different ways to connect to language servers:
 
 #### WebSocket Connection
+
 ```typescript
 connection: {
     options: {
@@ -203,22 +224,26 @@ connection: {
 ```
 
 #### Worker Config
+
 ```typescript
 connection: {
     options: {
         $type: 'WorkerConfig',
         url: new URL('./language-server-worker.js', window.location.href),
-        type: 'module', // or 'classic'
+        // we suggest to use esm workers (=module)
+        type: 'module',
         workerName: 'LanguageServerWorker'
     }
 }
 ```
 
 #### Direct Web Worker Connection
+
 ```typescript
 connection: {
     options: {
         $type: 'WorkerDirect',
+        // we suggest to use esm workers (=module)
         worker: new Worker('./language-server.js', { type: 'module' })
     }
 }
@@ -246,21 +271,35 @@ const config = {
 You can configure multiple language clients for different file types:
 
 ```typescript
-// TypeScript language client
-const tsConfig = {
-    connection: { options: { $type: 'WebSocketUrl', url: 'ws://localhost:3001/typescript' }},
-    clientOptions: { documentSelector: ['typescript'] }
+// Eclipse JDT language client
+const javaConfig = {
+    connection: {
+        options: {
+            $type: 'WebSocketUrl',
+            url: 'ws://localhost:3001/jdtls'
+        }
+    },
+    clientOptions: {
+        documentSelector: ['java']
+    }
 };
 
 // JSON language client
 const jsonConfig = {
-    connection: { options: { $type: 'WebSocketUrl', url: 'ws://localhost:3002/json' }},
-    clientOptions: { documentSelector: ['json'] }
+    connection: {
+        options: {
+            $type: 'WebSocketUrl',
+            url: 'ws://localhost:3001/json'
+        }
+    },
+    clientOptions: {
+        documentSelector: ['json']
+    }
 };
 
 // Initialize both
 await Promise.all([
-    new LanguageClientWrapper().init(tsConfig),
+    new LanguageClientWrapper().init(javaConfig),
     new LanguageClientWrapper().init(jsonConfig)
 ]);
 ```
@@ -270,12 +309,11 @@ await Promise.all([
 The configuration is validated at runtime. Common validation errors:
 
 - **Missing htmlContainer**: Must provide a DOM element for Extended Mode
-- **Invalid connection type**: Must specify valid `$type` for connections
 - **Missing document selector**: Language clients need to know which files to handle
 
 ## Next Steps
 
 - **See [Examples](examples.md)** for complete configuration examples
-- **Learn [Extended Mode](../advanced-usage/extended-mode.md)** for advanced VS Code features
+- **Learn [Extended Mode](../advanced-usage/extended-mode.md)** for advanced VSCode features
 - **Explore [WebSocket Communication](../advanced-usage/websockets.md)** for external language servers
 - **Check [Troubleshooting](../guides/troubleshooting.md)** for configuration issues

@@ -5,6 +5,7 @@ Monaco Language Client provides a React integration through the `@typefox/monaco
 ## When to Use React Integration
 
 Use the React wrapper when you need:
+
 - **React component lifecycle** management for Monaco editors
 - **Declarative configuration** through React props
 - **State management** integration with React hooks
@@ -13,7 +14,7 @@ Use the React wrapper when you need:
 
 ## Installation
 
-```bash
+```shell
 npm install @typefox/monaco-editor-react
 npm install monaco-languageclient @codingame/monaco-vscode-api
 ```
@@ -43,7 +44,7 @@ export const JsonEditorComponent: React.FC<JsonEditorProps> = ({
     initialValue = '{\n  "name": "example"\n}',
     onValueChange
 }) => {
-    // VS Code API configuration
+    // VSCode API configuration
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         htmlContainer: document.body,
@@ -102,7 +103,7 @@ export const JsonEditorComponent: React.FC<JsonEditorProps> = ({
     }, [onValueChange]);
 
     const handleVscodeApiInitDone = useCallback((apiWrapper: any) => {
-        console.log('VS Code API initialized');
+        console.log('VSCode API initialized');
     }, []);
 
     const handleError = useCallback((error: Error) => {
@@ -411,7 +412,7 @@ export const MonacoLanguageClientProvider: React.FC<MonacoLanguageClientProvider
 
 ## Server-Side Rendering (SSR)
 
-### Next.js Integration
+### Next.js
 
 ```tsx
 // pages/editor.tsx
@@ -702,18 +703,21 @@ export default App;
 The project includes working React examples you can run:
 
 ### React Statemachine (`packages/examples/react_statemachine.html`)
+
 **Location**: `packages/examples/src/langium/statemachine/main-react.tsx`
 **Description**: Langium statemachine DSL with React integration
 
 ### React Python Editor (`packages/examples/react_python.html`)
+
 **Location**: `packages/examples/src/python/client/reactPython.tsx`
 **Description**: Python development environment with React integration
 
 ### React Application Playground (`packages/examples/react_appPlayground.html`)
+
 **Location**: `packages/examples/src/appPlayground/reactMain.tsx`
 **Description**: Application playground example using React
 
-```bash
+```shell
 # Run the React examples
 npm run dev
 
@@ -724,6 +728,7 @@ npm run dev
 ```
 
 ### Next.js Integration
+
 The project also includes a complete Next.js example in the `verify/next/` directory demonstrating SSR-safe implementation:
 
 ```tsx
@@ -752,6 +757,7 @@ const DynamicMonacoEditorReact = dynamic(async () => {
 The project's React examples demonstrate proper usage:
 
 **Separate Configurations**:
+
 ```tsx
 // From react_statemachine example
 const vscodeApiConfig = createLangiumGlobalConfig().vscodeApiConfig;
@@ -764,6 +770,7 @@ const languageClientConfigs = {
 ```
 
 **Proper Event Handling**:
+
 ```tsx
 <MonacoEditorReactComp
     vscodeApiConfig={vscodeApiConfig}
@@ -805,7 +812,7 @@ interface MonacoEditorProps {
 
 ## Next Steps
 
-- Compare with [Extended Mode](./extended-mode.md) for VS Code-like functionality
+- Compare with [Extended Mode](./extended-mode.md) for VSCode-like functionality
 - Learn [WebSocket Communication](./websockets.md) for external language servers
 - Try [Web Workers](./web-workers.md) for in-browser language servers
 - Check [Examples](../examples/index.md) for complete React implementations
