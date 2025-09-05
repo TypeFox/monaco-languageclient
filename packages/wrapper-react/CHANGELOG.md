@@ -6,6 +6,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 - Updated to `monaco-languageclient@10.0.0-next.1`.
 - Dropped `monaco-editor-wrapper`.
+- Updated all `@codingame/monaco-vscode` packages to `^20`.
 
 ## [6.12.0] - 2025-08-21
 

@@ -46,7 +46,7 @@
     "npm": "10.9.3"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-editor-api": "~20.2.1",
+    "@codingame/monaco-vscode-editor-api": "^20",
     "react": ">=18.0.0 || <20.0.0"
   },
   "repository": {
