@@ -37,7 +37,5 @@ export const runPythonWrapper = async () => {
 
         await vscode.commands.executeCommand('workbench.view.explorer');
         await vscode.window.showTextDocument(appConfig.configParams.files.get('hello2.py')!.uri);
-
-        await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
     }
 };
