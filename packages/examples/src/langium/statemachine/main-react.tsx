@@ -28,7 +28,7 @@ export const runStatemachineReact = async () => {
         },
         worker,
         messageTransports: { reader, writer },
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        htmlContainer: 'ReactPlaceholder'
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 

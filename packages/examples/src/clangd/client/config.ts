@@ -35,7 +35,6 @@ export const createClangdAppConfig = async (config: {
 }): Promise<ClangdAppConfig> => {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer: config.htmlContainer,
         logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
@@ -49,7 +48,8 @@ export const createClangdAppConfig = async (config: {
             ...getSecretStorageServiceOverride()
         },
         viewsConfig: {
-            viewServiceType: 'ViewsService',
+            $type: 'ViewsService',
+            htmlContainer: config.htmlContainer,
             htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
             viewsInitFunc: defaultViewsInit
         },
@@ -125,9 +125,7 @@ export const createClangdAppConfig = async (config: {
         }
     };
 
-    const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type
-    };
+    const editorAppConfig: EditorAppConfig = {};
 
     return {
         vscodeApiConfig,

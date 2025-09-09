@@ -7,7 +7,6 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 
 export class ModelRefs {
     modified?: IReference<ITextFileEditorModel>;
@@ -47,7 +46,6 @@ export interface DisposableModelRefs {
 
 export interface EditorAppConfig {
     id?: string;
-    $type?: OverallConfigType;
     logLevel?: LogLevel | number;
     codeResources?: CodeResources;
     useDiffEditor?: boolean;

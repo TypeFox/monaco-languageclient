@@ -20,11 +20,15 @@ export const runClient = async () => {
                 'editor.experimental.asyncTokenization': true
             })
         },
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
         monacoWorkerFactory: configureClassicWorkerFactory
     };
 
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     // register the JSON language with Monaco
     monaco.languages.register({

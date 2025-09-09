@@ -21,7 +21,6 @@ export const runBrowserEditor = async () => {
     const protocolConverter = createProtocolConverter(undefined, true, true);
 
     let mainVscodeDocument: vscode.TextDocument | undefined;
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const languageId = 'json';
     const code = `{
     "$schema": "http://json.schemastore.org/coffeelint",
@@ -31,7 +30,10 @@ export const runBrowserEditor = async () => {
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer,
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer: document.getElementById('monaco-editor-root')!
+        },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
@@ -47,7 +49,6 @@ export const runBrowserEditor = async () => {
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
     const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type,
         codeResources: {
             modified: {
                 text: code,
@@ -56,7 +57,7 @@ export const runBrowserEditor = async () => {
         }
     };
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     const editorApp = new EditorApp(editorAppConfig);
 
@@ -158,7 +159,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await editorApp.start(htmlContainer);
+    await editorApp.start(vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
 
     editorApp.getTextModels().modified?.onDidChangeContent(() => {
         validate();

@@ -15,10 +15,13 @@ describe('Test LanguageClientWrapper', () => {
     beforeAll(async () => {
         const apiConfig: MonacoVscodeApiConfig = {
             $type: 'extended',
-            htmlContainer: createMonacoEditorDiv()
+            viewsConfig: {
+                $type: 'EditorService',
+                htmlContainer: createMonacoEditorDiv()
+            }
         };
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
     });
 
     test('restart with languageclient', async () => {

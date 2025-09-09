@@ -19,6 +19,10 @@ describe('Test MonacoEditorReactComp', () => {
     const unmountDelayMs = 250;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer: 'ReactPlaceholder'
+        },
         logLevel: LogLevel.Debug
     };
 

@@ -6,24 +6,20 @@
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
-import { createDefaultMonacoVscodeApiConfig, createEditorAppConfigClassicExtended, createMonacoEditorDiv } from '../support/helper.js';
+import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
 
-    const htmlContainer = createMonacoEditorDiv();
-
     test('Start EditorApp with no services', async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
-        apiConfig.viewsConfig = {
-            viewServiceType: 'ViewsService'
-        };
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', createMonacoEditorDiv());
+        apiConfig.viewsConfig.$type = 'ViewsService';
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
 
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(async () => {
-            await editorApp.start(htmlContainer);
+            await editorApp.start(apiConfig.$type, apiWrapper.getHtmlContainer());
         }).rejects.toThrowError('No EditorService configured. monaco-editor will not be started.');
     });
 

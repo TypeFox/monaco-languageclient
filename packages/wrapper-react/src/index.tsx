@@ -95,10 +95,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
             (async () => {
                 apiWrapperRef.current.getLogger().debug('GLOBAL INIT');
-                await apiWrapperRef.current.init({
-                    caller: className,
-                    htmlContainer: containerRef.current
+                apiWrapperRef.current.overrideViewsConfig({
+                    $type: apiWrapperRef.current.getMonacoVscodeApiConfig().viewsConfig.$type,
+                    htmlContainer: containerRef.current!
                 });
+                await apiWrapperRef.current.start();
 
                 // set if editor mode is available, otherwise text bindings will not work
                 haveEditorService.current = envEnhanced.viewServiceType === 'EditorService';
@@ -138,7 +139,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                             onTextChangedRef.current(textChanges);
                         }
                     });
-                    await editorAppRef.current.start(containerRef.current!);
+                    const type = apiWrapperRef.current.getMonacoVscodeApiConfig().$type;
+                    await editorAppRef.current.start(type, containerRef.current!);
 
                     onEditorStartDone?.(editorAppRef.current);
 

@@ -11,7 +11,7 @@ import { configurePostStart } from './common.js';
 
 export const runApplicationPlaygroundReact = async () => {
 
-    const configResult = await configure();
+    const configResult = await configure('ReactPlaceholder');
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
         return (

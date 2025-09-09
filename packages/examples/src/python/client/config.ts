@@ -21,11 +21,11 @@ import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createUrl } from 'monaco-languageclient/common';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit, type HtmlContainerConfig, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
@@ -37,7 +37,7 @@ import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
 import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
-export const createDefaultConfigParams = (homeDir: string, htmlContainer?: HTMLElement): ConfigParams => {
+export const createDefaultConfigParams = (homeDir: string, htmlContainer: HtmlContainerConfig): ConfigParams => {
     const files = new Map<string, FileDefinition>();
     const workspaceRoot = `${homeDir}/workspace`;
     const configParams: ConfigParams = {
@@ -101,7 +101,6 @@ export const createPythonAppConfig = (): PythonAppConfig => {
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer: configParams.htmlContainer,
         logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
@@ -121,7 +120,8 @@ export const createPythonAppConfig = (): PythonAppConfig => {
             ...getPreferencesServiceOverride()
         },
         viewsConfig: {
-            viewServiceType: 'ViewsService',
+            $type: 'ViewsService',
+            htmlContainer: configParams.htmlContainer,
             htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
             viewsInitFunc: defaultViewsInit
         },
@@ -206,9 +206,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
         }
     };
 
-    const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type
-    };
+    const editorAppConfig: EditorAppConfig = {};
 
     return {
         vscodeApiConfig,

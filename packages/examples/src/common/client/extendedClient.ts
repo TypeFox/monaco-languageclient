@@ -23,7 +23,10 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer,
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
@@ -70,7 +73,6 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     };
 
     const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type,
         codeResources: {
             modified: {
                 text: helloCode,
@@ -81,14 +83,14 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
 
     // perform global init
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     const lcWrapper = new LanguageClientWrapper(languageClientConfig, apiWrapper.getLogger());
     const editorApp = new EditorApp(editorAppConfig);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(htmlContainer);
+            await editorApp.start(vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
             await lcWrapper.start();
 
             // open files, so the LS can pick it up

@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { initialize, LogLevel } from '@codingame/monaco-vscode-api';
 import { ExtensionHostKind, getExtensionManifests, registerExtension, type IExtensionManifest, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
@@ -15,18 +15,22 @@ import { ConsoleLogger, encodeStringOrUrlToDataUrl, type Logger } from 'monaco-l
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import 'vscode/localExtensionHost';
-import type { ExtensionConfig, MonacoVscodeApiConfig } from './config.js';
+import type { ExtensionConfig, MonacoVscodeApiConfig, ViewsConfig } from './config.js';
 import { configureExtHostWorker, getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
 
-export interface InitServicesInstructions {
-    caller?: string;
-    performServiceConsistencyChecks?: boolean;
-    htmlContainer?: HTMLElement | null;
+export interface ViewsConfigRuntime extends ViewsConfig {
+    htmlContainer: HTMLElement;
 }
 
 export interface MonacoVscodeApiConfigRuntime extends MonacoVscodeApiConfig {
     serviceOverrides: monaco.editor.IEditorOverrideServices;
     logLevel: LogLevel | number;
+    viewsConfig: ViewsConfigRuntime;
+}
+
+export interface StartInstructions {
+    caller?: string;
+    performServiceConsistencyChecks?: boolean;
 }
 
 export class MonacoVscodeApiWrapper {
@@ -37,11 +41,17 @@ export class MonacoVscodeApiWrapper {
     private apiConfig: MonacoVscodeApiConfigRuntime;
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
-        this.apiConfig = {
+        const intermediate = {
             ...apiConfig,
             serviceOverrides: apiConfig.serviceOverrides ?? {},
             logLevel: apiConfig.logLevel ?? LogLevel.Off,
         };
+        if (intermediate.viewsConfig.htmlContainer === 'ReactPlaceholder') {
+            // this is temporary and must be overriden at start by react component with
+            // correct react dom element
+            intermediate.viewsConfig.htmlContainer = document.body;
+        }
+        this.apiConfig = intermediate as MonacoVscodeApiConfigRuntime;
         this.logger.setLevel(this.apiConfig.logLevel);
     }
 
@@ -55,6 +65,10 @@ export class MonacoVscodeApiWrapper {
 
     getMonacoVscodeApiConfig(): MonacoVscodeApiConfig {
         return this.apiConfig;
+    }
+
+    getHtmlContainer() {
+        return this.apiConfig.viewsConfig.htmlContainer;
     }
 
     protected configureMonacoWorkers() {
@@ -84,19 +98,19 @@ export class MonacoVscodeApiWrapper {
     }
 
     protected async configureViewsServices() {
-        const viewServiceType = this.apiConfig.viewsConfig?.viewServiceType ?? 'EditorService';
-        if (this.apiConfig.$type === 'classic' && (viewServiceType === 'ViewsService' || viewServiceType === 'WorkspaceService')) {
-            throw new Error(`View Service Type "${viewServiceType}" cannot be used with classic configuration.`);
+        const viewsConfigType = this.apiConfig.viewsConfig.$type;
+        if (this.apiConfig.$type === 'classic' && (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkspaceService')) {
+            throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
         }
 
         const envEnhanced = getEnhancedMonacoEnvironment();
-        if (this.apiConfig.viewsConfig?.viewServiceType === 'ViewsService') {
+        if (viewsConfigType === 'ViewsService') {
             const getViewsServiceOverride = (await import('@codingame/monaco-vscode-views-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
                 ...getViewsServiceOverride(this.apiConfig.viewsConfig.openEditorFunc ?? useOpenEditorStub)
             });
             envEnhanced.viewServiceType = 'ViewsService';
-        } else if (this.apiConfig.viewsConfig?.viewServiceType === 'WorkspaceService') {
+        } else if (viewsConfigType === 'WorkspaceService') {
             const getWorkbenchServiceOverride = (await import('@codingame/monaco-vscode-workbench-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
                 ...getWorkbenchServiceOverride()
@@ -105,15 +119,15 @@ export class MonacoVscodeApiWrapper {
         } else {
             const getEditorServiceOverride = (await import('@codingame/monaco-vscode-editor-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
-                ...getEditorServiceOverride(this.apiConfig.viewsConfig?.openEditorFunc ?? useOpenEditorStub)
+                ...getEditorServiceOverride(this.apiConfig.viewsConfig.openEditorFunc ?? useOpenEditorStub)
             });
             envEnhanced.viewServiceType = 'EditorService';
         }
     }
 
     protected async applyViewsPostConfig() {
-        this.apiConfig.viewsConfig?.htmlAugmentationInstructions?.(this.apiConfig.htmlContainer);
-        await this.apiConfig.viewsConfig?.viewsInitFunc?.();
+        this.apiConfig.viewsConfig.htmlAugmentationInstructions?.(this.apiConfig.viewsConfig.htmlContainer);
+        await this.apiConfig.viewsConfig.viewsInitFunc?.();
     }
 
     /**
@@ -214,7 +228,7 @@ export class MonacoVscodeApiWrapper {
      *   - log
      *   - model
      */
-    protected async importAllServices(instructions?: InitServicesInstructions) {
+    protected async importAllServices(performServiceConsistencyChecks?: boolean) {
         const services = await this.supplyRequiredServices();
 
         mergeServices(services, this.apiConfig.serviceOverrides);
@@ -222,12 +236,12 @@ export class MonacoVscodeApiWrapper {
 
         reportServiceLoading(services, this.logger);
 
-        if (instructions?.performServiceConsistencyChecks === true) {
+        if (performServiceConsistencyChecks ?? true) {
             this.checkServiceConsistency();
         }
 
-        if (this.apiConfig.viewsConfig?.viewServiceType === 'ViewsService' || this.apiConfig.viewsConfig?.viewServiceType === 'WorkspaceService') {
-            await initialize(services, this.apiConfig.htmlContainer, this.apiConfig.workspaceConfig, this.apiConfig.envOptions);
+        if (this.apiConfig.viewsConfig.$type === 'ViewsService' || this.apiConfig.viewsConfig.$type === 'WorkspaceService') {
+            await initialize(services, this.apiConfig.viewsConfig.htmlContainer, this.apiConfig.workspaceConfig, this.apiConfig.envOptions);
         } else {
             await initialize(services, undefined, this.apiConfig.workspaceConfig, this.apiConfig.envOptions);
         }
@@ -294,24 +308,33 @@ export class MonacoVscodeApiWrapper {
         this.logger.debug('markGlobalInitDone');
     }
 
-    async init(instructions?: InitServicesInstructions): Promise<void> {
+    overrideViewsConfig(viewsConfigOverride: ViewsConfigRuntime) {
+        const orgViewsConfig = this.apiConfig.viewsConfig;
+        this.apiConfig.viewsConfig = {
+            $type: viewsConfigOverride.$type,
+            htmlContainer: viewsConfigOverride.htmlContainer,
+            htmlAugmentationInstructions: viewsConfigOverride.htmlAugmentationInstructions ?? orgViewsConfig.htmlAugmentationInstructions,
+            openEditorFunc: viewsConfigOverride.openEditorFunc ?? orgViewsConfig.openEditorFunc,
+            viewsInitFunc: viewsConfigOverride.viewsInitFunc ?? orgViewsConfig.viewsInitFunc
+        };
+    }
+
+    async start(startInstructions?: StartInstructions): Promise<void> {
         const envEnhanced = getEnhancedMonacoEnvironment();
         if (envEnhanced.vscodeApiInitialised === true) {
             this.logger.warn('Initialization of monaco-vscode api can only performed once!');
         } else {
             if (!(envEnhanced.vscodeApiInitialising === true)) {
+
                 envEnhanced.vscodeApiInitialising = true;
                 this.markGlobalInit();
-                if (instructions?.htmlContainer !== undefined && instructions.htmlContainer !== null) {
-                    this.apiConfig.htmlContainer = instructions.htmlContainer;
-                }
 
                 // ensures "vscodeApiConfig.workspaceConfig" is available
                 this.configureWorkspaceConfig();
 
                 // ensure logging and development logging options are in-line
                 this.configureDevLogLevel();
-                this.logger.info(`Initializing monaco-vscode api. Caller: ${instructions?.caller ?? 'unknown'}`);
+                this.logger.info(`Initializing monaco-vscode api. Caller: ${startInstructions?.caller ?? 'unknown'}`);
 
                 await this.configureMonacoWorkers();
 
@@ -326,7 +349,7 @@ export class MonacoVscodeApiWrapper {
 
                 await this.initUserConfiguration();
 
-                await this.importAllServices(instructions);
+                await this.importAllServices(startInstructions?.performServiceConsistencyChecks);
 
                 await this.applyViewsPostConfig();
 

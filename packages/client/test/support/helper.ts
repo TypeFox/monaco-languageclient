@@ -5,7 +5,7 @@
 
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MessageTransports } from 'vscode-languageclient/browser.js';
 
@@ -64,24 +64,16 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
     };
 };
 
-export const createEditorAppConfigClassic = (codeResources: CodeResources): EditorAppConfig => {
+export const createEditorAppConfig = (codeResources: CodeResources): EditorAppConfig => {
     return {
-        $type: 'classic',
         codeResources,
-        editorOptions: {},
+        editorOptions: {}
     };
 };
 
-export const createEditorAppConfigClassicExtended = (codeResources: CodeResources): EditorAppConfig => {
+export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
     return {
-        $type: 'extended',
-        codeResources
-    };
-};
-
-export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
-    return {
-        $type: 'extended',
+        $type: overallConfigType,
         advanced: {
             enforceSemanticHighlighting: true,
             loadThemes: false
@@ -91,7 +83,10 @@ export const createDefaultMonacoVscodeApiConfig = (htmlContainer: HTMLElement): 
                 'workbench.colorTheme': 'Default Dark Modern'
             })
         },
-        htmlContainer,
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 };

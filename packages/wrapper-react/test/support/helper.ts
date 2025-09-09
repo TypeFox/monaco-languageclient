@@ -10,7 +10,6 @@ import { MessageTransports } from 'vscode-languageclient';
 
 export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLevel?: LogLevel): EditorAppConfig => {
     return {
-        $type: 'extended',
         logLevel,
         codeResources
     };

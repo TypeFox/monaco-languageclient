@@ -9,25 +9,26 @@ import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { createDefaultMonacoVscodeApiConfig, createEditorAppConfigClassic, createMonacoEditorDiv } from '../support/helper.js';
+import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test Test EditorApp (classic)', () => {
 
     const htmlContainer = createMonacoEditorDiv();
+    const apiConfig = createDefaultMonacoVscodeApiConfig('classic', htmlContainer);
 
     beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
     });
 
     test('classic type: empty EditorAppConfigClassic', () => {
-        const editorAppConfig = createEditorAppConfigClassic({});
-        expect(editorAppConfig.$type).toBe('classic');
+        const editorAppConfig = createEditorAppConfig({});
+        expect(editorAppConfig.editorOptions).toStrictEqual({});
+        expect(apiConfig.$type).toBe('classic');
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -44,7 +45,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('editorOptions: semanticHighlighting=false', () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -58,7 +59,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('editorOptions: semanticHighlighting="configuredByTheme"', () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -72,7 +73,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('editorOptions: semanticHighlighting=true', () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -82,12 +83,11 @@ describe('Test Test EditorApp (classic)', () => {
         editorAppConfig.id = 'test-semanticHighlighting-true';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect(editorAppConfig.$type).toEqual('classic');
         expect(editorApp.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeTruthy();
     });
 
     test('Check default values', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -95,7 +95,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
 
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         expect(editorApp).toBeDefined();
 
@@ -106,7 +106,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Code resources main', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -114,7 +114,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -124,7 +124,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Call start twice without prior disposal', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -132,16 +132,16 @@ describe('Test Test EditorApp (classic)', () => {
         });
 
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         await expect(async () => {
-            await editorApp.start(htmlContainer);
+            await editorApp.start(apiConfig.$type, htmlContainer);
         }).rejects.toThrowError('Start was called without properly disposing the EditorApp first.');
 
         await editorApp.dispose();
     });
 
     test('Call start twice with prior disposal', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -149,15 +149,15 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         await editorApp.dispose();
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });
 
     test('Code resources original (regular editor)', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -172,7 +172,7 @@ describe('Test Test EditorApp (classic)', () => {
 
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -181,7 +181,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Code resources original (diff editor)', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -196,7 +196,7 @@ describe('Test Test EditorApp (classic)', () => {
         };
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -205,7 +205,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Code resources main and original', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'modified',
                 uri: `/workspace/${expect.getState().testPath}_modified.js`
@@ -218,7 +218,7 @@ describe('Test Test EditorApp (classic)', () => {
         };
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -235,7 +235,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Code resources empty', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -243,7 +243,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         editorAppConfig.codeResources = {};
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         // default modelRef is created with regular editor even if no codeResources are given
@@ -254,7 +254,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Code resources model direct', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -263,7 +263,7 @@ describe('Test Test EditorApp (classic)', () => {
         editorAppConfig.codeResources = {};
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         editorApp.setModelRefDisposeTimeout(1000);
 
@@ -282,7 +282,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Early code resources update on editorApp are ok', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
 
         editorApp.setModelRefDisposeTimeout(1000);
@@ -294,7 +294,7 @@ describe('Test Test EditorApp (classic)', () => {
         expect(modelRefsBefore?.modified).toBeUndefined();
         expect(modelRefsBefore?.original).toBeUndefined();
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         editorApp.registerOnTextChangedCallback((textChanges: TextContents) => {
             console.log(textChanges);
@@ -316,14 +316,14 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Check current model is globally removed after dispose', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "test";',
                 uri: `/workspace/${expect.getState().testPath}_single-model.js`
             }
         });
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const currentModel = editorApp.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
@@ -334,7 +334,7 @@ describe('Test Test EditorApp (classic)', () => {
     });
 
     test('Check current model is globally removed after dispose (second model)', async () => {
-        const editorAppConfig = createEditorAppConfigClassic({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "test";',
                 uri: `/workspace/${expect.getState().testPath}_second-model.js`
@@ -342,7 +342,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         const currentModel = editorApp.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();

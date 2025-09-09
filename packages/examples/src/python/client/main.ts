@@ -14,9 +14,9 @@ import { createPythonAppConfig } from './config.js';
 export const runPythonWrapper = async () => {
     const appConfig = createPythonAppConfig();
 
-    // perform global init
+    // perform global monaco-vscode-api init
     const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
 

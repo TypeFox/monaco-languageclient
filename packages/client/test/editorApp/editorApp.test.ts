@@ -9,26 +9,27 @@ import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
-import { createDefaultMonacoVscodeApiConfig, createEditorAppConfigClassicExtended, createMonacoEditorDiv } from '../support/helper.js';
+import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
 
     const htmlContainer = createMonacoEditorDiv();
+    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
 
     beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
     });
 
     test('extended type: empty EditorAppConfigExtended', () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        expect(editorAppConfig.$type).toBe('extended');
+        expect(editorAppConfig.editorOptions).toStrictEqual({});
+        expect(apiConfig.$type).toBe('extended');
     });
 
     test('verifyUrlorCreateDataUrl: url', () => {
@@ -54,7 +55,7 @@ describe('Test EditorApp', () => {
     });
 
     test('config defaults', () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -71,26 +72,26 @@ describe('Test EditorApp', () => {
     });
 
     test('New editorApp has undefined editor', () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         expect(editorApp.getEditor()).toBeUndefined();
     });
 
     test('New editorApp has undefined diff editor', () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         expect(editorApp.getDiffEditor()).toBeUndefined();
     });
 
     test('Start EditorApp', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         await editorApp.dispose();
     });
 
     test('Update code resources after start (same file)', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -98,7 +99,7 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         expect(editorApp.isStarted()).toBeTruthy();
 
         editorApp.registerOnTextChangedCallback((textChanges: TextContents) => {
@@ -123,7 +124,7 @@ describe('Test EditorApp', () => {
     });
 
     test('Update code resources after start (different file)', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -131,7 +132,7 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         expect(editorApp.isStarted()).toBeTruthy();
 
         editorApp.setModelRefDisposeTimeout(1000);
@@ -152,7 +153,7 @@ describe('Test EditorApp', () => {
     });
 
     test('Verify registerTextChangeCallback', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
 
         const onTextChanged = (textChanges: TextContents) => {
             console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
@@ -167,7 +168,7 @@ describe('Test EditorApp', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const spyAnnounceModelUpdate = vi.spyOn(editorApp as any, 'announceModelUpdate');
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         onTextChangedDiposeable = editorApp['textChangedDisposables'].modified;
         expect(onTextChangedDiposeable).toBeDefined();
@@ -193,7 +194,7 @@ describe('Test EditorApp', () => {
     });
 
     test('Test editorApp init/start/dispose phase promises', async () => {
-        let editorAppConfig = createEditorAppConfigClassicExtended({
+        let editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -201,7 +202,7 @@ describe('Test EditorApp', () => {
         });
         let editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
         expect(editorApp.isStarting()).toBeFalsy();
         expect(editorApp.isDisposing()).toBeFalsy();
 
@@ -210,20 +211,20 @@ describe('Test EditorApp', () => {
         expect(editorApp.isStarting()).toBeFalsy();
         expect(editorApp.isDisposing()).toBeFalsy();
 
-        editorAppConfig = createEditorAppConfigClassicExtended({
+        editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World";',
                 uri: `/workspace/${expect.getState().testPath}_2.js`
             }
         });
         editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });
 
     test('Test html parameter with start', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({
+        const editorAppConfig = createEditorAppConfig({
             modified: {
                 text: 'const text = "Hello World";',
                 uri: `/workspace/${expect.getState().testPath}.js`
@@ -231,7 +232,7 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        await expect(await editorApp.start(apiConfig.$type, htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });

@@ -28,7 +28,10 @@ export const runTsWrapper = async () => {
     const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
-        htmlContainer,
+        viewsConfig: {
+            $type: 'EditorService',
+            htmlContainer
+        },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
@@ -52,7 +55,6 @@ export const runTsWrapper = async () => {
     };
 
     const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type,
         codeResources: {
             modified: {
                 text: code,
@@ -65,15 +67,16 @@ export const runTsWrapper = async () => {
         }
     };
 
+    // perform global monaco-vscode-api init
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     const editorApp = new EditorApp(editorAppConfig);
     disableElement('button-swap-code', true);
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(htmlContainer);
+            await editorApp.start(vscodeApiConfig.$type, htmlContainer);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -116,7 +119,7 @@ export const runTsWrapper = async () => {
             editorAppConfig.useDiffEditor = !useDiffEditor;
             disableElement('button-swap-code', !editorAppConfig.useDiffEditor);
 
-            await editorApp.start(htmlContainer);
+            await editorApp.start(vscodeApiConfig.$type, htmlContainer);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await editorApp.dispose();
