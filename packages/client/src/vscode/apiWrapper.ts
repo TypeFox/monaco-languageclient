@@ -299,9 +299,8 @@ export class MonacoVscodeApiWrapper {
 
     protected markGlobalInitDone() {
         const envEnhanced = getEnhancedMonacoEnvironment();
-        if (typeof envEnhanced.vscodeApiGlobalInitResolve === 'function') {
-            envEnhanced.vscodeApiGlobalInitResolve();
-        }
+        envEnhanced.vscodeApiGlobalInitResolve?.();
+
         envEnhanced.vscodeApiInitialised = true;
         envEnhanced.vscodeApiGlobalInitAwait = undefined;
         envEnhanced.vscodeApiGlobalInitResolve = undefined;

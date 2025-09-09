@@ -176,7 +176,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
     };
 
     const languageClientConfig: LanguageClientConfig = {
-        name: 'Python Language Server Example',
+        languageId: 'python',
         connection: {
             options: {
                 $type: 'WebSocketDirect',

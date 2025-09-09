@@ -78,7 +78,7 @@ describe('Test LanguageClientWrapper', () => {
             await languageClientWrapper.start();
         } catch (error) {
             expect(error).toEqual({
-                message: 'languageClientWrapper (test-ws-unreachable): Websocket connection failed.',
+                message: 'languageClientWrapper (javascript): Websocket connection failed.',
                 error: 'No error was provided.'
             });
         }
@@ -100,7 +100,7 @@ describe('Test LanguageClientWrapper', () => {
         const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
         await expect(languageClientWrapper.start()).rejects.toEqual({
-            message: 'languageClientWrapper (test-worker-unreachable): Illegal worker configuration detected.',
+            message: 'languageClientWrapper (javascript): Illegal worker configuration detected.',
             error: 'No error was provided.'
         });
     });

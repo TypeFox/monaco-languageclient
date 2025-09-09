@@ -9,5 +9,5 @@ export const jsontLsConfig: ExampleLsConfig = {
     port: 30000,
     path: '/sampleServer',
     basePath: '/home/mlc/packages/examples/resources/json',
-    documentSelector: 'json'
+    languageId: 'json'
 };

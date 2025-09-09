@@ -102,7 +102,7 @@ export const createClangdAppConfig = async (config: {
     };
 
     const languageClientConfig: LanguageClientConfig = {
-        name: 'Clangd WASM Language Server',
+        languageId: 'cpp',
         connection: {
             options: {
                 $type: 'WorkerDirect',

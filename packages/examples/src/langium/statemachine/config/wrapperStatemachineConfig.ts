@@ -32,6 +32,7 @@ export const createLangiumGlobalConfig = (params: {
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
     const languageClientConfig: LanguageClientConfig = {
+        languageId: 'statemachine',
         clientOptions: {
             documentSelector: ['statemachine']
         },

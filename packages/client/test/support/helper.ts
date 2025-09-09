@@ -19,7 +19,7 @@ export const createMonacoEditorDiv = () => {
 export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
     messageTransports?: MessageTransports): LanguageClientConfig => {
     return {
-        name: 'test-worker-direct',
+        languageId,
         clientOptions: {
             documentSelector: [languageId]
         },
@@ -35,7 +35,7 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
 
 export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
     return {
-        name: 'test-worker-unreachable',
+        languageId: 'javascript',
         clientOptions: {
             documentSelector: ['javascript']
         },
@@ -51,7 +51,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
 
 export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
     return {
-        name: 'test-ws-unreachable',
+        languageId: 'javascript',
         clientOptions: {
             documentSelector: ['javascript']
         },

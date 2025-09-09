@@ -134,6 +134,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     };
 
     const languageClientConfig: LanguageClientConfig = {
+        languageId: 'langium',
         clientOptions: {
             documentSelector: ['langium']
         },

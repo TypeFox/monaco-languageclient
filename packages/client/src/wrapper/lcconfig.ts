@@ -12,11 +12,13 @@ export interface ConnectionConfig {
 }
 
 export interface LanguageClientConfig {
-    name?: string;
+    languageId: string;
     connection: ConnectionConfig;
     clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
     disposeWorker?: boolean;
+    overwriteExisting?: boolean;
+    enforceDispose?: boolean;
 }
 
 export interface LanguageClientRestartOptions {
@@ -26,7 +28,5 @@ export interface LanguageClientRestartOptions {
 }
 
 export interface LanguageClientConfigs {
-    configs: Record<string, LanguageClientConfig>
-    overwriteExisting?: boolean;
-    enforceDispose?: boolean;
+    configs: Record<string, LanguageClientConfig>;
 }

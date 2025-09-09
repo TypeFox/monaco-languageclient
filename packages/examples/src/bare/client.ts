@@ -50,6 +50,7 @@ export const runClient = async () => {
     });
 
     const languageClientConfig: LanguageClientConfig = {
+        languageId: 'json',
         clientOptions: {
             documentSelector: ['json']
         },
