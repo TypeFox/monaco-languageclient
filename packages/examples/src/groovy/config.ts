@@ -9,5 +9,5 @@ export const groovyConfig: ExampleLsConfig = {
     port: 30002,
     path: '/groovy',
     basePath: '/home/gradle/mlc/packages/examples/resources/groovy',
-    documentSelector: 'groovy'
+    languageId: 'groovy'
 };

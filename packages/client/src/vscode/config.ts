@@ -11,21 +11,27 @@ import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { Logger } from 'monaco-languageclient/common';
 
+export type OverallConfigType = 'extended' | 'classic';
+
+export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkspaceService';
+
+export type HtmlContainerConfig = HTMLElement | 'ReactPlaceholder';
+
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeApiInitialising?: boolean;
     vscodeApiInitialised?: boolean;
     vscodeApiGlobalInitAwait?: Promise<void>;
     vscodeApiGlobalInitResolve?: ((value: void | PromiseLike<void>) => void);
-    viewServiceType?: 'EditorService' | 'ViewsService' | 'WorkspaceService';
+    viewServiceType?: ViewsConfigTypes;
 }
-
-export type OverallConfigType = 'extended' | 'classic';
 
 export interface UserConfiguration {
     json?: string;
 }
+
 export interface ViewsConfig {
-    viewServiceType: 'EditorService' | 'ViewsService' | 'WorkspaceService';
+    $type: ViewsConfigTypes;
+    htmlContainer: HtmlContainerConfig;
     openEditorFunc?: OpenEditor;
     htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
     viewsInitFunc?: () => Promise<void>;
@@ -38,12 +44,11 @@ export interface ExtensionConfig {
 
 export interface MonacoVscodeApiConfig {
     $type: OverallConfigType;
-    htmlContainer?: HTMLElement;
+    viewsConfig: ViewsConfig,
     serviceOverrides?: monaco.editor.IEditorOverrideServices;
     logLevel?: LogLevel | number;
     workspaceConfig?: IWorkbenchConstructionOptions;
     userConfiguration?: UserConfiguration;
-    viewsConfig?: ViewsConfig,
     envOptions?: EnvironmentOverride;
     extensions?: ExtensionConfig[];
     monacoWorkerFactory?: (logger?: Logger) => void;

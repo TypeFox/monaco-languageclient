@@ -15,7 +15,7 @@ export const runLangiumGrammarDsl = async () => {
 
         // perform global init
         const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
 
         // init language client
         const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);

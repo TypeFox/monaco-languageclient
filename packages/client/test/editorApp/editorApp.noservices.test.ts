@@ -5,17 +5,17 @@
 
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { describe, expect, test } from 'vitest';
-import { createEditorAppConfigClassicExtended, createMonacoEditorDiv } from '../support/helper.js';
+import { createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
 
     const htmlContainer = createMonacoEditorDiv();
 
     test('Start EditorApp with no services', async () => {
-        const editorAppConfig = createEditorAppConfigClassicExtended({});
+        const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(async () => {
-            await editorApp.start(htmlContainer);
+            await editorApp.start('extended', htmlContainer);
         }).rejects.toThrowError('monaco-vscode-api was not initialized. Aborting.');
     });
 

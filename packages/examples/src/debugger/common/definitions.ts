@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
+import type { HtmlContainerConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { Uri } from 'vscode';
 
 export type FileDefinition = {
@@ -26,7 +27,7 @@ export type ConfigParams = {
     homeDir: string;
     workspaceRoot: string;
     workspaceFile: Uri;
-    htmlContainer?: HTMLElement;
+    htmlContainer: HtmlContainerConfig;
     protocol: 'ws' | 'wss';
     hostname: string;
     port: number;

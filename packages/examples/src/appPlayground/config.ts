@@ -27,9 +27,9 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit, type HtmlContainerConfig, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
@@ -43,13 +43,12 @@ export type ConfigResult = {
     testerTsUri: vscode.Uri;
 };
 
-export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResult> => {
+export const configure = async (htmlContainer: HtmlContainerConfig): Promise<ConfigResult> => {
     const workspaceFileUri = vscode.Uri.file('/workspace.code-workspace');
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         logLevel: LogLevel.Debug,
-        htmlContainer,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
             ...getLifecycleServiceOverride(),
@@ -66,7 +65,8 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
             ...getOutlineServiceOverride()
         },
         viewsConfig: {
-            viewServiceType: 'ViewsService',
+            $type: 'ViewsService',
+            htmlContainer,
             htmlAugmentationInstructions: defaultHtmlAugmentationInstructions,
             viewsInitFunc: defaultViewsInit
         },
@@ -123,8 +123,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
     };
 
     const editorAppConfig: EditorAppConfig = {
-        $type: vscodeApiConfig.$type,
-        id: 'AAP',
+        id: 'AAP'
     };
 
     const workspaceUri = vscode.Uri.file('/workspace');

@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { Logger } from 'monaco-languageclient/common';
-import type { LanguageClientConfigs } from './lcconfig.js';
+import type { LanguageClientConfig, LanguageClientConfigs } from './lcconfig.js';
 import { LanguageClientWrapper } from './lcwrapper.js';
 
 export class LanguageClientsManager {
@@ -33,25 +33,30 @@ export class LanguageClientsManager {
         return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
+    async setConfig(languageClientConfig: LanguageClientConfig): Promise<void> {
+        const languageId = languageClientConfig.languageId;
+        const current = this.languageClientWrappers.get(languageId);
+        const lcw = new LanguageClientWrapper(languageClientConfig, this.logger);
+
+        if (current !== undefined) {
+            if (languageClientConfig.overwriteExisting === true) {
+                if (languageClientConfig.enforceDispose === true) {
+                    await current.dispose();
+                }
+            } else {
+                throw new Error(`A languageclient config with id "${languageId}" already exists and you confiured to not override.`);
+            }
+        }
+        this.languageClientWrappers.set(languageId, lcw);
+    }
+
     async setConfigs(languageClientConfigs: LanguageClientConfigs): Promise<void> {
         this.languageClientConfigs = languageClientConfigs;
 
-        const lccEntries = Object.entries(this.languageClientConfigs.configs);
-        if (lccEntries.length > 0) {
-            for (const [languageId, lcc] of lccEntries) {
-                const current = this.languageClientWrappers.get(languageId);
-                const lcw = new LanguageClientWrapper(lcc, this.logger);
-
-                if (current !== undefined) {
-                    if (languageClientConfigs.overwriteExisting === true) {
-                        if (languageClientConfigs.enforceDispose === true) {
-                            await current.dispose();
-                        }
-                    } else {
-                        throw new Error(`A languageclient config with id "${languageId}" already exists and you confiured to not override.`);
-                    }
-                }
-                this.languageClientWrappers.set(languageId, lcw);
+        const lccs = Object.values(this.languageClientConfigs.configs);
+        if (lccs.length > 0) {
+            for (const lcc of lccs) {
+                await this.setConfig(lcc);
             }
         }
     }

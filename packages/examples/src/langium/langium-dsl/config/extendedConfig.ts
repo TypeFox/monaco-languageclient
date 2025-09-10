@@ -59,9 +59,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     await fileSystemProvider.writeFile(langiumTypesLangiumUri, textEncoder.encode(langiumTypesLangium), options);
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const editorAppConfig: EditorAppConfig = {
-        $type: overallConfigType
-    };
+    const editorAppConfig: EditorAppConfig = {};
 
     const innerHtml = `<div id="editorsDiv">
     <div id="editors"></div>
@@ -86,12 +84,12 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: overallConfigType,
         logLevel: LogLevel.Debug,
-        htmlContainer: document.body,
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
         },
         viewsConfig: {
-            viewServiceType: 'ViewsService',
+            $type: 'ViewsService',
+            htmlContainer: document.body,
             htmlAugmentationInstructions: (htmlElement: HTMLElement | null | undefined) => {
                 const htmlContainer = document.createElement('div', { is: 'app' });
                 htmlContainer.innerHTML = innerHtml;
@@ -136,6 +134,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     };
 
     const languageClientConfig: LanguageClientConfig = {
+        languageId: 'langium',
         clientOptions: {
             documentSelector: ['langium']
         },

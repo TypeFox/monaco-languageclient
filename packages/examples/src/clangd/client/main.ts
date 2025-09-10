@@ -41,7 +41,7 @@ export const runClangdWrapper = async () => {
 
     // perform global init
     const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
 

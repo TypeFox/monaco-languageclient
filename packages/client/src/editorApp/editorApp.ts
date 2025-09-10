@@ -22,7 +22,6 @@ import { ModelRefs } from './config.js';
  */
 export class EditorApp {
 
-    private $type: OverallConfigType;
     private id: string;
     private config: EditorAppConfig;
 
@@ -44,7 +43,6 @@ export class EditorApp {
     private disposingAwait?: Promise<void>;
 
     constructor(userAppConfig?: EditorAppConfig) {
-        this.$type = userAppConfig?.$type ?? 'extended';
         this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
         if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
             throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
@@ -119,7 +117,7 @@ export class EditorApp {
     /**
      * Starts the single editor application.
      */
-    async start(htmlContainer: HTMLElement) {
+    async start(overallConfigType: OverallConfigType, htmlContainer: HTMLElement) {
         if (this.isStarting()) {
             await this.getStartingAwait();
         }
@@ -146,7 +144,7 @@ export class EditorApp {
 
             const languageDef = this.config.languageDef;
             if (languageDef) {
-                if (this.$type === 'extended') {
+                if (overallConfigType === 'extended') {
                     throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
                 }
                 // register own language first
@@ -176,7 +174,7 @@ export class EditorApp {
                     this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
             }
 
-            await this.createEditors(htmlContainer!);
+            await this.createEditors(htmlContainer);
 
             // everything is fine at this point
             startingResolve();

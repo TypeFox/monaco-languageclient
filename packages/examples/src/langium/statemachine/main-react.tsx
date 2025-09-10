@@ -28,7 +28,7 @@ export const runStatemachineReact = async () => {
         },
         worker,
         messageTransports: { reader, writer },
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        htmlContainer: 'ReactPlaceholder'
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
 
@@ -56,11 +56,6 @@ export const runStatemachineReact = async () => {
                     return () => clearTimeout(timer);
                 }, []);
 
-                const languageClientConfigs = {
-                    configs: {
-                        langium: appConfig.languageClientConfig
-                    }
-                };
                 return (
                     <>
                         <div style={{ 'height': height }} >
@@ -68,7 +63,7 @@ export const runStatemachineReact = async () => {
                                 style={{ 'height': '100%' }}
                                 vscodeApiConfig={appConfig.vscodeApiConfig}
                                 editorAppConfig={appConfig.editorAppConfig}
-                                languageClientConfigs={languageClientConfigs}
+                                languageClientConfig={appConfig.languageClientConfig}
                                 onTextChanged={onTextChanged}
                             />
                             <b>Debug:</b><br />{testState}

@@ -9,7 +9,7 @@ import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
 
 export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => {
     return {
-        name: 'JSON Client',
+        languageId: 'json',
         clientOptions: {
             documentSelector: ['json']
         },
@@ -27,6 +27,7 @@ export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => 
 
 export const createPythonLanguageClientConfig: () => LanguageClientConfig = () => {
     return {
+        languageId: 'python',
         connection: {
             options: {
                 $type: 'WebSocketParams',

@@ -60,16 +60,16 @@ const startEditor = async () => {
     });
     editorApp = new EditorApp(appConfig.editorAppConfig);
 
-    // perform global init
+    // perform global monaco-vscode-api init
     const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.init();
+    await apiWrapper.start();
 
     // init language client
     lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
     await lcWrapper.start();
 
     // run editorApp
-    await editorApp.start(appConfig.vscodeApiConfig.htmlContainer!);
+    await editorApp.start(appConfig.vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
 
     editorApp.updateCodeResources({
         modified: {
@@ -85,11 +85,10 @@ const startEditor = async () => {
         text: textMod,
         uri: '/workspace/example-mod.statemachine'
     };
-    appConfig2.vscodeApiConfig.htmlContainer = document.getElementById('monaco-editor-root2')!;
     editorApp2 = new EditorApp(appConfig2.editorAppConfig);
 
-    // run editorApp
-    await editorApp2.start(appConfig2.vscodeApiConfig.htmlContainer);
+    // run a second editorApp with another dom element
+    await editorApp2.start(appConfig.vscodeApiConfig.$type, document.getElementById('monaco-editor-root2')!);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);

@@ -29,19 +29,13 @@ export const runPythonReact = async () => {
     };
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
-
-    const languageClientConfigs = {
-        configs: {
-            langium: appConfig.languageClientConfig
-        }
-    };
     const App = () => {
         return (
             <div style={{ 'backgroundColor': '#1f1f1f' }} >
                 <MonacoEditorReactComp
                     vscodeApiConfig={appConfig.vscodeApiConfig}
                     editorAppConfig={appConfig.editorAppConfig}
-                    languageClientConfigs={languageClientConfigs}
+                    languageClientConfig={appConfig.languageClientConfig}
                     style={{ 'height': '100%' }}
                     onVscodeApiInitDone={onVscodeApiInitDone}
                     onError={(e) => {

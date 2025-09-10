@@ -14,7 +14,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(() => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
         apiConfig.extensions = [{
             config: {
                 name: 'unit-test-extension',
@@ -49,7 +49,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
         expect(envEnhanced).toBeUndefined();
 
         // call init with api config
-        const promise = apiWrapper.init();
+        const promise = apiWrapper.start();
         envEnhanced = (self as Window).MonacoEnvironment as MonacoEnvironmentEnhanced;
         expect(envEnhanced.vscodeApiGlobalInitAwait).toBeDefined();
         expect(envEnhanced.vscodeApiGlobalInitResolve).toBeDefined();

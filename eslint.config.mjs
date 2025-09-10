@@ -26,6 +26,7 @@ pluginHeader.rules.header.meta.schema = false;
 
 export default [{
     ignores: [
+        '**/.chrome/**/*',
         '**/node_modules/**/*',
         '**/dist/**/*',
         '**/lib/**/*',

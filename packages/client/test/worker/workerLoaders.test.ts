@@ -22,10 +22,10 @@ describe('Test WorkerLoaders', () => {
     const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig(htmlContainer);
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
         apiConfig.monacoWorkerFactory = configureClassicWorkerFactory;
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.init();
+        await apiWrapper.start();
 
         editor = monaco.editor.create(htmlContainer, {
             value: 'const text = "Hello World!";',

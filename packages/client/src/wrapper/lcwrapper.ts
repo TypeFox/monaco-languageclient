@@ -21,12 +21,12 @@ export class LanguageClientWrapper {
     private languageClientConfig: LanguageClientConfig;
     private worker?: Worker;
     private port?: MessagePort;
-    private name?: string;
+    private languageId: string;
     private logger: Logger | undefined;
 
     constructor(config: LanguageClientConfig, logger?: Logger) {
         this.languageClientConfig = config;
-        this.name = this.languageClientConfig.name ?? 'unnamed';
+        this.languageId = this.languageClientConfig.languageId;
         this.logger = logger;
     }
 
@@ -102,7 +102,7 @@ export class LanguageClientWrapper {
         };
         webSocket.onerror = (ev: Event) => {
             const languageClientError: LanguageClientError = {
-                message: `languageClientWrapper (${this.name}): Websocket connection failed.`,
+                message: `languageClientWrapper (${this.languageId}): Websocket connection failed.`,
                 error: (ev as ErrorEvent).error ?? 'No error was provided.'
             };
             reject(languageClientError);
@@ -120,7 +120,7 @@ export class LanguageClientWrapper {
 
                 this.worker.onerror = (ev) => {
                     const languageClientError: LanguageClientError = {
-                        message: `languageClientWrapper (${this.name}): Illegal worker configuration detected.`,
+                        message: `languageClientWrapper (${this.languageId}): Illegal worker configuration detected.`,
                         error: ev.error ?? 'No error was provided.'
                     };
                     reject(languageClientError);
@@ -155,7 +155,8 @@ export class LanguageClientWrapper {
         }
 
         const mlcConfig = {
-            name: this.languageClientConfig.name ?? 'Monaco Wrapper Language Client',
+            id: this.languageClientConfig.languageId,
+            name: 'Monaco Wrapper Language Client',
             clientOptions: {
                 // disable the default error handler...
                 errorHandler: {
@@ -205,12 +206,12 @@ export class LanguageClientWrapper {
             }
         } catch (e: unknown) {
             const languageClientError: LanguageClientError = {
-                message: `languageClientWrapper (${this.name}): Start was unsuccessful.`,
+                message: `languageClientWrapper (${this.languageId}): Start was unsuccessful.`,
                 error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
             };
             reject(languageClientError);
         }
-        this.logger?.info(`languageClientWrapper (${this.name}): Started successfully.`);
+        this.logger?.info(`languageClientWrapper (${this.languageId}): Started successfully.`);
         resolve();
         starting = false;
     }
@@ -258,7 +259,7 @@ export class LanguageClientWrapper {
             }
         } catch (e) {
             const languageClientError: LanguageClientError = {
-                message: `languageClientWrapper (${this.name}): Disposing the monaco-languageclient resulted in error.`,
+                message: `languageClientWrapper (${this.languageId}): Disposing the monaco-languageclient resulted in error.`,
                 error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
             };
             return Promise.reject(languageClientError);

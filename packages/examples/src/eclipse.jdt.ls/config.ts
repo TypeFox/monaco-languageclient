@@ -9,5 +9,5 @@ export const eclipseJdtLsConfig: ExampleLsConfig = {
     port: 30003,
     path: '/jdtls',
     basePath: '/home/mlc/packages/examples/resources/eclipse.jdt.ls',
-    documentSelector: 'java'
+    languageId: 'java'
 };
