@@ -82,7 +82,7 @@ print("Hello Moon!")
             disableElement('button-start', true);
             disableElement('button-flip', false);
 
-            await editorApp.start(vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
+            await editorApp.start(apiWrapper.getHtmlContainer());
             if (editorAppConfig.codeResources?.modified !== undefined) {
                 editorAppConfig.codeResources.modified.text = currentText;
                 editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;

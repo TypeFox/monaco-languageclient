@@ -170,8 +170,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                             onTextChangedRef.current(textChanges);
                         }
                     });
-                    const type = apiWrapperRef.current.getMonacoVscodeApiConfig().$type;
-                    await editorAppRef.current.start(type, containerRef.current!);
+                    await editorAppRef.current.start(containerRef.current!);
 
                     onEditorStartDone?.(editorAppRef.current);
 

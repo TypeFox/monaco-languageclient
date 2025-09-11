@@ -15,7 +15,7 @@ describe('Test EditorApp', () => {
         const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(async () => {
-            await editorApp.start('extended', htmlContainer);
+            await editorApp.start(htmlContainer);
         }).rejects.toThrowError('monaco-vscode-api was not initialized. Aborting.');
     });
 

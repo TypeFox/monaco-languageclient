@@ -13,6 +13,7 @@ import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { LangiumMonarchContent } from '../../langium/langium-dsl/config/langium.monarch.js';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
     const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
@@ -79,6 +80,10 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
                 text: helloCode,
                 uri: helloUri.path
             }
+        },
+        languageDef: {
+            monarchLanguage: LangiumMonarchContent,
+            languageExtensionConfig: { id: 'langium' }
         }
     };
 
@@ -91,7 +96,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
+            await editorApp.start(apiWrapper.getHtmlContainer());
             await lcWrapper.start();
 
             // open files, so the LS can pick it up

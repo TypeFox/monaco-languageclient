@@ -19,7 +19,7 @@ describe('Test EditorApp', () => {
         const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(async () => {
-            await editorApp.start(apiConfig.$type, apiWrapper.getHtmlContainer());
+            await editorApp.start(apiWrapper.getHtmlContainer());
         }).rejects.toThrowError('No EditorService configured. monaco-editor will not be started.');
     });
 

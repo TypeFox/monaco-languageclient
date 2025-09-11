@@ -76,7 +76,7 @@ export const runTsWrapper = async () => {
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(vscodeApiConfig.$type, htmlContainer);
+            await editorApp.start(htmlContainer);
 
             vscode.commands.getCommands().then((x) => {
                 console.log(`Found ${x.length} commands`);
@@ -119,7 +119,7 @@ export const runTsWrapper = async () => {
             editorAppConfig.useDiffEditor = !useDiffEditor;
             disableElement('button-swap-code', !editorAppConfig.useDiffEditor);
 
-            await editorApp.start(vscodeApiConfig.$type, htmlContainer);
+            await editorApp.start(htmlContainer);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
             await editorApp.dispose();

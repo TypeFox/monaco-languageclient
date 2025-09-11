@@ -159,7 +159,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await editorApp.start(vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
     editorApp.getTextModels().modified?.onDidChangeContent(() => {
         validate();

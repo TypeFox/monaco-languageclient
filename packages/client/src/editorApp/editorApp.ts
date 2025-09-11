@@ -8,7 +8,7 @@ import { createModelReference, type ITextFileEditorModel } from '@codingame/mona
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
-import { getEnhancedMonacoEnvironment, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
+import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
 import type { CallbackDisposeable, CodeContent, CodeResources, DisposableModelRefs, EditorAppConfig, TextContents, TextModels } from './config.js';
 import { ModelRefs } from './config.js';
@@ -117,7 +117,7 @@ export class EditorApp {
     /**
      * Starts the single editor application.
      */
-    async start(overallConfigType: OverallConfigType, htmlContainer: HTMLElement) {
+    async start(htmlContainer: HTMLElement) {
         if (this.isStarting()) {
             await this.getStartingAwait();
         }
@@ -144,9 +144,6 @@ export class EditorApp {
 
             const languageDef = this.config.languageDef;
             if (languageDef) {
-                if (overallConfigType === 'extended') {
-                    throw new Error('Language definition is not supported for extended editor apps where textmate is used.');
-                }
                 // register own language first
                 monaco.languages.register(languageDef.languageExtensionConfig);
 

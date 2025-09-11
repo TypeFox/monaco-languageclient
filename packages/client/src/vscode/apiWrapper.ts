@@ -227,8 +227,9 @@ export class MonacoVscodeApiWrapper {
      *   - languages
      *   - log
      *   - model
+     *   - configuration services
      */
-    protected async importAllServices(performServiceConsistencyChecks?: boolean) {
+    protected async initAllServices(performServiceConsistencyChecks?: boolean) {
         const services = await this.supplyRequiredServices();
 
         mergeServices(services, this.apiConfig.serviceOverrides);
@@ -348,7 +349,7 @@ export class MonacoVscodeApiWrapper {
 
                 await this.initUserConfiguration();
 
-                await this.importAllServices(startInstructions?.performServiceConsistencyChecks);
+                await this.initAllServices(startInstructions?.performServiceConsistencyChecks);
 
                 await this.applyViewsPostConfig();
 

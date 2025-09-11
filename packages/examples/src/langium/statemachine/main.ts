@@ -69,7 +69,7 @@ const startEditor = async () => {
     await lcWrapper.start();
 
     // run editorApp
-    await editorApp.start(appConfig.vscodeApiConfig.$type, apiWrapper.getHtmlContainer());
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
     editorApp.updateCodeResources({
         modified: {
@@ -88,7 +88,7 @@ const startEditor = async () => {
     editorApp2 = new EditorApp(appConfig2.editorAppConfig);
 
     // run a second editorApp with another dom element
-    await editorApp2.start(appConfig.vscodeApiConfig.$type, document.getElementById('monaco-editor-root2')!);
+    await editorApp2.start(document.getElementById('monaco-editor-root2')!);
 
     vscode.commands.getCommands().then((x) => {
         console.log('Currently registered # of vscode commands: ' + x.length);
