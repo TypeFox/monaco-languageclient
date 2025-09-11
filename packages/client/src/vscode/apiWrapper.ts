@@ -8,7 +8,6 @@ import { ExtensionHostKind, getExtensionManifests, registerExtension, type IExte
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override';
 import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import { ConsoleLogger, encodeStringOrUrlToDataUrl, type Logger } from 'monaco-languageclient/common';
@@ -85,7 +84,9 @@ export class MonacoVscodeApiWrapper {
         if (this.apiConfig.$type === 'extended') {
             const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
             const getThemeServiceOverride = (await import('@codingame/monaco-vscode-theme-service-override')).default;
+            const getLanguagesServiceOverride = (await import('@codingame/monaco-vscode-languages-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
+                ...getLanguagesServiceOverride(),
                 ...getTextmateServiceOverride(),
                 ...getThemeServiceOverride()
             });
@@ -192,7 +193,6 @@ export class MonacoVscodeApiWrapper {
     protected async supplyRequiredServices() {
         return {
             ...getConfigurationServiceOverride(),
-            ...getLanguagesServiceOverride(),
             ...getLogServiceOverride(),
             ...getModelServiceOverride()
         };
