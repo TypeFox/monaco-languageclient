@@ -31,7 +31,7 @@ await apiWrapper.start();
 
 ## Extended Mode Configuration
 
-Extended Mode provides a rich feature set by leveraging VSCode services. This is generally the recommended mode for most applications. If you use extended mode `MonacoVscodeApiWrapper` will automatically initialize Textmate and Themes related services. This disable monarch and language related feature in `monaco-editor` and only allows to build a "partial" VSCode Web application.
+Extended Mode provides a rich feature set by leveraging VSCode services. This is generally the recommended mode for most applications. If you use extended mode, `MonacoVscodeApiWrapper` will automatically initialize Textmate and Themes related services. This disables monarch and language related feature in `monaco-editor` and only allows to build a "partial" VSCode Web application.
 
 ### Basic Extended Configuration
 
@@ -55,7 +55,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
         })
     },
 
-    // spefic features handled by web workers
+    // specific features handled by web workers
     monacoWorkerFactory: configureDefaultWorkerFactory
 };
 
@@ -137,7 +137,7 @@ await lcWrapper.start();
 
 ## Classic Mode Configuration
 
-Classic Mode uses the standard Monaco Editor with language client features added:
+Classic Mode uses the standard Monaco Editor with language client features added in:
 
 ```typescript
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';

@@ -2,7 +2,7 @@
 
 ## What is the Monaco Language Client?
 
-The Monaco Language Client is a TypeScript library allowing to use the Language Server Protocol (LSP) directly with monaco-editor. Thereby it can utilize language servers to extend monoaco-editor's language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more, directly in the browser.
+The Monaco Language Client is a TypeScript library allowing to use the Language Server Protocol (LSP) directly with the monaco-editor. This lets it utilize language servers to extend the monoaco-editor's existing language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more, directly in the browser.
 
 ## Key Concepts
 
@@ -15,7 +15,7 @@ We'll briefly explain each below.
 
 ### Language Server Protocol (LSP) and vscode-languageclient
 
-The Language Server Protocol is a standard that defines how development tools can communicate with language servers to provide enhanced language support in the code editor. A language server understands a specific programming language and can provide support features such as:
+The Language Server Protocol is a standard that defines how development tools can communicate with language servers to provide enhanced language support in editors. A language server understands a specific programming language and can provide support features such as:
 
 - **Code completion** - Intelligent suggestions as you type
 - **Diagnostics** - Error and warning messages
@@ -27,9 +27,9 @@ The `vscode-languageclient` is the library usually supplying client side support
 
 ## monaco-editor and @codingame/monaco-vscode-api
 
-The Monaco Editor is the code editor that powers VSCode. In the past it was extracted by Microsoft from the monolithic VSCode as self-standing [npm package](https://www.npmjs.com/package/monaco-editor), so people can have an editor that works in the web. [monaco-editor](https://microsoft.github.io/monaco-editor/) provides syntax highlighting, basic editing features and a rich API for customization. However, by default, it does include language-specific features like code completion or diagnostics only for very few languages (e.g. TypeScript/JavaScript, HTML). It can't be connected to language servers as it does not offer support for the Language Server Protocol directly.
+The Monaco Editor is the code editor that powers VSCode. In the past it was extracted by Microsoft from the monolithic VSCode as a self-standing [npm package](https://www.npmjs.com/package/monaco-editor), so people could have an editor that works in the web. [monaco-editor](https://microsoft.github.io/monaco-editor/) provides syntax highlighting, basic editing features and a rich API for customization. However, by default, it does include language-specific features like code completion or diagnostics only for a few languages (e.g. TypeScript/JavaScript, HTML). It can't be connected to language servers as it does not offer support for the Language Server Protocol directly.
 
-This is where the `@codingame/monaco-vscode-api` comes in. It supplies a modularized VSCode Web and its API allowing you to build a web applications that only use a sub-set of VSCode itself. Hereby, you can use things like the `vscode-langugaeclient` library or Textmate syntax highlighting that are usually not available with the regular `monaco-editor` npm package. Trying to re-integrate the package back into VSCode is not possible without substantial modification. Thus a fully `monaco-editor` API compatible package named `@codingame/monaco-vscode-editor-api` is available as npm package along many others under the `@codingame/monaco-vscode` umbrella.
+This is where the `@codingame/monaco-vscode-api` comes in. It supplies a modularized VSCode Web and its API allowing you to build web applications that only use a sub-set of VSCode itself. This lets you use things like the `vscode-languageclient` library or Textmate syntax highlighting that are usually not available with the regular `monaco-editor` npm package. Trying to re-integrate the package back into VSCode is not possible without substantial modification. Thus a fully `monaco-editor` API compatible package named `@codingame/monaco-vscode-editor-api` is available as an npm package along with many others under the `@codingame/monaco-vscode` umbrella.
 
 ### How the Monaco Language Client Works
 
@@ -85,7 +85,7 @@ Uses `@codingame/monaco-vscode-api` to provide VSCode-like services and function
 - Advanced editor features
 - Extension-like capabilities
 - Rich VSCode services integration
-- Ability to used VSCode Web extensions
+- Ability to use VSCode Web extensions
 
 This is the recommended mode for _most_ use cases. If you're not sure which mode to use, start with the extended mode.
 
@@ -93,7 +93,7 @@ This is the recommended mode for _most_ use cases. If you're not sure which mode
 
 ### Classic Mode
 
-Uses standalone Monaco Editor with language client features added on top. This is a light-weight option that provides:
+Uses a standalone Monaco Editor with language client features added on top. This is a light-weight option that provides:
 
 - Core language server features
 - Smaller bundle size
