@@ -138,7 +138,7 @@ If you see import errors, ensure you have the correct overrides/resolutions in y
 
 ### Worker Loading Issues
 
-For Web Worker usage, ensure your bundler can handle worker imports. See our [troubleshooting guide](guides/troubleshooting.md) for a bundler-specific configuration.
+For Web Worker usage, ensure your bundler can handle worker imports. See our [troubleshooting guide](./guides/troubleshooting.md) for a bundler-specific configuration.
 
 ### Version Mismatches
 
@@ -148,11 +148,4 @@ If you see console warnings about version mismatches, check that all `@codingame
 
 Once you have Monaco Language Client installed, you're ready to:
 
-1. **Follow the [Getting Started Guide](basic-usage/getting-started.md)** for your first setup
-2. **Choose your integration mode** - [Extended Mode](advanced-usage/extended-mode.md) or [Classic Mode](advanced-usage/classic-mode.md)
-
-For specific framework integration guides, see:
-
-- [React Integration](advanced-usage/react-integration.md)
-- [WebSocket Communication](advanced-usage/websockets.md)
-- [Web Worker Usage](advanced-usage/web-workers.md)
+1. **Follow the [Getting Started Guide](./guides/getting-started.md)** for your first setup

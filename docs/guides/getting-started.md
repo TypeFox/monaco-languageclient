@@ -194,10 +194,8 @@ Connects to an external language server via WebSocket. The language server then 
 
 Congratulations! If everything worked as expected, then you've created your first Monaco Language Client integration. From here you can:
 
-1. **Explore [Configuration](configuration.md)** to customize the editor behavior
-2. **Check out [Examples](examples.md)** for other language server integrations
-3. **Learn about [Extended Mode](../advanced-usage/extended-mode.md)** for more VSCode-like features
-4. **Try [Web Workers](../advanced-usage/web-workers.md)** for in-browser language servers
+1. **Explore [Configuration](./configuration.md)** to customize the editor behavior
+2. **Check out [Examples](./examples.md)** for other language server integrations
 
 ## Troubleshooting
 
@@ -207,4 +205,4 @@ Congratulations! If everything worked as expected, then you've created your firs
 
 **Import errors**: Make sure you have the correct package versions and bundler configuration from the [Installation guide](../installation.md).
 
-For more help, see our [Troubleshooting Guide](../guides/troubleshooting.md).
+For more help, see our [Troubleshooting Guide](./troubleshooting.md).

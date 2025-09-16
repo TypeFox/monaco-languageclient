@@ -3,7 +3,6 @@
 [![Github Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://typefox.github.io/monaco-languageclient)
 [![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
-[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 <br>
 [![monaco-languageclient Version](https://img.shields.io/npm/v/monaco-languageclient?logo=npm&label=monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
 [![monaco-languageclient Downloads](https://img.shields.io/npm/dt/monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
@@ -23,6 +22,7 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
 
 - [Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-react-and-examples)
   - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
+  - [Official Documentation](#official-documentation)
   - [Getting started](#getting-started)
     - [Vite dev server](#vite-dev-server)
   - [Usage](#usage)
@@ -48,17 +48,6 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
     - [VSCode integration](#vscode-integration)
   - [Featured projects](#featured-projects)
   - [Troubleshooting](#troubleshooting)
-    - [General](#general)
-    - [@codingame/monaco-vscode-editor-api / monaco-editor usage](#codingamemonaco-vscode-editor-api--monaco-editor-usage)
-    - [Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api](#dependency-issues-monaco-editor--codingamemonaco-vscode-api--codingamemonaco-vscode-editor-api)
-    - [Volta](#volta)
-    - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
-    - [SSR frameworks](#ssr-frameworks)
-    - [Serve all files required](#serve-all-files-required)
-    - [Bad Polyfills](#bad-polyfills)
-      - [buffer](#buffer)
-    - [monaco-editor and react](#monaco-editor-and-react)
-    - [webpack worker issues](#webpack-worker-issues)
   - [Licenses](#licenses)
 
 ## Changelogs, project history and compatibility
@@ -84,12 +73,13 @@ These are the current versions of packages from this repository and their alignm
 
 You find the full compatibility table with all previous versions [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
 
-[This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
+## Official Documentation
+
+Since `monaco-languageclient` version 10 we started to build an [official documentation](./docs/index.md). This will be continuously extended.
 
 ## Getting started
 
-On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Or, use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
-Locally, from a terminal do:
+On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Locally, from a terminal do:
 
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git

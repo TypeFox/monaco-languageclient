@@ -313,7 +313,5 @@ The configuration is validated at runtime. Common validation errors:
 
 ## Next Steps
 
-- **See [Examples](examples.md)** for complete configuration examples
-- **Learn [Extended Mode](../advanced-usage/extended-mode.md)** for advanced VSCode features
-- **Explore [WebSocket Communication](../advanced-usage/websockets.md)** for external language servers
-- **Check [Troubleshooting](../guides/troubleshooting.md)** for configuration issues
+- **See [Examples](./examples.md)** for complete configuration examples
+- **Check [Troubleshooting](./troubleshooting.md)** for configuration issues

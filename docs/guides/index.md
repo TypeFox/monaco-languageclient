@@ -4,11 +4,10 @@ This section covers the general concepts and usage patterns for the Monaco Langu
 
 ## Section Contents
 
-- **[Getting Started](getting-started.md)** - Your first Monaco Language Client integration with a minimal working example
-- **[Configuration](configuration.md)** - Understanding configuration options and how to customize your setup
-- **[Examples](examples.md)** - Simple, practical examples demonstrating common integration patterns
-- **[Migration Guide](migration.md)** - Guide for migrating from v9 to v10, including changes in configuration and usage
-- **[Troubleshooting](troubleshooting.md)** - Common issues and how to resolve them
+- **[Getting Started](./getting-started.md)** - Your first Monaco Language Client integration with a minimal working example
+- **[Configuration](./configuration.md)** - Understanding configuration options and how to customize your setup
+- **[Examples](./examples.md)** - Simple, practical examples demonstrating common integration patterns
+- **[Troubleshooting](./troubleshooting.md)** - Common issues and how to resolve them
 
 ## Quick Overview
 
@@ -73,8 +72,8 @@ Generally you should start with Extended Mode unless you have specific constrain
 
 ## Next Steps
 
-- **New to the Monaco Language Client?** Start with [Getting Started](getting-started.md)
-- **Need specific configuration help?** Check [Configuration](configuration.md)
-- **Jump straight to Practical Usage?** Browse [Examples](examples.md)
-- **Upgrading from v9?** Follow the [Migration Guide](migration.md)
-- **Facing issues?** Look into [Troubleshooting](troubleshooting.md)
+- **New to the Monaco Language Client?** Start with [Getting Started](./getting-started.md)
+- **Need specific configuration help?** Check [Configuration](./configuration.md)
+- **Jump straight to Practical Usage?** Browse [Examples](./examples.md)
+- **Upgrading from v9?** Follow the [Migration Guide](../migration.md)
+- **Facing issues?** Look into [Troubleshooting](./troubleshooting.md)

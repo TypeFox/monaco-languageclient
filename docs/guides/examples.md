@@ -319,7 +319,5 @@ To run these examples:
 
 ## Next Steps
 
-- **Try [Advanced Usage](../advanced-usage/index.md)** for more sophisticated integrations
-- **Explore [Examples](../examples/index.md)** for complete, working implementations
-- **Check [API Reference](../api-reference/index.md)** for detailed configuration options
-- **See [Troubleshooting](../guides/troubleshooting.md)** if you encounter issues
+- **Explore [Examples](./index.md)** for complete, working implementations
+- **See [Troubleshooting](./troubleshooting.md)** if you encounter issues

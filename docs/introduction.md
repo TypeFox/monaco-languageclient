@@ -116,9 +116,4 @@ The Monaco Language Client is ideal when you need to:
 
 ## What's Next?
 
-Ready to get started? Check out our [Installation Guide](installation.md) to set up the monaco-languageclient in your project, or jump to [Basic Usage](basic-usage/index.md) to start learning how to get started with simple examples.
-
-For a deeper understanding of the different integration approaches, see:
-
-- [Extended Mode](advanced-usage/extended-mode.md) for VSCode-like functionality
-- [Classic Mode](advanced-usage/classic-mode.md) for simpler integrations
+Ready to get started? Check out our [Installation Guide](./installation.md) to set up the monaco-languageclient in your project, or jump to [Basic Usage](./guides/getting-started.md) to start learning how to get started with simple examples.

@@ -266,7 +266,7 @@ Then it's likely you have an old version of `buffer` interfering (see [#538](htt
 
 - **Dispose of Instances**: Ensure you call the `.dispose()` method on `EditorApp`, `LanguageClientWrapper`, and `MonacoVscodeApiWrapper` instances when they are no longer needed (e.g., when a component unmounts).
 - **Limit Open Files**: In a multi-file setup, manage the number of files kept in memory.
-- **Use Classic Mode**: For simpler use cases, [Classic Mode](../advanced-usage/classic-mode.md) has a smaller memory footprint.
+- **Use Classic Mode**: For simpler use cases, [Classic Mode](./index.md#classic-mode) has a smaller memory footprint.
 
 ### Slow Editor Performance
 
