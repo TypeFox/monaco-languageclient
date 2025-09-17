@@ -1,6 +1,5 @@
 # Monaco Language Client
 
-[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
 [![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
 [![NPM Version](https://img.shields.io/npm/v/monaco-languageclient.svg)](https://www.npmjs.com/package/monaco-languageclient)
@@ -12,40 +11,105 @@ Module to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) wi
 
 All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/CHANGELOG.md).
 
-## Getting Started
+## Official documentation, quick start and examples
 
-This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions]](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient).
 
-## Usage
+You find detailed information in the [official documentation](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/index.md).
 
-### NEW with v8: Use monaco-vscode-editor-api package instead of monaco-editor
+If interested, check [quick start for local development]](<https://github.com/TypeFox/monaco-languageclient#getting-started>).
 
-Since version 2 (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)) of this library we rely on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the VSCode API. It evolved substantially since then and thesedays allows to use many vscode only services with `monaco-editor`. With v6 and v7 we used a *treemended* version of `monaco-editor` which brought back monaco-editor code that was removed during bundling/threeshaking. This left users with the need to define overrides / resolution which was problematic.
-Therefore [monaco-vscode-editor-api](https://www.npmjs.com/package/@codingame/monaco-vscode-editor-api) is now used and installed as an alias to `monaco-editor` because it provides the same api as the official monaco-editor, but no longer has the drawbacks of the *treemended* version.
+A detailed list of examples is contained in the GitHub repository, please see [this listing](<https://github.com/TypeFox/monaco-languageclient#examples-overview>).
 
-### Using services and extra packages from @codingame/monaco-vscode-api
+## Version 10: A toolbox for language client applications
 
-The bespoke projects not only supplies the api, but it provides 100+ packages with additional services, default extensions and language packs. By default when initalizing `monaco-languageclient` via the required `initServices` the following services are always loaded:
+Since Version 2 this library relied on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the VSCode API (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)). `monaco-vscode-api` has evolved substantially since then and thesedays provides 100+ packages with additional services, default extensions and language packs allowing you to create VSCode Web compatible applications.
 
-- *languages* and model *services* (always added by `monaco-languagclient`)
-- *layout*, *environment*, *extension*, *files* and *quickAccess* (always added by `monaco-vscode-api`)
+Since `monaco-langaugeclient` version `10` all building blocks for complete web applications are contained in this package. The biggest deviation from the previous major versions is that the handling of monaco-vscode-api, the handling of language clients and the single editor app functionality are now very clearly separated. Instead of supplying an independent npm module (monaco-editor-wrapper), almost all useful pieces of code were moved here and the different functionalities are exposed via domain specific sub-exports:
 
-Please check the [following link](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services) for information about all services supplied by [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api).
+- **vscodeApiWrapper**: Contains MonacoVscodeApiWrapper used to handle everything regarding monaco-vscode-api
+- **lcwrapper**: LanguageClientWrapper & LanguageClientsManager help to control one or multiple language clients
+- **editorApp**: EditorApp is used to control a single monaco-editor
 
-#### textmate and monarch
+### Usage
 
-If you use the `textmate` or `theme` services you are able to load textmate based grammars and theme definitions from vscode:
+The `monaco-vscode-api` initialization and start-up can only and must been only done once within an applications' lifecycle. Everything else cab be repeated. If you use TypeScript all configuration is fully typed.
 
-```js
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
+```typescript
+import * as vscode from 'vscode';
+// Import Monaco Language Client components
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+
+async function createEditorAndLanguageClient() {
+    const languageId = 'mylang';
+    const code = '// initial editor content';
+    const codeUri = '/workspace/hello.mylang';
+
+    // Monaco VSCode API configuration
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
+        $type: 'extended',
+        viewsConfig: {
+            $type: 'EditorService',
+            // the div to which monaco-editor is added
+            htmlContainer: document.getElementById('monaco-editor-root')!
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.wordBasedSuggestions': 'off'
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    // Language client configuration
+    const languageClientConfig: LanguageClientConfig = {
+        languageId,
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                // at this url the language server for myLang must be reachable
+                url: 'ws://localhost:30000/myLangLS'
+            }
+        },
+        clientOptions: {
+            documentSelector: [languageId],
+            orkspaceFolder: {
+                index: 0,
+                name: 'workspace',
+                uri: vscode.Uri.file('/workspace')
+            }
+        }
+    };
+
+    // editor app / monaco-editor configuration
+    const editorAppConfig: EditorAppConfig = {
+        codeResources: {
+            main: {
+                text: code,
+                uri: codeUri
+            }
+        }
+    };
+
+    // Create the monaco-vscode api Wrapper and start it before anything else
+    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+    await apiWrapper.start();
+
+    // Create language client wrapper
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+    await lcWrapper.start();
+
+    // Create and start the editor app
+    const editorApp = new EditorApp(editorAppConfig);
+    await editorApp.start(apiWrapper.getHtmlContainer());
+}
+
+createEditorAndLanguageClient().catch(console.error);
 ```
-
-Once you those services you can no longer make use of monarch based grammars and themes.
-
-## Examples
-
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 

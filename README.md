@@ -21,8 +21,9 @@ This repository now host multiple npm packages under one roof:
 The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
 - [Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-react-and-examples)
-  - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
   - [Official Documentation](#official-documentation)
+    - [Migration Guide](#migration-guide)
+  - [Changelogs, current versions and compatibility table](#changelogs-current-versions-and-compatibility-table)
   - [Getting started](#getting-started)
     - [Vite dev server](#vite-dev-server)
   - [Usage](#usage)
@@ -50,7 +51,15 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
   - [Troubleshooting](#troubleshooting)
   - [Licenses](#licenses)
 
-## Changelogs, project history and compatibility
+## Official Documentation
+
+Since `monaco-languageclient` version 10 we started to build an [official documentation](./docs/index.md). This will be continuously extended.
+
+### Migration Guide
+
+We added a [migration guide](./docs/migration.md) with the release of `monaco-languageclient` version `10`.
+
+## Changelogs, current versions and compatibility table
 
 CHANGELOGs for each project are available from the linked location:
 
@@ -71,11 +80,7 @@ These are the current versions of packages from this repository and their alignm
   - **monaco-editor**: `0.52.2`
 - **vscode-ws-jsonrpc**: `3.5.0` (release date: 2025-08-11)
 
-You find the full compatibility table with all previous versions [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
-
-## Official Documentation
-
-Since `monaco-languageclient` version 10 we started to build an [official documentation](./docs/index.md). This will be continuously extended.
+Check find the [full compatibility table](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) with all previous versions.
 
 ## Getting started
 

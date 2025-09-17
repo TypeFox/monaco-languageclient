@@ -43,10 +43,10 @@ Create your main TypeScript file (`main.ts`):
 import '@codingame/monaco-vscode-json-default-extension';
 
 // Import Monaco Language Client components
-import { EditorApp } from 'monaco-languageclient/editorApp';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
-import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
 // VSCode API for file system operations
 import * as vscode from 'vscode';
@@ -69,7 +69,7 @@ async function createJsonEditor() {
     registerFileSystemOverlay(1, fileSystemProvider);
 
     // Monaco VSCode API configuration
-    const vscodeApiConfig = {
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
             $type: 'EditorService',
@@ -86,7 +86,7 @@ async function createJsonEditor() {
     };
 
     // Language client configuration
-    const languageClientConfig = {
+    const languageClientConfig: LanguageClientConfig = {
         languageId: 'json',
         connection: {
             options: {
@@ -104,30 +104,30 @@ async function createJsonEditor() {
         }
     };
 
+    // editor app / monaco-editor configuration
+    const editorAppConfig: EditorAppConfig = {
+        codeResources: {
+            main: {
+                text: code,
+                uri: codeUri
+            }
+        }
+    };
+
     // Create the monaco-vscode api Wrapper
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
     // Create language client wrapper
     const lcWrapper = new LanguageClientWrapper(languageClientConfig);
-
-    // Create the editor app
-    const editorApp = new EditorApp({
-        codeResources: {
-            main: {
-                text: jsonContent,
-                uri: fileUri.path
-            }
-        }
-    });
-
-    await editorApp.start(apiWrapper.getHtmlContainer());
     await lcWrapper.start();
+
+    // Create and start the editor app
+    const editorApp = new EditorApp(editorAppConfig);
+    await editorApp.start(apiWrapper.getHtmlContainer());
 
     console.log('JSON editor with language client is ready!');
 }
-
-// Start the editor
 createJsonEditor().catch(console.error);
 ```
 

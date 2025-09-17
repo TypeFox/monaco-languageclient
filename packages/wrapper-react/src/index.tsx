@@ -22,7 +22,7 @@ export type MonacoEditorProps = {
     onTextChanged?: (textChanges: TextContents) => void;
     onError?: (error: Error) => void;
     onDisposeEditor?: () => void;
-    onDisposeLanguageClients?: () => void;
+    onDisposeLanguageClient?: () => void;
     modifiedTextValue?: string;
     originalTextValue?: string;
 }
@@ -40,7 +40,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         onTextChanged,
         onError,
         onDisposeEditor,
-        onDisposeLanguageClients,
+        onDisposeLanguageClient,
         modifiedTextValue,
         originalTextValue
     } = props;
@@ -229,7 +229,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                     if (languageClientConfig?.enforceDispose === true) {
                         lcsManagerRef.current?.dispose();
-                        onDisposeLanguageClients?.();
+                        onDisposeLanguageClient?.();
                     }
 
                     debugLogging('DISPOSE DONE', true);

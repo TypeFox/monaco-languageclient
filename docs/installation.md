@@ -45,7 +45,7 @@ If using npm or pnpm, and your dependencies already contain a refernence to `mon
 ```json
 {
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~20.2.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^21.0.1"
   }
 }
 ```
@@ -57,7 +57,7 @@ In yarn you have to specify `resolutions` instead of `overrides`:
 ```json
 {
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~20.2.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^21.0.1"
   }
 }
 ```
@@ -69,17 +69,17 @@ If using pnpm, you have to add more transitive dependencies that npm or yarn aut
 ```json
 {
   "dependencies": {
-    "@codingame/monaco-vscode-api": "~20.2.1",
-    "@codingame/monaco-vscode-configuration-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-editor-api": "~20.2.1",
-    "@codingame/monaco-vscode-editor-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-extension-api": "~20.2.1",
-    "@codingame/monaco-vscode-extensions-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-languages-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-localization-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-log-service-override": "~20.2.1",
-    "@codingame/monaco-vscode-model-service-override": "~20.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@~20.2.1"
+    "@codingame/monaco-vscode-api": "^21.0.1",
+    "@codingame/monaco-vscode-configuration-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-editor-api": "^21.0.1",
+    "@codingame/monaco-vscode-editor-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-extension-api": "^21.0.1",
+    "@codingame/monaco-vscode-extensions-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-languages-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-localization-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-log-service-override": "^21.0.1",
+    "@codingame/monaco-vscode-model-service-override": "^21.0.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1"
   }
 }
 ```

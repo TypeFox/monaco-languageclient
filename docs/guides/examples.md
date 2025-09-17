@@ -19,7 +19,6 @@ import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 // VSCode API for file system operations
 import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 
 async function createJsonEditor() {
     const languageId = 'json';
@@ -28,13 +27,14 @@ async function createJsonEditor() {
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": "unix"
 }`;
-    const codeUri = '/workspace/model.json';
+    const codeUri = '/workspace/hello.json';
 
     // Monaco VSCode API configuration
     const vscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
             $type: 'EditorService',
+            // the div to which monaco-editor is added
             htmlContainer: document.getElementById('monaco-editor-root')!
         },
         logLevel: LogLevel.Debug,
@@ -49,7 +49,7 @@ async function createJsonEditor() {
 
     // Language client configuration
     const languageClientConfig = {
-        languageId: 'json',
+        languageId,
         connection: {
             options: {
                 $type: 'WebSocketUrl',
@@ -57,7 +57,7 @@ async function createJsonEditor() {
             }
         },
         clientOptions: {
-            documentSelector: ['json'],
+            documentSelector: [languageId],
             workspaceFolder: {
                 index: 0,
                 name: 'workspace',
@@ -72,24 +72,23 @@ async function createJsonEditor() {
 
     // Create language client wrapper
     const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+    await lcWrapper.start();
 
     // Create the editor app
     const editorApp = new EditorApp({
         codeResources: {
             main: {
                 text: jsonContent,
-                uri: fileUri.path
+                uri: codeUri
             }
         }
     });
 
+    // Start the editor
     await editorApp.start(apiWrapper.getHtmlContainer());
-    await lcWrapper.start();
 
     console.log('JSON editor with language client is ready!');
 }
-
-// Start the editor
 createJsonEditor().catch(console.error);
 ```
 
@@ -158,7 +157,8 @@ export const runClient = async () => {
         connection: {
             options: {
                 $type: 'WebSocketUrl',
-                url: 'ws://localhost:30000/sampleServer'
+                // at this url the language server must be reachable
+                url: 'ws://localhost:30000/jsonLS'
             }
         }
     };
