@@ -5,7 +5,7 @@
 
 import { beforeAll, describe, expect, test } from 'vitest';
 import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
-import { MonacoVscodeApiWrapper, type MonacoEnvironmentEnhanced } from 'monaco-languageclient/vscodeApiWrapper';
+import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests', () => {
@@ -45,19 +45,18 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     });
 
     test.sequential('test init MonacoVscodeApiWrapper and gloabl state', async () => {
-        let envEnhanced = (self as Window).MonacoEnvironment as MonacoEnvironmentEnhanced;
-        expect(envEnhanced).toBeUndefined();
+        expect(typeof MonacoEnvironment === 'undefined').toBeTruthy();
 
         // call init with api config
         const promise = apiWrapper.start();
-        envEnhanced = (self as Window).MonacoEnvironment as MonacoEnvironmentEnhanced;
+        let envEnhanced = getEnhancedMonacoEnvironment();
         expect(envEnhanced.vscodeApiGlobalInitAwait).toBeDefined();
         expect(envEnhanced.vscodeApiGlobalInitResolve).toBeDefined();
         expect(envEnhanced.vscodeApiInitialised).toBeFalsy();
 
         // wait for the initial promise to complete and expect that api init was completed and is no longer ongoing
         await expect(await promise).toBeUndefined();
-        envEnhanced = (self as Window).MonacoEnvironment as MonacoEnvironmentEnhanced;
+        envEnhanced = getEnhancedMonacoEnvironment();
         expect(envEnhanced.vscodeApiGlobalInitAwait).toBeUndefined();
         expect(envEnhanced.vscodeApiGlobalInitResolve).toBeUndefined();
         expect(envEnhanced.vscodeApiInitialised).toBeTruthy();

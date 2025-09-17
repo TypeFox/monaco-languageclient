@@ -12,11 +12,10 @@ import { FakeWorker as Worker } from 'monaco-languageclient/workerFactory';
 import type { MonacoEnvironmentEnhanced } from './config.js';
 
 export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
-    const monWin = (self as Window);
-    if (monWin.MonacoEnvironment === undefined) {
-        monWin.MonacoEnvironment = {};
+    if (typeof MonacoEnvironment === 'undefined') {
+        globalThis.MonacoEnvironment = {};
     }
-    const envEnhanced = monWin.MonacoEnvironment as MonacoEnvironmentEnhanced;
+    const envEnhanced = MonacoEnvironment as MonacoEnvironmentEnhanced;
     if (envEnhanced.vscodeApiInitialising === undefined) {
         envEnhanced.vscodeApiInitialising = false;
     }

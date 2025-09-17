@@ -7,6 +7,7 @@ import { describe, expect, test } from 'vitest';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from 'monaco-languageclient/common';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
 
 describe('WorkerFactory Tests', () => {
 
@@ -14,8 +15,7 @@ describe('WorkerFactory Tests', () => {
 
         useWorkerFactory({});
 
-        const monWin = (self as Window);
-        const getWorker = () => monWin.MonacoEnvironment?.getWorker?.('test', 'TextEditorWorker');
+        const getWorker = () => getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
         expect(getWorker).toThrowError('Unimplemented worker TextEditorWorker (test)');
     });
 
@@ -32,8 +32,7 @@ describe('WorkerFactory Tests', () => {
             logger
         });
 
-        const monWin = (self as Window);
-        const getWorker = () => monWin.MonacoEnvironment?.getWorker?.('test', 'TextEditorWorker');
+        const getWorker = () => getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
         const workerFunc = getWorker();
         expect(workerFunc).toBeDefined();
         expect(workerFunc).toBeInstanceOf(Worker);

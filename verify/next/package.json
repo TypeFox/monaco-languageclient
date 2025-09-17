@@ -17,8 +17,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@codingame/monaco-vscode-api": "^20.5.0",
-    "@codingame/monaco-vscode-keybindings-service-override": "^20.5.0",
+    "@codingame/monaco-vscode-api": "^21.0.1",
+    "@codingame/monaco-vscode-keybindings-service-override": "^21.0.1",
     "@typefox/monaco-editor-react": "~7.0.0-next.2",
     "langium": "~4.0.0",
     "monaco-languageclient": "~10.0.0-next.2",
@@ -26,7 +26,7 @@
     "next": "~15.5.2",
     "react": "~19.1.1",
     "react-dom": "~19.1.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^20.5.0",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1"
   },
@@ -39,7 +39,7 @@
     "rolldown-vite": "~7.1.5"
   },
   "volta": {
-    "node": "22.18.0",
+    "node": "22.19.0",
     "npm": "10.9.3"
   }
 }

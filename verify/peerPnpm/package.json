@@ -8,12 +8,12 @@
     "pnpm": ">=9.15.0"
   },
   "volta": {
-    "node": "22.18.0",
+    "node": "22.19.0",
     "pnpm": "10.15.0"
   },
   "dependencies": {
     "monaco-languageclient-examples": "~2025.8.6",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^20.5.0"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1"
   },
   "devDependencies": {
     "typescript": "~5.9.2"
