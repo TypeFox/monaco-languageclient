@@ -3,7 +3,6 @@
 [![Github Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://typefox.github.io/monaco-languageclient)
 [![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
-[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/TypeFox/monaco-languageclient)
 <br>
 [![monaco-languageclient Version](https://img.shields.io/npm/v/monaco-languageclient?logo=npm&label=monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
 [![monaco-languageclient Downloads](https://img.shields.io/npm/dt/monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
@@ -22,7 +21,9 @@ This repository now host multiple npm packages under one roof:
 The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
 - [Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples](#monaco-language-client-vscode-websocket-json-rpc-monaco-editor-react-and-examples)
-  - [Changelogs, project history and compatibility](#changelogs-project-history-and-compatibility)
+  - [Official Documentation](#official-documentation)
+    - [Migration Guide](#migration-guide)
+  - [Changelogs, current versions and compatibility table](#changelogs-current-versions-and-compatibility-table)
   - [Getting started](#getting-started)
     - [Vite dev server](#vite-dev-server)
   - [Usage](#usage)
@@ -36,7 +37,6 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
       - [Application Playground (Location)](#application-playground-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
-      - [bare monaco-languageclient (Location)](#bare-monaco-languageclient-location)
       - [Browser example (Location)](#browser-example-location)
       - [Purely monaco-editor related examples](#purely-monaco-editor-related-examples)
       - [Server processes](#server-processes)
@@ -49,20 +49,17 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
     - [VSCode integration](#vscode-integration)
   - [Featured projects](#featured-projects)
   - [Troubleshooting](#troubleshooting)
-    - [General](#general)
-    - [@codingame/monaco-vscode-editor-api / monaco-editor usage](#codingamemonaco-vscode-editor-api--monaco-editor-usage)
-    - [Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api](#dependency-issues-monaco-editor--codingamemonaco-vscode-api--codingamemonaco-vscode-editor-api)
-    - [Volta](#volta)
-    - [Vite dev server troubleshooting](#vite-dev-server-troubleshooting)
-    - [SSR frameworks](#ssr-frameworks)
-    - [Serve all files required](#serve-all-files-required)
-    - [Bad Polyfills](#bad-polyfills)
-      - [buffer](#buffer)
-    - [monaco-editor and react](#monaco-editor-and-react)
-    - [webpack worker issues](#webpack-worker-issues)
   - [Licenses](#licenses)
 
-## Changelogs, project history and compatibility
+## Official Documentation
+
+Since `monaco-languageclient` version 10 we started to build an [official documentation](./docs/index.md). This will be continuously extended.
+
+### Migration Guide
+
+We added a [migration guide](./docs/migration.md) with the release of `monaco-languageclient` version `10`.
+
+## Changelogs, current versions and compatibility table
 
 CHANGELOGs for each project are available from the linked location:
 
@@ -83,14 +80,11 @@ These are the current versions of packages from this repository and their alignm
   - **monaco-editor**: `0.52.2`
 - **vscode-ws-jsonrpc**: `3.5.0` (release date: 2025-08-11)
 
-You find the full compatibility table with all previous versions [here](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table).
-
-[This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
+Check find the [full compatibility table](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) with all previous versions.
 
 ## Getting started
 
-On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Or, use a fresh dev environment in [Gitpod](https://www.gitpod.io) by pressing the **code now** badge above.
-Locally, from a terminal do:
+On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Locally, from a terminal do:
 
 ```bash
 git clone https://github.com/TypeFox/monaco-languageclient.git
@@ -138,7 +132,8 @@ The examples demonstrate mutliple things:
 #### JSON Language client and language server example ([Location](./packages/examples/src/json))
 
 The **json-server** runs an external Node.js [Express app](./packages/examples/src/json/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [JSON Language Server](#json-language-server)).
-The **json-client** contains the [editor app](./packages/examples/src/json/client/wrapperWs.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-client using extended mode** as [editor app](./packages/examples/src/json/client/extended.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
+The **json-client using classic mode** as [editor app](./packages/examples/src/json/client/classic.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
 #### Python Language client and pyright language server example ([Location](./packages/examples/src/python))
 
@@ -174,10 +169,6 @@ It contains both the [language client](./packages/examples/src/langium/langium-d
 
 It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
 It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
-
-#### bare monaco-languageclient ([Location](./packages/examples/src/bare))
-
-This demonstrates how the `JSON Language client and language server example` can be realized with just the pure monaco api and no abstraction via the `editor app`. You find the implementation [here](./packages/examples/src/bare/client.ts).
 
 #### Browser example ([Location](./packages/examples/src/browser))
 
@@ -243,142 +234,7 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 ## Troubleshooting
 
-### General
-
-Whenever you used `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/`@codingame/monaco-vscode-extension-api`, `monaco-languageclient` or `@typefox/monaco-editor-react` ensure they are imported before you do any `monaco-editor` or `vscode` api related intialization work or start using it.
-
-If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
-
-```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1"
-```
-
-### @codingame/monaco-vscode-editor-api / monaco-editor usage
-
-When you use the libraries from this project you are no longer are required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^21.0.1"` in you `package.json`. You can directly use it like this:
-
-```js
-import * as monaco from '@codingame/monaco-vscode-editor-api';
-```
-
-If your dependency stack already contains a reference `monaco-editor` you must enforce the correct reference to `@codingame/monaco-vscode-editor-api` or you will have problems with mismatching code. Use`overrides` (npm/pnpm) or `resolutions` (yarn) to do so:
-
-```json
-"overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^21.0.1"
-}
-```
-
-### Dependency issues: monaco-editor / @codingame/monaco-vscode-api / @codingame/monaco-vscode-editor-api
-
-If you have mutiple, possibly hundreds of compile errors resulting from missing functions deep in `monaco-editor` or `vscode` then it is very likely you have a mismatching dependency definition somewhere in your dependency definitions:
-
-1. Use `npm list @codingame/monaco-vscode-api` to see if there are two different versions are listed in the dependency tree.
-2. If you see a message in the browser console starting with `Another version of monaco-vscode-api has already been loaded. Trying to load` then definetly a version mismatch was detected by `@codingame/monaco-vscode-api`. This error is reported since v14.
-
-If one of the two is true, fix you dependencies, remove `package-lock.json` and `node_modules` and perform a fresh `npm install`.
-
-### Volta
-
-There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
-
-### Vite dev server troubleshooting
-
-When you are using the vite dev server there are some issues with imports, please [read this recommendation](https://github.com/CodinGame/monaco-vscode-api/wiki/Troubleshooting#if-you-use-vite).
-
-If you see the problem *Assertion failed (There is already an extension with this id)* you likely have mismatching dependencies defined for `vscode` / `@codingame/monaco-vscode-extension-api`. You should fix this or add the following entry to your vite config:
-
-```javascript
-resolve: {
-  dedupe: ['vscode']
-}
-```
-
-### SSR frameworks
-
-**Important:** Due to its reliance on `@codingame/monaco-vscode-api` this stack will not directly work with Server-Side Rendering (SSR) frameworks like Next.js. They client code has to be run in a browser environment. Take a look at the [Next.js verification example](./verify/next) to see how to dynamically load the code.
-
-### Serve all files required
-
- `@codingame/monaco-vscode-api` requires json and other files to be served. In your project's web-server configuration you have to ensure you don't prevent this.
-
-### Bad Polyfills
-
-#### buffer
-
-If you see an error similar to the one below:
-
-```yaml
-Uncaught Error: Unexpected non—whitespace character after JSON at position 2
-
-SyntaxError: Unexpected non—whitespace character after JSON at position 2
-    at JSON. parse («anonymous>)
-```
-
-It is very likely you have an old version of `buffer` interfering (see [#538](https://github.com/TypeFox/monaco-languageclient/issues/538) and [#546](https://github.com/TypeFox/monaco-languageclient/issues/546)). You can enforce a current version by adding a `resolution` as shown below to your projects' `package.json`.
-
-```yaml
-"resolutions": {
-  "buffer": "~6.0.3",
-}
-```
-
-### monaco-editor and react
-
-We recommend you now use `typefox/monaco-editor-react`.
-
-But if you need to use `@monaco-editor/react`, then add the `monaco-editor` import at the top of your editor component file [source](https://github.com/suren-atoyan/monaco-react#use-monaco-editor-as-an-npm-package):
-
-```javascript
-import * as monaco from "monaco-editor";
-import { loader } from "@monaco-editor/react";
-
-loader.config({ monaco });
-```
-
-### webpack worker issues
-
-When webpack is used as bundler there are issues with utilizing the undbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of issue #853 [here](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822):
-
-1. Npm install `webpack-cli` (or webpack will do it for you when you try running this later).
-2. Create a `bundle-monaco-workers.js` file with this content:
-
-    ```js
-    // solve: __dirname is not defined in ES module scope
-    import { fileURLToPath } from 'url';
-    import { dirname, resolve } from 'path';
-
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-
-    export default {
-      entry: {
-        editor: './node_modules/@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js',
-        textmate: './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'
-      },
-      output: {
-        filename: '[name].js',
-        path: resolve(__dirname, './src/assets/monaco-workers'),
-        // if this is true (default), webpack will produce code trying to access global `document` variable for the textmate worker, which will fail at runtime due to being a worker
-        chunkLoading: false
-      },
-      mode: 'production',
-      performance: {
-        hints: false
-      }
-    };
-    ```
-
-3. Add this line to your `packages.json` scripts section: `"bundle monaco workers": "webpack --config bundle-monaco-workers.js"`
-4. Run the script `npm run 'bundle monaco workers'`
-5. Configure the `workerLoaders` parameter for `useWorkerFactory` to point to the pre-bundled workers:
-
-    ```js
-    'TextEditorWorker': () => new Worker('/assets/monaco-workers/editor.js', {type: 'module'}),
-    'TextMateWorker': () => new Worker('/assets/monaco-workers/textmate.js', {type: 'module'}),
-    ```
-
-6. Enable `editor.experimental.asyncTokenization` in the monaco-wrapper config, if you want to use the textmate worker.
+For troubleshooting, please also see the [Troubleshooting Guide](./docs/guides/troubleshooting.md).
 
 ## Licenses
 

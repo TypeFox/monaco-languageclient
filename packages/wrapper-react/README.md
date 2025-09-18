@@ -1,59 +1,109 @@
 # React component for Monaco-Editor and Monaco Languageclient
 
-This packages provides a React component that wraps the functionality of [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient). It behaves nearly the same way as the monaco editor, with the primary difference being that you interact with it through a React component.
-
-The [monaco-languageclient](https://github.com/TypeFox/monaco-languageclient) can be activated to connect to a language server either via jsonrpc over a websocket to an exernal server process, or via the Language Server Protocol for the browser where the language server runs in a web worker.
+This packages provides a React component that wraps the functionality of [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) and all its tools.
 
 ## CHANGELOG
 
 All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/CHANGELOG.md).
 
-## Getting Started
+## Official documentation, quick start and examples
 
-This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient). Please follow the main repositories [instructions](https://github.com/TypeFox/monaco-languageclient#getting-started) to get started with local development.
+This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient).
+
+You find detailed information in the [official documentation](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/index.md).
+
+If interested, check [quick start for local development]](<https://github.com/TypeFox/monaco-languageclient#getting-started>).
+
+A detailed list of examples is contained in the GitHub repository, please see [this listing](<https://github.com/TypeFox/monaco-languageclient#examples-overview>).
 
 ## Usage
 
-You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same config object approach like `monaco-languageclient`.
+You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same configuration objects you using  `monaco-languageclient` directly with TypeScript/JavaScript.
 
-TODO: Update Example
+The language client on start can connect to a language server either via jsonrpc over a websocket to an exernal server process, or directly in the browser where the language server runs in a web worker. In both cases they use the Language Server Protocol to communicate. The react component is limited to one language client per component.
 
 ```tsx
+import * as vscode from 'vscode';
+// Import Monaco Language Client components
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@codingame/monaco-vscode-python-default-extension';
-import { WrapperConfig } from 'monaco-languageclient/editorApp';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 
-const wrapperConfig: WrapperConfig = {
-  $type: 'extended',
-  htmlContainer: document.getElementById('monaco-editor-root')!,
-  editorAppConfig: {
-    codeResources: {
-      modified: {
-              uri: '/workspace/hello.py',
-              text: 'print("Hello, World!")'
-      }
-    },
-    monacoWorkerFactory: configureDefaultWorkerFactory
-  }
+export const createEditorAndLanguageClient = async () => {
+    const languageId = 'mylang';
+    const code = '// initial editor content';
+    const codeUri = '/workspace/hello.mylang';
+
+    // Monaco VSCode API configuration
+    const vscodeApiConfig: MonacoVscodeApiConfig = {
+        $type: 'extended',
+        viewsConfig: {
+            $type: 'EditorService',
+            // the div to which monaco-editor is added
+            htmlContainer: document.getElementById('monaco-editor-root')!
+        },
+        userConfiguration: {
+            json: JSON.stringify({
+                'workbench.colorTheme': 'Default Dark Modern',
+                'editor.wordBasedSuggestions': 'off'
+            })
+        },
+        monacoWorkerFactory: configureDefaultWorkerFactory
+    };
+
+    // Language client configuration
+    const languageClientConfig: LanguageClientConfig = {
+        languageId,
+        connection: {
+            options: {
+                $type: 'WebSocketUrl',
+                // at this url the language server for myLang must be reachable
+                url: 'ws://localhost:30000/myLangLS'
+            }
+        },
+        clientOptions: {
+            documentSelector: [languageId],
+            orkspaceFolder: {
+                index: 0,
+                name: 'workspace',
+                uri: vscode.Uri.file('/workspace')
+            }
+        }
+    };
+
+    // editor app / monaco-editor configuration
+    const editorAppConfig: EditorAppConfig = {
+        codeResources: {
+            main: {
+                text: code,
+                uri: codeUri
+            }
+        }
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('react-root')!);
+    const App = () => {
+        return (
+            <div style={{ 'backgroundColor': '#1f1f1f' }} >
+                <MonacoEditorReactComp
+                    vscodeApiConfig={vscodeApiConfig}
+                    editorAppConfig={editorAppConfig}
+                    languageClientConfig={languageClientConfig}
+                    style={{ 'height': '100%' }}
+                    onError={(e) => {
+                        console.error(e);
+                    }} />
+            </div>
+        );
+    };
+    root.render(<App />);
 };
-
-const comp = <MonacoEditorReactComp
-    wrapperConfig={wrapperConfig}
-    style={{ 'height': '100%' }}
-    onLoad={(wrapper: MonacoEditorLanguageClientWrapper) => {
-        // use the wrapper to get access to monaco-editor or the languageclient
-    }}
-/>;
-ReactDOM.createRoot(document.getElementById('react-root')!).render(comp);
-
+createEditorAndLanguageClient();
 ```
-
-## Examples
-
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
 
 ## License
 

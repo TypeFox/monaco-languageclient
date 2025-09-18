@@ -297,7 +297,7 @@ describe('Test MonacoEditorReactComp', () => {
                         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                         resolve();
                     }}
-                    onDisposeLanguageClients={() => {
+                    onDisposeLanguageClient={() => {
                         resolveLc();
                     }}
                 />);

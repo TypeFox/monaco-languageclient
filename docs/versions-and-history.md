@@ -82,10 +82,14 @@ The following table describes which version of **monaco-languageclient** and **@
 
 ## Important Project Changes
 
+[This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
+
 ### July 2025 (v10.0.0)
 
 - Dropped `monaco-editor-wrapper`. All required funcitonality was moved back to `monaco-languageclient` and made available as sub exports.
 - `@typefox/monaco-editor-react` lifecycle and robustness improvements.
+
+### December 2025 (v9.0.0)
 
 ### March 2024 (v8.0.0)
 

@@ -4,8 +4,16 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [7.0.0] - unreleased
 
-- Updated to `monaco-languageclient@10.0.0-next.2`.
-- Dropped `monaco-editor-wrapper`.
+- Merge `monaco-editor-wrapper` with `monaco-languageclient`:
+  - Updated to `monaco-languageclient@10.0.0`.
+  - Documentation update [#956](https://github.com/TypeFox/monaco-languageclient/pull/956).
+  - Lifecycle adjustments [#939](https://github.com/TypeFox/monaco-languageclient/pull/939).
+  - Move MonacoLanguageClientWrapper to monaco-languageclient [#920](https://github.com/TypeFox/monaco-languageclient/pull/920).
+  - Please see the [migration guide](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/migration.md).
+  - Noteworthy updates and stability improvements:
+    - Fix React Stict Mode
+    - Only one language client can be used directly with the component
+    - Fixed rerendering issue by introducing an internal update queue
 - Updated all `@codingame/monaco-vscode` packages to `^21.0.1`.
 
 ## [6.12.0] - 2025-08-21

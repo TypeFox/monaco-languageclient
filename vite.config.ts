@@ -18,7 +18,7 @@ export const definedViteConfig = defineConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
-                bare: path.resolve(__dirname, 'packages/examples/bare.html'),
+                json_classic: path.resolve(__dirname, 'packages/examples/json_classic.html'),
                 json: path.resolve(__dirname, 'packages/examples/json.html'),
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
                 langium_extended: path.resolve(__dirname, 'packages/examples/langium_extended.html'),

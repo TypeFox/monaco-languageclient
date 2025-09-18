@@ -29,8 +29,8 @@
       "default": "./dist/node.js"
     },
     "./json-client": {
-      "types": "./dist/json/client/client.d.ts",
-      "default": "./dist/json/client/client.js"
+      "types": "./dist/json/client/extended.d.ts",
+      "default": "./dist/json/client/extended.js"
     },
     "./python-client": {
       "types": "./dist/python/client/main.d.ts",
@@ -54,7 +54,7 @@
         "dist/node"
       ],
       "json-client": [
-        "dist/json/client/client"
+        "dist/json/client/extended"
       ],
       "worker/langium": [
         "dist/langium/langium-dsl/worker/langium-server"
