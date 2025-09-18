@@ -27,8 +27,8 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const langiumTextmateGrammar = await langiumTextmateGrammarResponse.text();
 
     const extensionFilesOrContents = new Map<string, string | URL>();
-    extensionFilesOrContents.set('/langium-configuration.json', langiumLanguageConfig);
-    extensionFilesOrContents.set('/langium-grammar.json', langiumTextmateGrammar);
+    extensionFilesOrContents.set('/workspace/langium-configuration.json', langiumLanguageConfig);
+    extensionFilesOrContents.set('/workspace/langium-grammar.json', langiumTextmateGrammar);
 
     // prepare all resources that should be preloaded
     const exampleLangiumResponse = await fetch(new URL('./langium-grammar.langium', import.meta.url));
@@ -37,7 +37,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const langiumTypesLangium = await langiumTypesResponse.text();
 
     const workspaceUri = Uri.file('/workspace');
-    const exampleLangiumUri = Uri.file('/workspace/langium-grammar.langium');
+    const langiumGrammarLangiumUri = Uri.file('/workspace/langium-grammar.langium');
     const langiumTypesLangiumUri = Uri.file('/workspace/langium-types.langium');
     const fileSystemProvider = new InMemoryFileSystemProvider();
     const textEncoder = new TextEncoder();
@@ -49,13 +49,11 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
         overwrite: true
     };
     await fileSystemProvider.mkdir(workspaceUri);
-    await fileSystemProvider.writeFile(exampleLangiumUri, textEncoder.encode(exampleLangium), options);
+    await fileSystemProvider.writeFile(langiumGrammarLangiumUri, textEncoder.encode(exampleLangium), options);
     await fileSystemProvider.writeFile(langiumTypesLangiumUri, textEncoder.encode(langiumTypesLangium), options);
     registerFileSystemOverlay(1, fileSystemProvider);
 
-    const editorAppConfig: EditorAppConfig = {
-        $type: overallConfigType
-    };
+    const editorAppConfig: EditorAppConfig = {};
 
     const workerFile = '/workers/langium-server.js';
     const worker = new Worker(workerFile, {
@@ -88,12 +86,12 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: overallConfigType,
         logLevel: LogLevel.Debug,
-        htmlContainer: document.getElementById('monaco-editor-root')!,
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
         },
         viewsConfig: {
-            viewServiceType: 'ViewsService',
+            $type: 'ViewsService',
+            htmlContainer: document.getElementById('monaco-editor-root')!,
             htmlAugmentationInstructions: (htmlElement: HTMLElement | null | undefined) => {
                 const htmlContainer = document.createElement('div', { is: 'app' });
                 htmlContainer.innerHTML = innerHtml;
@@ -124,12 +122,12 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
                         id: 'langium',
                         extensions: ['.langium'],
                         aliases: ['langium', 'LANGIUM'],
-                        configuration: './langium-configuration.json'
+                        configuration: '/workspace/langium-configuration.json'
                     }],
                     grammars: [{
                         language: 'langium',
                         scopeName: 'source.langium',
-                        path: './langium-grammar.json'
+                        path: '/workspace/langium-grammar.json'
                     }]
                 }
             },
@@ -138,6 +136,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     };
 
     const languageClientConfig: LanguageClientConfig = {
+        languageId: 'langium',
         clientOptions: {
             documentSelector: ['langium']
         },
@@ -146,10 +145,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
                 $type: 'WorkerDirect',
                 worker
             },
-            messageTransports: {
-                reader,
-                writer
-            }
+            messageTransports: { reader, writer }
         }
     };
 

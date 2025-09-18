@@ -10,7 +10,7 @@
   },
   "volta": {
     "node": "22.19.0",
-    "yarn": "4.9.3"
+    "yarn": "4.9.4"
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "^21.0.1",
@@ -23,7 +23,7 @@
     "@codingame/monaco-vscode-localization-service-override": "^21.0.1",
     "@codingame/monaco-vscode-log-service-override": "^21.0.1",
     "@codingame/monaco-vscode-model-service-override": "^21.0.1",
-    "monaco-languageclient-examples": "~2025.8.6",
+    "monaco-languageclient-examples": "~2025.9.1-next.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1",
     "vscode-languageclient": "~9.0.1"
   },

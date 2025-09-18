@@ -15,16 +15,11 @@ const DynamicMonacoEditorReact = dynamic(async () => {
     const { setupLangiumClientExtended } = await import('./langium-dsl/config/extendedConfig');
     const appConfig = await setupLangiumClientExtended();
 
-    const languageClientConfigs = {
-        configs: {
-            langium: appConfig.languageClientConfig
-        }
-    };
     return () => <comp.MonacoEditorReactComp
         style={{ 'height': '100%' }}
         vscodeApiConfig={appConfig.vscodeApiConfig}
         editorAppConfig={appConfig.editorAppConfig}
-        languageClientConfigs={languageClientConfigs}
+        languageClientConfig={appConfig.languageClientConfig}
         onVscodeApiInitDone={async () => {
             console.log('MonacoEditorReactComp editor started.');
 

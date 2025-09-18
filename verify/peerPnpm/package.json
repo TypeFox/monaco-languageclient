@@ -9,10 +9,10 @@
   },
   "volta": {
     "node": "22.19.0",
-    "pnpm": "10.15.0"
+    "pnpm": "10.17.0"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2025.8.6",
+    "monaco-languageclient-examples": "~2025.9.1-next.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.0.1"
   },
   "devDependencies": {
