@@ -7,7 +7,7 @@ import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
 import type { ExampleAppConfig } from '../../common/client/utils.js';
-import { setupLangiumClientExtended } from './config/extendedConfig.js';
+import { setupLangiumClientExtended } from './config/langiumDslConfig.js';
 
 export const runLangiumGrammarDsl = async () => {
     try {

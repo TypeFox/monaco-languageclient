@@ -176,7 +176,7 @@ This demonstrates how an [editor app can be combined with a language service wri
 
 #### Purely monaco-editor related examples
 
-See [Typescript Language support](./packages/examples/src/ts/wrapperTs.ts).
+See [Typescript Language support](./packages/examples/src/ts/clientTs.ts).
 
 #### Server processes
 

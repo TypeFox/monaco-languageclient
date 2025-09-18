@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { EditorApp } from 'monaco-languageclient/editorApp';
-import { createLangiumGlobalConfig } from './config/wrapperStatemachineConfig.js';
+import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 import workerUrl from './worker/statemachine-server?worker&url';
 import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
@@ -119,7 +119,7 @@ const disposeEditor = async () => {
     console.log(editorApp2?.reportStatus().join('\n'));
 };
 
-export const runStatemachineWrapper = async () => {
+export const runStatemachine = async () => {
     try {
         document.querySelector('#button-start')?.addEventListener('click', startEditor);
         document.querySelector('#button-dispose')?.addEventListener('click', disposeEditor);

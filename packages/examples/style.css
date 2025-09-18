@@ -1,5 +1,7 @@
 body {
     font-family: Helvetica, Arial, Sans-Serif;
+    background-color: #1f1f1f;
+    color: #cccccc;
 }
 
 .exampleHeadelineDiv {
@@ -9,4 +11,23 @@ body {
 .exampleHeadeline {
     font-weight: bold;
     font-size: 20px;
+}
+
+a:link {
+    color: #d7ba7d;
+}
+a:hover {
+    color: #a2b6c7;
+}
+a:visited {
+    color: #3794ff;
+}
+
+h2, h3 {
+    color: rgb(190, 120, 0);
+}
+
+h3 {
+    margin-bottom: 6px;
+    margin-top: 12px;
 }

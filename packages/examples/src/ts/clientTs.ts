@@ -71,7 +71,7 @@ export const runTsWrapper = async () => {
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    const editorApp = new EditorApp(editorAppConfig);
+    let editorApp = new EditorApp(editorAppConfig);
     disableElement('button-swap-code', true);
 
     try {
@@ -88,8 +88,8 @@ export const runTsWrapper = async () => {
             await vscode.commands.executeCommand('actions.find');
         });
         document.querySelector('#button-swap-code')?.addEventListener('click', () => {
-            const codeResources = editorApp.getConfig().codeResources;
-            if (codeResources?.modified?.uri === codeUri) {
+            const textModels = editorApp.getTextModels();
+            if (textModels.modified?.uri.path === codeUri) {
                 editorApp.updateCodeResources({
                     modified: {
                         text: codeOriginal,
@@ -119,6 +119,8 @@ export const runTsWrapper = async () => {
             editorAppConfig.useDiffEditor = !useDiffEditor;
             disableElement('button-swap-code', !editorAppConfig.useDiffEditor);
 
+            await editorApp.dispose();
+            editorApp = new EditorApp(editorAppConfig);
             await editorApp.start(htmlContainer);
         });
         document.querySelector('#button-dispose')?.addEventListener('click', async () => {
