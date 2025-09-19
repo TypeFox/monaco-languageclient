@@ -12,7 +12,7 @@ This is npm package is part of the [monaco-languageclient mono repo](https://git
 
 You find detailed information in the [official documentation](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/index.md).
 
-If interested, check [quick start for local development]](<https://github.com/TypeFox/monaco-languageclient#getting-started>).
+If interested, check [quick start for local development](<https://github.com/TypeFox/monaco-languageclient#getting-started>).
 
 A detailed list of examples is contained in the GitHub repository, please see [this listing](<https://github.com/TypeFox/monaco-languageclient#examples-overview>).
 
