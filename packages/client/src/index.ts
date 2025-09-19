@@ -18,7 +18,6 @@ export class MonacoLanguageClient extends BaseLanguageClient {
     constructor({ id, name, clientOptions, messageTransports }: MonacoLanguageClientOptions) {
         super(id ?? name.toLowerCase(), name, clientOptions);
         this.messageTransports = messageTransports;
-        ProposedFeatures.createAll(this);
     }
 
     protected override createMessageTransports(_encoding: string): Promise<MessageTransports> {

@@ -27,7 +27,6 @@ import '@codingame/monaco-vscode-typescript-language-features-default-extension'
 
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
-import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type HtmlContainerConfig, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
@@ -37,7 +36,6 @@ import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 
 export type ConfigResult = {
     vscodeApiConfig: MonacoVscodeApiConfig;
-    editorAppConfig: EditorAppConfig
     workspaceFileUri: vscode.Uri;
     helloTsUri: vscode.Uri;
     testerTsUri: vscode.Uri;
@@ -103,7 +101,7 @@ export const configure = async (htmlContainer: HtmlContainerConfig): Promise<Con
                 'typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors': false,
                 'editor.guides.bracketPairsHorizontal': true,
                 'oct.serverUrl': 'https://api.open-collab.tools/',
-                'editor.experimental.asyncTokenization': false
+                'editor.experimental.asyncTokenization': true
             })
         },
         extensions: [{
@@ -120,10 +118,6 @@ export const configure = async (htmlContainer: HtmlContainerConfig): Promise<Con
             enableExtHostWorker: true,
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
-    };
-
-    const editorAppConfig: EditorAppConfig = {
-        id: 'AAP'
     };
 
     const workspaceUri = vscode.Uri.file('/workspace');
@@ -146,7 +140,6 @@ export const configure = async (htmlContainer: HtmlContainerConfig): Promise<Con
 
     return {
         vscodeApiConfig,
-        editorAppConfig,
         workspaceFileUri,
         helloTsUri,
         testerTsUri

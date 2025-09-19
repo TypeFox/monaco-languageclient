@@ -12,9 +12,6 @@ export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, con
     const result = apiWrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
     result.setAsDefaultApi();
 
-    // WA: Force show explorer and not search
-    await vscode.commands.executeCommand('workbench.view.explorer');
-
     await Promise.all([
         await vscode.workspace.openTextDocument(configResult.helloTsUri),
         await vscode.workspace.openTextDocument(configResult.testerTsUri)
