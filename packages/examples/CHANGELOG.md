@@ -2,7 +2,7 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.9.1] - unreleased
+## [2025.9.1] - 2025-09-19
 
 - Add outline to appPlayground example [#936](https://github.com/TypeFox/monaco-languageclient/pull/936).
 - Updated to `monaco-languageclient@10.0.0` and `@typefox/monaco-editor-react@7.0.0`.
@@ -11,7 +11,7 @@ All notable changes to this npm module are documented in this file.
   - Transform bare example to become json classic example
   - Remove Langium classic example.
   - Update Langium example to Langium 4.0 supportign multiple files.
-- Updated all `@codingame/monaco-vscode` packages to `21.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `21.1.0`.
 
 ## [2025.8.6] - 2025-08-22
 

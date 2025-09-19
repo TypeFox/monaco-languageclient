@@ -2,14 +2,14 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.0.0] - unreleased
+## [10.0.0] - 2025-09-19
 
 - Merge `monaco-editor-wrapper` with `monaco-languageclient`:
   - Documentation update [#956](https://github.com/TypeFox/monaco-languageclient/pull/956).
   - Lifecycle adjustments [#939](https://github.com/TypeFox/monaco-languageclient/pull/939).
   - Move MonacoLanguageClientWrapper to monaco-languageclient [#920](https://github.com/TypeFox/monaco-languageclient/pull/920).
   - Added multiple new sub-exports: `vscodeApiWrapper`, `lcwrapper`, `editorApp` and `workerFactory` that expose the merged functionality, please see the [migration guide](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/migration.md).
-- Updated all `@codingame/monaco-vscode` packages to `^21.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `^21.1.0`.
 
 ## [9.11.0] - 2025-08-21
 

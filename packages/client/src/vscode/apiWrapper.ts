@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { initialize, LogLevel } from '@codingame/monaco-vscode-api';
-import { ExtensionHostKind, getExtensionManifests, registerExtension, type IExtensionManifest, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import { ExtensionHostKind, getBuiltinExtensions, registerExtension, type IExtensionManifest, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -261,7 +261,7 @@ export class MonacoVscodeApiWrapper {
         if (this.apiConfig.extensions) {
             const allPromises: Array<Promise<void>> = [];
             const extensionIds: string[] = [];
-            getExtensionManifests().forEach((ext) => {
+            getBuiltinExtensions().forEach((ext) => {
                 extensionIds.push(ext.identifier.id);
             });
             for (const extensionConfig of extensions ?? []) {
