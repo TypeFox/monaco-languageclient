@@ -9,3 +9,5 @@ __screenshots__
 
 # draw.io backup files
 *.bkp
+
+coverage

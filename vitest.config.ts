@@ -25,6 +25,15 @@ export const vitestConfig = {
                 }
             ]
         },
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'html'],
+            include: [
+                'packages/client',
+                'packages/vscode-ws-jsonrpc',
+                'packages/wrapper-react'
+            ],
+        },
         include: [
             // keep also an explicit list of tests to run, so they can be commented in case of problems
             // '**/client/test/common/logging.test.ts',
