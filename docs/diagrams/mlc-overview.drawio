@@ -24,9 +24,6 @@
             <mxPoint x="92" y="4" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="k4CSAVVTnt-oedxpcEqQ-97" value="&lt;font style=&quot;font-size: 34px;&quot;&gt;&lt;b&gt;@typefox/monaco-editor-react&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#866EFF;strokeColor=#3700CC;fontColor=light-dark(#000000, #121212);verticalAlign=middle;opacity=50;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="1" vertex="1">
-          <mxGeometry x="225" y="160" width="665" height="160" as="geometry" />
-        </mxCell>
         <mxCell id="nS1JZoDu9XlfnFd3QL9L-4" value="&lt;div&gt;Monolithic&lt;/div&gt;&lt;div&gt;block&lt;/div&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fontSize=24;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1130" y="610" width="220" height="180" as="geometry" />
         </mxCell>
