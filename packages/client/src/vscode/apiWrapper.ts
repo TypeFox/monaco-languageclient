@@ -100,7 +100,7 @@ export class MonacoVscodeApiWrapper {
 
     protected async configureViewsServices() {
         const viewsConfigType = this.apiConfig.viewsConfig.$type;
-        if (this.apiConfig.$type === 'classic' && (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkspaceService')) {
+        if (this.apiConfig.$type === 'classic' && (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService')) {
             throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
         }
 
@@ -111,12 +111,12 @@ export class MonacoVscodeApiWrapper {
                 ...getViewsServiceOverride(this.apiConfig.viewsConfig.openEditorFunc ?? useOpenEditorStub)
             });
             envEnhanced.viewServiceType = 'ViewsService';
-        } else if (viewsConfigType === 'WorkspaceService') {
+        } else if (viewsConfigType === 'WorkbenchService') {
             const getWorkbenchServiceOverride = (await import('@codingame/monaco-vscode-workbench-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
                 ...getWorkbenchServiceOverride()
             });
-            envEnhanced.viewServiceType = 'WorkspaceService';
+            envEnhanced.viewServiceType = 'WorkbenchService';
         } else {
             const getEditorServiceOverride = (await import('@codingame/monaco-vscode-editor-service-override')).default;
             mergeServices(this.apiConfig.serviceOverrides, {
@@ -241,7 +241,7 @@ export class MonacoVscodeApiWrapper {
             this.checkServiceConsistency();
         }
 
-        if (this.apiConfig.viewsConfig.$type === 'ViewsService' || this.apiConfig.viewsConfig.$type === 'WorkspaceService') {
+        if (this.apiConfig.viewsConfig.$type === 'ViewsService' || this.apiConfig.viewsConfig.$type === 'WorkbenchService') {
             await initialize(services, this.apiConfig.viewsConfig.htmlContainer, this.apiConfig.workspaceConfig, this.apiConfig.envOptions);
         } else {
             await initialize(services, undefined, this.apiConfig.workspaceConfig, this.apiConfig.envOptions);

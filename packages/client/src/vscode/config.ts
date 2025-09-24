@@ -13,7 +13,7 @@ import type { Logger } from 'monaco-languageclient/common';
 
 export type OverallConfigType = 'extended' | 'classic';
 
-export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkspaceService';
+export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkbenchService';
 
 export type HtmlContainerConfig = HTMLElement | 'ReactPlaceholder';
 
