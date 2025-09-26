@@ -416,11 +416,11 @@ export class EditorApp {
         }
     }
 
-    updateLayout() {
+    updateLayout(dimension?: monaco.editor.IDimension, postponeRendering?: boolean) {
         if (this.isDiffEditor()) {
-            this.diffEditor?.layout();
+            this.diffEditor?.layout(dimension, postponeRendering);
         } else {
-            this.editor?.layout();
+            this.editor?.layout(dimension, postponeRendering);
         }
     }
 
