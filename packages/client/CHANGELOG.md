@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [10.0.1] - unreleased
+
+- Renamed `WorkspaceService` to `WorkbenchService` im `ViewsConfigTypes`.
+- Updated all `@codingame/monaco-vscode` packages to `^21.2.1`.
+
 ## [10.0.0] - 2025-09-19
 
 - Merge `monaco-editor-wrapper` with `monaco-languageclient`:
