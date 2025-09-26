@@ -2,6 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [7.0.1] - unreleased
+
+- Updated to `monaco-languageclient@10.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `21.2.1`.
+
 ## [7.0.0] - 2025-09-19
 
 - Merge `monaco-editor-wrapper` with `monaco-languageclient`:
@@ -14,7 +19,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
     - Fix React Stict Mode
     - Only one language client can be used directly with the component
     - Fixed rerendering issue by introducing an internal update queue
-- Updated all `@codingame/monaco-vscode` packages to `^21.1.0`.
+- Updated all `@codingame/monaco-vscode` packages to `21.1.0`.
 
 ## [6.12.0] - 2025-08-21
 

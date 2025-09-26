@@ -2,6 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.9.2] - unreleased
+
+- Updated to `monaco-languageclient@10.0.1` and `@typefox/monaco-editor-react@7.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `21.2.1`.
+- Updated to `langium` version `4.1.0`.
+
 ## [2025.9.1] - 2025-09-19
 
 - Add outline to appPlayground example [#936](https://github.com/TypeFox/monaco-languageclient/pull/936).
