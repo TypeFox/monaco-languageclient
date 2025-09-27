@@ -6,11 +6,13 @@
 import { defineConfig } from 'vite';
 import fs from 'node:fs';
 import * as path from 'node:path';
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
-import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
-import react from '@vitejs/plugin-react';
+// import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
+// import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
+// import react from '@vitejs/plugin-react';
 
 const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm';
+
+/// <reference lib="rolldown-vite/config" />
 
 export const definedViteConfig = defineConfig({
     build: {
@@ -55,11 +57,11 @@ export const definedViteConfig = defineConfig({
         }
     },
     optimizeDeps: {
-        esbuildOptions: {
-            plugins: [
-                importMetaUrlPlugin
-            ]
-        },
+        //     esbuildOptions: {
+        //         plugins: [
+        //             importMetaUrlPlugin
+        //         ]
+        //     },
         include: [
             '@codingame/monaco-vscode-standalone-languages',
             '@codingame/monaco-vscode-standalone-css-language-features',
@@ -81,8 +83,8 @@ export const definedViteConfig = defineConfig({
         ]
     },
     plugins: [
-        vsixPlugin(),
-        react()
+        // vsixPlugin(),
+        // react()
     ],
     define: {
         rootDirectory: JSON.stringify(__dirname),

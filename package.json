@@ -36,11 +36,16 @@
     "globals": "~16.4.0",
     "minimatch": "~10.0.3",
     "playwright": "~1.55.1",
+    "rolldown-vite": "~7.1.14",
     "shx": "~0.4.0",
     "tsx": "~4.20.6",
-    "typescript": "~5.9.2",
-    "vite": "~7.1.7",
+    "typescript": "~5.9.3",
     "vitest": "~3.2.4"
+  },
+  "overrides": {
+    "vite": {
+      "rolldown-vite": "~7.1.13"
+    }
   },
   "scripts": {
     "clean": "npm run clean --workspaces",
