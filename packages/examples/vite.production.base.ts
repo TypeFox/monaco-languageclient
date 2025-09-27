@@ -6,7 +6,6 @@ import path from 'path';
 export const buildBaseProductionConfig: () => UserConfig = () => {
     return {
         build: {
-            target: 'ES2022',
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
