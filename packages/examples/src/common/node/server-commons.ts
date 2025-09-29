@@ -13,18 +13,11 @@ import { type IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 import { Message, InitializeRequest, type InitializeParams, type RequestMessage, type ResponseMessage } from 'vscode-languageserver-protocol';
 
-export enum LanguageName {
-    /** https://nodejs.org/api/cli.html  */
-    node = 'node',
-    /** https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html */
-    java = 'java'
-}
-
 export interface LanguageServerRunConfig {
     serverName: string;
     pathName: string;
     serverPort: number;
-    runCommand: LanguageName | string;
+    runCommand: string;
     runCommandArgs: string[];
     wsServerOptions: ServerOptions,
     spawnOptions?: cp.SpawnOptions;

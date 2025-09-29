@@ -4,8 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { Logger } from 'monaco-languageclient/common';
-import type { DirectoryListingRequest, DirectoryListingRequestResult, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from '../definitions.js';
-import { EndpointType } from '../definitions.js';
+import type { DirectoryListingRequest, DirectoryListingRequestResult, EndpointType, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from '../definitions.js';
 
 export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
 

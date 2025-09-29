@@ -32,7 +32,8 @@
     "noImplicitOverride": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
   "include": [
     "**/src/**/*.ts",
