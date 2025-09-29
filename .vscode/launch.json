@@ -8,8 +8,8 @@
           "name": "Launch JSON LS",
           "type": "node",
           "request": "launch",
+          "runtimeExecutable": "tsx",
           "args": ["${workspaceRoot}/packages/examples/src/json/server/direct.ts"],
-          "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples",
           "internalConsoleOptions": "openOnSessionStart"
         },
@@ -17,8 +17,8 @@
           "name": "Launch Python LS",
           "type": "node",
           "request": "launch",
+          "runtimeExecutable": "tsx",
           "args": ["${workspaceRoot}/packages/examples/src/python/server/direct.ts"],
-          "runtimeArgs": ["--nolazy", "--loader", "ts-node/esm"],
           "cwd": "${workspaceRoot}/packages/examples",
           "internalConsoleOptions": "openOnSessionStart"
         },
