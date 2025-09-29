@@ -3,12 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { EmptyFileSystemEndpoint } from 'monaco-languageclient/fs';
 import { describe, expect, test } from 'vitest';
-import { EmptyFileSystemEndpoint, EndpointType } from 'monaco-languageclient/fs';
 
 describe('EmptyFileSystemEndpoint Tests', () => {
 
-    const endpoint = new EmptyFileSystemEndpoint(EndpointType.EMPTY);
+    const endpoint = new EmptyFileSystemEndpoint('EMPTY');
 
     test('readFile', async () => {
         const result = await endpoint.readFile({ resourceUri: '/tmp/test.js' });

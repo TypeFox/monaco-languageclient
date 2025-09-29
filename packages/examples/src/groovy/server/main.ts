@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { runLanguageServer } from '../../common/node/language-server-runner.js';
-import { LanguageName } from '../../common/node/server-commons.js';
 import { groovyConfig } from '../config.js';
 
 export const runGroovyLanguageServer = () => {
@@ -12,7 +11,7 @@ export const runGroovyLanguageServer = () => {
         serverName: 'GROOVY',
         pathName: groovyConfig.path,
         serverPort: groovyConfig.port,
-        runCommand: LanguageName.java,
+        runCommand: 'java',
         runCommandArgs: [
             '-jar',
             `${groovyConfig.basePath}/lib/groovy-language-server-all.jar`

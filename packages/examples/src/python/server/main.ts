@@ -3,10 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { resolve } from 'node:path';
 import { IncomingMessage } from 'node:http';
+import { resolve } from 'node:path';
 import { runLanguageServer } from '../../common/node/language-server-runner.js';
-import { LanguageName } from '../../common/node/server-commons.js';
 
 export const runPythonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);
@@ -14,7 +13,7 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
         serverName: 'PYRIGHT',
         pathName: '/pyright',
         serverPort: 30001,
-        runCommand: LanguageName.node,
+        runCommand: 'node',
         runCommandArgs: [
             processRunPath,
             '--stdio'

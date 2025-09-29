@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { runLanguageServer } from '../../common/node/language-server-runner.js';
-import { LanguageName } from '../../common/node/server-commons.js';
 import { eclipseJdtLsConfig } from '../config.js';
 
 export const runEclipseJdtLs = () => {
@@ -12,7 +11,7 @@ export const runEclipseJdtLs = () => {
         serverName: 'Eclipse JDT LS',
         pathName: eclipseJdtLsConfig.path,
         serverPort: eclipseJdtLsConfig.port,
-        runCommand: LanguageName.java,
+        runCommand: 'java',
         runCommandArgs: [
             '-Declipse.application=org.eclipse.jdt.ls.core.id1',
             '-Dosgi.bundles.defaultStartLevel=4',

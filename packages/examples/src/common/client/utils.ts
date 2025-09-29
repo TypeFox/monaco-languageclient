@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { IStoredWorkspace } from '@codingame/monaco-vscode-configuration-service-override';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -17,7 +16,7 @@ export const disableElement = (id: string, disabled: boolean) => {
 
 export const createDefaultWorkspaceContent = (workspacePath: string) => {
     return JSON.stringify(
-        <IStoredWorkspace>{
+        {
             folders: [
                 {
                     path: workspacePath

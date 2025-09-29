@@ -6,7 +6,7 @@ All notable changes to this npm module are documented in this file.
 
 - Updated to Langium 4.1 [#961](https://github.com/TypeFox/monaco-languageclient/pull/961).
 - Updated to `monaco-languageclient@10.0.1` and `@typefox/monaco-editor-react@7.0.1`.
-- Updated all `@codingame/monaco-vscode` packages to `21.2.1`.
+- Updated all `@codingame/monaco-vscode` packages to `21.3.0`.
 
 ## [2025.9.1] - 2025-09-19
 

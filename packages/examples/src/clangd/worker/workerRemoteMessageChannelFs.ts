@@ -3,8 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { DirectoryListingRequest, DirectoryListingRequestResult, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from 'monaco-languageclient/fs';
-import { EndpointType } from 'monaco-languageclient/fs';
+import type { DirectoryListingRequest, DirectoryListingRequestResult, EndpointType, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from 'monaco-languageclient/fs';
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 
 class FileHandlerWorker implements ComRouter {
@@ -44,7 +43,7 @@ export class WorkerRemoteMessageChannelFs implements FileSystemEndpoint {
     }
 
     getEndpointType(): EndpointType {
-        return EndpointType.DRIVER;
+        return 'DRIVER';
     }
 
     async init() {

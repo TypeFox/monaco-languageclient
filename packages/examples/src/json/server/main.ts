@@ -3,19 +3,18 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { resolve } from 'node:path';
 import cors from 'cors';
-
-import { runLanguageServer } from '../../common/node/language-server-runner.js';
-import { LanguageName } from '../../common/node/server-commons.js';
 import express from 'express';
+import { resolve } from 'node:path';
+import { runLanguageServer } from '../../common/node/language-server-runner.js';
+
 export const runJsonServer = (baseDir: string, relativeDir: string) => {
     const processRunPath = resolve(baseDir, relativeDir);
     runLanguageServer({
         serverName: 'JSON',
         pathName: '/sampleServer',
         serverPort: 30000,
-        runCommand: LanguageName.node,
+        runCommand: 'node',
         runCommandArgs: [
             processRunPath,
             '--stdio'

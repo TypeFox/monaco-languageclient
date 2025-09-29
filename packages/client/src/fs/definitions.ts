@@ -50,12 +50,7 @@ export interface StatsRequestResult {
     mtime: number
 }
 
-export enum EndpointType {
-    DRIVER,
-    FOLLOWER,
-    LOCAL,
-    EMPTY
-}
+export type EndpointType = 'DRIVER' | 'FOLLOWER' | 'LOCAL' | 'EMPTY';
 
 export interface FileSystemCapabilities {
 
