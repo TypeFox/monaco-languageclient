@@ -51,8 +51,7 @@ import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languag
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        $type: 'EditorService'
     }.
     // ...
 };
@@ -71,7 +70,8 @@ const lcWrapper = new LanguageClientWrapper(languageClientConfig);
 await lcWrapper.start();
 
 const editorApp = new EditorApp(editorAppConfig);
-await editorApp.start(apiWrapper.getHtmlContainer());
+const htmlContainer = document.getElementById('monaco-editor-root')!;
+await editorApp.start(htmlContainer);
 ```
 
 </td></tr>
@@ -91,7 +91,7 @@ The content and scope configuration objects `MonacoVscodeApiConfig`, `LanguageCl
 $type: 'extended',
 const wrapperConfig: WrapperConfig = {
     $type: 'extended',
-    htmlContainer,
+    htmlContainer: document.getElementById('monaco-editor-root')!
     vscodeApiConfig: {
         serviceOverrides: {
         },
@@ -106,9 +106,7 @@ const wrapperConfig: WrapperConfig = {
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
-        $type: 'EditorService',
-        // the div to which monaco-editor is added
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        $type: 'EditorService'
     }
     // ...
 };
@@ -285,3 +283,44 @@ The callbacks names have been aligned and a couple have been added. None are man
 - `onError`: Called when an error occurred.
 - `onDisposeEditor`: **New** Called when `monaco-editor` has been disposed.
 - `onDisposeLanguageClient`: **New** Called when a language client has been disposed.
+
+## Service Initialization only
+
+If you used `initServices` to directly initialize services, you have to change your approach. It is now possible to just rely on `MonacoVscodeApiWrapper` to perform the service initialization.
+
+<table>
+<tr><th>v9/v6</th><th>v10</th></tr>
+<tr><td>
+
+```ts
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+import { initServices } from "monaco-languageclient/vscode/services";
+
+initServices({
+    serviceOverrides: {
+        ...getKeybindingsServiceOverride()
+    }
+};
+```
+
+</td><td>
+
+```ts
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
+
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'classic',
+    viewsConfig: {
+        $type: 'EditorService'
+    },
+    serviceOverrides: {
+        ...getKeybindingsServiceOverride()
+    }
+};
+const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+await apiWrapper.start();
+```
+
+</td></tr>
+</table>

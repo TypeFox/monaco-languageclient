@@ -46,6 +46,7 @@ const startEditor = async () => {
         console.log('Received message from worker:', message);
     });
 
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     // the configuration does not contain any text content
     const appConfig = createLangiumGlobalConfig({
         languageServerId: 'first',
@@ -56,7 +57,7 @@ const startEditor = async () => {
         worker: stateMachineWorkerPort,
         messagePort: channel.port1,
         messageTransports: { reader, writer },
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        htmlContainer
     });
     editorApp = new EditorApp(appConfig.editorAppConfig);
 
@@ -69,7 +70,7 @@ const startEditor = async () => {
     await lcWrapper.start();
 
     // run editorApp
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    await editorApp.start(htmlContainer);
 
     editorApp.updateCodeResources({
         modified: {

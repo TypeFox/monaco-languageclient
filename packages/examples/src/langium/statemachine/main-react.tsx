@@ -27,8 +27,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
             uri: '/workspace/example.statemachine'
         },
         worker,
-        messageTransports: { reader, writer },
-        htmlContainer: 'ReactPlaceholder'
+        messageTransports: { reader, writer }
     });
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {

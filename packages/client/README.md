@@ -52,9 +52,7 @@ async function createEditorAndLanguageClient() {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
-            $type: 'EditorService',
-            // the div to which monaco-editor is added
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            $type: 'EditorService'
         },
         userConfiguration: {
             json: JSON.stringify({
@@ -105,7 +103,8 @@ async function createEditorAndLanguageClient() {
 
     // Create and start the editor app
     const editorApp = new EditorApp(editorAppConfig);
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    await editorApp.start(htmlContainer);
 }
 
 createEditorAndLanguageClient().catch(console.error);

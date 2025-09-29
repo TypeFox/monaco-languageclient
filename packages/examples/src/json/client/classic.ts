@@ -53,7 +53,7 @@ export const runClient = async () => {
         }
     };
     const editorApp = new EditorApp(editorAppConfig);
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    await editorApp.start(htmlContainer);
 
     const languageClientConfig: LanguageClientConfig = {
         languageId,

@@ -33,11 +33,12 @@ print("Hello Moon!")
     let currentText = textJson;
     let currenFileExt = 'json';
 
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
             $type: 'EditorService',
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            htmlContainer
         },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
@@ -82,7 +83,7 @@ print("Hello Moon!")
             disableElement('button-start', true);
             disableElement('button-flip', false);
 
-            await editorApp.start(apiWrapper.getHtmlContainer());
+            await editorApp.start(htmlContainer);
             if (editorAppConfig.codeResources?.modified !== undefined) {
                 editorAppConfig.codeResources.modified.text = currentText;
                 editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;

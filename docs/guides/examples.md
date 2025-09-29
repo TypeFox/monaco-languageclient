@@ -33,9 +33,7 @@ async function createJsonEditor() {
     const vscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
-            $type: 'EditorService',
-            // the div to which monaco-editor is added
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            $type: 'EditorService'
         },
         logLevel: LogLevel.Debug,
         userConfiguration: {
@@ -85,7 +83,8 @@ async function createJsonEditor() {
     });
 
     // Start the editor
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    await editorApp.start(htmlContainer);
 
     console.log('JSON editor with language client is ready!');
 }
@@ -105,12 +104,10 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import { defineDefaultWorkerLoaders, useWorkerFactory } from 'monaco-languageclient/workerFactory';
 
 export const runClient = async () => {
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'classic',
         viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer
+            $type: 'EditorService'
         },
         logLevel: LogLevel.Debug,
         userConfiguration: {
@@ -147,7 +144,8 @@ export const runClient = async () => {
         }
     };
     const editorApp = new EditorApp(editorAppConfig);
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    await editorApp.start(htmlContainer);
 
     const languageClientConfig: LanguageClientConfig = {
         languageId,
@@ -220,7 +218,9 @@ import '@codingame/monacovscode-java-default-extension';
 async function createMultiLanguageEditor() {
     const apiWrapper = new MonacoVscodeApiWrapper({
         $type: 'extended',
-        htmlContainer: document.getElementById('editor')!,
+        viewsConfig: {
+            $type: 'EditorService'
+        },
         monacoWorkerFactory: configureDefaultWorkerFactory
     });
     await apiWrapper.start();
@@ -247,7 +247,8 @@ async function createMultiLanguageEditor() {
         }
     });
 
-    await editorApp.init(wrapper);
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    await editorApp.start(htmlContainer);
 }
 ```
 

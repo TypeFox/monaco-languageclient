@@ -14,7 +14,7 @@ import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonaco
 describe('Test EditorApp', () => {
 
     const htmlContainer = createMonacoEditorDiv();
-    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
+    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
 
     beforeAll(async () => {
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
