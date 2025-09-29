@@ -286,7 +286,7 @@ The callbacks names have been aligned and a couple have been added. None are man
 
 ## Service Initialization only
 
-If you used `initServices` to directly initializes services you have to change your approach. It is now possible to just rely on `MonacoVscodeApiWrapper` to perform the service initialization.
+If you used `initServices` to directly initialize services, you have to change your approach. It is now possible to just rely on `MonacoVscodeApiWrapper` to perform the service initialization.
 
 <table>
 <tr><th>v9/v6</th><th>v10</th></tr>
