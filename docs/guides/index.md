@@ -25,8 +25,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
     // both $type and viewsConfig are mandatory
     $type: 'extended',
     viewsConfig: {
-        $type: 'ViewsService',
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        $type: 'ViewsService'
     },
     // further configuration
 };
@@ -44,8 +43,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'classic',
     viewsConfig: {
         // in classic mode only one type can be configured
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('monaco-editor-root')!
+        $type: 'EditorService'
     },
     // further configuration
 };
@@ -65,7 +63,8 @@ await apiWrapper.start();
 
 // create editor with empty content
 const editorApp = new EditorApp({});
-await editorApp.start(apiWrapper.getHtmlContainer());
+const htmlContainer = document.getElementById('monaco-editor-root')!;
+await editorApp.start(htmlContainer);
 ```
 
 Generally you should start with Extended Mode unless you have specific constraints that require Classic Mode.

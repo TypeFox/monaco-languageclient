@@ -15,7 +15,7 @@ export type OverallConfigType = 'extended' | 'classic';
 
 export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkbenchService';
 
-export type HtmlContainerConfig = HTMLElement | 'ReactPlaceholder';
+// export type HtmlContainerConfig = HTMLElement;
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeApiInitialising?: boolean;
@@ -31,7 +31,7 @@ export interface UserConfiguration {
 
 export interface ViewsConfig {
     $type: ViewsConfigTypes;
-    htmlContainer: HtmlContainerConfig;
+    htmlContainer?: HTMLElement;
     openEditorFunc?: OpenEditor;
     htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
     viewsInitFunc?: () => Promise<void>;

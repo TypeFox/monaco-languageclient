@@ -9,7 +9,7 @@ import getLocalizationServiceOverride from '@codingame/monaco-vscode-localizatio
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { MessageTransports } from 'vscode-languageclient';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
-import type { HtmlContainerConfig, MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import type { CodeContent, EditorAppConfig } from 'monaco-languageclient/editorApp';
@@ -25,7 +25,7 @@ export const createLangiumGlobalConfig = (params: {
     worker: Worker,
     messagePort?: MessagePort,
     messageTransports?: MessageTransports,
-    htmlContainer: HtmlContainerConfig
+    htmlContainer?: HTMLElement
 }): ExampleAppConfig => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);

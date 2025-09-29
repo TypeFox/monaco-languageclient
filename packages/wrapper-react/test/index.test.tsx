@@ -20,8 +20,7 @@ describe('Test MonacoEditorReactComp', () => {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer: 'ReactPlaceholder'
+            $type: 'EditorService'
         },
         logLevel: LogLevel.Debug
     };

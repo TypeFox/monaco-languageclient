@@ -22,7 +22,7 @@ describe('Test WorkerLoaders', () => {
     const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
         apiConfig.monacoWorkerFactory = configureClassicWorkerFactory;
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
         await apiWrapper.start();

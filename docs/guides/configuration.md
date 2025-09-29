@@ -20,8 +20,7 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('my-editor-dom-element')!
+        $type: 'EditorService'
     }
 };
 
@@ -43,8 +42,7 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('my-editor-dom-element')!
+        $type: 'EditorService'
     }
     logLevel: LogLevel.Info,
 
@@ -76,8 +74,7 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeAp
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('my-editor-dom-element')!
+        $type: 'EditorService'
     }
 
     // Override specific services
@@ -145,8 +142,7 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'classic',
     viewsConfig: {
-        $type: 'EditorService',
-        htmlContainer: document.getElementById('my-editor-dom-element')!
+        $type: 'EditorService'
     }
 };
 
@@ -155,7 +151,8 @@ await apiWrapper.start();
 
 const editorAppConfig: EditorAppConfig = {};
 const editorApp = new EditorApp(editorAppConfig);
-editorApp.start(apiWrapper.getHtmlContainer());
+const htmlContainer = document.getElementById('monaco-editor-root')!;
+await editorApp.start(htmlContainer);
 ```
 
 ## Common Configuration Options
@@ -308,7 +305,7 @@ await Promise.all([
 
 The configuration is validated at runtime. Common validation errors:
 
-- **Missing htmlContainer**: Must provide a DOM element for Extended Mode
+- **Missing htmlContainer**: Must provide a DOM element for `ViewsService` and `WorkbenchService`.
 - **Missing document selector**: Language clients need to know which files to handle
 
 ## Next Steps

@@ -11,15 +11,15 @@ import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonaco
 describe('Test EditorApp', () => {
 
     test('Start EditorApp with no services', async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', createMonacoEditorDiv());
-        apiConfig.viewsConfig.$type = 'ViewsService';
+        const htmlContainer = createMonacoEditorDiv();
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'ViewsService');
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
         await apiWrapper.start();
 
         const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
         await expect(async () => {
-            await editorApp.start(apiWrapper.getHtmlContainer());
+            await editorApp.start(htmlContainer);
         }).rejects.toThrowError('No EditorService configured. monaco-editor will not be started.');
     });
 

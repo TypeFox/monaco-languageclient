@@ -72,8 +72,7 @@ async function createJsonEditor() {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            $type: 'EditorService'
         },
         logLevel: LogLevel.Debug,
         userConfiguration: {
@@ -124,7 +123,8 @@ async function createJsonEditor() {
 
     // Create and start the editor app
     const editorApp = new EditorApp(editorAppConfig);
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
+    await editorApp.start(htmlContainer);
 
     console.log('JSON editor with language client is ready!');
 }

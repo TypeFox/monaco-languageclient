@@ -5,7 +5,7 @@
 
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
+import type { MonacoVscodeApiConfig, OverallConfigType, ViewsConfigTypes } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MessageTransports } from 'vscode-languageclient/browser.js';
 
@@ -71,7 +71,7 @@ export const createEditorAppConfig = (codeResources: CodeResources): EditorAppCo
     };
 };
 
-export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement): MonacoVscodeApiConfig => {
+export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement, viewsConfigType: ViewsConfigTypes): MonacoVscodeApiConfig => {
     return {
         $type: overallConfigType,
         advanced: {
@@ -84,7 +84,7 @@ export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallCon
             })
         },
         viewsConfig: {
-            $type: 'EditorService',
+            $type: viewsConfigType,
             htmlContainer
         },
         monacoWorkerFactory: configureDefaultWorkerFactory

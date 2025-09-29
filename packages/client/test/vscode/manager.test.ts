@@ -14,7 +14,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(() => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer);
+        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
         apiConfig.extensions = [{
             config: {
                 name: 'unit-test-extension',

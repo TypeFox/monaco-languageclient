@@ -96,7 +96,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
 
     try {
         document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(apiWrapper.getHtmlContainer());
+            await editorApp.start(htmlContainer);
             await lcWrapper.start();
 
             // open files, so the LS can pick it up

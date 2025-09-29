@@ -40,6 +40,7 @@ export const vitestConfig = {
             // '**/client/test/common/utils.test.ts',
             // '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
             // '**/client/test/vscode/manager.test.ts',
+            // '**/client/test/vscode/manager.wrongHtmlContainer.test.ts',
             // '**/client/test/wrapper/lcmanager.test.ts',
             // '**/client/test/wrapper/lcwrapper.test.ts',
             // '**/client/test/worker/workerFactory.test.ts',

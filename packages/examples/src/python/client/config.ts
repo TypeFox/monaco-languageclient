@@ -25,7 +25,7 @@ import { createUrl } from 'monaco-languageclient/common';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
-import { defaultHtmlAugmentationInstructions, defaultViewsInit, type HtmlContainerConfig, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
@@ -37,7 +37,7 @@ import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
 import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
 import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
-export const createDefaultConfigParams = (homeDir: string, htmlContainer: HtmlContainerConfig): ConfigParams => {
+export const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
     const files = new Map<string, FileDefinition>();
     const workspaceRoot = `${homeDir}/workspace`;
     const configParams: ConfigParams = {

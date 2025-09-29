@@ -17,14 +17,10 @@ import 'vscode/localExtensionHost';
 import type { ExtensionConfig, MonacoVscodeApiConfig, ViewsConfig } from './config.js';
 import { configureExtHostWorker, getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
 
-export interface ViewsConfigRuntime extends ViewsConfig {
-    htmlContainer: HTMLElement;
-}
-
 export interface MonacoVscodeApiConfigRuntime extends MonacoVscodeApiConfig {
     serviceOverrides: monaco.editor.IEditorOverrideServices;
     logLevel: LogLevel | number;
-    viewsConfig: ViewsConfigRuntime;
+    viewsConfig: ViewsConfig;
 }
 
 export interface StartInstructions {
@@ -40,17 +36,19 @@ export class MonacoVscodeApiWrapper {
     private apiConfig: MonacoVscodeApiConfigRuntime;
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
-        const intermediate = {
+        const viewsConfigType = apiConfig.viewsConfig.$type;
+        console.log('Ping ' + viewsConfigType + apiConfig.viewsConfig.htmlContainer);
+        if ((viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') &&
+            apiConfig.viewsConfig.htmlContainer === undefined) {
+
+            throw new Error(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
+        }
+
+        this.apiConfig = {
             ...apiConfig,
             serviceOverrides: apiConfig.serviceOverrides ?? {},
             logLevel: apiConfig.logLevel ?? LogLevel.Off,
         };
-        if (intermediate.viewsConfig.htmlContainer === 'ReactPlaceholder') {
-            // this is temporary and must be overriden at start by react component with
-            // correct react dom element
-            intermediate.viewsConfig.htmlContainer = document.body;
-        }
-        this.apiConfig = intermediate as MonacoVscodeApiConfigRuntime;
         this.logger.setLevel(this.apiConfig.logLevel);
     }
 
@@ -64,10 +62,6 @@ export class MonacoVscodeApiWrapper {
 
     getMonacoVscodeApiConfig(): MonacoVscodeApiConfig {
         return this.apiConfig;
-    }
-
-    getHtmlContainer() {
-        return this.apiConfig.viewsConfig.htmlContainer;
     }
 
     protected configureMonacoWorkers() {
@@ -308,7 +302,7 @@ export class MonacoVscodeApiWrapper {
         this.logger.debug('markGlobalInitDone');
     }
 
-    overrideViewsConfig(viewsConfigOverride: ViewsConfigRuntime) {
+    overrideViewsConfig(viewsConfigOverride: ViewsConfig) {
         const orgViewsConfig = this.apiConfig.viewsConfig;
         this.apiConfig.viewsConfig = {
             $type: viewsConfigOverride.$type,

@@ -28,11 +28,12 @@ export const runBrowserEditor = async () => {
 }`;
     const codeUri = '/workspace/model.json';
 
+    const htmlContainer = document.getElementById('monaco-editor-root')!;
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
             $type: 'EditorService',
-            htmlContainer: document.getElementById('monaco-editor-root')!
+            htmlContainer
         },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
@@ -159,7 +160,7 @@ export const runBrowserEditor = async () => {
         diagnosticCollection.clear();
     };
 
-    await editorApp.start(apiWrapper.getHtmlContainer());
+    await editorApp.start(htmlContainer);
 
     editorApp.getTextModels().modified?.onDidChangeContent(() => {
         validate();
