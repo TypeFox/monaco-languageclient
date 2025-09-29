@@ -145,7 +145,7 @@
   },
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo ./resources/vsix",
-    "compile": "tsc --build tsconfig.src.json",
+    "compile": "tsgo --build tsconfig.src.json",
     "resources:download": "tsx ./resources/scripts/downloadResources.ts",
     "build:msg": "echo Building main examples:",
     "build": "npm run build:msg && npm run clean && npm run resources:download && npm run extract:docker && npm run compile",

@@ -141,7 +141,7 @@
 
   "scripts": {
     "clean": "shx rm -fr ./lib *.tsbuildinfo",
-    "compile": "tsc --build tsconfig.src.json",
+    "compile": "tsgo --build tsconfig.src.json",
     "build:msg": "echo Building monaco-languageclient:",
     "build": "npm run build:msg && npm run clean && npm run compile"
   }

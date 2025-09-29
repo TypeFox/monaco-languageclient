@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "clean": "shx rm -fr ./lib ./bundle *.tsbuildinfo",
-    "compile": " tsc --build tsconfig.src.json",
+    "compile": " tsgo --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
   },
   "engines": {
