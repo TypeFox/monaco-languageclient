@@ -2,11 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.9.2] - unreleased
+## [2025.9.2] - 2025-09-30
 
+- Updated migration guide, relaxed requirement to specify htmlContainer [#966](https://github.com/TypeFox/monaco-languageclient/pull/966).
+- tsgo and erasableSyntaxOnly [#964](https://github.com/TypeFox/monaco-languageclient/pull/964).
 - Updated to Langium 4.1 [#961](https://github.com/TypeFox/monaco-languageclient/pull/961).
-- Updated to `monaco-languageclient@10.0.1` and `@typefox/monaco-editor-react@7.0.1`.
-- Updated all `@codingame/monaco-vscode` packages to `21.3.0`.
+- Updated to `monaco-languageclient@10.1.0` and `@typefox/monaco-editor-react@7.1.0`.
+- Updated all `@codingame/monaco-vscode` packages to `21.3.2`.
 
 ## [2025.9.1] - 2025-09-19
 
