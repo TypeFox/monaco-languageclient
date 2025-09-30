@@ -2,10 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.0.1] - unreleased
+## [10.1.0] - 2025-09-30
 
+- Updated migration guide, relaxed requirement to specify htmlContainer [#966](https://github.com/TypeFox/monaco-languageclient/pull/966).
+- tsgo and erasableSyntaxOnly [#964](https://github.com/TypeFox/monaco-languageclient/pull/964).
 - Renamed `WorkspaceService` to `WorkbenchService` im `ViewsConfigTypes`.
-- Updated all `@codingame/monaco-vscode` packages to `^21.3.0`.
+- Updated all `@codingame/monaco-vscode` packages to `^21.3.2`.
 - Allow to pass options to `EditorApp#updateLayout`
 
 ## [10.0.0] - 2025-09-19
