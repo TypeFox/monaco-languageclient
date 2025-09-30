@@ -11,7 +11,6 @@
     "dev:turbo": "npm run build:worker &&next dev --turbopack -p 8083",
     "build": "npm run build:worker && next build",
     "build:worker": "npx esbuild --format=esm --bundle ./app/langium-dsl/worker/langium-server.ts --outdir=public/workers",
-    "build:worker:vite": "vite build",
     "build:tsc": "tsc --build tsconfig.json",
     "watch:tsc": "tsc --build tsconfig.json --watch",
     "start": "next start",
@@ -25,7 +24,7 @@
     "langium": "~4.1.0",
     "monaco-languageclient": "~10.1.0",
     "monaco-languageclient-examples": "~2025.9.2",
-    "next": "~15.5.3",
+    "next": "~15.5.4",
     "react": "~19.1.1",
     "react-dom": "~19.1.1",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^21.3.2",
@@ -34,11 +33,10 @@
   },
   "devDependencies": {
     "@types/node": "~22.15.35",
-    "@types/react": "~19.1.13",
+    "@types/react": "~19.1.16",
     "@types/react-dom": "~19.1.9",
     "shx": "~0.4.0",
-    "typescript": "~5.9.2",
-    "rolldown-vite": "~7.1.11"
+    "typescript": "~5.9.2"
   },
   "volta": {
     "node": "22.19.0",
