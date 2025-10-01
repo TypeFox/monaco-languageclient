@@ -45,13 +45,15 @@ export const runClangdWrapper = async () => {
 
     const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
 
+    /* @vite-ignore */
+    const compressedWorkspaceUrl = new URL('../../../resources/clangd/workspace.zip', import.meta.url).href;
     const initConfig = {
         lsMessagePort: channelLs.port2,
         fsMessagePort: channelFs.port2,
         clearIndexedDb: false,
         // set to true to use the compressed workspace at the specified URL
         useCompressedWorkspace: false,
-        compressedWorkspaceUrl: new URL('../../../resources/clangd/workspace.zip', import.meta.url).href
+        compressedWorkspaceUrl
     };
 
     const startWrapper = async () => {
