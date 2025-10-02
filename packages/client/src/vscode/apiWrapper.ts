@@ -37,7 +37,6 @@ export class MonacoVscodeApiWrapper {
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
         const viewsConfigType = apiConfig.viewsConfig.$type;
-        console.log('Ping ' + viewsConfigType + apiConfig.viewsConfig.htmlContainer);
         if ((viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') &&
             apiConfig.viewsConfig.htmlContainer === undefined) {
 
