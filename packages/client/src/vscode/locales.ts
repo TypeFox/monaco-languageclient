@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { LocalizationOptions } from '@codingame/monaco-vscode-localization-service-override';
+import { type Logger } from 'monaco-languageclient/common';
 
 export const createDefaultLocaleConfiguration = (): LocalizationOptions => {
     return {
@@ -116,13 +117,13 @@ const localeLoader: Partial<Record<string, () => Promise<void>>> = {
 
 export const locales = Object.keys(localeLoader);
 
-export const initLocaleLoader = async (locale = new URLSearchParams(window.location.search).get('locale')) => {
+export const initLocaleLoader = async (locale = new URLSearchParams(window.location.search).get('locale'), logger?: Logger) => {
     if (locale !== null) {
         const loader = localeLoader[locale];
         if (loader) {
             await loader();
         } else {
-            console.error(`Unknown locale ${locale}`);
+            logger?.error(`Unknown locale ${locale}`);
         }
     }
 };

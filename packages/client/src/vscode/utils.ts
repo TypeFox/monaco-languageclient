@@ -60,7 +60,7 @@ export const configureExtHostWorker = async (enableExtHostWorker: boolean, userS
     }
 };
 
-export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide) => {
-    console.log('Received open editor call with parameters: ', modelRef, options, sideBySide);
+export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide, logger?: Logger) => {
+    logger?.info('Received open editor call with parameters: ', modelRef, options, sideBySide);
     return undefined;
 };
