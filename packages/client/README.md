@@ -65,7 +65,7 @@ async function createEditorAndLanguageClient() {
 
     // Language client configuration
     const languageClientConfig: LanguageClientConfig = {
-        languageId,
+        languageId: languageId,
         connection: {
             options: {
                 $type: 'WebSocketUrl',
