@@ -1,0 +1,11 @@
+{
+  "name": "webcontainer-demo",
+  "version": "1.0.0",
+  "type":"module",
+  "dependencies": {
+    "generator-langium": "~4.1.0",
+    "langium-cli": "~4.1.0",
+    "tsx": "~4.20.6",
+    "yeoman-test": "~11.0.0"
+  }
+}

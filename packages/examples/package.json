@@ -119,8 +119,10 @@
     "@codingame/monaco-vscode-view-title-bar-service-override": "^23.2.2",
     "@codingame/monaco-vscode-outline-service-override": "^23.2.2",
     "@typefox/monaco-editor-react": "~7.4.0",
+    "@webcontainer/api": "~1.6.1",
     "cors": "~2.8.5",
     "express": "~5.2.1",
+    "generator-langium": "~4.1.0",
     "jszip": "~3.10.1",
     "langium": "~4.1.2",
     "monaco-languageclient": "~10.4.0",
@@ -145,7 +147,8 @@
     "langium-cli": "~4.1.0",
     "mini-coi": "~0.4.2",
     "vite-plugin-static-copy": "~3.1.4",
-    "vscode-languageserver-types": "~3.17.5"
+    "vscode-languageserver-types": "~3.17.5",
+    "yeoman-test": "~11.0.0"
   },
   "scripts": {
     "clean": "shx rm -fr dist *.tsbuildinfo ./resources/vsix",

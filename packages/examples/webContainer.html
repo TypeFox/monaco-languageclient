@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Container Experiment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="exampleHeadelineDiv">
+        <b class="exampleHeadeline">Web Container Experiment</b> - [<a href="../../index.html">Back to Index</a>]
+        <br>
+    </div>
+    <div id="textarea"></div>
+    <script type="module">
+        import './src/webContainer/main.ts';
+        import { bootWebContainer } from './src/webContainer/main.ts';
+
+        bootWebContainer();
+    </script>
+</body>
+
+</html>
