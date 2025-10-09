@@ -114,6 +114,7 @@
     "@codingame/monaco-vscode-views-service-override": "^21.3.2",
     "@codingame/monaco-vscode-outline-service-override": "^21.3.2",
     "@typefox/monaco-editor-react": "~7.1.0",
+    "@webcontainer/api": "~1.6.1",
     "cors": "~2.8.5",
     "express": "~5.1.0",
     "jszip": "~3.10.1",
