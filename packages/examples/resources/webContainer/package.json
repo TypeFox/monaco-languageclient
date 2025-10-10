@@ -6,8 +6,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "chalk": "~5.6.2",
-    "langium": "~4.1.0",
-    "langium-cli": "4.1.0"
+    "generator-langium": "~4.1.0",
+    "langium-cli": "4.1.0",
+    "yeoman-test": "~11.0.0"
   }
 }

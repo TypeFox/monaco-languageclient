@@ -1,3 +1,8 @@
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
+
 import { WebContainer, type FileSystemTree } from '@webcontainer/api';
 
 import packageJson from '../../resources/webContainer/package.json?raw';
@@ -15,7 +20,7 @@ const createWritableStream = () => {
             }
             console.log(`Output: ${output}`);
         }
-    })
+    });
 };
 
 export const bootWebContainer = async () => {
@@ -29,11 +34,17 @@ export const bootWebContainer = async () => {
             file: {
                 contents: indexJs
             }
+        },
+        'hello-world': {
+            directory: {
+            }
         }
     };
 
     console.log('Booting WebContainer...');
-    const webcontainerInstance = await WebContainer.boot();
+    const webcontainerInstance = await WebContainer.boot({
+        workdirName: 'langium'
+    });
     console.log('WebContainer booted successfully.');
 
     await webcontainerInstance.mount(files);
@@ -53,6 +64,9 @@ export const bootWebContainer = async () => {
     const startProcess = await webcontainerInstance.spawn('npm', ['run', 'start']);
     startProcess.output.pipeTo(createWritableStream());
     await startProcess.exit;
+
+    console.log(await webcontainerInstance.fs.readdir('./hello-world'));
+    console.log(await webcontainerInstance.fs.readdir('.'));
 
     console.log('Execution finished.');
 };
