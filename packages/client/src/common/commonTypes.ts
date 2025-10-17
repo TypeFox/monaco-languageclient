@@ -4,13 +4,15 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
+import type { Socket } from 'socket.io-client';
 
 export type ConnectionConfigOptions =
   | WebSocketConfigOptionsDirect
   | WebSocketConfigOptionsParams
   | WebSocketConfigOptionsUrl
   | WorkerConfigOptionsParams
-  | WorkerConfigOptionsDirect;
+  | WorkerConfigOptionsDirect
+  | SocketIoConfigOptionsDirect;
 
 export interface WebSocketCallOptions {
   /** Adds handle on languageClient */
@@ -19,9 +21,12 @@ export interface WebSocketCallOptions {
   reportStatus?: boolean;
 }
 
-export interface WebSocketConfigOptionsDirect {
+export interface WebSocketLikeConfig {
+  webSocket: WebSocket | Socket;
+}
+
+export interface WebSocketConfigOptionsDirect extends WebSocketLikeConfig {
   $type: 'WebSocketDirect';
-  webSocket: WebSocket;
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
 }
@@ -62,4 +67,8 @@ export interface WorkerConfigOptionsDirect {
   $type: 'WorkerDirect';
   worker: Worker;
   messagePort?: MessagePort;
+}
+
+export interface SocketIoConfigOptionsDirect extends WebSocketLikeConfig {
+  $type: 'SocketIoDirect';
 }
