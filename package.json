@@ -85,6 +85,7 @@
   },
   "workspaces": [
     "packages/vscode-ws-jsonrpc",
+    "packages/socketio",
     "packages/client",
     "packages/wrapper",
     "packages/wrapper-react",
