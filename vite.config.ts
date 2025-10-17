@@ -22,6 +22,7 @@ export const definedViteConfig = defineConfig({
                 browser: path.resolve(__dirname, 'packages/examples/browser.html'),
                 langium_extended: path.resolve(__dirname, 'packages/examples/langium_extended.html'),
                 statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
+                statemachine_node: path.resolve(__dirname, 'packages/examples/statemachine_node.html'),
                 python: path.resolve(__dirname, 'packages/examples/python.html'),
                 groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
                 clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),

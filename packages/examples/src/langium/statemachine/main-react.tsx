@@ -42,7 +42,13 @@ export const runStatemachineReact = async (noControls: boolean) => {
                 text: codeState,
                 uri: '/workspace/example.statemachine'
             },
-            worker,
+            connection: {
+                options: {
+                    $type: 'WorkerDirect',
+                    worker
+                },
+                messageTransports: { reader, writer }
+            },
             messageTransports: { reader, writer }
         });
 

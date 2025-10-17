@@ -3,27 +3,26 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import { MessageTransports } from 'vscode-languageclient';
+import type { CodeContent, EditorAppConfig } from 'monaco-languageclient/editorApp';
+import type { ConnectionConfig, LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import type { CodeContent, EditorAppConfig } from 'monaco-languageclient/editorApp';
+import { MessageTransports } from 'vscode-languageclient';
 
 // cannot be imported with assert as json contains comments
-import statemachineLanguageConfig from './language-configuration.json?raw';
-import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
+import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw';
+import statemachineLanguageConfig from './language-configuration.json?raw';
 
 export const createLangiumGlobalConfig = (params: {
     languageServerId: string,
     codeContent: CodeContent,
-    worker: Worker,
-    messagePort?: MessagePort,
+    connection: ConnectionConfig;
     messageTransports?: MessageTransports,
     htmlContainer?: HTMLElement
 }): ExampleAppConfig => {
@@ -36,16 +35,11 @@ export const createLangiumGlobalConfig = (params: {
         clientOptions: {
             documentSelector: ['statemachine']
         },
-        connection: {
-            options: {
-                $type: 'WorkerDirect',
-                worker: params.worker,
-                messagePort: params.messagePort,
-            },
-            messageTransports: params.messageTransports
-        },
+        connection: params.connection,
         logLevel: LogLevel.Off
     };
+
+
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',

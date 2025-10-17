@@ -2,6 +2,8 @@
   "files": [],
   "references": [
       { "path": "./packages/vscode-ws-jsonrpc/tsconfig.src.json" },
+      { "path": "./packages/socketio/tsconfig.src.json" },
+      { "path": "./packages/socketio/tsconfig.test.json" },
       { "path": "./packages/client/tsconfig.src.json" },
       { "path": "./packages/client/tsconfig.test.json" },
       { "path": "./packages/wrapper-react/tsconfig.src.json" },

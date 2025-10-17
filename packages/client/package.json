@@ -137,6 +137,7 @@
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
+    "vscode-socketio-jsonrpc": "~0.0.1",
     "vscode-ws-jsonrpc": "~3.5.0"
   },
   "devDependencies": {

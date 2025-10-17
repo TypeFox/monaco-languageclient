@@ -6,3 +6,4 @@
 /* server side export only */
 export * from './common/node/server-commons.js';
 export * from './common/node/language-server-runner.js';
+export * from './langium/statemachine/node/statemachine-server.js';

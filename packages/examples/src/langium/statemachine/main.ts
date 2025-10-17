@@ -54,9 +54,14 @@ const startEditor = async () => {
             text,
             uri: '/workspace/example.statemachine'
         },
-        worker: stateMachineWorkerPort,
-        messagePort: channel.port1,
-        messageTransports: { reader, writer },
+        connection: {
+            options: {
+                $type: 'WorkerDirect',
+                worker: stateMachineWorkerPort,
+                messagePort: channel.port1,
+            },
+            messageTransports: { reader, writer }
+        },
         htmlContainer
     });
     editorApp = new EditorApp(appConfig.editorAppConfig);

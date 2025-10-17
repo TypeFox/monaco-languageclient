@@ -6,12 +6,6 @@
     "outDir": "lib",
     "declarationDir": "lib"
   },
-  "references": [{
-    "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
-  },
-  {
-    "path": "../socketio/tsconfig.src.json"
-  }],
   "include": [
     "src/**/*.ts"
   ]
