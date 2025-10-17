@@ -189,6 +189,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
     languageId: 'python',
     connection: {
       options: {
+        $family: 'WebSocket',
         $type: 'WebSocketDirect',
         webSocket: webSocket,
         startOptions: {

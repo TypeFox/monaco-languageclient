@@ -85,6 +85,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   if (lsConfig.useExternalWebSocket) {
     webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
     connectionConfigOptions = {
+      $family: 'WebSocket',
       $type: 'WebSocketDirect',
       webSocket,
       startOptions,
@@ -92,6 +93,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     };
   } else {
     connectionConfigOptions = {
+      $family: 'WebSocket',
       $type: 'WebSocketUrl',
       url: webSocketUrl,
       startOptions,

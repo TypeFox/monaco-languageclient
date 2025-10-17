@@ -63,6 +63,7 @@ export const createMinilogoConfig = (params: { htmlContainer: HTMLElement }): Ex
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerDirect',
         worker
       },

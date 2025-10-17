@@ -6,10 +6,13 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
-import { createUrl, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+
+import { Deferred } from '../common/utils.js';
+import type { LanguageClientConnectionRealization } from './con/contract.js';
+import { LcSocketIo } from './con/lcSocketIo.js';
+import { LcWebSocket } from './con/lcWebSocket .js';
+import { LcWorker } from './con/lcWorker.js';
 import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 
 export interface LanguageClientError {
@@ -20,15 +23,27 @@ export interface LanguageClientError {
 export class LanguageClientWrapper {
   private languageClient?: MonacoLanguageClient | MonacoLanguageClientWithProposedFeatures;
   private languageClientConfig: LanguageClientConfig;
-  private worker?: Worker;
-  private port?: MessagePort;
-  private languageId: string;
   private logger: ILogger | undefined;
+  private connectionRealization: LanguageClientConnectionRealization;
 
   constructor(config: LanguageClientConfig) {
     this.languageClientConfig = config;
-    this.languageId = this.languageClientConfig.languageId;
     this.logger = new ConsoleLogger(this.languageClientConfig.logLevel ?? LogLevel.Off);
+
+    switch (this.languageClientConfig.connection.options.$type) {
+      case 'WebSocketDirect':
+      case 'WebSocketParams':
+      case 'WebSocketUrl':
+        this.connectionRealization = new LcWebSocket();
+        break;
+      case 'SocketIoDirect':
+        this.connectionRealization = new LcSocketIo();
+        break;
+      case 'WorkerDirect':
+      case 'WorkerConfig':
+        this.connectionRealization = new LcWorker();
+        break;
+    }
   }
 
   haveLanguageClient(): boolean {
@@ -40,7 +55,10 @@ export class LanguageClientWrapper {
   }
 
   getWorker(): Worker | undefined {
-    return this.worker;
+    if (this.connectionRealization.getTransportLayerName() === 'Worker') {
+      return (this.connectionRealization as LcWorker).getWorker();
+    }
+    return undefined;
   }
 
   isStarted(): boolean {
@@ -48,23 +66,24 @@ export class LanguageClientWrapper {
   }
 
   async start(): Promise<void> {
-    if (this.languageClient?.isRunning() ?? false) {
-      this.logger?.info('startLanguageClientConnection: monaco-languageclient already running!');
-      return Promise.resolve();
+    const deferred = new Deferred<void>();
+
+    if (this.languageClient === undefined || !this.languageClient.isRunning()) {
+      const messageTransports = this.connectionRealization.reinit(
+        this.languageClientConfig.languageId,
+        this.languageClientConfig.connection
+      );
+      this.connectionRealization.connected = async () => {
+        await this.performLanguageClientStart(messageTransports, deferred.reject);
+      };
+      this.connectionRealization.disconnected = async () => {
+        await this.dispose();
+      };
+      this.connectionRealization.configureErrorHandling(deferred.reject);
+      this.connectionRealization.configureConnectionHandling();
+      deferred.resolve();
     }
-
-    return new Promise<void>((resolve, reject) => {
-      const conConfig = this.languageClientConfig.connection;
-      const conOptions = conConfig.options;
-
-      if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') {
-        const webSocket = conOptions.$type === 'WebSocketDirect' ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
-        return this.initMessageTransportWebSocket(webSocket, resolve, reject);
-      } else {
-        // init of worker and start of languageclient can be handled directly, because worker available already
-        return this.initMessageTransportWorker(conOptions, resolve, reject);
-      }
-    });
+    return deferred.promise;
   }
 
   /**
@@ -76,87 +95,22 @@ export class LanguageClientWrapper {
   async restart(updatedWorker?: Worker, forceWorkerDispose?: boolean): Promise<void> {
     await this.dispose(forceWorkerDispose);
 
-    this.worker = updatedWorker;
+    if (updatedWorker !== undefined && this.connectionRealization.getTransportLayerName() === 'Worker') {
+      (this.connectionRealization as LcWorker).updateWorker(updatedWorker);
+    }
     this.logger?.info('Re-Starting monaco-languageclient');
     return this.start();
   }
 
-  protected async initMessageTransportWebSocket(webSocket: WebSocket, resolve: () => void, reject: (reason?: unknown) => void) {
-    let messageTransports = this.languageClientConfig.connection.messageTransports;
-    if (messageTransports === undefined) {
-      const iWebSocket = toSocket(webSocket);
-      messageTransports = {
-        reader: new WebSocketMessageReader(iWebSocket),
-        writer: new WebSocketMessageWriter(iWebSocket)
-      };
-    }
-
-    // if websocket is already open, then start the languageclient directly
-    if (webSocket.readyState === WebSocket.OPEN) {
-      await this.performLanguageClientStart(messageTransports, resolve, reject);
-    }
-
-    // otherwise start on open
-    webSocket.onopen = async () => {
-      await this.performLanguageClientStart(messageTransports, resolve, reject);
-    };
-    webSocket.onerror = (ev: Event) => {
-      const languageClientError: LanguageClientError = {
-        message: `languageClientWrapper (${this.languageId}): Websocket connection failed.`,
-        error: (ev as ErrorEvent).error ?? 'No error was provided.'
-      };
-      reject(languageClientError);
-    };
-  }
-
-  protected async initMessageTransportWorker(
-    lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams,
-    resolve: () => void,
-    reject: (reason?: unknown) => void
-  ) {
-    if (this.worker === undefined) {
-      if (lccOptions.$type === 'WorkerConfig') {
-        const workerConfig = lccOptions as WorkerConfigOptionsParams;
-        this.worker = new Worker(workerConfig.url.href, {
-          type: workerConfig.type,
-          name: workerConfig.workerName
-        });
-
-        this.worker.onerror = (ev) => {
-          const languageClientError: LanguageClientError = {
-            message: `languageClientWrapper (${this.languageId}): Illegal worker configuration detected.`,
-            error: ev.error ?? 'No error was provided.'
-          };
-          reject(languageClientError);
-        };
-      } else {
-        const workerDirectConfig = lccOptions as WorkerConfigOptionsDirect;
-        this.worker = workerDirectConfig.worker;
-      }
-      if (lccOptions.messagePort !== undefined) {
-        this.port = lccOptions.messagePort;
-      }
-    }
-
-    const portOrWorker = this.port ?? this.worker;
-    let messageTransports = this.languageClientConfig.connection.messageTransports;
-    messageTransports ??= {
-      reader: new BrowserMessageReader(portOrWorker),
-      writer: new BrowserMessageWriter(portOrWorker)
-    };
-    await this.performLanguageClientStart(messageTransports, resolve, reject);
-  }
-
   protected async performLanguageClientStart(
     messageTransports: MessageTransports,
-    resolve: () => void,
-    reject: (reason?: unknown) => void
-  ) {
+    errorHandler: (reason?: unknown) => void
+  ): Promise<void> {
     let starting = true;
     // do not perform another start attempt if already running
     if (this.languageClient?.isRunning() ?? false) {
       this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
-      resolve();
+      return;
     }
 
     const mlcConfig = {
@@ -167,7 +121,7 @@ export class LanguageClientWrapper {
         errorHandler: {
           error: (e: Error) => {
             if (starting) {
-              reject(`Error occurred in language client: ${e}`);
+              errorHandler(`Error occurred in language client: ${e}`);
               return { action: ErrorAction.Shutdown };
             } else {
               return { action: ErrorAction.Continue };
@@ -219,13 +173,12 @@ export class LanguageClientWrapper {
       }
     } catch (e: unknown) {
       const languageClientError: LanguageClientError = {
-        message: `languageClientWrapper (${this.languageId}): Start was unsuccessful.`,
+        message: `languageClientWrapper (${this.languageClientConfig.languageId}): Start was unsuccessful.`,
         error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
       };
-      reject(languageClientError);
+      errorHandler(languageClientError);
     }
-    this.logger?.info(`languageClientWrapper (${this.languageId}): Started successfully.`);
-    resolve();
+    this.logger?.info(`languageClientWrapper (${this.languageClientConfig.languageId}): Started successfully.`);
     starting = false;
   }
 
@@ -238,18 +191,19 @@ export class LanguageClientWrapper {
 
       const restartLC = async () => {
         if (this.isStarted()) {
+          const worker = this.getWorker();
           try {
             readerOnError.dispose();
             readerOnClose.dispose();
 
-            await this.restart(this.worker, restartOptions.keepWorker);
+            await this.restart(worker, restartOptions.keepWorker);
           } finally {
             retry++;
             if (retry > restartOptions.retries && !this.isStarted()) {
               this.logger?.info(`Disabling Language Client. Failed to start clangd after ${restartOptions.retries} retries`);
             } else {
               setTimeout(async () => {
-                await this.restart(this.worker, restartOptions.keepWorker);
+                await this.restart(worker, restartOptions.keepWorker);
               }, restartOptions.timeout);
             }
           }
@@ -258,12 +212,7 @@ export class LanguageClientWrapper {
     }
   }
 
-  protected disposeWorker() {
-    this.worker?.terminate();
-    this.worker = undefined;
-  }
-
-  async dispose(forceWorkerDispose?: boolean): Promise<void> {
+  async dispose(forceDispose?: boolean): Promise<void> {
     try {
       if (this.isStarted()) {
         await this.languageClient?.dispose();
@@ -272,14 +221,14 @@ export class LanguageClientWrapper {
       }
     } catch (e) {
       const languageClientError: LanguageClientError = {
-        message: `languageClientWrapper (${this.languageId}): Disposing the monaco-languageclient resulted in error.`,
+        message: `languageClientWrapper (${this.languageClientConfig.languageId}): Disposing the monaco-languageclient resulted in error.`,
         error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
       };
-      return Promise.reject(languageClientError);
+      throw new Error(languageClientError.message, { cause: languageClientError.error });
     } finally {
       // always terminate the worker if desired
-      if (this.languageClientConfig.disposeWorker === true || forceWorkerDispose === true) {
-        this.disposeWorker();
+      if (this.languageClientConfig.disposeWorker === true || forceDispose === true) {
+        this.connectionRealization.dispose();
       }
     }
   }

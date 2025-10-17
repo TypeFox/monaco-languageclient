@@ -20,6 +20,7 @@
   "files": [
     "dist",
     "src",
+    "test",
     "*.html",
     "*.ts",
     "README.md",
@@ -72,6 +73,7 @@
     "start:server:jdtls": "tsx src/eclipse.jdt.ls/server/direct.ts",
     "start:server:json": "tsx src/json/server/direct.ts",
     "start:server:python": "tsx src/python/server/direct.ts",
+    "start:server:statemachine": "tsx src/langium/statemachine/node/direct.ts",
     "langium:generate:statemachine": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
     "langium:generate": "npm run langium:generate:statemachine",
     "extract:docker": "tsx ./resources/clangd/scripts/extractDockerFiles.ts",
@@ -136,6 +138,7 @@
     "vscode-languageserver": "~10.1.1",
     "vscode-languageserver-protocol": "~3.18.3",
     "vscode-languageserver-textdocument": "~1.0.14",
+    "vscode-socketio-jsonrpc": "~0.0.1",
     "vscode-uri": "~3.2.0",
     "vscode-ws-jsonrpc": "~4.0.0-next.3",
     "ws": "~8.21.3",

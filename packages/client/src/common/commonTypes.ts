@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { Socket } from 'socket.io-client';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 
 export type ConnectionConfigOptions =
@@ -10,7 +11,8 @@ export type ConnectionConfigOptions =
   | WebSocketConfigOptionsParams
   | WebSocketConfigOptionsUrl
   | WorkerConfigOptionsParams
-  | WorkerConfigOptionsDirect;
+  | WorkerConfigOptionsDirect
+  | SocketIoConfigOptionsDirect;
 
 export interface WebSocketCallOptions {
   /** Adds handle on languageClient */
@@ -19,9 +21,16 @@ export interface WebSocketCallOptions {
   reportStatus?: boolean;
 }
 
-export interface WebSocketConfigOptionsDirect {
+export interface ConnectionOptionsFamily {
+  $family: 'Worker' | 'WebSocket';
+}
+
+export interface WebSocketLikeConfig extends ConnectionOptionsFamily {
+  webSocket: WebSocket | Socket;
+}
+
+export interface WebSocketConfigOptionsDirect extends WebSocketLikeConfig {
   $type: 'WebSocketDirect';
-  webSocket: WebSocket;
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
 }
@@ -34,7 +43,7 @@ export interface WebSocketUrlParams {
   extraParams?: Record<string, string | number | Array<string | number>>;
 }
 
-export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
+export interface WebSocketConfigOptionsParams extends WebSocketUrlParams, ConnectionOptionsFamily {
   $type: 'WebSocketParams';
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
@@ -44,13 +53,13 @@ export interface WebSocketUrlString {
   url: string;
 }
 
-export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
+export interface WebSocketConfigOptionsUrl extends WebSocketUrlString, ConnectionOptionsFamily {
   $type: 'WebSocketUrl';
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
 }
 
-export interface WorkerConfigOptionsParams {
+export interface WorkerConfigOptionsParams extends ConnectionOptionsFamily {
   $type: 'WorkerConfig';
   url: URL;
   type: 'classic' | 'module';
@@ -58,8 +67,12 @@ export interface WorkerConfigOptionsParams {
   workerName?: string;
 }
 
-export interface WorkerConfigOptionsDirect {
+export interface WorkerConfigOptionsDirect extends ConnectionOptionsFamily {
   $type: 'WorkerDirect';
   worker: Worker;
   messagePort?: MessagePort;
+}
+
+export interface SocketIoConfigOptionsDirect extends WebSocketLikeConfig {
+  $type: 'SocketIoDirect';
 }
