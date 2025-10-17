@@ -52,6 +52,9 @@
         "src/python/client/reactPython.tsx",
         "src/ts/clientTs.ts"
       ]
+    },
+    "packages/socketio": {
+      "entry": ["src/node/server.ts", "src/browser/client.ts", "src/index.ts"]
     }
   },
   "ignoreFiles": ["verify/**"],

@@ -31,9 +31,9 @@ export const vitestConfig = {
       reporter: ['text', 'html'],
       include: ['packages/client', 'packages/vscode-ws-jsonrpc', 'packages/wrapper-react']
     },
-    include: ['**/client/test/**/*', '**/wrapper-react/test/**/*'],
+    include: ['**/client/test/**/*', '**/wrapper-react/test/**/*', '**/socketio/test/**/*'],
     exclude: ['**/support/**/*', '**/__screenshots__/**/*', '**/verify/**/*'],
-    tags: [{ name: 'worker', fileParallelism: false, testTimeout: 10000 }, { name: 'main' }]
+    tags: [{ name: 'worker', fileParallelism: false, testTimeout: 10000 }, { name: 'main' }, { name: 'commander' }]
   }
 };
 
