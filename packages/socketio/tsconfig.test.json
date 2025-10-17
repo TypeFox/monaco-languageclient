@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.src.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "test"
+  },
+  "references": [{
+    "path": "./tsconfig.src.json"
+  },
+  {
+    "path": "../client/tsconfig.src.json",
+  },
+  {
+    "path": "../examples/tsconfig.src.json"
+  }],
+  "include": [
+    "test/**/*.ts",
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "vscode-socketio-jsonrpc",
+  "version": "0.0.1",
+  "description": "vscode jsonrpc over socket.io",
+  "author": {
+    "name": "TypeFox GmbH",
+    "url": "http://www.typefox.io"
+  },
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/socketio/README.md",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
+    "directory": "packages/socketio"
+  },
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./node": {
+      "types": "./lib/node/server.d.ts",
+      "default": "./lib/node/server.js"
+    },
+    "./browser": {
+      "types": "./lib/browser/client.d.ts",
+      "default": "./lib/browser/client.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "lib/index.d.ts"
+      ],
+      "node": [
+        "lib/node/server"
+      ],
+      "browser": [
+        "lib/browser/client"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "22.19.0",
+    "npm": "10.9.3"
+  },
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "socket.io": "~4.8.3",
+    "socket.io-client": "~4.8.3",
+    "vscode-jsonrpc": "~8.2.1",
+    "vscode-languageserver-protocol": "~3.17.5"
+  },
+  "devDependencies": {
+    "vscode-languageserver":"~9.0.1",
+    "monaco-languageclient": "~10.7.0",
+    "monaco-languageclient-examples": "~2026.2.1"
+  },
+
+  "scripts": {
+    "clean": "shx rm -fr ./lib *.tsbuildinfo",
+    "compile": "tsgo --build tsconfig.src.json",
+    "build:msg": "echo Building vscode-sockeio-jsonrpc:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
+  }
+}

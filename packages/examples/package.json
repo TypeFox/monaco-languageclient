@@ -132,6 +132,7 @@
     "vscode-json-languageservice": "~5.7.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
+    "vscode-socketio-jsonrpc": "~0.0.1",
     "vscode-uri": "~3.1.0",
     "vscode-ws-jsonrpc": "~3.5.0",
     "ws": "~8.19.0",
