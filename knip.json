@@ -44,12 +44,16 @@
         "src/langium/statemachine/launcher.ts",
         "src/langium/statemachine/main-react.tsx",
         "src/langium/statemachine/main.ts",
+        "src/langium/statemachine/main-node.ts",
         "src/multi/twoLanguageClients.ts",
         "src/node.ts",
         "src/python/client/main.ts",
         "src/python/client/reactPython.tsx",
         "src/ts/clientTs.ts"
       ]
+    },
+    "packages/socketio": {
+      "entry": ["src/node/server.ts", "src/browser/client.ts", "src/index.ts"]
     }
   },
   "ignoreFiles": ["verify/**"],

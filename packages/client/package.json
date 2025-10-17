@@ -110,9 +110,11 @@
     "@codingame/monaco-vscode-theme-service-override": "^27.0.0",
     "@codingame/monaco-vscode-views-service-override": "^27.0.0",
     "@codingame/monaco-vscode-workbench-service-override": "^27.0.0",
+    "socket.io-client": "~4.8.3",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^27.0.0",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver-protocol": "~3.17.5",
+    "vscode-socketio-jsonrpc": "~0.0.1",
     "vscode-ws-jsonrpc": "~3.5.0"
   },
   "devDependencies": {
