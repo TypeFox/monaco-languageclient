@@ -4,29 +4,34 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
+import type { LanguageClientConnectionRealization } from '../wrapper/index.js';
+import type { DataCallback } from 'vscode-languageserver-protocol';
 
-export type ConnectionConfigOptions =
-  | WebSocketConfigOptionsDirect
-  | WebSocketConfigOptionsParams
-  | WebSocketConfigOptionsUrl
-  | WorkerConfigOptionsParams
-  | WorkerConfigOptionsDirect;
+export type ConnectionRetryConfig = {
+  retries?: number;
+  timeout?: number;
+  disposeOnRestart?: boolean;
+};
 
-export interface WebSocketCallOptions {
+export type ConnectionConfigOptions = WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams;
+
+export interface CallOptions {
   /** Adds handle on languageClient */
   onCall: (languageClient?: BaseLanguageClient) => void;
   /** Reports Status Of Language Client */
   reportStatus?: boolean;
 }
 
-export interface WebSocketConfigOptionsDirect {
-  $type: 'WebSocketDirect';
-  webSocket: WebSocket;
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
+export interface ConnectionOptionsFamily {
+  $family: 'Worker' | 'WebSocket';
+  disposeResources?: boolean;
+  realization: () => LanguageClientConnectionRealization;
+  startOptions?: CallOptions;
+  stopOptions?: CallOptions;
+  readerCallback?: DataCallback;
 }
 
-export interface WebSocketUrlParams {
+export interface WebSocketConfigOptionsParams extends ConnectionOptionsFamily {
   secured: boolean;
   host: string;
   port?: number;
@@ -34,32 +39,13 @@ export interface WebSocketUrlParams {
   extraParams?: Record<string, string | number | Array<string | number>>;
 }
 
-export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
-  $type: 'WebSocketParams';
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
+export interface WebSocketConfigOptionsUrl extends ConnectionOptionsFamily {
+  webSocketUrl: string;
 }
 
-export interface WebSocketUrlString {
-  url: string;
-}
-
-export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
-  $type: 'WebSocketUrl';
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
-}
-
-export interface WorkerConfigOptionsParams {
-  $type: 'WorkerConfig';
-  url: URL;
+export interface WorkerConfigOptionsParams extends ConnectionOptionsFamily {
+  workerUrl: URL;
   type: 'classic' | 'module';
   messagePort?: MessagePort;
   workerName?: string;
-}
-
-export interface WorkerConfigOptionsDirect {
-  $type: 'WorkerDirect';
-  worker: Worker;
-  messagePort?: MessagePort;
 }

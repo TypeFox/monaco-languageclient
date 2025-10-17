@@ -5,7 +5,7 @@
 
 import * as fs from 'node:fs';
 import { minimatch } from 'minimatch';
-import { getPathRelativeToRootDirectory } from './helper';
+import { getPathRelativeToRootDirectory } from './helper.js';
 
 const printHelp = () => {
   console.log('\nUse:');

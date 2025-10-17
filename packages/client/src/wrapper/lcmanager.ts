@@ -29,10 +29,6 @@ export class LanguageClientManager {
     return this.languageClientWrappers.get(languageId)?.getLanguageClient();
   }
 
-  getWorker(languageId: string): Worker | undefined {
-    return this.languageClientWrappers.get(languageId)?.getWorker();
-  }
-
   setConfig(languageClientConfig?: LanguageClientConfig) {
     if (languageClientConfig === undefined) return;
 

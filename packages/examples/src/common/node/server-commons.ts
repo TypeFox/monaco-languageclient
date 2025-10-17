@@ -14,9 +14,9 @@ import {
   type RequestMessage,
   type ResponseMessage
 } from 'vscode-languageserver-protocol';
-import { createConnection, forward, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { createServerProcess } from 'vscode-ws-jsonrpc/server';
 import type { IWebSocket } from 'vscode-ws-jsonrpc';
+import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
 
 import { WebSocketServer, type ServerOptions } from 'ws';
 
@@ -86,6 +86,7 @@ export const upgradeWsServer = (
     if (pathName === runconfig.pathName) {
       config.wss.handleUpgrade(request, socket, head, (webSocket) => {
         const socket: IWebSocket = {
+          $type: 'IWebSocket',
           send: (content) =>
             webSocket.send(content, (error: Error | null | undefined) => {
               if (error !== null && error !== undefined) {

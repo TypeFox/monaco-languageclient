@@ -6,15 +6,11 @@
 import * as cp from 'node:child_process';
 import * as net from 'node:net';
 import * as stream from 'node:stream';
+import { Disposable, Message, MessageReader, MessageWriter } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter, StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import {
-  createConnection,
-  type IConnection,
-  type IWebSocket,
-  type IWebSocketConnection,
-  WebSocketMessageReader,
-  WebSocketMessageWriter
-} from 'vscode-ws-jsonrpc';
+import { type IWebSocket, type IWebSocketConnection, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { DisposableCollection } from '../common/disposable.js';
+import type { IConnection } from '../common/types.js';
 
 export function createServerProcess(
   serverName: string,
@@ -62,4 +58,37 @@ export function createStreamConnection(outStream: stream.Readable, inStream: str
   const reader = new StreamMessageReader(outStream);
   const writer = new StreamMessageWriter(inStream);
   return createConnection(reader, writer, onDispose);
+}
+
+export function forward(clientConnection: IConnection, serverConnection: IConnection, map?: (message: Message) => Message): void {
+  clientConnection.forward(serverConnection, map);
+  serverConnection.forward(clientConnection, map);
+  clientConnection.onClose(() => serverConnection.dispose());
+  serverConnection.onClose(() => clientConnection.dispose());
+}
+
+export function createConnection<T extends object>(
+  reader: MessageReader,
+  writer: MessageWriter,
+  onDispose: () => void,
+  extensions: T = {} as T
+): IConnection & T {
+  const disposeOnClose = new DisposableCollection();
+  reader.onClose(() => disposeOnClose.dispose());
+  writer.onClose(() => disposeOnClose.dispose());
+  return {
+    reader,
+    writer,
+    forward(to: IConnection, map: (message: Message) => Message = (message) => message): void {
+      reader.listen(async (input) => {
+        const output = map(input);
+        await to.writer.write(output);
+      });
+    },
+    onClose(callback: () => void): Disposable {
+      return disposeOnClose.push(Disposable.create(callback));
+    },
+    dispose: () => onDispose(),
+    ...extensions
+  };
 }

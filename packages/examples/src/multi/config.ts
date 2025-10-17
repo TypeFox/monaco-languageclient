@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { type LanguageClientConfig, LcWebSocket } from 'monaco-languageclient/lcwrapper';
 import * as vscode from 'vscode';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 
 export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => {
@@ -15,7 +15,8 @@ export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => 
     },
     connection: {
       options: {
-        $type: 'WebSocketParams',
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30000,
         path: 'sampleServer',
@@ -30,7 +31,8 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
     languageId: 'python',
     connection: {
       options: {
-        $type: 'WebSocketParams',
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30001,
         path: 'pyright',

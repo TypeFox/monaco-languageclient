@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './common/connection.js';
 export * from './common/disposable.js';
 export * from './common/logger.js';
 export * from './common/types.js';

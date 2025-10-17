@@ -14,7 +14,7 @@ import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-servi
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { Uri } from 'vscode';
@@ -107,15 +107,17 @@ export const createClangdAppConfig = async (config: {
     languageId: 'cpp',
     connection: {
       options: {
-        $type: 'WorkerDirect',
-        worker: await config.clangdWorkerHandler.createWorker(),
+        $family: 'Worker',
+        realization: () => new LcWorker(),
+        workerUrl: new URL('../worker/clangd-server.ts', import.meta.url),
+        type: 'module',
+        workerName: 'Clangd Server Worker',
         messagePort: config.lsMessageLocalPort
+      },
+      retryConfig: {
+        retries: 5,
+        disposeOnRestart: false
       }
-    },
-    restartOptions: {
-      retries: 5,
-      timeout: 1000,
-      keepWorker: true
     },
     clientOptions: {
       documentSelector: ['cpp'],
