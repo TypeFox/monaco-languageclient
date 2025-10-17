@@ -3,12 +3,14 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { ConsoleLogger, createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { MonacoLanguageClient } from 'monaco-languageclient';
+import { ConsoleLogger, createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
+import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
+import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
+import type { Socket } from 'socket.io-client';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
 export interface LanguageClientError {
@@ -57,8 +59,8 @@ export class LanguageClientWrapper {
             const conConfig = this.languageClientConfig.connection;
             const conOptions = conConfig.options;
 
-            if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') {
-                const webSocket = conOptions.$type === 'WebSocketDirect' ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
+            if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'SocketIoDirect') {
+                const webSocket = (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'SocketIoDirect') ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
                 this.initMessageTransportWebSocket(webSocket, resolve, reject);
             } else {
                 // init of worker and start of languageclient can be handled directly, because worker available already
@@ -81,33 +83,53 @@ export class LanguageClientWrapper {
         return this.start();
     }
 
-    protected async initMessageTransportWebSocket(webSocket: WebSocket, resolve: () => void, reject: (reason?: unknown) => void) {
-
+    protected async initMessageTransportWebSocket(webSocket: WebSocket | Socket, resolve: () => void, reject: (reason?: unknown) => void) {
         let messageTransports = this.languageClientConfig.connection.messageTransports;
         if (messageTransports === undefined) {
-            const iWebSocket = toSocket(webSocket);
-            messageTransports = {
-                reader: new WebSocketMessageReader(iWebSocket),
-                writer: new WebSocketMessageWriter(iWebSocket)
-            };
+
+            if (this.languageClientConfig.connection.options.$type === 'SocketIoDirect') {
+                messageTransports = {
+                    reader: new SocketIoMessageReader(webSocket as Socket),
+                    writer: new SocketIoMessageWriter(webSocket as Socket)
+                };
+            } else {
+                const iWebSocket = toSocket(webSocket as WebSocket);
+                messageTransports = {
+                    reader: new WebSocketMessageReader(iWebSocket),
+                    writer: new WebSocketMessageWriter(iWebSocket)
+                };
+            }
         }
 
-        // if websocket is already open, then start the languageclient directly
-        if (webSocket.readyState === WebSocket.OPEN) {
+        if (this.languageClientConfig.connection.options.$type === 'SocketIoDirect') {
+            // (webSocket as Socket).on('connect', async () => {
             await this.performLanguageClientStart(messageTransports, resolve, reject);
-        }
+            // });
+            (webSocket as Socket).on('error', (ev) => {
+                const languageClientError: LanguageClientError = {
+                    message: `languageClientWrapper (${this.languageId}): Websocket connection failed.`,
+                    error: (ev as ErrorEvent).error ?? 'No error was provided.'
+                };
+                reject(languageClientError);
+            });
+        } else {
+            // if websocket is already open, then start the languageclient directly
+            if ((webSocket as WebSocket).readyState === WebSocket.OPEN) {
+                await this.performLanguageClientStart(messageTransports, resolve, reject);
+            }
 
-        // otherwise start on open
-        webSocket.onopen = async () => {
-            await this.performLanguageClientStart(messageTransports, resolve, reject);
-        };
-        webSocket.onerror = (ev: Event) => {
-            const languageClientError: LanguageClientError = {
-                message: `languageClientWrapper (${this.languageId}): Websocket connection failed.`,
-                error: (ev as ErrorEvent).error ?? 'No error was provided.'
+            // otherwise start on open
+            (webSocket as WebSocket).onopen = async () => {
+                await this.performLanguageClientStart(messageTransports, resolve, reject);
             };
-            reject(languageClientError);
-        };
+            (webSocket as WebSocket).onerror = (ev: Event) => {
+                const languageClientError: LanguageClientError = {
+                    message: `languageClientWrapper (${this.languageId}): Websocket connection failed.`,
+                    error: (ev as ErrorEvent).error ?? 'No error was provided.'
+                };
+                reject(languageClientError);
+            };
+        }
     }
 
     protected async initMessageTransportWorker(lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams, resolve: () => void, reject: (reason?: unknown) => void) {
