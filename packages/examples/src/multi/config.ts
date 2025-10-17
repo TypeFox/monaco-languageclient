@@ -6,6 +6,7 @@
 import * as vscode from 'vscode';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => {
   return {
@@ -15,7 +16,8 @@ export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => 
     },
     connection: {
       options: {
-        $type: 'WebSocketParams',
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30000,
         path: 'sampleServer',
@@ -30,7 +32,8 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
     languageId: 'python',
     connection: {
       options: {
-        $type: 'WebSocketParams',
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30001,
         path: 'pyright',

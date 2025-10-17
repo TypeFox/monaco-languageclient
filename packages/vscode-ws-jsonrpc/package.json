@@ -32,6 +32,11 @@
       "import": "./lib/index.js",
       "default": "./lib/index.js"
     },
+    "./browser": {
+      "types": "./lib/browser/index.d.ts",
+      "import": "./lib/browser/index.js",
+      "default": "./lib/browser/index.js"
+    },
     "./server": {
       "types": "./lib/server/index.d.ts",
       "import": "./lib/server/index.js",
@@ -45,7 +50,9 @@
     "build": "npm run build:msg && npm run clean && npm run compile"
   },
   "dependencies": {
-    "vscode-jsonrpc": "~9.0.2"
+    "monaco-languageclient": "~11.0.0-next.3",
+    "vscode-jsonrpc": "~9.0.2",
+    "vscode-languageclient": "~10.1.1"
   },
   "engines": {
     "node": ">=22",

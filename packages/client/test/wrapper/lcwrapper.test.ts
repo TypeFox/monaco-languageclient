@@ -7,18 +7,17 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import {
+  createDefaultLanguageClientConfig,
   createDefaultLcUnreachableUrlConfig,
-  createDefaultLcWorkerConfig,
   createMonacoEditorDiv,
   createUnreachableWorkerConfig
 } from '../support/helper.js';
 
-describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
+describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['main'] }, () => {
   beforeAll(async () => {
     const apiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',
@@ -31,38 +30,19 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
     await monacoVscodeApiManager.start();
   });
 
-  const createWorkerAndConfig = () => {
-    const workerUrl = 'monaco-languageclient-examples/worker/langium';
-    const worker = new Worker(workerUrl, {
-      type: 'module',
-      name: 'Langium LS'
-    });
-
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
-    reader.listen((message) => {
-      console.log('Received message from worker:', message);
-    });
-    const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
-    languageClientConfig.disposeWorker = true;
-    return {
-      worker,
-      languageClientConfig
-    };
-  };
-
   test('Constructor: no config', () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     expect(languageClientWrapper.haveLanguageClient()).toBeFalsy();
   });
 
   test('Dispose: direct worker is cleaned up afterwards', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
+    const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(workerAndConfig.worker).toBeDefined();
-    expect(languageClientWrapper.getWorker()).toBeUndefined();
+    expect(realization.getWorker()).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
     try {
@@ -71,25 +51,21 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
       // ignore
     }
 
-    expect(languageClientWrapper.getWorker()).toBeTruthy();
+    expect(realization.getWorker()).toBeTruthy();
 
     // dispose & verify
     await languageClientWrapper.dispose();
-    expect(languageClientWrapper.getWorker()).toBeUndefined();
+    expect(realization.getWorker()).toBeUndefined();
   });
 
   test('Start: unreachable url', async () => {
-    const languageClientConfig = createDefaultLcUnreachableUrlConfig(23456);
+    const languageClientConfig = createDefaultLcUnreachableUrlConfig(21999);
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
-    try {
-      await languageClientWrapper.start();
-    } catch (error) {
-      expect(error).toEqual({
-        message: 'languageClientWrapper (javascript): Websocket connection failed.',
-        error: 'No error was provided.'
-      });
-    }
+    await expect(languageClientWrapper.start()).rejects.toEqual({
+      error: 'No error was provided.',
+      message: 'WebSocket (javascript): Websocket connection failed.'
+    });
   });
 
   test('Only unreachable worker url', async () => {
@@ -108,17 +84,17 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
     await expect(languageClientWrapper.start()).rejects.toEqual({
-      message: 'languageClientWrapper (javascript): Illegal worker configuration detected.',
-      error: 'No error was provided.'
+      error: 'No error was provided.',
+      message: 'Worker (javascript): Unable to load worker from URL: 404 Not Found.'
     });
   });
 
   test('Dispose: start, dispose worker and restart', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
+    const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(workerAndConfig.worker).toBeDefined();
-    expect(languageClientWrapper.getWorker()).toBeUndefined();
+    expect(realization.getWorker()).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
     try {
@@ -127,11 +103,11 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
       // ignore
       console.error(_error);
     }
-    expect(languageClientWrapper.getWorker()).toBeTruthy();
+    expect(realization.getWorker()).toBeTruthy();
 
     // dispose & verify
     await languageClientWrapper.dispose();
-    expect(languageClientWrapper.getWorker()).toBeUndefined();
+    expect(realization.getWorker()).toBeUndefined();
 
     // restart & verify
     try {
@@ -140,18 +116,18 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
       // ignore
       console.error(_error);
     }
-    expect(languageClientWrapper.getWorker()).toBeTruthy();
+    expect(realization.getWorker()).toBeTruthy();
   });
 
   test('set verify log levels are applied', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    let languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    let languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     let logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
     expect(logLevel).toBe(LogLevel.Off);
     expect(logLevel).toBe(0);
 
-    workerAndConfig.languageClientConfig.logLevel = LogLevel.Debug;
-    languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    languageClientConfig.logLevel = LogLevel.Debug;
+    languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
     expect(logLevel).toBe(LogLevel.Debug);
     expect(logLevel).toBe(2);

@@ -1,8 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "packages/vscode-ws-jsonrpc",
     "packages/client",
+    "packages/vscode-ws-jsonrpc",
     "packages/wrapper-react",
     "packages/examples"
   ],
@@ -42,8 +42,8 @@
     "test:tags:worker": "vitest --config vitest.config.ts --tags-filter=worker run",
     "test:tags:main": "vitest --config vitest.config.ts --tags-filter=main run",
     "test:tags": "npm run test:tags:main && npm run test:tags:worker",
-    "test:ci": "npm run test:install && npm run test",
-    "test:ci:tags": "npm run test:install && npm run test:tags",
+    "test:ci": "npm run test:install && concurrently \"npm run test\"",
+    "test:ci:tags": "npm run test:install && concurrently \"npm run test:tags\"",
     "test:coverage": "vitest --config vitest.config.ts run --coverage",
     "test:install": "playwright install chromium",
     "license:check": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-check",
@@ -63,6 +63,7 @@
     "@vitest/browser": "~5.0.0",
     "@vitest/browser-playwright": "~5.0.0",
     "@vitest/coverage-v8": "~5.0.0",
+    "concurrently": "~10.0.5",
     "knip": "~6.35.1",
     "minimatch": "~10.2.6",
     "oxfmt": "~0.67.0",

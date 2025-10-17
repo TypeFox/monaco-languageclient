@@ -8,6 +8,7 @@ import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureClassicWorkerFactory } from '../../common/worker/classic-workers.js';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 export const runClient = async () => {
   const htmlContainer = document.getElementById('monaco-editor-root')!;
@@ -61,8 +62,9 @@ export const runClient = async () => {
     },
     connection: {
       options: {
-        $type: 'WebSocketUrl',
-        url: 'ws://localhost:30000/sampleServer'
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
+        webSocketUrl: 'ws://localhost:30000/sampleServer'
       }
     }
   };

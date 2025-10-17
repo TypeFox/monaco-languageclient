@@ -11,8 +11,7 @@ import { delayExecution } from 'monaco-languageclient/common';
 import { LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
-import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
+import { createDefaultLanguageClientConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
   beforeAll(async () => {
@@ -30,17 +29,7 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
   test('restart with languageclient', async () => {
     let error = false;
     const lcManager = new LanguageClientManager();
-
-    const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
-    const worker = new Worker(workerUrl, {
-      type: 'module',
-      name: 'Langium LS (Regular Test)'
-    });
-    expect(worker).toBeDefined();
-
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
-    const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
+    const languageClientConfig = createDefaultLanguageClientConfig();
 
     const lcConfigs = {
       configs: {

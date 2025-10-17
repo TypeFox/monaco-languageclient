@@ -7,6 +7,9 @@
   "references": [
     {
       "path": "./tsconfig.src.json"
+    },
+    {
+      "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
     }
   ],
   "include": ["test/**/*.ts"]

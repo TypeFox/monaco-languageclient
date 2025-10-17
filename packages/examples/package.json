@@ -20,6 +20,7 @@
   "files": [
     "dist",
     "src",
+    "test",
     "*.html",
     "*.ts",
     "README.md",
@@ -72,6 +73,7 @@
     "start:server:jdtls": "tsx src/eclipse.jdt.ls/server/direct.ts",
     "start:server:json": "tsx src/json/server/direct.ts",
     "start:server:python": "tsx src/python/server/direct.ts",
+    "start:server:statemachine": "tsx src/langium/statemachine/node/direct.ts",
     "langium:generate:statemachine": "langium generate --file ./src/langium/statemachine/config/langium-config.json",
     "langium:generate": "npm run langium:generate:statemachine",
     "extract:docker": "tsx ./resources/clangd/scripts/extractDockerFiles.ts",
