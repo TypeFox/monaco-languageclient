@@ -8,7 +8,7 @@ import * as fs from 'node:fs';
 import { exec } from 'node:child_process';
 import express from 'express';
 import { WebSocketServer } from 'ws';
-import type { InitMessage } from '../common/definitions.js';
+import type { InitMessage } from 'monaco-languageclient/debugger';
 import { DAPSocket } from './DAPSocket.js';
 
 // This is derived from:

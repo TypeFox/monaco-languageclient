@@ -3,13 +3,47 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
+import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
+import type { Logger } from 'monaco-languageclient/common';
 import type { ExtensionConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import type { ConfigParams, InitMessage } from '../common/definitions.js';
+import * as vscode from 'vscode';
+import { Uri } from 'vscode';
 
 // This is derived from:
 // https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/src/features/debugger.ts
 // The client configuration is generic and can be used for a another language
+
+export type FileDefinition = {
+    path: string;
+    code: string;
+    uri: Uri;
+}
+
+export type InitMessage = {
+    id: 'init',
+    files: Record<string, FileDefinition>
+    defaultFile: string;
+    debuggerExecCall: string;
+};
+
+export type ConfigParams = {
+    extensionName: string;
+    version: string;
+    publisher: string;
+    languageId: string;
+    documentSelector: string[];
+    homeDir: string;
+    workspaceRoot: string;
+    workspaceFile: Uri;
+    htmlContainer: HTMLElement;
+    protocol: 'ws' | 'wss';
+    hostname: string;
+    port: number;
+    files: Map<string, FileDefinition>;
+    defaultFile: string;
+    helpContainerCmd: string;
+    debuggerExecCall: string;
+}
 
 export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionConfig => {
     const filesOrContents = new Map<string, string | URL>();
@@ -18,8 +52,8 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
     return {
         config: {
             name: config.extensionName,
-            publisher: 'TypeFox',
-            version: '1.0.0',
+            publisher: config.publisher,
+            version: config.version,
             engines: {
                 vscode: '*'
             },
@@ -47,7 +81,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
     };
 };
 
-export const configureDebugging = async (api: typeof vscode, config: ConfigParams) => {
+export const configureDebugging = async (api: typeof vscode, config: ConfigParams, logger?: Logger) => {
     class WebsocketDebugAdapter implements vscode.DebugAdapter {
         private websocket: WebSocket;
 
@@ -93,7 +127,7 @@ export const configureDebugging = async (api: typeof vscode, config: ConfigParam
                 debuggerExecCall: config.debuggerExecCall
             };
             for (const [name, fileDef] of config.files.entries()) {
-                console.log(`Found: ${name} Sending file: ${fileDef.path}`);
+                logger?.info(`Found: ${name} Sending file: ${fileDef.path}`);
                 initMessage.files[name] = {
                     path: fileDef.path,
                     code: fileDef.code,
@@ -105,10 +139,30 @@ export const configureDebugging = async (api: typeof vscode, config: ConfigParam
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             adapter.onDidSendMessage((message: any) => {
                 if (message.type === 'event' && message.event === 'output') {
-                    console.log('OUTPUT', message.body.output);
+                    logger?.info('OUTPUT', message.body.output);
                 }
             });
             return new api.DebugAdapterInlineImplementation(adapter);
         }
     });
+};
+
+export const createDebugLaunchConfigFile = (workspacePath: string, type: string) => {
+    return new RegisteredMemoryFile(
+        Uri.file(`${workspacePath}/.vscode/launch.json`),
+        JSON.stringify(
+            {
+                version: '0.2.0',
+                configurations: [
+                    {
+                        name: 'Debugger: Lauch',
+                        type,
+                        request: 'attach',
+                    }
+                ]
+            },
+            null,
+            2
+        )
+    );
 };

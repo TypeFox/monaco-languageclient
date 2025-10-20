@@ -9,7 +9,7 @@ import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrap
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as vscode from 'vscode';
-import { configureDebugging } from '../../debugger/client/debugger.js';
+import { configureDebugging } from 'monaco-languageclient/debugger';
 import { createPythonAppConfig } from './config.js';
 
 export const runPythonReact = async () => {
