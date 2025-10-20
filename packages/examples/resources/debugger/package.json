@@ -28,12 +28,12 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.19.0",
+    "node": "22.20.0",
     "npm": "10.9.3"
   },
   "dependencies": {
     "express": "~4.21.2",
-    "monaco-languageclient": "~10.1.0",
+    "monaco-languageclient": "~10.2.0",
     "ws": "~8.18.0"
   },
   "devDependencies": {
