@@ -8,7 +8,7 @@
     "npm": ">=10.2.3"
   },
   "volta": {
-    "node": "22.19.0",
+    "node": "22.20.0",
     "npm": "10.9.3"
   },
   "dependencies": {
@@ -16,8 +16,8 @@
     "@angular/core": "~18.2.8",
     "@angular/platform-browser": "~18.2.8",
     "@angular/platform-browser-dynamic": "~18.2.8",
-    "@codingame/monaco-vscode-editor-api": "^21.3.2",
-    "monaco-languageclient-examples": "~2025.9.2",
+    "@codingame/monaco-vscode-editor-api": "^22.1.0",
+    "monaco-languageclient-examples": "~2025.10.1",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
   },
