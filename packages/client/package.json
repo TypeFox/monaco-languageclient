@@ -51,6 +51,10 @@
     "./editorApp": {
       "types": "./lib/editorApp/index.d.ts",
       "default": "./lib/editorApp/index.js"
+    },
+    "./debugger": {
+      "types": "./lib/debugger/index.d.ts",
+      "default": "./lib/debugger/index.js"
     }
   },
   "typesVersions": {
@@ -78,6 +82,9 @@
       ],
       "editorApp": [
         "lib/editorApp/index"
+      ],
+      "debugger": [
+        "lib/debugger/index"
       ]
     }
   },

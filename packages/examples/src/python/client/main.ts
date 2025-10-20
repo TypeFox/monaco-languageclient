@@ -8,7 +8,7 @@ import { EditorApp } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
-import { configureDebugging } from '../../debugger/client/debugger.js';
+import { configureDebugging } from 'monaco-languageclient/debugger';
 import { createPythonAppConfig } from './config.js';
 
 export const runPythonWrapper = async () => {

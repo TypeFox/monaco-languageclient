@@ -22,6 +22,7 @@ import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-servi
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
 import { createUrl } from 'monaco-languageclient/common';
+import { createDebugLaunchConfigFile, provideDebuggerExtensionConfig, type ConfigParams, type FileDefinition } from 'monaco-languageclient/debugger';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
@@ -34,14 +35,14 @@ import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
-import { provideDebuggerExtensionConfig } from '../../debugger/client/debugger.js';
-import { createDebugLaunchConfigFile, type ConfigParams, type FileDefinition } from '../../debugger/common/definitions.js';
 
 export const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
     const files = new Map<string, FileDefinition>();
     const workspaceRoot = `${homeDir}/workspace`;
     const configParams: ConfigParams = {
         extensionName: 'debugger-py-client',
+        publisher: 'TypeFox',
+        version: '1.0.0',
         languageId: 'python',
         documentSelector: ['python', 'py'],
         homeDir,
