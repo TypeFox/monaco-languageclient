@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { playwright } from '@vitest/browser-playwright'
 import { mergeConfig } from 'vite';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
 import externalViteConfig from './vite.config.js';
@@ -15,7 +16,7 @@ export const vitestConfig = {
         browser: {
             enabled: true,
             headless: true,
-            provider: 'playwright',
+            provider: playwright(),
             api: {
                 port: 20101
             },
