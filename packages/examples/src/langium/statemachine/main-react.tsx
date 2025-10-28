@@ -56,7 +56,8 @@ export const runStatemachineReact = async (noControls: boolean) => {
     };
 
     const renderApp = () => {
-        const strictMode = (document.getElementById('checkbox-strictmode') as HTMLInputElement)?.checked ?? false;
+        const elem = document.getElementById('checkbox-strictmode');
+        const strictMode = elem === null ? false : (elem as HTMLInputElement).checked;
         if (strictMode) {
             root.render(<StrictMode><App /></StrictMode>);
         } else {
