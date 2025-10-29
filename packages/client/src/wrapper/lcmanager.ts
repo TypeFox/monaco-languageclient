@@ -7,13 +7,13 @@ import type { Logger } from 'monaco-languageclient/common';
 import type { LanguageClientConfig, LanguageClientConfigs } from './lcconfig.js';
 import { LanguageClientWrapper } from './lcwrapper.js';
 
-export class LanguageClientsManager {
+export class LanguageClientManager {
 
     private logger?: Logger;
     private languageClientConfigs?: LanguageClientConfigs;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
 
-    constructor(logger?: Logger) {
+    setLogger(logger?: Logger) {
         this.logger = logger;
     }
 
@@ -33,21 +33,16 @@ export class LanguageClientsManager {
         return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
-    async setConfig(languageClientConfig: LanguageClientConfig): Promise<void> {
-        const languageId = languageClientConfig.languageId;
-        const current = this.languageClientWrappers.get(languageId);
-        const lcw = new LanguageClientWrapper(languageClientConfig, this.logger);
+    async setConfig(languageClientConfig?: LanguageClientConfig): Promise<void> {
+        if (languageClientConfig === undefined) return;
 
-        if (current !== undefined) {
-            if (languageClientConfig.overwriteExisting === true) {
-                if (languageClientConfig.enforceDispose === true) {
-                    await current.dispose();
-                }
-            } else {
-                throw new Error(`A languageclient config with id "${languageId}" already exists and you confiured to not override.`);
-            }
+        const languageId = languageClientConfig.languageId;
+        let lcw = this.languageClientWrappers.get(languageId);
+
+        if (lcw === undefined) {
+            lcw = new LanguageClientWrapper(languageClientConfig, this.logger);
+            this.languageClientWrappers.set(languageId, lcw);
         }
-        this.languageClientWrappers.set(languageId, lcw);
     }
 
     async setConfigs(languageClientConfigs: LanguageClientConfigs): Promise<void> {
@@ -89,6 +84,5 @@ export class LanguageClientsManager {
             }
         }
         await Promise.all(allPromises);
-        this.languageClientWrappers.clear();
     }
 }

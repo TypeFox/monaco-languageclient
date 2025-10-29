@@ -52,7 +52,7 @@ export class LanguageClientWrapper {
             return Promise.resolve();
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const conConfig = this.languageClientConfig.connection;
             const conOptions = conConfig.options;
 
@@ -255,7 +255,7 @@ export class LanguageClientWrapper {
             if (this.isStarted()) {
                 await this.languageClient?.dispose();
                 this.languageClient = undefined;
-                this.logger?.info('monaco-languageclient and monaco-editor were successfully disposed.');
+                this.logger?.info('monaco-languageclient was successfully disposed.');
             }
         } catch (e) {
             const languageClientError: LanguageClientError = {

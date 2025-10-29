@@ -14,7 +14,7 @@ export function listen(options: {
     onConnection: (connection: MessageConnection) => void;
 }) {
     const { webSocket, onConnection } = options;
-    const logger = options.logger || new ConsoleLogger();
+    const logger = options.logger ?? new ConsoleLogger();
     webSocket.onopen = () => {
         const socket = toSocket(webSocket);
         const connection = createWebSocketConnection(socket, logger);

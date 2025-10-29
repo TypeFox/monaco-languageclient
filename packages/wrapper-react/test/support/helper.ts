@@ -40,3 +40,10 @@ export const createDefaultLanguageClientConfig = (): LanguageClientConfig => {
     });
     return createDefaultLcWorkerConfig(worker, 'langium');
 };
+
+export const unmountDelayMs = 250;
+
+export const cleanHtmlBody = () => {
+    // manual clean document body
+    document.body.innerHTML = '';
+};

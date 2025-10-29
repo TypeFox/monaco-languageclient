@@ -12,7 +12,7 @@ import externalViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 30000,
+        testTimeout: 15000,
         browser: {
             enabled: true,
             headless: true,
@@ -52,6 +52,7 @@ export const vitestConfig = {
             // '**/client/test/editorApp/editorApp.wrongservices.test',
             // '**/client/test/editorApp/config.test.ts',
             // '**/wrapper-react/test/index.test.tsx',
+            // '**/wrapper-react/test/index.strictmode.test.tsx',
             '**/client/test/**/*',
             '**/wrapper-react/test/**/*'
         ],

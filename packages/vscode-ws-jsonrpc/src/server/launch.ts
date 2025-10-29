@@ -13,7 +13,7 @@ import { WebSocketMessageReader } from '../socket/reader.js';
 import { WebSocketMessageWriter } from '../socket/writer.js';
 
 export function createServerProcess(serverName: string, command: string, args?: string[], options?: cp.SpawnOptions): IConnection | undefined {
-    const serverProcess = cp.spawn(command, args || [], options || {});
+    const serverProcess = cp.spawn(command, args ?? [], options ?? {});
     serverProcess.on('error', error =>
         console.error(`Launching ${serverName} Server failed: ${error}`)
     );
