@@ -3,10 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import React, { StrictMode, useState } from 'react';
+import React, { StrictMode, useState, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import type { TextContents } from 'monaco-languageclient/editorApp';
+import type { EditorApp, EditorAppConfig, TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
@@ -17,9 +17,9 @@ export const runStatemachineReact = async (noControls: boolean) => {
     const worker = loadStatemachineWorkerRegular();
     const reader = new BrowserMessageReader(worker);
     const writer = new BrowserMessageWriter(worker);
-    reader.listen((message) => {
-        console.log('Received message from worker:', message);
-    });
+    // reader.listen((message) => {
+    //     console.log('Received message from worker:', message);
+    // });
     const appConfig = createLangiumGlobalConfig({
         languageServerId: 'react',
         codeContent: {
@@ -33,21 +33,40 @@ export const runStatemachineReact = async (noControls: boolean) => {
     const App = () => {
 
         const [testState, setTestState] = useState<string>('');
+        const [testState2, setTestState2] = useState<string>(text);
 
         const onTextChanged = (textChanges: TextContents) => {
-            console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
             setTestState(textChanges.modified as string);
         };
 
+        const editorAppRef = useRef<EditorApp>(undefined);
+        const editorAppConfig: EditorAppConfig = {
+            codeResources: {
+                modified: {
+                    text,
+                    uri: '/workspace/example.statemachine'
+                }
+            }
+        };
+
+        editorAppRef.current?.getEditor()?.updateOptions({ theme: 'vs-dark'});
         return (
             <>
                 <div>
+                    <button
+                        style={{background: "purple"}} onClick={() => setTestState2(testState2 + "// comment\n")}
+                    >Change Text</button>
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
-                        editorAppConfig={appConfig.editorAppConfig}
+                        editorAppConfig={editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
+                        modifiedTextValue={testState2}
+                        onEditorStartDone={(editorApp?: EditorApp) => {
+                            editorAppRef.current = editorApp;
+                            editorAppRef.current?.getEditor()?.updateOptions({ theme: 'vs-dark'});
+                        }}
                     />
                     <b>Debug:</b><br />{testState}
                 </div>

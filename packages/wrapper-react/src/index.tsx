@@ -4,7 +4,7 @@
 * ------------------------------------------------------------------------------------------ */
 
 import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
-import { type LanguageClientConfig, LanguageClientsManager } from 'monaco-languageclient/lcwrapper';
+import { type LanguageClientConfig, LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { type CSSProperties, useEffect, useRef, useState } from 'react';
 
@@ -18,7 +18,7 @@ export type MonacoEditorProps = {
     languageClientConfig?: LanguageClientConfig;
     onVscodeApiInitDone?: (monacoVscodeApiManager: MonacoVscodeApiWrapper) => void;
     onEditorStartDone?: (editorApp?: EditorApp) => void;
-    onLanguageClientsStartDone?: (lcsManager?: LanguageClientsManager) => void;
+    onLanguageClientsStartDone?: (lcsManager?: LanguageClientManager) => void;
     onTextChanged?: (textChanges: TextContents) => void;
     onError?: (error: Error) => void;
     onDisposeEditor?: () => void;
@@ -26,6 +26,9 @@ export type MonacoEditorProps = {
     modifiedTextValue?: string;
     originalTextValue?: string;
 }
+
+// this must be outside of the component as this is valid across multiple instances
+const lcsManager = new LanguageClientManager();
 
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
@@ -40,38 +43,53 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         onTextChanged,
         onError,
         onDisposeEditor,
-        onDisposeLanguageClient,
         modifiedTextValue,
         originalTextValue
     } = props;
 
     const apiWrapperRef = useRef<MonacoVscodeApiWrapper>(new MonacoVscodeApiWrapper(vscodeApiConfig));
     const haveEditorService = useRef(true);
+    const currentEditorConfig = useRef<EditorAppConfig | undefined>(undefined);
     const editorAppRef = useRef<EditorApp>(null);
-    const lcsManagerRef = useRef<LanguageClientsManager>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const onTextChangedRef = useRef(onTextChanged);
     const [modifiedCode, setModifiedCode] = useState(modifiedTextValue);
     const [originalCode, setOriginalCode] = useState(originalTextValue);
 
-    const runQueue = useRef<Array<() => Promise<void>>>([]);
+    const runQueue = useRef<Array<{id: string, func: () => Promise<void>}>>([]);
+    let queueAwait: Promise<void> | undefined = undefined;
+    let queueResolve: ((value: void | PromiseLike<void>) => void) | undefined = undefined;
 
-    const executeQueue = (id: string, newfunc: () => Promise<void>) => {
+    const addQueue = (id: string, func: () => Promise<void>) => {
         debugLogging(`Adding to queue: ${id}`);
         debugLogging(`QUEUE SIZE before: ${runQueue.current.length}`);
-        runQueue.current.push(newfunc);
-        (async () => {
-            // always expect to need to await the global init
-            await awaitGlobal();
+        runQueue.current.push({id, func});
+    };
 
-            while (runQueue.current.length > 0) {
-                const func = runQueue.current.shift();
-                debugLogging('QUEUE FUNC start', true);
-                await func?.();
-                debugLogging('QUEUE FUNC end');
+    const triggerQueue = () => {
+        setInterval(() =>  {
+            if (queueAwait === undefined) {
+                queueAwait = new Promise<void>((resolve) => {
+                    queueResolve = resolve;
+                });
+                executeQueue();
             }
-            debugLogging(`QUEUE SIZE after: ${runQueue.current.length}`);
-        })();
+        }, 50);
+    };
+
+    const executeQueue = async () => {
+        while (runQueue.current.length > 0) {
+            const queueObj = runQueue.current.shift();
+            if (queueObj !== undefined) {
+                debugLogging(`QUEUE ${queueObj.id} start`, true);
+                await queueObj.func();
+                debugLogging(`QUEUE ${queueObj.id} SIZE after: ${runQueue.current.length}`);
+                debugLogging(`QUEUE ${queueObj.id} end`);
+            }
+        }
+        queueResolve?.();
+        queueAwait = undefined;
+        queueResolve = undefined;
     };
 
     const debugLogging = (id: string, useTime?: boolean) => {
@@ -106,12 +124,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         }
     }, [originalTextValue]);
 
-    const awaitGlobal = async () => {
-        // await global init if not completed before doing anything else
-        const envEnhanced = getEnhancedMonacoEnvironment();
-        return envEnhanced.vscodeApiGlobalInitAwait ?? Promise.resolve();
-    };
-
     const performGlobalInit = async () => {
         if (containerRef.current === null) {
             performErrorHandling(new Error('No htmlContainer found! Aborting...'));
@@ -132,12 +144,15 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                 // set if editor mode is available, otherwise text bindings will not work
                 haveEditorService.current = envEnhanced.viewServiceType === 'EditorService';
+                lcsManager.setLogger(apiWrapperRef.current.getLogger());
 
                 onVscodeApiInitDone?.(apiWrapperRef.current);
-
+                triggerQueue();
                 debugLogging('GLOBAL INIT DONE', true);
             };
             globalInitFunc();
+        } else if (envEnhanced.vscodeApiInitialised === true) {
+            triggerQueue();
         }
     };
 
@@ -145,12 +160,20 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
+        let createEditor = false;
+        // it is possible to run without an editorApp, for example when using the ViewsService
+        if (haveEditorService.current) {
+            createEditor = currentEditorConfig.current === undefined || JSON.stringify(editorAppConfig) !== JSON.stringify(currentEditorConfig.current);
+        }
+
         const editorInitFunc = async () => {
             try {
                 debugLogging('INIT', true);
 
-                // it is possible to run without an editorApp, for example when using the ViewsService
-                if (haveEditorService.current) {
+                if (createEditor) {
+                    debugLogging('INIT: Creating editor', true);
+
+                    currentEditorConfig.current = editorAppConfig;
                     editorAppRef.current = new EditorApp(editorAppConfig);
                     if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
                         await Promise.all([
@@ -173,12 +196,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     await editorAppRef.current.start(containerRef.current!);
 
                     onEditorStartDone?.(editorAppRef.current);
-
-                    // originalTextValue and modifiedTextValue useEffects may happen before
-                    editorAppRef.current.updateCode({
-                        original: originalCode,
-                        modified: modifiedCode
-                    });
                 }
 
                 debugLogging('INIT DONE', true);
@@ -186,51 +203,46 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 performErrorHandling(error as Error);
             }
         };
-        executeQueue('editorInit', editorInitFunc);
+        addQueue('editorInit', editorInitFunc);
     }, [editorAppConfig]);
 
     useEffect(() => {
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
-        if (languageClientConfig !== undefined) {
-            const lcInitFunc = async () => {
-                try {
-                    debugLogging('INIT LC', true);
+        const lcInitFunc = async () => {
+            try {
+                debugLogging('INIT LC', true);
 
-                    lcsManagerRef.current = new LanguageClientsManager(apiWrapperRef.current.getLogger());
+                await lcsManager.setConfig(languageClientConfig);
+                await lcsManager.start();
 
-                    await lcsManagerRef.current.setConfig(languageClientConfig);
-                    await lcsManagerRef.current.start();
+                onLanguageClientsStartDone?.(lcsManager);
 
-                    onLanguageClientsStartDone?.(lcsManagerRef.current);
-
-                    debugLogging('INIT LC DONE', true);
-                } catch (error) {
-                    performErrorHandling(error as Error);
-                }
-            };
-            executeQueue('lcInit', lcInitFunc);
-        }
+                debugLogging('INIT LC DONE', true);
+            } catch (error) {
+                performErrorHandling(error as Error);
+            }
+        };
+        addQueue('lcInit', lcInitFunc);
     }, [languageClientConfig]);
 
     useEffect(() => {
+        // this part runs on mount (componentDidMount)
+
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
+        // this part runs on unmount (componentWillUnmount)
         return () => {
             const disposeFunc = async () => {
-                // dispose editor id used and languageclient if enforced
+                // dispose editor if used
                 try {
                     debugLogging('DISPOSE', true);
 
                     await editorAppRef.current?.dispose();
                     onDisposeEditor?.();
-
-                    if (languageClientConfig?.enforceDispose === true) {
-                        lcsManagerRef.current?.dispose();
-                        onDisposeLanguageClient?.();
-                    }
+                    editorAppRef.current = null;
 
                     debugLogging('DISPOSE DONE', true);
                 } catch (error) {
@@ -238,7 +250,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${error}`));
                 }
             };
-            executeQueue('dispose', disposeFunc);
+            addQueue('dispose', disposeFunc);
         };
     }, []);
 

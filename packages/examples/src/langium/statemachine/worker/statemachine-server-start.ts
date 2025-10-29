@@ -19,9 +19,9 @@ export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: stri
     messageReader = new BrowserMessageReader(port);
     messageWriter = new BrowserMessageWriter(port);
 
-    messageReader.listen((message) => {
-        console.log('Received message from main thread:', message);
-    });
+    // messageReader.listen((message) => {
+    //     console.log('Received message from main thread:', message);
+    // });
 
     const connection = createConnection(messageReader, messageWriter);
 

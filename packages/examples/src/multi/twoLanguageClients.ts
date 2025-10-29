@@ -14,7 +14,7 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 import { disableElement } from '../common/client/utils.js';
 import { createJsonLanguageClientConfig, createPythonLanguageClientConfig } from './config.js';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { LanguageClientsManager, type LanguageClientConfigs } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientManager, type LanguageClientConfigs } from 'monaco-languageclient/lcwrapper';
 
 export const runMultipleLanguageClientsExample = async () => {
     disableElement('button-flip', true);
@@ -68,7 +68,7 @@ print("Hello Moon!")
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    const lcManager = new LanguageClientsManager();
+    const lcManager = new LanguageClientManager();
     const languageClientConfigs: LanguageClientConfigs = {
         configs: {
             json: createJsonLanguageClientConfig(),

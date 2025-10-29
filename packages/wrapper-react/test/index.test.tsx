@@ -8,7 +8,7 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { delayExecution } from 'monaco-languageclient/common';
 import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
-import { type LanguageClientsManager } from 'monaco-languageclient/lcwrapper';
+import { type LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { StrictMode } from 'react';
 import { describe, expect, test } from 'vitest';
@@ -261,7 +261,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfig={languageClientConfig}
                 style={{ 'height': '800px' }}
-                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }} />);
@@ -281,7 +281,6 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const languageClientConfig = createDefaultLanguageClientConfig();
-        languageClientConfig.enforceDispose = true;
 
         let renderResult: RenderResult;
         // eslint-disable-next-line no-async-promise-executor
@@ -292,7 +291,7 @@ describe('Test MonacoEditorReactComp', () => {
                     editorAppConfig={editorAppConfig}
                     languageClientConfig={languageClientConfig}
                     style={{ 'height': '800px' }}
-                    onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                    onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                         resolve();
                     }}
@@ -327,7 +326,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfig={languageClientConfig}
                 style={{ 'height': '800px' }}
-                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }} />);
@@ -380,7 +379,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfig={languageClientConfig}
                 style={{ 'height': '800px' }}
-                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }}
@@ -419,8 +418,6 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const languageClientConfigs3 = createDefaultLanguageClientConfig();
-        languageClientConfigs3.overwriteExisting = true;
-        languageClientConfigs3.enforceDispose = true;
         languageClientConfigs3.clientOptions.markdown = {
             supportHtml: true
         };
@@ -430,7 +427,7 @@ describe('Test MonacoEditorReactComp', () => {
                 editorAppConfig={editorAppConfig}
                 languageClientConfig={languageClientConfigs3}
                 style={{ 'height': '800px' }}
-                onLanguageClientsStartDone={(lcsManager?: LanguageClientsManager) => {
+                onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                     expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
                     resolve();
                 }}

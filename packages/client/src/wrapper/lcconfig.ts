@@ -17,8 +17,6 @@ export interface LanguageClientConfig {
     clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
     disposeWorker?: boolean;
-    overwriteExisting?: boolean;
-    enforceDispose?: boolean;
 }
 
 export interface LanguageClientRestartOptions {
