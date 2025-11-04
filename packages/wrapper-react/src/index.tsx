@@ -31,6 +31,10 @@ export type MonacoEditorProps = {
 // this must be outside of the component as this is valid across multiple instances
 const lcsManager = new LanguageClientManager();
 
+const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
+let queueAwait: Promise<void> | undefined = undefined;
+let queueResolve: ((value: void | PromiseLike<void>) => void) | undefined = undefined;
+
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
         style,
@@ -59,14 +63,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const modifiedCode = useRef<string>(modifiedTextValue);
     const originalCode = useRef<string>(originalTextValue);
 
-    const runQueue = useRef<Array<{id: string, func: () => Promise<void>}>>([]);
-    let queueAwait: Promise<void> | undefined = undefined;
-    let queueResolve: ((value: void | PromiseLike<void>) => void) | undefined = undefined;
-
     const addQueue = (id: string, func: () => Promise<void>) => {
         debugLogging(`Adding to queue: ${id}`);
-        debugLogging(`QUEUE SIZE before: ${runQueue.current.length}`);
-        runQueue.current.push({id, func});
+        debugLogging(`QUEUE SIZE before: ${runQueue.length}`);
+        runQueue.push({id, func});
     };
 
     const triggerQueue = () => {
@@ -81,12 +81,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     };
 
     const executeQueue = async () => {
-        while (runQueue.current.length > 0) {
-            const queueObj = runQueue.current.shift();
+        while (runQueue.length > 0) {
+            const queueObj = runQueue.shift();
             if (queueObj !== undefined) {
+                debugLogging(`QUEUE ${queueObj.id} SIZE before: ${runQueue.length}`);
                 debugLogging(`QUEUE ${queueObj.id} start`, true);
                 await queueObj.func();
-                debugLogging(`QUEUE ${queueObj.id} SIZE after: ${runQueue.current.length}`);
+                debugLogging(`QUEUE ${queueObj.id} SIZE after: ${runQueue.length}`);
                 debugLogging(`QUEUE ${queueObj.id} end`);
             }
         }
