@@ -66,6 +66,11 @@ export class MonacoVscodeApiWrapper {
         }
     }
 
+    private performErrorHandling = (message: string) => {
+        getEnhancedMonacoEnvironment().vscodeApiInitialising = false;
+        throw new Error(message);
+    };
+
     protected async configureHighlightingServices() {
         if (this.apiConfig.$type === 'extended') {
             const getTextmateServiceOverride = (await import('@codingame/monaco-vscode-textmate-service-override')).default;
@@ -88,10 +93,10 @@ export class MonacoVscodeApiWrapper {
         const viewsConfigType = this.apiConfig.viewsConfig.$type;
         if (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') {
             if (this.apiConfig.$type === 'classic') {
-                throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
+                this.performErrorHandling(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
             }
             if (this.apiConfig.viewsConfig.htmlContainer === undefined) {
-                throw new Error(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
+                this.performErrorHandling(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
             }
         }
 
@@ -156,7 +161,7 @@ export class MonacoVscodeApiWrapper {
             devOptions.logLevel = this.apiConfig.logLevel;
             (this.apiConfig.workspaceConfig!.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
         } else if (devLogLevel !== this.apiConfig.logLevel) {
-            throw new Error(`You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
+            this.performErrorHandling(`You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
         } else {
             this.logger.debug('Development log level and api log level are in aligned.');
         }
@@ -198,12 +203,12 @@ export class MonacoVscodeApiWrapper {
 
         // theme requires textmate
         if (haveThemeService && !haveTextmateService) {
-            throw new Error('"theme" service requires "textmate" service. Please add it to the "userServices".');
+            this.performErrorHandling('"theme" service requires "textmate" service. Please add it to the "userServices".');
         }
 
         // markers service requires views service
         if (haveMarkersService && !haveViewsService) {
-            throw new Error('"markers" service requires "views" service. Please add it to the "userServices".');
+            this.performErrorHandling('"markers" service requires "views" service. Please add it to the "userServices".');
         }
     }
 

@@ -29,12 +29,15 @@ export type MonacoEditorProps = {
 }
 
 // All must be outside of the component as they ars valid across all instances and should not be re-created
-let apiWrapperRef: MonacoVscodeApiWrapper | undefined;
+let apiWrapper: MonacoVscodeApiWrapper | undefined;
 const lcsManager = new LanguageClientManager();
+const haveEditorService = () => {
+    return apiWrapper?.getMonacoVscodeApiConfig().viewsConfig.$type === 'EditorService';
+};
+
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
 let queueAwait: Promise<void> | undefined = undefined;
 let queueResolve: ((value: void | PromiseLike<void>) => void) | undefined = undefined;
-
 
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
@@ -55,9 +58,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         originalTextValue
     } = props;
 
-    const haveEditorService = useRef(true);
     const currentEditorConfig = useRef<EditorAppConfig | undefined>(undefined);
-    const editorAppRef = useRef<EditorApp>(null);
+    const editorAppRef = useRef<EditorApp>(undefined);
     const containerRef = useRef<HTMLDivElement>(null);
     const onTextChangedRef = useRef(onTextChanged);
     const modifiedCode = useRef<string>(modifiedTextValue);
@@ -98,9 +100,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const debugLogging = (id: string, useTime?: boolean) => {
         if (useTime === true) {
-            apiWrapperRef?.getLogger().debug(`${id}: ${Date.now()}`);
+            apiWrapper?.getLogger().debug(`${id}: ${Date.now()}`);
         } else {
-            apiWrapperRef?.getLogger().debug(id);
+            apiWrapper?.getLogger().debug(id);
         }
     };
 
@@ -114,7 +116,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     useEffect(() => {
         // this is only available if EditorService is configured
-        if (haveEditorService.current && modifiedTextValue !== undefined) {
+        if (haveEditorService() && modifiedTextValue !== undefined) {
             modifiedCode.current = modifiedTextValue;
             editorAppRef.current?.updateCode({modified: modifiedTextValue});
         }
@@ -122,7 +124,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     useEffect(() => {
         // this is only available if EditorService is configured
-        if ( haveEditorService.current && originalTextValue !== undefined) {
+        if (haveEditorService() && originalTextValue !== undefined) {
             originalCode.current = originalTextValue;
             editorAppRef.current?.updateCode({original: originalTextValue});
         }
@@ -137,24 +139,28 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // init will only performed once
         if (envEnhanced.vscodeApiInitialising !== true) {
 
-            apiWrapperRef = new MonacoVscodeApiWrapper(vscodeApiConfig);
+            apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
             const globalInitFunc = async () => {
-                debugLogging('GLOBAL INIT', true);
-                if (apiWrapperRef === undefined) throw new Error('Unexpected error occurred: apiWrapper is not available! Aborting...');
+                try {
+                    debugLogging('GLOBAL INIT', true);
+                    if (apiWrapper === undefined) throw new Error('Unexpected error occurred: apiWrapper is not available! Aborting...');
 
-                apiWrapperRef.overrideViewsConfig({
-                    $type: apiWrapperRef.getMonacoVscodeApiConfig().viewsConfig.$type,
-                    htmlContainer: containerRef.current!
-                });
-                await apiWrapperRef.start();
+                    if (haveEditorService()) {
+                        apiWrapper.overrideViewsConfig({
+                            $type: 'EditorService',
+                            htmlContainer: containerRef.current!
+                        });
+                    }
+                    await apiWrapper.start();
 
-                // set if editor mode is available, otherwise text bindings will not work
-                haveEditorService.current = envEnhanced.viewServiceType === 'EditorService';
-                lcsManager.setLogger(apiWrapperRef.getLogger());
+                    lcsManager.setLogger(apiWrapper.getLogger());
 
-                onVscodeApiInitDone?.(apiWrapperRef);
-                triggerQueue();
-                debugLogging('GLOBAL INIT DONE', true);
+                    onVscodeApiInitDone?.(apiWrapper);
+                    triggerQueue();
+                    debugLogging('GLOBAL INIT DONE', true);
+                } catch (error) {
+                    performErrorHandling(error as Error);
+                }
             };
             globalInitFunc();
         } else if (envEnhanced.vscodeApiInitialised === true) {
@@ -169,17 +175,15 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
-        let createEditor = false;
-        // it is possible to run without an editorApp, for example when using the ViewsService
-        if (haveEditorService.current) {
-            createEditor = currentEditorConfig.current === undefined || JSON.stringify(editorAppConfig) !== JSON.stringify(currentEditorConfig.current);
-        }
-
+        // re-create editor if config changed
+        const recreateEditor = editorAppRef.current === undefined || currentEditorConfig.current === undefined ||
+            JSON.stringify(editorAppConfig) !== JSON.stringify(currentEditorConfig.current);
         const editorInitFunc = async () => {
             try {
                 debugLogging('INIT', true);
 
-                if (createEditor) {
+                // it is possible to run without an editorApp, for example when using the ViewsService
+                if (recreateEditor && haveEditorService()) {
                     debugLogging('INIT: Creating editor', true);
 
                     editorAppRef.current?.dispose();
@@ -254,8 +258,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 debugLogging('DISPOSE', true);
 
                 await editorAppRef.current?.dispose();
+                editorAppRef.current = undefined;
                 onDisposeEditor?.();
-                editorAppRef.current = null;
 
                 debugLogging('DISPOSE DONE', true);
             };

@@ -6,7 +6,7 @@
 import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import * as vscode from 'vscode';
 import { configureDebugging } from 'monaco-languageclient/debugger';
@@ -30,18 +30,24 @@ export const runPythonReact = async () => {
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
+        const [dispose, setDispose] = useState(false);
         return (
-            <div style={{ 'backgroundColor': '#1f1f1f' }} >
-                <MonacoEditorReactComp
-                    vscodeApiConfig={appConfig.vscodeApiConfig}
-                    editorAppConfig={appConfig.editorAppConfig}
-                    languageClientConfig={appConfig.languageClientConfig}
-                    style={{ 'height': '100%' }}
-                    onVscodeApiInitDone={onVscodeApiInitDone}
-                    onError={(e) => {
-                        console.error(e);
-                    }} />
-            </div>
+            <>
+                <div> <button onClick={() => setDispose(true)}>mount</button> <button onClick={() => setDispose(false)}>unmount</button></div>
+                <div style={{ 'backgroundColor': '#1f1f1f' }} >
+                    {
+                        dispose ? <MonacoEditorReactComp
+                            vscodeApiConfig={appConfig.vscodeApiConfig}
+                            editorAppConfig={appConfig.editorAppConfig}
+                            languageClientConfig={appConfig.languageClientConfig}
+                            style={{ 'height': '100%' }}
+                            onVscodeApiInitDone={onVscodeApiInitDone}
+                            onError={(e) => {
+                                console.error(e);
+                            }} /> : null
+                    }
+                </div>
+            </>
         );
     };
     root.render(<App />);
