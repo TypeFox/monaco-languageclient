@@ -23,7 +23,7 @@
     "@types/react-dom": "~19.2.2",
     "@typescript-eslint/eslint-plugin": "~8.46.3",
     "@typescript-eslint/parser": "~8.46.3",
-    "@typescript/native-preview": "~7.0.0-dev.20251104.1",
+    "@typescript/native-preview": "~7.0.0-dev.20251105.1",
     "@vitejs/plugin-react": "~5.1.0",
     "@vitest/browser": "~4.0.7",
     "@vitest/browser-playwright": "~4.0.7",
