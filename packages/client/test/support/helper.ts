@@ -71,7 +71,7 @@ export const createEditorAppConfig = (codeResources: CodeResources): EditorAppCo
     };
 };
 
-export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement, viewsConfigType: ViewsConfigTypes): MonacoVscodeApiConfig => {
+export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement | undefined, viewsConfigType: ViewsConfigTypes): MonacoVscodeApiConfig => {
     return {
         $type: overallConfigType,
         advanced: {

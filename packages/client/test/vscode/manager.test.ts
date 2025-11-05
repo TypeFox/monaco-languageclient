@@ -123,4 +123,5 @@ describe('MonacoVscodeApiWrapper Tests', () => {
         expect(() => apiWrapper.dispose()).not.toThrowError();
         await expect(await apiWrapper.initExtensions()).toBeUndefined();
     });
+
 });

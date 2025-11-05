@@ -36,13 +36,6 @@ export class MonacoVscodeApiWrapper {
     private apiConfig: MonacoVscodeApiConfigRuntime;
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
-        const viewsConfigType = apiConfig.viewsConfig.$type;
-        if ((viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') &&
-            apiConfig.viewsConfig.htmlContainer === undefined) {
-
-            throw new Error(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
-        }
-
         this.apiConfig = {
             ...apiConfig,
             serviceOverrides: apiConfig.serviceOverrides ?? {},
@@ -93,8 +86,13 @@ export class MonacoVscodeApiWrapper {
 
     protected async configureViewsServices() {
         const viewsConfigType = this.apiConfig.viewsConfig.$type;
-        if (this.apiConfig.$type === 'classic' && (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService')) {
-            throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
+        if (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') {
+            if (this.apiConfig.$type === 'classic') {
+                throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
+            }
+            if (this.apiConfig.viewsConfig.htmlContainer === undefined) {
+                throw new Error(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
+            }
         }
 
         const envEnhanced = getEnhancedMonacoEnvironment();

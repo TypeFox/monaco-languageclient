@@ -28,12 +28,13 @@ export type MonacoEditorProps = {
     originalTextValue?: string;
 }
 
-// this must be outside of the component as this is valid across multiple instances
+// All must be outside of the component as they ars valid across all instances and should not be re-created
+let apiWrapperRef: MonacoVscodeApiWrapper | undefined;
 const lcsManager = new LanguageClientManager();
-
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
 let queueAwait: Promise<void> | undefined = undefined;
 let queueResolve: ((value: void | PromiseLike<void>) => void) | undefined = undefined;
+
 
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const {
@@ -54,7 +55,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         originalTextValue
     } = props;
 
-    const apiWrapperRef = useRef<MonacoVscodeApiWrapper>(new MonacoVscodeApiWrapper(vscodeApiConfig));
     const haveEditorService = useRef(true);
     const currentEditorConfig = useRef<EditorAppConfig | undefined>(undefined);
     const editorAppRef = useRef<EditorApp>(null);
@@ -98,9 +98,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const debugLogging = (id: string, useTime?: boolean) => {
         if (useTime === true) {
-            apiWrapperRef.current.getLogger().debug(`${id}: ${Date.now()}`);
+            apiWrapperRef?.getLogger().debug(`${id}: ${Date.now()}`);
         } else {
-            apiWrapperRef.current.getLogger().debug(id);
+            apiWrapperRef?.getLogger().debug(id);
         }
     };
 
@@ -114,7 +114,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     useEffect(() => {
         // this is only available if EditorService is configured
-        if (modifiedTextValue !== undefined && haveEditorService.current) {
+        if (haveEditorService.current && modifiedTextValue !== undefined) {
             modifiedCode.current = modifiedTextValue;
             editorAppRef.current?.updateCode({modified: modifiedTextValue});
         }
@@ -122,7 +122,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     useEffect(() => {
         // this is only available if EditorService is configured
-        if (originalTextValue !== undefined && haveEditorService.current) {
+        if ( haveEditorService.current && originalTextValue !== undefined) {
             originalCode.current = originalTextValue;
             editorAppRef.current?.updateCode({original: originalTextValue});
         }
@@ -137,20 +137,22 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // init will only performed once
         if (envEnhanced.vscodeApiInitialising !== true) {
 
+            apiWrapperRef = new MonacoVscodeApiWrapper(vscodeApiConfig);
             const globalInitFunc = async () => {
                 debugLogging('GLOBAL INIT', true);
+                if (apiWrapperRef === undefined) throw new Error('Unexpected error occurred: apiWrapper is not available! Aborting...');
 
-                apiWrapperRef.current.overrideViewsConfig({
-                    $type: apiWrapperRef.current.getMonacoVscodeApiConfig().viewsConfig.$type,
+                apiWrapperRef.overrideViewsConfig({
+                    $type: apiWrapperRef.getMonacoVscodeApiConfig().viewsConfig.$type,
                     htmlContainer: containerRef.current!
                 });
-                await apiWrapperRef.current.start();
+                await apiWrapperRef.start();
 
                 // set if editor mode is available, otherwise text bindings will not work
                 haveEditorService.current = envEnhanced.viewServiceType === 'EditorService';
-                lcsManager.setLogger(apiWrapperRef.current.getLogger());
+                lcsManager.setLogger(apiWrapperRef.getLogger());
 
-                onVscodeApiInitDone?.(apiWrapperRef.current);
+                onVscodeApiInitDone?.(apiWrapperRef);
                 triggerQueue();
                 debugLogging('GLOBAL INIT DONE', true);
             };
