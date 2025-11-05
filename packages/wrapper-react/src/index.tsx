@@ -32,7 +32,7 @@ export type MonacoEditorProps = {
 let apiWrapper: MonacoVscodeApiWrapper | undefined;
 const lcsManager = new LanguageClientManager();
 const haveEditorService = () => {
-    return apiWrapper?.getMonacoVscodeApiConfig().viewsConfig.$type === 'EditorService';
+    return getEnhancedMonacoEnvironment().viewServiceType === 'EditorService';
 };
 
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
@@ -145,7 +145,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     debugLogging('GLOBAL INIT', true);
                     if (apiWrapper === undefined) throw new Error('Unexpected error occurred: apiWrapper is not available! Aborting...');
 
-                    if (haveEditorService()) {
+                    if (apiWrapper.getMonacoVscodeApiConfig().viewsConfig.$type === 'EditorService') {
                         apiWrapper.overrideViewsConfig({
                             $type: 'EditorService',
                             htmlContainer: containerRef.current!
@@ -186,7 +186,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 if (recreateEditor && haveEditorService()) {
                     debugLogging('INIT: Creating editor', true);
 
-                    editorAppRef.current?.dispose();
+                    await handleEditorDispose();
 
                     currentEditorConfig.current = editorAppConfig;
                     editorAppRef.current = new EditorApp(editorAppConfig);
@@ -220,6 +220,12 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         };
         addQueue('editorInit', editorInitFunc);
     }, [editorAppConfig]);
+
+    const handleEditorDispose = async () => {
+        await editorAppRef.current?.dispose();
+        editorAppRef.current = undefined;
+        onDisposeEditor?.();
+    };
 
     useEffect(() => {
         // fast-fail
@@ -257,9 +263,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 // dispose editor if used
                 debugLogging('DISPOSE', true);
 
-                await editorAppRef.current?.dispose();
-                editorAppRef.current = undefined;
-                onDisposeEditor?.();
+                await handleEditorDispose();
 
                 debugLogging('DISPOSE DONE', true);
             };
