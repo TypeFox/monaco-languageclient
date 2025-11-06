@@ -5,11 +5,12 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render } from '@testing-library/react';
+import { Deferred } from 'monaco-languageclient/common';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, Deferred } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 

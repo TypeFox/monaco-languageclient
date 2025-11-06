@@ -6,13 +6,13 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { delayExecution } from 'monaco-languageclient/common';
+import { delayExecution, Deferred } from 'monaco-languageclient/common';
 import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { useState } from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, Deferred, unmountDelayMs } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, unmountDelayMs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
