@@ -324,34 +324,60 @@ describe('Test MonacoEditorReactComp', () => {
     test.sequential('test render, modifiedTextValue', async () => {
         const code = 'const text = "Hello World!";';
         const codeUpdated = 'const text = "Goodbye World!";';
-        const editorAppConfig = createDefaultEditorAppConfig({
-            modified: {
-                text: code,
-                uri: `/workspace/${expect.getState().testPath}.js`
-            }
-        });
 
         let editorApp: EditorApp | undefined;
 
-        const deferred = new Deferred();
-        render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            style={{ 'height': '800px' }}
-            onTextChanged={async (textChanges: TextContents) => {
-                const modified = textChanges.modified;
+        const deferredStart = new Deferred();
+        const deferredChanged = new Deferred();
+        let modified;
+        let count = 0;
 
-                await expect(modified).toBeOneOf([code, codeUpdated]);
-                if (editorApp !== undefined) {
-                    await expect(editorApp.getEditor()?.getValue()).toBeOneOf([code, codeUpdated]);
+        const App = () => {
+            const [testState, setTestState] = useState<string>(code);
+
+            const editorAppConfig = createDefaultEditorAppConfig({
+                modified: {
+                    text: code,
+                    uri: `/workspace/${expect.getState().testPath}.js`
                 }
-            }}
-            onEditorStartDone={(editorAppPassed?: EditorApp) => {
-                editorApp = editorAppPassed;
-                deferred.resolve();
-            }}
-            modifiedTextValue={codeUpdated} />);
-        await expect(await deferred.promise).toBeUndefined();
+            });
+
+            return (
+                <>
+                    <button id='change-button' style={{background: 'purple'}} onClick={() => setTestState(codeUpdated)}>Change Text</button>
+                    <MonacoEditorReactComp
+                        vscodeApiConfig={vscodeApiConfig}
+                        editorAppConfig={editorAppConfig}
+                        style={{ 'height': '800px' }}
+                        onTextChanged={async (textChanges: TextContents) => {
+                            modified = textChanges.modified;
+                            count++;
+                            if (codeUpdated === modified) {
+                                deferredChanged.resolve();
+                            }
+                        }}
+                        onEditorStartDone={(editorAppPassed?: EditorApp) => {
+                            editorApp = editorAppPassed;
+                            deferredStart.resolve();
+                        }}
+                        modifiedTextValue={testState}
+                    />
+                </>
+            );
+        };
+        const renderResult = render(<App />);
+        await expect(await deferredStart.promise).toBeUndefined();
+
+        // delay execute/click, so await below is already awaiting the deferredDispose
+        setTimeout(() => {
+            document.getElementById('change-button')?.click();
+        }, unmountDelayMs);
+
+        await expect(await deferredChanged.promise).toBeUndefined();
+        await expect(count).toBe(2);
+        await expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+
+        renderResult.unmount();
 
         cleanHtmlBody();
     });
@@ -378,14 +404,19 @@ describe('Test MonacoEditorReactComp', () => {
                         editorAppConfig={editorAppConfig}
                         style={{ 'height': '800px' }}
                         onEditorStartDone={() => deferredStart.resolve()}
-                        onDisposeEditor={() => deferredDispose.resolve()}
+                        onDisposeEditor={() => {
+                            console.log('Editor disposed');
+                            deferredDispose.resolve();
+                        }}
                     />
                 </>
             );
         };
 
         const renderResult = render(<App />);
+
         await expect(await deferredStart.promise).toBeUndefined();
+        expect(document.getElementsByClassName('monaco-editor').length).toBe(1);
 
         // delay execute/click, so await below is already awaiting the deferredDispose
         setTimeout(() => {

@@ -222,9 +222,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [editorAppConfig]);
 
     const handleEditorDispose = async () => {
-        await editorAppRef.current?.dispose();
-        editorAppRef.current = undefined;
-        onDisposeEditor?.();
+        if (editorAppRef.current !== undefined) {
+            await editorAppRef.current.dispose();
+            editorAppRef.current = undefined;
+            onDisposeEditor?.();
+        }
     };
 
     useEffect(() => {

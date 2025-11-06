@@ -52,9 +52,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
         return (
             <>
                 <div>
-                    <button
-                        style={{background: 'purple'}} onClick={() => setTestStateButton(testStateButton + '\n// comment')}
-                    >Change Text</button>
+                    <button style={{background: 'purple'}} onClick={() => setTestStateButton(testStateButton + '\n// comment')}>Change Text</button>
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
