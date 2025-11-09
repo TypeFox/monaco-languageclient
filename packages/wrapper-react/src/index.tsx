@@ -3,7 +3,7 @@
 * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
-import { Deferred } from 'monaco-languageclient/common';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientConfig, LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
@@ -22,6 +22,7 @@ export type MonacoEditorProps = {
     onEditorStartDone?: (editorApp?: EditorApp) => void;
     onLanguageClientsStartDone?: (lcsManager?: LanguageClientManager) => void;
     onTextChanged?: (textChanges: TextContents) => void;
+    onConfigProcessed?: (editorApp?: EditorApp) => void;
     onError?: (error: Error) => void;
     onDisposeEditor?: () => void;
     onDisposeLanguageClient?: () => void;
@@ -37,45 +38,47 @@ const haveEditorService = () => {
 };
 
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
-let deferred: Deferred | undefined = new Deferred();
+// let deferred: Deferred = new Deferred();
+let lock = true;
 let intervalId: number | unknown | undefined = undefined;
 
 const addQueue = (id: string, func: () => Promise<void>) => {
-    debugLogging('=======================');
-    debugLogging(`Adding to queue: ${id}`);
-    debugLogging(`QUEUE SIZE before: ${runQueue.length}`);
+    debugLogging('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    debugLogging(`Adding to queue: ${id}: QUEUE SIZE before: ${runQueue.length}`);
     runQueue.push({id, func});
 
     kickQueue();
 };
 
 const executeQueue = async () => {
-    deferred = new Deferred();
-    while (runQueue.length > 0) {
-        const queueObj = runQueue.shift();
-        if (queueObj !== undefined) {
-            debugLogging('=======================');
-            debugLogging(`QUEUE ${queueObj.id} SIZE before: ${runQueue.length}`);
-            debugLogging(`QUEUE ${queueObj.id} start`, true);
-            await queueObj.func();
-            debugLogging(`QUEUE ${queueObj.id} SIZE after: ${runQueue.length}`);
-            debugLogging(`QUEUE ${queueObj.id} end`);
+    // while (runQueue.length > 0) {
+    console.log(`Queue size: ${runQueue.length}`);
+
+    if (runQueue.length > 0) {
+        lock = true;
+        while (runQueue.length > 0) {
+            // deferred = new Deferred();
+            const lengthBefore = runQueue.length;
+            const queueObj = runQueue.shift();
+            debugLogging('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            debugLogging(`QUEUE ${queueObj?.id} start: SIZE before: ${lengthBefore}`, true);
+            await queueObj?.func();
+            debugLogging(`QUEUE ${queueObj?.id} end: SIZE after: ${runQueue.length}`);
+            // deferred.resolve();
         }
+        lock = false;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    deferred?.resolve();
-    deferred = undefined;
-    stopQueue();
 };
 
 const kickQueue = () => {
     if (intervalId === undefined && runQueue.length > 0) {
         intervalId = setInterval(async () =>  {
-            if (deferred !== undefined) {
-                await deferred.promise;
-            }
             debugLogging('Checking queue...');
-            executeQueue();
+            if (!lock) {
+            // await deferred.promise;
+                executeQueue();
+                stopQueue();
+            }
         }, 50);
     }
 };
@@ -108,6 +111,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         onEditorStartDone,
         onLanguageClientsStartDone,
         onTextChanged,
+        onConfigProcessed,
         onError,
         onDisposeEditor,
         onDisposeLanguageClient,
@@ -115,12 +119,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         originalTextValue
     } = props;
 
-    const currentEditorConfig = useRef<EditorAppConfig | undefined>(undefined);
     const editorAppRef = useRef<EditorApp>(undefined);
     const containerRef = useRef<HTMLDivElement>(null);
     const onTextChangedRef = useRef(onTextChanged);
     const modifiedCode = useRef<string>(modifiedTextValue);
     const originalCode = useRef<string>(originalTextValue);
+    const launchingRef = useRef<boolean>(false);
+    const editorAppConfigRef = useRef<EditorAppConfig>(undefined);
 
     const performErrorHandling = (error: Error) => {
         if (onError) {
@@ -174,13 +179,76 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     onVscodeApiInitDone?.(apiWrapper);
                     debugLogging('GLOBAL INIT DONE', true);
 
-                    deferred?.resolve();
+                    // deferred?.resolve();
+                    lock = false;
                 } catch (error) {
                     performErrorHandling(error as Error);
                 }
             };
             globalInitFunc();
         }
+    };
+
+    const editorInitFunc = async () => {
+        try {
+            debugLogging('INIT', true);
+
+            // it is possible to run without an editorApp, for example when using the ViewsService
+            if (haveEditorService()) {
+                if (editorAppRef.current === undefined && !launchingRef.current) {
+                    launchingRef.current = true;
+                    debugLogging('INIT: Creating editor', true);
+
+                    editorAppRef.current = new EditorApp(editorAppConfigRef.current);
+                    if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
+                        await Promise.all([
+                            editorAppRef.current.getStartingAwait(),
+                            editorAppRef.current.getDisposingAwait()
+                        ]);
+                    }
+
+                    editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
+                        if (textChanges.modified !== undefined) {
+                            modifiedCode.current = textChanges.modified;
+                        }
+                        if (textChanges.original !== undefined) {
+                            originalCode.current = textChanges.original;
+                        }
+                        if (onTextChangedRef.current !== undefined) {
+                            onTextChangedRef.current(textChanges);
+                        }
+                    });
+                    await editorAppRef.current.start(containerRef.current!);
+
+                    onEditorStartDone?.(editorAppRef.current);
+                    launchingRef.current = false;
+                }
+            }
+
+            debugLogging('INIT DONE', true);
+        } catch (error) {
+            performErrorHandling(error as Error);
+        }
+    };
+
+    const configProcessedFunc = () => {
+        if (!launchingRef.current) {
+            if (editorAppConfigRef.current?.codeResources !== undefined && editorAppRef.current) {
+                editorAppRef.current.updateCodeResources(editorAppConfigRef.current.codeResources);
+            }
+            if (editorAppConfigRef.current?.editorOptions !== undefined && editorAppRef.current) {
+                if (!editorAppRef.current.isDiffEditor()) {
+                    editorAppRef.current.getEditor()?.updateOptions(editorAppConfigRef.current.editorOptions as monaco.editor.IEditorOptions);
+                }
+            }
+            if (editorAppConfigRef.current?.diffEditorOptions !== undefined && editorAppRef.current) {
+                if (editorAppRef.current.isDiffEditor()) {
+                    editorAppRef.current.getDiffEditor()?.updateOptions(editorAppConfigRef.current.diffEditorOptions as monaco.editor.IDiffEditorOptions);
+                }
+            }
+        }
+        onConfigProcessed?.(editorAppRef.current);
+        debugLogging('Config processed');
     };
 
     useEffect(() => {
@@ -190,61 +258,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
-        // re-create editor if config changed
-        const recreateEditor = editorAppRef.current === undefined || currentEditorConfig.current === undefined ||
-            JSON.stringify(editorAppConfig) !== JSON.stringify(currentEditorConfig.current);
-        if (recreateEditor) {
-            const editorInitFunc = async () => {
-                try {
-                    debugLogging('INIT', true);
+        editorAppConfigRef.current = editorAppConfig;
 
-                    // it is possible to run without an editorApp, for example when using the ViewsService
-                    if (haveEditorService()) {
-                        debugLogging('INIT: Creating editor', true);
-
-                        await handleEditorDispose();
-
-                        currentEditorConfig.current = editorAppConfig;
-                        editorAppRef.current = new EditorApp(editorAppConfig);
-                        if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
-                            await Promise.all([
-                                editorAppRef.current.getStartingAwait(),
-                                editorAppRef.current.getDisposingAwait()
-                            ]);
-                        }
-
-                        editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
-                            if (textChanges.modified !== undefined) {
-                                modifiedCode.current = textChanges.modified;
-                            }
-                            if (textChanges.original !== undefined) {
-                                originalCode.current = textChanges.original;
-                            }
-                            if (onTextChangedRef.current !== undefined) {
-                                onTextChangedRef.current(textChanges);
-                            }
-                        });
-                        await editorAppRef.current.start(containerRef.current!);
-
-                        onEditorStartDone?.(editorAppRef.current);
-                    }
-
-                    debugLogging('INIT DONE', true);
-                } catch (error) {
-                    performErrorHandling(error as Error);
-                }
-            };
-            addQueue('editorInit', editorInitFunc);
+        addQueue('editorInit', editorInitFunc);
+        if (editorAppRef.current !== undefined && !launchingRef.current) {
+            configProcessedFunc();
         }
     }, [editorAppConfig]);
-
-    const handleEditorDispose = async () => {
-        if (editorAppRef.current !== undefined) {
-            await editorAppRef.current.dispose();
-            editorAppRef.current = undefined;
-            onDisposeEditor?.();
-        }
-    };
 
     useEffect(() => {
         // fast-fail
@@ -282,7 +302,11 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 // dispose editor if used
                 debugLogging('DISPOSE', true);
 
-                await handleEditorDispose();
+                if (editorAppRef.current !== undefined) {
+                    await editorAppRef.current.dispose();
+                    editorAppRef.current = undefined;
+                    onDisposeEditor?.();
+                }
 
                 debugLogging('DISPOSE DONE', true);
             };

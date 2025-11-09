@@ -166,9 +166,14 @@ export class EditorApp {
                 }
             }
 
-            if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-                StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
-                    this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+            // as monaco.editor.IStandaloneEditorConstructionOptions
+            const editorOptions = this.config.editorOptions;
+            if (editorOptions !== undefined) {
+                const cOpt = editorOptions as monaco.editor.IStandaloneEditorConstructionOptions;
+                if (cOpt['semanticHighlighting.enabled'] !== undefined) {
+                    StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                        cOpt['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+                }
             }
 
             await this.createEditors(htmlContainer);

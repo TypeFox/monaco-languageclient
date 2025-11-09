@@ -52,8 +52,8 @@ export interface EditorAppConfig {
     domReadOnly?: boolean;
     readOnly?: boolean;
     overrideAutomaticLayout?: boolean;
-    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
-    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+    editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions | monaco.editor.IEditorOptions;
+    diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions | monaco.editor.IDiffEditorOptions;
     languageDef?: {
         languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
         monarchLanguage?: monaco.languages.IMonarchLanguage;

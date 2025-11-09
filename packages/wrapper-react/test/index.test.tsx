@@ -6,7 +6,7 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { delayExecution, Deferred } from 'monaco-languageclient/common';
+import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -23,11 +23,13 @@ describe('Test MonacoEditorReactComp', () => {
         },
         logLevel: LogLevel.Debug
     };
+    const code = 'const text = "Hello World!";';
+    const codeUpdated = 'const text = "Goodbye World!";';
 
     test.sequential('test render, manual clean-up', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -41,65 +43,84 @@ describe('Test MonacoEditorReactComp', () => {
         await expect(await deferred.promise).toBeUndefined();
 
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, unmount', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
+
         const deferred = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()} />);
-
         await expect(await deferred.promise).toBeUndefined();
 
-        renderResult.unmount();
+        await expect(renderResult).toBeDefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, rerender', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
+
+        let editorApp: EditorApp | undefined;
         const deferred = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred.resolve()} />);
+            onEditorStartDone={(editorAppPassed?: EditorApp) => {
+                editorApp = editorAppPassed;
+                deferred.resolve();
+            }}
+        />);
         await expect(await deferred.promise).toBeUndefined();
 
+        const deferred2 = new Deferred();
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World 2!";',
+                text: codeUpdated,
                 uri: `/workspace/${expect.getState().testPath}_2.js`
             }
         });
-        const deferred2 = new Deferred();
         renderResult.rerender(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig2}
             style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred2.resolve()}/>);
+            onConfigProcessed={async (editorApp?: EditorApp) => {
+                expect(editorApp).toBeDefined();
+                await delayExecution(unmountDelayMs);
+                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                deferred2.resolve();
+            }}
+        />);
         await expect(await deferred2.promise).toBeUndefined();
+        await delayExecution(unmountDelayMs);
+        expect(editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, unmount and render new', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -111,7 +132,10 @@ describe('Test MonacoEditorReactComp', () => {
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()} />);
         await expect(await deferred.promise).toBeUndefined();
+
         renderResult.unmount();
+        cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
 
         const deferred2 = new Deferred();
         renderResult = render(<MonacoEditorReactComp
@@ -119,19 +143,17 @@ describe('Test MonacoEditorReactComp', () => {
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred2.resolve()} />);
-
         await expect(await deferred2.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
         renderResult.unmount();
-
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, languageclient, manual clean-up', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -139,7 +161,7 @@ describe('Test MonacoEditorReactComp', () => {
         const languageClientConfig = createDefaultLanguageClientConfig();
 
         const deferred = new Deferred();
-        render(<MonacoEditorReactComp
+        const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             languageClientConfig={languageClientConfig}
@@ -150,13 +172,15 @@ describe('Test MonacoEditorReactComp', () => {
             }} />);
         await expect(await deferred.promise).toBeUndefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, languageclient, unmount with enforce dispose', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -176,7 +200,6 @@ describe('Test MonacoEditorReactComp', () => {
                 deferred.resolve();
             }}
         />);
-
         await expect(await deferred.promise).toBeUndefined();
 
         const deferredLc = new Deferred();
@@ -193,12 +216,11 @@ describe('Test MonacoEditorReactComp', () => {
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeFalsy();
 
         renderResult.unmount();
-
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, languageclient, rerender', async () => {
-        const code = 'const text = "Hello World!";';
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: code,
@@ -208,7 +230,7 @@ describe('Test MonacoEditorReactComp', () => {
 
         const languageClientConfig = createDefaultLanguageClientConfig();
 
-        const deferred = new Deferred();
+        const deferredLc = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
@@ -216,11 +238,11 @@ describe('Test MonacoEditorReactComp', () => {
             style={{ 'height': '800px' }}
             onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                 expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
-                deferred.resolve();
-            }} />);
-        await expect(await deferred.promise).toBeUndefined();
+                deferredLc.resolve();
+            }}
+        />);
+        await expect(await deferredLc.promise).toBeUndefined();
 
-        const codeUpdated = 'const text = "Goodbye World!";';
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: codeUpdated,
@@ -234,20 +256,22 @@ describe('Test MonacoEditorReactComp', () => {
             editorAppConfig={editorAppConfig2}
             languageClientConfig={languageClientConfig}
             style={{ 'height': '800px' }}
-            onEditorStartDone={async (editorAppPassed?: EditorApp) => {
-                if (editorAppPassed !== undefined) {
-                    await expect(editorAppPassed.getEditor()?.getValue()).toBe(codeUpdated);
-                }
+            onConfigProcessed={async (editorApp?: EditorApp) => {
+                expect(editorApp).toBeDefined();
+                await delayExecution(unmountDelayMs);
+                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
         />);
+
         await expect(await deferred2.promise).toBeUndefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, languageclient, rerender with changed config', async () => {
-        const code = 'const text = "Hello World!";';
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: code,
@@ -257,7 +281,8 @@ describe('Test MonacoEditorReactComp', () => {
 
         const languageClientConfig = createDefaultLanguageClientConfig();
 
-        const deferred = new Deferred();
+        const deferredLc = new Deferred();
+        const deferredEditor = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
@@ -265,12 +290,12 @@ describe('Test MonacoEditorReactComp', () => {
             style={{ 'height': '800px' }}
             onLanguageClientsStartDone={(lcsManager?: LanguageClientManager) => {
                 expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
-                deferred.resolve();
+                deferredLc.resolve();
             }}
+            onEditorStartDone={() => deferredEditor.resolve()}
         />);
-        await expect(await deferred.promise).toBeUndefined();
+        await expect(Promise.all([deferredEditor.promise, deferredLc.promise])).resolves.toEqual([undefined, undefined]);
 
-        const codeUpdated = 'const text = "Goodbye World!";';
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: codeUpdated,
@@ -288,10 +313,10 @@ describe('Test MonacoEditorReactComp', () => {
             editorAppConfig={editorAppConfig2}
             languageClientConfig={languageClientConfigs2}
             style={{ 'height': '800px' }}
-            onEditorStartDone={async (editorAppPassed?: EditorApp) => {
-                if (editorAppPassed !== undefined) {
-                    await expect(editorAppPassed.getEditor()?.getValue()).toBe(codeUpdated);
-                }
+            onConfigProcessed={async (editorApp?: EditorApp) => {
+                expect(editorApp).toBeDefined();
+                await delayExecution(unmountDelayMs);
+                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
             onError={(error) => {
@@ -318,15 +343,55 @@ describe('Test MonacoEditorReactComp', () => {
         />);
         await expect(await deferred3.promise).toBeUndefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
+    });
+
+    test.sequential('strictMode: multiple editors in single render', async () => {
+        const editorAppConfig1 = createDefaultEditorAppConfig({
+            modified: {
+                text: 'const text = "FirstComponent";',
+                uri: `/workspace/first-${expect.getState().testPath}.js`
+            }
+        });
+        const editorAppConfig2 = createDefaultEditorAppConfig({
+            modified: {
+                text: 'const text = "SecondComponent";',
+                uri: `/workspace/second-${expect.getState().testPath}.js`
+            }
+        });
+        const firstComponentReady = new Deferred();
+        const secondComponentReady = new Deferred();
+        const renderResult = render(<>
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig1}
+                style={{ 'height': '100px' }}
+                onEditorStartDone={() => firstComponentReady.resolve()}
+            />
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig2}
+                style={{ 'height': '100px' }}
+                onEditorStartDone={() => secondComponentReady.resolve()}
+            />
+        </>);
+
+        const promises = await Promise.all([firstComponentReady.promise, secondComponentReady.promise]);
+        expect(promises).toEqual([undefined, undefined]);
+
+        await delayExecution(unmountDelayMs);
+
+        await expect(renderResult.getAllByRole('code')[0].innerText).contains('FirstComponent');
+        await expect(renderResult.getAllByRole('code')[1].innerText).contains('SecondComponent');
+
+        renderResult.unmount();
+        cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test render, modifiedTextValue', async () => {
-        const code = 'const text = "Hello World!";';
-        const codeUpdated = 'const text = "Goodbye World!";';
-
-        let editorApp: EditorApp | undefined;
-
         const deferredStart = new Deferred();
         const deferredChanged = new Deferred();
         let modified;
@@ -356,10 +421,7 @@ describe('Test MonacoEditorReactComp', () => {
                                 deferredChanged.resolve();
                             }
                         }}
-                        onEditorStartDone={(editorAppPassed?: EditorApp) => {
-                            editorApp = editorAppPassed;
-                            deferredStart.resolve();
-                        }}
+                        onEditorStartDone={() => deferredStart.resolve()}
                         modifiedTextValue={testState}
                     />
                 </>
@@ -374,19 +436,18 @@ describe('Test MonacoEditorReactComp', () => {
         }, unmountDelayMs);
 
         await expect(await deferredChanged.promise).toBeUndefined();
+        // one time code, then update
         await expect(count).toBe(2);
-        await expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
 
         renderResult.unmount();
-
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('test state change effects editorconfig', async () => {
         const deferredStart = new Deferred();
         const deferredDispose = new Deferred();
         const App = () => {
-            const code = 'const text = "Hello World!";';
             const [testState, setTestState] = useState<string>(code);
 
             const editorAppConfig = createDefaultEditorAppConfig({
@@ -404,18 +465,15 @@ describe('Test MonacoEditorReactComp', () => {
                         editorAppConfig={editorAppConfig}
                         style={{ 'height': '800px' }}
                         onEditorStartDone={() => deferredStart.resolve()}
-                        onDisposeEditor={() => {
-                            console.log('Editor disposed');
-                            deferredDispose.resolve();
-                        }}
+                        onConfigProcessed={() => deferredDispose.resolve()}
                     />
                 </>
             );
         };
-
         const renderResult = render(<App />);
-
         await expect(await deferredStart.promise).toBeUndefined();
+
+        await delayExecution(unmountDelayMs);
         expect(document.getElementsByClassName('monaco-editor').length).toBe(1);
 
         // delay execute/click, so await below is already awaiting the deferredDispose
@@ -425,7 +483,7 @@ describe('Test MonacoEditorReactComp', () => {
         await expect(await deferredDispose.promise).toBeUndefined();
 
         renderResult.unmount();
-
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 });

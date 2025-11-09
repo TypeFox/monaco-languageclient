@@ -51,11 +51,11 @@ describe('Test Test EditorApp (classic)', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        editorAppConfig!.editorOptions!['semanticHighlighting.enabled'] = false;
+        (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = false;
         editorAppConfig.id = 'test-semanticHighlighting-false';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect(editorApp.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeFalsy();
+        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toBeFalsy();
     });
 
     test('editorOptions: semanticHighlighting="configuredByTheme"', () => {
@@ -65,11 +65,11 @@ describe('Test Test EditorApp (classic)', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        editorAppConfig!.editorOptions!['semanticHighlighting.enabled'] = 'configuredByTheme';
+        (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = 'configuredByTheme';
         editorAppConfig.id = 'test-semanticHighlighting-theme';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect(editorApp.getConfig().editorOptions?.['semanticHighlighting.enabled']).toEqual('configuredByTheme');
+        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toEqual('configuredByTheme');
     });
 
     test('editorOptions: semanticHighlighting=true', () => {
@@ -79,11 +79,11 @@ describe('Test Test EditorApp (classic)', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        editorAppConfig!.editorOptions!['semanticHighlighting.enabled'] = true;
+        (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = true;
         editorAppConfig.id = 'test-semanticHighlighting-true';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect(editorApp.getConfig().editorOptions?.['semanticHighlighting.enabled']).toBeTruthy();
+        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toBeTruthy();
     });
 
     test('Check default values', async () => {

@@ -5,12 +5,12 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render } from '@testing-library/react';
-import { Deferred } from 'monaco-languageclient/common';
+import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, unmountDelayMs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
@@ -31,7 +31,7 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const deferred = new Deferred();
-        await expect(render(<MonacoEditorReactComp
+        const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
@@ -39,10 +39,12 @@ describe('Test MonacoEditorReactComp', () => {
                 expect(error.message).toEqual('View Service Type "ViewsService" requires a HTMLElement.');
                 deferred.resolve();
             }}
-        />));
+        />);
         await expect(await deferred.promise).toBeUndefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 
     test.sequential('views service: HTMLElement', async () => {
@@ -55,14 +57,16 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const deferred = new Deferred();
-        await expect(render(<MonacoEditorReactComp
+        const renderResult = render(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onVscodeApiInitDone={() => deferred.resolve()}
-        />));
+        />);
         await expect(await deferred.promise).toBeUndefined();
 
+        renderResult.unmount();
         cleanHtmlBody();
+        await delayExecution(unmountDelayMs);
     });
 });
