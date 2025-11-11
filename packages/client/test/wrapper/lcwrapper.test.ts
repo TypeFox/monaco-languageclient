@@ -3,10 +3,12 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { Logger } from 'monaco-languageclient/common';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { beforeAll, describe, expect, test } from 'vitest';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createMonacoEditorDiv, createUnreachableWorkerConfig } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
@@ -133,6 +135,22 @@ describe('Test LanguageClientWrapper', () => {
             console.error(_error);
         };
         expect(languageClientWrapper.getWorker()).toBeTruthy();
+    });
+
+    test('set verify log levels are applied', async () => {
+        const workerAndConfig = createWorkerAndConfig();
+        let languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+        // eslint-disable-next-line dot-notation
+        let logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Off);
+        expect(logLevel).toBe(0);
+
+        workerAndConfig.languageClientConfig.logLevel = LogLevel.Debug;
+        languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+        // eslint-disable-next-line dot-notation
+        logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Debug);
+        expect(logLevel).toBe(2);
     });
 
 });

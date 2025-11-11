@@ -3,18 +3,19 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Logger } from 'monaco-languageclient/common';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
 import type { LanguageClientConfig, LanguageClientConfigs } from './lcconfig.js';
 import { LanguageClientWrapper } from './lcwrapper.js';
 
 export class LanguageClientManager {
 
-    private logger?: Logger;
+    private logger: Logger = new ConsoleLogger();
     private languageClientConfigs?: LanguageClientConfigs;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
 
-    setLogger(logger?: Logger) {
-        this.logger = logger;
+    setLogLevel(logLevel?: LogLevel | number) {
+        this.logger.setLevel(logLevel ?? LogLevel.Off);
     }
 
     haveLanguageClients(): boolean {
@@ -40,7 +41,7 @@ export class LanguageClientManager {
         let lcw = this.languageClientWrappers.get(languageId);
 
         if (lcw === undefined) {
-            lcw = new LanguageClientWrapper(languageClientConfig, this.logger);
+            lcw = new LanguageClientWrapper(languageClientConfig);
             this.languageClientWrappers.set(languageId, lcw);
         }
     }
@@ -57,6 +58,7 @@ export class LanguageClientManager {
     }
 
     async start(): Promise<void | void[]> {
+        this.logger.debug('Starting all LanguageClientWrappers...');
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
             if (!lcw.isStarted()) {
@@ -77,6 +79,7 @@ export class LanguageClientManager {
     }
 
     async dispose(): Promise<void | void[]> {
+        this.logger.debug('Disposing all LanguageClientWrappers...');
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
             if (lcw.haveLanguageClient()) {

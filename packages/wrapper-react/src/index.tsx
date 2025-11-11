@@ -3,7 +3,9 @@
 * Licensed under the MIT License. See LICENSE in the package root for license information.
 * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
+import { ConsoleLogger } from 'monaco-languageclient/common';
 import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientConfig, LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
@@ -28,6 +30,7 @@ export type MonacoEditorProps = {
     onDisposeLanguageClient?: () => void;
     modifiedTextValue?: string;
     originalTextValue?: string;
+    logLevel?: LogLevel | number;
 }
 
 // All must be outside of the component as they ars valid across all instances and should not be re-created
@@ -36,9 +39,9 @@ const lcsManager = new LanguageClientManager();
 const haveEditorService = () => {
     return getEnhancedMonacoEnvironment().viewServiceType === 'EditorService';
 };
+const logger = new ConsoleLogger(LogLevel.Debug);
 
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
-// let deferred: Deferred = new Deferred();
 let lock = true;
 let intervalId: number | unknown | undefined = undefined;
 
@@ -51,20 +54,17 @@ const addQueue = (id: string, func: () => Promise<void>) => {
 };
 
 const executeQueue = async () => {
-    // while (runQueue.length > 0) {
     console.log(`Queue size: ${runQueue.length}`);
 
     if (runQueue.length > 0) {
         lock = true;
         while (runQueue.length > 0) {
-            // deferred = new Deferred();
             const lengthBefore = runQueue.length;
             const queueObj = runQueue.shift();
-            debugLogging('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            debugLogging('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
             debugLogging(`QUEUE ${queueObj?.id} start: SIZE before: ${lengthBefore}`, true);
             await queueObj?.func();
             debugLogging(`QUEUE ${queueObj?.id} end: SIZE after: ${runQueue.length}`);
-            // deferred.resolve();
         }
         lock = false;
     }
@@ -75,7 +75,6 @@ const kickQueue = () => {
         intervalId = setInterval(async () =>  {
             debugLogging('Checking queue...');
             if (!lock) {
-            // await deferred.promise;
                 executeQueue();
                 stopQueue();
             }
@@ -93,9 +92,9 @@ const stopQueue = () => {
 
 const debugLogging = (id: string, useTime?: boolean) => {
     if (useTime === true) {
-        apiWrapper?.getLogger().debug(`${id}: ${Date.now()}`);
+        logger.debug(`${id}: ${Date.now()}`);
     } else {
-        apiWrapper?.getLogger().debug(id);
+        logger.debug(id);
     }
 };
 
@@ -116,7 +115,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         onDisposeEditor,
         onDisposeLanguageClient,
         modifiedTextValue,
-        originalTextValue
+        originalTextValue,
+        logLevel
     } = props;
 
     const editorAppRef = useRef<EditorApp>(undefined);
@@ -174,12 +174,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     }
                     await apiWrapper.start();
 
-                    lcsManager.setLogger(apiWrapper.getLogger());
-
                     onVscodeApiInitDone?.(apiWrapper);
                     debugLogging('GLOBAL INIT DONE', true);
 
-                    // deferred?.resolve();
                     lock = false;
                 } catch (error) {
                     performErrorHandling(error as Error);
@@ -277,6 +274,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             try {
                 debugLogging('INIT LC', true);
 
+                lcsManager.setLogLevel(languageClientConfig.logLevel);
                 await lcsManager.setConfig(languageClientConfig);
                 await lcsManager.start();
 
@@ -313,6 +311,12 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             addQueue('dispose', disposeFunc);
         };
     }, []);
+
+    useEffect(() => {
+        if (logLevel !== undefined) {
+            logger.setLevel(logLevel);
+        }
+    }, [logLevel]);
 
     useEffect(() => {
         // always try to perform global init. Reason: we cannot ensure order

@@ -44,10 +44,6 @@ export class MonacoVscodeApiWrapper {
         this.logger.setLevel(this.apiConfig.logLevel);
     }
 
-    getLogger(): Logger {
-        return this.logger;
-    }
-
     getExtensionRegisterResult(extensionName: string) {
         return this.extensionRegisterResults.get(extensionName);
     }

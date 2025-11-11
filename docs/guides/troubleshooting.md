@@ -11,7 +11,7 @@ Whenever you use `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@^22.1.4"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@^22.1.8"
 ```
 
 ### Missing Overrides or Resolutions
@@ -23,7 +23,7 @@ To ensure all Monaco-related packages use a single, compatible version, you must
 ```json
 {
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.4"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.8"
   }
 }
 ```
@@ -33,7 +33,7 @@ To ensure all Monaco-related packages use a single, compatible version, you must
 ```json
 {
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.4"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.8"
   }
 }
 ```
@@ -50,7 +50,7 @@ Additionally, if you see a message in the browser console starting with `Another
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.4"` in you `package.json`. You can directly use it like so:
+When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.8"` in you `package.json`. You can directly use it like so:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -60,7 +60,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.4"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^22.1.8"
 }
 ```
 

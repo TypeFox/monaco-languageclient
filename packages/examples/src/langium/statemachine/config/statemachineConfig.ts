@@ -52,7 +52,7 @@ export const createLangiumGlobalConfig = (params: {
             $type: 'EditorService',
             htmlContainer: params.htmlContainer
         },
-        logLevel: LogLevel.Debug,
+        logLevel: LogLevel.Off,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
             ...getLifecycleServiceOverride(),
@@ -96,7 +96,8 @@ export const createLangiumGlobalConfig = (params: {
     const editorAppConfig: EditorAppConfig = {
         codeResources: {
             modified: params.codeContent
-        }
+        },
+        logLevel: LogLevel.Debug
     };
 
     return {

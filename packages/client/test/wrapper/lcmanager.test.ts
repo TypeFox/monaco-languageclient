@@ -3,11 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { Logger } from 'monaco-languageclient/common';
 import { delayExecution } from 'monaco-languageclient/common';
 import { LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { beforeAll, describe, expect, test } from 'vitest';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
@@ -61,6 +63,20 @@ describe('Test LanguageClientWrapper', () => {
         }
 
         expect(error).toBe(false);
+    });
+
+    test('set verify log levels are applied', async () => {
+        const lcsManager = new LanguageClientManager();
+        // eslint-disable-next-line dot-notation
+        let logLevel = (lcsManager['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Off);
+        expect(logLevel).toBe(0);
+
+        lcsManager.setLogLevel(LogLevel.Debug);
+        // eslint-disable-next-line dot-notation
+        logLevel = (lcsManager['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Debug);
+        expect(logLevel).toBe(2);
     });
 
 });

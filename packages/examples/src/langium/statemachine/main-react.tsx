@@ -3,32 +3,25 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { ConsoleLogger } from 'monaco-languageclient/common';
+import type { TextContents } from 'monaco-languageclient/editorApp';
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import type { EditorAppConfig, TextContents } from 'monaco-languageclient/editorApp';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-import { loadStatemachineWorkerRegular } from './main.js';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
+import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
+import { loadStatemachineWorkerRegular } from './main.js';
 
 export const runStatemachineReact = async (noControls: boolean) => {
     const worker = loadStatemachineWorkerRegular();
     const reader = new BrowserMessageReader(worker);
     const writer = new BrowserMessageWriter(worker);
+    const logger = new ConsoleLogger(LogLevel.Off);
     reader.listen((message) => {
-        console.log('Received message from worker:', message);
-    });
-
-    const appConfig = createLangiumGlobalConfig({
-        languageServerId: 'react',
-        codeContent: {
-            text,
-            uri: '/workspace/example.statemachine'
-        },
-        worker,
-        messageTransports: { reader, writer }
+        logger.info('Received message from worker:', message);
     });
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
@@ -40,14 +33,15 @@ export const runStatemachineReact = async (noControls: boolean) => {
             setTestState(textChanges.modified as string);
         };
 
-        const editorAppConfig: EditorAppConfig = {
-            codeResources: {
-                modified: {
-                    text,
-                    uri: '/workspace/example.statemachine'
-                }
-            }
-        };
+        const appConfig = createLangiumGlobalConfig({
+            languageServerId: 'react',
+            codeContent: {
+                text,
+                uri: '/workspace/example.statemachine'
+            },
+            worker,
+            messageTransports: { reader, writer }
+        });
 
         return (
             <>
@@ -56,7 +50,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
-                        editorAppConfig={editorAppConfig}
+                        editorAppConfig={appConfig.editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
                         modifiedTextValue={testStateButton}

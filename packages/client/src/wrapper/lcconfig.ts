@@ -3,8 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { LanguageClientOptions, MessageTransports } from 'vscode-languageclient/browser.js';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ConnectionConfigOptions } from 'monaco-languageclient/common';
+import type { LanguageClientOptions, MessageTransports } from 'vscode-languageclient/browser.js';
 
 export interface ConnectionConfig {
     options: ConnectionConfigOptions;
@@ -17,6 +18,7 @@ export interface LanguageClientConfig {
     clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
     disposeWorker?: boolean;
+    logLevel?: LogLevel | number;
 }
 
 export interface LanguageClientRestartOptions {
