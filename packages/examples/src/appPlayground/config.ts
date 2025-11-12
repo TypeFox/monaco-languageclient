@@ -21,6 +21,9 @@ import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-
 import * as vscode from 'vscode';
 
 // this is required syntax highlighting
+import '@codingame/monaco-vscode-javascript-default-extension';
+import '@codingame/monaco-vscode-json-default-extension';
+import '@codingame/monaco-vscode-json-language-features-default-extension';
 import '@codingame/monaco-vscode-search-result-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
@@ -32,6 +35,7 @@ import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscod
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
+import helloJsonCode from '../../resources/appPlayground/hello.json?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 
 export type ConfigResult = {
@@ -39,6 +43,7 @@ export type ConfigResult = {
     workspaceFileUri: vscode.Uri;
     helloTsUri: vscode.Uri;
     testerTsUri: vscode.Uri;
+    helloJsonUri: vscode.Uri;
 };
 
 export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResult> => {
@@ -123,6 +128,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
     const workspaceUri = vscode.Uri.file('/workspace');
     const helloTsUri = vscode.Uri.file('/workspace/hello.ts');
     const testerTsUri = vscode.Uri.file('/workspace/tester.ts');
+    const helloJsonUri = vscode.Uri.file('/workspace/hello.json');
     const fileSystemProvider = new InMemoryFileSystemProvider();
     const textEncoder = new TextEncoder();
 
@@ -135,6 +141,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
     await fileSystemProvider.mkdir(workspaceUri);
     await fileSystemProvider.writeFile(helloTsUri, textEncoder.encode(helloTsCode), options);
     await fileSystemProvider.writeFile(testerTsUri, textEncoder.encode(testerTsCode), options);
+    await fileSystemProvider.writeFile(helloJsonUri, textEncoder.encode(helloJsonCode), options);
     await fileSystemProvider.writeFile(workspaceFileUri, textEncoder.encode(createDefaultWorkspaceContent('/workspace')), options);
     registerFileSystemOverlay(1, fileSystemProvider);
 
@@ -142,6 +149,7 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
         vscodeApiConfig,
         workspaceFileUri,
         helloTsUri,
-        testerTsUri
+        testerTsUri,
+        helloJsonUri
     };
 };

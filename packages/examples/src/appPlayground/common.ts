@@ -14,7 +14,8 @@ export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, con
 
     await Promise.all([
         await vscode.workspace.openTextDocument(configResult.helloTsUri),
-        await vscode.workspace.openTextDocument(configResult.testerTsUri)
+        await vscode.workspace.openTextDocument(configResult.testerTsUri),
+        await vscode.workspace.openTextDocument(configResult.helloJsonUri)
     ]);
 
     await Promise.all([
