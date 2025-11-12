@@ -69,6 +69,8 @@ export class LanguageClientManager {
     }
 
     isStarted(): boolean {
+        // fast-fail
+        if (this.languageClientWrappers.size === 0) return false;
         for (const lcw of this.languageClientWrappers.values()) {
             // as soon as one is not started return
             if (!lcw.isStarted()) {
@@ -78,7 +80,7 @@ export class LanguageClientManager {
         return true;
     }
 
-    async dispose(): Promise<void | void[]> {
+    async dispose(clearClients: boolean = false): Promise<void | void[]> {
         this.logger.debug('Disposing all LanguageClientWrappers...');
         const allPromises: Array<Promise<void>> = [];
         for (const lcw of this.languageClientWrappers.values()) {
@@ -87,5 +89,9 @@ export class LanguageClientManager {
             }
         }
         await Promise.all(allPromises);
+
+        if (clearClients) {
+            this.languageClientWrappers.clear();
+        }
     }
 }

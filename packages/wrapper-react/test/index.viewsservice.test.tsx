@@ -3,10 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render } from '@testing-library/react';
-import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
@@ -18,8 +17,7 @@ describe('Test MonacoEditorReactComp', () => {
         $type: 'extended',
         viewsConfig: {
             $type: 'ViewsService'
-        },
-        logLevel: LogLevel.Debug
+        }
     };
 
     test.sequential('views service: no HTMLElement', async () => {

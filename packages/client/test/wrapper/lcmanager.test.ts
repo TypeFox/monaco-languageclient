@@ -79,4 +79,12 @@ describe('Test LanguageClientWrapper', () => {
         expect(logLevel).toBe(2);
     });
 
+    test('Check started to be false if nothing is configured', async () => {
+        const lcsManager = new LanguageClientManager();
+        expect(lcsManager.haveLanguageClients()).toBe(false);
+        // eslint-disable-next-line dot-notation
+        expect(lcsManager['languageClientWrappers'].size).toBe(0);
+        expect(lcsManager.isStarted()).toBe(false);
+    });
+
 });

@@ -26,36 +26,39 @@ export const runStatemachineReact = async (noControls: boolean) => {
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
-        const [testState, setTestState] = useState<string>('');
-        const [testStateButton, setTestStateButton] = useState<string>(text);
+        const [debugTextState, setDebugTextState] = useState<string>('');
+        const [codeState, setCodeState] = useState<string>(text);
+        const [disposeLcState, setDisposeLcState] = useState<boolean>(false);
 
         const onTextChanged = (textChanges: TextContents) => {
-            setTestState(textChanges.modified as string);
+            setDebugTextState(textChanges.modified as string);
         };
 
         const appConfig = createLangiumGlobalConfig({
             languageServerId: 'react',
             codeContent: {
-                text,
+                text: codeState,
                 uri: '/workspace/example.statemachine'
             },
             worker,
             messageTransports: { reader, writer }
         });
+        appConfig.languageClientConfig.enforceDispose = disposeLcState;
 
         return (
             <>
                 <div>
-                    <button style={{background: 'purple'}} onClick={() => setTestStateButton(testStateButton + '\n// comment')}>Change Text</button>
+                    <button style={{background: 'purple'}} onClick={() => setCodeState(codeState + '\n// comment')}>Change Text</button>
+                    <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Swatch LC Dispose</button>
+
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
                         editorAppConfig={appConfig.editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
-                        modifiedTextValue={testStateButton}
                     />
-                    <b>Debug:</b><br />{testState}
+                    <b>Debug:</b><br />{debugTextState}
                 </div>
             </>
         );

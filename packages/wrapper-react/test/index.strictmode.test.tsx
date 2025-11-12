@@ -3,16 +3,14 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { delayExecution, Deferred } from 'monaco-languageclient/common';
+import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
-import { type LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { StrictMode, useState } from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, unmountDelayMs } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, unmountDelayMs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
@@ -20,8 +18,7 @@ describe('Test MonacoEditorReactComp', () => {
         $type: 'extended',
         viewsConfig: {
             $type: 'EditorService'
-        },
-        logLevel: LogLevel.Debug
+        }
     };
     const code = 'const text = "Hello World!";';
     const codeUpdated = 'const text = "Goodbye World!";';
@@ -156,49 +153,6 @@ describe('Test MonacoEditorReactComp', () => {
         await delayExecution(unmountDelayMs);
     });
 
-    test.sequential('strictMode: test render, languageclient, unmount with enforce dispose', async () => {
-        const editorAppConfig = createDefaultEditorAppConfig({
-            modified: {
-                text: code,
-                uri: `/workspace/${expect.getState().testPath}.js`
-            }
-        });
-
-        const languageClientConfig = createDefaultLanguageClientConfig();
-        let lcsManager: LanguageClientManager | undefined;
-
-        const deferred = new Deferred();
-        const renderResult = render(<StrictMode><MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={(lcsManagerPassed?: LanguageClientManager) => {
-                expect(lcsManagerPassed?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
-                lcsManager = lcsManagerPassed;
-                deferred.resolve();
-            }}
-        /></StrictMode>);
-        await expect(await deferred.promise).toBeUndefined();
-
-        const deferredLc = new Deferred();
-        renderResult.rerender(<StrictMode><MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            enforceDisposeLanguageClient={true}
-            onDisposeLanguageClient={() => deferredLc.resolve()}
-        /></StrictMode>);
-
-        await expect(await deferredLc.promise).toBeUndefined();
-
-        expect(lcsManager?.getLanguageClientWrapper('langium')?.haveLanguageClient()).toBeFalsy();
-        expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeFalsy();
-
-        renderResult.unmount();
-        cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
-    });
-
     test.sequential('strictMode: multiple editors in single render', async () => {
         const editorAppConfig1 = createDefaultEditorAppConfig({
             modified: {
@@ -242,25 +196,25 @@ describe('Test MonacoEditorReactComp', () => {
         await delayExecution(unmountDelayMs);
     });
 
-    test.sequential('srict mode: test render, modifiedTextValue', async () => {
+    test.sequential('srict mode: test render, modify code', async () => {
         const deferredStart = new Deferred();
         const deferredChanged = new Deferred();
         let modified;
         let count = 0;
 
         const App = () => {
-            const [testState, setTestState] = useState<string>(code);
+            const [codeState, setCodeState] = useState<string>(code);
 
             const editorAppConfig = createDefaultEditorAppConfig({
                 modified: {
-                    text: code,
+                    text: codeState,
                     uri: `/workspace/${expect.getState().testPath}.js`
                 }
             });
 
             return (
                 <>
-                    <button id='change-button' style={{background: 'purple'}} onClick={() => setTestState(codeUpdated)}>Change Text</button>
+                    <button id='change-button' style={{background: 'purple'}} onClick={() => setCodeState(codeUpdated)}>Change Text</button>
                     <MonacoEditorReactComp
                         vscodeApiConfig={vscodeApiConfig}
                         editorAppConfig={editorAppConfig}
@@ -274,7 +228,6 @@ describe('Test MonacoEditorReactComp', () => {
                             }
                         }}
                         onEditorStartDone={() => deferredStart.resolve()}
-                        modifiedTextValue={testState}
                     />
                 </>
             );
@@ -290,51 +243,6 @@ describe('Test MonacoEditorReactComp', () => {
         await expect(await deferredChanged.promise).toBeUndefined();
         // two times code (strict mode), then update
         await expect(count).toBe(3);
-
-        renderResult.unmount();
-        cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
-    });
-
-    test.sequential('strictmode: test state change effects editorconfig', async () => {
-        const deferredStart = new Deferred();
-        const deferredDispose = new Deferred();
-        const App = () => {
-            const code = 'const text = "Hello World!";';
-            const [testState, setTestState] = useState<string>(code);
-
-            const editorAppConfig = createDefaultEditorAppConfig({
-                modified: {
-                    text: testState,
-                    uri: `/workspace/${expect.getState().testPath}.js`
-                }
-            });
-
-            return (
-                <>
-                    <button id='change-button' style={{background: 'purple'}} onClick={() => setTestState(testState + '\n// comment')}>Change Text</button>
-                    <MonacoEditorReactComp
-                        vscodeApiConfig={vscodeApiConfig}
-                        editorAppConfig={editorAppConfig}
-                        style={{ 'height': '800px' }}
-                        onEditorStartDone={() => deferredStart.resolve()}
-                        onDisposeEditor={() => deferredDispose.resolve()}
-                    />
-                </>
-            );
-        };
-
-        const renderResult = render(<StrictMode><App /></StrictMode>);
-        await expect(await deferredStart.promise).toBeUndefined();
-
-        await delayExecution(unmountDelayMs);
-        expect(document.getElementsByClassName('monaco-editor').length).toBe(1);
-
-        // delay execute/click, so await below is already awaiting the deferredDispose
-        setTimeout(() => {
-            document.getElementById('change-button')?.click();
-        }, unmountDelayMs);
-        await expect(await deferredDispose.promise).toBeUndefined();
 
         renderResult.unmount();
         cleanHtmlBody();

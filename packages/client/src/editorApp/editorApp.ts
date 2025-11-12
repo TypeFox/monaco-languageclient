@@ -272,6 +272,7 @@ export class EditorApp {
                     };
                     this.diffEditor?.setModel(model);
                     this.announceModelUpdate(model);
+                    await this.disposeModelRefs();
                 }
             } else {
                 this.logger.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
@@ -284,13 +285,12 @@ export class EditorApp {
                 if (model.modified !== undefined && model.modified !== null) {
                     this.editor?.setModel(model.modified);
                     this.announceModelUpdate(model);
+                    await this.disposeModelRefs();
                 }
             } else {
                 this.logger.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
             }
         }
-
-        await this.disposeModelRefs();
     }
 
     async buildModelReference(codeContent: CodeContent): Promise<IReference<ITextFileEditorModel>> {
