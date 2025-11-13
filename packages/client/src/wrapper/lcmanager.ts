@@ -34,7 +34,7 @@ export class LanguageClientManager {
         return this.languageClientWrappers.get(languageId)?.getWorker();
     }
 
-    async setConfig(languageClientConfig?: LanguageClientConfig): Promise<void> {
+    setConfig(languageClientConfig?: LanguageClientConfig) {
         if (languageClientConfig === undefined) return;
 
         const languageId = languageClientConfig.languageId;
@@ -46,13 +46,13 @@ export class LanguageClientManager {
         }
     }
 
-    async setConfigs(languageClientConfigs: LanguageClientConfigs): Promise<void> {
+    setConfigs(languageClientConfigs: LanguageClientConfigs) {
         this.languageClientConfigs = languageClientConfigs;
 
         const lccs = Object.values(this.languageClientConfigs.configs);
         if (lccs.length > 0) {
             for (const lcc of lccs) {
-                await this.setConfig(lcc);
+                this.setConfig(lcc);
             }
         }
     }

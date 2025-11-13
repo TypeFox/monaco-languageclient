@@ -10,9 +10,9 @@ import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { StrictMode, useState } from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, unmountDelayMs } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
-describe('Test MonacoEditorReactComp', () => {
+describe.sequential('Test MonacoEditorReactComp', () => {
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
@@ -23,27 +23,7 @@ describe('Test MonacoEditorReactComp', () => {
     const code = 'const text = "Hello World!";';
     const codeUpdated = 'const text = "Goodbye World!";';
 
-    test.sequential('strictMode: test render, manual clean-up', async () => {
-        const editorAppConfig = createDefaultEditorAppConfig({
-            modified: {
-                text: code,
-                uri: `/workspace/${expect.getState().testPath}.js`
-            }
-        });
-
-        const deferred = new Deferred();
-        render(<StrictMode><MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred.resolve()} /></StrictMode>);
-        await expect(await deferred.promise).toBeUndefined();
-
-        cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
-    });
-
-    test.sequential('strictMode: test render, unmount', async () => {
+    test('strictMode: test render, manual clean-up', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: code,
@@ -56,21 +36,19 @@ describe('Test MonacoEditorReactComp', () => {
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred.resolve()} />
-        </StrictMode>);
+            onEditorStartDone={() => deferred.resolve()}
+        /></StrictMode>);
         await expect(await deferred.promise).toBeUndefined();
 
-        await expect(renderResult).toBeDefined();
-
         // prevents stack trace during execution (only required in strict mode)
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
-    test.sequential('strictMode: test render, rerender', async () => {
+    test('strictMode: test render, unmount', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: code,
@@ -86,12 +64,42 @@ describe('Test MonacoEditorReactComp', () => {
             onEditorStartDone={() => deferred.resolve()} />
         </StrictMode>);
         await expect(await deferred.promise).toBeUndefined();
+
+        // prevents stack trace during execution (only required in strict mode)
+        await delayExecution(hundredMs);
+
+        renderResult.unmount();
+        cleanHtmlBody();
+        await delayExecution(hundredMs);
+    });
+
+    test('strictMode: test render, rerender', async () => {
+        const editorAppConfig = createDefaultEditorAppConfig({
+            modified: {
+                text: code,
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+
+        const deferred = new Deferred();
+        const renderResult = render(<StrictMode><MonacoEditorReactComp
+            vscodeApiConfig={vscodeApiConfig}
+            editorAppConfig={editorAppConfig}
+            style={{ 'height': '800px' }}
+            onEditorStartDone={(editorApp?: EditorApp) => {
+                expect(editorApp).toBeDefined();
+                deferred.resolve();
+            }}
+        /></StrictMode>);
+        await expect(await deferred.promise).toBeUndefined();
+
+        await delayExecution(hundredMs);
 
         const deferred2 = new Deferred();
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: codeUpdated,
-                uri: `/workspace/${expect.getState().testPath}_2.js`
+                uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
         renderResult.rerender(<StrictMode><MonacoEditorReactComp
@@ -100,23 +108,22 @@ describe('Test MonacoEditorReactComp', () => {
             style={{ 'height': '800px' }}
             onConfigProcessed={async (editorApp?: EditorApp) => {
                 expect(editorApp).toBeDefined();
-                await delayExecution(unmountDelayMs);
+                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 expect(editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
-            }} />
-        </StrictMode>);
-
+            }}
+        /></StrictMode>);
         await expect(await deferred2.promise).toBeUndefined();
 
         // prevents stack trace during execution (only required in strict mode)
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
-    test.sequential('strictMode: test render, unmount and render new', async () => {
+    test('strictMode: test render, unmount and render new', async () => {
         const editorAppConfig = createDefaultEditorAppConfig({
             modified: {
                 text: code,
@@ -130,30 +137,32 @@ describe('Test MonacoEditorReactComp', () => {
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred.resolve()}/></StrictMode>);
+            onEditorStartDone={() => deferred.resolve()}
+        /></StrictMode>);
         await expect(await deferred.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
-        await expect(renderResult).toBeDefined();
+        await delayExecution(hundredMs);
         renderResult.unmount();
+        cleanHtmlBody();
 
         const deferred2 = new Deferred();
         renderResult = render(<StrictMode><MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
-            onEditorStartDone={() => deferred2.resolve()}/></StrictMode>);
+            onEditorStartDone={() => deferred2.resolve()}
+        /></StrictMode>);
         await expect(await deferred2.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
-        await expect(renderResult).toBeDefined();
+        // prevents stack trace during execution (only required in strict mode)
+        await delayExecution(hundredMs);
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
-    test.sequential('strictMode: multiple editors in single render', async () => {
+    test('strictMode: multiple editors in single render', async () => {
         const editorAppConfig1 = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "FirstComponent";',
@@ -186,17 +195,17 @@ describe('Test MonacoEditorReactComp', () => {
         const promises = await Promise.all([firstComponentReady.promise, secondComponentReady.promise]);
         expect(promises).toEqual([undefined, undefined]);
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         await expect(renderResult.getAllByRole('code')[0].innerText).contains('FirstComponent');
         await expect(renderResult.getAllByRole('code')[1].innerText).contains('SecondComponent');
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
-    test.sequential('srict mode: test render, modify code', async () => {
+    test('srict mode: test render, modify code', async () => {
         const deferredStart = new Deferred();
         const deferredChanged = new Deferred();
         let modified;
@@ -238,7 +247,7 @@ describe('Test MonacoEditorReactComp', () => {
         // delay execute/click, so await below is already awaiting the deferredDispose
         setTimeout(() => {
             document.getElementById('change-button')?.click();
-        }, unmountDelayMs);
+        }, hundredMs);
 
         await expect(await deferredChanged.promise).toBeUndefined();
         // two times code (strict mode), then update
@@ -246,8 +255,7 @@ describe('Test MonacoEditorReactComp', () => {
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
 });
-

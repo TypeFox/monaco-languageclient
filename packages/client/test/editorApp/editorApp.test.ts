@@ -146,7 +146,7 @@ describe('Test EditorApp', () => {
                 text: codeUpdated,
                 uri: `/workspace/${expect.getState().testPath}_2.js`,
             }
-        })).toBeUndefined();
+        })).toBeTruthy();
 
         const textModels = editorApp.getTextModels();
         expect(textModels.modified?.getValue()).toEqual(codeUpdated);

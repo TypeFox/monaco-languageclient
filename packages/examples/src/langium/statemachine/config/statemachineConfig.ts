@@ -44,7 +44,7 @@ export const createLangiumGlobalConfig = (params: {
             },
             messageTransports: params.messageTransports
         },
-        logLevel: LogLevel.Debug
+        logLevel: LogLevel.Off
     };
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {

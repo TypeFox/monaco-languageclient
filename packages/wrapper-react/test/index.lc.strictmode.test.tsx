@@ -11,7 +11,7 @@ import type { LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { StrictMode } from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, unmountDelayMs } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, hundredMs } from './support/helper.js';
 
 describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', () => {
 
@@ -47,13 +47,13 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         /></StrictMode>);
         await expect(await deferred.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
         lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
     test('test render, languageclient, unmount with enforce dispose', async () => {
@@ -81,7 +81,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         const deferredLc = new Deferred();
         const languageClientConfig2 = createDefaultLanguageClientConfig(true);
@@ -99,7 +99,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
     test('test render, languageclient, rerender', async () => {
@@ -127,12 +127,12 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         await expect(await deferredLc.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: codeUpdated,
-                uri: `/workspace/${expect.getState().testPath}_2.js`
+                uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
         const deferred2 = new Deferred();
@@ -143,7 +143,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
             style={{ 'height': '800px' }}
             onConfigProcessed={async (editorApp?: EditorApp) => {
                 expect(editorApp).toBeDefined();
-                await delayExecution(unmountDelayMs);
+                await delayExecution(hundredMs);
                 expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
@@ -153,7 +153,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
     test('test render, languageclient, rerender with changed config', async () => {
@@ -182,12 +182,12 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         /></StrictMode>);
         await expect(Promise.all([deferredEditor.promise, deferredLc.promise])).resolves.toEqual([undefined, undefined]);
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
                 text: codeUpdated,
-                uri: `/workspace/${expect.getState().testPath}_2.js`
+                uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
         const languageClientConfigs2 = createDefaultLanguageClientConfig(false);
@@ -202,7 +202,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
             style={{ 'height': '800px' }}
             onConfigProcessed={async (editorApp?: EditorApp) => {
                 expect(editorApp).toBeDefined();
-                await delayExecution(unmountDelayMs);
+                await delayExecution(hundredMs);
                 expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
@@ -212,7 +212,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         /></StrictMode>);
         await expect(await deferred2.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         const languageClientConfigs3 = createDefaultLanguageClientConfig(true);
         const deferred3 = new Deferred();
@@ -226,7 +226,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         /></StrictMode>);
         await expect(await deferred3.promise).toBeUndefined();
 
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
 
         const languageClientConfigs4 = createDefaultLanguageClientConfig(false);
         languageClientConfigs4.clientOptions.markdown = {
@@ -246,7 +246,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
         lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
 });

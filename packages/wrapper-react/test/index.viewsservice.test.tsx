@@ -9,7 +9,7 @@ import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
-import { cleanHtmlBody, createDefaultEditorAppConfig, unmountDelayMs } from './support/helper.js';
+import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
 
@@ -42,7 +42,7 @@ describe('Test MonacoEditorReactComp', () => {
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 
     test.sequential('views service: HTMLElement', async () => {
@@ -65,6 +65,6 @@ describe('Test MonacoEditorReactComp', () => {
 
         renderResult.unmount();
         cleanHtmlBody();
-        await delayExecution(unmountDelayMs);
+        await delayExecution(hundredMs);
     });
 });

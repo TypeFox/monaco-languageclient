@@ -42,7 +42,7 @@ export const createDefaultLanguageClientConfig = (enforceDispose: boolean): Lang
     return createDefaultLcWorkerConfig(worker, 'langium', enforceDispose);
 };
 
-export const unmountDelayMs = 250;
+export const hundredMs = 100;
 
 export const cleanHtmlBody = () => {
     // manual clean document body

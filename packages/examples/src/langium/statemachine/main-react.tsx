@@ -26,19 +26,21 @@ export const runStatemachineReact = async (noControls: boolean) => {
 
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
-        const [debugTextState, setDebugTextState] = useState<string>('');
         const [codeState, setCodeState] = useState<string>(text);
         const [disposeLcState, setDisposeLcState] = useState<boolean>(false);
+        const [uriState, setUriState] = useState<string>('/workspace/example.statemachine');
 
         const onTextChanged = (textChanges: TextContents) => {
-            setDebugTextState(textChanges.modified as string);
+            if (textChanges.modified !== codeState) {
+                setCodeState(textChanges.modified as string);
+            }
         };
 
         const appConfig = createLangiumGlobalConfig({
             languageServerId: 'react',
             codeContent: {
                 text: codeState,
-                uri: '/workspace/example.statemachine'
+                uri: uriState
             },
             worker,
             messageTransports: { reader, writer }
@@ -50,6 +52,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                 <div>
                     <button style={{background: 'purple'}} onClick={() => setCodeState(codeState + '\n// comment')}>Change Text</button>
                     <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Swatch LC Dispose</button>
+                    <button style={{background: 'orange'}} onClick={() => setUriState('/workspace/example2.statemachine')}>Change URI</button>
 
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
@@ -58,7 +61,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
                     />
-                    <b>Debug:</b><br />{debugTextState}
+                    <b>Debug:</b><br />{codeState}
                 </div>
             </>
         );

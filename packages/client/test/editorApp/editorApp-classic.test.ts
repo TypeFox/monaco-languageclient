@@ -306,7 +306,7 @@ describe('Test Test EditorApp (classic)', () => {
                 text: '// comment',
                 uri: '/workspace/test.statemachine',
             }
-        })).toBeUndefined();
+        })).toBeTruthy();
 
         const modelRefsAfter = editorApp['modelRefs'];
         expect(modelRefsAfter?.modified).toBeDefined();

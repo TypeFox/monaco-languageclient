@@ -241,9 +241,10 @@ export class EditorApp {
         }
     }
 
-    async updateCodeResources(codeResources?: CodeResources): Promise<void> {
+    async updateCodeResources(codeResources?: CodeResources): Promise<boolean> {
         let updateModified = false;
         let updateOriginal = false;
+        let updated = false;
 
         if (codeResources?.modified !== undefined && codeResources.modified.uri !== this.modelRefs.modified?.object.resource.path) {
             this.modelDisposables.modified = this.modelRefs.modified;
@@ -257,7 +258,7 @@ export class EditorApp {
         }
 
         if (this.isDiffEditor()) {
-            if (updateModified && updateOriginal) {
+            if (updateModified || updateOriginal) {
                 const modified = this.modelRefs.modified?.object.textEditorModel ?? undefined;
                 const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
                 if (modified !== undefined && original !== undefined) {
@@ -268,6 +269,7 @@ export class EditorApp {
                     this.diffEditor?.setModel(model);
                     this.announceModelUpdate(model);
                     await this.disposeModelRefs();
+                    updated = true;
                 }
             } else {
                 this.logger.info('Diff Editor: Code resources were not updated. They are ether unchanged or undefined.');
@@ -281,11 +283,13 @@ export class EditorApp {
                     this.editor?.setModel(model.modified);
                     this.announceModelUpdate(model);
                     await this.disposeModelRefs();
+                    updated = true;
                 }
             } else {
                 this.logger.info('Editor: Code resources were not updated. They are either unchanged or undefined.');
             }
         }
+        return updated;
     }
 
     async buildModelReference(codeContent: CodeContent): Promise<IReference<ITextFileEditorModel>> {
