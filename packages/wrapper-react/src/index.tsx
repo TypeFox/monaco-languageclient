@@ -268,16 +268,16 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     const newModifiedCodeUri = editorAppConfigRef.current.codeResources.modified?.uri;
                     const newOriginalCodeUri = editorAppConfigRef.current.codeResources.original?.uri;
 
-                    let modifiedUri = modifiedCodeUriRef.current !== newModifiedCodeUri ? newModifiedCodeUri : undefined;
-                    let originalUri = originalCodeUriRef.current !== newOriginalCodeUri ? newOriginalCodeUri : undefined;
+                    const modifiedUri = modifiedCodeUriRef.current !== newModifiedCodeUri ? newModifiedCodeUri : undefined;
+                    const originalUri = originalCodeUriRef.current !== newOriginalCodeUri ? newOriginalCodeUri : undefined;
                     // re-create the editor if the URIs have changed
                     if (modifiedUri !== undefined || originalUri !== undefined) {
                         updateModel = true;
                     } else {
                         const newModifiedCode = editorAppConfigRef.current.codeResources.modified?.text;
                         const newOriginalCode = editorAppConfigRef.current.codeResources.original?.text;
-                        let modified = modifiedCodeRef.current !== newModifiedCode ? newModifiedCode : undefined;
-                        let original = originalCodeRef.current !== newOriginalCode ? newOriginalCode : undefined;
+                        const modified = modifiedCodeRef.current !== newModifiedCode ? newModifiedCode : undefined;
+                        const original = originalCodeRef.current !== newOriginalCode ? newOriginalCode : undefined;
                         if (modified !== undefined || original !== undefined) {
                             editorAppRef.current.updateCode({ modified, original });
                         }

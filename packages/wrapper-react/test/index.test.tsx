@@ -37,7 +37,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()}
-         />);
+        />);
         await expect(await deferred.promise).toBeUndefined();
 
         renderResult.unmount();
