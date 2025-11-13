@@ -4,7 +4,6 @@
 * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { ConsoleLogger } from 'monaco-languageclient/common';
 import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientConfig, LanguageClientManager } from 'monaco-languageclient/lcwrapper';
@@ -39,7 +38,7 @@ const haveEditorService = () => {
 const logger = new ConsoleLogger(LogLevel.Debug);
 
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
-let queueLock = true;
+let runQueueLock = true;
 let intervalId: number | unknown | undefined = undefined;
 
 const addQueue = (id: string, func: () => Promise<void>) => {
@@ -53,30 +52,24 @@ const executeQueue = async () => {
     console.log(`Queue size: ${runQueue.length}`);
 
     if (runQueue.length > 0) {
-        queueLock = true;
+        runQueueLock = true;
         while (runQueue.length > 0) {
             const lengthBefore = runQueue.length;
             const queueObj = runQueue.shift();
             debugLogging('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
             debugLogging(`QUEUE ${queueObj?.id} start: SIZE before: ${lengthBefore}`, true);
-            try {
-                await queueObj?.func();
-            } catch (error) {
-                queueLock = false;
-                debugLogging(`QUEUE ${queueObj?.id} ERROR: SIZE after: ${runQueue.length}`);
-                throw error;
-            }
+            await queueObj?.func();
             debugLogging(`QUEUE ${queueObj?.id} end: SIZE after: ${runQueue.length}`);
         }
-        queueLock = false;
+        runQueueLock = false;
     }
 };
 
 const kickQueue = () => {
     if (intervalId === undefined && runQueue.length > 0) {
         intervalId = setInterval(async () =>  {
-            debugLogging('Checking queue...' + queueLock);
-            if (!queueLock) {
+            debugLogging('Checking queue...' + runQueueLock);
+            if (!runQueueLock) {
                 await executeQueue();
                 stopQueue();
             }
@@ -129,6 +122,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (onError) {
             onError(error);
         } else {
+            debugLogging(`INTERCEPTED Error: ${error}. Stopping queue...`);
+            runQueueLock = false;
             throw error;
         }
     };
@@ -165,12 +160,16 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                     debugLogging('GLOBAL INIT DONE', true);
 
-                    queueLock = false;
+                    runQueueLock = false;
                 } catch (error) {
                     performErrorHandling(error as Error);
                 }
             };
             globalInitFunc();
+        } else if (envEnhanced.vscodeApiInitialised === true) {
+            if (runQueueLock && intervalId !== undefined) {
+                runQueueLock = false;
+            }
         }
     };
 
@@ -213,28 +212,32 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     };
 
     const configProcessedFunc = () => {
-        debugLogging('CONFIG PROCESSED', true);
-        if (!launchingRef.current) {
-            if (editorAppConfigRef.current?.codeResources !== undefined && editorAppRef.current) {
-                editorAppRef.current.updateCodeResources(editorAppConfigRef.current.codeResources);
-                editorAppRef.current.updateCode({
-                    modified: editorAppConfigRef.current.codeResources.modified?.text,
-                    original: editorAppConfigRef.current.codeResources.original?.text
-                });
-            }
-            if (editorAppConfigRef.current?.editorOptions !== undefined && editorAppRef.current) {
-                if (!editorAppRef.current.isDiffEditor()) {
-                    editorAppRef.current.getEditor()?.updateOptions(editorAppConfigRef.current.editorOptions as monaco.editor.IEditorOptions);
+        try {
+            debugLogging('CONFIG PROCESSED', true);
+            if (!launchingRef.current) {
+                if (editorAppConfigRef.current?.codeResources !== undefined && editorAppRef.current) {
+                    editorAppRef.current.updateCodeResources(editorAppConfigRef.current.codeResources);
+                    editorAppRef.current.updateCode({
+                        modified: editorAppConfigRef.current.codeResources.modified?.text,
+                        original: editorAppConfigRef.current.codeResources.original?.text
+                    });
+                }
+                if (editorAppConfigRef.current?.editorOptions !== undefined && editorAppRef.current) {
+                    if (!editorAppRef.current.isDiffEditor()) {
+                        editorAppRef.current.getEditor()?.updateOptions(editorAppConfigRef.current.editorOptions);
+                    }
+                }
+                if (editorAppConfigRef.current?.diffEditorOptions !== undefined && editorAppRef.current) {
+                    if (editorAppRef.current.isDiffEditor()) {
+                        editorAppRef.current.getDiffEditor()?.updateOptions(editorAppConfigRef.current.diffEditorOptions);
+                    }
                 }
             }
-            if (editorAppConfigRef.current?.diffEditorOptions !== undefined && editorAppRef.current) {
-                if (editorAppRef.current.isDiffEditor()) {
-                    editorAppRef.current.getDiffEditor()?.updateOptions(editorAppConfigRef.current.diffEditorOptions as monaco.editor.IDiffEditorOptions);
-                }
-            }
+            onConfigProcessed?.(editorAppRef.current);
+            debugLogging('CONFIG PROCESSED: Done', true);
+        } catch (error) {
+            performErrorHandling(error as Error);
         }
-        onConfigProcessed?.(editorAppRef.current);
-        debugLogging('CONFIG PROCESSED: Done', true);
     };
 
     useEffect(() => {
@@ -309,17 +312,21 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // this part runs on unmount (componentWillUnmount)
         return () => {
             const disposeFunc = async () => {
-                // dispose editor if used
-                debugLogging('DISPOSE', true);
+                try {
+                    // dispose editor if used
+                    debugLogging('DISPOSE', true);
 
-                if (editorAppRef.current !== undefined) {
-                    await editorAppRef.current.dispose();
-                    editorAppRef.current = undefined;
-                    onDisposeEditor?.();
-                } else {
-                    debugLogging('DISPOSE: EditorApp is not disposed', true);
+                    if (editorAppRef.current !== undefined) {
+                        await editorAppRef.current.dispose();
+                        editorAppRef.current = undefined;
+                        onDisposeEditor?.();
+                    } else {
+                        debugLogging('DISPOSE: EditorApp is not disposed', true);
+                    }
+                    debugLogging('DISPOSE DONE', true);
+                } catch (error) {
+                    performErrorHandling(error as Error);
                 }
-                debugLogging('DISPOSE DONE', true);
             };
             addQueue('dispose', disposeFunc);
         };

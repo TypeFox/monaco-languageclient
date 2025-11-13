@@ -53,6 +53,7 @@ export const vitestConfig = {
             // '**/client/test/editorApp/editorApp.noservices.test.ts',
             // '**/client/test/editorApp/editorApp.wrongservices.test.ts',
             // '**/client/test/editorApp/config.test.ts',
+            // '**/wrapper-react/test/index.extapi.test.tsx',
             // '**/wrapper-react/test/index.test.tsx',
             // '**/wrapper-react/test/index.lc.test.tsx',
             // '**/wrapper-react/test/index.strictmode.test.tsx',
