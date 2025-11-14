@@ -2,11 +2,11 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [7.3.0-next.6] - 2025-11-13
+## [7.3.0] - 2025-11-14
 
 - Fixed re-rendering issues with React StrictMode [#986](https://github.com/TypeFox/monaco-languageclient/pull/986).
-- Updated to `monaco-languageclient@10.3.0-next.6`.
-- Updated all `@codingame/monaco-vscode` packages to `22.1.9`.
+- Updated to `monaco-languageclient@10.3.0`.
+- Updated all `@codingame/monaco-vscode` packages to `23.0.0`.
 
 ## [7.2.0] - 2025-10-20
 

@@ -2,10 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.11.1] - unreleased
+## [2025.11.1] - 2025-11-14
 
 - Updated to `monaco-languageclient@10.3.0` and `@typefox/monaco-editor-react@7.3.0`.
-- Updated all `@codingame/monaco-vscode` packages to `22.1.9`.
+- Updated all `@codingame/monaco-vscode` packages to `23.0.0`.
 
 ## [2025.10.1] - 2025-10-20
 
