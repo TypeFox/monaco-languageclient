@@ -10,9 +10,9 @@ import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import '@codingame/monaco-vscode-java-default-extension';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { LangiumMonarchContent } from '../../langium/langium-dsl/config/langium.monarch.js';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
@@ -91,7 +91,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    const lcWrapper = new LanguageClientWrapper(languageClientConfig, apiWrapper.getLogger());
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
     const editorApp = new EditorApp(editorAppConfig);
 
     try {

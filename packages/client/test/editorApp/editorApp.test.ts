@@ -5,6 +5,8 @@
 
 /* eslint-disable dot-notation */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { Logger } from 'monaco-languageclient/common';
 import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
@@ -20,11 +22,13 @@ describe('Test EditorApp', () => {
         const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
         await apiWrapper.start();
     });
+    const code = 'const text = "Hello World!";';
+    const codeUpdated = 'const text = "Goodbye World!";';
 
     test('extended type: empty EditorAppConfigExtended', () => {
         const editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -57,14 +61,14 @@ describe('Test EditorApp', () => {
     test('config defaults', () => {
         const editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
         editorAppConfig.id = 'test-config-defaults';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect(editorApp.getConfig().codeResources?.modified?.text).toEqual('const text = "Hello World!";');
+        expect(editorApp.getConfig().codeResources?.modified?.text).toEqual(code);
         expect(editorApp.getConfig().codeResources?.original).toBeUndefined();
         expect(editorApp.getConfig().useDiffEditor ?? false).toBeFalsy();
         expect(editorApp.getConfig().readOnly).toBeFalsy();
@@ -93,7 +97,7 @@ describe('Test EditorApp', () => {
     test('Update code resources after start (same file)', async () => {
         const editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -110,15 +114,15 @@ describe('Test EditorApp', () => {
 
         await editorApp.updateCodeResources({
             modified: {
-                text: 'const text = "Goodbye World";',
+                text: codeUpdated,
                 uri: `/workspace/${expect.getState().testPath}_2.js`
             }
         });
 
         const textModels = editorApp.getTextModels();
-        expect(textModels.modified?.getValue()).toEqual('const text = "Goodbye World";');
+        expect(textModels.modified?.getValue()).toEqual(codeUpdated);
 
-        expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
+        expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual(codeUpdated);
 
         await editorApp.dispose();
     });
@@ -126,7 +130,7 @@ describe('Test EditorApp', () => {
     test('Update code resources after start (different file)', async () => {
         const editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -139,15 +143,15 @@ describe('Test EditorApp', () => {
 
         await expect(await editorApp.updateCodeResources({
             modified: {
-                text: 'const text = "Goodbye World";',
+                text: codeUpdated,
                 uri: `/workspace/${expect.getState().testPath}_2.js`,
             }
-        })).toBeUndefined();
+        })).toBeTruthy();
 
         const textModels = editorApp.getTextModels();
-        expect(textModels.modified?.getValue()).toEqual('const text = "Goodbye World";');
+        expect(textModels.modified?.getValue()).toEqual(codeUpdated);
 
-        expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual('const text = "Goodbye World";');
+        expect(editorApp.getEditor()?.getModel()?.getValue()).toEqual(codeUpdated);
 
         await editorApp.dispose();
     });
@@ -182,7 +186,7 @@ describe('Test EditorApp', () => {
 
         await editorApp.updateCodeResources({
             modified: {
-                text: 'const text = "Hello World!";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}_2.statemachine`,
             }
         });
@@ -196,7 +200,7 @@ describe('Test EditorApp', () => {
     test('Test editorApp init/start/dispose phase promises', async () => {
         let editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -213,7 +217,7 @@ describe('Test EditorApp', () => {
 
         editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}_2.js`
             }
         });
@@ -226,7 +230,7 @@ describe('Test EditorApp', () => {
     test('Test html parameter with start', async () => {
         const editorAppConfig = createEditorAppConfig({
             modified: {
-                text: 'const text = "Hello World";',
+                text: code,
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
@@ -235,6 +239,25 @@ describe('Test EditorApp', () => {
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
+    });
+
+    test('set verify log levels are applied', async () => {
+        const editorAppConfig = createEditorAppConfig({
+            modified: {
+                text: code,
+                uri: `/workspace/${expect.getState().testPath}.js`
+            }
+        });
+        let editorApp = new EditorApp(editorAppConfig);
+        let logLevel = (editorApp['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Off);
+        expect(logLevel).toBe(0);
+
+        editorAppConfig.logLevel = LogLevel.Debug;
+        editorApp = new EditorApp(editorAppConfig);
+        logLevel = (editorApp['logger'] as Logger).getLevel();
+        expect(logLevel).toBe(LogLevel.Debug);
+        expect(logLevel).toBe(2);
     });
 
 });

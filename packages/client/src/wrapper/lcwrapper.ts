@@ -5,10 +5,11 @@
 
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
+import { ConsoleLogger, createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 
 export interface LanguageClientError {
     message: string;
@@ -24,10 +25,10 @@ export class LanguageClientWrapper {
     private languageId: string;
     private logger: Logger | undefined;
 
-    constructor(config: LanguageClientConfig, logger?: Logger) {
+    constructor(config: LanguageClientConfig) {
         this.languageClientConfig = config;
         this.languageId = this.languageClientConfig.languageId;
-        this.logger = logger;
+        this.logger = new ConsoleLogger(this.languageClientConfig.logLevel ?? LogLevel.Off);
     }
 
     haveLanguageClient(): boolean {
@@ -52,7 +53,7 @@ export class LanguageClientWrapper {
             return Promise.resolve();
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const conConfig = this.languageClientConfig.connection;
             const conOptions = conConfig.options;
 
@@ -255,7 +256,7 @@ export class LanguageClientWrapper {
             if (this.isStarted()) {
                 await this.languageClient?.dispose();
                 this.languageClient = undefined;
-                this.logger?.info('monaco-languageclient and monaco-editor were successfully disposed.');
+                this.logger?.info('monaco-languageclient was successfully disposed.');
             }
         } catch (e) {
             const languageClientError: LanguageClientError = {

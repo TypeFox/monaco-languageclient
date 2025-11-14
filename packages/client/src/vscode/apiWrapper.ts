@@ -36,23 +36,12 @@ export class MonacoVscodeApiWrapper {
     private apiConfig: MonacoVscodeApiConfigRuntime;
 
     constructor(apiConfig: MonacoVscodeApiConfig) {
-        const viewsConfigType = apiConfig.viewsConfig.$type;
-        if ((viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') &&
-            apiConfig.viewsConfig.htmlContainer === undefined) {
-
-            throw new Error(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
-        }
-
         this.apiConfig = {
             ...apiConfig,
             serviceOverrides: apiConfig.serviceOverrides ?? {},
             logLevel: apiConfig.logLevel ?? LogLevel.Off,
         };
         this.logger.setLevel(this.apiConfig.logLevel);
-    }
-
-    getLogger(): Logger {
-        return this.logger;
     }
 
     getExtensionRegisterResult(extensionName: string) {
@@ -72,6 +61,11 @@ export class MonacoVscodeApiWrapper {
             });
         }
     }
+
+    private performErrorHandling = (message: string) => {
+        getEnhancedMonacoEnvironment().vscodeApiInitialising = false;
+        throw new Error(message);
+    };
 
     protected async configureHighlightingServices() {
         if (this.apiConfig.$type === 'extended') {
@@ -93,8 +87,13 @@ export class MonacoVscodeApiWrapper {
 
     protected async configureViewsServices() {
         const viewsConfigType = this.apiConfig.viewsConfig.$type;
-        if (this.apiConfig.$type === 'classic' && (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService')) {
-            throw new Error(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
+        if (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') {
+            if (this.apiConfig.$type === 'classic') {
+                this.performErrorHandling(`View Service Type "${viewsConfigType}" cannot be used with classic configuration.`);
+            }
+            if (this.apiConfig.viewsConfig.htmlContainer === undefined) {
+                this.performErrorHandling(`View Service Type "${viewsConfigType}" requires a HTMLElement.`);
+            }
         }
 
         const envEnhanced = getEnhancedMonacoEnvironment();
@@ -158,7 +157,7 @@ export class MonacoVscodeApiWrapper {
             devOptions.logLevel = this.apiConfig.logLevel;
             (this.apiConfig.workspaceConfig!.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
         } else if (devLogLevel !== this.apiConfig.logLevel) {
-            throw new Error(`You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
+            this.performErrorHandling(`You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
         } else {
             this.logger.debug('Development log level and api log level are in aligned.');
         }
@@ -200,12 +199,12 @@ export class MonacoVscodeApiWrapper {
 
         // theme requires textmate
         if (haveThemeService && !haveTextmateService) {
-            throw new Error('"theme" service requires "textmate" service. Please add it to the "userServices".');
+            this.performErrorHandling('"theme" service requires "textmate" service. Please add it to the "userServices".');
         }
 
         // markers service requires views service
         if (haveMarkersService && !haveViewsService) {
-            throw new Error('"markers" service requires "views" service. Please add it to the "userServices".');
+            this.performErrorHandling('"markers" service requires "views" service. Please add it to the "userServices".');
         }
     }
 

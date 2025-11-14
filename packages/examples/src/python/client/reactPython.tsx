@@ -5,11 +5,11 @@
 
 import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { configureDebugging } from 'monaco-languageclient/debugger';
 import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as vscode from 'vscode';
-import { configureDebugging } from 'monaco-languageclient/debugger';
 import { createPythonAppConfig } from './config.js';
 
 export const runPythonReact = async () => {
@@ -31,17 +31,19 @@ export const runPythonReact = async () => {
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
         return (
-            <div style={{ 'backgroundColor': '#1f1f1f' }} >
-                <MonacoEditorReactComp
-                    vscodeApiConfig={appConfig.vscodeApiConfig}
-                    editorAppConfig={appConfig.editorAppConfig}
-                    languageClientConfig={appConfig.languageClientConfig}
-                    style={{ 'height': '100%' }}
-                    onVscodeApiInitDone={onVscodeApiInitDone}
-                    onError={(e) => {
-                        console.error(e);
-                    }} />
-            </div>
+            <>
+                <div style={{ 'backgroundColor': '#1f1f1f' }} >
+                    <MonacoEditorReactComp
+                        vscodeApiConfig={appConfig.vscodeApiConfig}
+                        editorAppConfig={appConfig.editorAppConfig}
+                        languageClientConfig={appConfig.languageClientConfig}
+                        style={{ 'height': '100%' }}
+                        onVscodeApiInitDone={onVscodeApiInitDone}
+                        onError={(e) => {
+                            console.error(e);
+                        }} />
+                </div>
+            </>
         );
     };
     root.render(<App />);

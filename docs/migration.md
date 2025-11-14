@@ -117,7 +117,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
 
 ## LanguageClientConfig(s)
 
-The previous `languageClientConfigs` can now be expressed as single `LanguageClientConfig` to be directly used with `LanguageClientWrapper` or multiple language client configurations can be expressed in the `LanguageClientConfigs` and used with `LanguageClientsManager`. Obey, that `languageId` is now a mandatory property in `LanguageClientConfig`.
+The previous `languageClientConfigs` can now be expressed as single `LanguageClientConfig` to be directly used with `LanguageClientWrapper` or multiple language client configurations can be expressed in the `LanguageClientConfigs` and used with `LanguageClientManager`. Obey, that `languageId` is now a mandatory property in `LanguageClientConfig`.
 
 <table>
 <tr><th>v9/v6</th><th>v10</th></tr>
@@ -181,7 +181,7 @@ await lcWrapper.start();
 </td><td>
 
 ```ts
-const lcManager = new LanguageClientsManager();
+const lcManager = new LanguageClientManager();
 const languageClientConfigs: LanguageClientConfigs = {
     configs: {
         myLang1: {

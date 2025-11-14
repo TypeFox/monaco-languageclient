@@ -2,10 +2,22 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.1.0] - 2025-09-30
+## [10.3.0-next.6] - 2025-11-13
+
+- Fixed re-rendering issues with React StrictMode [#986](https://github.com/TypeFox/monaco-languageclient/pull/986).
+  - Fixed `LanguageClientManager` for that
+
+## [10.2.0] - 2025-09-30
 
 - Move generic debugger client code to mlc [#977](https://github.com/TypeFox/monaco-languageclient/pull/977).
-- Updated all `@codingame/monaco-vscode` packages to `^22.1.0`.
+- Updated all `@codingame/monaco-vscode` packages to `22.1.0`.
+
+## [10.1.0] - 2025-10-20
+
+- Updated migration guide, relaxed requirement to specify htmlContainer [#966](https://github.com/TypeFox/monaco-languageclient/pull/966).
+- tsgo and erasableSyntaxOnly [#964](https://github.com/TypeFox/monaco-languageclient/pull/964).
+- Renamed `WorkspaceService` to `WorkbenchService` im `ViewsConfigTypes`.
+- Updated all `@codingame/monaco-vscode` packages to `21.3.2`.
 - Allow to pass options to `EditorApp#updateLayout`
 
 ## [10.0.0] - 2025-09-19

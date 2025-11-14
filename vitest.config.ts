@@ -12,7 +12,7 @@ import externalViteConfig from './vite.config.js';
 
 export const vitestConfig = {
     test: {
-        testTimeout: 30000,
+        testTimeout: 15000,
         browser: {
             enabled: true,
             headless: true,
@@ -41,7 +41,9 @@ export const vitestConfig = {
             // '**/client/test/common/utils.test.ts',
             // '**/client/test/fs/endpoints/emptyEndpoint.test.ts',
             // '**/client/test/vscode/manager.test.ts',
-            // '**/client/test/vscode/manager.wrongHtmlContainer.test.ts',
+            // '**/client/test/vscode/manager.editorservice.test.ts',
+            // '**/client/test/vscode/manager.viewsserivce.test.ts',
+            // '**/client/test/vscode/manager.workbenchserivce.test.ts',
             // '**/client/test/wrapper/lcmanager.test.ts',
             // '**/client/test/wrapper/lcwrapper.test.ts',
             // '**/client/test/worker/workerFactory.test.ts',
@@ -49,9 +51,14 @@ export const vitestConfig = {
             // '**/client/test/editorApp/editorApp.test.ts',
             // '**/client/test/editorApp/editorApp-classic.test.ts',
             // '**/client/test/editorApp/editorApp.noservices.test.ts',
-            // '**/client/test/editorApp/editorApp.wrongservices.test',
+            // '**/client/test/editorApp/editorApp.wrongservices.test.ts',
             // '**/client/test/editorApp/config.test.ts',
             // '**/wrapper-react/test/index.test.tsx',
+            // '**/wrapper-react/test/index.extapi.test.tsx',
+            // '**/wrapper-react/test/index.strictmode.test.tsx',
+            // '**/wrapper-react/test/index.lc.test.tsx',
+            // '**/wrapper-react/test/index.lc.strictmode.test.tsx',
+            // '**/wrapper-react/test/index.viewsservice.test.tsx',
             '**/client/test/**/*',
             '**/wrapper-react/test/**/*'
         ],

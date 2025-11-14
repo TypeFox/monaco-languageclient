@@ -7,19 +7,24 @@ import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { Deferred, delayExecution } from 'monaco-languageclient/common';
 import type { EditorApp, TextContents } from 'monaco-languageclient/editorApp';
-import { type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React, { useState } from 'react';
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
-describe.sequential('Test MonacoEditorReactComp', () => {
+describe.sequential('Test MonacoEditorReactComp: External monaco-vscode-api', () => {
 
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService'
-        }
-    };
+    beforeAll(async () => {
+        const vscodeApiConfig: MonacoVscodeApiConfig = {
+            $type: 'extended',
+            viewsConfig: {
+                $type: 'EditorService'
+            }
+        };
+        const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+        await apiWrapper.start();
+    });
+
     const code = 'const text = "Hello World!";';
     const codeUpdated = 'const text = "Goodbye World!";';
 
@@ -33,7 +38,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
         const deferred = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()}
@@ -55,7 +59,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
         const deferred = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()} />);
@@ -76,7 +79,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
         const deferred = new Deferred();
         const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={(editorApp?: EditorApp) => {
@@ -86,8 +88,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
         />);
         await expect(await deferred.promise).toBeUndefined();
 
-        await delayExecution(hundredMs);
-
         const deferred2 = new Deferred();
         const editorAppConfig2 = createDefaultEditorAppConfig({
             modified: {
@@ -96,7 +96,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             }
         });
         renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig2}
             style={{ 'height': '800px' }}
             onConfigProcessed={async (editorApp?: EditorApp) => {
@@ -125,7 +124,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
         let renderResult: RenderResult | undefined;
         const deferred = new Deferred();
         renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred.resolve()}
@@ -138,7 +136,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
         const deferred2 = new Deferred();
         renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             style={{ 'height': '800px' }}
             onEditorStartDone={() => deferred2.resolve()}
@@ -167,13 +164,11 @@ describe.sequential('Test MonacoEditorReactComp', () => {
         const secondComponentReady = new Deferred();
         const renderResult = render(<>
             <MonacoEditorReactComp
-                vscodeApiConfig={vscodeApiConfig}
                 editorAppConfig={editorAppConfig1}
                 style={{ 'height': '100px' }}
                 onEditorStartDone={() => firstComponentReady.resolve()}
             />
             <MonacoEditorReactComp
-                vscodeApiConfig={vscodeApiConfig}
                 editorAppConfig={editorAppConfig2}
                 style={{ 'height': '100px' }}
                 onEditorStartDone={() => secondComponentReady.resolve()}
@@ -213,7 +208,6 @@ describe.sequential('Test MonacoEditorReactComp', () => {
                 <>
                     <button id='change-button' style={{background: 'purple'}} onClick={() => setCodeState(codeUpdated)}>Change Text</button>
                     <MonacoEditorReactComp
-                        vscodeApiConfig={vscodeApiConfig}
                         editorAppConfig={editorAppConfig}
                         style={{ 'height': '800px' }}
                         onTextChanged={async (textChanges: TextContents) => {

@@ -43,7 +43,8 @@ export const createLangiumGlobalConfig = (params: {
                 messagePort: params.messagePort,
             },
             messageTransports: params.messageTransports
-        }
+        },
+        logLevel: LogLevel.Off
     };
 
     const vscodeApiConfig: MonacoVscodeApiConfig = {
@@ -52,7 +53,7 @@ export const createLangiumGlobalConfig = (params: {
             $type: 'EditorService',
             htmlContainer: params.htmlContainer
         },
-        logLevel: LogLevel.Debug,
+        logLevel: LogLevel.Off,
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
             ...getLifecycleServiceOverride(),
@@ -96,7 +97,8 @@ export const createLangiumGlobalConfig = (params: {
     const editorAppConfig: EditorAppConfig = {
         codeResources: {
             modified: params.codeContent
-        }
+        },
+        logLevel: LogLevel.Debug
     };
 
     return {

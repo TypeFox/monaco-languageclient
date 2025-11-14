@@ -3,15 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { configure } from './config.js';
 import { configurePostStart } from './common.js';
+import { configure } from './config.js';
 
 export const runApplicationPlaygroundReact = async () => {
 
-    const configResult = await configure();
+    const configResult = await configure(document.body);
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
         return (

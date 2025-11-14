@@ -3,45 +3,57 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { ConsoleLogger } from 'monaco-languageclient/common';
+import type { TextContents } from 'monaco-languageclient/editorApp';
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import type { TextContents } from 'monaco-languageclient/editorApp';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-import { loadStatemachineWorkerRegular } from './main.js';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
+import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
+import { loadStatemachineWorkerRegular } from './main.js';
 
 export const runStatemachineReact = async (noControls: boolean) => {
     const worker = loadStatemachineWorkerRegular();
     const reader = new BrowserMessageReader(worker);
     const writer = new BrowserMessageWriter(worker);
+    const logger = new ConsoleLogger(LogLevel.Off);
     reader.listen((message) => {
-        console.log('Received message from worker:', message);
+        logger.info('Received message from worker:', message);
     });
-    const appConfig = createLangiumGlobalConfig({
-        languageServerId: 'react',
-        codeContent: {
-            text,
-            uri: '/workspace/example.statemachine'
-        },
-        worker,
-        messageTransports: { reader, writer }
-    });
+
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
-
-        const [testState, setTestState] = useState<string>('');
+        const [codeState, setCodeState] = useState<string>(text);
+        const [disposeLcState, setDisposeLcState] = useState<boolean>(false);
+        const [uriState, setUriState] = useState<string>('/workspace/example.statemachine');
 
         const onTextChanged = (textChanges: TextContents) => {
-            console.log(`text: ${textChanges.modified}\ntextOriginal: ${textChanges.original}`);
-            setTestState(textChanges.modified as string);
+            if (textChanges.modified !== codeState) {
+                setCodeState(textChanges.modified as string);
+            }
         };
+
+        const appConfig = createLangiumGlobalConfig({
+            languageServerId: 'react',
+            codeContent: {
+                text: codeState,
+                uri: uriState
+            },
+            worker,
+            messageTransports: { reader, writer }
+        });
+        appConfig.languageClientConfig.enforceDispose = disposeLcState;
 
         return (
             <>
                 <div>
+                    <button style={{background: 'purple'}} onClick={() => setCodeState(codeState + '\n// comment')}>Change Text</button>
+                    <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Swatch LC Dispose</button>
+                    <button style={{background: 'orange'}} onClick={() => setUriState('/workspace/example2.statemachine')}>Change URI</button>
+
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
@@ -49,7 +61,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
                     />
-                    <b>Debug:</b><br />{testState}
+                    <b>Debug:</b><br />{codeState}
                 </div>
             </>
         );

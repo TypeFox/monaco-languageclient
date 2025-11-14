@@ -67,10 +67,7 @@ export const runClient = async () => {
             }
         }
     };
-    const languageClientWrapper = new LanguageClientWrapper(
-        languageClientConfig,
-        apiWrapper.getLogger()
-    );
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     await languageClientWrapper.start();
 };
 
