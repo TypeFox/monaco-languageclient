@@ -35,7 +35,7 @@ const lcsManager = new LanguageClientManager();
 const haveEditorService = () => {
     return getEnhancedMonacoEnvironment().viewServiceType === 'EditorService';
 };
-const logger = new ConsoleLogger(LogLevel.Debug);
+const logger = new ConsoleLogger(LogLevel.Off);
 
 const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
 let runQueueLock = true;
@@ -50,8 +50,6 @@ const addQueue = (id: string, func: () => Promise<void>) => {
 };
 
 const executeQueue = async () => {
-    console.log(`Queue size: ${runQueue.length}`);
-
     if (runQueue.length > 0) {
         runQueueLock = true;
         while (runQueue.length > 0) {
