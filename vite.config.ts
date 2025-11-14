@@ -12,9 +12,10 @@ import react from '@vitejs/plugin-react';
 
 const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm';
 
+/// <reference lib="rolldown-vite/config" />
+
 export const definedViteConfig = defineConfig({
     build: {
-        target: 'ES2022',
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),

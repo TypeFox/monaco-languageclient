@@ -192,10 +192,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                             editorAppRef.current.getDisposingAwait()
                         ]);
                     }
-                    modifiedCodeRef.current = editorAppConfigRef.current?.codeResources?.modified?.text;
-                    originalCodeRef.current = editorAppConfigRef.current?.codeResources?.original?.text;
-                    modifiedCodeUriRef.current = editorAppConfigRef.current?.codeResources?.modified?.uri;
-                    originalCodeUriRef.current = editorAppConfigRef.current?.codeResources?.original?.uri;
+                    updateModelRelatedRefs();
 
                     editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
                         if (textChanges.modified !== undefined) {
@@ -229,6 +226,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             debugLogging('UPDATE EDITOR MODEL', true);
             if (!launchingRef.current && editorAppRef.current) {
                 editorAppRef.current.updateCodeResources(editorAppConfigRef.current?.codeResources);
+                updateModelRelatedRefs();
                 onConfigProcessed?.(editorAppRef.current);
             } else {
                 debugLogging('UPDATE EDITOR MODEL: Not Possible: No editor', true);
@@ -237,6 +235,13 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         } catch (error) {
             performErrorHandling(error as Error);
         }
+    };
+
+    const updateModelRelatedRefs = () => {
+        modifiedCodeRef.current = editorAppConfigRef.current?.codeResources?.modified?.text;
+        originalCodeRef.current = editorAppConfigRef.current?.codeResources?.original?.text;
+        modifiedCodeUriRef.current = editorAppConfigRef.current?.codeResources?.modified?.uri;
+        originalCodeUriRef.current = editorAppConfigRef.current?.codeResources?.original?.uri;
     };
 
     const disposeEditor = async () => {
