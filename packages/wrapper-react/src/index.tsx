@@ -37,15 +37,20 @@ const haveEditorService = () => {
 };
 const logger = new ConsoleLogger(LogLevel.Off);
 
-const runQueue: Array<{id: string, func: () => Promise<void>}> = [];
+type QueueEntry = {
+    id: string;
+    func: (htmlContainer: HTMLElement | null) => Promise<void>;
+    currentContainer: HTMLElement | null;
+};
+const runQueue: QueueEntry[] = [];
 let runQueueLock = true;
 let intervalId: number | unknown | undefined = undefined;
-const queueIntervalMs = 25;
+const queueIntervalMs = 10;
 
-const addQueue = (id: string, func: () => Promise<void>) => {
+const addQueue = (queueEntry: QueueEntry) => {
     debugLogging('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    debugLogging(`Adding to queue: ${id}: QUEUE SIZE before: ${runQueue.length}`);
-    runQueue.push({id, func});
+    debugLogging(`Adding to queue: ${queueEntry.id}: QUEUE SIZE before: ${runQueue.length}`);
+    runQueue.push(queueEntry);
     kickQueue();
 };
 
@@ -57,7 +62,7 @@ const executeQueue = async () => {
             const queueObj = runQueue.shift();
             debugLogging('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
             debugLogging(`QUEUE ${queueObj?.id} start: SIZE before: ${lengthBefore}`, true);
-            await queueObj?.func();
+            await queueObj?.func(queueObj.currentContainer);
             debugLogging(`QUEUE ${queueObj?.id} end: SIZE after: ${runQueue.length}`);
         }
         runQueueLock = false;
@@ -137,7 +142,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         }
         const envEnhanced = getEnhancedMonacoEnvironment();
 
-        // let apiConfig: MonacoVscodeApiConfig;
         if (vscodeApiConfig === undefined && envEnhanced.vscodeApiInitialised !== true) {
             throw new Error('vscodeApiConfig is not provided, but the monaco-vscode-api is not initialized! Aborting...');
         }
@@ -152,12 +156,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                     if (apiWrapper === undefined) throw new Error('Unexpected error occurred: apiWrapper is not available! Aborting...');
 
-                    if (apiWrapper.getMonacoVscodeApiConfig().viewsConfig.$type === 'EditorService') {
-                        apiWrapper.overrideViewsConfig({
-                            $type: 'EditorService',
-                            htmlContainer: containerRef.current!
-                        });
-                    }
                     await apiWrapper.start();
                     onVscodeApiInitDone?.(apiWrapper);
 
@@ -176,41 +174,47 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         }
     };
 
-    const editorInit = async () => {
+    const editorInit = async (htmlContainer: HTMLElement | null) => {
         try {
             debugLogging('INIT EDITOR', true);
             // it is possible to run without an editorApp, when the ViewsService or WorkbenchService
             if (haveEditorService()) {
-                if (editorAppRef.current === undefined && !launchingRef.current) {
-                    launchingRef.current = true;
-                    debugLogging('INIT: Creating editor', true);
-
-                    editorAppRef.current = new EditorApp(editorAppConfigRef.current);
-                    if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
-                        await Promise.all([
-                            editorAppRef.current.getStartingAwait(),
-                            editorAppRef.current.getDisposingAwait()
-                        ]);
-                    }
-                    updateModelRelatedRefs();
-
-                    editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
-                        if (textChanges.modified !== undefined) {
-                            modifiedCodeRef.current = textChanges.modified;
-                        }
-                        if (textChanges.original !== undefined) {
-                            originalCodeRef.current = textChanges.original;
-                        }
-                        if (onTextChangedRef.current !== undefined) {
-                            onTextChangedRef.current(textChanges);
-                        }
-                    });
-                    await editorAppRef.current.start(containerRef.current!);
-
-                    onEditorStartDone?.(editorAppRef.current);
-                    launchingRef.current = false;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                if (htmlContainer === null || (htmlContainer !== null && htmlContainer.parentElement === null)) {
+                    debugLogging('INIT EDITOR: Unable to create editor. HTML container or the parent is missing.', true);
                 } else {
-                    debugLogging('INIT EDITOR: Editor already created', true);
+                    if (editorAppRef.current === undefined && !launchingRef.current) {
+                        launchingRef.current = true;
+                        debugLogging('INIT EDITOR: Creating editor', true);
+
+                        editorAppRef.current = new EditorApp(editorAppConfigRef.current);
+                        if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
+                            await Promise.all([
+                                editorAppRef.current.getStartingAwait(),
+                                editorAppRef.current.getDisposingAwait()
+                            ]);
+                        }
+                        updateModelRelatedRefs();
+
+                        editorAppRef.current.registerOnTextChangedCallback((textChanges) => {
+                            if (textChanges.modified !== undefined) {
+                                modifiedCodeRef.current = textChanges.modified;
+                            }
+                            if (textChanges.original !== undefined) {
+                                originalCodeRef.current = textChanges.original;
+                            }
+                            if (onTextChangedRef.current !== undefined) {
+                                onTextChangedRef.current(textChanges);
+                            }
+                        });
+                        // await retrieveContainerRef('INIT EDITOR');
+                        await editorAppRef.current.start(htmlContainer);
+
+                        onEditorStartDone?.(editorAppRef.current);
+                        launchingRef.current = false;
+                    } else {
+                        debugLogging('INIT EDITOR: Editor already created', true);
+                    }
                 }
             } else {
                 debugLogging('INIT EDITOR: Do nothing: Using ViewsService', true);
@@ -319,10 +323,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (haveEditorService()) {
             const updateModel = processConfig();
             if (updateModel) {
-                addQueue('model update', updateEditorModel);
+                addQueue({ id: 'model update', func: updateEditorModel, currentContainer: containerRef.current});
             } else {
                 if (editorAppRef.current === undefined) {
-                    addQueue('editorInit', editorInit);
+                    addQueue({ id: 'editorInit', func: editorInit, currentContainer: containerRef.current});
                 } else {
                     debugLogging('CHECK EDITOR: Editor already created', true);
                 }
@@ -354,27 +358,27 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${error}`));
                 }
             };
-            addQueue('dispose lc', disposeLCFunc);
+            addQueue({ id:'dispose lc', func: disposeLCFunc, currentContainer: containerRef.current });
         } else {
             const lcInitFunc = async () => {
                 try {
                     debugLogging('INIT LC', true);
 
-                    lcsManager.setLogLevel(languageClientConfig.logLevel);
-                    lcsManager.setConfig(languageClientConfig);
-                    if (!lcsManager.isStarted()) {
-                        await lcsManager.start();
-                        onLanguageClientsStartDone?.(lcsManager);
-                        debugLogging('INIT LC: Language client started', true);
-                    } else {
-                        debugLogging('INIT LC: Language client is not (re-)started', true);
-                    }
+                    await lcsManager.start();
+                    onLanguageClientsStartDone?.(lcsManager);
+                    debugLogging('INIT LC: Language client started', true);
                     debugLogging('INIT LC DONE', true);
                 } catch (error) {
                     performErrorHandling(error as Error);
                 }
             };
-            addQueue('lcInit', lcInitFunc);
+            lcsManager.setLogLevel(languageClientConfig.logLevel);
+            lcsManager.setConfig(languageClientConfig);
+            if (!lcsManager.isStarted()) {
+                addQueue({ id:'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
+            } else {
+                debugLogging('INIT LC: Language client is already running. No need to schedule async start.', true);
+            }
         }
     }, [languageClientConfig]);
 
@@ -386,7 +390,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
         // this part runs on unmount (componentWillUnmount)
         return () => {
-            addQueue ('disposeEditor', disposeEditor);
+            addQueue({ id:'disposeEditor', func: disposeEditor, currentContainer: containerRef.current });
         };
     }, []);
 

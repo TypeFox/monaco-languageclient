@@ -300,17 +300,6 @@ export class MonacoVscodeApiWrapper {
         this.logger.debug('markGlobalInitDone');
     }
 
-    overrideViewsConfig(viewsConfigOverride: ViewsConfig) {
-        const orgViewsConfig = this.apiConfig.viewsConfig;
-        this.apiConfig.viewsConfig = {
-            $type: viewsConfigOverride.$type,
-            htmlContainer: viewsConfigOverride.htmlContainer,
-            htmlAugmentationInstructions: viewsConfigOverride.htmlAugmentationInstructions ?? orgViewsConfig.htmlAugmentationInstructions,
-            openEditorFunc: viewsConfigOverride.openEditorFunc ?? orgViewsConfig.openEditorFunc,
-            viewsInitFunc: viewsConfigOverride.viewsInitFunc ?? orgViewsConfig.viewsInitFunc
-        };
-    }
-
     async start(startInstructions?: StartInstructions): Promise<void> {
         const envEnhanced = getEnhancedMonacoEnvironment();
         if (envEnhanced.vscodeApiInitialised === true) {
