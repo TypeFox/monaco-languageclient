@@ -2,9 +2,13 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [7.3.0] - 2025-11-14
+## [7.3.0] - 2025-11-16
 
 - Fixed re-rendering issues with React StrictMode [#986](https://github.com/TypeFox/monaco-languageclient/pull/986).
+  - Added `onConfigProcessed` to announced the `EditorAppConfig` changed. The editor is only re-launched the component was disposed.
+  - Optional `modifiedTextValue` and `originalTextValue` are removed as text/model changes are handled via `EditorAppConfig`.
+  - `vscodeApiConfig` is now optional as you can start the api layer independently. If you use the compoenent without `vscodeApiConfig`, but did not ensure it is started an error is thrown.
+- React comp: Only execute queued EditorApp start if HTML is still valid [#995](https://github.com/TypeFox/monaco-languageclient/pull/995).
 - Updated to `monaco-languageclient@10.3.0`.
 - Updated all `@codingame/monaco-vscode` packages to `23.0.0`.
 

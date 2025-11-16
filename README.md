@@ -159,7 +159,7 @@ It contains both the [language client](./packages/examples/src/clangd/client/mai
 
 #### Application Playground ([Location](./packages/examples/src/appPlayground))
 
-This [example](./packages/examples/src/appPlayground/main.ts) uses the view service provider from `@codingame/monaco-vscode-editor-api` to build an application that utilizes more vscode features. <b>Heads up:</b> This is a prototype and still evolving.
+This [example](./packages/examples/src/appPlayground/launcher.ts) uses the view service provider from `@codingame/monaco-vscode-editor-api` to build an application that utilizes more vscode features. Alternatively, it is possible to use a [react version of the app](./packages/examples/src/appPlayground/reactLauncher.ts) <b>Heads up:</b> This is a prototype and still evolving.
 
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
@@ -182,7 +182,7 @@ See [Typescript Language support](./packages/examples/src/ts/clientTs.ts).
 
 ##### JSON Language Server
 
-For the **json-client**, **react-client** or the **client-webpack** examples you need to ensure the **json-server** example is running:
+For all **json** client related examples you need to ensure the **json-server** example is running:
 
 ```shell
 # start the express server with the language server running in the same process.

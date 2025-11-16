@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.3.0] - 2025-11-14
+## [10.3.0] - 2025-11-16
 
 - Fixed re-rendering issues with React StrictMode [#986](https://github.com/TypeFox/monaco-languageclient/pull/986).
+- React comp: Only execute queued EditorApp start if HTML is still valid [#995](https://github.com/TypeFox/monaco-languageclient/pull/995).
 
 ## [10.2.0] - 2025-09-30
 

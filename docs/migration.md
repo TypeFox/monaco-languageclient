@@ -1,6 +1,6 @@
 # Migration Guide
 
-This guide provides instructions for migrating from version `9` of `monaco-languageclient` and vrsion `6` of `monaco-editor-wrapper` or `@typefox/monaco-editor-react` verion `6` to `monaco-languageclient` version `10` or `@typefox/monaco-editor-react` verion `7`.
+This guide provides instructions for migrating from version `9` of `monaco-languageclient` and vrsion `6` of `monaco-editor-wrapper` or `@typefox/monaco-editor-react` verion `6` to `monaco-languageclient` version `10` or `@typefox/monaco-editor-react` version `7`.
 
 ## Overview
 
@@ -243,7 +243,7 @@ const editorAppConfig: EditorAppConfig = {
 
 ## @typefox/monaco-editor-react
 
-`@typefox/monaco-editor-react` uses the same configuration because internally it relies on `MonacoVscodeApiWrapper`, `LanguageClientWrapper` and `EditorApp`. Thus, you need to pass `MonacoVscodeApiConfig`, `LanguageClientConfig` and `EditorAppConfig` as described in the previous chapter. Remember that the React component only allows to use one `LanguageClientConfig`.
+`@typefox/monaco-editor-react` uses the same configuration because internally it relies on `MonacoVscodeApiWrapper`, `LanguageClientWrapper` and `EditorApp`. Thus, you need to pass `MonacoVscodeApiConfig` (optional as you can initialize the api independently), `LanguageClientConfig` (optional) and `EditorAppConfig` (as described in the previous chapter. Remember that the React component only allows to use one `LanguageClientConfig`.
 
 <table>
 <tr><th>v6</th><th>v7</th></tr>
