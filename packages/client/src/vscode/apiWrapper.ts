@@ -119,8 +119,11 @@ export class MonacoVscodeApiWrapper {
     }
 
     protected async applyViewsPostConfig() {
-        this.apiConfig.viewsConfig.htmlAugmentationInstructions?.(this.apiConfig.viewsConfig.htmlContainer);
-        await this.apiConfig.viewsConfig.viewsInitFunc?.();
+        const viewsConfigType = this.apiConfig.viewsConfig.$type;
+        if (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') {
+            this.apiConfig.viewsConfig.htmlAugmentationInstructions?.(this.apiConfig.viewsConfig.htmlContainer);
+            await this.apiConfig.viewsConfig.viewsInitFunc?.();
+        }
     }
 
     /**
