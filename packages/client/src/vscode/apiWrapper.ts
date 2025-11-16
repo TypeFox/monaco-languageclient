@@ -119,8 +119,11 @@ export class MonacoVscodeApiWrapper {
     }
 
     protected async applyViewsPostConfig() {
-        this.apiConfig.viewsConfig.htmlAugmentationInstructions?.(this.apiConfig.viewsConfig.htmlContainer);
-        await this.apiConfig.viewsConfig.viewsInitFunc?.();
+        const viewsConfigType = this.apiConfig.viewsConfig.$type;
+        if (viewsConfigType === 'ViewsService' || viewsConfigType === 'WorkbenchService') {
+            this.apiConfig.viewsConfig.htmlAugmentationInstructions?.(this.apiConfig.viewsConfig.htmlContainer);
+            await this.apiConfig.viewsConfig.viewsInitFunc?.();
+        }
     }
 
     /**
@@ -298,17 +301,6 @@ export class MonacoVscodeApiWrapper {
         envEnhanced.vscodeApiGlobalInitAwait = undefined;
         envEnhanced.vscodeApiGlobalInitResolve = undefined;
         this.logger.debug('markGlobalInitDone');
-    }
-
-    overrideViewsConfig(viewsConfigOverride: ViewsConfig) {
-        const orgViewsConfig = this.apiConfig.viewsConfig;
-        this.apiConfig.viewsConfig = {
-            $type: viewsConfigOverride.$type,
-            htmlContainer: viewsConfigOverride.htmlContainer,
-            htmlAugmentationInstructions: viewsConfigOverride.htmlAugmentationInstructions ?? orgViewsConfig.htmlAugmentationInstructions,
-            openEditorFunc: viewsConfigOverride.openEditorFunc ?? orgViewsConfig.openEditorFunc,
-            viewsInitFunc: viewsConfigOverride.viewsInitFunc ?? orgViewsConfig.viewsInitFunc
-        };
     }
 
     async start(startInstructions?: StartInstructions): Promise<void> {
