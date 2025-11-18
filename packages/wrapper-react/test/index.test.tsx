@@ -99,7 +99,10 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig2}
             style={{ 'height': '800px' }}
-            onConfigProcessed={async (editorApp?: EditorApp) => {
+            toggleReprocessConfig={true}
+            onConfigProcessed={async (result, editorApp?: EditorApp) => {
+                expect(result.textUpdated).toBeTruthy();
+                expect(result.modelUpdated).toBeFalsy();
                 expect(editorApp).toBeDefined();
                 expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 expect(editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
@@ -150,7 +153,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
         await delayExecution(hundredMs);
     });
 
-    test('strictMode: multiple editors in single render', async () => {
+    test('multiple editors in single render', async () => {
         const editorAppConfig1 = createDefaultEditorAppConfig({
             modified: {
                 text: 'const text = "FirstComponent";',
@@ -196,11 +199,13 @@ describe.sequential('Test MonacoEditorReactComp', () => {
     test('test render, modify code', async () => {
         const deferredStart = new Deferred();
         const deferredChanged = new Deferred();
+        const deferredConfigUpdate = new Deferred();
         let modified;
         let count = 0;
 
         const App = () => {
             const [codeState, setCodeState] = useState<string>(code);
+            const [reprocessConfig, setReprocessConfig] = useState<boolean>(false);
 
             const editorAppConfig = createDefaultEditorAppConfig({
                 modified: {
@@ -211,7 +216,10 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
             return (
                 <>
-                    <button id='change-button' style={{background: 'purple'}} onClick={() => setCodeState(codeUpdated)}>Change Text</button>
+                    <button id='change-button' style={{background: 'purple'}} onClick={() => {
+                        setCodeState(codeUpdated);
+                        setReprocessConfig(!reprocessConfig);
+                    }}>Change Text</button>
                     <MonacoEditorReactComp
                         vscodeApiConfig={vscodeApiConfig}
                         editorAppConfig={editorAppConfig}
@@ -223,6 +231,12 @@ describe.sequential('Test MonacoEditorReactComp', () => {
                             if (codeUpdated === modified) {
                                 deferredChanged.resolve();
                             }
+                        }}
+                        toggleReprocessConfig={reprocessConfig}
+                        onConfigProcessed={(result) => {
+                            expect(result.textUpdated).toBeTruthy();
+                            expect(result.modelUpdated).toBeFalsy();
+                            deferredConfigUpdate.resolve();
                         }}
                         onEditorStartDone={() => deferredStart.resolve()}
                     />
@@ -237,7 +251,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             document.getElementById('change-button')?.click();
         }, hundredMs);
 
-        await expect(await deferredChanged.promise).toBeUndefined();
+        await expect(await Promise.all([deferredChanged.promise, deferredConfigUpdate.promise])).toStrictEqual([undefined, undefined]);
         // one time code, then update
         await expect(count).toBe(2);
 

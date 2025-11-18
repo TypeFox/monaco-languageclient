@@ -28,7 +28,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
     const App = () => {
         const [codeState, setCodeState] = useState<string>(text);
         const [disposeLcState, setDisposeLcState] = useState<boolean>(false);
-        const [uriState, setUriState] = useState<string>('/workspace/example.statemachine');
+        const [reprocessConfig, setReprocessConfig] = useState<boolean>(false);
 
         const onTextChanged = (textChanges: TextContents) => {
             if (textChanges.modified !== codeState) {
@@ -40,19 +40,23 @@ export const runStatemachineReact = async (noControls: boolean) => {
             languageServerId: 'react',
             codeContent: {
                 text: codeState,
-                uri: uriState
+                uri: '/workspace/example.statemachine'
             },
             worker,
             messageTransports: { reader, writer }
         });
-        appConfig.languageClientConfig.enforceDispose = disposeLcState;
 
         return (
             <>
                 <div>
-                    <button style={{background: 'purple'}} onClick={() => setCodeState(codeState + '\n// comment')}>Change Text</button>
-                    <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Swatch LC Dispose</button>
-                    <button style={{background: 'orange'}} onClick={() => setUriState('/workspace/example2.statemachine')}>Change URI</button>
+                    <button style={{background: 'purple'}} onClick={() => {
+                        setCodeState(codeState + '\n// comment');
+                        setReprocessConfig(!reprocessConfig);
+                    }}>Change Text</button>
+                    <button style={{background: 'green'}} onClick={() => {
+                        setReprocessConfig(true);
+                    }}>Reprocess Config</button>
+                    <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Flip LC</button>
 
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
@@ -60,6 +64,11 @@ export const runStatemachineReact = async (noControls: boolean) => {
                         editorAppConfig={appConfig.editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
+                        logLevel={LogLevel.Debug}
+                        toggleReprocessConfig={reprocessConfig}
+                        onConfigProcessed={() => console.log(' >>> config processed <<<')}
+                        enforceLanguageClientDispose={disposeLcState}
+                        onDisposeLanguageClient={() => console.log(' >>> language client disposed <<<')}
                     />
                     <b>Debug:</b><br />{codeState}
                 </div>
