@@ -17,11 +17,18 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.json",
-            // "plugins": ["./node_modules/@codingame/esbuild-import-meta-url-plugin/dist/esbuildImportMetaUrlPlugin.js"],
+            "plugins": [
+              "./esbuild.config.mjs"
+            ],
             "polyfills": [
               "zone.js"
             ],
-            "assets": [],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
             "styles": [],
             "scripts": [],
             "aot": false,
