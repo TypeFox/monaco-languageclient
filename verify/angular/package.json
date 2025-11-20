@@ -12,25 +12,29 @@
     "npm": "10.9.3"
   },
   "dependencies": {
-    "@angular/compiler": "~18.2.8",
-    "@angular/core": "~18.2.8",
-    "@angular/platform-browser": "~18.2.8",
-    "@angular/platform-browser-dynamic": "~18.2.8",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/platform-browser-dynamic": "^20.0.0",
     "@codingame/monaco-vscode-editor-api": "^23.2.2",
     "monaco-languageclient-examples": "~2025.11.2",
+    "@angular-builders/custom-esbuild": "^20.0.0",
     "rxjs": "~7.8.1",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-builders/custom-esbuild": "~18.0.0",
-    "@angular/cli": "~18.2.8",
-    "@angular/compiler-cli": "~18.2.8",
+    "@angular-builders/custom-esbuild": "^20.0.0",
+    "@angular/cli": "^20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
-    "@types/node": "~22.13.10",
-    "css-loader": "~7.1.2",
-    "shx": "~0.3.4",
-    "style-loader": "~4.0.0",
-    "typescript": "~5.5.4"
+    "@types/node": "~22.15.35",
+    "rolldown-vite": "~7.2.7",
+    "typescript": "~5.9.3"
+  },
+  "overrides": {
+    "vite": {
+      "rolldown-vite": "~7.2.7"
+    }
   },
   "scripts": {
     "verify": "npm install && npm run start",
@@ -42,6 +46,7 @@
     "start": "npm run clean && ng serve",
     "start:production": "npm run clean && ng serve --configuration production",
     "watch": "npm run clean && ng build --watch --configuration development",
+    "watch:tsc": "tsc --build tsconfig.json --watch",
     "reset:repo": "git clean -f -X -d"
   }
 }

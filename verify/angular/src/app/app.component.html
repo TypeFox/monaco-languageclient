@@ -1,7 +1,9 @@
 <h2>Angular Monaco Editor demo with saving code to a mock HTTP server </h2>
 <div class="editor-container">
     <monaco-angular-wrapper
-        [wrapperConfig]="wrapperConfig()"
+        [monacoVscodeApiConfig] = "monacoVscodeApiConfig()"
+        [languageClientConfig] = "languageClientConfig()"
+        [editorAppConfig] = "editorAppConfig()"
         [monacoEditorId]="editorId"
         [editorInlineStyle]="editorInlineStyle()"
         (onTextChanged)="onTextChanged($event)"

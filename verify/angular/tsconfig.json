@@ -29,7 +29,8 @@
     "types": [
       "vscode"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": "dist"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -42,7 +43,6 @@
   ],
   "exclude": [
     "dist",
-    "node_modules",
-    "src/server/**/*.ts"
+    "node_modules"
   ]
 }

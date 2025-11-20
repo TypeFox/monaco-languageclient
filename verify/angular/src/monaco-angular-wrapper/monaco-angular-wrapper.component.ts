@@ -14,11 +14,14 @@ import {
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import {
-    MonacoEditorLanguageClientWrapper,
     TextContents,
     TextModels,
-    WrapperConfig, didModelContentChange
+    didModelContentChange,
+    EditorAppConfig,
+    EditorApp
 } from 'monaco-languageclient/editorApp';
+import { LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 
 @Component({
     standalone: true,
@@ -28,21 +31,29 @@ import {
 })
 export class MonacoAngularWrapperComponent implements OnDestroy {
     @Output() onTextChanged = new EventEmitter<string>();
-    wrapperConfig = input<WrapperConfig>();
+    monacoVscodeApiConfig = input<MonacoVscodeApiConfig>();
+    languageClientConfig = input<LanguageClientConfig>();
+    editorAppConfig = input<EditorAppConfig>();
     monacoEditorId = input<string>();
     editorInlineStyle = input<string>();
-    private wrapper: MonacoEditorLanguageClientWrapper =
-        new MonacoEditorLanguageClientWrapper();
+    private editorApp: EditorApp | undefined;
+    private lcWrapper: LanguageClientWrapper | undefined;
     private _subscription: monaco.IDisposable | null = null;
     private isRestarting?: Promise<void>;
 
     constructor() {
         effect(async () => {
             try {
-                if (this.wrapperConfig() !== undefined) {
-                    await this.wrapper.initAndStart(
-                        this.wrapperConfig() as WrapperConfig
-                    );
+                if (this.monacoVscodeApiConfig() !== undefined && this.languageClientConfig() !== undefined && this.editorAppConfig() !== undefined) {
+                    const apiWrapper = new MonacoVscodeApiWrapper(this.monacoVscodeApiConfig()!);
+                    await apiWrapper.start();
+
+                    this.lcWrapper = new LanguageClientWrapper(this.languageClientConfig()!);
+                    this.editorApp = new EditorApp(this.editorAppConfig()!);
+
+                    await this.editorApp.start(this.monacoVscodeApiConfig()!.viewsConfig.htmlContainer!);
+                    await this.lcWrapper.start();
+
                     this.handleOnTextChanged();
                 }
             } catch (e) {
@@ -56,7 +67,8 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
             await this.isRestarting;
         }
         try {
-            await this.wrapper.dispose();
+            await this.editorApp?.dispose();
+            await this.lcWrapper?.dispose();
         } catch {
             // The language client may throw an error during disposal.
             // This should not prevent us from continue working.
@@ -72,13 +84,13 @@ export class MonacoAngularWrapperComponent implements OnDestroy {
     }
 
     handleOnTextChanged() {
-        const wrapperConfig = this.wrapperConfig();
-        const textModels = this.wrapper.getTextModels();
-        if (textModels?.modified !== undefined && wrapperConfig !== undefined) {
+        const editorAppConfig = this.editorAppConfig();
+        const textModels = this.editorApp?.getTextModels();
+        if (textModels?.modified !== undefined && editorAppConfig !== undefined) {
             const newSubscriptions: monaco.IDisposable[] = [];
             this.emitCodeChange(textModels);
             newSubscriptions.push(
-                textModels.modified.onDidChangeContent(() => {
+                textModels.modified!.onDidChangeContent(() => {
                     this.emitCodeChange(textModels);
                 })
             );
