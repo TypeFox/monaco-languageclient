@@ -2,10 +2,16 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [10.4.0-next.1] - 2025-11-20
+
+- Use flags to trigger behaviour [#997](https://github.com/TypeFox/monaco-languageclient/pull/997).
+- Updated all `@codingame/monaco-vscode` packages to `23.0.4`.
+
 ## [10.3.0] - 2025-11-16
 
 - Fixed re-rendering issues with React StrictMode [#986](https://github.com/TypeFox/monaco-languageclient/pull/986).
 - React comp: Only execute queued EditorApp start if HTML is still valid [#995](https://github.com/TypeFox/monaco-languageclient/pull/995).
+- Updated all `@codingame/monaco-vscode` packages to `23.0.0`.
 
 ## [10.2.0] - 2025-09-30
 

@@ -2,10 +2,10 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [7.4.0-next.0] - 2025-11-18
+## [7.4.0-next.1] - 2025-11-20
 
 - Use flags to trigger behaviour [#997](https://github.com/TypeFox/monaco-languageclient/pull/997).
-- Updated all `@codingame/monaco-vscode` packages to `23.0.3`.
+- Updated all `@codingame/monaco-vscode` packages to `23.0.4`.
 
 ## [7.3.0] - 2025-11-16
 
