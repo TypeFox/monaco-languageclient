@@ -56,7 +56,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                     <button style={{background: 'green'}} onClick={() => {
                         setTriggerReprocessConfig(triggerReprocessConfig + 1);
                     }}>Reprocess Config</button>
-                    <button style={{background: 'orange'}} onClick={() => setDisposeLcState(!disposeLcState)}>Flip Language Client</button>
+                    <button style={{background: 'orange'}} onClick={() => setDisposeLcState(!(disposeLcState ?? false))}>Flip Language Client</button>
 
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
