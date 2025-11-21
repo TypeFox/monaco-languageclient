@@ -6,7 +6,6 @@
 import { render } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { Deferred, delayExecution } from 'monaco-languageclient/common';
-import type { EditorApp } from 'monaco-languageclient/editorApp';
 import type { LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import React from 'react';
@@ -31,7 +30,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        const languageClientConfig = createDefaultLanguageClientConfig(false);
+        const languageClientConfig = createDefaultLanguageClientConfig();
 
         const deferred = new Deferred();
         let lcsManager: LanguageClientManager | undefined;
@@ -61,7 +60,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        const languageClientConfig = createDefaultLanguageClientConfig(false);
+        const languageClientConfig = createDefaultLanguageClientConfig();
 
         let lcsManager: LanguageClientManager | undefined;
         const deferred = new Deferred();
@@ -80,11 +79,12 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
         const deferredLc = new Deferred();
-        const languageClientConfig2 = createDefaultLanguageClientConfig(true);
+        const languageClientConfig2 = createDefaultLanguageClientConfig();
         renderResult.rerender(<MonacoEditorReactComp
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig}
             languageClientConfig={languageClientConfig2}
+            enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferredLc.resolve()}
         />);
         await expect(await deferredLc.promise).toBeUndefined();
@@ -105,7 +105,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        const languageClientConfig = createDefaultLanguageClientConfig(false);
+        const languageClientConfig = createDefaultLanguageClientConfig();
 
         const deferredLc = new Deferred();
         let lcsManager: LanguageClientManager | undefined;
@@ -134,10 +134,12 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             editorAppConfig={editorAppConfig2}
             languageClientConfig={languageClientConfig}
             style={{ 'height': '800px' }}
-            onConfigProcessed={async (editorApp?: EditorApp) => {
-                expect(editorApp).toBeDefined();
+            triggerReprocessConfig={1}
+            onConfigProcessed={async (result) => {
+                expect(result.textUpdated).toBe(true);
+                expect(result.editorApp).toBeDefined();
                 await delayExecution(hundredMs);
-                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
         />);
@@ -156,7 +158,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        const languageClientConfig = createDefaultLanguageClientConfig(false);
+        const languageClientConfig = createDefaultLanguageClientConfig();
 
         const deferredLc = new Deferred();
         const deferredEditor = new Deferred();
@@ -181,7 +183,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        const languageClientConfigs2 = createDefaultLanguageClientConfig(false);
+        const languageClientConfigs2 = createDefaultLanguageClientConfig();
         languageClientConfigs2.clientOptions.markdown = {
             supportHtml: true
         };
@@ -191,10 +193,12 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             editorAppConfig={editorAppConfig2}
             languageClientConfig={languageClientConfigs2}
             style={{ 'height': '800px' }}
-            onConfigProcessed={async (editorApp?: EditorApp) => {
-                expect(editorApp).toBeDefined();
+            triggerReprocessConfig={1}
+            onConfigProcessed={async (result) => {
+                expect(result.textUpdated).toBe(true);
+                expect(result.editorApp).toBeDefined();
                 await delayExecution(hundredMs);
-                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
             onError={(error) => {
@@ -203,7 +207,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
         />);
         await expect(await deferred2.promise).toBeUndefined();
 
-        const languageClientConfigs3 = createDefaultLanguageClientConfig(true);
+        const languageClientConfigs3 = createDefaultLanguageClientConfig();
         const deferred3 = new Deferred();
         // you have to enforce dispose of the LanguageClient if you want to restart with new configuration
         renderResult.rerender(<MonacoEditorReactComp
@@ -211,11 +215,12 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             editorAppConfig={editorAppConfig}
             languageClientConfig={languageClientConfigs3}
             style={{ 'height': '800px' }}
+            enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferred3.resolve()}
         />);
         await expect(await deferred3.promise).toBeUndefined();
 
-        const languageClientConfigs4 = createDefaultLanguageClientConfig(false);
+        const languageClientConfigs4 = createDefaultLanguageClientConfig();
         languageClientConfigs4.clientOptions.markdown = {
             supportHtml: true
         };

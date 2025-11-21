@@ -19,7 +19,6 @@ export interface LanguageClientConfig {
     restartOptions?: LanguageClientRestartOptions;
     disposeWorker?: boolean;
     logLevel?: LogLevel | number;
-    enforceDispose?: boolean;
 }
 
 export interface LanguageClientRestartOptions {

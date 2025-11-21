@@ -15,8 +15,7 @@ export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLe
     };
 };
 
-export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, enforceDispose: boolean,
-    messageTransports?: MessageTransports): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, messageTransports?: MessageTransports): LanguageClientConfig => {
     return {
         languageId,
         clientOptions: {
@@ -28,18 +27,17 @@ export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, 
                 worker
             },
             messageTransports
-        },
-        enforceDispose
+        }
     };
 };
 
-export const createDefaultLanguageClientConfig = (enforceDispose: boolean): LanguageClientConfig => {
+export const createDefaultLanguageClientConfig = (): LanguageClientConfig => {
     const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
     const worker = new Worker(workerUrl, {
         type: 'module',
         name: 'Langium LS (React Test)'
     });
-    return createDefaultLcWorkerConfig(worker, 'langium', enforceDispose);
+    return createDefaultLcWorkerConfig(worker, 'langium');
 };
 
 export const hundredMs = 100;
