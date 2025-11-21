@@ -11,6 +11,11 @@ import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeA
 import React, { type CSSProperties, useEffect, useRef } from 'react';
 
 export type ResolveFc = (value: void | PromiseLike<void>) => void;
+export type ConfigProcessedResult = {
+    textUpdated: boolean;
+    modelUpdated: boolean;
+    editorApp?: EditorApp;
+};
 
 export type MonacoEditorProps = {
     style?: CSSProperties;
@@ -21,13 +26,32 @@ export type MonacoEditorProps = {
     onVscodeApiInitDone?: (monacoVscodeApiManager: MonacoVscodeApiWrapper) => void;
     onEditorStartDone?: (editorApp?: EditorApp) => void;
     onLanguageClientsStartDone?: (lcsManager: LanguageClientManager) => void;
+    /**
+     * Called when the text in the editor has changed
+     */
     onTextChanged?: (textChanges: TextContents) => void;
-    onConfigProcessed?: (result: { textUpdated: boolean, modelUpdated: boolean}, editorApp?: EditorApp) => void;
+    /**
+     * Called when an error occurred within the component
+     */
     onError?: (error: Error) => void;
     onDisposeEditor?: () => void;
     onDisposeLanguageClient?: () => void;
-    toggleReprocessConfig?: boolean;
+    /**
+     * Trigger reprocessing oft the editorAppConfig to update code/models or editor options.
+     * This is performed once and only repeated if the value is increased again.
+     */
+    triggerReprocessConfig?: number;
+    /**
+     * Always called after the config was re-processed.
+     */
+    onConfigProcessed?: (result: ConfigProcessedResult) => void;
+    /**
+     * Enforce disposal of the language client
+     */
     enforceLanguageClientDispose?: boolean;
+    /**
+     * Set the log level for the internal logger
+     */
     logLevel?: LogLevel | number;
 }
 
@@ -74,7 +98,7 @@ const executeQueue = async () => {
 const kickQueue = () => {
     if (intervalId === undefined && runQueue.length > 0) {
         intervalId = setInterval(async () =>  {
-            debugLogging('Checking queue...' + runQueueLock);
+            debugLogging(`Checking queue (lock state: ${runQueueLock})`);
             if (!runQueueLock) {
                 await executeQueue();
                 stopQueue();
@@ -93,7 +117,11 @@ const stopQueue = () => {
 
 const debugLogging = (id: string) => {
     const now = new Date(Date.now());
-    logger.debug(`[${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}]: ${id}`);
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
+    logger.debug(`[${hours}:${minutes}:${seconds}.${milliseconds}]: ${id}`);
 };
 
 export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
@@ -112,7 +140,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         onDisposeEditor,
         onDisposeLanguageClient,
         logLevel,
-        toggleReprocessConfig,
+        triggerReprocessConfig,
         enforceLanguageClientDispose
     } = props;
 
@@ -125,8 +153,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const onTextChangedRef = useRef(onTextChanged);
     const launchingRef = useRef<boolean>(false);
     const editorAppConfigRef = useRef<EditorAppConfig>(undefined);
-    const flipReprocessConfigRef = useRef<boolean>(false);
-    const flipLanguageClientDisposeRef = useRef<boolean>(false);
+    const triggerReprocessConfigRef = useRef<number>(0);
+    const enforceLanguageClientDisposeRef = useRef<boolean>(undefined);
 
     const performErrorHandling = (error: Error) => {
         debugLogging(`ERROR: ${error.message}`);
@@ -226,10 +254,10 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             if (!launchingRef.current && editorAppRef.current) {
                 editorAppRef.current.updateCodeResources(editorAppConfigRef.current?.codeResources);
                 updateModelRelatedRefs();
-                onConfigProcessed?.({modelUpdated: true, textUpdated: true}, editorAppRef.current);
+                onConfigProcessed?.({ modelUpdated: true, textUpdated: true, editorApp: editorAppRef.current });
                 debugLogging('UPDATE EDITOR MODEL: Model was updated.');
             } else {
-                onConfigProcessed?.({modelUpdated: false, textUpdated: false}, editorAppRef.current);
+                onConfigProcessed?.({modelUpdated: false, textUpdated: false, editorApp: editorAppRef.current });
                 debugLogging('UPDATE EDITOR MODEL: No editor is avilable. Model update was not possible.');
             }
         } catch (error) {
@@ -299,7 +327,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             }
             // notitfy now if no async model update was necessary
             if (!modelUpdated) {
-                onConfigProcessed?.({modelUpdated, textUpdated}, editorAppRef.current);
+                onConfigProcessed?.({modelUpdated, textUpdated, editorApp: editorAppRef.current });
             }
             debugLogging('CONFIG PROCESSED: Done');
         } catch (error) {
@@ -329,17 +357,27 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [editorAppConfig]);
 
     useEffect(() => {
-        if (flipReprocessConfigRef.current !== (toggleReprocessConfig === true)) {
+        const triggerValue = triggerReprocessConfig ?? 0;
+        if (triggerValue > triggerReprocessConfigRef.current) {
             debugLogging('REPROCESS CONFIG: Triggered');
             const updateModel = processConfig();
             if (updateModel) {
                 addQueue({ id: 'modelUpdate', func: updateEditorModel, currentContainer: containerRef.current});
             }
-            flipReprocessConfigRef.current = !flipReprocessConfigRef.current;
+            triggerReprocessConfigRef.current = triggerValue;
         } else {
             debugLogging('REPROCESS CONFIG: Denied');
         }
-    }, [toggleReprocessConfig]);
+    }, [triggerReprocessConfig]);
+
+    const lcInitFunc = async () => {
+        try {
+            await lcsManager.start();
+            onLanguageClientsStartDone?.(lcsManager);
+        } catch (error) {
+            performErrorHandling(error as Error);
+        }
+    };
 
     useEffect(() => {
         // fast-fail
@@ -348,17 +386,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // always try to perform global init. Reason: we cannot ensure order
         performGlobalInit();
 
-        const lcInitFunc = async () => {
-            try {
-                await lcsManager.start();
-                onLanguageClientsStartDone?.(lcsManager);
-            } catch (error) {
-                performErrorHandling(error as Error);
-            }
-        };
         lcsManager.setLogLevel(languageClientConfig.logLevel);
         lcsManager.setConfig(languageClientConfig);
-        if (!lcsManager.isStarted()) {
+        if (!lcsManager.isStarted() && (enforceLanguageClientDisposeRef.current === undefined || !enforceLanguageClientDisposeRef.current)) {
             addQueue({ id:'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
         } else {
             debugLogging('INIT LC: Language client is already running. No need to schedule async start.');
@@ -366,7 +396,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     }, [languageClientConfig]);
 
     useEffect(() => {
-        if (flipLanguageClientDisposeRef.current !== (enforceLanguageClientDispose === true)) {
+        enforceLanguageClientDisposeRef.current = enforceLanguageClientDispose === true;
+        if (enforceLanguageClientDisposeRef.current === true) {
             const disposeLCFunc = async () => {
                 try {
                     await lcsManager.dispose();
@@ -376,9 +407,16 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${error}`));
                 }
             };
-            addQueue({ id:'lcDispose', func: disposeLCFunc, currentContainer: containerRef.current });
+            if (lcsManager.isStarted()) {
+                addQueue({ id:'lcDispose', func: disposeLCFunc, currentContainer: containerRef.current });
+            } else {
+                debugLogging('ENFORCE DISPOSE LC: Denied: No language client is running.');
+            }
         } else {
-            debugLogging('ENFORCE DISPOSE LC: Denied');
+            debugLogging('ENFORCE DISPOSE LC: Denied: enforceLanguageClientDisposeRef.current is false.');
+            if (!lcsManager.isStarted()) {
+                addQueue({ id:'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
+            }
         }
     }, [enforceLanguageClientDispose]);
 

@@ -99,13 +99,13 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig2}
             style={{ 'height': '800px' }}
-            toggleReprocessConfig={true}
-            onConfigProcessed={async (result, editorApp?: EditorApp) => {
+            triggerReprocessConfig={1}
+            onConfigProcessed={async (result) => {
                 expect(result.textUpdated).toBeTruthy();
                 expect(result.modelUpdated).toBeFalsy();
-                expect(editorApp).toBeDefined();
-                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
-                expect(editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
+                expect(result.editorApp).toBeDefined();
+                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                expect(result.editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
         />);
@@ -205,7 +205,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
         const App = () => {
             const [codeState, setCodeState] = useState<string>(code);
-            const [reprocessConfig, setReprocessConfig] = useState<boolean>(false);
+            const [triggerReprocessConfig, setTriggerReprocessConfig] = useState<number>(0);
 
             const editorAppConfig = createDefaultEditorAppConfig({
                 modified: {
@@ -218,7 +218,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
                 <>
                     <button id='change-button' style={{background: 'purple'}} onClick={() => {
                         setCodeState(codeUpdated);
-                        setReprocessConfig(!reprocessConfig);
+                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
                     }}>Change Text</button>
                     <MonacoEditorReactComp
                         vscodeApiConfig={vscodeApiConfig}
@@ -232,7 +232,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
                                 deferredChanged.resolve();
                             }
                         }}
-                        toggleReprocessConfig={reprocessConfig}
+                        triggerReprocessConfig={triggerReprocessConfig}
                         onConfigProcessed={(result) => {
                             expect(result.textUpdated).toBeTruthy();
                             expect(result.modelUpdated).toBeFalsy();

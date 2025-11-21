@@ -27,8 +27,8 @@ export const runStatemachineReact = async (noControls: boolean) => {
     const root = ReactDOM.createRoot(document.getElementById('react-root')!);
     const App = () => {
         const [codeState, setCodeState] = useState<string>(text);
-        const [disposeLcState, setDisposeLcState] = useState<boolean>(false);
-        const [reprocessConfig, setReprocessConfig] = useState<boolean>(false);
+        const [disposeLcState, setDisposeLcState] = useState<boolean | undefined>(undefined);
+        const [triggerReprocessConfig, setTriggerReprocessConfig] = useState<number>(0);
 
         const onTextChanged = (textChanges: TextContents) => {
             if (textChanges.modified !== codeState) {
@@ -51,12 +51,12 @@ export const runStatemachineReact = async (noControls: boolean) => {
                 <div>
                     <button style={{background: 'purple'}} onClick={() => {
                         setCodeState(codeState + '\n// comment');
-                        setReprocessConfig(!reprocessConfig);
+                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
                     }}>Change Text</button>
                     <button style={{background: 'green'}} onClick={() => {
-                        setReprocessConfig(true);
+                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
                     }}>Reprocess Config</button>
-                    <button style={{background: 'red'}} onClick={() => setDisposeLcState(!disposeLcState)}>Flip LC</button>
+                    <button style={{background: 'orange'}} onClick={() => setDisposeLcState(!disposeLcState)}>Flip Language Client</button>
 
                     <MonacoEditorReactComp
                         style={{ 'height': '50vh' }}
@@ -65,7 +65,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
                         languageClientConfig={appConfig.languageClientConfig}
                         onTextChanged={onTextChanged}
                         logLevel={LogLevel.Debug}
-                        toggleReprocessConfig={reprocessConfig}
+                        triggerReprocessConfig={triggerReprocessConfig}
                         onConfigProcessed={() => console.log(' >>> config processed <<<')}
                         enforceLanguageClientDispose={disposeLcState}
                         onDisposeLanguageClient={() => console.log(' >>> language client disposed <<<')}
