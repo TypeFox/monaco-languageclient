@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import { render, type RenderResult } from '@testing-library/react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { Deferred, delayExecution } from 'monaco-languageclient/common';
@@ -106,12 +107,16 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             vscodeApiConfig={vscodeApiConfig}
             editorAppConfig={editorAppConfig2}
             style={{ 'height': '800px' }}
-            onConfigProcessed={async (editorApp?: EditorApp) => {
-                expect(editorApp).toBeDefined();
-                expect(editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
-                expect(editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
+            triggerReprocessConfig={1}
+            onConfigProcessed={async (result) => {
+                expect(result.textUpdated).toBeTruthy();
+                expect(result.modelUpdated).toBeFalsy();
+                expect(result.editorApp).toBeDefined();
+                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                expect(result.editorApp?.getTextModels().modified?.getValue()).toBe(codeUpdated);
                 deferred2.resolve();
             }}
+            logLevel={LogLevel.Debug}
         /></StrictMode>);
         await expect(await deferred2.promise).toBeUndefined();
 
@@ -205,14 +210,16 @@ describe.sequential('Test MonacoEditorReactComp', () => {
         await delayExecution(hundredMs);
     });
 
-    test('srict mode: test render, modify code', async () => {
+    test('strict mode: test render, modify code', async () => {
         const deferredStart = new Deferred();
         const deferredChanged = new Deferred();
+        const deferredConfigUpdate = new Deferred();
         let modified;
         let count = 0;
 
         const App = () => {
             const [codeState, setCodeState] = useState<string>(code);
+            const [triggerReprocessConfig, setTriggerReprocessConfig] = useState<number>(0);
 
             const editorAppConfig = createDefaultEditorAppConfig({
                 modified: {
@@ -223,7 +230,10 @@ describe.sequential('Test MonacoEditorReactComp', () => {
 
             return (
                 <>
-                    <button id='change-button' style={{background: 'purple'}} onClick={() => setCodeState(codeUpdated)}>Change Text</button>
+                    <button id='change-button' style={{background: 'purple'}} onClick={() => {
+                        setCodeState(codeUpdated);
+                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
+                    }}>Change Text</button>
                     <MonacoEditorReactComp
                         vscodeApiConfig={vscodeApiConfig}
                         editorAppConfig={editorAppConfig}
@@ -235,6 +245,12 @@ describe.sequential('Test MonacoEditorReactComp', () => {
                             if (codeUpdated === modified) {
                                 deferredChanged.resolve();
                             }
+                        }}
+                        triggerReprocessConfig={triggerReprocessConfig}
+                        onConfigProcessed={(result) => {
+                            expect(result.textUpdated).toBeTruthy();
+                            expect(result.modelUpdated).toBeFalsy();
+                            deferredConfigUpdate.resolve();
                         }}
                         onEditorStartDone={() => deferredStart.resolve()}
                     />
@@ -249,7 +265,7 @@ describe.sequential('Test MonacoEditorReactComp', () => {
             document.getElementById('change-button')?.click();
         }, hundredMs);
 
-        await expect(await deferredChanged.promise).toBeUndefined();
+        await expect(await Promise.all([deferredChanged.promise, deferredConfigUpdate.promise])).toStrictEqual([undefined, undefined]);
         // two times code (strict mode), then update
         await expect(count).toBe(3);
 
