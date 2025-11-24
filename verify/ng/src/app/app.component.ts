@@ -1,20 +1,45 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2025 TypeFox and others.
+ * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { AfterViewInit, Component } from '@angular/core';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
-import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import '@codingame/monaco-vscode-json-default-extension';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { LangiumMonarchContent } from '../../langium/langium-dsl/config/langium.monarch.js';
 
-export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: true
+})
+export class MonacoEditorComponent implements AfterViewInit {
+    title = 'angular-client';
+    initDone = false;
+
+    async ngAfterViewInit(): Promise<void> {
+        await runExtendedClient();
+    }
+}
+
+const runExtendedClient = async () => {
+    const lsConfig = {
+        port: 30000,
+        path: '/sampleServer',
+        basePath: '/home/mlc/packages/examples/resources/json',
+        languageId: 'json'
+    };
+    const helloCode = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": {"value": "unix"}
+}`;
     const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
     const fileSystemProvider = new RegisteredFileSystemProvider(false);
     fileSystemProvider.registerFile(new RegisteredMemoryFile(helloUri, helloCode));
@@ -28,16 +53,10 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
             htmlContainer
         },
         logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
-        },
         userConfiguration: {
             json: JSON.stringify({
                 'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
+                'editor.experimental.asyncTokenization': false
             })
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
@@ -49,19 +68,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
             options: {
                 $type: 'WebSocketUrl',
                 url: `ws://localhost:${lsConfig.port}${lsConfig.path}`,
-                startOptions: {
-                    onCall: () => {
-                        console.log('Connected to socket.');
-                    },
-                    reportStatus: true
-                },
-                stopOptions: {
-                    onCall: () => {
-                        console.log('Disconnected from socket.');
-                    },
-                    reportStatus: true
-                }
-            },
+            }
         },
         clientOptions: {
             documentSelector: [lsConfig.languageId],
@@ -79,10 +86,6 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
                 text: helloCode,
                 uri: helloUri.path
             }
-        },
-        languageDef: {
-            monarchLanguage: LangiumMonarchContent,
-            languageExtensionConfig: { id: 'langium' }
         }
     };
 
@@ -90,29 +93,12 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+    new LanguageClientWrapper(languageClientConfig);
     const editorApp = new EditorApp(editorAppConfig);
 
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            await editorApp.start(htmlContainer);
-            await lcWrapper.start();
+    await editorApp.start(htmlContainer);
+    // await lcWrapper.start();
 
-            // open files, so the LS can pick it up
-            await vscode.workspace.openTextDocument(helloUri);
-        });
-        document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await editorApp.dispose();
-            await lcWrapper.dispose();
-        });
-    } catch (e) {
-        console.error(e);
-    }
-};
-
-export type ExampleLsConfig = {
-    port: number;
-    path: string;
-    basePath: string;
-    languageId: string;
+    // open files, so the LS can pick it up
+    // await vscode.workspace.openTextDocument(helloUri);
 };
