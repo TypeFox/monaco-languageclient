@@ -156,7 +156,7 @@ export class JsonServer {
         return this.jsonService.findDocumentSymbols(document, jsonDocument);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     protected executeCommand(params: ExecuteCommandParams): any {
         if (params.command === 'json.documentUpper' && params.arguments) {
             const versionedTextDocumentIdentifier = params.arguments[0];

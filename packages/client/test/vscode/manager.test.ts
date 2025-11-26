@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/* eslint-disable dot-notation */
+
 import { beforeAll, describe, expect, test } from 'vitest';
 import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
@@ -74,7 +76,6 @@ describe('MonacoVscodeApiWrapper Tests', () => {
             }
         };
 
-        // eslint-disable-next-line dot-notation
         apiWrapper['configureDevLogLevel']();
         expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Info);
     });
@@ -89,7 +90,6 @@ describe('MonacoVscodeApiWrapper Tests', () => {
             }
         };
 
-        // eslint-disable-next-line dot-notation
         apiWrapper['configureDevLogLevel']();
         expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Debug);
     });
@@ -104,7 +104,6 @@ describe('MonacoVscodeApiWrapper Tests', () => {
             }
         };
 
-        // eslint-disable-next-line dot-notation
         expect(() => apiWrapper['configureDevLogLevel']()).toThrowError('You have configured mismatching logLevels: 1 (wrapperConfig) 3 (workspaceConfig.developmentOptions)');
     });
 
