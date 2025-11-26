@@ -169,7 +169,7 @@ describe('Test EditorApp', () => {
 
         editorApp.registerOnTextChangedCallback(onTextChanged);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any
         const spyAnnounceModelUpdate = vi.spyOn(editorApp as any, 'announceModelUpdate');
 
         await expect(await editorApp.start(htmlContainer)).toBeUndefined();

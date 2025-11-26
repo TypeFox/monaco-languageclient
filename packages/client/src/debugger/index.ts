@@ -136,7 +136,7 @@ export const configureDebugging = async (api: typeof vscode, config: ConfigParam
             }
             websocket.send(JSON.stringify(initMessage));
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // oxlint-disable-next-line @typescript-eslint/no-explicit-any
             adapter.onDidSendMessage((message: any) => {
                 if (message.type === 'event' && message.event === 'output') {
                     logger?.info('OUTPUT', message.body.output);

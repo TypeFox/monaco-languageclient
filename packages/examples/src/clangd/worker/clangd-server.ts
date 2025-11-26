@@ -17,7 +17,7 @@ import JSZip from 'jszip';
 declare const self: DedicatedWorkerGlobalScope;
 
 interface RequiredResources {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     ClangdJsModule: any;
     wasmDataUrl: string;
 }
@@ -86,7 +86,7 @@ export class ClangdInteractionWorker implements ComRouter {
         await this.updateRemoteFilesystem();
 
         // run main clangd
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any
         (clangd as any).callMain([]);
 
         // send the launch complete message to the client
@@ -316,7 +316,7 @@ export class ClangdInteractionWorker implements ComRouter {
         this.emscriptenFS.mkdir(WORKSPACE_PATH);
 
         // Mounting IndexedDB filesystem
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any
         this.emscriptenFS.mount((this.emscriptenFS as any).filesystems.IDBFS, {}, WORKSPACE_PATH);
 
         // Synchronize the filesystem from IndexedDB to memory

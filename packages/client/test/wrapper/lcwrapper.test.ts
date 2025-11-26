@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/* eslint-disable dot-notation */
+
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { Logger } from 'monaco-languageclient/common';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
@@ -140,14 +142,12 @@ describe('Test LanguageClientWrapper', () => {
     test('set verify log levels are applied', async () => {
         const workerAndConfig = createWorkerAndConfig();
         let languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
-        // eslint-disable-next-line dot-notation
         let logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
         expect(logLevel).toBe(LogLevel.Off);
         expect(logLevel).toBe(0);
 
         workerAndConfig.languageClientConfig.logLevel = LogLevel.Debug;
         languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
-        // eslint-disable-next-line dot-notation
         logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);

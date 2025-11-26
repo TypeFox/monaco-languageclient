@@ -8,9 +8,9 @@ import type { IConnection } from '../server/connection.js';
 
 export interface IWebSocket extends Disposable {
     send(content: string): void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     onMessage(cb: (data: any) => void): void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     onError(cb: (reason: any) => void): void;
     onClose(cb: (code: number, reason: string) => void): void;
 }

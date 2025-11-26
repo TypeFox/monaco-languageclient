@@ -29,7 +29,7 @@ export function toSocket(webSocket: WebSocket): IWebSocket {
             webSocket.onmessage = event => cb(event.data);
         },
         onError: cb => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // oxlint-disable-next-line @typescript-eslint/no-explicit-any
             webSocket.onerror = (event: any) => {
                 if (Object.hasOwn(event, 'message')) {
                     cb(event.message);
