@@ -4,8 +4,9 @@ All notable changes to this npm module are documented in this file.
 
 ## [2025.11.2] - 2025-11-26
 
-- Updated to `monaco-languageclient@10.4.0-next.2` and `@typefox/monaco-editor-react@7.4.0-next.2`.
+- Updated to `monaco-languageclient@10.4.0` and `@typefox/monaco-editor-react@7.4.0`.
 - Updated all `@codingame/monaco-vscode` packages to `23.2.2`.
+- Use oxlint for most linting now. eslint is only kept for currently unsupported rules or eslint plugins.
 
 ## [2025.11.1] - 2025-11-16
 
