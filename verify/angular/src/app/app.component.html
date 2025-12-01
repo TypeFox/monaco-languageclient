@@ -1,11 +1,20 @@
-<h2>Angular Monaco Editor demo with saving code to a mock HTTP server </h2>
-<div class="editor-container">
-    <monaco-angular-wrapper
-        [wrapperConfig]="wrapperConfig()"
-        [monacoEditorId]="editorId"
-        [editorInlineStyle]="editorInlineStyle()"
-        (onTextChanged)="onTextChanged($event)"
-    ></monaco-angular-wrapper>
+<h2 class="text-2xl font-bold m-6">Angular Monaco Editor Demo</h2>
 
-    <button class="save-button" (click)="save()">Save</button>
+<div class="flex justify-between space-x-4"> <!-- Flex container to hold both editors -->
+
+
+  <!-- Groovy Editor -->
+  <div class="editor-container flex-1 p-4 border rounded shadow-lg bg-white">
+      <h1 class="text-xl font-semibold mb-4">Groovy Editor</h1>
+      <monaco-angular-wrapper
+          [wrapperConfig]="groovyWrapperConfig()"
+          [monacoEditorId]="groovyEditorId"
+          [editorInlineStyle]="editorInlineStyle()"
+          (onTextChanged)="onTextChanged($event)"
+      ></monaco-angular-wrapper>
+
+      <button class="save-button mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+          Save
+      </button>
+  </div>
 </div>
