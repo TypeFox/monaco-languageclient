@@ -1,9 +1,3 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
- * Licensed under the MIT License. See LICENSE in the package root for license information.
- * ------------------------------------------------------------------------------------------ */
-
-import { AfterViewInit, Component } from '@angular/core';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
 // this is required syntax highlighting
@@ -14,22 +8,7 @@ import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languag
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 
-@Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: true
-})
-export class MonacoEditorComponent implements AfterViewInit {
-    title = 'angular-client';
-    initDone = false;
-
-    async ngAfterViewInit(): Promise<void> {
-        await runExtendedClient();
-    }
-}
-
-const runExtendedClient = async () => {
+export const runExtendedClient = async () => {
     const lsConfig = {
         port: 30000,
         path: '/sampleServer',
@@ -93,12 +72,12 @@ const runExtendedClient = async () => {
     const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
     await apiWrapper.start();
 
-    new LanguageClientWrapper(languageClientConfig);
+    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
     const editorApp = new EditorApp(editorAppConfig);
 
     await editorApp.start(htmlContainer);
-    // await lcWrapper.start();
+    await lcWrapper.start();
 
     // open files, so the LS can pick it up
-    // await vscode.workspace.openTextDocument(helloUri);
+    await vscode.workspace.openTextDocument(helloUri);
 };
