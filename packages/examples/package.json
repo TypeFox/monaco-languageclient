@@ -94,6 +94,7 @@
     "@codingame/monaco-vscode-java-default-extension": "^23.2.2",
     "@codingame/monaco-vscode-javascript-default-extension": "^23.2.2",
     "@codingame/monaco-vscode-json-default-extension": "^23.2.2",
+    "@codingame/monaco-vscode-json-language-features-default-extension": "^23.2.2",
     "@codingame/monaco-vscode-keybindings-service-override": "^23.2.2",
     "@codingame/monaco-vscode-lifecycle-service-override": "^23.2.2",
     "@codingame/monaco-vscode-localization-service-override": "^23.2.2",
