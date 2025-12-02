@@ -1,2 +1,7 @@
+bundle
+dist
+lib
+node_modules
+*.tsbuildinfo
 production
 package-lock.json

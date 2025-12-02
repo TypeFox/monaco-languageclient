@@ -7,13 +7,11 @@
     "verify": "npm install && npm run start",
     "verify:ci": "npm install && npm run build",
     "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
+    "clean:production": "shx rm -fr production",
     "build:msg": "echo Building angular-client example:",
-    "build:prebundle": "npx rolldown-vite build",
-    "build": "npm run build:msg && npm run clean && npm run build:prebundle && ng build",
-    "build:production": "npm run build:msg && npm run clean && npm run build:prebundle && ng build --configuration production",
-    "start": "npm run clean && npm run build:prebundle && ng serve",
-    "start:production": "npm run clean && npm run build:prebundle && ng serve --configuration production",
-    "watch": "npm run clean && npm run build:prebundle && ng build --watch --configuration development",
+    "build": "npm run build:msg && npm run clean && npm run clean:production && vite build",
+    "start": "npm run clean && vite dev",
+    "watch:tsc": "tsc --build tsconfig.app.json --watch",
     "reset:repo": "git clean -f -X -d"
   },
   "dependencies": {
@@ -21,24 +19,24 @@
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
+    "@codingame/monaco-vscode-api": "^23.2.2",
+    "@codingame/monaco-vscode-files-service-override": "^23.2.2",
+    "@codingame/monaco-vscode-json-default-extension": "^23.2.2",
+    "monaco-languageclient": "~10.4.0",
     "rxjs": "~7.8.2",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^23.2.2",
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "~2.1.2",
     "@angular/build": "^20.0.0",
     "@angular/cli": "^20.0.0",
     "@angular/compiler-cli": "^20.0.0",
-    "@codingame/monaco-vscode-api": "^23.2.2",
-    "@codingame/monaco-vscode-editor-api": "^23.2.2",
-    "@codingame/monaco-vscode-files-service-override": "^23.2.2",
-    "@codingame/monaco-vscode-json-default-extension": "^23.2.2",
+    "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
     "@types/node": "~22.15.35",
-    "monaco-languageclient": "~10.4.0",
     "rolldown-vite": "~7.2.9",
     "shx": "~0.4.0",
-    "typescript": "~5.9.3",
-    "vite": "~7.2.6",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^23.2.2"
+    "typescript": "~5.9.3"
   },
   "overrides": {
     "vite": {

@@ -27,7 +27,7 @@
     "noUnusedLocals": true,
     // Disable type checking of declaration files, enable in packages where it makes sense if any
     "skipLibCheck": true,
-     // Disallow inconsistently-cased references to the same file
+    // Disallow inconsistently-cased references to the same file
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "experimentalDecorators": true,
