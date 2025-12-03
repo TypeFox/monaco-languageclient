@@ -8,7 +8,6 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import '@codingame/monaco-vscode-java-default-extension';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';

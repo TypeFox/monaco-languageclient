@@ -1,11 +1,4 @@
-<h2>Angular Monaco Editor demo with saving code to a mock HTTP server </h2>
-<div class="editor-container">
-    <monaco-angular-wrapper
-        [wrapperConfig]="wrapperConfig()"
-        [monacoEditorId]="editorId"
-        [editorInlineStyle]="editorInlineStyle()"
-        (onTextChanged)="onTextChanged($event)"
-    ></monaco-angular-wrapper>
-
-    <button class="save-button" (click)="save()">Save</button>
+<h2>Monaco Language Client Angular Client Example</h2>
+<div>
+    <div id="monaco-editor-root" class="monaco-editor"></div>
 </div>

@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
   "newProjectRoot": "projects",
   "projects": {
     "ng-mlc": {
@@ -11,48 +14,34 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-esbuild:application",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/ng-mlc",
-            "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.json",
-            // "plugins": ["./node_modules/@codingame/esbuild-import-meta-url-plugin/dist/esbuildImportMetaUrlPlugin.js"],
             "polyfills": [
               "zone.js"
             ],
-            "assets": [],
-            "styles": [],
-            "scripts": [],
-            "aot": false,
-            "optimization": false,
-            "sourceMap": true,
-            "namedChunks": false,
-            "extractLicenses": false,
-            "allowedCommonJsDependencies": [
-              "vscode-languageclient",
-              "vscode-languageserver-protocol",
-              "vscode-jsonrpc",
-              "vscode-oniguruma",
-              "vscode-textmate",
-              "@vscode/iconv-lite-umd"
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ]
           },
           "configurations": {
             "production": {
-              "aot": true,
-              "optimization": true,
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true
+              "outputHashing": "all"
             },
             "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-esbuild:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "ng-mlc:build:production"
@@ -63,13 +52,10 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
+        "test": {
+          "builder": "@angular/build:unit-test"
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
