@@ -20,7 +20,7 @@
     "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
-    "ts-loader": "~9.5.2",
+    "ts-loader": "~9.5.4",
     "webpack-cli": "~6.0.1"
   },
   "scripts": {

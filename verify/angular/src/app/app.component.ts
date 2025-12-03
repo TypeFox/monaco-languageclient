@@ -3,9 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-// this import is required beacuse @analogjs/vite-plugin-angular is instead of the angular builder
-import 'zone.js';
-
 import { type AfterViewInit, Component } from '@angular/core';
 
 // import { runExtendedClient } from '../../production/mlc-bundle.js';

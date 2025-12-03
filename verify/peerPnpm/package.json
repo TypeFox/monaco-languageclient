@@ -16,7 +16,7 @@
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^23.2.2"
   },
   "devDependencies": {
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.3"
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",

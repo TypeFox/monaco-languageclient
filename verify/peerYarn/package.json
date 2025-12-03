@@ -28,7 +28,7 @@
     "vscode-languageclient": "~9.0.1"
   },
   "devDependencies": {
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.3"
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",
