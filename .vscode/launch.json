@@ -23,6 +23,15 @@
           "internalConsoleOptions": "openOnSessionStart"
         },
         {
+          "name": "Launch Statemachine LS",
+          "type": "node",
+          "request": "launch",
+          "runtimeExecutable": "tsx",
+          "args": ["${workspaceRoot}/packages/examples/src/langium/statemachine/node/runLocal.ts"],
+          "cwd": "${workspaceRoot}/packages/examples",
+          "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
           "name": "Chrome",
           "type": "chrome",
           "request": "launch",

@@ -8,5 +8,5 @@
   "include": [
     "src/**/*",
     "test/**/*"
-  ]
+, "../examples/src/langium/statemachine/node/statemachine-server.ts"  ]
 }

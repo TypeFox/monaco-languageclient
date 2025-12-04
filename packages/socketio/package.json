@@ -69,7 +69,8 @@
   },
   "devDependencies": {
     "vscode-languageserver":"~9.0.1",
-    "monaco-languageclient": "~10.5.0"
+    "monaco-languageclient": "~10.5.0",
+    "monaco-languageclient-examples": "~2025.12.2-next.0"
   },
 
   "scripts": {
