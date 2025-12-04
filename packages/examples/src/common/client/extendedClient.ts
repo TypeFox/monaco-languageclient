@@ -61,7 +61,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
                     },
                     reportStatus: true
                 }
-            },
+            }
         },
         clientOptions: {
             documentSelector: [lsConfig.languageId],

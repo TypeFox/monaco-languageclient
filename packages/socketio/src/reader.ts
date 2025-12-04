@@ -9,7 +9,7 @@ import { AbstractMessageReader, type DataCallback, type Disposable, MessageReade
 
 export class SocketIoMessageReader extends AbstractMessageReader implements MessageReader {
     protected readonly socket: Socket | SocketClient;
-    protected callback: DataCallback | undefined;
+    protected callbacks = new Set<DataCallback>();
 
     constructor(socket: Socket | SocketClient) {
         super();
@@ -27,24 +27,21 @@ export class SocketIoMessageReader extends AbstractMessageReader implements Mess
     }
 
     listen(callback: DataCallback): Disposable {
-        if (this.callback) {
-            throw new Error('A listener is already set.');
-        }
-        this.callback = callback;
+        this.callbacks.add(callback);
         return {
             dispose: () => {
-                this.callback = undefined;
+                this.callbacks.forEach(callback => this.callbacks.delete(callback));
             }
         };
     }
 
     protected onMessage(data: string | object): void {
-        if (!this.callback) {
+        if (this.callbacks.size === 0) {
             return;
         }
         try {
             const message = typeof data === 'string' ? JSON.parse(data) : data;
-            this.callback(message);
+            this.callbacks.forEach(callback => callback(message));
         } catch (e) {
             const error = e instanceof Error ? e : new Error(`Failed to parse message: ${e}`);
             this.fireError(error);

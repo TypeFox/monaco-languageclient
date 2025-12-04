@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2025.11.3-next.0] - unreleased
+
+- Make further examples openly available
+
 ## [2025.11.2] - 2025-11-26
 
 - Updated to `monaco-languageclient@10.4.0` and `@typefox/monaco-editor-react@7.4.0`.
