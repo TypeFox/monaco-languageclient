@@ -10,6 +10,6 @@ const socketIoServerStatemachineLs = new SocketIoServer({
     wsPort: 30003,
     corsPort: 20001,
     logLevel: 1,
-    socketHandler: runStatemachineLanguageServer
+    messageTransportHandler: runStatemachineLanguageServer
 });
 socketIoServerStatemachineLs.start();

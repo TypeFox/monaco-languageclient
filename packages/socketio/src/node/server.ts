@@ -3,15 +3,17 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ConsoleLogger, LogLevel, type LogLevelValue } from '../logger.js';
 import { Server, type Socket } from 'socket.io';
+import { SocketIoMessageReader, SocketIoMessageWriter, type MessageTransports } from 'vscode-socketio-jsonrpc';
+import { ConsoleLogger, LogLevel, type LogLevelValue } from '../logger.js';
 
 export type SocketIoServerConfig = {
     protocol?: 'http' | 'https';
     hostname: string;
     wsPort: number;
     corsPort: number;
-    socketHandler?: (socket: Socket) => void;
+    messageTransportHandler?: (messageTransports: MessageTransports) => void;
+    socketHandler?: (socketHandler: Socket) => void;
     logLevel?: LogLevelValue | number;
 };
 
@@ -21,6 +23,7 @@ export class SocketIoServer {
     private config: SocketIoServerConfig;
     private io?: Server;
     private socket?: Socket;
+    private messageTransports?: MessageTransports;
 
     constructor(config: SocketIoServerConfig) {
         this.config = config;
@@ -56,7 +59,9 @@ export class SocketIoServer {
                 this.logger.debug(`disconnect ${socket.id}`);
             });
 
-            this.config.socketHandler?.(socket);
+            this.messageTransports = createMessageTransports(socket);
+            this.config.socketHandler?.(this.socket);
+            this.config.messageTransportHandler?.(this.messageTransports);
         });
     }
 
@@ -77,4 +82,16 @@ export class SocketIoServer {
     getSocket(): Socket | undefined {
         return this.socket;
     }
+
+    getMessageTransports(): MessageTransports | undefined {
+        return this.messageTransports;
+    }
 }
+
+export const createMessageTransports = (socket: Socket): MessageTransports => {
+    return {
+        reader: new SocketIoMessageReader(socket),
+        writer: new SocketIoMessageWriter(socket)
+    }
+};
+

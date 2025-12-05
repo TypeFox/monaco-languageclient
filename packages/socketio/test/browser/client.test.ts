@@ -70,10 +70,10 @@ describe.sequential('socketio', () => {
         await expect(async () => await languageClientWrapper.start()).not.toThrowError();
 
         languageClientWrapper.dispose();
-        socket?.disconnect();
+        socket.disconnect();
     });
 
-    test.only('Test Commanding Dummy Language Server', async () => {
+    test('Test Commanding Dummy Language Server', async () => {
         const socketIoClient = new SocketIoClient({
             url: 'ws://localhost:30200',
             logLevel: LogLevel.Debug
@@ -111,7 +111,7 @@ describe.sequential('socketio', () => {
         socket.disconnect();
     });
 
-    test.only('Test Commanding Statemachine Language Server', async () => {
+    test('Test Commanding Statemachine Language Server', async () => {
         const socketIoClient = new SocketIoClient({
             url: 'ws://localhost:30200',
             logLevel: LogLevel.Debug

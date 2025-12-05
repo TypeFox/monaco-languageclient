@@ -4,11 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { Socket } from 'socket.io';
-import { ConsoleLogger, LogLevel } from 'vscode-socketio-jsonrpc';
+import { ConsoleLogger, linkMessageTransports, LogLevel } from 'vscode-socketio-jsonrpc';
 import { SocketIoServer } from 'vscode-socketio-jsonrpc/node';
 import type { CommandCallback, CommandStatus, LsCommandArgs } from './command-args.js';
 import { runDummyLanguageServer } from './ls/dummy.js';
-import { runStatemachineLanguageServer } from 'monaco-languageclient-examples/node';
+import { getLocalDirectory, runStatemachineLanguageServer } from 'monaco-languageclient-examples/node';
+import { createServerProcess } from '../../src/node/external.js';
+import { resolve } from 'node:path';
 
 const logger = new ConsoleLogger(LogLevel.Debug);
 
@@ -18,15 +20,36 @@ const runCommanding = async () => {
         wsPort: 30102,
         corsPort: 20101,
         logLevel: 1,
-        socketHandler: runDummyLanguageServer
+        messageTransportHandler: runDummyLanguageServer
     });
     const socketIoServerStatemachineLs = new SocketIoServer({
         hostname: 'localhost',
         wsPort: 30103,
         corsPort: 20101,
         logLevel: 1,
-        socketHandler: runStatemachineLanguageServer
+        messageTransportHandler: runStatemachineLanguageServer
     });
+
+    const baseDir = resolve(getLocalDirectory(import.meta.url));
+    const relativeDir = '../../../examples/dist/langium/statemachine/node/statemachine-server.js';
+    const processRunPath = resolve(baseDir, relativeDir);
+    const messageTransports = createServerProcess('External Statemachine Language Server', 'node', [processRunPath, '--stdio']);
+    if (messageTransports !== undefined) {
+        const socketIoServerPassthrough = new SocketIoServer({
+            hostname: 'localhost',
+            wsPort: 30003,
+            corsPort: 20001,
+            logLevel: 1,
+            messageTransportHandler: (myMessageTransports) => {
+                linkMessageTransports(myMessageTransports, messageTransports, {
+                    logger: logger
+                });
+            }
+        });
+        socketIoServerPassthrough.start();
+    } else {
+        logger.error('Unable to spawn local Language Server process.');
+    }
 
     const commandHandler = (socket: Socket) => {
         let message: string;
@@ -62,9 +85,9 @@ const runCommanding = async () => {
             status = 'OK';
             let message = 'Language server was stopped.';
             if (commandArgs.ls === 'dummy') {
-                await socketIoServerDummyLs?.shutdown();
+                await socketIoServerDummyLs.shutdown();
             } else if (commandArgs.ls === 'statemachine') {
-                await socketIoServerStatemachineLs?.shutdown();
+                await socketIoServerStatemachineLs.shutdown();
             } else {
                 status = 'ERROR';
                 message = 'Unknown language server.';
