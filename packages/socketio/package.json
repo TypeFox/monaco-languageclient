@@ -76,6 +76,7 @@
   "scripts": {
     "clean": "shx rm -fr ./lib *.tsbuildinfo",
     "compile": "tsgo --build tsconfig.src.json",
+    "test:server:socketio": "tsx test/helper/ls-tester.ts",
     "build:msg": "echo Building vscode-sockeio-jsonrpc:",
     "build": "npm run build:msg && npm run clean && npm run compile"
   }

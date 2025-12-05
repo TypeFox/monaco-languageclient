@@ -3,22 +3,19 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Socket } from 'socket.io';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { createConnection, DidChangeConfigurationNotification, type InitializeParams, type InitializeResult, ProposedFeatures, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver/node.js';
-import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
+import type { MessageTransports } from 'vscode-socketio-jsonrpc';
 
 /**
  * Derived from:
  * https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
  */
-export const runDummyLanguageServer = (socket: Socket) => {
-    const reader = new SocketIoMessageReader(socket);
-    const writer = new SocketIoMessageWriter(socket);
+export const runDummyLanguageServer = (messageTransports: MessageTransports) => {
 
     // Create a connection for the server, using socket.io directly
     // Also include all preview / proposed LSP features.
-    const connection = createConnection(ProposedFeatures.all, reader, writer);
+    const connection = createConnection(ProposedFeatures.all, messageTransports.reader, messageTransports.writer);
 
     // Create a simple text document manager.
     const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);

@@ -43,14 +43,18 @@ export const runStatemachine = async () => {
     });
     const editorApp = new EditorApp(appConfig.editorAppConfig);
 
-    // perform global monaco-vscode-api init
-    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.start();
+    try {
+        // perform global monaco-vscode-api init
+        const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+        await apiWrapper.start();
 
-    // init language client
-    const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
-    await lcWrapper.start();
+        // init language client
+        const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+        await lcWrapper.start();
 
-    // run editorApp
-    await editorApp.start(htmlContainer);
+        // run editorApp
+        await editorApp.start(htmlContainer);
+    } catch (error) {
+        console.error('Error while starting the Statemachine editor:', error);
+    }
 };
