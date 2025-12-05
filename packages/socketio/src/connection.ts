@@ -19,17 +19,9 @@ export type MessageTransports = {
 };
 
 export interface LinkMessageTransportsConfig {
-    logMessages?: boolean;
     requestMessageHandler?: (message: RequestMessage) => RequestMessage;
     responseMessageHandler?: (message: ResponseMessage) => ResponseMessage;
     logger?: Logger;
-};
-
-const logMessage = (logMessage: boolean, messagePrefix: string, message: Message, logger?: Logger): void => {
-    if (logMessage) {
-        logger?.info(messagePrefix);
-        logger?.info(JSON.stringify(message.jsonrpc));
-    }
 };
 
 const processMessage = (reader: MessageReader, writer: MessageWriter, linkConfig?: LinkMessageTransportsConfig): void => {
@@ -41,10 +33,13 @@ const processMessage = (reader: MessageReader, writer: MessageWriter, linkConfig
                     const initializeParams = output.params as InitializeParams;
                     initializeParams.processId = process.pid;
                 }
-                logMessage(linkConfig.logMessages ?? false, `Request: ${output.method}`, output, linkConfig.logger);
+                linkConfig.logger?.info(`Request: ${output.method}`);
+                linkConfig.logger?.info(JSON.stringify(output.jsonrpc));
+
                 output = linkConfig.requestMessageHandler?.(output) ?? output;
             } else if (Message.isResponse(output)) {
-                logMessage(linkConfig.logMessages ?? false, 'Response', output, linkConfig.logger);
+                linkConfig.logger?.info(`Response: ${output.result ?? ''}`);
+                linkConfig.logger?.info(JSON.stringify(output.jsonrpc));
                 output = linkConfig.responseMessageHandler?.(output) ?? output;
             }
         }

@@ -6,7 +6,7 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
-import { createUrl, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
+import { createUrl, Deferred, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
 import type { Socket } from 'socket.io-client';
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
@@ -55,19 +55,19 @@ export class LanguageClientWrapper {
             this.logger?.info('startLanguageClientConnection: monaco-languageclient already running!');
             return Promise.resolve();
         }
+        const deferred = new Deferred<void>();
 
-        return new Promise<void>((resolve, reject) => {
-            const conConfig = this.languageClientConfig.connection;
-            const conOptions = conConfig.options;
+        const conConfig = this.languageClientConfig.connection;
+        const conOptions = conConfig.options;
 
-            if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'SocketIoDirect') {
-                const webSocket = (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'SocketIoDirect') ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
-                this.initMessageTransportWebSocket(webSocket, resolve, reject);
-            } else {
-                // init of worker and start of languageclient can be handled directly, because worker available already
-                this.initMessageTransportWorker(conOptions, resolve, reject);
-            }
-        });
+        if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'SocketIoDirect') {
+            const webSocket = (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'SocketIoDirect') ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
+            this.initMessageTransportWebSocket(webSocket, deferred.resolve, deferred.reject);
+        } else {
+            // init of worker and start of languageclient can be handled directly, because worker available already
+            this.initMessageTransportWorker(conOptions, deferred.resolve, deferred.reject);
+        }
+        await deferred.promise;
     }
 
     /**
