@@ -1,30 +1,41 @@
 {
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=20.10.0",
     "npm": ">=10.2.3"
   },
   "scripts": {
+    "clean": "shx rm -fr .next dist lib bundle *.tsbuildinfo",
     "verify": "npm install && npm run dev",
     "verify:ci": "npm install && npm run build -d",
-    "dev": "npm run build:worker && next dev -p 8083",
-    "dev:turbo": "npm run build:worker &&next dev --turbopack -p 8083",
-    "build": "npm run build:worker && next build",
-    "build:worker": "npx esbuild --format=esm --bundle ./app/langium-dsl/worker/langium-server.ts --outdir=public/workers",
-    "build:tsc": "tsc --build tsconfig.json",
-    "watch:tsc": "tsc --build tsconfig.json --watch",
-    "start": "next start",
-    "clean": "shx rm -fr dist .next *.tsbuildinfo"
+    "dev": "npm run bundle && npm run build:tsc && npm run dev:next",
+    "dev:next": "next dev -p 8083",
+    "dev:vite": "npm run bundle:config && vite --config vite.config.ts",
+    "build": "npm run bundle && npm run build:tsc && next build",
+    "bundle": "npm run bundle:config && npm run bundle:editorWorker && npm run bundle:extHostWorker && npm run bundle:extensionService && npm run bundle:textmateWorker",
+    "bundle:config": "vite --config vite.config.bundle.ts build",
+    "bundle:editorWorker": "vite --config vite.config.editorWorker.ts build",
+    "bundle:extHostWorker": "vite --config vite.config.extHostWorker.ts build",
+    "bundle:extensionService": "vite --config vite.config.extensionService.ts build",
+    "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build",
+    "build:tsc": "tsgo --build ",
+    "watch:tsc": "tsgo --build --watch",
+    "start": "next start"
   },
-  "type": "module",
   "dependencies": {
     "@codingame/monaco-vscode-api": "^25.1.2",
+    "@codingame/monaco-vscode-editor-api": "^25.1.2",
+    "@codingame/monaco-vscode-extensions-service-override": "^25.1.2",
     "@codingame/monaco-vscode-keybindings-service-override": "^25.1.2",
+    "@codingame/monaco-vscode-textmate-service-override": "^25.1.2",
+    "@codingame/monaco-vscode-typescript-basics-default-extension": "^25.1.2",
+    "@codingame/monaco-vscode-typescript-language-features-default-extension": "^25.1.2",
+    "@codingame/monaco-vscode-views-service-override": "^25.1.2",
     "@typefox/monaco-editor-react": "~7.7.0",
     "langium": "~4.2.0",
     "monaco-languageclient": "~10.7.0",
-    "monaco-languageclient-examples": "^2026.2.1",
-    "next": "~15.5.12",
+    "next": "~16.1.6",
     "react": "~19.2.4",
     "react-dom": "~19.2.4",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^25.1.2",
@@ -32,11 +43,11 @@
     "vscode-languageserver": "~9.0.1"
   },
   "devDependencies": {
-    "@types/node": "~24.10.10",
-    "@types/react": "~19.2.11",
+    "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
+    "@typescript/native-preview": "~7.0.0-dev.20260205.1",
     "@types/react-dom": "~19.2.3",
     "shx": "~0.4.0",
-    "typescript": "~5.9.3"
+    "vite": "~8.0.0-beta.13"
   },
   "volta": {
     "node": "24.13.0",
