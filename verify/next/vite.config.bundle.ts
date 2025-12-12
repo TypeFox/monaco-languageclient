@@ -3,27 +3,28 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
-import * as path from 'node:path';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 
-/// <reference lib="rolldown-vite/config" />
-
-export const config = defineConfig({
+const config = defineConfig({
     build: {
-        rollupOptions: {
-            input: {
-                index: path.resolve(__dirname, 'index.html'),
-            },
+        assetsInlineLimit: 0,
+        lib: {
+            entry: path.resolve(__dirname, './app/langium-dsl/config/extendedConfig.ts'),
+            name: 'extendedConfig',
+            fileName: () => 'extendedConfig.js',
+            formats: ['es'],
+            cssFileName: 'extendedConfig'
         },
-        outDir: path.resolve(__dirname, 'production')
+        copyPublicDir: true,
+        rolldownOptions: {
+            external: ['react', 'react-dom'],
+            platform: 'browser'
+        },
+        outDir: path.resolve(__dirname, './bundle/langium-dsl'),
+        emptyOutDir: true
     },
     optimizeDeps: {
-        esbuildOptions: {
-            plugins: [
-                importMetaUrlPlugin
-            ]
-        },
         include: [
             'langium',
             'langium/lsp',
@@ -39,20 +40,11 @@ export const config = defineConfig({
         ]
     },
     worker: {
-        format: 'es'
-    },
-    server: {
-        cors: {
-            origin: '*'
-        },
-        headers: {
-            'Cross-Origin-Opener-Policy': 'same-origin',
-            'Cross-Origin-Embedder-Policy': 'require-corp',
-        },
-        watch: {
-            ignored: [
-                '**/.chrome/**/*'
-            ]
+        format: 'es',
+        rolldownOptions: {
+            output: {
+                entryFileNames: 'assets/workers/[name].js'
+            }
         }
     }
 });

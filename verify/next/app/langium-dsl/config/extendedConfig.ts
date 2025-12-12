@@ -1,15 +1,22 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
+ * Copyright (c) 2025 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
 import type { IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
-import type { ExampleAppConfig } from 'monaco-languageclient-examples';
+import type { MonacoEditorProps } from '@typefox/monaco-editor-react';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 
-export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> => {
+export type ExampleAppConfig = {
+    vscodeApiConfig: MonacoVscodeApiConfig;
+    languageClientConfig: LanguageClientConfig;
+    editorAppConfig: EditorAppConfig;
+    MonacoEditorReactComp: React.FC<MonacoEditorProps>;
+};
+
+export const setupLangiumClientExtended = async (worker: Worker): Promise<ExampleAppConfig> => {
 
     // perform all imports dynamically
     const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
@@ -19,6 +26,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const { Uri } = (await import('vscode'));
     const { configureDefaultWorkerFactory } = (await import('monaco-languageclient/workerFactory'));
     const { BrowserMessageReader, BrowserMessageWriter } = (await import('vscode-languageclient/browser.js'));
+    (await import('@codingame/monaco-vscode-typescript-language-features-default-extension'));
 
     // base configurration
     const overallConfigType: OverallConfigType = 'extended';
@@ -40,8 +48,14 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const workspaceUri = Uri.file('/workspace');
     const langiumGrammarLangiumUri = Uri.file('/workspace/langium-grammar.langium');
     const langiumTypesLangiumUri = Uri.file('/workspace/langium-types.langium');
+    const tsCodeUri = Uri.file('/workspace/hello.ts');
     const fileSystemProvider = new InMemoryFileSystemProvider();
     const textEncoder = new TextEncoder();
+
+    const code = `const takesString = (x: string) => {};
+
+// you should see an error marker in the next line
+takesString(0);`;
 
     const options: IFileWriteOptions = {
         atomic: false,
@@ -52,15 +66,16 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     await fileSystemProvider.mkdir(workspaceUri);
     await fileSystemProvider.writeFile(langiumGrammarLangiumUri, textEncoder.encode(exampleLangium), options);
     await fileSystemProvider.writeFile(langiumTypesLangiumUri, textEncoder.encode(langiumTypesLangium), options);
+    await fileSystemProvider.writeFile(tsCodeUri, textEncoder.encode(code), options);
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const editorAppConfig: EditorAppConfig = {};
-
-    const workerFile = '/workers/langium-server.js';
-    const worker = new Worker(workerFile, {
-        type: 'module',
-        name: 'Langium LS',
-    });
+    // const workerUrl = new URL('../worker/langium-server.js', import.meta.url);
+    // console.log('Worker URL:', workerUrl);
+    // const worker = new Worker(workerUrl, {
+    //     type: 'module',
+    //     name: 'Langium LS',
+    // });
     const reader = new BrowserMessageReader(worker);
     const writer = new BrowserMessageWriter(worker);
 
@@ -105,6 +120,9 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
                 htmlElement?.append(htmlContainer);
             },
             viewsInitFunc: viewsInit
+        },
+        advanced: {
+            enableExtHostWorker: true
         },
         userConfiguration: {
             json: JSON.stringify({
@@ -156,9 +174,22 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
         }
     };
 
+    const comp = await import('@typefox/monaco-editor-react');
+
     return {
         editorAppConfig,
         vscodeApiConfig,
-        languageClientConfig
+        languageClientConfig,
+        MonacoEditorReactComp: comp.MonacoEditorReactComp
     };
 };
+
+export const openDocument = async (uri: string) => {
+    const { workspace } = (await import('vscode'));
+    await workspace.openTextDocument(uri);
+}
+
+export const showDocument = async (uri: string) => {
+    const { window, Uri } = (await import('vscode'));
+    await window.showTextDocument(Uri.file(uri));
+}
