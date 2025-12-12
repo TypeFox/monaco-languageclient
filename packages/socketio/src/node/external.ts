@@ -17,6 +17,9 @@ export const createServerProcess = (serverName: string, command: string, args?: 
             console.error(`${serverName} Server: ${data}`)
         );
     }
+    serverProcess.stdout?.on('data', data =>
+        console.info(`${serverName} Server: ${data}`)
+    );
     const disposeMessageTransports = () => {
         messageTransports?.reader.dispose();
         messageTransports?.writer.dispose();

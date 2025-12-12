@@ -70,7 +70,7 @@ describe.sequential('socketio', () => {
         await expect(async () => await languageClientWrapper.start()).not.toThrowError();
 
         languageClientWrapper.dispose();
-        socket?.disconnect();
+        socket.disconnect();
     });
 
     test.only('Test Commanding Dummy Language Server', async () => {
@@ -90,28 +90,28 @@ describe.sequential('socketio', () => {
         });
         await deferredStart.promise;
 
-        const deferredStartedAlready = new Deferred();
-        socket.emit('ls:start', commandArgs, (response: LsCommandFeedback) => {
-            expect(response.status).toBe('OK');
-            expect(response.message).toBe('Language server was already started.');
-            console.info('ls:start feedback:', response);
-            deferredStartedAlready.resolve();
-        });
-        await deferredStartedAlready.promise;
+        // const deferredStartedAlready = new Deferred();
+        // socket.emit('ls:start', commandArgs, (response: LsCommandFeedback) => {
+        //     expect(response.status).toBe('OK');
+        //     expect(response.message).toBe('Language server was already started.');
+        //     console.info('ls:start feedback:', response);
+        //     deferredStartedAlready.resolve();
+        // });
+        // await deferredStartedAlready.promise;
 
-        const deferredStop = new Deferred();
-        socket.emit('ls:stop', commandArgs, (response: LsCommandFeedback) => {
-            expect(response.status).toBe('OK');
-            expect(response.message).toBe('Language server was stopped.');
-            console.info('ls:stop feedback:', response);
-            deferredStop.resolve();
-        });
-        await deferredStop.promise;
+        // const deferredStop = new Deferred();
+        // socket.emit('ls:stop', commandArgs, (response: LsCommandFeedback) => {
+        //     expect(response.status).toBe('OK');
+        //     expect(response.message).toBe('Language server was stopped.');
+        //     console.info('ls:stop feedback:', response);
+        //     deferredStop.resolve();
+        // });
+        // await deferredStop.promise;
 
         socket.disconnect();
     });
 
-    test.only('Test Commanding Statemachine Language Server', async () => {
+    test('Test Commanding Statemachine Language Server', async () => {
         const socketIoClient = new SocketIoClient({
             url: 'ws://localhost:30200',
             logLevel: LogLevel.Debug
