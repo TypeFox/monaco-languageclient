@@ -2,7 +2,7 @@
 
 ## What is the Monaco Language Client?
 
-The Monaco Language Client is a TypeScript library allowing to use the Language Server Protocol (LSP) directly with the monaco-editor. This lets it utilize language servers to extend the monoaco-editor's existing language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more, directly in the browser.
+The Monaco Language Client is a TypeScript library that allows you to use the Language Server Protocol (LSP) directly with the monaco-editor. This lets you utilize language servers to extend the monoaco-editor's existing language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more; directly in the browser.
 
 ## Key Concepts
 
@@ -11,7 +11,7 @@ To give some background, the monaco-languageclient builds on two main technologi
 - Language Server Protocol (LSP) and `vscode-languageclient`
 - `monaco-editor` and `@codingame/monaco-vscode-api`
 
-We'll briefly explain each below.
+We'll explain each below.
 
 ### Language Server Protocol (LSP) and vscode-languageclient
 
@@ -23,7 +23,9 @@ The Language Server Protocol is a standard that defines how development tools ca
 - **Hover information** - Documentation and type information
 - **Code formatting** - Automatic code formatting
 
-The `vscode-languageclient` is the library usually supplying client side support for the language server protocol for VSCode and its extensions. `monaco-languageclient` wraps this library directly and makes it available in the browser. It is made possible by the stack described in the next sub-section.
+and more, as defined by the LSP specification. Most of the features you're accustomed to in a modern IDE for a language are made possible through the LSP.
+
+The `vscode-languageclient` is the most frequently used library to provide client side support for the language server protocol for VSCode and its extensions. `monaco-languageclient` wraps this library and makes it available in the browser. This feat is made possible by the stack described in the next sub-section about the monaco-editor & @codingame/monaco-vscode-api.
 
 ## monaco-editor and @codingame/monaco-vscode-api
 
@@ -33,7 +35,7 @@ This is where the `@codingame/monaco-vscode-api` comes in. It supplies a modular
 
 ### How the Monaco Language Client Works
 
-The Monaco Language Client acts as a communication layer between the Monaco Editor and one or many language servers. This allows it to:
+The Monaco Language Client acts as a communication layer between the Monaco Editor and one or more language servers. This allows it to:
 
 1. **Receive events** from the Monaco Editor (typing, cursor movement, etc.)
 2. **Translate these events** into LSP messages
@@ -50,26 +52,26 @@ The Monaco Language Client supports two main architectural patterns:
 In this configuration it's implied that the language server is running as a server on a backend (Node.js, Python, etc.) and communicates with the editor in the browser via WebSockets.
 
 ```shell
-Web Browser                     Server
+    Web Browser                        Server
 ┌─────────────────┐             ┌──────────────────┐
 │ Monaco Editor   │             │ Language Server  │
-│ ↕               │             │ (Node.js/Python/ │
-│ Language Client │ ←WebSocket→ │ Java/etc.)       │
+│        ↕        │ ←WebSocket→ │ (Node.js/Python/ │
+│ Language Client │             │ Java/etc.)       │
 └─────────────────┘             └──────────────────┘
 ```
 
 ### Web Worker Communication
 
-In this configuration, the language server runs in a Web Worker within the browser itself. This is useful for language servers that can be compiled to WebAssembly or plain JavaScript. [Langium](https://langium.org/), for example, can generate language servers that run purely in Web Workers.
+In this configuration, the language server runs in a Web Worker within the browser itself. This is useful for language servers that can be compiled to WebAssembly or plain JavaScript. [Langium](https://langium.org/), for example, can generate language servers that run purely in Web Workers in this fashion.
 
 ```shell
-Web Browser
+               Web Browser
 ┌────────────────────────────────────────┐
-│ Main Thread            Web Worker      │
+│     Main Thread           Web Worker   │
 │ ┌─────────────────┐    ┌─────────────┐ │
 │ │ Monaco Editor   │    │ Language    │ │
-│ │ ↕               │    │ Server      │ │
-│ │ Language Client │ ←→ │ (WASM/JS)   │ │
+│ │        ↕        │ ←→ │ Server      │ │
+│ │ Language Client │    │ (WASM/JS)   │ │
 │ └─────────────────┘    └─────────────┘ │
 └────────────────────────────────────────┘
 ```
@@ -87,9 +89,9 @@ Uses `@codingame/monaco-vscode-api` to provide VSCode-like services and function
 - Rich VSCode services integration
 - Ability to use VSCode Web extensions
 
-This is the recommended mode for _most_ use cases. If you're not sure which mode to use, start with the extended mode.
+This is best for applications that want to provide VSCode-like functionality in the browser.
 
-**Best for**: Applications that want VSCode-like functionality in the browser.
+_This is the recommended mode for most use cases._ If you're not sure which mode to use, start with the extended mode.
 
 ### Classic Mode
 
@@ -100,13 +102,15 @@ Uses a standalone Monaco Editor with language client features added on top. This
 - Simpler integration
 - Direct Monaco Editor API access
 
-However, it lacks advanced features and services provided by the extended mode, and in _most_ cases is not recommended unless you have a specific need for it.
+This is best for applications that need language server features but want to keep things simple, and do not require any or some elements of the VSCode API.
 
-**Best for**: Applications that need language server features but want to keep things simple.
+However, keep in mind this mode lacks advanced features and services provided by the extended mode, and in _most_ cases is _not_ recommended unless you have a specific need for it.
+
+Generally speaking, it's a good idea to start with extended mode until you have a specific reason or justification to switch to classic mode.
 
 ## When to Use the Monaco Language Client
 
-The Monaco Language Client is ideal when you need to:
+Overall, the Monaco Language Client is ideal when you need to:
 
 - **Build web-based IDEs or editors** with language support
 - **Add intelligent language features** to existing Monaco Editor integrations
@@ -116,4 +120,4 @@ The Monaco Language Client is ideal when you need to:
 
 ## What's Next?
 
-Ready to get started? Check out our [Installation Guide](./installation.md) to set up the monaco-languageclient in your project, or jump to [Basic Usage](./guides/getting-started.md) to start learning how to get started with simple examples.
+Ready to get started? Check out our [Installation Guide](./installation.md) to set up the `monaco-languageclient` in your project, or jump to [Basic Usage](./guides/getting-started.md) to start learning how to get started with simple examples.

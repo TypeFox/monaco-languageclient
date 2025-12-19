@@ -12,7 +12,6 @@ import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { LangiumMonarchContent } from '../../langium/langium-dsl/config/langium.monarch.js';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
     const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
@@ -79,10 +78,6 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
                 text: helloCode,
                 uri: helloUri.path
             }
-        },
-        languageDef: {
-            monarchLanguage: LangiumMonarchContent,
-            languageExtensionConfig: { id: 'langium' }
         }
     };
 
