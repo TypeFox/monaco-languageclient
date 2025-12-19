@@ -170,22 +170,5 @@
     "@typescript-eslint/prefer-namespace-keyword": "error",
     "@typescript-eslint/strict-boolean-expressions": "error",
     "@typescript-eslint/triple-slash-reference": "error",
-    // jsPlugins: currently unstable
-    // "header/header": [2, "block", {
-    //   "pattern": "MIT License|DO NOT EDIT MANUALLY!"
-    // }],
-    // "@stylistic/indent": "error",
-    // "@stylistic/type-annotation-spacing": "error"
-  },
-  "files": [
-    "**/src/**/*.ts",
-    "**/src/**/*.tsx",
-    "**/test/**/*.ts",
-    "**/test/**/*.tsx"
-  ],
-  // jsPlugins: currently unstable
-  // "jsPlugins": [
-  //   "eslint-plugin-header",
-  //   "@stylistic/eslint-plugin"
-  // ]
+  }
 }

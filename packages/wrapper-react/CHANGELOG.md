@@ -2,10 +2,16 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
+## [7.5.0] - 2025-12-22
+
+- Updated all `@codingame/monaco-vscode` packages to `24.1.1`.
+- Updated to `monaco-languageclient@10.5.0`.
+
 ## [7.4.0] - 2025-11-26
 
 - Use flags to trigger behaviour [#997](https://github.com/TypeFox/monaco-languageclient/pull/997).
 - Updated all `@codingame/monaco-vscode` packages to `23.2.2`.
+- Updated to `monaco-languageclient@10.4.0`.
 - Use oxlint for most linting now. eslint is only kept for currently unsupported rules or eslint plugins.
 
 ## [7.3.0] - 2025-11-16
