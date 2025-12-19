@@ -25,7 +25,6 @@
     "@typescript-eslint/eslint-plugin": "~8.50.0",
     "@typescript-eslint/parser": "~8.50.0",
     "@typescript/native-preview": "~7.0.0-dev.20251219.1",
-    "@vitejs/plugin-react": "~5.1.2",
     "@vitest/browser-playwright": "~4.0.16",
     "@vitest/coverage-v8": "~4.0.16",
     "editorconfig": "~3.0.1",
