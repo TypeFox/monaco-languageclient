@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from 'monaco-languageclient/common';
-import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
 import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
 
 describe('WorkerFactory Tests', () => {
@@ -15,8 +15,10 @@ describe('WorkerFactory Tests', () => {
 
         useWorkerFactory({});
 
-        const getWorker = () => getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
-        expect(getWorker).toThrowError('Unimplemented worker TextEditorWorker (test)');
+        const worker = getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
+        expect(worker).toBeUndefined();
+        const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'TextEditorWorker');
+        expect(workerUrl).toBeUndefined();
     });
 
     test('useWorkerFactory: TextEditorWorker', async () => {
@@ -24,7 +26,7 @@ describe('WorkerFactory Tests', () => {
 
         useWorkerFactory({
             workerLoaders: {
-                TextEditorWorker: () => new Worker(
+                editorWorkerService: () => new Worker(
                     new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
                     { type: 'module' }
                 )
@@ -32,10 +34,10 @@ describe('WorkerFactory Tests', () => {
             logger
         });
 
-        const getWorker = () => getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
-        const workerFunc = getWorker();
-        expect(workerFunc).toBeDefined();
-        expect(workerFunc).toBeInstanceOf(Worker);
+        const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'editorWorkerService');
+        expect(workerUrl).contains('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js?worker_file&type=module');
+        const workerOptions = getEnhancedMonacoEnvironment().getWorkerOptions?.('test', 'editorWorkerService');
+        expect(workerOptions).toEqual({ type: 'module' });
     });
 
 });

@@ -19,12 +19,12 @@
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
-    "@codingame/monaco-vscode-api": "^23.2.2",
-    "@codingame/monaco-vscode-files-service-override": "^23.2.2",
-    "@codingame/monaco-vscode-json-default-extension": "^23.2.2",
-    "monaco-languageclient": "~10.4.0",
+    "@codingame/monaco-vscode-api": "^24.1.1",
+    "@codingame/monaco-vscode-files-service-override": "^24.1.1",
+    "@codingame/monaco-vscode-json-default-extension": "^24.1.1",
+    "monaco-languageclient": "~10.5.0-next.0",
     "rxjs": "~7.8.2",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^23.2.2",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^24.1.1",
     "zone.js": "^0.16.0"
   },
   "devDependencies": {

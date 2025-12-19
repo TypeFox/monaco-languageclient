@@ -75,6 +75,7 @@ export const configureClassicWorkerFactory = (logger?: Logger) => {
     const defaultworkerLoaders = defineDefaultWorkerLoaders();
     // remove textmate worker as it is not compatible with classic mode
     defaultworkerLoaders.TextMateWorker = undefined;
+    defaultworkerLoaders.extensionHostWorkerMain = undefined;
     useWorkerFactory({
         workerLoaders: defaultworkerLoaders,
         logger
