@@ -14,6 +14,7 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import { createDefaultWorkspaceContent, disableElement } from '../common/client/utils.js';
+import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 
 export const runTsWrapper = async () => {
     disableElement('button-diff', true);
@@ -61,11 +62,15 @@ takesNumber(0);`;
             htmlContainer
         },
         logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride()
-        },
+        // demonstrate that you can enable the ext host worker manually
         advanced: {
-            enableExtHostWorker: true,
+            enableExtHostWorker: false,
+        },
+        serviceOverrides: {
+            ...getKeybindingsServiceOverride(),
+            ...getExtensionServiceOverride({
+                enableWorkerExtensionHost: true
+            })
         },
         userConfiguration: {
             json: JSON.stringify({
