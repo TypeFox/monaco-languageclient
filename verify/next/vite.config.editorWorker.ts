@@ -8,28 +8,22 @@ import { defineConfig } from 'vite';
 
 const config = defineConfig({
     build: {
-        assetsInlineLimit: 0,
+        assetsInlineLimit: 1024 * 1024 * 128,
         lib: {
-            entry: path.resolve(__dirname, './app/langium-dsl/config/extendedConfig.ts'),
-            name: 'extendedConfig',
-            fileName: () => 'extendedConfig.js',
+            entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-api/workers/editor.worker.js'),
+            name: 'editor.worker',
+            fileName: () => 'editor.worker.js',
             formats: ['es'],
-            cssFileName: 'extendedConfig'
+            cssFileName: 'editor.worker'
         },
-        copyPublicDir: false,
         rolldownOptions: {
-            external: [
-                'react',
-                'react-dom',
-                'vscode-oniguruma',
-                'vscode-textmate'
-            ],
             output: {
                 entryFileNames: '[name].js',
-                assetFileNames: '[name][extname]'
+                assetFileNames: '[name][extname]',
+                inlineDynamicImports: true
             }
         },
-        outDir: path.resolve(__dirname, 'bundle/langium-dsl/config'),
+        outDir: path.resolve(__dirname, 'bundle/editorWorker'),
         emptyOutDir: true
     }
 });

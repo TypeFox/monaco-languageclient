@@ -5,6 +5,7 @@
 
 import type { IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
 import type { MonacoEditorProps } from '@typefox/monaco-editor-react';
+import type { Logger } from 'monaco-languageclient/common';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
@@ -16,7 +17,7 @@ export type ExampleAppConfig = {
     MonacoEditorReactComp: React.FC<MonacoEditorProps>;
 };
 
-export const setupLangiumClientExtended = async (worker: Worker): Promise<ExampleAppConfig> => {
+export const setupLangiumClientExtended = async (languageServerWorker: Worker, vscodeApiWorkerFactory: (logger?: Logger) => void): Promise<ExampleAppConfig> => {
 
     // perform all imports dynamically
     const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
@@ -24,9 +25,7 @@ export const setupLangiumClientExtended = async (worker: Worker): Promise<Exampl
     const { InMemoryFileSystemProvider, registerFileSystemOverlay } = (await import('@codingame/monaco-vscode-files-service-override'));
     const { LogLevel } = (await import('@codingame/monaco-vscode-api'));
     const { Uri } = (await import('vscode'));
-    const { configureDefaultWorkerFactory } = (await import('monaco-languageclient/workerFactory'));
     const { BrowserMessageReader, BrowserMessageWriter } = (await import('vscode-languageclient/browser.js'));
-    (await import('@codingame/monaco-vscode-typescript-language-features-default-extension'));
 
     // base configurration
     const overallConfigType: OverallConfigType = 'extended';
@@ -70,14 +69,8 @@ takesString(0);`;
     registerFileSystemOverlay(1, fileSystemProvider);
 
     const editorAppConfig: EditorAppConfig = {};
-    // const workerUrl = new URL('../worker/langium-server.js', import.meta.url);
-    // console.log('Worker URL:', workerUrl);
-    // const worker = new Worker(workerUrl, {
-    //     type: 'module',
-    //     name: 'Langium LS',
-    // });
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
+    const reader = new BrowserMessageReader(languageServerWorker);
+    const writer = new BrowserMessageWriter(languageServerWorker);
 
     const innerHtml = `<div id="editorsDiv">
     <div id="editors"></div>
@@ -121,9 +114,6 @@ takesString(0);`;
             },
             viewsInitFunc: viewsInit
         },
-        advanced: {
-            enableExtHostWorker: true
-        },
         userConfiguration: {
             json: JSON.stringify({
                 'workbench.colorTheme': 'Default Dark Modern',
@@ -133,7 +123,7 @@ takesString(0);`;
                 'vitest.disableWorkspaceWarning': true
             })
         },
-        monacoWorkerFactory: configureDefaultWorkerFactory,
+        monacoWorkerFactory: vscodeApiWorkerFactory,
         extensions: [{
             config: {
                 name: 'langium-example',
@@ -168,7 +158,7 @@ takesString(0);`;
         connection: {
             options: {
                 $type: 'WorkerDirect',
-                worker
+                worker: languageServerWorker
             },
             messageTransports: { reader, writer }
         }

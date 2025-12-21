@@ -3,19 +3,55 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { Logger } from 'monaco-languageclient/common';
+import { Worker as MlcWorker, useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import ReactDOM from 'react-dom/client';
 
 export const createDynamicEditorComponent = async () => {
-    // const { setupLangiumClientExtended, openDocument, showDocument } =  await import('./langium-dsl/config/extendedConfig.js');
-    const { setupLangiumClientExtended, openDocument, showDocument } =  await import('../bundle/langium-dsl/extendedConfig.js');
+    await import('@codingame/monaco-vscode-typescript-basics-default-extension');
+    await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+
+    const { setupLangiumClientExtended, openDocument, showDocument } =  await import('./langium-dsl/config/extendedConfig.js');
+    // const { setupLangiumClientExtended, openDocument, showDocument } =  await import('../bundle/langium-dsl/config/extendedConfig.js');
+
+    const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
+        const defaultEditorWorkerService = () => new MlcWorker(
+            new URL('../bundle/editorWorker/editor.worker.js', import.meta.url),
+            // new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
+            { type: 'module' }
+        );
+        const defaultExtensionHostWorkerMain = () => new MlcWorker(
+            new URL('../bundle/extHostWorker/extensionHost.worker.js', import.meta.url),
+            // new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
+            { type: 'module' }
+        );
+        const defaultTextMateWorker = () => new MlcWorker(
+            new URL('../bundle/textmateWorker/worker.js', import.meta.url),
+            // new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
+            { type: 'module' }
+        );
+
+        return {
+            editorWorkerService: defaultEditorWorkerService,
+            extensionHostWorkerMain: defaultExtensionHostWorkerMain,
+            TextMateWorker: defaultTextMateWorker,
+        };
+    };
+
+    const configureDefaultWorkerFactory = (logger?: Logger) => {
+        useWorkerFactory({
+            workerLoaders: defineWorkerLoaders(),
+            logger
+        });
+    };
 
     const workerUrl = new URL('./langium-dsl/worker/langium-server.ts', import.meta.url);
     console.log('Worker URL:', workerUrl);
-    const worker = new Worker(workerUrl, {
+    const languageServerWorker = new Worker(workerUrl, {
         type: 'module',
         name: 'Langium LS',
     });
-    const appConfig = await setupLangiumClientExtended(worker);
+    const appConfig = await setupLangiumClientExtended(languageServerWorker, configureDefaultWorkerFactory);
 
     return () => <appConfig.MonacoEditorReactComp
         style={{ 'height': '100%' }}
@@ -28,7 +64,8 @@ export const createDynamicEditorComponent = async () => {
             openDocument('/workspace/langium-types.langium');
             openDocument('/workspace/langium-grammar.langium');
             openDocument('/workspace/hello.ts');
-            showDocument('/workspace/langium-grammar.langium');
+            // showDocument('/workspace/langium-grammar.langium');
+            showDocument('/workspace/hello.ts');
         }} />
 };
 

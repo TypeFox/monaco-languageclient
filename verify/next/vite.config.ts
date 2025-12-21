@@ -7,16 +7,21 @@ import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import * as path from 'node:path';
 import { defineConfig } from 'vite';
 
-/// <reference lib="rolldown-vite/config" />
+/// <reference lib="vite/config" />
 
 export const config = defineConfig({
     build: {
-        rollupOptions: {
+        outDir: path.resolve(__dirname, 'production'),
+        rolldownOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
             },
-        },
-        outDir: path.resolve(__dirname, 'production')
+            external: ['react', 'react-dom'],
+            output: {
+                entryFileNames: '[name].js',
+                assetFileNames: 'assets/[name][extname]'
+            }
+        }
     },
     optimizeDeps: {
         esbuildOptions: {

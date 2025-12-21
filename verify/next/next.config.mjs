@@ -13,26 +13,48 @@ export default {
     typescript: {
         tsconfigPath: './tsconfig.json',
     },
-    distDir: 'dist',
     trailingSlash: true,
     reactStrictMode: true,
     output: 'standalone',
-    // transpilePackages: ['@codingame/monaco-vscode-api'],
     turbopack: {
         root: resolve(__dirname),
         resolveAlias: {
-            '/assets/workers/editor.worker.js': './bundle/langium-dsl/assets/workers/editor.worker.js',
-            '/assets/workers/extensionHost.worker.js': './bundle/langium-dsl/assets/workers/extensionHost.worker.js',
-            '/assets/workers/worker.js': './bundle/langium-dsl/assets/workers/worker.js',
+            // 'file:///_next/static/media/tsserver.web.556b7f5e.js': '.next/dev/static/media/tsserver.web.556b7f5e.js'
+            // '/resources/*': './public/resources/*'
         }
     },
+    // rules: {
+    //     '*.js': {
+    //         as: '*.js',
+    //         // Conceptually, you want to replace variables,
+    //         // but Turbo's API for granular replacement is evolving.
+    //     }
+    // },
     async headers() {
+        // const isDev = process.env.NODE_ENV !== 'production';
+
+        // // In dev, allow WebSockets (ws: wss:). In prod, keep it strict.
+        // const connectSrc = isDev
+        //     ? "connect-src * 'self' data: file: extension-file: blob: https: http: wss: ws:;"
+        //     : "connect-src 'self' https: data: blob:;";
+
+        // const cspHeader = `
+        //     default-src 'self';
+        //     script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: file:;
+        //     worker-src 'self' data: file: extension-file: blob: 'unsafe-inline';
+        //     style-src 'self' 'unsafe-inline';
+        //     img-src 'self' data: https:;
+        //     font-src 'self' data:;
+        //     ${connectSrc}
+        //     `.replace(/\n/g, '');
+
         return [
             {
                 source: '/(.*)',
                 headers: [
                     { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
-                    { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' }
+                    { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+                    // { key: 'Content-Security-Policy', value: cspHeader }
                 ]
             }
         ];
