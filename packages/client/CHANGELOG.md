@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [10.5.0] - 2025-12-22
 
-- Updated all `@codingame/monaco-vscode` packages to `24.1.1`.
+- Updated all `@codingame/monaco-vscode` packages to `24.2.0`.
 
 ## [10.4.0] - 2025-11-26
 

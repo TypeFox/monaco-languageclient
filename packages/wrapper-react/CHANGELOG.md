@@ -4,7 +4,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [7.5.0] - 2025-12-22
 
-- Updated all `@codingame/monaco-vscode` packages to `24.1.1`.
+- Updated all `@codingame/monaco-vscode` packages to `24.2.0`.
 - Updated to `monaco-languageclient@10.5.0`.
 
 ## [7.4.0] - 2025-11-26
