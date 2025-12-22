@@ -40,20 +40,6 @@ export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideSer
     }
 };
 
-/**
- * Enable ext host to run in a worker
- */
-export const configureExtHostWorker = async (enableExtHostWorker: boolean, userServices: monaco.editor.IEditorOverrideServices) => {
-    if (enableExtHostWorker) {
-        const { default: getExtensionServiceOverride } = await import('@codingame/monaco-vscode-extensions-service-override');
-        mergeServices(userServices, {
-            ...getExtensionServiceOverride({
-                enableWorkerExtensionHost: true
-            })
-        });
-    }
-};
-
 export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide, logger?: Logger) => {
     logger?.info('Received open editor call with parameters: ', modelRef, options, sideBySide);
     return undefined;

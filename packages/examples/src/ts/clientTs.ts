@@ -64,7 +64,7 @@ takesNumber(0);`;
         logLevel: LogLevel.Debug,
         // demonstrate that you can enable the ext host worker manually
         advanced: {
-            enableExtHostWorker: false,
+            loadExtensionServices: false
         },
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
