@@ -269,7 +269,7 @@ Congratulations! If everything worked as expected, then you've created your firs
 
 **Editor doesn't load**: Check browser console for errors. Ensure all dependencies are installed. Also if the language server is offline, this will block the editor & client from starting up.
 
-Also ensure that you have compatible versions of `monaco-languageclient` and any `@codinggame/...` extensions you are using. If there's a discrepancy here your editor or language client integration likely won't work, and you may not see any errors in the console. See the [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for reference.
+Also ensure that you have compatible versions of `monaco-languageclient` and any `@codingame/...` extensions you are using. If there's a discrepancy here your editor or language client integration likely won't work, and you may not see any errors in the console. See the [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for reference.
 
 **No language features**: Verify the language server is running and the WebSocket connection is successful.
 

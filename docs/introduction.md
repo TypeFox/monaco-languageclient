@@ -25,7 +25,7 @@ The Language Server Protocol is a standard that defines how development tools ca
 
 and more, as defined by the LSP specification. Most of the features you're accustomed to in a modern IDE for a language are made possible through the LSP.
 
-The `vscode-languageclient` is the most frequently used library to provide client side support for the language server protocol for VSCode and its extensions. `monaco-languageclient` wraps this library and makes it available in the browser. This feat is made possible by the stack described in the next sub-section about the monaco-editor & @codingame/monaco-vscode-api.
+The `vscode-languageclient` is the most frequently used library to provide client side support for the language server protocol for VSCode and its extensions. `monaco-languageclient` wraps this library and makes it available in the browser. This feature is made possible by the stack described in the next sub-section about the monaco-editor & @codingame/monaco-vscode-api.
 
 ## monaco-editor and @codingame/monaco-vscode-api
 
