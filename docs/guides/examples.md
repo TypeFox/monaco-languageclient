@@ -75,7 +75,7 @@ async function createJsonEditor() {
     // Create the editor app
     const editorApp = new EditorApp({
         codeResources: {
-            main: {
+            modified: {
                 text: jsonContent,
                 uri: codeUri
             }

@@ -10,7 +10,19 @@ Before installing Monaco Language Client, ensure you have:
 - **npm 10.2.3 or higher**
 - A web bundler (Vite, Webpack, etc.) that supports ES modules
 
-Generally, we prefer to use Volta to manage Node.js versions. You can install it from [https://volta.sh/](https://volta.sh/).
+We recommend using a Node.js version manager such as [nvm](https://github.com/nvm-sh/nvm) or [mise](https://mise.jdx.dev/).
+
+> [!NOTE]
+> Previously we have recommended using Volta to manage your Node.js versions, but as of late it is currently [unmaintained](https://github.com/volta-cli/volta), and their team recommends moving to an alternative solution, such as mise or nvm.
+
+You'll also need a project that you can use to install the `monaco-languageclient`. If you don't have one yet, you can get [started quickly by creating a new Vite project](https://vite.dev/guide/#scaffolding-your-first-vite-project) with React:
+
+```shell
+# create a new Vite React project
+npm create vite@latest my-monaco-project -- --template react-ts
+cd my-monaco-project
+npm install
+```
 
 ## Perform the installation
 
@@ -40,7 +52,7 @@ npm install @typefox/monaco-editor-react
 
 ### npm/pnpm
 
-If using npm or pnpm, and your dependencies already contain a refernence to `monaco-editor`, add `overrides` to your `package.json` to ensure only one compatible `monaco-editor` dependency is used in your project:
+If using npm or pnpm, and your dependencies already contain a reference to `monaco-editor`, add `overrides` to your `package.json` to ensure only one compatible `monaco-editor` dependency is used in your project:
 
 ```json
 {
@@ -49,6 +61,8 @@ If using npm or pnpm, and your dependencies already contain a refernence to `mon
   }
 }
 ```
+
+Depending on the version at the time of your installation, you may need to adjust the version range slightly to match the latest compatible version of `@codingame/monaco-vscode-editor-api`.
 
 ### Yarn
 
@@ -128,7 +142,7 @@ Then open <http://localhost:20001> to see various running examples.
 
 ## Version Compatibility
 
-Monaco Language Client versions align with specific Monaco Editor and VSCode versions. See our [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for details.
+Keep in mind that monaco-languageclient versions align with specific Monaco Editor and VSCode versions. See our [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) to determine which versions can be used together. When in doubt, double check your `package.json` dependencies to ensure compatibility.
 
 ## Common Issues
 
@@ -146,6 +160,4 @@ If you see console warnings about version mismatches, check that all `@codingame
 
 ## What's Next?
 
-Once you have Monaco Language Client installed, you're ready to:
-
-1. **Follow the [Getting Started Guide](./guides/getting-started.md)** for your first setup
+Once you have Monaco Language Client installed, you can hop over to the [Getting Started Guide](./guides/getting-started.md) for your first setup.
