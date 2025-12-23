@@ -20,10 +20,10 @@
   "dependencies": {
     "@codingame/monaco-vscode-api": "^24.2.0",
     "@codingame/monaco-vscode-keybindings-service-override": "^24.2.0",
-    "@typefox/monaco-editor-react": "~7.5.0-next.1",
+    "@typefox/monaco-editor-react": "~7.5.0",
     "langium": "~4.1.2",
-    "monaco-languageclient": "~10.5.0-next.1",
-    "monaco-languageclient-examples": "~2025.12.1-next.1",
+    "monaco-languageclient": "~10.5.0",
+    "monaco-languageclient-examples": "~2025.12.1",
     "next": "~15.5.4",
     "react": "~19.2.0",
     "react-dom": "~19.2.0",

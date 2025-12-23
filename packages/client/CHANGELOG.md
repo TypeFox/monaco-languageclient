@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.5.0] - 2025-12-22
+## [10.5.0] - 2025-12-23
 
 - Updated all `@codingame/monaco-vscode` packages to `24.2.0`.
+- LanguageClient config enhancements, plus dynamic loading of extension-service-override [#1006](https://github.com/TypeFox/monaco-languageclient/pull/1006).
 
 ## [10.4.0] - 2025-11-26
 
