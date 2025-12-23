@@ -28,20 +28,15 @@
     "zone.js": "^0.16.0"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "~2.1.2",
+    "@analogjs/vite-plugin-angular": "~2.2.0",
     "@angular/build": "^21.0.0",
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
     "@types/node": "~22.15.35",
-    "rolldown-vite": "~7.2.10",
+    "vite": "~8.0.0-beta.4",
     "shx": "~0.4.0",
     "typescript": "~5.9.3"
-  },
-  "overrides": {
-    "vite": {
-      "rolldown-vite": "~7.2.9"
-    }
   },
   "volta": {
     "node": "22.20.0",
