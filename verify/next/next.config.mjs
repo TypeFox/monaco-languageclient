@@ -16,45 +16,35 @@ export default {
     trailingSlash: true,
     reactStrictMode: true,
     output: 'standalone',
+    serverExternalPackages: [
+        '@codingame/monaco-vscode-typescript-language-features-default-extension',
+    ],
     turbopack: {
         root: resolve(__dirname),
-        resolveAlias: {
-            // 'file:///_next/static/media/tsserver.web.556b7f5e.js': '.next/dev/static/media/tsserver.web.556b7f5e.js'
-            // '/resources/*': './public/resources/*'
+        rules: {
+            // Target the specific broken dependency file
+            // You can use a glob pattern to match the file inside node_modules
+            './node_modules/@codingame/monaco-vscode-typescript-language-features-default-extension/index.js': {
+                loaders: [
+                    {
+                        loader: resolve(__dirname, 'loaders/manipulate.cjs'),
+                        options: {
+                            target: 'browser',
+                        },
+                    },
+                ],
+                // "as": "*.js" tells Turbopack to treat the output as a JS module
+                as: '*.js',
+            },
         }
     },
-    // rules: {
-    //     '*.js': {
-    //         as: '*.js',
-    //         // Conceptually, you want to replace variables,
-    //         // but Turbo's API for granular replacement is evolving.
-    //     }
-    // },
     async headers() {
-        // const isDev = process.env.NODE_ENV !== 'production';
-
-        // // In dev, allow WebSockets (ws: wss:). In prod, keep it strict.
-        // const connectSrc = isDev
-        //     ? "connect-src * 'self' data: file: extension-file: blob: https: http: wss: ws:;"
-        //     : "connect-src 'self' https: data: blob:;";
-
-        // const cspHeader = `
-        //     default-src 'self';
-        //     script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: file:;
-        //     worker-src 'self' data: file: extension-file: blob: 'unsafe-inline';
-        //     style-src 'self' 'unsafe-inline';
-        //     img-src 'self' data: https:;
-        //     font-src 'self' data:;
-        //     ${connectSrc}
-        //     `.replace(/\n/g, '');
-
         return [
             {
                 source: '/(.*)',
                 headers: [
                     { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
-                    { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
-                    // { key: 'Content-Security-Policy', value: cspHeader }
+                    { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' }
                 ]
             }
         ];

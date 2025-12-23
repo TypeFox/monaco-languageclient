@@ -14,7 +14,8 @@ export default function Page() {
 
     const DynamicMonacoEditorReact = dynamic(async () => {
         await import('@codingame/monaco-vscode-typescript-basics-default-extension');
-        await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+        // await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+        // await import('../bundle/tsserver/index.js');
 
         const { setupLangiumClientExtended, openDocument, showDocument } = await import('./langium-dsl/config/extendedConfig');
         const mlcWFModule = await import('monaco-languageclient/workerFactory');
@@ -27,22 +28,23 @@ export default function Page() {
         const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
             const defaultEditorWorkerService = () => new mlcWFModule.Worker(
                 new URL('../bundle/editorWorker/editor.worker.js', import.meta.url),
-                // new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
+                // new URL('@codingame/monaco-vscode-api/workers/editor.worker', import.meta.url),
                 { type: 'module' }
             );
-            const defaultExtensionHostWorkerMain = () => new mlcWFModule.Worker(
-                new URL('../bundle/extHostWorker/extensionHost.worker.js', import.meta.url),
-                // new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
-                { type: 'module' }
-            );
+            // const defaultExtensionHostWorkerMain = () => new mlcWFModule.Worker(
+            //     new URL('../bundle/extHostWorker/extensionHost.worker.js', import.meta.url),
+            //     // new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
+            //     { type: 'module' }
+            // );
             const defaultTextMateWorker = () => new mlcWFModule.Worker(
                 new URL('../bundle/textmateWorker/worker.js', import.meta.url),
+                // new URL('../node_modules/@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
                 // new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
                 { type: 'module' }
             );
             return {
                 editorWorkerService: defaultEditorWorkerService,
-                extensionHostWorkerMain: defaultExtensionHostWorkerMain,
+                // extensionHostWorkerMain: defaultExtensionHostWorkerMain,
                 TextMateWorker: defaultTextMateWorker,
             };
         };

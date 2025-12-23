@@ -21,7 +21,6 @@ export const setupLangiumClientExtended = async (languageServerWorker: Worker, v
 
     // perform all imports dynamically
     const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
-    const getExtensionServiceOverride = (await import('@codingame/monaco-vscode-extensions-service-override')).default;
     const { InMemoryFileSystemProvider, registerFileSystemOverlay } = (await import('@codingame/monaco-vscode-files-service-override'));
     const { LogLevel } = (await import('@codingame/monaco-vscode-api'));
     const { Uri } = (await import('vscode'));
@@ -96,13 +95,10 @@ takesString(0);`;
         $type: overallConfigType,
         logLevel: LogLevel.Debug,
         advanced: {
-            enableExtHostWorker: true
+            enableExtHostWorker: false
         },
         serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
-            ...getExtensionServiceOverride({
-                enableWorkerExtensionHost: false
-            })
+            ...getKeybindingsServiceOverride()
         },
         viewsConfig: {
             $type: 'ViewsService',

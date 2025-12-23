@@ -6,7 +6,6 @@
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import type { PluginContext } from 'rolldown';
-import fs from 'node:fs';
 
 const config = defineConfig({
     optimizeDeps: {
