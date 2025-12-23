@@ -53,6 +53,7 @@ export interface MonacoVscodeApiConfig {
     extensions?: ExtensionConfig[];
     monacoWorkerFactory?: (logger?: Logger) => void;
     advanced?: {
+        loadExtensionServices?: boolean;
         enableExtHostWorker?: boolean;
         loadThemes?: boolean;
         enforceSemanticHighlighting?: boolean;

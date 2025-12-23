@@ -2,10 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2025.12.1] - 2025-12-22
+## [2025.12.1] - 2025-12-23
 
 - Updated to `monaco-languageclient@10.5.0` and `@typefox/monaco-editor-react@7.5.0`.
-- Updated all `@codingame/monaco-vscode` packages to `24.1.1`.
+- Updated all `@codingame/monaco-vscode` packages to `24.2.0`.
 
 ## [2025.11.2] - 2025-11-26
 
@@ -96,7 +96,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [2025.4.1] - 2025-04-02
 
-- Updated to `monaco-languageclient@9.6.0-next.0`, `monaco-editor-wrapper@6.7.0-next.0` and `@typefox/monaco-editor-react@6.7.0-next.0`.
+- Updated to `monaco-languageclient@9.6.0-next.1`, `monaco-editor-wrapper@6.7.0-next.1` and `@typefox/monaco-editor-react@6.7.0-next.1`.
 
 ## [2025.3.6] - 2025-03-13
 
@@ -104,13 +104,13 @@ All notable changes to this npm module are documented in this file.
 
 ## [2025.3.5] - 2025-03-13
 
-- Updated to `monaco-languageclient@9.5.0-next.0`, `monaco-editor-wrapper@6.6.0-next.1` and `@typefox/monaco-editor-react@6.6.0-next.1`.
+- Updated to `monaco-languageclient@9.5.0-next.1`, `monaco-editor-wrapper@6.6.0-next.1` and `@typefox/monaco-editor-react@6.6.0-next.1`.
 - Updated all `@codingame/monaco-vscode` packages to `15.0.2`.
 
 ## [2025.3.4] - 2025-03-07
 
 - Model handling improvements [#891](https://github.com/TypeFox/monaco-languageclient/pull/891)
-  - Updated to `monaco-editor-wrapper@6.6.0-next.0` and `@typefox/monaco-editor-react@6.6.0-next.0`.
+  - Updated to `monaco-editor-wrapper@6.6.0-next.1` and `@typefox/monaco-editor-react@6.6.0-next.1`.
   - Aligned examples to api changes
   - Langium examples log messsage exchange between client and language server
 
@@ -126,7 +126,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [2025.3.1] - 2025-03-04
 
-- Updated to `monaco-languageclient@9.4.1-next.0`, `monaco-editor-wrapper@6.5.0-next.0` and `@typefox/monaco-editor-react@6.5.0-next.0`.
+- Updated to `monaco-languageclient@9.4.1-next.1`, `monaco-editor-wrapper@6.5.0-next.1` and `@typefox/monaco-editor-react@6.5.0-next.1`.
 - Updated all `@codingame/monaco-vscode` packages to `14.0.6`.
 - Fixed bare example syntax highlighting problems.
 
@@ -203,7 +203,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [2025.1.3] - 2025-01-24
 
-- Updated to `monaco-languageclient@9.2.0-next.0`, `monaco-editor-wrapper@6.2.0-next.0` and `@typefox/monaco-editor-react@6.2.0-next.0`.
+- Updated to `monaco-languageclient@9.2.0-next.1`, `monaco-editor-wrapper@6.2.0-next.1` and `@typefox/monaco-editor-react@6.2.0-next.1`.
 
 ## [2025.1.2] - 2025-01-20
 

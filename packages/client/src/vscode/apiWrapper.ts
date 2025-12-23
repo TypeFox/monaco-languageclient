@@ -15,7 +15,7 @@ import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import 'vscode/localExtensionHost';
 import type { ExtensionConfig, MonacoVscodeApiConfig, ViewsConfig } from './config.js';
-import { configureExtHostWorker, getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
+import { getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
 
 export interface MonacoVscodeApiConfigRuntime extends MonacoVscodeApiConfig {
     serviceOverrides: monaco.editor.IEditorOverrideServices;
@@ -228,7 +228,14 @@ export class MonacoVscodeApiWrapper {
         const services = await this.supplyRequiredServices();
 
         mergeServices(services, this.apiConfig.serviceOverrides);
-        await configureExtHostWorker(this.apiConfig.advanced?.enableExtHostWorker === true, services);
+        if (this.apiConfig.advanced?.loadExtensionServices === undefined ? true : this.apiConfig.advanced.loadExtensionServices === true) {
+            const { default: getExtensionServiceOverride } = await import('@codingame/monaco-vscode-extensions-service-override');
+            mergeServices(services, {
+                ...getExtensionServiceOverride({
+                    enableWorkerExtensionHost: this.apiConfig.advanced?.enableExtHostWorker === true
+                })
+            });
+        }
 
         reportServiceLoading(services, this.logger);
 

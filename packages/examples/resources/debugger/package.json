@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "express": "~4.21.2",
-    "monaco-languageclient": "~10.5.0-next.0",
+    "monaco-languageclient": "~10.5.0",
     "ws": "~8.18.0"
   },
   "devDependencies": {

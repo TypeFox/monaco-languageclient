@@ -5,7 +5,6 @@
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
-import getExtensionServiceOverride from '@codingame/monaco-vscode-extensions-service-override';
 import type { Logger } from 'monaco-languageclient/common';
 import type { MonacoEnvironmentEnhanced } from './config.js';
 
@@ -38,19 +37,6 @@ export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideSer
         for (const [name, service] of Object.entries(services)) {
             overrideServices[name] = service;
         }
-    }
-};
-
-/**
- * Enable ext host to run in a worker
- */
-export const configureExtHostWorker = async (enableExtHostWorker: boolean, userServices: monaco.editor.IEditorOverrideServices) => {
-    if (enableExtHostWorker) {
-        mergeServices(userServices, {
-            ...getExtensionServiceOverride({
-                enableWorkerExtensionHost: true
-            })
-        });
     }
 };
 

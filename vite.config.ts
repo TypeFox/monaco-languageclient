@@ -50,7 +50,8 @@ export const definedViteConfig = defineConfig({
         },
         watch: {
             ignored: [
-                '**/.chrome/**/*'
+                '**/.chrome/**/*',
+                './verify/**/*'
             ]
         }
     },

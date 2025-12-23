@@ -7,7 +7,7 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserve
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
 import { ConsoleLogger, createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { MonacoLanguageClient } from 'monaco-languageclient';
+import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
 import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
@@ -18,7 +18,7 @@ export interface LanguageClientError {
 
 export class LanguageClientWrapper {
 
-    private languageClient?: MonacoLanguageClient;
+    private languageClient?: MonacoLanguageClient | MonacoLanguageClientWithProposedFeatures;
     private languageClientConfig: LanguageClientConfig;
     private worker?: Worker;
     private port?: MessagePort;
@@ -176,7 +176,6 @@ export class LanguageClientWrapper {
             },
             messageTransports
         };
-        this.languageClient = new MonacoLanguageClient(mlcConfig);
 
         const conOptions = this.languageClientConfig.connection.options;
         this.initRestartConfiguration(messageTransports, this.languageClientConfig.restartOptions);
@@ -196,6 +195,11 @@ export class LanguageClientWrapper {
         });
 
         try {
+            this.languageClient = this.languageClientConfig.useClientWithProposedFeatures === true ? new MonacoLanguageClientWithProposedFeatures(mlcConfig) : new MonacoLanguageClient(mlcConfig);
+            if (this.languageClientConfig.registerFeatures !== undefined) {
+                this.languageClient.registerFeatures(this.languageClientConfig.registerFeatures);
+            }
+
             await this.languageClient.start();
 
             if (isWebSocket && conOptions.startOptions !== undefined) {

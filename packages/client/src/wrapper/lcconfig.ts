@@ -5,7 +5,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ConnectionConfigOptions } from 'monaco-languageclient/common';
-import type { LanguageClientOptions, MessageTransports } from 'vscode-languageclient/browser.js';
+import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFeature } from 'vscode-languageclient/browser.js';
 
 export interface ConnectionConfig {
     options: ConnectionConfigOptions;
@@ -17,6 +17,9 @@ export interface LanguageClientConfig {
     connection: ConnectionConfig;
     clientOptions: LanguageClientOptions;
     restartOptions?: LanguageClientRestartOptions;
+    useClientWithProposedFeatures?: boolean;
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+    registerFeatures?: Array<(StaticFeature | DynamicFeature<any>)>;
     disposeWorker?: boolean;
     logLevel?: LogLevel | number;
 }
