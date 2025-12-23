@@ -15,6 +15,7 @@ export default function Page() {
     const DynamicMonacoEditorReact = dynamic(async () => {
         await import('@codingame/monaco-vscode-typescript-basics-default-extension');
         await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+        // await import('../bundle/tsserver/index.js');
 
         const { setupLangiumClientExtended, openDocument, showDocument } = await import('./langium-dsl/config/extendedConfig');
         const mlcWFModule = await import('monaco-languageclient/workerFactory');

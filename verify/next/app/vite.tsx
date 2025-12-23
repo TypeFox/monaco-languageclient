@@ -9,7 +9,8 @@ import ReactDOM from 'react-dom/client';
 
 export const createDynamicEditorComponent = async () => {
     await import('@codingame/monaco-vscode-typescript-basics-default-extension');
-    await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+    // await import('@codingame/monaco-vscode-typescript-language-features-default-extension');
+    await import('../bundle/tsserver/index.js');
 
     const { setupLangiumClientExtended, openDocument, showDocument } =  await import('./langium-dsl/config/extendedConfig.js');
     // const { setupLangiumClientExtended, openDocument, showDocument } =  await import('../bundle/langium-dsl/config/extendedConfig.js');

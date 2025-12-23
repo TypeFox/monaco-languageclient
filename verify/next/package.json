@@ -48,6 +48,7 @@
     "@types/react": "~19.2.7",
     "@types/react-dom": "~19.2.3",
     "shx": "~0.4.0",
+    "string-replace-loader": "~3.3.0",
     "vite": "~8.0.0-beta.4"
   },
   "volta": {
