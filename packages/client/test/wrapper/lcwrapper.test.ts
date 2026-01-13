@@ -6,7 +6,7 @@
 /* eslint-disable dot-notation */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
@@ -142,13 +142,13 @@ describe('Test LanguageClientWrapper', () => {
     test('set verify log levels are applied', async () => {
         const workerAndConfig = createWorkerAndConfig();
         let languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
-        let logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
+        let logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
         expect(logLevel).toBe(LogLevel.Off);
         expect(logLevel).toBe(0);
 
         workerAndConfig.languageClientConfig.logLevel = LogLevel.Debug;
         languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
-        logLevel = (languageClientWrapper['logger'] as Logger).getLevel();
+        logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);
     });

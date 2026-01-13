@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { describe, expect, test } from 'vitest';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { ConsoleLogger } from 'monaco-languageclient/common';
-import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
+import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
+import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
+import { describe, expect, test } from 'vitest';
 
 describe('WorkerFactory Tests', () => {
 

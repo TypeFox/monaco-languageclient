@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
-import type { Logger } from 'monaco-languageclient/common';
 
 export class Worker {
     url: string | URL;
@@ -20,7 +20,7 @@ export type WorkerLoader = (() => Worker) | undefined;
 
 export interface WorkerFactoryConfig {
     workerLoaders?: Partial<Record<string, WorkerLoader>>;
-    logger?: Logger;
+    logger?: ILogger;
 }
 
 export const useWorkerFactory = (config: WorkerFactoryConfig) => {
@@ -64,7 +64,7 @@ export const defineDefaultWorkerLoaders: () => Partial<Record<string, WorkerLoad
     };
 };
 
-export const configureDefaultWorkerFactory = (logger?: Logger) => {
+export const configureDefaultWorkerFactory = (logger?: ILogger) => {
     useWorkerFactory({
         workerLoaders: defineDefaultWorkerLoaders(),
         logger

@@ -4,13 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
+import { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { LanguageClientConfig, LanguageClientConfigs } from './lcconfig.js';
 import { LanguageClientWrapper } from './lcwrapper.js';
 
 export class LanguageClientManager {
 
-    private logger: Logger = new ConsoleLogger();
+    private logger: ILogger = new ConsoleLogger();
     private languageClientConfigs?: LanguageClientConfigs;
     private languageClientWrappers: Map<string, LanguageClientWrapper> = new Map();
 

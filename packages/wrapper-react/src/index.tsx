@@ -4,7 +4,7 @@
 * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { ConsoleLogger } from 'monaco-languageclient/common';
+import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { EditorApp, type EditorAppConfig, type TextContents } from 'monaco-languageclient/editorApp';
 import { type LanguageClientConfig, LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { getEnhancedMonacoEnvironment, type MonacoVscodeApiConfig, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';

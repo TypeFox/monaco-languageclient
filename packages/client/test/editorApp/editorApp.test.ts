@@ -6,7 +6,7 @@
 /* eslint-disable dot-notation */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { Logger } from 'monaco-languageclient/common';
+import { type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
@@ -249,13 +249,13 @@ describe('Test EditorApp', () => {
             }
         });
         let editorApp = new EditorApp(editorAppConfig);
-        let logLevel = (editorApp['logger'] as Logger).getLevel();
+        let logLevel = (editorApp['logger'] as ILogger).getLevel();
         expect(logLevel).toBe(LogLevel.Off);
         expect(logLevel).toBe(0);
 
         editorAppConfig.logLevel = LogLevel.Debug;
         editorApp = new EditorApp(editorAppConfig);
-        logLevel = (editorApp['logger'] as Logger).getLevel();
+        logLevel = (editorApp['logger'] as ILogger).getLevel();
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);
     });

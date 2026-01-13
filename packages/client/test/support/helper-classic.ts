@@ -3,8 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { useWorkerFactory, Worker, type WorkerLoader } from 'monaco-languageclient/workerFactory';
-import type { Logger } from 'monaco-languageclient/common';
 
 const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
 const workerPromises: Map<string, Promise<void>> = new Map();
@@ -76,7 +76,7 @@ export const defineClassicWorkers: () => Partial<Record<string, WorkerLoader>> =
     };
 };
 
-export const configureClassicWorkerFactory = (logger?: Logger) => {
+export const configureClassicWorkerFactory = (logger?: ILogger) => {
     useWorkerFactory({
         workerLoaders: defineClassicWorkers(),
         logger
