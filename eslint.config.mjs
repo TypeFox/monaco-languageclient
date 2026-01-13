@@ -23,7 +23,7 @@ export default [{
         '**/public/**/*',
         '**/.next/**/*',
         '**/*env.d.ts',
-        '**/.pnp.cjs'
+        '**/.pnp.*'
     ],
 }, {
     files: [

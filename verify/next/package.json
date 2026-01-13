@@ -18,8 +18,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@codingame/monaco-vscode-api": "^24.2.0",
-    "@codingame/monaco-vscode-keybindings-service-override": "^24.2.0",
+    "@codingame/monaco-vscode-api": "^24.3.0",
+    "@codingame/monaco-vscode-keybindings-service-override": "^24.3.0",
     "@typefox/monaco-editor-react": "~7.5.0",
     "langium": "~4.1.2",
     "monaco-languageclient": "~10.5.0",
@@ -27,7 +27,7 @@
     "next": "~15.5.4",
     "react": "~19.2.0",
     "react-dom": "~19.2.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^24.2.0",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^24.3.0",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1"
   },

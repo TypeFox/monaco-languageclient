@@ -36,7 +36,7 @@
     // currently in oxlint's nursery (=under development)
     "getter-return": "error",
     "guard-for-in": "error",
-        // currently unsupported by oxlint
+    // currently unsupported by oxlint
     "new-parens": "error",
     "no-async-promise-executor": "error",
     "no-bitwise": "error",
