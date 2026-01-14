@@ -3,13 +3,14 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { ConsoleLogger, createUrl, type Logger, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
-import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
+import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
+import { createUrl, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
+import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
+import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 
 export interface LanguageClientError {
     message: string;
@@ -23,7 +24,7 @@ export class LanguageClientWrapper {
     private worker?: Worker;
     private port?: MessagePort;
     private languageId: string;
-    private logger: Logger | undefined;
+    private logger: ILogger | undefined;
 
     constructor(config: LanguageClientConfig) {
         this.languageClientConfig = config;

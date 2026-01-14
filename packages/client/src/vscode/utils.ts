@@ -5,7 +5,7 @@
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { MonacoEnvironmentEnhanced } from './config.js';
 
 export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
@@ -26,7 +26,7 @@ export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
     return envEnhanced;
 };
 
-export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, logger?: Logger) => {
+export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, logger?: ILogger) => {
     for (const serviceName of Object.keys(services)) {
         logger?.debug(`Loading service: ${serviceName}`);
     }
@@ -40,7 +40,7 @@ export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideSer
     }
 };
 
-export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide, logger?: Logger) => {
+export const useOpenEditorStub: OpenEditor = async (modelRef, options, sideBySide, logger?: ILogger) => {
     logger?.info('Received open editor call with parameters: ', modelRef, options, sideBySide);
     return undefined;
 };

@@ -7,7 +7,8 @@ import { ConfigurationTarget, IConfigurationService, LogLevel, StandaloneService
 import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
-import { ConsoleLogger, type Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
+import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
 import type { CallbackDisposeable, CodeContent, CodeResources, DisposableModelRefs, EditorAppConfig, TextContents, TextModels } from './config.js';
@@ -25,7 +26,7 @@ export class EditorApp {
     private id: string;
     private config: EditorAppConfig;
 
-    protected logger: Logger = new ConsoleLogger();
+    protected logger: ILogger = new ConsoleLogger();
 
     private editor: monaco.editor.IStandaloneCodeEditor | undefined;
     private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;

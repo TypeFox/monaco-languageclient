@@ -3,13 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Logger } from 'monaco-languageclient/common';
+import { type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { DirectoryListingRequest, DirectoryListingRequestResult, EndpointType, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from '../definitions.js';
 
 export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
 
     private endpointType: EndpointType;
-    private logger?: Logger;
+    private logger?: ILogger;
 
     constructor(endpointType: EndpointType) {
         this.endpointType = endpointType;
@@ -21,7 +21,7 @@ export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
         return 'This file system performs no operations.';
     }
 
-    setLogger(logger: Logger): void {
+    setLogger(logger: ILogger): void {
         this.logger = logger;
     }
 

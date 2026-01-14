@@ -8,9 +8,9 @@ import { ExtensionHostKind, getBuiltinExtensions, registerExtension, type IExten
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
-import getLogServiceOverride from '@codingame/monaco-vscode-log-service-override';
+import getLogServiceOverride, { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
-import { ConsoleLogger, encodeStringOrUrlToDataUrl, type Logger } from 'monaco-languageclient/common';
+import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
 import { useWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import 'vscode/localExtensionHost';
@@ -30,7 +30,7 @@ export interface StartInstructions {
 
 export class MonacoVscodeApiWrapper {
 
-    private logger: Logger = new ConsoleLogger();
+    private logger: ILogger = new ConsoleLogger();
     private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
     private disposableStore: DisposableStore = new DisposableStore();
     private apiConfig: MonacoVscodeApiConfigRuntime;
@@ -250,7 +250,11 @@ export class MonacoVscodeApiWrapper {
         }
 
         setUnexpectedErrorHandler((e) => {
-            this.logger.createErrorAndLog('Unexpected error', e);
+            const message = 'Unexpected error';
+            if (this.logger.getLevel() >= LogLevel.Error) {
+                this.logger.error(message, e);
+            }
+            return new Error(message);
         });
     }
 

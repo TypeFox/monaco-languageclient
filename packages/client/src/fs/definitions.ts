@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
 export interface FileReadRequest {
     resourceUri: string
@@ -103,7 +103,7 @@ export interface FileSystemEndpoint extends FileSystemCapabilities {
      * Set an optional logger
      * @param logger the logger implemenation
      */
-    setLogger?(logger: Logger): void;
+    setLogger?(logger: ILogger): void;
 
     /**
      * Get the type of the client

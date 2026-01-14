@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { ConsoleLogger } from 'monaco-languageclient/common';
 import type { TextContents } from 'monaco-languageclient/editorApp';
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom/client';

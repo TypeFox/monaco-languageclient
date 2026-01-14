@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { ExtensionConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import * as vscode from 'vscode';
 import { Uri } from 'vscode';
@@ -81,7 +81,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
     };
 };
 
-export const configureDebugging = async (api: typeof vscode, config: ConfigParams, logger?: Logger) => {
+export const configureDebugging = async (api: typeof vscode, config: ConfigParams, logger?: ILogger) => {
     class WebsocketDebugAdapter implements vscode.DebugAdapter {
         private websocket: WebSocket;
 

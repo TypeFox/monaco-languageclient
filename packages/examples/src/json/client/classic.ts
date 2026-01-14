@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -71,7 +71,7 @@ export const runClient = async () => {
     await languageClientWrapper.start();
 };
 
-export const configureClassicWorkerFactory = (logger?: Logger) => {
+export const configureClassicWorkerFactory = (logger?: ILogger) => {
     const defaultworkerLoaders = defineDefaultWorkerLoaders();
     // remove textmate worker as it is not compatible with classic mode
     defaultworkerLoaders.TextMateWorker = undefined;

@@ -3,13 +3,13 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from '@codingame/monaco-vscode-editor-api';
-import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api';
+import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { IExtensionManifest } from '@codingame/monaco-vscode-api/extensions';
 import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
 export type OverallConfigType = 'extended' | 'classic';
 
@@ -51,7 +51,7 @@ export interface MonacoVscodeApiConfig {
     userConfiguration?: UserConfiguration;
     envOptions?: EnvironmentOverride;
     extensions?: ExtensionConfig[];
-    monacoWorkerFactory?: (logger?: Logger) => void;
+    monacoWorkerFactory?: (logger?: ILogger) => void;
     advanced?: {
         loadExtensionServices?: boolean;
         enableExtHostWorker?: boolean;
