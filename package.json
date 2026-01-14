@@ -68,6 +68,8 @@
     "build:wrapper-react": "npm run build --workspace packages/wrapper-react",
     "build:examples": "npm run build --workspace packages/examples",
     "langium:generate": "npm run langium:generate --workspace packages/examples",
+    "start:example:server:groovy": "npm run start:server:groovy --workspace packages/examples",
+    "start:example:server:jdtls": "npm run start:server:jdtls --workspace packages/examples",
     "start:example:server:json": "npm run start:server:json --workspace packages/examples",
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test",

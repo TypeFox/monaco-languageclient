@@ -1,23 +1,31 @@
-FROM gradle:7-jdk17-focal
+FROM gradle:9-jdk21
+
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y curl
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ENV MISE_DATA_DIR="/mise"
+ENV MISE_CONFIG_DIR="/mise"
+ENV MISE_CACHE_DIR="/mise/cache"
+ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
+ENV PATH="/mise/shims:$PATH"
+
+# install mise
+RUN curl https://mise.run | sh
+
+# configure mise
+RUN mise use --global node@24
 
 ARG HOME_DIR=/home/gradle
 ARG PATH_MLC=${HOME_DIR}/mlc
 ARG PATH_GLS=${HOME_DIR}/groovy-language-server
 ARG PATH_GROOVY_JAR=${PATH_MLC}/packages/examples/resources/groovy/lib
 
-RUN apt update \
-    && apt upgrade -y
-RUN apt install -y curl
-
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_FEATURE_PNPM=1
-ENV VOLTA_HOME="/root/.volta"
-ENV PATH="$VOLTA_HOME/bin:$PATH"
-RUN volta install node@20
-
 # prepare
 RUN cd ${HOME_DIR} \
-    && mkdir -p ${PATH_MLC}
+    && mkdir -p ${PATH_MLC} \
+    && mise trust ${PATH_MLC}
 
 # build groovy language server
 RUN cd ${HOME_DIR} \

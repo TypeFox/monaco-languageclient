@@ -64,9 +64,9 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 }
 ```
 
-### Volta
+### mise-en-place
 
-There are [Volta](https://volta.sh/) instructions in the `package.json` files. When you have Volta available it will ensure the exactly specified `node` and `npm` versions are used.
+We use [mise-en-place](https://mise.jdx.dev/) for tool management. In the past we used Volta, but unfourtunately is has become unmaintained. We will phase out volta instructions in the future. In the repository root you find [mise.toml](../../mise.toml) which specifies all tools required with the correct versions. Use `mise upgrade` to install the required tools.
 
 ### Bad Polyfills
 

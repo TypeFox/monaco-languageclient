@@ -153,6 +153,8 @@
     "resources:download": "tsx ./resources/scripts/downloadResources.ts",
     "build:msg": "echo Building main examples:",
     "build": "npm run build:msg && npm run clean && npm run resources:download && npm run extract:docker && npm run compile",
+    "start:server:groovy": "tsx src/groovy/server/direct.ts",
+    "start:server:jdtls": "tsx src/eclipse.jdt.ls/server/direct.ts",
     "start:server:json": "tsx src/json/server/direct.ts",
     "start:server:python": "tsx src/python/server/direct.ts",
     "langium:generate:statemachine": "langium generate --file ./src/langium/statemachine/config/langium-config.json",

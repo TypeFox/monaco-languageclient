@@ -1,14 +1,19 @@
-FROM ghcr.io/graalvm/graalpy-community:24
+FROM ghcr.io/graalvm/graalpy-community:25
 
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_FEATURE_PNPM=1
-ENV VOLTA_HOME="/root/.volta"
-ENV PATH="$VOLTA_HOME/bin:$PATH"
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ENV MISE_DATA_DIR="/mise"
+ENV MISE_CONFIG_DIR="/mise"
+ENV MISE_CACHE_DIR="/mise/cache"
+ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
+ENV PATH="/mise/shims:$PATH"
 
-RUN volta install node@22
+# install mise
+RUN curl https://mise.run | sh
 
-RUN mkdir -p /home/mlc/workspace
-RUN mkdir -p /home/mlc/server/src
+# configure mise
+RUN mise use --global node@24
+
+RUN mkdir -p /home/mlc/workspace && mkdir -p /home/mlc/server/src
 
 COPY ./packages/examples/resources/debugger/package.json /home/mlc/server
 COPY ./packages/examples/src/debugger/server/debugServer.ts /home/mlc/server/src

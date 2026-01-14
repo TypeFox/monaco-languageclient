@@ -13,7 +13,7 @@ Before installing Monaco Language Client, ensure you have:
 We recommend using a Node.js version manager such as [nvm](https://github.com/nvm-sh/nvm) or [mise](https://mise.jdx.dev/).
 
 > [!NOTE]
-> Previously we have recommended using Volta to manage your Node.js versions, but as of late it is currently [unmaintained](https://github.com/volta-cli/volta), and their team recommends moving to an alternative solution, such as mise or nvm.
+> Previously we have recommended using Volta to manage your Node.js versions, but as of late it is currently [unmaintained](https://github.com/volta-cli/volta). We now recommend to use [mise-en-place](https://mise.jdx.dev/). We will phase out volta instructions in the `monaco-languageclient` in the future.
 
 You'll also need a project that you can use to install the `monaco-languageclient`. If you don't have one yet, you can get [started quickly by creating a new Vite project](https://vite.dev/guide/#scaffolding-your-first-vite-project) with React:
 
