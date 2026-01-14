@@ -84,11 +84,17 @@ Check find the [full compatibility table](https://github.com/TypeFox/monaco-lang
 
 ## Getting started
 
+We recommend [mise-en-place](https://mise.jdx.dev/) to setup corrects version of required tools like `node` and `npm` (described [here](./docs/guides/troubleshooting.md#mise-en-place)). If you have `mise` installed use the optional isntruction below.
+
 On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Locally, from a terminal do:
 
 ```bash
+# clone the git repository
 git clone https://github.com/TypeFox/monaco-languageclient.git
 cd monaco-languageclient
+# optional: if you have mise installed
+mise upgrade
+# install npm dependencies
 npm i
 # Cleans-up, compiles and builds everything
 npm run build

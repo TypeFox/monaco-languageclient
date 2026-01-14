@@ -33,13 +33,13 @@
     "@angular/cli": "^21.0.5",
     "@angular/compiler-cli": "^21.0.8",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
-    "@types/node": "~22.15.35",
+    "@types/node": "~24.10.8",
     "vite": "~8.0.0-beta.7",
     "shx": "~0.4.0",
     "typescript": "~5.9.3"
   },
   "volta": {
-    "node": "22.20.0",
-    "npm": "10.9.3"
+    "node": "24.13.0",
+    "npm": "11.6.2"
   }
 }
