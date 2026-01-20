@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { WorkerLoader } from 'monaco-languageclient/workerFactory';
 import ReactDOM from 'react-dom/client';
 
@@ -39,7 +39,7 @@ export const createDynamicEditorComponent = async () => {
         };
     };
 
-    const configureDefaultWorkerFactory = (logger?: Logger) => {
+    const configureDefaultWorkerFactory = (logger?: ILogger) => {
         workerFactory.useWorkerFactory({
             workerLoaders: defineWorkerLoaders(),
             logger

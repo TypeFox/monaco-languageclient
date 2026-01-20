@@ -5,9 +5,9 @@
 
 'use client';
 
-import dynamic from 'next/dynamic';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { WorkerLoader } from 'monaco-languageclient/workerFactory';
+import dynamic from 'next/dynamic';
 import './views.editorOnly.css';
 
 export default function Page() {
@@ -49,7 +49,7 @@ export default function Page() {
             };
         };
 
-        const configureWorkerFactory = (logger?: Logger) => {
+        const configureWorkerFactory = (logger?: ILogger) => {
             mlcWFModule.useWorkerFactory({
                 workerLoaders: defineWorkerLoaders(),
                 logger
