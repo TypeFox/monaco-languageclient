@@ -5,9 +5,9 @@
 
 'use client';
 
-import dynamic from 'next/dynamic';
-import type { Logger } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { WorkerLoader } from 'monaco-languageclient/workerFactory';
+import dynamic from 'next/dynamic';
 import './views.editorOnly.css';
 
 export default function Page() {
@@ -28,18 +28,15 @@ export default function Page() {
         const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
             const defaultEditorWorkerService = () => new mlcWFModule.Worker(
                 new URL('../bundle/editorWorker/editor.worker.js', import.meta.url),
-                // new URL('@codingame/monaco-vscode-api/workers/editor.worker', import.meta.url),
                 { type: 'module' }
             );
             // const defaultExtensionHostWorkerMain = () => new mlcWFModule.Worker(
-            //     new URL('../bundle/extHostWorker/extensionHost.worker.js', import.meta.url),
-            //     // new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
+            //     new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
+            //     // new URL('../bundle/extHostWorker/extensionHost.worker.js', import.meta.url),
             //     { type: 'module' }
             // );
             const defaultTextMateWorker = () => new mlcWFModule.Worker(
                 new URL('../bundle/textmateWorker/worker.js', import.meta.url),
-                // new URL('../node_modules/@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
-                // new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
                 { type: 'module' }
             );
             return {
@@ -49,13 +46,13 @@ export default function Page() {
             };
         };
 
-        const configureWorkerFactory = (logger?: Logger) => {
+        const configureWorkerFactory = (logger?: ILogger) => {
             mlcWFModule.useWorkerFactory({
                 workerLoaders: defineWorkerLoaders(),
                 logger
             });
         };
-        const appConfig = await setupLangiumClientExtended(languageServerWorker, configureWorkerFactory);
+        const appConfig = await setupLangiumClientExtended(languageServerWorker, false, configureWorkerFactory);
 
         return () => <appConfig.MonacoEditorReactComp
             style={{ 'height': '100%' }}
@@ -65,11 +62,11 @@ export default function Page() {
             onVscodeApiInitDone={async () => {
                 console.log('MonacoEditorReactComp editor started.');
 
-                openDocument('/workspace/langium-types.langium');
-                openDocument('/workspace/langium-grammar.langium');
-                openDocument('/workspace/hello.ts');
-                // showDocument('/workspace/langium-grammar.langium');
-                showDocument('/workspace/hello.ts');
+                await openDocument('/workspace/langium-types.langium');
+                await openDocument('/workspace/langium-grammar.langium');
+                await openDocument('/workspace/hello.ts');
+                await showDocument('/workspace/hello.ts');
+                await showDocument('/workspace/langium-grammar.langium');
             }} />
     }, {
         ssr: false

@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import * as path from 'node:path';
 import { defineConfig } from 'vite';
 
@@ -23,11 +22,6 @@ export const config = defineConfig({
         }
     },
     optimizeDeps: {
-        esbuildOptions: {
-            plugins: [
-                importMetaUrlPlugin
-            ]
-        },
         include: [
             'langium',
             'langium/lsp',
@@ -37,9 +31,7 @@ export const config = defineConfig({
             'vscode-languageclient',
             'vscode-languageserver',
             'vscode-languageserver/browser.js',
-            'vscode-languageserver-protocol',
-            'vscode-oniguruma',
-            'vscode-textmate'
+            'vscode-languageserver-protocol'
         ]
     },
     worker: {

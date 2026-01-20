@@ -10,9 +10,7 @@ import type { PluginContext } from 'rolldown';
 const config = defineConfig({
     optimizeDeps: {
         include: [
-            'vscode/localExtensionHost',
-            'vscode-oniguruma',
-            'vscode-textmate'
+            'vscode/localExtensionHost'
         ]
     },
     build: {

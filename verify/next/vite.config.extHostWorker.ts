@@ -12,8 +12,6 @@ const config = defineConfig({
     optimizeDeps: {
         include: [
             'vscode/localExtensionHost',
-            'vscode-oniguruma',
-            'vscode-textmate'
         ]
     },
     build: {

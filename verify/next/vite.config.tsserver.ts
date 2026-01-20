@@ -9,9 +9,7 @@ import { defineConfig } from 'vite';
 const config = defineConfig({
     optimizeDeps: {
         include: [
-            'vscode/localExtensionHost',
-            'vscode-oniguruma',
-            'vscode-textmate'
+            'vscode/localExtensionHost'
         ]
     },
     build: {

@@ -5,7 +5,7 @@
     "rootDir": ".",
     "outDir": "lib",
     "declarationDir": "lib",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "plugins": [{
         "name": "next"
     }]

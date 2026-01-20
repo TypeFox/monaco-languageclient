@@ -11,13 +11,11 @@ import type { PluginContext } from 'rolldown';
 const config = defineConfig({
     optimizeDeps: {
         include: [
-            'vscode/localExtensionHost',
-            'vscode-oniguruma',
-            'vscode-textmate'
+            'vscode/localExtensionHost'
         ]
     },
     build: {
-        assetsInlineLimit: 1024 * 1024 * 128,
+        assetsInlineLimit: 0, // 1024 * 1024 * 128,
         lib: {
             entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'),
             name: 'textmateWorker',
@@ -38,9 +36,11 @@ const config = defineConfig({
 
                         if (id.endsWith('textMateTokenizationWorker.worker.js')) {
                             const code = fs.readFileSync(id, 'utf8');
-                            const base64 = fs.readFileSync('./node_modules/vscode-oniguruma/release/onig.wasm', 'base64');
-                            let outputCode = code.replace('const response = await fetch(onigurumaWASMUri);',
-                                `const response = await fetch('data:application/wasm;base64,${base64}');`);
+                            const base64 = fs.readFileSync('./node_modules/@codingame/monaco-vscode-textmate-service-override/external/vscode-oniguruma/release/onig.wasm', 'base64');
+                            let outputCode = code.replace(
+                                'const response = await fetch(onigurumaWASMUri);',
+                                `const response = await fetch('data:application/wasm;base64,${base64}')`
+                            );
                             return outputCode;
                         }
                     }

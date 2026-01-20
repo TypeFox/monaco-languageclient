@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { MonacoEditorProps } from '@typefox/monaco-editor-react';
-import type { Logger } from 'monaco-languageclient/common';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
@@ -17,7 +17,7 @@ export type ExampleAppConfig = {
     MonacoEditorReactComp: React.FC<MonacoEditorProps>;
 };
 
-export const setupLangiumClientExtended = async (languageServerWorker: Worker, vscodeApiWorkerFactory: (logger?: Logger) => void): Promise<ExampleAppConfig> => {
+export const setupLangiumClientExtended = async (languageServerWorker: Worker, enableExtHostWorker: boolean, vscodeApiWorkerFactory: (logger?: ILogger) => void): Promise<ExampleAppConfig> => {
 
     // perform all imports dynamically
     const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
@@ -95,7 +95,7 @@ takesString(0);`;
         $type: overallConfigType,
         logLevel: LogLevel.Debug,
         advanced: {
-            enableExtHostWorker: false
+            enableExtHostWorker
         },
         serviceOverrides: {
             ...getKeybindingsServiceOverride()
