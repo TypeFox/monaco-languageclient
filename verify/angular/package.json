@@ -15,10 +15,10 @@
     "reset:repo": "git clean -f -X -d"
   },
   "dependencies": {
-    "@angular/common": "^21.0.8",
-    "@angular/compiler": "^21.0.8",
-    "@angular/core": "^21.0.8",
-    "@angular/platform-browser": "^21.0.8",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
     "@codingame/monaco-vscode-api": "^25.0.0",
     "@codingame/monaco-vscode-files-service-override": "^25.0.0",
     "@codingame/monaco-vscode-json-default-extension": "^25.0.0",
@@ -28,13 +28,13 @@
     "zone.js": "^0.16.0"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "~2.2.1",
-    "@angular/build": "^21.0.5",
-    "@angular/cli": "^21.0.5",
-    "@angular/compiler-cli": "^21.0.8",
+    "@analogjs/vite-plugin-angular": "~2.2.2",
+    "@angular/build": "^21.1.0",
+    "@angular/cli": "^21.1.0",
+    "@angular/compiler-cli": "^21.1.0",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
-    "@types/node": "~24.10.8",
-    "vite": "~8.0.0-beta.7",
+    "@types/node": "~24.10.9",
+    "vite": "~7.3.1",
     "shx": "~0.4.0",
     "typescript": "~5.9.3"
   },

@@ -8,8 +8,9 @@ import { type AfterViewInit, Component } from '@angular/core';
 // import { runExtendedClient } from '../../production/mlc-bundle.js';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
-// this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
+
+// this is required syntax highlighting
 import '@codingame/monaco-vscode-json-default-extension';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';

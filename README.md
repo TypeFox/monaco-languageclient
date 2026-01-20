@@ -226,7 +226,7 @@ None of the verification examples is part of the npm workspace. Some bring subst
 
 - [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8083>.
 
-- [Angular verification example](./verify/angular): Before March 2024 this was located in [a separate repository](https://github.com/TypeFox/monaco-languageclient-ng-example). If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:8084>.
+- [Angular verification example](./verify/angular): If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:8084>. **Important**: `monaco-languageclient` currently does not support the angular build as it breaks the development and produstion build. We therefore use `@analogjs/vite-plugin-angular` which relies on vite.
 
 ### VSCode integration
 

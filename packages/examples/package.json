@@ -129,7 +129,7 @@
     "react-dom": "~19.2.0",
     "request-light": "~0.8.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^25.0.0",
-    "vscode-json-languageservice": "~5.6.4",
+    "vscode-json-languageservice": "~5.7.1",
     "vscode-languageclient": "~9.0.1",
     "vscode-languageserver": "~9.0.1",
     "vscode-uri": "~3.1.0",
@@ -144,7 +144,7 @@
     "@types/ws": "~8.18.1",
     "langium-cli": "~4.1.0",
     "mini-coi": "~0.4.2",
-    "vite-plugin-static-copy": "~3.1.4",
+    "vite-plugin-static-copy": "~3.1.5",
     "vscode-languageserver-types": "~3.17.5"
   },
   "scripts": {
