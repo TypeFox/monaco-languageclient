@@ -32,9 +32,7 @@ export default defineConfig(({ command }) => {
                 'vscode-languageclient',
                 'vscode-languageserver',
                 'vscode-languageserver/browser.js',
-                'vscode-languageserver-protocol',
-                'vscode-oniguruma',
-                'vscode-textmate'
+                'vscode-languageserver-protocol'
             ]
         },
         server: {

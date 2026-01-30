@@ -6,7 +6,6 @@
 import { defineConfig } from 'vite';
 import fs from 'node:fs';
 import * as path from 'node:path';
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 
 const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm';
@@ -15,7 +14,7 @@ const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm'
 
 export const definedViteConfig = defineConfig({
     build: {
-        rollupOptions: {
+        rolldownOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
                 json_classic: path.resolve(__dirname, 'packages/examples/json_classic.html'),
@@ -35,10 +34,6 @@ export const definedViteConfig = defineConfig({
             }
         }
     },
-    resolve: {
-        // not needed here, see https://github.com/TypeFox/monaco-languageclient#vite-dev-server-troubleshooting
-        // dedupe: ['vscode']
-    },
     server: {
         port: 20001,
         cors: {
@@ -56,11 +51,6 @@ export const definedViteConfig = defineConfig({
         }
     },
     optimizeDeps: {
-        esbuildOptions: {
-            plugins: [
-                importMetaUrlPlugin
-            ]
-        },
         include: [
             '@codingame/monaco-vscode-standalone-languages',
             '@codingame/monaco-vscode-standalone-css-language-features',
@@ -76,25 +66,23 @@ export const definedViteConfig = defineConfig({
             'vscode-languageclient',
             'vscode-languageserver',
             'vscode-languageserver/browser.js',
-            'vscode-languageserver-protocol',
-            'vscode-oniguruma',
-            'vscode-textmate'
+            'vscode-languageserver-protocol'
         ]
     },
     plugins: [
-        {
-            // For the *-language-features extensions which use SharedArrayBuffer
-            name: 'configure-response-headers',
-            apply: 'serve',
-            configureServer: (server) => {
-                server.middlewares.use((_req, res, next) => {
-                    res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless')
-                    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-                    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
-                    next()
-                })
-            }
-        },
+        // {
+        //     // For the *-language-features extensions which use SharedArrayBuffer
+        //     name: 'configure-response-headers',
+        //     apply: 'serve',
+        //     configureServer: (server) => {
+        //         server.middlewares.use((_req, res, next) => {
+        //             res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless')
+        //             res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+        //             res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+        //             next()
+        //         })
+        //     }
+        // },
         vsixPlugin()
     ],
     define: {
