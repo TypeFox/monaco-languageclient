@@ -77,10 +77,6 @@ export default {
       format: 'es'
     },
     optimizeDeps: {
-      include: [
-        'vscode-textmate',
-        'vscode-oniguruma'
-      ],
       esbuildOptions: {
         plugins: [importMetaUrlPlugin]
       }
