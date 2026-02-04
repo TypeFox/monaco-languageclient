@@ -251,10 +251,9 @@ export class MonacoVscodeApiWrapper {
 
         setUnexpectedErrorHandler((e) => {
             const message = 'Unexpected error';
-            if (this.logger.getLevel() >= LogLevel.Error) {
+            if (this.logger.getLevel() !== LogLevel.Off) {
                 this.logger.error(message, e);
             }
-            return new Error(message);
         });
     }
 
