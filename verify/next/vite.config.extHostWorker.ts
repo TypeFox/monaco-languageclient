@@ -44,7 +44,7 @@ const config = defineConfig({
 let newURL = new URL(browserUri.toString().replace('file://', ''), import.meta.url);
 console.log("newURL: " + newURL.toString());
 const response = await fetch((newURL));`;
-                            let outputCode = code.replace(search, newCode);
+                            const outputCode = code.replace(search, newCode);
                             return outputCode;
                         }
                     }

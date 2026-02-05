@@ -37,7 +37,7 @@ const config = defineConfig({
                         if (id.endsWith('textMateTokenizationWorker.worker.js')) {
                             const code = fs.readFileSync(id, 'utf8');
                             const base64 = fs.readFileSync('./node_modules/@codingame/monaco-vscode-textmate-service-override/external/vscode-oniguruma/release/onig.wasm', 'base64');
-                            let outputCode = code.replace(
+                            const outputCode = code.replace(
                                 'const response = await fetch(onigurumaWASMUri);',
                                 `const response = await fetch('data:application/wasm;base64,${base64}')`
                             );
