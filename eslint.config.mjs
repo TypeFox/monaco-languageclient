@@ -15,6 +15,7 @@ export default [{
         '**/.chrome/**/*',
         '**/node_modules/**/*',
         '**/dist/**/*',
+        '**/bundle/**/*',
         '**/lib/**/*',
         '**/out/**/*',
         '**/bin/**/*',

@@ -1,35 +1,55 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2024 TypeFox and others.
+ * Copyright (c) 2025 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import path from 'node:path';
+import * as path from 'node:path';
 import { defineConfig } from 'vite';
 
-const config = defineConfig({
+/// <reference lib="vite/config" />
+
+export const config = defineConfig({
     build: {
-        target: 'ES2022',
-        assetsInlineLimit: 0,
-        lib: {
-            entry: path.resolve(__dirname, './app/langium-dsl/worker/langium-server.ts'),
-            name: 'lsworker',
-            fileName: () => `langium-server.js`,
-            formats: ['es']
-        },
-        outDir: path.resolve(__dirname, './public/workers'),
-        copyPublicDir: false,
-        emptyOutDir: false
+        outDir: path.resolve(__dirname, 'production'),
+        rolldownOptions: {
+            input: {
+                index: path.resolve(__dirname, 'index.html')
+            },
+            output: {
+                entryFileNames: '[name].js',
+                assetFileNames: 'assets/[name][extname]'
+            }
+        }
+    },
+    optimizeDeps: {
+        include: [
+            'langium',
+            'langium/lsp',
+            'langium/grammar',
+            'vscode/localExtensionHost',
+            'vscode-jsonrpc',
+            'vscode-languageclient',
+            'vscode-languageserver',
+            'vscode-languageserver/browser.js',
+            'vscode-languageserver-protocol'
+        ]
     },
     worker: {
-        rollupOptions: {
-            external: [
-                path.resolve(__dirname, './app/langium-dsl/worker/wasm/**/*'),
-            ]
-        },
-        format: 'es',
+        format: 'es'
     },
-    esbuild: {
-        minifySyntax: false,
+    server: {
+        cors: {
+            origin: '*'
+        },
+        headers: {
+            'Cross-Origin-Opener-Policy': 'same-origin',
+            'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
+        watch: {
+            ignored: [
+                '**/.chrome/**/*'
+            ]
+        }
     }
 });
 
