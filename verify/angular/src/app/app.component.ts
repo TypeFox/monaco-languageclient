@@ -59,7 +59,7 @@ export const runExtendedClient = async () => {
         userConfiguration: {
             json: JSON.stringify({
                 'workbench.colorTheme': 'Default Dark Modern',
-                'editor.experimental.asyncTokenization': false
+                'editor.experimental.asyncTokenization': true
             })
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
