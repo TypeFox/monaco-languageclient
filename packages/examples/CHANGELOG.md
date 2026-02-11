@@ -2,6 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2026.2.2] - unreleased
+
+- Updated all `@codingame/monaco-vscode` packages to `26.0.1`.
+- Updated to `monaco-languageclient@10.8.0` and `@typefox/monaco-editor-react@7.8.0`.
+
 ## [2026.2.1] - 2026-02-04
 
 - New monaco-vscode-api / vite 8 beta 12 + esbuild-import-meta-url-plugin removal [#1017](https://github.com/TypeFox/monaco-languageclient/pull/1017)
