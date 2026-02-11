@@ -1,49 +1,13 @@
 {
   "private": true,
+  "workspaces": [
+    "packages/vscode-ws-jsonrpc",
+    "packages/client",
+    "packages/wrapper",
+    "packages/wrapper-react",
+    "packages/examples"
+  ],
   "type": "module",
-  "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
-  },
-  "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
-  },
-  "devDependencies": {
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "^26.0.1",
-    "@eslint/js": "~9.39.2",
-    "@oxlint/migrate": "~1.46.0",
-    "@stylistic/eslint-plugin": "~5.8.0",
-    "@testing-library/react": "~16.3.2",
-    "@types/node": "~24.10.13",
-    "@types/react": "~19.2.13",
-    "@types/react-dom": "~19.2.3",
-    "@typescript-eslint/eslint-plugin": "~8.55.0",
-    "@typescript-eslint/parser": "~8.55.0",
-    "@typescript/native-preview": "~7.0.0-dev.20260210.1",
-    "@vitest/browser": "~4.0.18",
-    "@vitest/browser-playwright": "~4.0.18",
-    "@vitest/coverage-v8": "~4.0.18",
-    "editorconfig": "~3.0.1",
-    "esbuild": "~0.27.3",
-    "eslint": "~9.39.2",
-    "eslint-plugin-header": "~3.1.1",
-    "eslint-plugin-import": "~2.32.0",
-    "eslint-plugin-unused-imports": "~4.4.1",
-    "globals": "~17.3.0",
-    "minimatch": "~10.1.2",
-    "oxlint": "~1.46.0",
-    "vite": "~8.0.0-beta.13",
-    "shx": "~0.4.0",
-    "tsx": "~4.21.0",
-    "typescript": "~5.9.3",
-    "vitest": "~4.0.18"
-  },
-  "overrides": {
-    "react": "~19.2.4",
-    "react-dom": "~19.2.4",
-    "vite": "~8.0.0-beta.13"
-  },
   "scripts": {
     "clean": "npm run clean --workspaces",
     "compile": "npm run compile --workspaces",
@@ -75,19 +39,57 @@
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run test",
     "reset:chrome": "shx rm -fr ./.chrome",
     "reset:repo": "git clean -f -d -x --exclude=.chrome",
-    "test": "npm run test:install && npm run test:direct",
+    "test:ci": "npm run test:install && npm run test:direct",
     "test:direct:watch": "vitest --config vitest.config.ts",
     "test:watch": "npm run test:install && npm run test:direct:watch",
-    "test:direct": "vitest --config vitest.config.ts run",
+    "test": "vitest --config vitest.config.ts run",
     "test:coverage": "vitest --config vitest.config.ts run --coverage",
     "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
-    "test:install": "playwright install --with-deps chromium"
+    "test:install": "playwright install --with-deps chromium",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
-  "workspaces": [
-    "packages/vscode-ws-jsonrpc",
-    "packages/client",
-    "packages/wrapper",
-    "packages/wrapper-react",
-    "packages/examples"
-  ]
+  "devDependencies": {
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "^26.1.0",
+    "@eslint/js": "~9.39.2",
+    "@oxlint/migrate": "~1.46.0",
+    "@stylistic/eslint-plugin": "~5.8.0",
+    "@testing-library/react": "~16.3.2",
+    "@types/node": "~24.10.13",
+    "@types/react": "~19.2.14",
+    "@types/react-dom": "~19.2.3",
+    "@typescript-eslint/eslint-plugin": "~8.55.0",
+    "@typescript-eslint/parser": "~8.55.0",
+    "@typescript/native-preview": "~7.0.0-dev.20260212.1",
+    "@vitest/browser": "~4.0.18",
+    "@vitest/browser-playwright": "~4.0.18",
+    "@vitest/coverage-v8": "~4.0.18",
+    "esbuild": "~0.27.3",
+    "eslint": "~9.39.2",
+    "eslint-plugin-header": "~3.1.1",
+    "eslint-plugin-import": "~2.32.0",
+    "eslint-plugin-unused-imports": "~4.4.1",
+    "globals": "~17.3.0",
+    "minimatch": "~10.1.2",
+    "oxfmt": "~0.31.0",
+    "oxlint": "~1.46.0",
+    "shx": "~0.4.0",
+    "tsx": "~4.21.0",
+    "typescript": "~5.9.3",
+    "vite": "~8.0.0-beta.14",
+    "vitest": "~4.0.18"
+  },
+  "overrides": {
+    "react": "~19.2.4",
+    "react-dom": "~19.2.4",
+    "vite": "~8.0.0-beta.14"
+  },
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "24.13.0",
+    "npm": "11.6.2"
+  }
 }

@@ -11,7 +11,7 @@ Whenever you use `monaco-editor`/`@codingame/monaco-vscode-editor-api` `vscode`/
 If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-api` as direct dependency, otherwise the installation will fail:
 
 ```json
-"vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1"
+"vscode": "npm:@codingame/monaco-vscode-extension-api@^26.1.0"
 ```
 
 ### Missing Overrides or Resolutions
@@ -23,7 +23,7 @@ To ensure all Monaco-related packages use a single, compatible version, you must
 ```json
 {
   "overrides": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.0.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.1.0"
   }
 }
 ```
@@ -33,7 +33,7 @@ To ensure all Monaco-related packages use a single, compatible version, you must
 ```json
 {
   "resolutions": {
-    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.0.1"
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.1.0"
   }
 }
 ```
@@ -50,7 +50,7 @@ Additionally, if you see a message in the browser console starting with `Another
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.0.1"` in you `package.json`. You can directly use it like so:
+When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.1.0"` in you `package.json`. You can directly use it like so:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -60,7 +60,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ```json
 "overrides": {
-  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.0.1"
+  "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^26.1.0"
 }
 ```
 
@@ -76,17 +76,19 @@ We use [mise-en-place](https://mise.jdx.dev/) for tool management. In the past w
 Uncaught Error: Unexpected non—whitespace character after JSON at position 2
 
 SyntaxError: Unexpected non—whitespace character after JSON at position 2
-    at JSON. parse («anonymous>)
+  at JSON. parse («anonymous>)
 ```
 
 Then it's likely you have an old version of `buffer` interfering (see [#538](https://github.com/TypeFox/monaco-languageclient/issues/538) and [#546](https://github.com/TypeFox/monaco-languageclient/issues/546)). You can enforce a current version by adding a `resolution` as shown below to your projects' `package.json`.
 
 ```json
 {
-  "resolutions": { // For Yarn
+  "resolutions": {
+    // For Yarn
     "buffer": "~6.0.3"
   },
-  "overrides": { // For npm/pnpm
+  "overrides": {
+    // For npm/pnpm
     "buffer": "~6.0.3"
   }
 }
@@ -154,8 +156,8 @@ We recommend you now use `typefox/monaco-editor-react`.
 But if you need to use `@monaco-editor/react`, then add the `monaco-editor` import at the top of your editor component file [source](https://github.com/suren-atoyan/monaco-react#use-monaco-editor-as-an-npm-package):
 
 ```javascript
-import * as monaco from "monaco-editor";
-import { loader } from "@monaco-editor/react";
+import * as monaco from 'monaco-editor';
+import { loader } from '@monaco-editor/react';
 
 loader.config({ monaco });
 ```
@@ -216,14 +218,17 @@ Monaco Language Client requires a browser environment and will not run during Se
 // ex. pages/editor.tsx
 import dynamic from 'next/dynamic';
 
-const MyEditorComponent = dynamic(async () => {
-  const comp = await import('@typefox/monaco-editor-react');
-  const { window, workspace, Uri } = (await import('vscode'));
-  // ... cont setup
-}, {
-  ssr: false,
-  loading: () => <p>Loading Editor...</p>
-});
+const MyEditorComponent = dynamic(
+  async () => {
+    const comp = await import('@typefox/monaco-editor-react');
+    const { window, workspace, Uri } = await import('vscode');
+    // ... cont setup
+  },
+  {
+    ssr: false,
+    loading: () => <p>Loading Editor...</p>
+  }
+);
 
 export default function EditorPage() {
   return <MyEditorComponent />;
@@ -244,17 +249,19 @@ For more details, see the [Next.js example](./../../verify/next).
 Uncaught Error: Unexpected non—whitespace character after JSON at position 2
 
 SyntaxError: Unexpected non—whitespace character after JSON at position 2
-    at JSON. parse («anonymous>)
+  at JSON. parse («anonymous>)
 ```
 
 Then it's likely you have an old version of `buffer` interfering (see [#538](https://github.com/TypeFox/monaco-languageclient/issues/538) and [#546](https://github.com/TypeFox/monaco-languageclient/issues/546)). You can enforce a current version by adding a `resolution` as shown below to your projects' `package.json`.
 
 ```json
 {
-  "resolutions": { // For Yarn
+  "resolutions": {
+    // For Yarn
     "buffer": "~6.0.3"
   },
-  "overrides": { // For npm/pnpm
+  "overrides": {
+    // For npm/pnpm
     "buffer": "~6.0.3"
   }
 }
@@ -272,11 +279,11 @@ Then it's likely you have an old version of `buffer` interfering (see [#538](htt
 
 - **Async Tokenization**: For large files, enable asynchronous tokenization in your editor configuration:
 
-    ```json
-    {
-      "editor.experimental.asyncTokenization": true
-    }
-    ```
+  ```json
+  {
+    "editor.experimental.asyncTokenization": true
+  }
+  ```
 
 - **Web Workers**: Offload language server processing to a Web Worker to keep the main UI thread responsive.
 
@@ -290,8 +297,8 @@ To see detailed logs from the language client and server communication, set the 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
 const vscodeApiConfig = {
-    // ...
-    logLevel: LogLevel.Debug
+  // ...
+  logLevel: LogLevel.Debug
 };
 ```
 

@@ -3,6 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "verify:ci": "yarn install && yarn run build"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-api": "^26.1.0",
+    "@codingame/monaco-vscode-configuration-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-editor-api": "^26.1.0",
+    "@codingame/monaco-vscode-editor-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-extension-api": "^26.1.0",
+    "@codingame/monaco-vscode-extensions-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-languages-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-localization-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-log-service-override": "^26.1.0",
+    "@codingame/monaco-vscode-model-service-override": "^26.1.0",
+    "monaco-languageclient-examples": "^2026.2.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.1.0",
+    "vscode-languageclient": "~9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  },
   "engines": {
     "node": ">=20.10.0",
     "npm": ">=10.2.3",
@@ -11,27 +33,5 @@
   "volta": {
     "node": "24.13.0",
     "yarn": "4.12.0"
-  },
-  "dependencies": {
-    "@codingame/monaco-vscode-api": "^26.0.1",
-    "@codingame/monaco-vscode-configuration-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-editor-api": "^26.0.1",
-    "@codingame/monaco-vscode-editor-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-extension-api": "^26.0.1",
-    "@codingame/monaco-vscode-extensions-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-languages-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-localization-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-log-service-override": "^26.0.1",
-    "@codingame/monaco-vscode-model-service-override": "^26.0.1",
-    "monaco-languageclient-examples": "^2026.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1",
-    "vscode-languageclient": "~9.0.1"
-  },
-  "devDependencies": {
-    "typescript": "~5.9.3"
-  },
-  "scripts": {
-    "build": "tsc --build tsconfig.json",
-    "verify:ci": "yarn install && yarn run build"
   }
 }

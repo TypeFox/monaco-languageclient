@@ -48,4 +48,4 @@ jobs:
     - name: Test
       shell: bash
       run: |
-        npm run test
+        npm run test:ci

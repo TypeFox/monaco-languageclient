@@ -75,7 +75,7 @@ These are the current versions of packages from this repository and their alignm
 - **monaco-languageclient**: `10.7.0` (release date: 2026-02-04)
 - **@typefox/monaco-editor-react**: `7.7.0` (release date: unrel2026-02-04eased)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `26.0.1`
+  - **@codingame/monaco-vscode-[editor]-api**: `26.1.0`
   - **vscode**: `1.108.2`
   - **monaco-editor**: `0.55.1`
 - **vscode-ws-jsonrpc**: `3.5.0` (release date: 2025-08-11)
@@ -145,7 +145,7 @@ The **json-client using classic mode** as [editor app](./packages/examples/src/j
 
 The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
 The **python-client** contains the [editor app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
-   It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
+It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
 
 #### Groovy Language client and language server example ([Location](./packages/examples/src/groovy))
 

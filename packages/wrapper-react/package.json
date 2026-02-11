@@ -1,29 +1,24 @@
 {
   "name": "@typefox/monaco-editor-react",
   "version": "7.7.0",
-  "license": "MIT",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
     "monaco-editor",
     "monaco-languageclient",
-    "typescript",
-    "react"
+    "react",
+    "typescript"
   ],
-  "type": "module",
-  "main": "./lib/index.js",
-  "module": "./lib/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    }
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md",
+  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
+  "license": "MIT",
+  "author": {
+    "name": "TypeFox",
+    "url": "https://www.typefox.io"
   },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index"
-      ]
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
+    "directory": "packages/monaco-editor-react"
   },
   "files": [
     "lib",
@@ -32,10 +27,32 @@
     "CHANGELOG.md",
     "LICENSE"
   ],
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "lib/index"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "scripts": {
     "clean": "shx rm -fr ./lib ./bundle *.tsbuildinfo",
     "compile": " tsgo --build tsconfig.src.json",
     "build": "npm run clean && npm run compile"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-editor-api": "^26.1.0",
+    "@codingame/monaco-vscode-extension-api": "^26.1.0",
+    "react": ">=18.0.0 || <20.0.0",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.1.0"
   },
   "engines": {
     "node": ">=20.10.0",
@@ -44,22 +61,5 @@
   "volta": {
     "node": "24.13.0",
     "npm": "11.6.2"
-  },
-  "dependencies": {
-    "@codingame/monaco-vscode-editor-api": "^26.0.1",
-    "@codingame/monaco-vscode-extension-api": "^26.0.1",
-    "react": ">=18.0.0 || <20.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
-    "directory": "packages/monaco-editor-react"
-  },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md",
-  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
-  "author": {
-    "name": "TypeFox",
-    "url": "https://www.typefox.io"
   }
 }

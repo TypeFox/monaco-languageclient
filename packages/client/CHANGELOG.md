@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [10.8.0] - unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `26.0.1`
+- Updated all `@codingame/monaco-vscode` packages to `26.1.0`
 
 ## [10.7.0] - 2026-02-04
 
@@ -290,7 +290,7 @@ All notable changes to this npm module are documented in this file.
 
 - Updated to `monaco-editor` `0.43.0` and `monaco-vscode-api` `1.82.2`
 - Only keep user services in`initServices`. It requires to specifically import and use services provided by [monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api#monaco-standalone-services)
-  - All *enable...* and *configure* type parameters have been removed from `monaco-languagclient`
+  - All _enable..._ and _configure_ type parameters have been removed from `monaco-languagclient`
   - languages and model services are always added by `monaco-languagclient`
   - layout, environment, extension, files and quickAccess servies are always added by `monaco-vscode-api`
   - Additional services need to be added to the package dependencies and imported and configured as shown in the [examples](https://github.com/TypeFox/monaco-languageclient#examples)
@@ -427,7 +427,7 @@ The npm packages exports the following:
 ## [2.0.2] - 2022-06-22
 
 - Align all tsconfigs and vscode-ws-jsonrpc provides esm/cjs [#390](https://github.com/TypeFox/monaco-languageclient/pull/390)
-  - Use `typesVersions` in **package.json*- for proper TypeScript import support (used in node example)
+  - Use `typesVersions` in \*_package.json_- for proper TypeScript import support (used in node example)
   - Remove AMD and CJS builds adn exports of the main library. Only `monaco-converters` and `monaco-converters/cjs` are left
 
 ## [2.0.1] - 2022-06-21
@@ -465,7 +465,7 @@ The npm packages exports the following:
   - Bugfixes resulting from this:
     - fix: Fix vscode-compatibility using webpack [#342](https://github.com/TypeFox/monaco-languageclient/pull/342)
     - Use ts-node for example [#344](https://github.com/TypeFox/monaco-languageclient/pull/344)
-    - Update README.md  [#345](https://github.com/TypeFox/monaco-languageclient/pull/345)
+    - Update README.md [#345](https://github.com/TypeFox/monaco-languageclient/pull/345)
     - Integrate webpack client example as second option [#353](https://github.com/TypeFox/monaco-languageclient/pull/353)
 - Make monaco workspace disposable [#330](https://github.com/TypeFox/monaco-languageclient/pull/330)
 - Update the protocol to version 3.17 [#350](https://github.com/TypeFox/monaco-languageclient/pull/350)
@@ -684,7 +684,10 @@ In order to use `vscode-languageclient` directly the compatibility layer was imp
   import { MonacoServices, Services } from 'monaco-languageclient';
 
   const services: MonacoServices = {
-      worspace, languages, commands, window
+    worspace,
+    languages,
+    commands,
+    window
   };
   Services.install(services);
   ```

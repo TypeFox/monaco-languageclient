@@ -3,6 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "verify:ci": "pnpm install && pnpm run build"
+  },
+  "dependencies": {
+    "monaco-languageclient-examples": "~2026.2.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  },
   "engines": {
     "node": ">=20.10.0",
     "pnpm": ">=9.15.0"
@@ -10,16 +21,5 @@
   "volta": {
     "node": "24.13.0",
     "pnpm": "10.28.2"
-  },
-  "dependencies": {
-    "monaco-languageclient-examples": "~2026.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1"
-  },
-  "devDependencies": {
-    "typescript": "~5.9.3"
-  },
-  "scripts": {
-    "build": "tsc --build tsconfig.json",
-    "verify:ci": "pnpm install && pnpm run build"
   }
 }
