@@ -2,23 +2,61 @@
   "name": "monaco-languageclient",
   "version": "10.7.0",
   "description": "Monaco Language client implementation",
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "TypeFox GmbH",
     "url": "http://www.typefox.io"
   },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
     "directory": "packages/client"
   },
-  "bugs": {
-    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
-  },
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "lib/index.d.ts"
+      ],
+      "common": [
+        "lib/common/index"
+      ],
+      "vscodeApiWrapper": [
+        "lib/vscode/index"
+      ],
+      "vscodeApiLocales": [
+        "lib/vscode/locales"
+      ],
+      "fs": [
+        "lib/fs/index"
+      ],
+      "workerFactory": [
+        "lib/worker/index"
+      ],
+      "lcwrapper": [
+        "lib/wrapper/index"
+      ],
+      "editorApp": [
+        "lib/editorApp/index"
+      ],
+      "debugger": [
+        "lib/debugger/index"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -57,52 +95,12 @@
       "default": "./lib/debugger/index.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index.d.ts"
-      ],
-      "common": [
-        "lib/common/index"
-      ],
-      "vscodeApiWrapper": [
-        "lib/vscode/index"
-      ],
-      "vscodeApiLocales": [
-        "lib/vscode/locales"
-      ],
-      "fs": [
-        "lib/fs/index"
-      ],
-      "workerFactory": [
-        "lib/worker/index"
-      ],
-      "lcwrapper": [
-        "lib/wrapper/index"
-      ],
-      "editorApp": [
-        "lib/editorApp/index"
-      ],
-      "debugger": [
-        "lib/debugger/index"
-      ]
-    }
+  "scripts": {
+    "clean": "shx rm -fr ./lib *.tsbuildinfo",
+    "compile": "tsgo --build tsconfig.src.json",
+    "build:msg": "echo Building monaco-languageclient:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
   },
-  "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
-  },
-  "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
-  },
-  "files": [
-    "lib",
-    "src",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
   "dependencies": {
     "@codingame/monaco-vscode-api": "^26.2.1",
     "@codingame/monaco-vscode-configuration-service-override": "^26.2.1",
@@ -146,10 +144,12 @@
     "@codingame/monaco-vscode-standalone-languages": "^26.2.1",
     "@codingame/monaco-vscode-standalone-typescript-language-features": "^26.2.1"
   },
-  "scripts": {
-    "clean": "shx rm -fr ./lib *.tsbuildinfo",
-    "compile": "tsgo --build tsconfig.src.json",
-    "build:msg": "echo Building monaco-languageclient:",
-    "build": "npm run build:msg && npm run clean && npm run compile"
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "24.13.0",
+    "npm": "11.6.2"
   }
 }

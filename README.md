@@ -145,7 +145,7 @@ The **json-client using classic mode** as [editor app](./packages/examples/src/j
 
 The **python-server** runs an external Node.js [Express app](./packages/examples/src/python/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application (see [Pyright Language Server](#pyright-language-server)).
 The **python-client** contains the [editor app](./packages/examples/src/python/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
-   It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
+It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/python/client/reactPython.tsx) to connect to the server. Both versions now feature a debugger, see [here](#graalpy-debugger).
 
 #### Groovy Language client and language server example ([Location](./packages/examples/src/groovy))
 

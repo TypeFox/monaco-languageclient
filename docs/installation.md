@@ -113,7 +113,7 @@ export default defineConfig({
   resolve: {
     dedupe: ['vscode']
   }
-})
+});
 ```
 
 This ensures that only one version of the `vscode` package is used, in case you have multiple dependencies that reference differing versions.

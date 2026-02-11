@@ -34,9 +34,9 @@
     "@angular/compiler-cli": "^21.1.0",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
     "@types/node": "~24.10.10",
-    "vite": "~7.3.1",
     "shx": "~0.4.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vite": "~7.3.1"
   },
   "volta": {
     "node": "24.13.0",

@@ -22,6 +22,7 @@
     "editorconfig": "~3.0.2",
     "esbuild": "~0.27.3",
     "minimatch": "~10.2.4",
+    "oxfmt": "~0.36.0",
     "oxlint": "~1.51.0",
     "oxlint-tsgolint": "~0.15.0",
     "shx": "~0.4.0",
@@ -77,7 +78,9 @@
     "test:install": "playwright install --with-deps chromium",
     "license:check": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-check",
     "license:add": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-add",
-    "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help"
+    "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "workspaces": [
     "packages/vscode-ws-jsonrpc",

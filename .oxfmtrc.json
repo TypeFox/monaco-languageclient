@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "ignorePatterns": [
+    ".chrome/**/*",
+    "**/bundle/**/*",
+    "**/dist/**/*",
+    "**/lib/**/*",
+    "**/node_modules/**/*",
+    "**/production/**/*"
+  ],
+  "endOfLine": "lf",
+  "trailingComma": "none",
+  "insertFinalNewline": true,
+  "tabWidth": 4,
+  "printWidth": 160,
+  "overrides": [
+    {
+      "files": ["*.json"],
+      "options": {
+        "printWidth": 80,
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.yml", "*.yaml", "*.md"],
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.ts"],
+      "options": {
+        "insertFinalNewline": true
+      }
+    }
+  ]
+}

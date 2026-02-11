@@ -296,12 +296,12 @@ All notable changes to this npm module are documented in this file.
 ## [2024.10.4] - 2024-10-23
 
 - Updated to `monaco-languageclient@9.0.0-next.5`, `monaco-editor-wrapper@6.0.0-next.5` and `@typefox/monaco-editor-react@6.0.0-next.5`.
-Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
+  Updated all `@codingame/monaco-vscode` packages to `10.1.1`.
 
 ## [2024.10.3] - 2024-10-21
 
 - Updated to `monaco-languageclient@9.0.0-next.4`, `monaco-editor-wrapper@6.0.0-next.4` and `@typefox/monaco-editor-react@6.0.0-next.4`.
-Updated all `@codingame/monaco-vscode` packages to `10.1.0`.
+  Updated all `@codingame/monaco-vscode` packages to `10.1.0`.
 - Updated to eslint 9
 
 ## [2024.10.2] - 20241-10-11
