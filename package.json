@@ -10,18 +10,19 @@
     "npm": "11.6.2"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "^26.2.1",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "^26.2.2",
     "@testing-library/react": "~16.3.2",
     "@types/node": "~24.10.15",
     "@types/react": "~19.2.14",
     "@types/react-dom": "~19.2.3",
-    "@typescript/native-preview": "~7.0.0-dev.20260302.1",
+    "@typescript/native-preview": "~7.0.0-dev.20260305.1",
     "@vitest/browser": "~4.0.18",
     "@vitest/browser-playwright": "~4.0.18",
     "@vitest/coverage-v8": "~4.0.18",
     "editorconfig": "~3.0.2",
     "esbuild": "~0.27.3",
     "minimatch": "~10.2.4",
+    "oxfmt": "~0.36.0",
     "oxlint": "~1.51.0",
     "oxlint-tsgolint": "~0.16.0",
     "shx": "~0.4.0",
@@ -77,7 +78,9 @@
     "test:install": "playwright install --with-deps chromium",
     "license:check": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-check",
     "license:add": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-add",
-    "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help"
+    "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "workspaces": [
     "packages/vscode-ws-jsonrpc",

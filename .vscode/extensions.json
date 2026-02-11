@@ -1,8 +1,8 @@
 {
   "recommendations": [
-    "oxc.oxc-vscode",
-    "editorconfig.editorconfig",
     "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "oxc.oxc-vscode",
     "vitest.explorer"
   ]
 }

@@ -1,19 +1,11 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.guides.bracketPairs": true,
-  "editor.formatOnSave": false,
-  "workbench.editor.revealIfOpen": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "oxc.enable.oxlint": true,
   "oxc.typeAware": true,
-  "[javascript]": {
-    "editor.formatOnSave": true,
-  },
-  "[typescript]": {
-    "editor.formatOnSave": true,
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
+  "editor.formatOnSave": true,
+  "workbench.editor.revealIfOpen": true,
   "terminal.integrated.scrollback": 10000,
   "editor.minimap.enabled": false
 }
