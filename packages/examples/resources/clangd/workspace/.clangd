@@ -1,16 +1,17 @@
 {
     CompileFlags:
-    {
-        Add: [
-            '-xc++',
-            '-std=c++2b',
-            '-pedantic-errors',
-            '-Wall',
-            '--target=wasm32-wasi',
-            '-isystem/usr/include/c++/v1',
-            '-isystem/usr/include/wasm32-wasi/c++/v1',
-            '-isystem/usr/include',
-            '-isystem/usr/include/wasm32-wasi'
-        ]
-    }
+        {
+            Add:
+                [
+                    '-xc++',
+                    '-std=c++2b',
+                    '-pedantic-errors',
+                    '-Wall',
+                    '--target=wasm32-wasi',
+                    '-isystem/usr/include/c++/v1',
+                    '-isystem/usr/include/wasm32-wasi/c++/v1',
+                    '-isystem/usr/include',
+                    '-isystem/usr/include/wasm32-wasi'
+                ]
+        }
 }

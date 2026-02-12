@@ -1,88 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>monaco-languageclient Examples</title>
+        <link rel="stylesheet" href="packages/examples/style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>monaco-languageclient Examples</title>
-    <link rel="stylesheet" href="packages/examples/style.css">
-</head>
+    <body>
+        <div style="padding: 5px">
+            <h2>Examples</h2>
 
-<body>
-    <div style="padding: 5px">
-        <h2>Examples</h2>
+            Please run <b><code>npm run build</code></b> first.
 
-        Please run <b><code>npm run build</code></b> first.
+            <h3>Langium</h3>
 
-        <h3>Langium</h3>
+            Langium Grammar DSL (Language Server in Worker): [ <a href="./packages/examples/langium_extended.html">Example Page</a> ]
+            <br />
+            Langium Statemachine (Language Server in Worker): [ <a href="./packages/examples/statemachine.html">Example Page</a> |
+            <a href="./packages/examples/react_statemachine.html">React Example Page</a> ]
+            <br />
+            &nbsp;&nbsp;->&nbsp;&nbsp;Localized Versions: [
+            <a href="./packages/examples/statemachine.html?locale=cs">cs</a> - <a href="./packages/examples/statemachine.html?locale=de">de</a> -
+            <a href="./packages/examples/statemachine.html?locale=es">es</a> - <a href="./packages/examples/statemachine.html?locale=fr">fr</a> -
+            <a href="./packages/examples/statemachine.html?locale=it">it</a> - <a href="./packages/examples/statemachine.html?locale=ja">ja</a> -
+            <a href="./packages/examples/statemachine.html?locale=ko">ko</a> - <a href="./packages/examples/statemachine.html?locale=pl">pl</a> -
+            <a href="./packages/examples/statemachine.html?locale=pt-br">pt-br</a> -
+            <a href="./packages/examples/statemachine.html?locale=qps-ploc">qps-ploc</a> - <a href="./packages/examples/statemachine.html?locale=ru">ru</a> -
+            <a href="./packages/examples/statemachine.html?locale=tr">tr</a> - <a href="./packages/examples/statemachine.html?locale=zh-hans">zh-hans</a> -
+            <a href="./packages/examples/statemachine.html?locale=zh-hant">zh-hant</a> ]
 
-        Langium Grammar DSL (Language Server in Worker): [ <a href="./packages/examples/langium_extended.html">Example Page</a> ]
-        <br>
-        Langium Statemachine (Language Server in Worker): [ <a href="./packages/examples/statemachine.html">Example Page</a> | <a href="./packages/examples/react_statemachine.html">React Example Page</a> ]
-        <br>
-        &nbsp;&nbsp;->&nbsp;&nbsp;Localized Versions: [
-        <a href="./packages/examples/statemachine.html?locale=cs">cs</a> -
-        <a href="./packages/examples/statemachine.html?locale=de">de</a> -
-        <a href="./packages/examples/statemachine.html?locale=es">es</a> -
-        <a href="./packages/examples/statemachine.html?locale=fr">fr</a> -
-        <a href="./packages/examples/statemachine.html?locale=it">it</a> -
-        <a href="./packages/examples/statemachine.html?locale=ja">ja</a> -
-        <a href="./packages/examples/statemachine.html?locale=ko">ko</a> -
-        <a href="./packages/examples/statemachine.html?locale=pl">pl</a> -
-        <a href="./packages/examples/statemachine.html?locale=pt-br">pt-br</a> -
-        <a href="./packages/examples/statemachine.html?locale=qps-ploc">qps-ploc</a> -
-        <a href="./packages/examples/statemachine.html?locale=ru">ru</a> -
-        <a href="./packages/examples/statemachine.html?locale=tr">tr</a> -
-        <a href="./packages/examples/statemachine.html?locale=zh-hans">zh-hans</a> -
-        <a href="./packages/examples/statemachine.html?locale=zh-hant">zh-hant</a> ]
+            <h3>JSON</h3>
 
-        <h3>JSON</h3>
+            Beforehand, start Language Server with: <b><code>npm run start:example:server:json</code></b>
+            <br />
+            Extended (Language Server via Web Socket): [ <a href="./packages/examples/json.html">Example Page</a> ]
+            <br />
+            Classic (Language Server via Web Socket): [ <a href="./packages/examples/json_classic.html">Example Page</a> ]
+            <br />
+            Pure Browser Implementation: [ <a href="./packages/examples/browser.html">Example Page</a> ]
 
-        Beforehand, start Language Server with: <b><code>npm run start:example:server:json</code></b>
-        <br>
-        Extended (Language Server via Web Socket): [ <a href="./packages/examples/json.html">Example Page</a> ]
-        <br>
-        Classic (Language Server via Web Socket): [ <a href="./packages/examples/json_classic.html">Example Page</a> ]
-        <br>
-        Pure Browser Implementation: [ <a href="./packages/examples/browser.html">Example Page</a> ]
+            <h3>Python</h3>
+            Beforehand, start Language Server with: <b><code>npm run start:example:server:python</code></b
+            ><br />
+            Debugger runs in container. Beforehand, start it with:
+            <b><code>docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d</code></b
+            ><br />
+            Python (Language Server via Web Socket): [ <a href="./packages/examples/python.html">Example Page</a> |
+            <a href="./packages/examples/react_python.html">React Example Page</a> ]
 
-        <h3>Python</h3>
-        Beforehand, start Language Server with: <b><code>npm run start:example:server:python</code></b><br>
-        Debugger runs in container. Beforehand, start it with: <b><code>docker compose -f ./packages/examples/resources/debugger/docker-compose.yml up -d</code></b><br>
-        Python (Language Server via Web Socket): [ <a href="./packages/examples/python.html">Example Page</a> | <a href="./packages/examples/react_python.html">React Example Page</a> ]
+            <h3>Java / Eclipse JDT LS</h3>
+            Language Server runs in container. Beforehand, start it with:
+            <b><code>docker compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d</code></b
+            ><br />
+            Java (Language Server via Web Socket): [ <a href="./packages/examples/eclipse.jdt.ls.html">Example Page</a> ]
 
-        <h3>Java / Eclipse JDT LS</h3>
-        Language Server runs in container. Beforehand, start it with: <b><code>docker compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d</code></b><br>
-        Java (Language Server via Web Socket): [ <a href="./packages/examples/eclipse.jdt.ls.html">Example Page</a> ]
+            <h3>Groovy</h3>
+            Language Server runs in container. Beforehand, start it with:
+            <b><code>docker compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d</code></b
+            ><br />
+            Groovy (Language Server via Web Socket): [ <a href="./packages/examples/groovy.html">Example Page</a> ]
 
-        <h3>Groovy</h3>
-        Language Server runs in container. Beforehand, start it with: <b><code>docker compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d</code></b><br>
-        Groovy (Language Server via Web Socket): [ <a href="./packages/examples/groovy.html">Example Page</a> ]
+            <h3>Cpp / Clangd</h3>
+            Cpp (Language Server in Worker/Wasm): [ <a href="./packages/examples/clangd.html">Example Page</a> ]
 
-        <h3>Cpp / Clangd</h3>
-        Cpp (Language Server in Worker/Wasm): [ <a href="./packages/examples/clangd.html">Example Page</a> ]
+            <h3>Multi-Language Client</h3>
+            Json & Python Language Clients App: [ <a href="./packages/examples/two_langauge_clients.html">Example Page</a> ] (Requires Json and Python Language
+            Servers, see above)
+            <h3>Application Playground</h3>
+            Application Playground (incl. Open Collaboration Tools): [ <a href="./packages/examples/appPlayground.html">Example Page</a> |
+            <a href="./packages/examples/react_appPlayground.html">React Example Page</a> ]
+            <h3>TypeScript</h3>
+            TypeScript Extension Host Worker: [ <a href="./packages/examples/tsExtHost.html">Example Page</a> ]
 
-        <h3>Multi-Language Client</h3>
-        Json & Python Language Clients App: [ <a href="./packages/examples/two_langauge_clients.html">Example Page</a> ] (Requires Json and Python Language Servers, see above)
-        <h3>Application Playground</h3>
-        Application Playground (incl. Open Collaboration Tools): [ <a href="./packages/examples/appPlayground.html">Example Page</a> | <a href="./packages/examples/react_appPlayground.html">React Example Page</a> ]
-        <h3>TypeScript</h3>
-        TypeScript Extension Host Worker: [ <a href="./packages/examples/tsExtHost.html">Example Page</a> ]
-
-        <h2>Tools & Framework Verification Examples</h2>
-        <h3>Vite</h3>
-        Beforehand, start: <b><code>cd verify/vite && npm run verify</code></b><br>
-        JSON example (vite build): [ <a href="http://localhost:8081">Example Page</a> ]
-        <h3>Webpack</h3>
-        Beforehand, start: <b><code>cd verify/webpack && npm run verify</code></b><br>
-        JSON example (webpack build): [ <a href="http://localhost:8082">Example Page</a> ]
-        <h3>Next.js</h3>
-        Beforehand, start: <b><code>cd verify/next && npm run verify</code></b><br>
-        Langium DSL example (Next.js Dev Server): [ <a href="http://localhost:8083">Example Page</a> ]
-        <h3>Angular</h3>
-        Beforehand, start: <b><code>cd verify/angular && npm run verify</code></b><br>
-        JSON example (Angular/vite build): [ <a href="http://localhost:8084">Example Page</a> ]
+            <h2>Tools & Framework Verification Examples</h2>
+            <h3>Vite</h3>
+            Beforehand, start: <b><code>cd verify/vite && npm run verify</code></b
+            ><br />
+            JSON example (vite build): [ <a href="http://localhost:8081">Example Page</a> ]
+            <h3>Webpack</h3>
+            Beforehand, start: <b><code>cd verify/webpack && npm run verify</code></b
+            ><br />
+            JSON example (webpack build): [ <a href="http://localhost:8082">Example Page</a> ]
+            <h3>Next.js</h3>
+            Beforehand, start: <b><code>cd verify/next && npm run verify</code></b
+            ><br />
+            Langium DSL example (Next.js Dev Server): [ <a href="http://localhost:8083">Example Page</a> ]
+            <h3>Angular</h3>
+            Beforehand, start: <b><code>cd verify/angular && npm run verify</code></b
+            ><br />
+            JSON example (Angular/vite build): [ <a href="http://localhost:8084">Example Page</a> ]
         </div>
-</body>
-
+    </body>
 </html>

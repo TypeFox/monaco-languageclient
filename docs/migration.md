@@ -19,21 +19,21 @@ Instead of using `MonacoEditorLanguageClientWrapper` to `init` the configuration
 import { MonacoEditorLanguageClientWrapper, type WrapperConfig } from 'monaco-editor-wrapper';
 
 const wrapperConfig: WrapperConfig = {
-    $type: 'extended',
-    htmlContainer: document.getElementById('monaco-editor-root')!,
-    vscodeApiConfig: {
+  $type: 'extended',
+  htmlContainer: document.getElementById('monaco-editor-root')!,
+  vscodeApiConfig: {
+    // ...
+  },
+  languageClientConfigs: {
+    configs: {
+      myLang: {
         // ...
-    },
-    languageClientConfigs: {
-        configs: {
-            myLang: {
-                // ...
-            }
-        }
-    },
-    editorAppConfig: {
-        // ...
+      }
     }
+  },
+  editorAppConfig: {
+    // ...
+  }
 };
 
 const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -104,11 +104,11 @@ const wrapperConfig: WrapperConfig = {
 
 ```ts
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'EditorService'
-    }
-    // ...
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'EditorService'
+  }
+  // ...
 };
 ```
 
@@ -154,22 +154,22 @@ const wrapperConfig: WrapperConfig = {
 
 ```ts
 const languageClientConfig: LanguageClientConfig = {
-    languageId,
-    connection: {
-        options: {
-            $type: 'WebSocketUrl',
-            // at this url the language server for myLang must be reachable
-            url: 'ws://localhost:30000/myLangLS'
-        }
-    },
-    clientOptions: {
-        documentSelector: [languageId],
-        workspaceFolder: {
-            index: 0,
-            name: 'workspace',
-            uri: vscode.Uri.file('/workspace')
-        }
+  languageId,
+  connection: {
+    options: {
+      $type: 'WebSocketUrl',
+      // at this url the language server for myLang must be reachable
+      url: 'ws://localhost:30000/myLangLS'
     }
+  },
+  clientOptions: {
+    documentSelector: [languageId],
+    workspaceFolder: {
+      index: 0,
+      name: 'workspace',
+      uri: vscode.Uri.file('/workspace')
+    }
+  }
 };
 
 const lcWrapper = new LanguageClientWrapper(languageClientConfig);
@@ -183,14 +183,14 @@ await lcWrapper.start();
 ```ts
 const lcManager = new LanguageClientManager();
 const languageClientConfigs: LanguageClientConfigs = {
-    configs: {
-        myLang1: {
-            // ...
-        },
-        myLang2: {
-            // ...
-        }
+  configs: {
+    myLang1: {
+      // ...
+    },
+    myLang2: {
+      // ...
     }
+  }
 };
 
 await lcManager.setConfigs(languageClientConfigs);
@@ -228,13 +228,13 @@ const wrapperConfig: WrapperConfig = {
 
 ```ts
 const editorAppConfig: EditorAppConfig = {
-    codeResources: {
-        main: {
-            text: code,
-            uri: codeUri
-        }
-    },
-    // ...
+  codeResources: {
+    main: {
+      text: code,
+      uri: codeUri
+    }
+  }
+  // ...
 };
 ```
 
@@ -251,24 +251,26 @@ const editorAppConfig: EditorAppConfig = {
 
 ```tsx
 <MonacoEditorReactComp
-    wrapperConfig={appConfig.wrapperConfig}
-    style={{ 'height': '100%' }}
-    onError={(e) => {
-        console.error(e);
-    }} />
+  wrapperConfig={appConfig.wrapperConfig}
+  style={{ height: '100%' }}
+  onError={(e) => {
+    console.error(e);
+  }}
+/>
 ```
 
 </td><td>
 
 ```tsx
 <MonacoEditorReactComp
-    vscodeApiConfig={appConfig.vscodeApiConfig}
-    editorAppConfig={appConfig.editorAppConfig}
-    languageClientConfig={appConfig.languageClientConfig}
-    style={{ 'height': '100%' }}
-    onError={(e) => {
-        console.error(e);
-    }} />
+  vscodeApiConfig={appConfig.vscodeApiConfig}
+  editorAppConfig={appConfig.editorAppConfig}
+  languageClientConfig={appConfig.languageClientConfig}
+  style={{ height: '100%' }}
+  onError={(e) => {
+    console.error(e);
+  }}
+/>
 ```
 
 </td></tr>
@@ -310,13 +312,13 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'classic',
-    viewsConfig: {
-        $type: 'EditorService'
-    },
-    serviceOverrides: {
-        ...getKeybindingsServiceOverride()
-    }
+  $type: 'classic',
+  viewsConfig: {
+    $type: 'EditorService'
+  },
+  serviceOverrides: {
+    ...getKeybindingsServiceOverride()
+  }
 };
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
 await apiWrapper.start();

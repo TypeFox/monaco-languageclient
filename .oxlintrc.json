@@ -1,8 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript"
-  ],
+  "plugins": ["typescript"],
   "categories": {
     "correctness": "error"
   },
@@ -77,9 +75,12 @@
     // currently in oxlint's nursery (=under development)
     "no-misleading-character-class": "error",
     // currently unsupported by oxlint
-    "no-multiple-empty-lines": ["error", {
+    "no-multiple-empty-lines": [
+      "error",
+      {
         "max": 1
-    }],
+      }
+    ],
     "no-new-native-nonconstructor": "error",
     "no-new-wrappers": "error",
     "no-nonoctal-decimal-escape": "error",
@@ -126,18 +127,25 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     // currently unsupported by oxlint
-    "quotes": [2, "single", {
-      "avoidEscape": true
-    }],
+    "quotes": [
+      2,
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
     "require-yield": "error",
     // currently unsupported by oxlint
     "semi": [2, "always"],
     // currently unsupported by oxlint
-    "space-before-function-paren": ["error", {
+    "space-before-function-paren": [
+      "error",
+      {
         "anonymous": "never",
         "asyncArrow": "always",
         "named": "never"
-    }],
+      }
+    ],
     "use-isnan": "error",
     "valid-typeof": "error",
     "@typescript-eslint/ban-ts-comment": "error",
@@ -169,6 +177,6 @@
     "@typescript-eslint/prefer-as-const": "error",
     "@typescript-eslint/prefer-namespace-keyword": "error",
     "@typescript-eslint/strict-boolean-expressions": "error",
-    "@typescript-eslint/triple-slash-reference": "error",
+    "@typescript-eslint/triple-slash-reference": "error"
   }
 }

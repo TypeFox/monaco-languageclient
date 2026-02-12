@@ -4,10 +4,10 @@
     "noEmit": true,
     "rootDir": "test"
   },
-  "references": [{
-    "path": "./tsconfig.src.json"
-  }],
-  "include": [
-    "test/**/*.ts",
-  ]
+  "references": [
+    {
+      "path": "./tsconfig.src.json"
+    }
+  ],
+  "include": ["test/**/*.ts"]
 }

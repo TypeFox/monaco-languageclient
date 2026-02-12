@@ -12,7 +12,6 @@ import { describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
 describe('Test MonacoEditorReactComp', () => {
-
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
@@ -29,15 +28,17 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const deferred = new Deferred();
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            style={{ 'height': '800px' }}
-            onError={(error) => {
-                expect(error.message).toEqual('View Service Type "ViewsService" requires a HTMLElement.');
-                deferred.resolve();
-            }}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                style={{ height: '800px' }}
+                onError={(error) => {
+                    expect(error.message).toEqual('View Service Type "ViewsService" requires a HTMLElement.');
+                    deferred.resolve();
+                }}
+            />
+        );
         await expect(await deferred.promise).toBeUndefined();
 
         renderResult.unmount();
@@ -55,12 +56,14 @@ describe('Test MonacoEditorReactComp', () => {
         });
 
         const deferred = new Deferred();
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            style={{ 'height': '800px' }}
-            onVscodeApiInitDone={() => deferred.resolve()}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                style={{ height: '800px' }}
+                onVscodeApiInitDone={() => deferred.resolve()}
+            />
+        );
         await expect(await deferred.promise).toBeUndefined();
 
         renderResult.unmount();

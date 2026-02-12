@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------------------------
-* Copyright (c) 2024 TypeFox and others.
-* Licensed under the MIT License. See LICENSE in the package root for license information.
-* ------------------------------------------------------------------------------------------ */
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
 import type { RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
@@ -18,9 +18,7 @@ export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, con
         await vscode.workspace.openTextDocument(configResult.helloJsonUri)
     ]);
 
-    await Promise.all([
-        await vscode.window.showTextDocument(configResult.helloTsUri)
-    ]);
+    await Promise.all([await vscode.window.showTextDocument(configResult.helloTsUri)]);
 
     console.log('Application Playground started');
 };

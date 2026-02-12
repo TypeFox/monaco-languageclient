@@ -13,7 +13,6 @@ import { describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, hundredMs } from './support/helper.js';
 
 describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
-
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
         viewsConfig: {
@@ -34,16 +33,18 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
 
         const deferred = new Deferred();
         let lcsManager: LanguageClientManager | undefined;
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
-                lcsManager = lcsManagerPassed;
-                deferred.resolve();
-            }}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfig}
+                style={{ height: '800px' }}
+                onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
+                    lcsManager = lcsManagerPassed;
+                    deferred.resolve();
+                }}
+            />
+        );
         await expect(await deferred.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
@@ -64,29 +65,33 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
 
         let lcsManager: LanguageClientManager | undefined;
         const deferred = new Deferred();
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
-                lcsManager = lcsManagerPassed;
-                deferred.resolve();
-            }}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfig}
+                style={{ height: '800px' }}
+                onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
+                    lcsManager = lcsManagerPassed;
+                    deferred.resolve();
+                }}
+            />
+        );
         await expect(await deferred.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
         const deferredLc = new Deferred();
         const languageClientConfig2 = createDefaultLanguageClientConfig();
-        renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig2}
-            enforceLanguageClientDispose={true}
-            onDisposeLanguageClient={() => deferredLc.resolve()}
-        />);
+        renderResult.rerender(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfig2}
+                enforceLanguageClientDispose={true}
+                onDisposeLanguageClient={() => deferredLc.resolve()}
+            />
+        );
         await expect(await deferredLc.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.haveLanguageClient()).toBeFalsy();
@@ -109,16 +114,18 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
 
         const deferredLc = new Deferred();
         let lcsManager: LanguageClientManager | undefined;
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
-                lcsManager = lcsManagerPassed;
-                deferredLc.resolve();
-            }}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfig}
+                style={{ height: '800px' }}
+                onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
+                    lcsManager = lcsManagerPassed;
+                    deferredLc.resolve();
+                }}
+            />
+        );
         await expect(await deferredLc.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
@@ -129,20 +136,22 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             }
         });
         const deferred2 = new Deferred();
-        renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig2}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            triggerReprocessConfig={1}
-            onConfigProcessed={async (result) => {
-                expect(result.textUpdated).toBe(true);
-                expect(result.editorApp).toBeDefined();
-                await delayExecution(hundredMs);
-                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
-                deferred2.resolve();
-            }}
-        />);
+        renderResult.rerender(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig2}
+                languageClientConfig={languageClientConfig}
+                style={{ height: '800px' }}
+                triggerReprocessConfig={1}
+                onConfigProcessed={async (result) => {
+                    expect(result.textUpdated).toBe(true);
+                    expect(result.editorApp).toBeDefined();
+                    await delayExecution(hundredMs);
+                    expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                    deferred2.resolve();
+                }}
+            />
+        );
         await expect(await deferred2.promise).toBeUndefined();
 
         lcsManager?.dispose(true);
@@ -163,18 +172,20 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
         const deferredLc = new Deferred();
         const deferredEditor = new Deferred();
         let lcsManager: LanguageClientManager | undefined;
-        const renderResult = render(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfig}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
-                lcsManager = lcsManagerPassed;
-                expect(lcsManager.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
-                deferredLc.resolve();
-            }}
-            onEditorStartDone={() => deferredEditor.resolve()}
-        />);
+        const renderResult = render(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfig}
+                style={{ height: '800px' }}
+                onLanguageClientsStartDone={(lcsManagerPassed: LanguageClientManager) => {
+                    lcsManager = lcsManagerPassed;
+                    expect(lcsManager.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
+                    deferredLc.resolve();
+                }}
+                onEditorStartDone={() => deferredEditor.resolve()}
+            />
+        );
         await expect(Promise.all([deferredEditor.promise, deferredLc.promise])).resolves.toEqual([undefined, undefined]);
 
         const editorAppConfig2 = createDefaultEditorAppConfig({
@@ -188,36 +199,40 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             supportHtml: true
         };
         const deferred2 = new Deferred();
-        renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig2}
-            languageClientConfig={languageClientConfigs2}
-            style={{ 'height': '800px' }}
-            triggerReprocessConfig={1}
-            onConfigProcessed={async (result) => {
-                expect(result.textUpdated).toBe(true);
-                expect(result.editorApp).toBeDefined();
-                await delayExecution(hundredMs);
-                expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
-                deferred2.resolve();
-            }}
-            onError={(error) => {
-                expect(error.message).toEqual('A languageclient config with id "langium" already exists and you confiured to not override.');
-            }}
-        />);
+        renderResult.rerender(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig2}
+                languageClientConfig={languageClientConfigs2}
+                style={{ height: '800px' }}
+                triggerReprocessConfig={1}
+                onConfigProcessed={async (result) => {
+                    expect(result.textUpdated).toBe(true);
+                    expect(result.editorApp).toBeDefined();
+                    await delayExecution(hundredMs);
+                    expect(result.editorApp?.getEditor()?.getValue()).toBe(codeUpdated);
+                    deferred2.resolve();
+                }}
+                onError={(error) => {
+                    expect(error.message).toEqual('A languageclient config with id "langium" already exists and you confiured to not override.');
+                }}
+            />
+        );
         await expect(await deferred2.promise).toBeUndefined();
 
         const languageClientConfigs3 = createDefaultLanguageClientConfig();
         const deferred3 = new Deferred();
         // you have to enforce dispose of the LanguageClient if you want to restart with new configuration
-        renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfigs3}
-            style={{ 'height': '800px' }}
-            enforceLanguageClientDispose={true}
-            onDisposeLanguageClient={() => deferred3.resolve()}
-        />);
+        renderResult.rerender(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfigs3}
+                style={{ height: '800px' }}
+                enforceLanguageClientDispose={true}
+                onDisposeLanguageClient={() => deferred3.resolve()}
+            />
+        );
         await expect(await deferred3.promise).toBeUndefined();
 
         const languageClientConfigs4 = createDefaultLanguageClientConfig();
@@ -225,13 +240,15 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             supportHtml: true
         };
         const deferred4 = new Deferred();
-        renderResult.rerender(<MonacoEditorReactComp
-            vscodeApiConfig={vscodeApiConfig}
-            editorAppConfig={editorAppConfig}
-            languageClientConfig={languageClientConfigs4}
-            style={{ 'height': '800px' }}
-            onLanguageClientsStartDone={() => deferred4.resolve()}
-        />);
+        renderResult.rerender(
+            <MonacoEditorReactComp
+                vscodeApiConfig={vscodeApiConfig}
+                editorAppConfig={editorAppConfig}
+                languageClientConfig={languageClientConfigs4}
+                style={{ height: '800px' }}
+                onLanguageClientsStartDone={() => deferred4.resolve()}
+            />
+        );
         await expect(await deferred4.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
@@ -240,5 +257,4 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
         cleanHtmlBody();
         await delayExecution(hundredMs);
     });
-
 });

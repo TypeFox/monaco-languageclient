@@ -30,7 +30,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
         console.log(`Langium worker URL: ${workerUrl}`);
         return new Worker(workerUrl, {
             type: 'module',
-            name: 'Langium LS',
+            name: 'Langium LS'
         });
     };
 
@@ -65,18 +65,16 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     <div id="editors"></div>
 </div>`;
     const viewsInit = async () => {
-        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart, } = await import('@codingame/monaco-vscode-views-service-override');
+        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart } = await import('@codingame/monaco-vscode-views-service-override');
 
-        for (const config of [
-            { part: Parts.EDITOR_PART, element: '#editors' },
-        ]) {
+        for (const config of [{ part: Parts.EDITOR_PART, element: '#editors' }]) {
             attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
 
             if (!isPartVisibile(config.part)) {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
             }
 
-            onPartVisibilityChange(config.part, visible => {
+            onPartVisibilityChange(config.part, (visible) => {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
             });
         }
@@ -107,30 +105,36 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
             })
         },
         monacoWorkerFactory: configureDefaultWorkerFactory,
-        extensions: [{
-            config: {
-                name: 'langium-example',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'langium-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [
+                            {
+                                id: 'langium',
+                                extensions: ['.langium'],
+                                aliases: ['langium', 'LANGIUM'],
+                                configuration: '/workspace/langium-configuration.json'
+                            }
+                        ],
+                        grammars: [
+                            {
+                                language: 'langium',
+                                scopeName: 'source.langium',
+                                path: '/workspace/langium-grammar.json'
+                            }
+                        ]
+                    }
                 },
-                contributes: {
-                    languages: [{
-                        id: 'langium',
-                        extensions: ['.langium'],
-                        aliases: ['langium', 'LANGIUM'],
-                        configuration: '/workspace/langium-configuration.json'
-                    }],
-                    grammars: [{
-                        language: 'langium',
-                        scopeName: 'source.langium',
-                        path: '/workspace/langium-grammar.json'
-                    }]
-                }
-            },
-            filesOrContents: extensionFilesOrContents
-        }]
+                filesOrContents: extensionFilesOrContents
+            }
+        ]
     };
 
     const languageClientConfig: LanguageClientConfig = {

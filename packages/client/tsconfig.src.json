@@ -6,10 +6,10 @@
     "outDir": "lib",
     "declarationDir": "lib"
   },
-  "references": [{
-    "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
-  }],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "references": [
+    {
+      "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
+    }
+  ],
+  "include": ["src/**/*.ts"]
 }

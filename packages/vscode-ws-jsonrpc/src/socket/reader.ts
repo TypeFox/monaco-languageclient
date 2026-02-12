@@ -14,17 +14,13 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
     protected state: 'initial' | 'listening' | 'closed' = 'initial';
     protected callback: DataCallback | undefined;
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-    protected readonly events: Array<{ message?: any, error?: any }> = [];
+    protected readonly events: Array<{ message?: any; error?: any }> = [];
 
     constructor(socket: IWebSocket) {
         super();
         this.socket = socket;
-        this.socket.onMessage(message =>
-            this.readMessage(message)
-        );
-        this.socket.onError(error =>
-            this.fireError(error)
-        );
+        this.socket.onMessage((message) => this.readMessage(message));
+        this.socket.onError((error) => this.fireError(error));
         this.socket.onClose((code, reason) => {
             if (code !== 1000) {
                 const error: Error = {

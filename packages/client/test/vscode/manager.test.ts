@@ -11,38 +11,43 @@ import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-lan
 import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests', () => {
-
     let apiWrapper: MonacoVscodeApiWrapper;
     const htmlContainer = createMonacoEditorDiv();
 
     beforeAll(() => {
         const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
-        apiConfig.extensions = [{
-            config: {
-                name: 'unit-test-extension',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        apiConfig.extensions = [
+            {
+                config: {
+                    name: 'unit-test-extension',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [
+                            {
+                                id: 'js',
+                                extensions: ['.js'],
+                                configuration: './language-configuration.json'
+                            }
+                        ],
+                        grammars: [
+                            {
+                                language: 'js',
+                                scopeName: 'source.js',
+                                path: './javascript.tmLanguage.json'
+                            }
+                        ]
+                    }
                 },
-                contributes: {
-                    languages: [{
-                        id: 'js',
-                        extensions: ['.js'],
-                        configuration: './language-configuration.json'
-                    }],
-                    grammars: [{
-                        language: 'js',
-                        scopeName: 'source.js',
-                        path: './javascript.tmLanguage.json'
-                    }]
-                }
-            },
-            filesOrContents: new Map([
-                ['/language-configuration.json', '{}'],
-                ['/javascript.tmLanguage.json', '{}']
-            ]),
-        }];
+                filesOrContents: new Map([
+                    ['/language-configuration.json', '{}'],
+                    ['/javascript.tmLanguage.json', '{}']
+                ])
+            }
+        ];
         apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
     });
 
@@ -104,13 +109,15 @@ describe('MonacoVscodeApiWrapper Tests', () => {
             }
         };
 
-        expect(() => apiWrapper['configureDevLogLevel']()).toThrowError('You have configured mismatching logLevels: 1 (wrapperConfig) 3 (workspaceConfig.developmentOptions)');
+        expect(() => apiWrapper['configureDevLogLevel']()).toThrowError(
+            'You have configured mismatching logLevels: 1 (wrapperConfig) 3 (workspaceConfig.developmentOptions)'
+        );
     });
 
     test.sequential('test semanticHighlighting.enabled workaround', async () => {
         expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(true);
 
-        const semHigh = await new Promise<unknown>(resolve => {
+        const semHigh = await new Promise<unknown>((resolve) => {
             setTimeout(() => {
                 resolve(StandaloneServices.get(IConfigurationService).getValue('editor.semanticHighlighting.enabled'));
             }, 100);
@@ -122,5 +129,4 @@ describe('MonacoVscodeApiWrapper Tests', () => {
         expect(() => apiWrapper.dispose()).not.toThrowError();
         await expect(await apiWrapper.initExtensions()).toBeUndefined();
     });
-
 });

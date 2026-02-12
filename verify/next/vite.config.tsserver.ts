@@ -8,9 +8,7 @@ import { defineConfig } from 'vite';
 
 const config = defineConfig({
     optimizeDeps: {
-        include: [
-            'vscode/localExtensionHost'
-        ]
+        include: ['vscode/localExtensionHost']
     },
     build: {
         assetsInlineLimit: 0, // 1024 * 1024 * 128,
@@ -31,7 +29,6 @@ const config = defineConfig({
         outDir: path.resolve(__dirname, 'bundle/tsserver'),
         emptyOutDir: true
     }
-
 });
 
 export default config;

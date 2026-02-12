@@ -81,7 +81,7 @@ export type PythonAppConfig = {
     vscodeApiConfig: MonacoVscodeApiConfig;
     editorAppConfig: EditorAppConfig;
     configParams: ConfigParams;
-}
+};
 
 export const createPythonAppConfig = (): PythonAppConfig => {
     const configParams = createDefaultConfigParams('/home/mlc', document.body);
@@ -192,7 +192,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
                             });
                         }, 250);
                     },
-                    reportStatus: true,
+                    reportStatus: true
                 }
             },
             messageTransports: { reader, writer }
@@ -203,7 +203,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
                 index: 0,
                 name: configParams.workspaceRoot,
                 uri: vscode.Uri.parse(configParams.workspaceRoot)
-            },
+            }
         }
     };
 

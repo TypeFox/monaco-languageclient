@@ -6,9 +6,11 @@
     "outDir": "lib",
     "declarationDir": "lib",
     "jsx": "react-jsx",
-    "plugins": [{
+    "plugins": [
+      {
         "name": "next"
-    }]
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -21,10 +23,5 @@
     "editor/src/**/*",
     "bundle/**/*"
   ],
-  "exclude": [
-    "editor/**/*",
-    "dist/**/*",
-    "lib/**/*",
-    "node_modules/**/*"
-  ]
+  "exclude": ["editor/**/*", "dist/**/*", "lib/**/*", "node_modules/**/*"]
 }

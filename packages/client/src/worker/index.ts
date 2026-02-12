@@ -38,18 +38,11 @@ export const useWorkerFactory = (config: WorkerFactoryConfig) => {
 };
 
 export const defineDefaultWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
-    const defaultEditorWorkerService = () => new Worker(
-        new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
-        { type: 'module' }
-    );
-    const defaultExtensionHostWorkerMain = () => new Worker(
-        new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url),
-        { type: 'module' }
-    );
-    const defaultTextMateWorker = () => new Worker(
-        new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url),
-        { type: 'module' }
-    );
+    const defaultEditorWorkerService = () =>
+        new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' });
+    const defaultExtensionHostWorkerMain = () =>
+        new Worker(new URL('@codingame/monaco-vscode-api/workers/extensionHost.worker', import.meta.url), { type: 'module' });
+    const defaultTextMateWorker = () => new Worker(new URL('@codingame/monaco-vscode-textmate-service-override/worker', import.meta.url), { type: 'module' });
 
     return {
         // if you import monaco api as 'monaco-editor': monaco-editor/esm/vs/editor/editor.worker.js
@@ -70,4 +63,3 @@ export const configureDefaultWorkerFactory = (logger?: ILogger) => {
         logger
     });
 };
-

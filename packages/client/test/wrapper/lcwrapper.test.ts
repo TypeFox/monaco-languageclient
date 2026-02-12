@@ -14,7 +14,6 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createMonacoEditorDiv, createUnreachableWorkerConfig } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
-
     beforeAll(async () => {
         const apiConfig: MonacoVscodeApiConfig = {
             $type: 'extended',
@@ -65,7 +64,7 @@ describe('Test LanguageClientWrapper', () => {
             await languageClientWrapper.start();
         } catch (_error) {
             // ignore
-        };
+        }
 
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
@@ -122,7 +121,7 @@ describe('Test LanguageClientWrapper', () => {
         } catch (_error) {
             // ignore
             console.error(_error);
-        };
+        }
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
         // dispose & verify
@@ -135,7 +134,7 @@ describe('Test LanguageClientWrapper', () => {
         } catch (_error) {
             // ignore
             console.error(_error);
-        };
+        }
         expect(languageClientWrapper.getWorker()).toBeTruthy();
     });
 
@@ -152,5 +151,4 @@ describe('Test LanguageClientWrapper', () => {
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);
     });
-
 });

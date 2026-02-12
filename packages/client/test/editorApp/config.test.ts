@@ -7,7 +7,6 @@ import { describe, expect, test } from 'vitest';
 import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
 
 describe('createUrl', () => {
-
     test('test createUrl: ws', () => {
         const url = createUrl({
             secured: false,
@@ -121,9 +120,10 @@ describe('createUrl', () => {
     });
 
     test('test createUrl: ws, not proper url', () => {
-        expect(() => createUrl({
-            url: 'http://www.testme.com:30000/sampleServer'
-        } as WebSocketConfigOptionsUrl)).toThrowError('This is not a proper websocket url: http://www.testme.com:30000/sampleServer');
+        expect(() =>
+            createUrl({
+                url: 'http://www.testme.com:30000/sampleServer'
+            } as WebSocketConfigOptionsUrl)
+        ).toThrowError('This is not a proper websocket url: http://www.testme.com:30000/sampleServer');
     });
-
 });

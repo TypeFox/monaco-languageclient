@@ -16,7 +16,7 @@ export class JsonStream {
     #inEscape = 0;
     readonly #textDecoder = new TextDecoder();
 
-    constructor() { }
+    constructor() {}
 
     /**
      * Insert a char into current partial JSON

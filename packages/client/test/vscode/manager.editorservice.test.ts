@@ -10,7 +10,6 @@ import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests: Different config', () => {
-
     test('Start MonacoVscodeApiWrapper with EditorService but no htmlContainer', async () => {
         const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'EditorService');
 
@@ -21,5 +20,4 @@ describe('MonacoVscodeApiWrapper Tests: Different config', () => {
         // eslint-disable-next-line dot-notation
         expect((apiWrapper['logger'] as ILogger).getLevel()).toBe(LogLevel.Off);
     });
-
 });

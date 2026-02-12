@@ -17,7 +17,6 @@ import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../su
 import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 
 describe.sequential('Test WorkerLoaders', () => {
-
     let editor: monaco.editor.IStandaloneCodeEditor;
     const htmlContainer = createMonacoEditorDiv();
 
@@ -67,5 +66,4 @@ describe.sequential('Test WorkerLoaders', () => {
         editor.setModel(modelRefHtml.object.textEditorModel);
         await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
-
 });

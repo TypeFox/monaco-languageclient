@@ -15,10 +15,7 @@ export const runJsonServer = (baseDir: string, relativeDir: string) => {
         pathName: '/sampleServer',
         serverPort: 30000,
         runCommand: 'node',
-        runCommandArgs: [
-            processRunPath,
-            '--stdio'
-        ],
+        runCommandArgs: [processRunPath, '--stdio'],
         wsServerOptions: {
             noServer: true,
             perMessageDeflate: false

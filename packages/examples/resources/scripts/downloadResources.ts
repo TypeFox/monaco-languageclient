@@ -31,9 +31,15 @@ const downloadResource = async (url: string, targetDir: string, filename: string
 // Source: https://gist.github.com/wanglf/7acc591890dc0d8ceff1e7ec9af32a55?permalink_comment_id=4151555#gistcomment-4151555
 // https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${publisher}/vsextensions/${extension}/${version}/vspackage
 
-await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/github-vscode-theme/6.3.5/vspackage',
-    resolve(getLocalDirectory(), '../vsix/'), 'github-vscode-theme.vsix');
+await downloadResource(
+    'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/github-vscode-theme/6.3.5/vspackage',
+    resolve(getLocalDirectory(), '../vsix/'),
+    'github-vscode-theme.vsix'
+);
 
 // not yet used
-await downloadResource('https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.3.5/vspackage',
-    resolve(getLocalDirectory(), '../vsix/'), 'open-collaboration-tools.vsix');
+await downloadResource(
+    'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/TypeFox/vsextensions/open-collaboration-tools/0.3.5/vspackage',
+    resolve(getLocalDirectory(), '../vsix/'),
+    'open-collaboration-tools.vsix'
+);

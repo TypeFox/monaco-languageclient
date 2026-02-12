@@ -6,7 +6,5 @@
     "outDir": "lib",
     "declarationDir": "lib"
   },
-  "include": [
-    "src/**/*.ts",
-  ]
+  "include": ["src/**/*.ts"]
 }

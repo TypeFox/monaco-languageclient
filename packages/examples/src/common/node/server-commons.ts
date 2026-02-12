@@ -19,7 +19,7 @@ export interface LanguageServerRunConfig {
     serverPort: number;
     runCommand: string;
     runCommandArgs: string[];
-    wsServerOptions: ServerOptions,
+    wsServerOptions: ServerOptions;
     spawnOptions?: cp.SpawnOptions;
     logMessages?: boolean;
     requestMessageHandler?: (message: RequestMessage) => RequestMessage;
@@ -37,7 +37,7 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
     const socketConnection = createConnection(reader, writer, () => socket.dispose());
     const serverConnection = createServerProcess(serverName, runCommand, runCommandArgs, spawnOptions);
     if (serverConnection !== undefined) {
-        forward(socketConnection, serverConnection, message => {
+        forward(socketConnection, serverConnection, (message) => {
             if (Message.isRequest(message)) {
                 if (message.method === InitializeRequest.type.method) {
                     const initializeParams = message.params as InitializeParams;
@@ -66,27 +66,31 @@ export const launchLanguageServer = (runconfig: LanguageServerRunConfig, socket:
     }
 };
 
-export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
+export const upgradeWsServer = (
+    runconfig: LanguageServerRunConfig,
     config: {
-        server: Server,
-        wss: WebSocketServer
-    }) => {
+        server: Server;
+        wss: WebSocketServer;
+    }
+) => {
     config.server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
         const baseURL = `http://${request.headers.host}/`;
         const pathName = request.url !== undefined ? new URL(request.url, baseURL).pathname : undefined;
         if (pathName === runconfig.pathName) {
-            config.wss.handleUpgrade(request, socket, head, webSocket => {
+            config.wss.handleUpgrade(request, socket, head, (webSocket) => {
                 const socket: IWebSocket = {
-                    send: content => webSocket.send(content, error => {
-                        if (error) {
-                            throw error;
-                        }
-                    }),
-                    onMessage: cb => webSocket.on('message', (data) => {
-                        cb(data);
-                    }),
-                    onError: cb => webSocket.on('error', cb),
-                    onClose: cb => webSocket.on('close', cb),
+                    send: (content) =>
+                        webSocket.send(content, (error) => {
+                            if (error) {
+                                throw error;
+                            }
+                        }),
+                    onMessage: (cb) =>
+                        webSocket.on('message', (data) => {
+                            cb(data);
+                        }),
+                    onError: (cb) => webSocket.on('error', cb),
+                    onClose: (cb) => webSocket.on('close', cb),
                     dispose: () => webSocket.close()
                 };
                 // launch the server when the web socket is opened

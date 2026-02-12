@@ -23,7 +23,6 @@ interface RequiredResources {
 }
 
 export class ClangdInteractionWorker implements ComRouter {
-
     private endpointWorker?: ComChannelEndpoint;
 
     private reader?: BrowserMessageReader;
@@ -141,7 +140,7 @@ export class ClangdInteractionWorker implements ComRouter {
         this.markStarting();
 
         const textEncoder = new TextEncoder();
-        let resolveStdinReady = () => { };
+        let resolveStdinReady = () => {};
         const stdinChunks: string[] = [];
         const currentStdinChunk: Array<number | null> = [];
 
@@ -193,9 +192,10 @@ export class ClangdInteractionWorker implements ComRouter {
                 message: WorkerMessage.fromPayload(
                     new RawPayload({
                         type: 'error',
-                        value: 'clangd aborted',
+                        value: 'clangd aborted'
                     }),
-                    'clangd_error')
+                    'clangd_error'
+                )
             });
         };
 
@@ -335,7 +335,6 @@ export class ClangdInteractionWorker implements ComRouter {
         if (!isWorkspaceLoaded) {
             let mainFiles: Record<string, () => Promise<string | unknown>> = {};
             if (this.useCompressedWorkspace && this.compressedWorkspaceUrl !== undefined) {
-
                 // Fetches a compressed workspace from a given URL (zip file)
                 // The additional conversion to array buffer is necessary for JSZip to work correctly
                 // It is expected that there is a workspace directory at top level in the zip file
@@ -370,7 +369,6 @@ export class ClangdInteractionWorker implements ComRouter {
         const dirsToCreate = new Set<string>();
         const filesToUse: Record<string, () => Promise<string | unknown>> = {};
         for (const [sourceFile, content] of Object.entries(files)) {
-
             let shortSourceFile = sourceFile.replace(dirReplacer, '');
             if (!shortSourceFile.startsWith('//')) {
                 shortSourceFile = shortSourceFile.substring(1);
@@ -385,7 +383,6 @@ export class ClangdInteractionWorker implements ComRouter {
             let dirToCreate = '';
             const targetDirParts = targetDir.split('/');
             for (const part of targetDirParts) {
-
                 if (part.length > 0) {
                     dirToCreate = `${dirToCreate}/${part}`;
                     // set reduces to unique directories
@@ -415,9 +412,9 @@ export class ClangdInteractionWorker implements ComRouter {
             try {
                 let contentAsString: string;
                 if (this.useCompressedWorkspace) {
-                    contentAsString = await content() as string;
+                    contentAsString = (await content()) as string;
                 } else {
-                    contentAsString = (await content() as RawContent).default;
+                    contentAsString = ((await content()) as RawContent).default;
                 }
                 this.emscriptenFS.writeFile(targetFile, contentAsString);
                 console.log(`Wrote file: ${targetFile}`);
@@ -444,11 +441,12 @@ export class ClangdInteractionWorker implements ComRouter {
             try {
                 // just push the binary content to the client
                 const content = this.emscriptenFS.readFile(filename, { encoding: 'binary' });
-                allPromises.push(this.remoteFs.syncFile({
-                    resourceUri: filename,
-                    content: content as unknown as ArrayBufferLike
-                }));
-
+                allPromises.push(
+                    this.remoteFs.syncFile({
+                        resourceUri: filename,
+                        content: content as unknown as ArrayBufferLike
+                    })
+                );
             } catch (e) {
                 console.error(`Unexpected error when reading file ${filename}: ${e}`);
             }

@@ -22,7 +22,6 @@ import { ModelRefs } from './config.js';
  * It provides the generic functionality for both implementations.
  */
 export class EditorApp {
-
     private id: string;
     private config: EditorAppConfig;
 
@@ -46,7 +45,9 @@ export class EditorApp {
     constructor(userAppConfig?: EditorAppConfig) {
         this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
         if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
+            throw new Error(
+                `Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`
+            );
         }
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
@@ -120,7 +121,7 @@ export class EditorApp {
             await this.getStartingAwait();
         }
 
-        let startingResolve: (value: void | PromiseLike<void>) => void = () => { };
+        let startingResolve: (value: void | PromiseLike<void>) => void = () => {};
         this.startingAwait = new Promise<void>((resolve) => {
             startingResolve = resolve;
         });
@@ -145,7 +146,7 @@ export class EditorApp {
                 // register own language first
                 monaco.languages.register(languageDef.languageExtensionConfig);
 
-                const languageRegistered = monaco.languages.getLanguages().filter(x => x.id === languageDef.languageExtensionConfig.id);
+                const languageRegistered = monaco.languages.getLanguages().filter((x) => x.id === languageDef.languageExtensionConfig.id);
                 if (languageRegistered.length === 0) {
                     // this is only meaningful for languages supported by monaco out of the box
                     monaco.languages.register({
@@ -165,8 +166,11 @@ export class EditorApp {
             }
 
             if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-                StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
-                    this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
+                StandaloneServices.get(IConfigurationService).updateValue(
+                    'editor.semanticHighlighting.enabled',
+                    this.config.editorOptions['semanticHighlighting.enabled'],
+                    ConfigurationTarget.USER
+                );
             }
 
             await this.createEditors(htmlContainer);
@@ -226,7 +230,7 @@ export class EditorApp {
         }
     }
 
-    updateCode(code: { modified?: string, original?: string }) {
+    updateCode(code: { modified?: string; original?: string }) {
         if (this.isDiffEditor()) {
             if (code.modified !== undefined) {
                 this.diffEditor?.getModifiedEditor().setValue(code.modified);
@@ -238,7 +242,6 @@ export class EditorApp {
             if (code.modified !== undefined) {
                 this.editor?.setValue(code.modified);
             }
-
         }
     }
 
@@ -307,7 +310,7 @@ export class EditorApp {
             this.logger.info(`Main languageId is enforced: ${enforceLanguageId}`);
         }
         return modelRef;
-    };
+    }
 
     private announceModelUpdate(textModels: TextModels) {
         if (this.onTextChanged !== undefined) {
@@ -341,7 +344,7 @@ export class EditorApp {
         if (this.isDisposing()) {
             await this.getDisposingAwait();
         }
-        let disposingResolve: (value: void | PromiseLike<void>) => void = () => { };
+        let disposingResolve: (value: void | PromiseLike<void>) => void = () => {};
         this.disposingAwait = new Promise<void>((resolve) => {
             disposingResolve = resolve;
         });
@@ -367,8 +370,12 @@ export class EditorApp {
     }
 
     isDisposed(): boolean {
-        return this.editor === undefined && this.diffEditor === undefined &&
-            this.modelDisposables.original === undefined && this.modelDisposables.modified === undefined;
+        return (
+            this.editor === undefined &&
+            this.diffEditor === undefined &&
+            this.modelDisposables.original === undefined &&
+            this.modelDisposables.modified === undefined
+        );
     }
 
     isDisposing() {
@@ -409,10 +416,12 @@ export class EditorApp {
 
         if (this.modelRefDisposeTimeout > 0) {
             this.logger.debug('Using async dispose of model references');
-            await new Promise<void>(resolve => setTimeout(() => {
-                disposeRefs();
-                resolve();
-            }, this.modelRefDisposeTimeout));
+            await new Promise<void>((resolve) =>
+                setTimeout(() => {
+                    disposeRefs();
+                    resolve();
+                }, this.modelRefDisposeTimeout)
+            );
         } else {
             disposeRefs();
         }

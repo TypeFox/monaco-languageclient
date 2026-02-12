@@ -68,12 +68,12 @@ body {
 #workbench-container {
     height: 95vh;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
 
 #workbench-top {
     display: flex;
     gap: 20px;
     flex: 2;
-    min-height: 0
+    min-height: 0;
 }

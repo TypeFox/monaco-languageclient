@@ -6,15 +6,17 @@
     "outDir": "dist",
     "declarationDir": "dist"
   },
-  "references": [{
-    "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
-  },
-  {
-    "path": "../client/tsconfig.src.json",
-  },
-  {
-    "path": "../wrapper-react/tsconfig.src.json"
-  }],
+  "references": [
+    {
+      "path": "../vscode-ws-jsonrpc/tsconfig.src.json"
+    },
+    {
+      "path": "../client/tsconfig.src.json"
+    },
+    {
+      "path": "../wrapper-react/tsconfig.src.json"
+    }
+  ],
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",

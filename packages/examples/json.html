@@ -1,26 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <title>JSON Language Client & Language Server (Web Socket)</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <title>JSON Language Client & Language Server (Web Socket)</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-</head>
+    <body>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">JSON Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+            <br />
+            <button type="button" id="button-start">Start</button>
+            <button type="button" id="button-dispose">Dispose</button>
+        </div>
+        <div id="monaco-editor-root" style="height: 80vh"></div>
+        <script type="module">
+            import { runJsonWrapper } from './src/json/client/extended.ts';
 
-<body>
-    <div class="exampleHeadelineDiv">
-        <b class="exampleHeadeline">JSON Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
-        <br>
-        <button type="button" id="button-start">Start</button>
-        <button type="button" id="button-dispose">Dispose</button>
-    </div>
-    <div id="monaco-editor-root" style="height: 80vh;"></div>
-    <script type="module">
-        import { runJsonWrapper } from './src/json/client/extended.ts';
-
-        runJsonWrapper();
-    </script>
-</body>
-
+            runJsonWrapper();
+        </script>
+    </body>
 </html>

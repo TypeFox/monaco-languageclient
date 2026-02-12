@@ -1,13 +1,9 @@
- {
+{
   "compilerOptions": {
     "target": "ES2022",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "allowJs": true,
     // esModuleInterop=true sets allowSyntheticDefaultImports=true,
     "esModuleInterop": true,
@@ -36,6 +32,6 @@
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
     "incremental": true,
-    "noEmit": true,
+    "noEmit": true
   }
 }

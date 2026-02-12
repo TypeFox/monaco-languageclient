@@ -1,27 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <title>Json & Python Languageclients & Language Server (Web Socket)</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <title>Json & Python Languageclients & Language Server (Web Socket)</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-</head>
+    <body>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">Json & Python Languageclients & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+            <br />
+            <button type="button" id="button-start">Start</button>
+            <button type="button" id="button-dispose">Dispose</button>
+            <button type="button" id="button-flip">Flip Content</button>
+        </div>
+        <div id="monaco-editor-root" style="width: 800px; height: 600px; border: 1px solid grey"></div>
+        <script type="module">
+            import { runMultipleLanguageClientsExample } from './src/multi/twoLanguageClients.ts';
 
-<body>
-    <div class="exampleHeadelineDiv">
-        <b class="exampleHeadeline">Json & Python Languageclients & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
-        <br>
-        <button type="button" id="button-start">Start</button>
-        <button type="button" id="button-dispose">Dispose</button>
-        <button type="button" id="button-flip">Flip Content</button>
-    </div>
-    <div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
-    <script type="module">
-        import { runMultipleLanguageClientsExample } from './src/multi/twoLanguageClients.ts';
-
-        runMultipleLanguageClientsExample();
-    </script>
-</body>
-
+            runMultipleLanguageClientsExample();
+        </script>
+    </body>
 </html>

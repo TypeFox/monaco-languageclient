@@ -22,12 +22,12 @@ Compared with the classic mode the only difference regarding the `monaco-vscode-
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    // both $type and viewsConfig are mandatory
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'ViewsService'
-    },
-    // further configuration
+  // both $type and viewsConfig are mandatory
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'ViewsService'
+  }
+  // further configuration
 };
 ```
 
@@ -39,13 +39,13 @@ Light-weight integration with standalone Monaco Editor.
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    // both $type and viewsConfig are mandatory
-    $type: 'classic',
-    viewsConfig: {
-        // in classic mode only one type can be configured
-        $type: 'EditorService'
-    },
-    // further configuration
+  // both $type and viewsConfig are mandatory
+  $type: 'classic',
+  viewsConfig: {
+    // in classic mode only one type can be configured
+    $type: 'EditorService'
+  }
+  // further configuration
 };
 ```
 

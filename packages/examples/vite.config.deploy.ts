@@ -7,4 +7,3 @@ export default defineConfig(({ command }) => {
     productionConfig.base = 'https://typefox.dev/monaco-languageclient/';
     return productionConfig;
 });
-

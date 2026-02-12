@@ -10,22 +10,12 @@ export const StatemachineTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
-    SL_COMMENT: /\/\/[^\n\r]*/,
+    SL_COMMENT: /\/\/[^\n\r]*/
 };
 
 export type StatemachineTerminalNames = keyof typeof StatemachineTerminals;
 
-export type StatemachineKeywordNames =
-    | "=>"
-    | "actions"
-    | "commands"
-    | "end"
-    | "events"
-    | "initialState"
-    | "state"
-    | "statemachine"
-    | "{"
-    | "}";
+export type StatemachineKeywordNames = '=>' | 'actions' | 'commands' | 'end' | 'events' | 'initialState' | 'state' | 'statemachine' | '{' | '}';
 
 export type StatemachineTokenNames = StatemachineTerminalNames | StatemachineKeywordNames;
 
@@ -129,12 +119,12 @@ export function isTransition(item: unknown): item is Transition {
 }
 
 export type StatemachineAstType = {
-    Command: Command
-    Event: Event
-    State: State
-    Statemachine: Statemachine
-    Transition: Transition
-}
+    Command: Command;
+    Event: Event;
+    State: State;
+    Statemachine: Statemachine;
+    Transition: Transition;
+};
 
 export class StatemachineAstReflection extends langium.AbstractAstReflection {
     override readonly types = {
@@ -213,7 +203,7 @@ export class StatemachineAstReflection extends langium.AbstractAstReflection {
             },
             superTypes: []
         }
-    } as const satisfies langium.AstMetaData
+    } as const satisfies langium.AstMetaData;
 }
 
 export const reflection = new StatemachineAstReflection();

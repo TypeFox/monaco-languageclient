@@ -10,9 +10,7 @@ import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
 import { describe, expect, test } from 'vitest';
 
 describe('WorkerFactory Tests', () => {
-
     test('useWorkerFactory: Nothing', () => {
-
         useWorkerFactory({});
 
         const worker = getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
@@ -26,10 +24,8 @@ describe('WorkerFactory Tests', () => {
 
         useWorkerFactory({
             workerLoaders: {
-                editorWorkerService: () => new Worker(
-                    new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
-                    { type: 'module' }
-                )
+                editorWorkerService: () =>
+                    new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' })
             },
             logger
         });
@@ -39,5 +35,4 @@ describe('WorkerFactory Tests', () => {
         const workerOptions = getEnhancedMonacoEnvironment().getWorkerOptions?.('test', 'editorWorkerService');
         expect(workerOptions).toEqual({ type: 'module' });
     });
-
 });

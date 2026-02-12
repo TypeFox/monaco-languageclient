@@ -18,7 +18,6 @@ export interface LanguageClientError {
 }
 
 export class LanguageClientWrapper {
-
     private languageClient?: MonacoLanguageClient | MonacoLanguageClientWithProposedFeatures;
     private languageClientConfig: LanguageClientConfig;
     private worker?: Worker;
@@ -83,7 +82,6 @@ export class LanguageClientWrapper {
     }
 
     protected async initMessageTransportWebSocket(webSocket: WebSocket, resolve: () => void, reject: (reason?: unknown) => void) {
-
         let messageTransports = this.languageClientConfig.connection.messageTransports;
         if (messageTransports === undefined) {
             const iWebSocket = toSocket(webSocket);
@@ -111,7 +109,11 @@ export class LanguageClientWrapper {
         };
     }
 
-    protected async initMessageTransportWorker(lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams, resolve: () => void, reject: (reason?: unknown) => void) {
+    protected async initMessageTransportWorker(
+        lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams,
+        resolve: () => void,
+        reject: (reason?: unknown) => void
+    ) {
         if (!this.worker) {
             if (lccOptions.$type === 'WorkerConfig') {
                 const workerConfig = lccOptions as WorkerConfigOptionsParams;
@@ -173,7 +175,7 @@ export class LanguageClientWrapper {
                     closed: () => ({ action: CloseAction.DoNotRestart })
                 },
                 // ...but allowm to override all options
-                ...this.languageClientConfig.clientOptions,
+                ...this.languageClientConfig.clientOptions
             },
             messageTransports
         };
@@ -196,7 +198,10 @@ export class LanguageClientWrapper {
         });
 
         try {
-            this.languageClient = this.languageClientConfig.useClientWithProposedFeatures === true ? new MonacoLanguageClientWithProposedFeatures(mlcConfig) : new MonacoLanguageClient(mlcConfig);
+            this.languageClient =
+                this.languageClientConfig.useClientWithProposedFeatures === true
+                    ? new MonacoLanguageClientWithProposedFeatures(mlcConfig)
+                    : new MonacoLanguageClient(mlcConfig);
             if (this.languageClientConfig.registerFeatures !== undefined) {
                 this.languageClient.registerFeatures(this.languageClientConfig.registerFeatures);
             }
@@ -238,7 +243,7 @@ export class LanguageClientWrapper {
                         await this.restart(this.worker, restartOptions.keepWorker);
                     } finally {
                         retry++;
-                        if (retry > (restartOptions.retries) && !this.isStarted()) {
+                        if (retry > restartOptions.retries && !this.isStarted()) {
                             this.logger?.info(`Disabling Language Client. Failed to start clangd after ${restartOptions.retries} retries`);
                         } else {
                             setTimeout(async () => {

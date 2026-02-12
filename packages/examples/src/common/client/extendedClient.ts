@@ -28,7 +28,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
         },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
+            ...getKeybindingsServiceOverride()
         },
         userConfiguration: {
             json: JSON.stringify({
@@ -60,7 +60,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
                     },
                     reportStatus: true
                 }
-            },
+            }
         },
         clientOptions: {
             documentSelector: [lsConfig.languageId],

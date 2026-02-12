@@ -1,25 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>React: Editor</title>
+        <link rel="stylesheet" href="./app/views.editorOnly.css" />
+        <link rel="stylesheet" href="./bundle/langium-dsl/config/extendedConfig.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React: Editor</title>
-    <link rel="stylesheet" href="./app/views.editorOnly.css">
-    <link rel="stylesheet" href="./bundle/langium-dsl/config/extendedConfig.css">
-</head>
-
-<body>
-    <div id="react-root">
-        <div id="monaco-editor-root">
-
+    <body>
+        <div id="react-root">
+            <div id="monaco-editor-root"></div>
         </div>
-    </div>
-    <script type="module" >
-        import { runDirectly } from './app/vite.tsx';
+        <script type="module">
+            import { runDirectly } from './app/vite.tsx';
 
-        runDirectly();
-    </script>
-</body>
-
+            runDirectly();
+        </script>
+    </body>
 </html>

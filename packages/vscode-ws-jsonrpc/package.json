@@ -2,23 +2,43 @@
   "name": "vscode-ws-jsonrpc",
   "version": "3.5.0",
   "description": "VSCode JSON RPC over WebSocket",
+  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "TypeFox GmbH",
     "url": "http://www.typefox.io"
   },
-  "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
     "directory": "packages/vscode-ws-jsonrpc"
   },
-  "bugs": {
-    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
-  },
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "lib/index"
+      ],
+      "server": [
+        "lib/server"
+      ],
+      "socket": [
+        "lib/socket"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -33,18 +53,14 @@
       "default": "./lib/socket/index.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index"
-      ],
-      "server": [
-        "lib/server"
-      ],
-      "socket": [
-        "lib/socket"
-      ]
-    }
+  "scripts": {
+    "clean": "shx rm -fr ./lib *.tsbuildinfo",
+    "compile": "tsgo --build tsconfig.src.json",
+    "build:msg": "echo Building vscode-ws-jsonrpc:",
+    "build": "npm run build:msg && npm run clean && npm run compile"
+  },
+  "dependencies": {
+    "vscode-jsonrpc": "~8.2.1"
   },
   "engines": {
     "node": ">=20.10.0",
@@ -53,21 +69,5 @@
   "volta": {
     "node": "24.13.0",
     "npm": "11.6.2"
-  },
-  "files": [
-    "lib",
-    "src",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
-  "dependencies": {
-    "vscode-jsonrpc": "~8.2.1"
-  },
-  "scripts": {
-    "clean": "shx rm -fr ./lib *.tsbuildinfo",
-    "compile": "tsgo --build tsconfig.src.json",
-    "build:msg": "echo Building vscode-ws-jsonrpc:",
-    "build": "npm run build:msg && npm run clean && npm run compile"
   }
 }

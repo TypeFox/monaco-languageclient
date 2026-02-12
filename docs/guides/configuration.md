@@ -18,10 +18,10 @@ Independent of the type of configuration (`classic` or `extendend`), you have to
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'EditorService'
-    }
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'EditorService'
+  }
 };
 
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -140,10 +140,10 @@ Classic Mode uses the standard Monaco Editor with language client features added
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'classic',
-    viewsConfig: {
-        $type: 'EditorService'
-    }
+  $type: 'classic',
+  viewsConfig: {
+    $type: 'EditorService'
+  }
 };
 
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -163,27 +163,27 @@ You can further configure VSCode related settings through the user configuration
 
 ```typescript
 userConfiguration: {
-    json: JSON.stringify({
-        // Editor appearance
-        'workbench.colorTheme': 'Default Dark Modern',
-        'editor.fontSize': 14,
-        'editor.fontFamily': 'Consolas, monospace',
+  json: JSON.stringify({
+    // Editor appearance
+    'workbench.colorTheme': 'Default Dark Modern',
+    'editor.fontSize': 14,
+    'editor.fontFamily': 'Consolas, monospace',
 
-        // Editor behavior
-        'editor.tabSize': 2,
-        'editor.wordWrap': 'on',
-        'editor.minimap.enabled': true,
-        'editor.lineNumbers': 'on',
+    // Editor behavior
+    'editor.tabSize': 2,
+    'editor.wordWrap': 'on',
+    'editor.minimap.enabled': true,
+    'editor.lineNumbers': 'on',
 
-        // Language features
-        'editor.quickSuggestions': true,
-        'editor.wordBasedSuggestions': 'off',
-        'editor.parameterHints.enabled': true,
+    // Language features
+    'editor.quickSuggestions': true,
+    'editor.wordBasedSuggestions': 'off',
+    'editor.parameterHints.enabled': true,
 
-        // Advanced features
-        'editor.experimental.asyncTokenization': true,
-        'editor.guides.bracketPairsHorizontal': 'active'
-    })
+    // Advanced features
+    'editor.experimental.asyncTokenization': true,
+    'editor.guides.bracketPairsHorizontal': 'active'
+  });
 }
 ```
 
@@ -196,10 +196,7 @@ import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemO
 
 // In-memory file system
 const fileSystemProvider = new RegisteredFileSystemProvider(false);
-fileSystemProvider.registerFile(new RegisteredMemoryFile(
-    vscode.Uri.file('/project/main.ts'),
-    'console.log("Hello from TypeScript");'
-));
+fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file('/project/main.ts'), 'console.log("Hello from TypeScript");'));
 registerFileSystemOverlay(1, fileSystemProvider);
 ```
 
@@ -254,12 +251,12 @@ connection: {
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const config = {
-    logLevel: isDevelopment ? LogLevel.Debug : LogLevel.Error,
-    userConfiguration: {
-        json: JSON.stringify({
-            'editor.wordBasedSuggestions': isDevelopment ? 'on' : 'off'
-        })
-    }
+  logLevel: isDevelopment ? LogLevel.Debug : LogLevel.Error,
+  userConfiguration: {
+    json: JSON.stringify({
+      'editor.wordBasedSuggestions': isDevelopment ? 'on' : 'off'
+    })
+  }
 };
 ```
 
@@ -270,35 +267,32 @@ You can configure multiple language clients for different file types:
 ```typescript
 // Eclipse JDT language client
 const javaConfig = {
-    connection: {
-        options: {
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:3001/jdtls'
-        }
-    },
-    clientOptions: {
-        documentSelector: ['java']
+  connection: {
+    options: {
+      $type: 'WebSocketUrl',
+      url: 'ws://localhost:3001/jdtls'
     }
+  },
+  clientOptions: {
+    documentSelector: ['java']
+  }
 };
 
 // JSON language client
 const jsonConfig = {
-    connection: {
-        options: {
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:3001/json'
-        }
-    },
-    clientOptions: {
-        documentSelector: ['json']
+  connection: {
+    options: {
+      $type: 'WebSocketUrl',
+      url: 'ws://localhost:3001/json'
     }
+  },
+  clientOptions: {
+    documentSelector: ['json']
+  }
 };
 
 // Initialize both
-await Promise.all([
-    new LanguageClientWrapper().init(javaConfig),
-    new LanguageClientWrapper().init(jsonConfig)
-]);
+await Promise.all([new LanguageClientWrapper().init(javaConfig), new LanguageClientWrapper().init(jsonConfig)]);
 ```
 
 ## Configuration Validation

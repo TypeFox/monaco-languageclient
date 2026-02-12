@@ -14,7 +14,6 @@ import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
-
     const htmlContainer = createMonacoEditorDiv();
     const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
 
@@ -141,12 +140,14 @@ describe('Test EditorApp', () => {
 
         editorApp.setModelRefDisposeTimeout(1000);
 
-        await expect(await editorApp.updateCodeResources({
-            modified: {
-                text: codeUpdated,
-                uri: `/workspace/${expect.getState().testPath}_2.js`,
-            }
-        })).toBeTruthy();
+        await expect(
+            await editorApp.updateCodeResources({
+                modified: {
+                    text: codeUpdated,
+                    uri: `/workspace/${expect.getState().testPath}_2.js`
+                }
+            })
+        ).toBeTruthy();
 
         const textModels = editorApp.getTextModels();
         expect(textModels.modified?.getValue()).toEqual(codeUpdated);
@@ -187,7 +188,7 @@ describe('Test EditorApp', () => {
         await editorApp.updateCodeResources({
             modified: {
                 text: code,
-                uri: `/workspace/${expect.getState().testPath}_2.statemachine`,
+                uri: `/workspace/${expect.getState().testPath}_2.statemachine`
             }
         });
 
@@ -259,5 +260,4 @@ describe('Test EditorApp', () => {
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);
     });
-
 });

@@ -70,7 +70,7 @@ export const runExtendedClient = async () => {
         connection: {
             options: {
                 $type: 'WebSocketUrl',
-                url: `ws://localhost:${lsConfig.port}${lsConfig.path}`,
+                url: `ws://localhost:${lsConfig.port}${lsConfig.path}`
             }
         },
         clientOptions: {

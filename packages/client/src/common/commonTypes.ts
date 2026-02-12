@@ -5,7 +5,12 @@
 
 import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
 
-export type ConnectionConfigOptions = WebSocketConfigOptionsDirect | WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams | WorkerConfigOptionsDirect;
+export type ConnectionConfigOptions =
+    | WebSocketConfigOptionsDirect
+    | WebSocketConfigOptionsParams
+    | WebSocketConfigOptionsUrl
+    | WorkerConfigOptionsParams
+    | WorkerConfigOptionsDirect;
 
 export interface WebSocketCallOptions {
     /** Adds handle on languageClient */
@@ -15,8 +20,8 @@ export interface WebSocketCallOptions {
 }
 
 export interface WebSocketConfigOptionsDirect {
-    $type: 'WebSocketDirect'
-    webSocket: WebSocket
+    $type: 'WebSocketDirect';
+    webSocket: WebSocket;
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
@@ -30,7 +35,7 @@ export interface WebSocketUrlParams {
 }
 
 export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
-    $type: 'WebSocketParams'
+    $type: 'WebSocketParams';
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
@@ -40,13 +45,13 @@ export interface WebSocketUrlString {
 }
 
 export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
-    $type: 'WebSocketUrl'
+    $type: 'WebSocketUrl';
     startOptions?: WebSocketCallOptions;
     stopOptions?: WebSocketCallOptions;
 }
 
 export interface WorkerConfigOptionsParams {
-    $type: 'WorkerConfig'
+    $type: 'WorkerConfig';
     url: URL;
     type: 'classic' | 'module';
     messagePort?: MessagePort;

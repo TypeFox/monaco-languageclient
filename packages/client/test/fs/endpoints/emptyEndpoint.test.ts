@@ -7,7 +7,6 @@ import { EmptyFileSystemEndpoint } from 'monaco-languageclient/fs';
 import { describe, expect, test } from 'vitest';
 
 describe('EmptyFileSystemEndpoint Tests', () => {
-
     const endpoint = new EmptyFileSystemEndpoint('EMPTY');
 
     test('readFile', async () => {
@@ -54,5 +53,4 @@ describe('EmptyFileSystemEndpoint Tests', () => {
             });
         }).rejects.toThrowError('No file listing possible.');
     });
-
 });

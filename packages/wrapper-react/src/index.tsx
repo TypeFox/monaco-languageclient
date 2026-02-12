@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------------------------
-* Copyright (c) 2024 TypeFox and others.
-* Licensed under the MIT License. See LICENSE in the package root for license information.
-* ------------------------------------------------------------------------------------------ */
+ * Copyright (c) 2024 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
@@ -53,7 +53,7 @@ export type MonacoEditorProps = {
      * Set the log level for the internal logger
      */
     logLevel?: LogLevel | number;
-}
+};
 
 // All must be outside of the component as they ars valid across all instances and should not be re-created
 let apiWrapper: MonacoVscodeApiWrapper | undefined;
@@ -97,7 +97,7 @@ const executeQueue = async () => {
 
 const kickQueue = () => {
     if (intervalId === undefined && runQueue.length > 0) {
-        intervalId = setInterval(async () =>  {
+        intervalId = setInterval(async () => {
             debugLogging(`Checking queue (lock state: ${runQueueLock})`);
             if (!runQueueLock) {
                 await executeQueue();
@@ -179,7 +179,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
         // init will only performed once
         if (envEnhanced.vscodeApiInitialising !== true) {
-
             apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig!);
             const globalInitFunc = async () => {
                 try {
@@ -213,10 +212,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
                         editorAppRef.current = new EditorApp(editorAppConfigRef.current);
                         if (editorAppRef.current.isStarting() === true || editorAppRef.current.isDisposing() === true) {
-                            await Promise.all([
-                                editorAppRef.current.getStartingAwait(),
-                                editorAppRef.current.getDisposingAwait()
-                            ]);
+                            await Promise.all([editorAppRef.current.getStartingAwait(), editorAppRef.current.getDisposingAwait()]);
                         }
                         updateModelRelatedRefs();
 
@@ -257,7 +253,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 onConfigProcessed?.({ modelUpdated: true, textUpdated: true, editorApp: editorAppRef.current });
                 debugLogging('UPDATE EDITOR MODEL: Model was updated.');
             } else {
-                onConfigProcessed?.({modelUpdated: false, textUpdated: false, editorApp: editorAppRef.current });
+                onConfigProcessed?.({ modelUpdated: false, textUpdated: false, editorApp: editorAppRef.current });
                 debugLogging('UPDATE EDITOR MODEL: No editor is avilable. Model update was not possible.');
             }
         } catch (error) {
@@ -327,7 +323,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             }
             // notitfy now if no async model update was necessary
             if (!modelUpdated) {
-                onConfigProcessed?.({modelUpdated, textUpdated, editorApp: editorAppRef.current });
+                onConfigProcessed?.({ modelUpdated, textUpdated, editorApp: editorAppRef.current });
             }
             debugLogging('CONFIG PROCESSED: Done');
         } catch (error) {
@@ -347,7 +343,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // it is possible to run without an editorApp, when the ViewsService or WorkbenchService
         if (haveEditorService()) {
             if (editorAppRef.current === undefined) {
-                addQueue({ id: 'editorInit', func: editorInit, currentContainer: containerRef.current});
+                addQueue({ id: 'editorInit', func: editorInit, currentContainer: containerRef.current });
             } else {
                 debugLogging('CHECK EDITOR: Editor already created. No queueing necessary.');
             }
@@ -362,7 +358,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
             debugLogging('REPROCESS CONFIG: Triggered');
             const updateModel = processConfig();
             if (updateModel) {
-                addQueue({ id: 'modelUpdate', func: updateEditorModel, currentContainer: containerRef.current});
+                addQueue({ id: 'modelUpdate', func: updateEditorModel, currentContainer: containerRef.current });
             }
             triggerReprocessConfigRef.current = triggerValue;
         } else {
@@ -389,7 +385,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         lcsManager.setLogLevel(languageClientConfig.logLevel);
         lcsManager.setConfig(languageClientConfig);
         if (!lcsManager.isStarted() && (enforceLanguageClientDisposeRef.current === undefined || !enforceLanguageClientDisposeRef.current)) {
-            addQueue({ id:'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
+            addQueue({ id: 'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
         } else {
             debugLogging('INIT LC: Language client is already running. No need to schedule async start.');
         }
@@ -408,14 +404,14 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                 }
             };
             if (lcsManager.isStarted()) {
-                addQueue({ id:'lcDispose', func: disposeLCFunc, currentContainer: containerRef.current });
+                addQueue({ id: 'lcDispose', func: disposeLCFunc, currentContainer: containerRef.current });
             } else {
                 debugLogging('ENFORCE DISPOSE LC: Denied: No language client is running.');
             }
         } else {
             debugLogging('ENFORCE DISPOSE LC: Denied: enforceLanguageClientDisposeRef.current is false.');
             if (!lcsManager.isStarted()) {
-                addQueue({ id:'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
+                addQueue({ id: 'lcInit', func: lcInitFunc, currentContainer: containerRef.current });
             }
         }
     }, [enforceLanguageClientDispose]);
@@ -428,7 +424,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
         // this part runs on unmount (componentWillUnmount)
         return () => {
-            addQueue({ id:'disposeEditor', func: disposeEditor, currentContainer: containerRef.current });
+            addQueue({ id: 'disposeEditor', func: disposeEditor, currentContainer: containerRef.current });
         };
     }, []);
 
@@ -438,11 +434,5 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         }
     }, [logLevel]);
 
-    return (
-        <div
-            ref={containerRef}
-            style={style}
-            className={className}
-        />
-    );
+    return <div ref={containerRef} style={style} className={className} />;
 };

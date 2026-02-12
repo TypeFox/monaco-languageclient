@@ -12,10 +12,7 @@ export const runGroovyLanguageServer = () => {
         pathName: groovyConfig.path,
         serverPort: groovyConfig.port,
         runCommand: 'java',
-        runCommandArgs: [
-            '-jar',
-            `${groovyConfig.basePath}/lib/groovy-language-server-all.jar`
-        ],
+        runCommandArgs: ['-jar', `${groovyConfig.basePath}/lib/groovy-language-server-all.jar`],
         wsServerOptions: {
             noServer: true,
             perMessageDeflate: false

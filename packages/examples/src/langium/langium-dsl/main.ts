@@ -28,4 +28,3 @@ export const runLangiumGrammarDsl = async () => {
         console.error(e);
     }
 };
-

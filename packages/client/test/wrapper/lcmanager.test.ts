@@ -15,7 +15,6 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
-
     beforeAll(async () => {
         const apiConfig: MonacoVscodeApiConfig = {
             $type: 'extended',
@@ -45,7 +44,7 @@ describe('Test LanguageClientWrapper', () => {
 
         const lcConfigs = {
             configs: {
-                'langium': languageClientConfig
+                langium: languageClientConfig
             }
         };
 
@@ -85,5 +84,4 @@ describe('Test LanguageClientWrapper', () => {
         expect(lcsManager['languageClientWrappers'].size).toBe(0);
         expect(lcsManager.isStarted()).toBe(false);
     });
-
 });

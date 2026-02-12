@@ -30,9 +30,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const sequential = <T, P extends unknown[]>(
-    fn: (...params: P) => Promise<T>
-): (...params: P) => Promise<T> => {
+const sequential = <T, P extends unknown[]>(fn: (...params: P) => Promise<T>): ((...params: P) => Promise<T>) => {
     let promise = Promise.resolve();
     return (...params: P) => {
         const result = promise.then(() => {
@@ -40,8 +38,8 @@ const sequential = <T, P extends unknown[]>(
         });
 
         promise = result.then(
-            () => { },
-            () => { }
+            () => {},
+            () => {}
         );
         return result;
     };

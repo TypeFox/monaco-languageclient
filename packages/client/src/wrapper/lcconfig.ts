@@ -19,7 +19,7 @@ export interface LanguageClientConfig {
     restartOptions?: LanguageClientRestartOptions;
     useClientWithProposedFeatures?: boolean;
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-    registerFeatures?: Array<(StaticFeature | DynamicFeature<any>)>;
+    registerFeatures?: Array<StaticFeature | DynamicFeature<any>>;
     disposeWorker?: boolean;
     logLevel?: LogLevel | number;
 }

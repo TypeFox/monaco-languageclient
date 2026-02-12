@@ -24,20 +24,21 @@ Start by creating a basic HTML file to give a place for monaco to setup:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Monaco Language Client - JSON Example</title>
-</head>
-<body>
+  </head>
+  <body>
     <div id="monaco-editor-root" style="height: 600px; width: 600px;"></div>
     <script type="module" src="./main.ts"></script>
-</body>
+  </body>
 </html>
 ```
 
 If you already have one setup, just be sure to add the root element for the Monaco Editor to attach to.
 
 If you're following along using Vite with the React TS template, you can add this to your main component (App.tsx):
+
 ```tsx
 <div id="monaco-editor-root" style={{ height: '600px', width: '600px', textAlign: 'left' }}></div>
 ```
@@ -65,23 +66,23 @@ npm install @codingame/esbuild-import-meta-url-plugin
 Then update your `vite.config.ts` as follows:
 
 ```typescript
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin'
+import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 
 export default {
-    // ... other vite config options
-    plugins: [
-      importMetaUrlPlugin,
-      // ... other plugins
-    ],
-    worker: {
-      format: 'es'
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        plugins: [importMetaUrlPlugin]
-      }
+  // ... other vite config options
+  plugins: [
+    importMetaUrlPlugin
+    // ... other plugins
+  ],
+  worker: {
+    format: 'es'
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [importMetaUrlPlugin]
     }
-}
+  }
+};
 ```
 
 ### Monaco Editor & Language Client Setup
@@ -93,7 +94,6 @@ Note that we'll still need a running language server for JSON language support, 
 Once you have that installed, you can setup your `main.ts` file as follows to setup the editor & language client:
 
 ```typescript
-
 // import Monaco Language Client components
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
@@ -106,7 +106,7 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
 
 // import extension for JSON support
-import "@codingame/monaco-vscode-json-default-extension";
+import '@codingame/monaco-vscode-json-default-extension';
 
 // Sample JSON content
 const jsonContent = `{
@@ -117,76 +117,76 @@ const jsonContent = `{
 }`;
 
 async function createJsonEditor() {
-    // Set up an in-memory file system (won't persist on reload)
-    const fileUri = vscode.Uri.file('/workspace/package.json');
-    const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, jsonContent));
-    registerFileSystemOverlay(1, fileSystemProvider);
+  // Set up an in-memory file system (won't persist on reload)
+  const fileUri = vscode.Uri.file('/workspace/package.json');
+  const fileSystemProvider = new RegisteredFileSystemProvider(false);
+  fileSystemProvider.registerFile(new RegisteredMemoryFile(fileUri, jsonContent));
+  registerFileSystemOverlay(1, fileSystemProvider);
 
-    // Monaco VSCode API configuration
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer: document.getElementById("monaco-editor-root")!
-        },
-        logLevel: LogLevel.Debug,
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-              'editor.guides.bracketPairsHorizontal': 'active',
-              'editor.lightbulb.enabled': 'On',
-              'editor.wordBasedSuggestions': 'off',
-              'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory
-    };
+  // Monaco VSCode API configuration
+  const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+      $type: 'EditorService',
+      htmlContainer: document.getElementById('monaco-editor-root')!
+    },
+    logLevel: LogLevel.Debug,
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern',
+        'editor.guides.bracketPairsHorizontal': 'active',
+        'editor.lightbulb.enabled': 'On',
+        'editor.wordBasedSuggestions': 'off',
+        'editor.experimental.asyncTokenization': true
+      })
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory
+  };
 
-    const languageId = 'json';
+  const languageId = 'json';
 
-    // Language client configuration
-    const languageClientConfig: LanguageClientConfig = {
-        languageId,
-        connection: {
-            options: {
-                $type: 'WebSocketUrl',
-                url: 'ws://localhost:30000/sampleServer'
-            }
-        },
-        clientOptions: {
-            documentSelector: [languageId],
-            workspaceFolder: {
-                index: 0,
-                name: 'workspace',
-                uri: vscode.Uri.file('/workspace')
-            }
-        }
-    };
+  // Language client configuration
+  const languageClientConfig: LanguageClientConfig = {
+    languageId,
+    connection: {
+      options: {
+        $type: 'WebSocketUrl',
+        url: 'ws://localhost:30000/sampleServer'
+      }
+    },
+    clientOptions: {
+      documentSelector: [languageId],
+      workspaceFolder: {
+        index: 0,
+        name: 'workspace',
+        uri: vscode.Uri.file('/workspace')
+      }
+    }
+  };
 
-    // editor app / monaco-editor configuration
-    const editorAppConfig: EditorAppConfig = {
-        codeResources: {
-            modified: {
-                text: jsonContent,
-                uri: fileUri.path,
-            }
-        }
-    };
+  // editor app / monaco-editor configuration
+  const editorAppConfig: EditorAppConfig = {
+    codeResources: {
+      modified: {
+        text: jsonContent,
+        uri: fileUri.path
+      }
+    }
+  };
 
-    // create the monaco-vscode api Wrapper
-    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.start();
+  // create the monaco-vscode api Wrapper
+  const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+  await apiWrapper.start();
 
-    // create language client wrapper & app
-    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
-    const editorApp = new EditorApp(editorAppConfig);
+  // create language client wrapper & app
+  const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+  const editorApp = new EditorApp(editorAppConfig);
 
-    // start editor app first, then language client
-    await editorApp.start(document.getElementById("monaco-editor-root")!);
-    await lcWrapper.start();
+  // start editor app first, then language client
+  await editorApp.start(document.getElementById('monaco-editor-root')!);
+  await lcWrapper.start();
 
-    console.log('JSON editor with language client is ready!');
+  console.log('JSON editor with language client is ready!');
 }
 createJsonEditor().catch(console.error);
 ```
@@ -270,6 +270,5 @@ Also ensure that you have compatible versions of `monaco-languageclient` and any
 **No language features**: Verify the language server is running and the WebSocket connection is successful.
 
 **Import errors**: Make sure you have the correct package versions and bundler configuration from the [Installation guide](../installation.md).
-
 
 For more help, see our [Troubleshooting Guide](./troubleshooting.md).

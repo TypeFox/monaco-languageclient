@@ -10,9 +10,7 @@ import type { PluginContext } from 'rolldown';
 
 const config = defineConfig({
     optimizeDeps: {
-        include: [
-            'vscode/localExtensionHost'
-        ]
+        include: ['vscode/localExtensionHost']
     },
     build: {
         assetsInlineLimit: 0, // 1024 * 1024 * 128,
@@ -33,10 +31,12 @@ const config = defineConfig({
                 {
                     name: 'inline-wasm',
                     load(this: PluginContext, id: string) {
-
                         if (id.endsWith('textMateTokenizationWorker.worker.js')) {
                             const code = fs.readFileSync(id, 'utf8');
-                            const base64 = fs.readFileSync('./node_modules/@codingame/monaco-vscode-textmate-service-override/external/vscode-oniguruma/release/onig.wasm', 'base64');
+                            const base64 = fs.readFileSync(
+                                './node_modules/@codingame/monaco-vscode-textmate-service-override/external/vscode-oniguruma/release/onig.wasm',
+                                'base64'
+                            );
                             const outputCode = code.replace(
                                 'const response = await fetch(onigurumaWASMUri);',
                                 `const response = await fetch('data:application/wasm;base64,${base64}')`
@@ -50,7 +50,6 @@ const config = defineConfig({
         outDir: path.resolve(__dirname, 'bundle/textmateWorker'),
         emptyOutDir: true
     }
-
 });
 
 export default config;

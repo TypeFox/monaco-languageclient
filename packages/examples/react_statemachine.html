@@ -1,27 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>React: Langium Statemachine Language Client & Language Server (Worker)</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React: Langium Statemachine Language Client & Language Server (Worker)</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <body>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">React: Langium Statemachine Language Client & Language Server (Worker)</b> - [<a href="../../index.html"
+                >Back to Index</a
+            >]
+            <br />
+            <button type="button" id="button-start">Start</button>
+            <label>Enable Strict mode:</label><input type="checkbox" id="checkbox-strictmode" />
+            <button type="button" id="button-dispose">Dispose</button>
+        </div>
+        <div id="react-root"></div>
+        <script type="module">
+            import { runStatemachineReact } from './src/langium/statemachine/main-react.tsx';
 
-<body>
-    <div class="exampleHeadelineDiv">
-        <b class="exampleHeadeline">React: Langium Statemachine Language Client & Language Server (Worker)</b> - [<a href="../../index.html">Back to Index</a>]
-        <br>
-        <button type="button" id="button-start">Start</button>
-        <label>Enable Strict mode:</label><input type="checkbox" id="checkbox-strictmode" />
-        <button type="button" id="button-dispose">Dispose</button>
-    </div>
-    <div id="react-root"></div>
-    <script type="module">
-        import { runStatemachineReact } from './src/langium/statemachine/main-react.tsx';
-
-        runStatemachineReact();
-    </script>
-</body>
-
+            runStatemachineReact();
+        </script>
+    </body>
 </html>

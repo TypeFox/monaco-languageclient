@@ -16,8 +16,7 @@ export class WebSocketMessageWriter extends AbstractMessageWriter implements Mes
         this.socket = socket;
     }
 
-    end(): void {
-    }
+    end(): void {}
 
     async write(msg: Message): Promise<void> {
         try {

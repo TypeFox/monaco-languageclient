@@ -21,7 +21,7 @@ export interface MonacoEnvironmentEnhanced extends monaco.Environment {
     vscodeApiInitialising?: boolean;
     vscodeApiInitialised?: boolean;
     vscodeApiGlobalInitAwait?: Promise<void>;
-    vscodeApiGlobalInitResolve?: ((value: void | PromiseLike<void>) => void);
+    vscodeApiGlobalInitResolve?: (value: void | PromiseLike<void>) => void;
     viewServiceType?: ViewsConfigTypes;
 }
 
@@ -44,7 +44,7 @@ export interface ExtensionConfig {
 
 export interface MonacoVscodeApiConfig {
     $type: OverallConfigType;
-    viewsConfig: ViewsConfig,
+    viewsConfig: ViewsConfig;
     serviceOverrides?: monaco.editor.IEditorOverrideServices;
     logLevel?: LogLevel | number;
     workspaceConfig?: IWorkbenchConstructionOptions;

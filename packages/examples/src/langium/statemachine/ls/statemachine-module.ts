@@ -14,15 +14,15 @@ import { StatemachineValidator, registerValidationChecks } from './statemachine-
  */
 export type StatemachineAddedServices = {
     validation: {
-        StatemachineValidator: StatemachineValidator
-    }
-}
+        StatemachineValidator: StatemachineValidator;
+    };
+};
 
 /**
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type StatemachineServices = LangiumServices & StatemachineAddedServices
+export type StatemachineServices = LangiumServices & StatemachineAddedServices;
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
@@ -51,18 +51,11 @@ export const StatemachineModule: Module<StatemachineServices, PartialLangiumServ
  * @returns An object wrapping the shared services and the language-specific services
  */
 export function createStatemachineServices(context: DefaultSharedModuleContext): {
-    shared: LangiumSharedServices,
-    statemachine: StatemachineServices
+    shared: LangiumSharedServices;
+    statemachine: StatemachineServices;
 } {
-    const shared = inject(
-        createDefaultSharedModule(context),
-        StatemachineGeneratedSharedModule
-    );
-    const statemachine = inject(
-        createDefaultModule({ shared }),
-        StatemachineModelGeneratedModule,
-        StatemachineModule
-    );
+    const shared = inject(createDefaultSharedModule(context), StatemachineGeneratedSharedModule);
+    const statemachine = inject(createDefaultModule({ shared }), StatemachineModelGeneratedModule, StatemachineModule);
     shared.ServiceRegistry.register(statemachine);
     registerValidationChecks(statemachine);
     if (!context.connection) {

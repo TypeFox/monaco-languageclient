@@ -17,14 +17,17 @@ export type ExampleAppConfig = {
     MonacoEditorReactComp: React.FC<MonacoEditorProps>;
 };
 
-export const setupLangiumClientExtended = async (languageServerWorker: Worker, enableExtHostWorker: boolean, vscodeApiWorkerFactory: (logger?: ILogger) => void): Promise<ExampleAppConfig> => {
-
+export const setupLangiumClientExtended = async (
+    languageServerWorker: Worker,
+    enableExtHostWorker: boolean,
+    vscodeApiWorkerFactory: (logger?: ILogger) => void
+): Promise<ExampleAppConfig> => {
     // perform all imports dynamically
     const getKeybindingsServiceOverride = (await import('@codingame/monaco-vscode-keybindings-service-override')).default;
-    const { InMemoryFileSystemProvider, registerFileSystemOverlay } = (await import('@codingame/monaco-vscode-files-service-override'));
-    const { LogLevel } = (await import('@codingame/monaco-vscode-api'));
-    const { Uri } = (await import('vscode'));
-    const { BrowserMessageReader, BrowserMessageWriter } = (await import('vscode-languageclient/browser.js'));
+    const { InMemoryFileSystemProvider, registerFileSystemOverlay } = await import('@codingame/monaco-vscode-files-service-override');
+    const { LogLevel } = await import('@codingame/monaco-vscode-api');
+    const { Uri } = await import('vscode');
+    const { BrowserMessageReader, BrowserMessageWriter } = await import('vscode-languageclient/browser.js');
 
     // base configurration
     const overallConfigType: OverallConfigType = 'extended';
@@ -75,18 +78,16 @@ takesString(0);`;
     <div id="editors"></div>
 </div>`;
     const viewsInit = async () => {
-        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart, } = await import('@codingame/monaco-vscode-views-service-override');
+        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart } = await import('@codingame/monaco-vscode-views-service-override');
 
-        for (const config of [
-            { part: Parts.EDITOR_PART, element: '#editors' },
-        ]) {
+        for (const config of [{ part: Parts.EDITOR_PART, element: '#editors' }]) {
             attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
 
             if (!isPartVisibile(config.part)) {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
             }
 
-            onPartVisibilityChange(config.part, visible => {
+            onPartVisibilityChange(config.part, (visible) => {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
             });
         }
@@ -120,30 +121,36 @@ takesString(0);`;
             })
         },
         monacoWorkerFactory: vscodeApiWorkerFactory,
-        extensions: [{
-            config: {
-                name: 'langium-example',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'langium-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [
+                            {
+                                id: 'langium',
+                                extensions: ['.langium'],
+                                aliases: ['langium', 'LANGIUM'],
+                                configuration: '/workspace/langium-configuration.json'
+                            }
+                        ],
+                        grammars: [
+                            {
+                                language: 'langium',
+                                scopeName: 'source.langium',
+                                path: '/workspace/langium-grammar.json'
+                            }
+                        ]
+                    }
                 },
-                contributes: {
-                    languages: [{
-                        id: 'langium',
-                        extensions: ['.langium'],
-                        aliases: ['langium', 'LANGIUM'],
-                        configuration: '/workspace/langium-configuration.json'
-                    }],
-                    grammars: [{
-                        language: 'langium',
-                        scopeName: 'source.langium',
-                        path: '/workspace/langium-grammar.json'
-                    }]
-                }
-            },
-            filesOrContents: extensionFilesOrContents
-        }]
+                filesOrContents: extensionFilesOrContents
+            }
+        ]
     };
 
     const languageClientConfig: LanguageClientConfig = {
@@ -171,13 +178,13 @@ takesString(0);`;
 };
 
 export const openDocument = async (uri: string) => {
-    const { workspace } = (await import('vscode'));
+    const { workspace } = await import('vscode');
     await workspace.openTextDocument(uri);
-}
+};
 
 export const showDocument = async (uri: string) => {
-    const { window, Uri } = (await import('vscode'));
+    const { window, Uri } = await import('vscode');
     await window.showTextDocument(Uri.file(uri));
-}
+};
 
 export * as workerFactory from 'monaco-languageclient/workerFactory';

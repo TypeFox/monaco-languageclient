@@ -45,4 +45,4 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
             minifySyntax: false
         }
     };
-}
+};

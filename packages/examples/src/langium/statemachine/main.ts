@@ -36,9 +36,12 @@ const startEditor = async () => {
         console.log('Received message from worker: ' + event.data);
     };
     const channel = new MessageChannel();
-    stateMachineWorkerPort.postMessage({
-        port: channel.port2
-    }, [channel.port2]);
+    stateMachineWorkerPort.postMessage(
+        {
+            port: channel.port2
+        },
+        [channel.port2]
+    );
 
     const reader = new BrowserMessageReader(channel.port1);
     const writer = new BrowserMessageWriter(channel.port1);
@@ -134,7 +137,7 @@ export const loadStatemachineWorkerRegular = () => {
     console.log(`Langium worker URL: ${workerUrl}`);
     return new Worker(workerUrl, {
         type: 'module',
-        name: 'Statemachine Server Regular',
+        name: 'Statemachine Server Regular'
     });
 };
 
@@ -143,6 +146,6 @@ export const loadStatemachinWorkerPort = () => {
     console.log(`Langium worker URL: ${workerPortUrl}`);
     return new Worker(workerPortUrl, {
         type: 'module',
-        name: 'Statemachine Server Port',
+        name: 'Statemachine Server Port'
     });
 };

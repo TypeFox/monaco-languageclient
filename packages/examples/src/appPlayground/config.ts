@@ -109,18 +109,20 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
                 'editor.experimental.asyncTokenization': true
             })
         },
-        extensions: [{
-            config: {
-                name: 'mlc-app-playground',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'mlc-app-playground',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    }
                 }
             }
-        }],
+        ],
         advanced: {
-            enableExtHostWorker: true,
+            enableExtHostWorker: true
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
     };

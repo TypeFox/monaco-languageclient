@@ -20,8 +20,12 @@ export function forward(clientConnection: IConnection, serverConnection: IConnec
     serverConnection.onClose(() => clientConnection.dispose());
 }
 
-export function createConnection<T extends object>(reader: MessageReader, writer: MessageWriter, onDispose: () => void,
-    extensions: T = {} as T): IConnection & T {
+export function createConnection<T extends object>(
+    reader: MessageReader,
+    writer: MessageWriter,
+    onDispose: () => void,
+    extensions: T = {} as T
+): IConnection & T {
     const disposeOnClose = new DisposableCollection();
     reader.onClose(() => disposeOnClose.dispose());
     writer.onClose(() => disposeOnClose.dispose());
@@ -29,7 +33,7 @@ export function createConnection<T extends object>(reader: MessageReader, writer
         reader,
         writer,
         forward(to: IConnection, map: (message: Message) => Message = (message) => message): void {
-            reader.listen(input => {
+            reader.listen((input) => {
                 const output = map(input);
                 to.writer.write(output);
             });

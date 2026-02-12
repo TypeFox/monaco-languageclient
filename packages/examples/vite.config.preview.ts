@@ -17,4 +17,3 @@ export default defineConfig(({ command }) => {
     };
     return productionConfig;
 });
-

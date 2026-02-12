@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) 2024 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
-* ------------------------------------------------------------------------------------------ */
+ * ------------------------------------------------------------------------------------------ */
 
 import { type RegisterLocalProcessExtensionResult } from '@codingame/monaco-vscode-api/extensions';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
@@ -32,16 +32,17 @@ export const runPythonReact = async () => {
     const App = () => {
         return (
             <>
-                <div style={{ 'backgroundColor': '#1f1f1f' }} >
+                <div style={{ backgroundColor: '#1f1f1f' }}>
                     <MonacoEditorReactComp
                         vscodeApiConfig={appConfig.vscodeApiConfig}
                         editorAppConfig={appConfig.editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
-                        style={{ 'height': '100%' }}
+                        style={{ height: '100%' }}
                         onVscodeApiInitDone={onVscodeApiInitDone}
                         onError={(e) => {
                             console.error(e);
-                        }} />
+                        }}
+                    />
                 </div>
             </>
         );

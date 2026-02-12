@@ -20,12 +20,12 @@ import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
 
 export const createLangiumGlobalConfig = (params: {
-    languageServerId: string,
-    codeContent: CodeContent,
-    worker: Worker,
-    messagePort?: MessagePort,
-    messageTransports?: MessageTransports,
-    htmlContainer?: HTMLElement
+    languageServerId: string;
+    codeContent: CodeContent;
+    worker: Worker;
+    messagePort?: MessagePort;
+    messageTransports?: MessageTransports;
+    htmlContainer?: HTMLElement;
 }): ExampleAppConfig => {
     const extensionFilesOrContents = new Map<string, string | URL>();
     extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
@@ -40,7 +40,7 @@ export const createLangiumGlobalConfig = (params: {
             options: {
                 $type: 'WorkerDirect',
                 worker: params.worker,
-                messagePort: params.messagePort,
+                messagePort: params.messagePort
             },
             messageTransports: params.messageTransports
         },
@@ -57,7 +57,7 @@ export const createLangiumGlobalConfig = (params: {
         serviceOverrides: {
             ...getKeybindingsServiceOverride(),
             ...getLifecycleServiceOverride(),
-            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration()),
+            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
         },
         monacoWorkerFactory: configureDefaultWorkerFactory,
         userConfiguration: {
@@ -68,30 +68,36 @@ export const createLangiumGlobalConfig = (params: {
                 'editor.experimental.asyncTokenization': true
             })
         },
-        extensions: [{
-            config: {
-                name: 'statemachine-example',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'statemachine-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [
+                            {
+                                id: 'statemachine',
+                                extensions: ['.statemachine'],
+                                aliases: ['statemachine', 'Statemachine'],
+                                configuration: `./${params.languageServerId}-statemachine-configuration.json`
+                            }
+                        ],
+                        grammars: [
+                            {
+                                language: 'statemachine',
+                                scopeName: 'source.statemachine',
+                                path: `./${params.languageServerId}-statemachine-grammar.json`
+                            }
+                        ]
+                    }
                 },
-                contributes: {
-                    languages: [{
-                        id: 'statemachine',
-                        extensions: ['.statemachine'],
-                        aliases: ['statemachine', 'Statemachine'],
-                        configuration: `./${params.languageServerId}-statemachine-configuration.json`
-                    }],
-                    grammars: [{
-                        language: 'statemachine',
-                        scopeName: 'source.statemachine',
-                        path: `./${params.languageServerId}-statemachine-grammar.json`
-                    }]
-                }
-            },
-            filesOrContents: extensionFilesOrContents
-        }]
+                filesOrContents: extensionFilesOrContents
+            }
+        ]
     };
 
     const editorAppConfig: EditorAppConfig = {

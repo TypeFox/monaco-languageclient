@@ -8,10 +8,26 @@ import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
 import { createConnection, type _Connection, TextDocuments, type DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
 import {
-    Diagnostic, Command, CompletionList, CompletionItem, Hover,
-    SymbolInformation, TextEdit, FoldingRange, ColorInformation, ColorPresentation
+    Diagnostic,
+    Command,
+    CompletionList,
+    CompletionItem,
+    Hover,
+    SymbolInformation,
+    TextEdit,
+    FoldingRange,
+    ColorInformation,
+    ColorPresentation
 } from 'vscode-languageserver-types';
-import type { TextDocumentPositionParams, DocumentRangeFormattingParams, ExecuteCommandParams, CodeActionParams, FoldingRangeParams, DocumentColorParams, ColorPresentationParams } from 'vscode-languageserver-protocol';
+import type {
+    TextDocumentPositionParams,
+    DocumentRangeFormattingParams,
+    ExecuteCommandParams,
+    CodeActionParams,
+    FoldingRangeParams,
+    DocumentColorParams,
+    ColorPresentationParams
+} from 'vscode-languageserver-protocol';
 import { TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, type LanguageService, type JSONDocument } from 'vscode-json-languageservice';
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -30,15 +46,13 @@ export class JsonServer {
     constructor(connection: _Connection) {
         this.connection = connection;
         this.documents.listen(this.connection);
-        this.documents.onDidChangeContent(change =>
-            this.validate(change.document)
-        );
-        this.documents.onDidClose(event => {
+        this.documents.onDidChangeContent((change) => this.validate(change.document));
+        this.documents.onDidClose((event) => {
             this.cleanPendingValidation(event.document);
             this.cleanDiagnostics(event.document);
         });
 
-        this.connection.onInitialize(params => {
+        this.connection.onInitialize((params) => {
             if (params.rootPath !== null && params.rootPath !== undefined) {
                 this.workspaceRoot = URI.URI.file(params.rootPath);
             } else if (params.rootUri !== null) {
@@ -64,36 +78,16 @@ export class JsonServer {
                 }
             };
         });
-        this.connection.onCodeAction(params =>
-            this.codeAction(params)
-        );
-        this.connection.onCompletion(params =>
-            this.completion(params)
-        );
-        this.connection.onCompletionResolve(item =>
-            this.resolveCompletion(item)
-        );
-        this.connection.onExecuteCommand(params =>
-            this.executeCommand(params)
-        );
-        this.connection.onHover(params =>
-            this.hover(params)
-        );
-        this.connection.onDocumentSymbol(params =>
-            this.findDocumentSymbols(params)
-        );
-        this.connection.onDocumentRangeFormatting(params =>
-            this.format(params)
-        );
-        this.connection.onDocumentColor(params =>
-            this.findDocumentColors(params)
-        );
-        this.connection.onColorPresentation(params =>
-            this.getColorPresentations(params)
-        );
-        this.connection.onFoldingRanges(params =>
-            this.getFoldingRanges(params)
-        );
+        this.connection.onCodeAction((params) => this.codeAction(params));
+        this.connection.onCompletion((params) => this.completion(params));
+        this.connection.onCompletionResolve((item) => this.resolveCompletion(item));
+        this.connection.onExecuteCommand((params) => this.executeCommand(params));
+        this.connection.onHover((params) => this.hover(params));
+        this.connection.onDocumentSymbol((params) => this.findDocumentSymbols(params));
+        this.connection.onDocumentRangeFormatting((params) => this.format(params));
+        this.connection.onDocumentColor((params) => this.findDocumentColors(params));
+        this.connection.onColorPresentation((params) => this.getColorPresentations(params));
+        this.connection.onFoldingRanges((params) => this.getFoldingRanges(params));
     }
 
     start() {
@@ -131,15 +125,19 @@ export class JsonServer {
         if (!document) {
             return [];
         }
-        return [{
-            title: 'Upper Case Document',
-            command: 'json.documentUpper',
-            // Send a VersionedTextDocumentIdentifier
-            arguments: [{
-                ...params.textDocument,
-                version: document.version
-            }]
-        }];
+        return [
+            {
+                title: 'Upper Case Document',
+                command: 'json.documentUpper',
+                // Send a VersionedTextDocumentIdentifier
+                arguments: [
+                    {
+                        ...params.textDocument,
+                        version: document.version
+                    }
+                ]
+            }
+        ];
     }
 
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
@@ -163,16 +161,20 @@ export class JsonServer {
             const document = this.documents.get(versionedTextDocumentIdentifier.uri);
             if (document) {
                 this.connection.workspace.applyEdit({
-                    documentChanges: [{
-                        textDocument: versionedTextDocumentIdentifier,
-                        edits: [{
-                            range: {
-                                start: { line: 0, character: 0 },
-                                end: { line: Number.MAX_SAFE_INTEGER, character: Number.MAX_SAFE_INTEGER }
-                            },
-                            newText: document.getText().toUpperCase()
-                        }]
-                    }]
+                    documentChanges: [
+                        {
+                            textDocument: versionedTextDocumentIdentifier,
+                            edits: [
+                                {
+                                    range: {
+                                        start: { line: 0, character: 0 },
+                                        end: { line: Number.MAX_SAFE_INTEGER, character: Number.MAX_SAFE_INTEGER }
+                                    },
+                                    newText: document.getText().toUpperCase()
+                                }
+                            ]
+                        }
+                    ]
                 });
             }
         }
@@ -224,10 +226,13 @@ export class JsonServer {
 
     protected validate(document: TextDocument): void {
         this.cleanPendingValidation(document);
-        this.pendingValidationRequests.set(document.uri, setTimeout(() => {
-            this.pendingValidationRequests.delete(document.uri);
-            this.doValidate(document);
-        }));
+        this.pendingValidationRequests.set(
+            document.uri,
+            setTimeout(() => {
+                this.pendingValidationRequests.delete(document.uri);
+                this.doValidate(document);
+            })
+        );
     }
 
     protected cleanPendingValidation(document: TextDocument): void {
@@ -244,9 +249,7 @@ export class JsonServer {
             return;
         }
         const jsonDocument = this.getJSONDocument(document);
-        this.jsonService.doValidation(document, jsonDocument).then(diagnostics =>
-            this.sendDiagnostics(document, diagnostics)
-        );
+        this.jsonService.doValidation(document, jsonDocument).then((diagnostics) => this.sendDiagnostics(document, diagnostics));
     }
 
     protected cleanDiagnostics(document: TextDocument): void {
@@ -255,7 +258,8 @@ export class JsonServer {
 
     protected sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): void {
         this.connection.sendDiagnostics({
-            uri: document.uri, diagnostics
+            uri: document.uri,
+            diagnostics
         });
     }
 

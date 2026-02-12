@@ -17,14 +17,10 @@ export default defineConfig(({ command }) => {
         esbuild: {
             minifySyntax: false
         },
-        plugins: [
-            angular()
-        ],
+        plugins: [angular()],
         optimizeDeps: {
             esbuildOptions: {
-                plugins: [
-                    importMetaUrlPlugin
-                ]
+                plugins: [importMetaUrlPlugin]
             },
             include: [
                 'vscode/localExtensionHost',
@@ -42,8 +38,8 @@ export default defineConfig(({ command }) => {
             },
             headers: {
                 'Cross-Origin-Opener-Policy': 'same-origin',
-                'Cross-Origin-Embedder-Policy': 'require-corp',
+                'Cross-Origin-Embedder-Policy': 'require-corp'
             }
-        },
+        }
     };
 });

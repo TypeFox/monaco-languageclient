@@ -6,6 +6,6 @@ services:
       context: .
       # only linux/amd64 for now
       platforms:
-        - "linux/amd64"
+        - 'linux/amd64'
     platform: linux/amd64
     container_name: clangd-wasm-configure

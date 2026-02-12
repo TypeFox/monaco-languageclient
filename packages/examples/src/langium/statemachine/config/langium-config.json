@@ -5,9 +5,7 @@
     {
       "id": "statemachine",
       "grammar": "../ls/statemachine.langium",
-      "fileExtensions": [
-        ".statemachine"
-      ],
+      "fileExtensions": [".statemachine"],
       "textMate": {
         "out": "../syntaxes/statemachine.tmLanguage.json"
       }

@@ -114,7 +114,7 @@ takesNumber(0);`;
                 },
                 original: {
                     text: currentOriginalCode,
-                    uri: currentOriginalCodeUri.path,
+                    uri: currentOriginalCodeUri.path
                 }
             },
             useDiffEditor: useDiffEditor
@@ -198,4 +198,3 @@ takesNumber(0);`;
         console.error(e);
     }
 };
-

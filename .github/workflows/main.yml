@@ -19,33 +19,33 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-    - name: mise-en-place
-      uses: jdx/mise-action@v2
+      - name: mise-en-place
+        uses: jdx/mise-action@v2
 
-    - name: Install
-      shell: bash
-      run: |
-        npm ci
+      - name: Install
+        shell: bash
+        run: |
+          npm ci
 
-    - name: Versions Report
-      shell: bash
-      run: |
-        npm run report:versions
+      - name: Versions Report
+        shell: bash
+        run: |
+          npm run report:versions
 
-    - name: Build
-      shell: bash
-      run: |
-        npm run build
+      - name: Build
+        shell: bash
+        run: |
+          npm run build
 
-    - name: Lint
-      shell: bash
-      run: |
-        npm run lint
+      - name: Lint
+        shell: bash
+        run: |
+          npm run lint
 
-    - name: Test
-      shell: bash
-      run: |
-        npm run test:ci
+      - name: Test
+        shell: bash
+        run: |
+          npm run test:ci

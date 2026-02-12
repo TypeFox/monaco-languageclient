@@ -1,63 +1,74 @@
 {
-    // Use IntelliSense to learn about possible Node.js debug attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-          "name": "Launch JSON LS",
-          "type": "node",
-          "request": "launch",
-          "runtimeExecutable": "tsx",
-          "args": ["${workspaceRoot}/packages/examples/src/json/server/direct.ts"],
-          "cwd": "${workspaceRoot}/packages/examples",
-          "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-          "name": "Launch Python LS",
-          "type": "node",
-          "request": "launch",
-          "runtimeExecutable": "tsx",
-          "args": ["${workspaceRoot}/packages/examples/src/python/server/direct.ts"],
-          "cwd": "${workspaceRoot}/packages/examples",
-          "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-          "name": "Chrome",
-          "type": "chrome",
-          "request": "launch",
-          "url": "http://localhost:20001",
-          "webRoot": "${workspaceFolder}",
-          "userDataDir": "${workspaceFolder}/.chrome/profile"
-        },
-        {
-          "name": "Chrome Preview",
-          "type": "chrome",
-          "request": "launch",
-          "url": "http://localhost:20002",
-          "webRoot": "${workspaceFolder}/packages/examples/production",
-          "userDataDir": "${workspaceFolder}/.chrome/profile"
-        },
-        {
-          "type": "node",
-          "request": "launch",
-          "name": "Run Vitest Browser Debug",
-          "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
-          "args": ["--config", "vitest.config.ts", "--inspect-brk=20222", "--browser", "--no-file-parallelism"],
-          "console": "integratedTerminal"
-        },
-        {
-          "type": "chrome",
-          "request": "attach",
-          "name": "Attach to Playwright Chromium",
-          "port": 20222
-        }
-    ],
-    "compounds": [
-      {
-        "name": "Debug Vitest Browser",
-        "configurations": ["Attach to Playwright Chromium", "Run Vitest Browser Debug"],
-        "stopAll": true
-      }
-    ]
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch JSON LS",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "tsx",
+      "args": ["${workspaceRoot}/packages/examples/src/json/server/direct.ts"],
+      "cwd": "${workspaceRoot}/packages/examples",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Launch Python LS",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "tsx",
+      "args": [
+        "${workspaceRoot}/packages/examples/src/python/server/direct.ts"
+      ],
+      "cwd": "${workspaceRoot}/packages/examples",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:20001",
+      "webRoot": "${workspaceFolder}",
+      "userDataDir": "${workspaceFolder}/.chrome/profile"
+    },
+    {
+      "name": "Chrome Preview",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:20002",
+      "webRoot": "${workspaceFolder}/packages/examples/production",
+      "userDataDir": "${workspaceFolder}/.chrome/profile"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Vitest Browser Debug",
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "args": [
+        "--config",
+        "vitest.config.ts",
+        "--inspect-brk=20222",
+        "--browser",
+        "--no-file-parallelism"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Playwright Chromium",
+      "port": 20222
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Vitest Browser",
+      "configurations": [
+        "Attach to Playwright Chromium",
+        "Run Vitest Browser Debug"
+      ],
+      "stopAll": true
+    }
+  ]
 }

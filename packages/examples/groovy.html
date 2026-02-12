@@ -1,27 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <title>Groovy Language Client & Language Server (Web Socket)</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <title>Groovy Language Client & Language Server (Web Socket)</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css">
-</head>
+    <body>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">Groovy Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
+            <br />
+            <button type="button" id="button-start">Start</button>
+            <button type="button" id="button-dispose">Dispose</button>
+            Launch backend with: <b><code>docker compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d</code></b
+            ><br />
+        </div>
+        <div id="monaco-editor-root" style="width: 800px; height: 600px; border: 1px solid grey"></div>
+        <script type="module">
+            import { runGroovyClient } from './src/groovy/client/main.ts';
 
-<body>
-    <div class="exampleHeadelineDiv">
-        <b class="exampleHeadeline">Groovy Language Client & Language Server (Web Socket)</b> - [<a href="../../index.html">Back to Index</a>]
-        <br>
-        <button type="button" id="button-start">Start</button>
-        <button type="button" id="button-dispose">Dispose</button>
-        Launch backend with: <b><code>docker compose -f ./packages/examples/resources/groovy/docker-compose.yml up -d</code></b><br>
-    </div>
-	<div id="monaco-editor-root" style="width:800px;height:600px;border:1px solid grey"></div>
-    <script type="module">
-        import { runGroovyClient } from "./src/groovy/client/main.ts";
-
-        runGroovyClient();
-    </script>
-</body>
-
+            runGroovyClient();
+        </script>
+    </body>
 </html>

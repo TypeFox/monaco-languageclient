@@ -18,10 +18,7 @@ const config = defineConfig({
         },
         copyPublicDir: false,
         rolldownOptions: {
-            external: [
-                'react',
-                'react-dom'
-            ],
+            external: ['react', 'react-dom'],
             output: {
                 entryFileNames: '[name].js',
                 assetFileNames: '[name][extname]'
