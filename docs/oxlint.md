@@ -9,32 +9,30 @@ Useful links:
 
 ## Eslint to Oxlint migration results
 
-Performed on 2025-11-26.
+Performed on 2025-11-26 and updated 2026-02-20.
 
-```shell
-unsupported rule, but in development: constructor-super
-unsupported rule, but in development: getter-return
-unsupported rule: no-dupe-args
-unsupported rule, but in development: no-misleading-character-class
-unsupported rule: no-octal
-unsupported rule, but in development: no-undef
-unsupported rule, but in development: no-unreachable
-unsupported rule: prefer-const
-unsupported rule: dot-notation
-unsupported rule: new-parens
-unsupported rule: no-multiple-empty-lines
-unsupported rule: no-trailing-spaces
-unsupported rule: space-before-function-paren
-unsupported rule: semi
-unsupported rule: quotes
-unsupported rule: @typescript-eslint/parameter-properties
-unsupported rule: @typescript-eslint/no-unnecessary-condition
-```
+- unsupported rule: no-dupe-args
+  - Not needed in modern code, strict is enforced by tsc
+- unsupported rule: no-octal
+  - Not needed in modern code, strict is enforced by tsc
+- unsupported rule, but in development: no-undef
+  - Not needed, handled by tsc
+- unsupported rule: dot-notation
+  - Replaced by `typescript/dot-notation`
+- unsupported rule: new-parens
+  - Is handled automatically by oxfmt
+- unsupported rule: no-multiple-empty-lines
+  - Is handled automatically by oxfmt
+- unsupported rule: no-trailing-spaces
+  - Is handled automatically by oxfmt
+- unsupported rule: space-before-function-paren
+  - Is handled automatically by oxfmt
+- unsupported rule: semi
+  - Is handled automatically by oxfmt
+- unsupported rule: quotes
+  - Is handled by oxfmt via config `"singleQuote": true`
 
 ## Changes
 
-- Replaced `@typescript-eslint/no-var-requires` with `no-var-requires`
-- Turned of recommended rule `no-undef` after migration
 - All rules in nursery (=under development) and unsupported rules are accompanied by a comment in [.oxlintrc.json](../.oxlintrc.json)
-- All rules unsupported by oxlint are still contained in [eslint.config.mjs](../eslint.config.mjs) and applied by eslint.
-- JsPlugins are instable in oxlint, therefore they are still contained in [eslint.config.mjs](../eslint.config.mjs) and applied by eslint.
+- 2026-02-20: Deleted eslint and all plugins

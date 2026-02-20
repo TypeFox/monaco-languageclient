@@ -11,4 +11,4 @@ const ctx = await esbuild.context({
 });
 
 await ctx.rebuild();
-ctx.dispose();
+await ctx.dispose();

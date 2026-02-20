@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/* eslint-disable dot-notation */
+/* oxlint-disable dot-notation */
 
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';

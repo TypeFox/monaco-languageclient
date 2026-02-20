@@ -28,6 +28,7 @@ import '@codingame/monaco-vscode-search-result-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 
+// @ts-ignore
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';

@@ -9,14 +9,6 @@
   "[typescript]": {
     "editor.formatOnSave": true,
   },
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
-  "eslint.format.enable": false,
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
