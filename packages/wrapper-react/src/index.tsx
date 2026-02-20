@@ -204,7 +204,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         try {
             // it is possible to run without an editorApp, when the ViewsService or WorkbenchService
             if (haveEditorService()) {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                // oxlint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (htmlContainer === null || (htmlContainer !== null && htmlContainer.parentElement === null)) {
                     debugLogging('INIT EDITOR: Unable to create editor. HTML container or the parent is missing.');
                 } else {

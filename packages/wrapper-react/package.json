@@ -46,10 +46,10 @@
     "npm": "11.6.2"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-editor-api": "^26.0.1",
-    "@codingame/monaco-vscode-extension-api": "^26.0.1",
+    "@codingame/monaco-vscode-editor-api": "^26.2.1",
+    "@codingame/monaco-vscode-extension-api": "^26.2.1",
     "react": ">=18.0.0 || <20.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.0.1"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^26.2.1"
   },
   "repository": {
     "type": "git",

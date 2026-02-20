@@ -18,7 +18,7 @@ describe('MonacoVscodeApiWrapper Tests: Different config', () => {
         const awaited = await apiWrapper.start();
         expect(awaited).toBeUndefined();
 
-        // eslint-disable-next-line dot-notation
+        // oxlint-disable-next-line dot-notation
         expect((apiWrapper['logger'] as ILogger).getLevel()).toBe(LogLevel.Off);
     });
 

@@ -26,7 +26,7 @@ export class DAPSocket {
 
     private onData = (data: Buffer) => {
         this.rawData = Buffer.concat([this.rawData, data]);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        // oxlint-disable-next-line @typescript-eslint/no-unnecessary-condition
         while (true) {
             if (this.contentLength >= 0) {
                 if (this.rawData.length >= this.contentLength) {

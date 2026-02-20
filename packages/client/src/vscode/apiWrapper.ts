@@ -330,7 +330,7 @@ export class MonacoVscodeApiWrapper {
                 this.configureDevLogLevel();
                 this.logger.info(`Initializing monaco-vscode api. Caller: ${startInstructions?.caller ?? 'unknown'}`);
 
-                await this.configureMonacoWorkers();
+                this.configureMonacoWorkers();
 
                 // ensure either classic (monarch) or textmate (extended) highlighting is used
                 await this.configureHighlightingServices();

@@ -75,7 +75,7 @@ These are the current versions of packages from this repository and their alignm
 - **monaco-languageclient**: `10.7.0` (release date: 2026-02-04)
 - **@typefox/monaco-editor-react**: `7.7.0` (release date: unrel2026-02-04eased)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `26.0.1`
+  - **@codingame/monaco-vscode-[editor]-api**: `26.2.1`
   - **vscode**: `1.108.2`
   - **monaco-editor**: `0.55.1`
 - **vscode-ws-jsonrpc**: `3.5.0` (release date: 2025-08-11)

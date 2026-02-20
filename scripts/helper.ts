@@ -19,9 +19,9 @@ export function getRootDirectory() {
 }
 
 export function getPathRelativeToRootDirectory(relativePath: string, pathToDelete?: string) {
-    if (pathToDelete) {
-        return path.resolve(getRootDirectory(), relativePath, pathToDelete);
-    } else {
+    if (pathToDelete === undefined) {
         return path.resolve(getRootDirectory(), relativePath);
+    } else {
+        return path.resolve(getRootDirectory(), relativePath, pathToDelete);
     }
 }

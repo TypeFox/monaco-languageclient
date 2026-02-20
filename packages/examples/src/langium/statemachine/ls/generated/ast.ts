@@ -3,7 +3,7 @@
  * DO NOT EDIT MANUALLY!
  ******************************************************************************/
 
-/* eslint-disable */
+/* oxlint-disable */
 import * as langium from 'langium';
 
 export const StatemachineTerminals = {

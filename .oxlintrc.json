@@ -1,7 +1,12 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": [
-    "typescript"
+    "typescript",
+    "oxc",
+    "promise"
+    // "vitest"
+    // "import"
+    // "react"
   ],
   "categories": {
     "correctness": "error"
@@ -28,16 +33,12 @@
   ],
   "rules": {
     "eqeqeq": "error",
-    // currently in oxlint's nursery (=under development)
     "constructor-super": "error",
-    // currently unsupported by oxlint
-    "dot-notation": "error",
+    "typescript/dot-notation": "error",
     "for-direction": "error",
     // currently in oxlint's nursery (=under development)
     "getter-return": "error",
     "guard-for-in": "error",
-    // currently unsupported by oxlint
-    "new-parens": "error",
     "no-async-promise-executor": "error",
     "no-bitwise": "error",
     "no-caller": "error",
@@ -51,8 +52,6 @@
     "no-control-regex": "error",
     "no-debugger": "error",
     "no-delete-var": "error",
-    // currently unsupported by oxlint
-    "no-dupe-args": "error",
     "no-dupe-class-members": "error",
     "no-dupe-else-if": "error",
     "no-dupe-keys": "error",
@@ -74,18 +73,11 @@
     "no-irregular-whitespace": "error",
     "no-labels": "error",
     "no-loss-of-precision": "error",
-    // currently in oxlint's nursery (=under development)
     "no-misleading-character-class": "error",
-    // currently unsupported by oxlint
-    "no-multiple-empty-lines": ["error", {
-        "max": 1
-    }],
     "no-new-native-nonconstructor": "error",
     "no-new-wrappers": "error",
     "no-nonoctal-decimal-escape": "error",
     "no-obj-calls": "error",
-    // currently unsupported by oxlint
-    "no-octal": "error",
     "no-prototype-builtins": "error",
     "no-redeclare": "error",
     "no-regex-spaces": "error",
@@ -95,10 +87,6 @@
     "no-sparse-arrays": "error",
     "no-this-before-super": "error",
     "no-throw-literal": "error",
-    // currently unsupported by oxlint
-    "no-trailing-spaces": "error",
-    // currently in oxlint's nursery (=under development)
-    "no-undef": "off",
     "no-unexpected-multiline": "error",
     // currently in oxlint's nursery (=under development)
     "no-unreachable": "error",
@@ -119,25 +107,11 @@
     "no-useless-catch": "error",
     "no-useless-escape": "error",
     "no-var": "error",
-    "no-var-requires": "error",
     "no-with": "error",
-    // currently unsupported by oxlint
     "prefer-const": "error",
     "prefer-rest-params": "error",
     "prefer-spread": "error",
-    // currently unsupported by oxlint
-    "quotes": [2, "single", {
-      "avoidEscape": true
-    }],
     "require-yield": "error",
-    // currently unsupported by oxlint
-    "semi": [2, "always"],
-    // currently unsupported by oxlint
-    "space-before-function-paren": ["error", {
-        "anonymous": "never",
-        "asyncArrow": "always",
-        "named": "never"
-    }],
     "use-isnan": "error",
     "valid-typeof": "error",
     "@typescript-eslint/ban-ts-comment": "error",
@@ -170,5 +144,16 @@
     "@typescript-eslint/prefer-namespace-keyword": "error",
     "@typescript-eslint/strict-boolean-expressions": "error",
     "@typescript-eslint/triple-slash-reference": "error",
+    "@typescript-eslint/no-var-requires": "error",
+    // "import/no-cycle": "deny",
+    // "import/no-duplicates": "error",
+    // "import/first": "error",
+    // "import/export": "error",
+    // "import/default": "error",
+    // "import/named": "error",
+    // "import/no-unresolved": "error"
+    // "pluginHeader/header": [2, "block", {
+    //     pattern: "MIT License|DO NOT EDIT MANUALLY!"
+    // }]
   }
 }

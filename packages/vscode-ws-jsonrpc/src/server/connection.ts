@@ -29,9 +29,9 @@ export function createConnection<T extends object>(reader: MessageReader, writer
         reader,
         writer,
         forward(to: IConnection, map: (message: Message) => Message = (message) => message): void {
-            reader.listen(input => {
+            reader.listen(async input => {
                 const output = map(input);
-                to.writer.write(output);
+                await to.writer.write(output);
             });
         },
         onClose(callback: () => void): Disposable {

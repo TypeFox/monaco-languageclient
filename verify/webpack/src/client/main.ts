@@ -5,4 +5,4 @@
 
 import { runJsonWrapper } from 'monaco-languageclient-examples/json-client';
 
-runJsonWrapper();
+await runJsonWrapper();
