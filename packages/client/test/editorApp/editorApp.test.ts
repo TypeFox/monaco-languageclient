@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/* eslint-disable dot-notation */
+/* oxlint-disable dot-notation */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ILogger } from '@codingame/monaco-vscode-log-service-override';

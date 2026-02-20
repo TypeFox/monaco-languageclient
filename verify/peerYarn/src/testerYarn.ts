@@ -7,4 +7,4 @@ import * as vscode from 'vscode';
 import { runJsonWrapper } from 'monaco-languageclient-examples/json-client';
 
 console.log(vscode.workspace.name);
-runJsonWrapper();
+await runJsonWrapper();

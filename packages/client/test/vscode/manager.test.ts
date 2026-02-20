@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/* eslint-disable dot-notation */
+/* oxlint-disable dot-notation */
 
 import { beforeAll, describe, expect, test } from 'vitest';
 import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
@@ -120,7 +120,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
 
     test.sequential('test dispose extensions and re-init', async () => {
         expect(() => apiWrapper.dispose()).not.toThrowError();
-        await expect(await apiWrapper.initExtensions()).toBeUndefined();
+        expect(await apiWrapper.initExtensions()).toBeUndefined();
     });
 
 });
