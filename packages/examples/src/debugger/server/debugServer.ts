@@ -89,7 +89,7 @@ wss.on('connection', (ws) => {
 
                         const cmd = `${debuggerExecCall} ${defaultFile} 2>&1 | tee /home/mlc/server/debugger.log`;
                         console.log(`Executing the debugger: ${cmd}`);
-                        const execGraalpy = await exec(cmd);
+                        const execGraalpy = exec(cmd);
                         execGraalpy.stdout?.on('data', (data) => {
                             sendOutput('stdout', data);
                         });

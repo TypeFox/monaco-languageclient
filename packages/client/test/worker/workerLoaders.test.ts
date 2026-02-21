@@ -36,7 +36,7 @@ describe.sequential('Test WorkerLoaders', () => {
     test('Test default worker application', async () => {
         // default, expect editor and ts worker to be loaded
         createWorkerPromises(['editorWorker', 'tsWorker']);
-        await expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
     });
 
     test('Test TS worker application', async () => {
@@ -44,28 +44,28 @@ describe.sequential('Test WorkerLoaders', () => {
         createWorkerPromises([]);
         const modelRefTs = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.ts`), '');
         editor.setModel(modelRefTs.object.textEditorModel);
-        await expect(await awaitWorkerPromises()).toStrictEqual([]);
+        expect(await awaitWorkerPromises()).toStrictEqual([]);
     });
 
     test('Test CSS worker application', async () => {
         createWorkerPromises(['cssWorker']);
         const modelRefCss = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.css`), '');
         editor.setModel(modelRefCss.object.textEditorModel);
-        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
 
     test('Test JSON worker application', async () => {
         createWorkerPromises(['jsonWorker']);
         const modelRefJson = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.json`), '');
         editor.setModel(modelRefJson.object.textEditorModel);
-        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
 
     test('Test HTML worker application', async () => {
         createWorkerPromises(['htmlWorker']);
         const modelRefHtml = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.html`), '');
         editor.setModel(modelRefHtml.object.textEditorModel);
-        await expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     });
 
 });

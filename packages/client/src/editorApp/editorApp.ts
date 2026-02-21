@@ -46,7 +46,9 @@ export class EditorApp {
     constructor(userAppConfig?: EditorAppConfig) {
         this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
         if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
+            const modifiedString = JSON.stringify(userAppConfig?.codeResources?.modified);
+            const originalString = JSON.stringify(userAppConfig?.codeResources?.original);
+            throw new Error(`Use diff editor was used without a valid config. code: ${modifiedString} codeOriginal: ${originalString}`);
         }
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
@@ -165,7 +167,7 @@ export class EditorApp {
             }
 
             if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-                StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                await StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
                     this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
             }
 

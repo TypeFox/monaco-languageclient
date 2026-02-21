@@ -60,10 +60,10 @@ export class LanguageClientWrapper {
 
             if (conOptions.$type === 'WebSocketDirect' || conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl') {
                 const webSocket = conOptions.$type === 'WebSocketDirect' ? conOptions.webSocket : new WebSocket(createUrl(conOptions));
-                this.initMessageTransportWebSocket(webSocket, resolve, reject);
+                return this.initMessageTransportWebSocket(webSocket, resolve, reject);
             } else {
                 // init of worker and start of languageclient can be handled directly, because worker available already
-                this.initMessageTransportWorker(conOptions, resolve, reject);
+                return this.initMessageTransportWorker(conOptions, resolve, reject);
             }
         });
     }

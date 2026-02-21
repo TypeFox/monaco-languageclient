@@ -13,7 +13,7 @@ self.onmessage = async (event: MessageEvent) => {
     const data = event.data;
     console.log(event.data);
     if (data.port !== undefined) {
-        start(data.port, 'statemachine-server-port');
+        await start(data.port, 'statemachine-server-port');
 
         setTimeout(() => {
             // test independent communication

@@ -27,7 +27,7 @@ export const fsReadAllFiles = (emscriptenFs: typeof FS, baseFolder: string) => {
                     console.log(`Ignored: ${path}`);
                 }
             } catch (error) {
-                console.error(`${path} provoked an error: ${error}`);
+                console.error(`${path} provoked an error: ${String(error)}`);
             }
         }
     };
