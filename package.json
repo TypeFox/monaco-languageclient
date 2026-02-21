@@ -75,7 +75,10 @@
     "test:direct": "vitest --config vitest.config.ts run",
     "test:coverage": "vitest --config vitest.config.ts run --coverage",
     "test:debug": "npm run test:playwright -- --inspect-brk=20222 --browser --no-file-parallelism",
-    "test:install": "playwright install --with-deps chromium"
+    "test:install": "playwright install --with-deps chromium",
+    "license:check": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-check",
+    "license:add": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-add",
+    "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help"
   },
   "workspaces": [
     "packages/vscode-ws-jsonrpc",
