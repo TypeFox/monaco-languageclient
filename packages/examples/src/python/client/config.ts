@@ -186,8 +186,8 @@ export const createPythonAppConfig = (): PythonAppConfig => {
                     onCall: (languageClient?: BaseLanguageClient) => {
                         setTimeout(() => {
                             ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                    languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                vscode.commands.registerCommand(cmdName, async (...args: unknown[]) => {
+                                    await languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
                                 });
                             });
                         }, 250);

@@ -33,9 +33,9 @@ export class JsonServer {
         this.documents.onDidChangeContent(change =>
             this.validate(change.document)
         );
-        this.documents.onDidClose(event => {
+        this.documents.onDidClose(async event => {
             this.cleanPendingValidation(event.document);
-            this.cleanDiagnostics(event.document);
+            await this.cleanDiagnostics(event.document);
         });
 
         this.connection.onInitialize(params => {
@@ -157,12 +157,12 @@ export class JsonServer {
     }
 
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-    protected executeCommand(params: ExecuteCommandParams): any {
+    protected async executeCommand(params: ExecuteCommandParams): Promise<any> {
         if (params.command === 'json.documentUpper' && params.arguments) {
             const versionedTextDocumentIdentifier = params.arguments[0];
             const document = this.documents.get(versionedTextDocumentIdentifier.uri);
             if (document) {
-                this.connection.workspace.applyEdit({
+                await this.connection.workspace.applyEdit({
                     documentChanges: [{
                         textDocument: versionedTextDocumentIdentifier,
                         edits: [{
@@ -224,9 +224,9 @@ export class JsonServer {
 
     protected validate(document: TextDocument): void {
         this.cleanPendingValidation(document);
-        this.pendingValidationRequests.set(document.uri, setTimeout(() => {
+        this.pendingValidationRequests.set(document.uri, setTimeout(async () => {
             this.pendingValidationRequests.delete(document.uri);
-            this.doValidate(document);
+            await this.doValidate(document);
         }));
     }
 
@@ -238,9 +238,9 @@ export class JsonServer {
         }
     }
 
-    protected doValidate(document: TextDocument): void {
+    protected async doValidate(document: TextDocument): Promise<void> {
         if (document.getText().length === 0) {
-            this.cleanDiagnostics(document);
+            await this.cleanDiagnostics(document);
             return;
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -249,12 +249,12 @@ export class JsonServer {
         );
     }
 
-    protected cleanDiagnostics(document: TextDocument): void {
-        this.sendDiagnostics(document, []);
+    protected async cleanDiagnostics(document: TextDocument): Promise<void> {
+        await this.sendDiagnostics(document, []);
     }
 
-    protected sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): void {
-        this.connection.sendDiagnostics({
+    protected async sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): Promise<void> {
+        await this.connection.sendDiagnostics({
             uri: document.uri, diagnostics
         });
     }

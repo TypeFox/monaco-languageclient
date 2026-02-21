@@ -192,6 +192,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     performErrorHandling(error as Error);
                 }
             };
+            // oxlint-disable-next-line typescript/no-floating-promises
             globalInitFunc();
         } else if (envEnhanced.vscodeApiInitialised === true) {
             if (runQueueLock && intervalId !== undefined) {
@@ -204,8 +205,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         try {
             // it is possible to run without an editorApp, when the ViewsService or WorkbenchService
             if (haveEditorService()) {
-                // oxlint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (htmlContainer === null || (htmlContainer !== null && htmlContainer.parentElement === null)) {
+                if (htmlContainer === null || (htmlContainer.parentElement === null)) {
                     debugLogging('INIT EDITOR: Unable to create editor. HTML container or the parent is missing.');
                 } else {
                     if (editorAppRef.current === undefined && !launchingRef.current) {
@@ -252,7 +252,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const updateEditorModel = async () => {
         try {
             if (!launchingRef.current && editorAppRef.current) {
-                editorAppRef.current.updateCodeResources(editorAppConfigRef.current?.codeResources);
+                await editorAppRef.current.updateCodeResources(editorAppConfigRef.current?.codeResources);
                 updateModelRelatedRefs();
                 onConfigProcessed?.({ modelUpdated: true, textUpdated: true, editorApp: editorAppRef.current });
                 debugLogging('UPDATE EDITOR MODEL: Model was updated.');
@@ -341,6 +341,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (editorAppConfig === undefined) return;
 
         // always try to perform global init. Reason: we cannot ensure order
+        // we can't await this due to the nature of useEffect
+        // oxlint-disable-next-line typescript/no-floating-promises
         performGlobalInit();
 
         editorAppConfigRef.current = editorAppConfig;
@@ -384,6 +386,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         if (languageClientConfig === undefined) return;
 
         // always try to perform global init. Reason: we cannot ensure order
+        // we can't await this due to the nature of useEffect
+        // oxlint-disable-next-line typescript/no-floating-promises
         performGlobalInit();
 
         lcsManager.setLogLevel(languageClientConfig.logLevel);
@@ -404,7 +408,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
                     onDisposeLanguageClient?.();
                 } catch (error) {
                     // The language client may throw an error during disposal, but we want to continue anyway
-                    performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${error}`));
+                    const message = error instanceof Error ? error.message : String(error);
+                    console.error(`Unexpected error occurred: ${message}`);
+                    performErrorHandling(new Error(`Unexpected error occurred during disposal of the language client: ${message }`));
                 }
             };
             if (lcsManager.isStarted()) {
@@ -424,6 +430,8 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         // this part runs on mount (componentDidMount)
 
         // always try to perform global init. Reason: we cannot ensure order
+        // we can't await this due to the nature of useEffect
+        // oxlint-disable-next-line typescript/no-floating-promises
         performGlobalInit();
 
         // this part runs on unmount (componentWillUnmount)

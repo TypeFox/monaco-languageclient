@@ -50,10 +50,10 @@ export const StatemachineModule: Module<StatemachineServices, PartialLangiumServ
  * @param context Optional module context with the LSP connection
  * @returns An object wrapping the shared services and the language-specific services
  */
-export function createStatemachineServices(context: DefaultSharedModuleContext): {
-    shared: LangiumSharedServices,
-    statemachine: StatemachineServices
-} {
+export async function createStatemachineServices(context: DefaultSharedModuleContext): Promise<{
+    shared: LangiumSharedServices;
+    statemachine: StatemachineServices;
+}> {
     const shared = inject(
         createDefaultSharedModule(context),
         StatemachineGeneratedSharedModule
@@ -68,7 +68,7 @@ export function createStatemachineServices(context: DefaultSharedModuleContext):
     if (!context.connection) {
         // We don't run inside a language server
         // Therefore, initialize the configuration provider instantly
-        shared.workspace.ConfigurationProvider.initialized({});
+        await shared.workspace.ConfigurationProvider.initialized({});
     }
     return { shared, statemachine };
 }

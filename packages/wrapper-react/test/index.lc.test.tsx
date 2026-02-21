@@ -44,10 +44,15 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 deferred.resolve();
             }}
         />);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        lcsManager?.dispose(true);
+        await delayExecution(hundredMs);
+        try {
+            await lcsManager?.dispose(true);
+        } catch (error) {
+            console.log('Error during manual dispose of LanguageClientManager:', error);
+        }
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -74,7 +79,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 deferred.resolve();
             }}
         />);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
@@ -87,12 +92,17 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferredLc.resolve()}
         />);
-        await expect(await deferredLc.promise).toBeUndefined();
+        expect(await deferredLc.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.haveLanguageClient()).toBeFalsy();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeFalsy();
 
-        lcsManager?.dispose(true);
+        await delayExecution(hundredMs);
+        try {
+            await lcsManager?.dispose(true);
+        } catch (error) {
+            console.log('Error during manual dispose of LanguageClientManager:', error);
+        }
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -119,7 +129,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 deferredLc.resolve();
             }}
         />);
-        await expect(await deferredLc.promise).toBeUndefined();
+        expect(await deferredLc.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
         const editorAppConfig2 = createDefaultEditorAppConfig({
@@ -143,9 +153,14 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 deferred2.resolve();
             }}
         />);
-        await expect(await deferred2.promise).toBeUndefined();
+        expect(await deferred2.promise).toBeUndefined();
 
-        lcsManager?.dispose(true);
+        await delayExecution(hundredMs);
+        try {
+            await lcsManager?.dispose(true);
+        } catch (error) {
+            console.log('Error during manual dispose of LanguageClientManager:', error);
+        }
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -205,7 +220,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
                 expect(error.message).toEqual('A languageclient config with id "langium" already exists and you confiured to not override.');
             }}
         />);
-        await expect(await deferred2.promise).toBeUndefined();
+        expect(await deferred2.promise).toBeUndefined();
 
         const languageClientConfigs3 = createDefaultLanguageClientConfig();
         const deferred3 = new Deferred();
@@ -218,7 +233,7 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferred3.resolve()}
         />);
-        await expect(await deferred3.promise).toBeUndefined();
+        expect(await deferred3.promise).toBeUndefined();
 
         const languageClientConfigs4 = createDefaultLanguageClientConfig();
         languageClientConfigs4.clientOptions.markdown = {
@@ -232,10 +247,15 @@ describe.sequential('Test MonacoEditorReactComp: Langugae Client', () => {
             style={{ 'height': '800px' }}
             onLanguageClientsStartDone={() => deferred4.resolve()}
         />);
-        await expect(await deferred4.promise).toBeUndefined();
+        expect(await deferred4.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        lcsManager?.dispose(true);
+        await delayExecution(hundredMs);
+        try {
+            await lcsManager?.dispose(true);
+        } catch (error) {
+            console.log('Error during manual dispose of LanguageClientManager:', error);
+        }
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);

@@ -9,4 +9,4 @@ import { start } from './statemachine-server-start.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
-start(self, 'statemachine-server');
+await start(self, 'statemachine-server');

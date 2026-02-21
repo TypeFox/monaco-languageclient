@@ -38,7 +38,7 @@ describe('Test MonacoEditorReactComp', () => {
                 deferred.resolve();
             }}
         />);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
 
         renderResult.unmount();
         cleanHtmlBody();
@@ -61,7 +61,7 @@ describe('Test MonacoEditorReactComp', () => {
             style={{ 'height': '800px' }}
             onVscodeApiInitDone={() => deferred.resolve()}
         />);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
 
         renderResult.unmount();
         cleanHtmlBody();

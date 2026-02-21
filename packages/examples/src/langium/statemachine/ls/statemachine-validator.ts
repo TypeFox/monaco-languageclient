@@ -12,8 +12,8 @@ export function registerValidationChecks(services: StatemachineServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.StatemachineValidator;
     const checks: ValidationChecks<StatemachineAstType> = {
-        State: validator.checkStateNameStartsWithCapital,
-        Statemachine: validator.checkUniqueStatesAndEvents
+        State: (state, accept) => validator.checkStateNameStartsWithCapital(state, accept),
+        Statemachine: (statemachine, accept) => validator.checkUniqueStatesAndEvents(statemachine, accept)
     };
     registry.register(checks, validator);
 }

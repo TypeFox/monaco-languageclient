@@ -17,11 +17,11 @@ export const runPythonReact = async () => {
 
     const onVscodeApiInitDone = async (apiWrapper: MonacoVscodeApiWrapper) => {
         const result = apiWrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
-        result.setAsDefaultApi();
+        await result.setAsDefaultApi();
 
         const initResult = apiWrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
         if (initResult !== undefined) {
-            configureDebugging(await initResult.getApi(), appConfig.configParams);
+            await configureDebugging(await initResult.getApi(), appConfig.configParams);
         }
 
         await vscode.commands.executeCommand('workbench.view.explorer');

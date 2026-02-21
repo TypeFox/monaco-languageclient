@@ -90,8 +90,8 @@ describe('Test EditorApp', () => {
     test('Start EditorApp', async () => {
         const editorAppConfig = createEditorAppConfig({});
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
-        await editorApp.dispose();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.dispose()).toBeUndefined();
     });
 
     test('Update code resources after start (same file)', async () => {
@@ -103,7 +103,7 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
         expect(editorApp.isStarted()).toBeTruthy();
 
         editorApp.registerOnTextChangedCallback((textChanges: TextContents) => {
@@ -136,12 +136,12 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
         expect(editorApp.isStarted()).toBeTruthy();
 
         editorApp.setModelRefDisposeTimeout(1000);
 
-        await expect(await editorApp.updateCodeResources({
+        expect(await editorApp.updateCodeResources({
             modified: {
                 text: codeUpdated,
                 uri: `/workspace/${expect.getState().testPath}_2.js`,
@@ -172,7 +172,7 @@ describe('Test EditorApp', () => {
         // oxlint-disable-next-line @typescript-eslint/no-explicit-any
         const spyAnnounceModelUpdate = vi.spyOn(editorApp as any, 'announceModelUpdate');
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         onTextChangedDiposeable = editorApp['textChangedDisposables'].modified;
         expect(onTextChangedDiposeable).toBeDefined();
@@ -206,11 +206,11 @@ describe('Test EditorApp', () => {
         });
         let editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
         expect(editorApp.isStarting()).toBeFalsy();
         expect(editorApp.isDisposing()).toBeFalsy();
 
-        await expect(await editorApp.dispose()).toBeUndefined();
+        expect(await editorApp.dispose()).toBeUndefined();
 
         expect(editorApp.isStarting()).toBeFalsy();
         expect(editorApp.isDisposing()).toBeFalsy();
@@ -222,7 +222,7 @@ describe('Test EditorApp', () => {
             }
         });
         editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });
@@ -236,7 +236,7 @@ describe('Test EditorApp', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });

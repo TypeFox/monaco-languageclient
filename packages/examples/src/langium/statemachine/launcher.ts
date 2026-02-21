@@ -7,4 +7,4 @@ import { initLocaleLoader } from 'monaco-languageclient/vscodeApiLocales';
 await initLocaleLoader();
 
 const { runStatemachine } = await import('./main.js');
-runStatemachine();
+await runStatemachine();

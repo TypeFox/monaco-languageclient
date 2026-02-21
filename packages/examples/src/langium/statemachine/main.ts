@@ -72,7 +72,7 @@ const startEditor = async () => {
     // run editorApp
     await editorApp.start(htmlContainer);
 
-    editorApp.updateCodeResources({
+    await editorApp.updateCodeResources({
         modified: {
             text,
             uri: '/workspace/statemachine-mod.statemachine'
@@ -97,7 +97,7 @@ const startEditor = async () => {
 
     await delayExecution(1000);
 
-    editorApp.updateCodeResources({
+    await editorApp.updateCodeResources({
         modified: {
             text: `// modified file\n\n${text}`,
             uri: '/workspace/statemachine-mod2.statemachine'
@@ -109,7 +109,7 @@ const disposeEditor = async () => {
     disableElement('button-start', false);
     disableElement('button-dispose', true);
 
-    lcWrapper.dispose();
+    await lcWrapper.dispose();
 
     editorApp?.reportStatus();
     await editorApp?.dispose();

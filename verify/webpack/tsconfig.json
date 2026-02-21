@@ -14,7 +14,8 @@
       "ES2022",
       "DOM"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": true
   },
   "include": [
     "src/**/*.ts",

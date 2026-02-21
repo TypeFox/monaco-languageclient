@@ -10,7 +10,7 @@ import type { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrap
 
 export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, configResult: ConfigResult) => {
     const result = apiWrapper.getExtensionRegisterResult('mlc-app-playground') as RegisterLocalProcessExtensionResult;
-    result.setAsDefaultApi();
+    await result.setAsDefaultApi();
 
     await Promise.all([
         await vscode.workspace.openTextDocument(configResult.helloTsUri),

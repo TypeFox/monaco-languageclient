@@ -95,7 +95,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
 
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         expect(editorApp).toBeDefined();
 
@@ -114,7 +114,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -132,7 +132,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
 
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
         await expect(async () => {
             await editorApp.start(htmlContainer);
         }).rejects.toThrowError('Start was called without properly disposing the EditorApp first.');
@@ -149,9 +149,9 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
         await editorApp.dispose();
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         await editorApp.dispose();
     });
@@ -172,7 +172,7 @@ describe('Test Test EditorApp (classic)', () => {
 
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -196,7 +196,7 @@ describe('Test Test EditorApp (classic)', () => {
         };
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -218,7 +218,7 @@ describe('Test Test EditorApp (classic)', () => {
         };
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         expect(modelRefs?.modified).toBeDefined();
@@ -243,7 +243,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         editorAppConfig.codeResources = {};
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const modelRefs = editorApp['modelRefs'];
         // default modelRef is created with regular editor even if no codeResources are given
@@ -263,11 +263,11 @@ describe('Test Test EditorApp (classic)', () => {
         editorAppConfig.codeResources = {};
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         editorApp.setModelRefDisposeTimeout(1000);
 
-        editorApp.updateCodeResources({
+        await editorApp.updateCodeResources({
             modified: {
                 text: 'const text = "Hello World!";',
                 uri: '/workspace/statemachineUri.statemachine'
@@ -294,14 +294,14 @@ describe('Test Test EditorApp (classic)', () => {
         expect(modelRefsBefore?.modified).toBeUndefined();
         expect(modelRefsBefore?.original).toBeUndefined();
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         editorApp.registerOnTextChangedCallback((textChanges: TextContents) => {
             console.log(textChanges);
             expect(textChanges.modified).toEqual('// comment');
         });
 
-        await expect(await editorApp.updateCodeResources({
+        expect(await editorApp.updateCodeResources({
             modified: {
                 text: '// comment',
                 uri: '/workspace/test.statemachine',
@@ -323,7 +323,7 @@ describe('Test Test EditorApp (classic)', () => {
             }
         });
         const editorApp = new EditorApp(editorAppConfig);
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const currentModel = editorApp.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
@@ -342,7 +342,7 @@ describe('Test Test EditorApp (classic)', () => {
         });
         const editorApp = new EditorApp(editorAppConfig);
 
-        await expect(await editorApp.start(htmlContainer)).toBeUndefined();
+        expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
         const currentModel = editorApp.getEditor()?.getModel();
         expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();

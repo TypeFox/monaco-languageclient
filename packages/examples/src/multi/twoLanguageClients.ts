@@ -90,7 +90,7 @@ print("Hello Moon!")
             }
 
             // init and start language clients after start
-            await lcManager.setConfigs(languageClientConfigs);
+            lcManager.setConfigs(languageClientConfigs);
             await lcManager.start();
         } catch (e) {
             console.error(e);
@@ -107,7 +107,7 @@ print("Hello Moon!")
     document.querySelector('#button-flip')?.addEventListener('click', async () => {
         currentText = currentText === textJson ? textPython : textJson;
         currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
-        editorApp.updateCodeResources({
+        await editorApp.updateCodeResources({
             modified: {
                 text: currentText,
                 uri: `/workspace/example.${currenFileExt}`

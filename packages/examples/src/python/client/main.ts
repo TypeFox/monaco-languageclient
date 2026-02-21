@@ -30,7 +30,7 @@ export const runPythonWrapper = async () => {
 
         const initResult = apiWrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
         if (initResult !== undefined) {
-            configureDebugging(await initResult.getApi(), appConfig.configParams);
+            await configureDebugging(await initResult.getApi(), appConfig.configParams);
         }
 
         await lcWrapper.start();

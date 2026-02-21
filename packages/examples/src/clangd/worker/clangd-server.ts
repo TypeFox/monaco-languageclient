@@ -63,7 +63,7 @@ export class ClangdInteractionWorker implements ComRouter {
         this.reader = new BrowserMessageReader(this.lsMessagePort);
         this.writer = new BrowserMessageWriter(this.lsMessagePort);
 
-        this.endpointWorker?.sentAnswer({
+        await this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
                 overrideCmd: 'clangd_init_complete'
             })
@@ -90,7 +90,7 @@ export class ClangdInteractionWorker implements ComRouter {
         (clangd as any).callMain([]);
 
         // send the launch complete message to the client
-        this.endpointWorker?.sentAnswer({
+        await this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
                 overrideCmd: 'clangd_launch_complete'
             })
@@ -161,17 +161,17 @@ export class ClangdInteractionWorker implements ComRouter {
 
         const jsonStream = new JsonStream();
 
-        const stdout = (charCode: number) => {
+        const stdout = async (charCode: number) => {
             const jsonOrNull = jsonStream.insert(charCode);
             if (jsonOrNull !== null) {
                 console.log('%c%s', 'color: green', jsonOrNull);
-                this.writer?.write(JSON.parse(jsonOrNull));
+                await this.writer?.write(JSON.parse(jsonOrNull));
             }
         };
 
         const LF = 10;
         let stderrLine = '';
-        const stderr = (charCode: number) => {
+        const stderr = async (charCode: number) => {
             if (charCode === LF) {
                 console.log('%c%s', 'color: darkorange', stderrLine);
                 stderrLine = '';
@@ -186,10 +186,10 @@ export class ClangdInteractionWorker implements ComRouter {
             }
         };
 
-        const onAbort = () => {
+        const onAbort = async () => {
             this.writer?.end();
 
-            this.endpointWorker?.sentMessage({
+            await this.endpointWorker?.sentMessage({
                 message: WorkerMessage.fromPayload(
                     new RawPayload({
                         type: 'error',
@@ -275,7 +275,7 @@ export class ClangdInteractionWorker implements ComRouter {
      * populate fs = true; persist fs = false
      * @param readOrWrite Whether to read or write the filesystem
      */
-    private async syncFS(readOrWrite: boolean) {
+    private syncFS(readOrWrite: boolean) {
         if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
 
         this.emscriptenFS.syncfs(readOrWrite, (err) => {
@@ -437,7 +437,7 @@ export class ClangdInteractionWorker implements ComRouter {
         const allFilesAndDirectories = fsReadAllFiles(this.emscriptenFS, '/');
 
         this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, this.emscriptenFS);
-        this.remoteFs.init();
+        await this.remoteFs.init();
 
         const allPromises = [];
         for (const filename of allFilesAndDirectories.files) {
@@ -457,7 +457,7 @@ export class ClangdInteractionWorker implements ComRouter {
         await Promise.all(allPromises);
 
         // signal the client everything is ready
-        this.remoteFs.ready();
+        await this.remoteFs.ready();
 
         const t1 = performance.now();
         const msg = `Remote FS: File loading completed in ${t1 - t0}ms.`;

@@ -8,4 +8,4 @@ import { initLocaleLoader } from 'monaco-languageclient/vscodeApiLocales';
 await initLocaleLoader();
 
 const { runApplicationPlayground } = await import('./main.js');
-runApplicationPlayground();
+await runApplicationPlayground();

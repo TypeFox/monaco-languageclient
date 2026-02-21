@@ -39,11 +39,11 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
                     authorization: 'UserAuth'
                 },
                 startOptions: {
-                    onCall: (languageClient?: BaseLanguageClient) => {
+                    onCall: async (languageClient?: BaseLanguageClient) => {
                         setTimeout(() => {
                             ['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-                                vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-                                    languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
+                                vscode.commands.registerCommand(cmdName, async (...args: unknown[]) => {
+                                    await languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args });
                                 });
                             });
                         }, 250);
