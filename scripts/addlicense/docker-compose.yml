@@ -1,0 +1,35 @@
+services:
+  addlicense-builder:
+    build:
+      context: ../..
+      dockerfile: ./scripts/addlicense/Dockerfile.addlicense
+    image: addlicense-builder
+    container_name: addlicense-builder
+
+  addlicense-check:
+    depends_on:
+      - addlicense-builder
+    image: addlicense-builder
+    tty: true
+    container_name: addlicense-checker
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+    command: [ "/bin/sh", "-c", "addlicense -v -check -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*"]
+
+  addlicense-add:
+    depends_on:
+      - addlicense-builder
+    image: addlicense-builder
+    container_name: addlicense-add
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+    command: [ "/bin/sh", "-c", "addlicense -v -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*"]
+
+  addlicense-help:
+    image: addlicense-builder
+    depends_on:
+      - addlicense-builder
+    container_name: addlicense-help
+    command: [ "/bin/sh", "-c", "addlicense -h" ]

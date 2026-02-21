@@ -152,8 +152,5 @@
     // "import/default": "error",
     // "import/named": "error",
     // "import/no-unresolved": "error"
-    // "pluginHeader/header": [2, "block", {
-    //     pattern: "MIT License|DO NOT EDIT MANUALLY!"
-    // }]
   }
 }

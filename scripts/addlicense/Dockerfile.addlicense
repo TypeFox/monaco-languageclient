@@ -1,0 +1,5 @@
+# Dockerfile for running addlicense tool to check TypeScript file headers
+FROM golang:1.26.0-alpine
+
+# Install addlicense
+RUN go install github.com/google/addlicense@latest

@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 TypeFox and others.
+ * Licensed under the MIT License. See LICENSE in the package root for license information.
+ */
+
 import { UserConfig } from 'vite';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
