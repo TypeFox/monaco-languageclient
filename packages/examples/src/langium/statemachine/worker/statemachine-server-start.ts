@@ -13,7 +13,7 @@ import { createStatemachineServices } from '../ls/statemachine-module.js';
 export let messageReader: BrowserMessageReader | undefined;
 export let messageWriter: BrowserMessageWriter | undefined;
 
-export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: string) => {
+export const start = async (port: MessagePort | DedicatedWorkerGlobalScope, name: string) => {
     console.log(`Starting ${name}...`);
     /* browser specific setup code */
     messageReader = new BrowserMessageReader(port);
@@ -26,7 +26,7 @@ export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: stri
     const connection = createConnection(messageReader, messageWriter);
 
     // Inject the shared services and language-specific services
-    const { shared } = createStatemachineServices({ connection, ...EmptyFileSystem });
+    const { shared } = await createStatemachineServices({ connection, ...EmptyFileSystem });
 
     // Start the language server with the shared services
     startLanguageServer(shared);

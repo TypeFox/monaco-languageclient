@@ -44,12 +44,12 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
                 deferred.resolve();
             }}
         /></StrictMode>);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
 
         await delayExecution(hundredMs);
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        lcsManager?.dispose(true);
+        await lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -76,7 +76,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
                 deferred.resolve();
             }}
         /></StrictMode>);
-        await expect(await deferred.promise).toBeUndefined();
+        expect(await deferred.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
@@ -91,12 +91,12 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
             enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferredLc.resolve()}
         /></StrictMode>);
-        await expect(await deferredLc.promise).toBeUndefined();
+        expect(await deferredLc.promise).toBeUndefined();
 
         expect(lcsManager?.getLanguageClientWrapper('langium')?.haveLanguageClient()).toBeFalsy();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeFalsy();
 
-        lcsManager?.dispose(true);
+        await lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -124,7 +124,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
                 deferredLc.resolve();
             }}
         /></StrictMode>);
-        await expect(await deferredLc.promise).toBeUndefined();
+        expect(await deferredLc.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
         await delayExecution(hundredMs);
@@ -150,9 +150,9 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
                 deferred2.resolve();
             }}
         /></StrictMode>);
-        await expect(await deferred2.promise).toBeUndefined();
+        expect(await deferred2.promise).toBeUndefined();
 
-        lcsManager?.dispose(true);
+        await lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);
@@ -214,7 +214,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
                 expect(error.message).toEqual('A languageclient config with id "langium" already exists and you confiured to not override.');
             }}
         /></StrictMode>);
-        await expect(await deferred2.promise).toBeUndefined();
+        expect(await deferred2.promise).toBeUndefined();
 
         await delayExecution(hundredMs);
 
@@ -229,7 +229,7 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
             enforceLanguageClientDispose={true}
             onDisposeLanguageClient={() => deferred3.resolve()}
         /></StrictMode>);
-        await expect(await deferred3.promise).toBeUndefined();
+        expect(await deferred3.promise).toBeUndefined();
 
         await delayExecution(hundredMs);
 
@@ -245,10 +245,10 @@ describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', (
             style={{ 'height': '800px' }}
             onLanguageClientsStartDone={() => deferred4.resolve()}
         /></StrictMode>);
-        await expect(await deferred4.promise).toBeUndefined();
+        expect(await deferred4.promise).toBeUndefined();
         expect(lcsManager?.getLanguageClientWrapper('langium')?.isStarted()).toBeTruthy();
 
-        lcsManager?.dispose(true);
+        await lcsManager?.dispose(true);
         renderResult.unmount();
         cleanHtmlBody();
         await delayExecution(hundredMs);

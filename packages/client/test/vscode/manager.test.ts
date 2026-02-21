@@ -57,7 +57,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
         expect(envEnhanced.vscodeApiInitialised).toBeFalsy();
 
         // wait for the initial promise to complete and expect that api init was completed and is no longer ongoing
-        await expect(await promise).toBeUndefined();
+        expect(await promise).toBeUndefined();
         envEnhanced = getEnhancedMonacoEnvironment();
         expect(envEnhanced.vscodeApiGlobalInitAwait).toBeUndefined();
         expect(envEnhanced.vscodeApiGlobalInitResolve).toBeUndefined();
