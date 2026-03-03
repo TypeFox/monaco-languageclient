@@ -7,7 +7,8 @@
     "**/dist/**/*",
     "**/lib/**/*",
     "**/node_modules/**/*",
-    "**/production/**/*"
+    "**/production/**/*",
+    "packages/examples/resources/clangd/clangd-include.files.md"
   ],
   "endOfLine": "lf",
   "trailingComma": "none",
