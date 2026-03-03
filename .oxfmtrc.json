@@ -7,7 +7,9 @@
     "**/dist/**/*",
     "**/lib/**/*",
     "**/node_modules/**/*",
-    "**/production/**/*"
+    "**/production/**/*",
+    // Exclude this file because `**` can be interpreted as Markdown bold/nesting and cause slow formatting (oxc issue #19929).
+    "packages/examples/resources/clangd/clangd-include.files.md"
   ],
   "endOfLine": "lf",
   "trailingComma": "none",
