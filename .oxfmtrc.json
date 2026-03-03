@@ -8,6 +8,7 @@
     "**/lib/**/*",
     "**/node_modules/**/*",
     "**/production/**/*",
+    // Markdown formatter can be pathologically slow on this file (oxc issue #19929).
     "packages/examples/resources/clangd/clangd-include.files.md"
   ],
   "endOfLine": "lf",
