@@ -3,8 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Message } from 'vscode-jsonrpc';
-import { AbstractMessageWriter, MessageWriter } from 'vscode-jsonrpc';
+import { AbstractMessageWriter, Message, MessageWriter } from 'vscode-jsonrpc';
 import type { IWebSocket } from './socket.js';
 
 export class WebSocketMessageWriter extends AbstractMessageWriter implements MessageWriter {

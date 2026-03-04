@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
@@ -11,10 +10,12 @@ import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import * as vscode from 'vscode';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import langiumGrammarLangium from '../../../../resources/langium/langium-dsl/langium-grammar.langium?raw';
 import langiumTypesLangium from '../../../../resources/langium/langium-dsl/langium-types.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
+// oxlint-disable-next-line import/default
 import workerUrl from '../worker/langium-server?worker&url';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';

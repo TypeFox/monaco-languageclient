@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { type Module, inject } from 'langium';
-import type { LangiumServices, LangiumSharedServices, PartialLangiumServices } from 'langium/lsp';
-import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModuleContext } from 'langium/lsp';
-import { StatemachineModelGeneratedModule, StatemachineGeneratedSharedModule } from './generated/module.js';
+import { type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices, createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
+import { StatemachineGeneratedSharedModule, StatemachineModelGeneratedModule } from './generated/module.js';
 import { StatemachineValidator, registerValidationChecks } from './statemachine-validator.js';
 
 /**

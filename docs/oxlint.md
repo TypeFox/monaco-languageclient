@@ -36,3 +36,4 @@ Performed on 2025-11-26 and updated 2026-02-20.
 
 - All rules in nursery (=under development) and unsupported rules are accompanied by a comment in [.oxlintrc.json](../.oxlintrc.json)
 - 2026-02-20: Deleted eslint and all plugins
+- 2026-03-04: Fixed all type aware issues, added import rules and removed all default rules

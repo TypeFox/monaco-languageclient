@@ -3,9 +3,10 @@
   "plugins": [
     "typescript",
     "oxc",
-    "promise"
+    "promise",
+    "import"
+    // these rule sets may be added later
     // "vitest"
-    // "import"
     // "react"
   ],
   "categories": {
@@ -31,70 +32,33 @@
     "**/*env.d.ts",
     "**/.pnp.cjs"
   ],
+  // see: https://oxc.rs/docs/guide/usage/linter/rules.html
   "rules": {
     "eqeqeq": "error",
-    "constructor-super": "error",
-    "typescript/dot-notation": "error",
-    "for-direction": "error",
     // currently in oxlint's nursery (=under development)
     "getter-return": "error",
     "guard-for-in": "error",
-    "no-async-promise-executor": "error",
+    "no-array-constructor": "error",
     "no-bitwise": "error",
-    "no-caller": "error",
     "no-case-declarations": "error",
-    "no-class-assign": "error",
-    "no-compare-neg-zero": "error",
-    "no-cond-assign": "error",
-    "no-const-assign": "error",
-    "no-constant-binary-expression": "error",
-    "no-constant-condition": "error",
-    "no-control-regex": "error",
-    "no-debugger": "error",
-    "no-delete-var": "error",
-    "no-dupe-class-members": "error",
-    "no-dupe-else-if": "error",
-    "no-dupe-keys": "error",
-    "no-duplicate-case": "error",
     "no-empty": "error",
     "no-empty-character-class": "error",
     "no-empty-pattern": "error",
     "no-empty-static-block": "error",
-    "no-eval": "error",
-    "no-ex-assign": "error",
     "no-explicit-any": "error",
-    "no-extra-boolean-cast": "error",
     "no-fallthrough": "error",
-    "no-func-assign": "error",
-    "no-global-assign": "error",
     "no-import-assign": "error",
     "no-inner-declarations": "off",
-    "no-invalid-regexp": "error",
-    "no-irregular-whitespace": "error",
     "no-labels": "error",
-    "no-loss-of-precision": "error",
     "no-misleading-character-class": "error",
-    "no-new-native-nonconstructor": "error",
     "no-new-wrappers": "error",
-    "no-nonoctal-decimal-escape": "error",
-    "no-obj-calls": "error",
     "no-prototype-builtins": "error",
     "no-redeclare": "error",
     "no-regex-spaces": "error",
-    "no-self-assign": "error",
-    "no-setter-return": "error",
-    "no-shadow-restricted-names": "error",
-    "no-sparse-arrays": "error",
-    "no-this-before-super": "error",
     "no-throw-literal": "error",
     "no-unexpected-multiline": "error",
     // currently in oxlint's nursery (=under development)
     "no-unreachable": "error",
-    "no-unsafe-finally": "error",
-    "no-unsafe-negation": "error",
-    "no-unsafe-optional-chaining": "error",
-    "no-unused-labels": "error",
-    "no-unused-private-class-members": "error",
     "no-unused-vars": [
       "error",
       {
@@ -103,19 +67,15 @@
         "varsIgnorePattern": "^_"
       }
     ],
-    "no-useless-backreference": "error",
-    "no-useless-catch": "error",
-    "no-useless-escape": "error",
     "no-var": "error",
-    "no-with": "error",
     "prefer-const": "error",
     "prefer-rest-params": "error",
     "prefer-spread": "error",
-    "require-yield": "error",
-    "use-isnan": "error",
-    "valid-typeof": "error",
+
+    // all typescript related rules
+    // currently in oxlint's nursery (=under development)
+    "typescript/dot-notation": "error",
     "@typescript-eslint/ban-ts-comment": "error",
-    "no-array-constructor": "error",
     "@typescript-eslint/adjacent-overload-signatures": "error",
     "@typescript-eslint/array-type": [
       "error",
@@ -123,34 +83,26 @@
         "default": "array-simple"
       }
     ],
-    "@typescript-eslint/no-duplicate-enum-values": "error",
     "@typescript-eslint/no-empty-object-type": "error",
-    "@typescript-eslint/no-extra-non-null-assertion": "error",
-    "@typescript-eslint/no-misused-new": "error",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/no-require-imports": "error",
-    "@typescript-eslint/no-this-alias": "error",
     "@typescript-eslint/no-unnecessary-type-constraint": "error",
-    "@typescript-eslint/no-unsafe-declaration-merging": "error",
     "@typescript-eslint/no-unsafe-function-type": "error",
     "@typescript-eslint/no-unused-expressions": "error",
     "@typescript-eslint/no-unnecessary-condition": "error",
-    "@typescript-eslint/no-wrapper-object-types": "error",
     "@typescript-eslint/parameter-properties": "error",
-    "@typescript-eslint/prefer-as-const": "error",
     "@typescript-eslint/prefer-namespace-keyword": "error",
     "@typescript-eslint/strict-boolean-expressions": "error",
     "@typescript-eslint/triple-slash-reference": "error",
     "@typescript-eslint/no-var-requires": "error",
-    // "import/no-cycle": "deny",
-    // "import/no-duplicates": "error",
-    // "import/first": "error",
-    // "import/export": "error",
-    // "import/default": "error",
-    // "import/named": "error",
-    // "import/no-unresolved": "error"
+    // all import related rules
+    "import/no-duplicates": "error",
+    "import/first": "error",
+    "import/export": "error",
+    "import/default": "error",
+    "import/named": "error",
+    "import/no-unresolved": "error"
   }
 }

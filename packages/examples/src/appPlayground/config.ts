@@ -34,8 +34,11 @@ import '../../resources/vsix/open-collaboration-tools.vsix';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+// oxlint-disable-next-line import/default
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
+// oxlint-disable-next-line import/default
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
+// oxlint-disable-next-line import/default
 import helloJsonCode from '../../resources/appPlayground/hello.json?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 

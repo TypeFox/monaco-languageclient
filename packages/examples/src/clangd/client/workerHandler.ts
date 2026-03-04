@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
+// oxlint-disable-next-line import/default
 import clangdWorkerUrl from '../worker/clangd-server?worker&url';
 
 class ClangdInteractionMain implements ComRouter {

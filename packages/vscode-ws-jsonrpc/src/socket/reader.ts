@@ -3,10 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from 'vscode-jsonrpc';
 // TODO: Use environment-specific imports (vscode-jsonrpc/browser or vscode-jsonrpc/node)
 // when upgrading to vscode-jsonrpc@9.x.x-next.X which supports proper export maps
-import { type DataCallback, AbstractMessageReader, MessageReader } from 'vscode-jsonrpc';
+import { AbstractMessageReader, type DataCallback, Disposable, MessageReader } from 'vscode-jsonrpc';
 import type { IWebSocket } from './socket.js';
 
 export class WebSocketMessageReader extends AbstractMessageReader implements MessageReader {
