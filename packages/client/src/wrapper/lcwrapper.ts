@@ -45,7 +45,7 @@ export class LanguageClientWrapper {
     }
 
     isStarted(): boolean {
-        return this.languageClient !== undefined && this.languageClient.isRunning();
+        return this.languageClient?.isRunning() ?? false;
     }
 
     async start(): Promise<void> {
@@ -125,7 +125,7 @@ export class LanguageClientWrapper {
                         message: `languageClientWrapper (${this.languageId}): Illegal worker configuration detected.`,
                         error: ev.error ?? 'No error was provided.'
                     };
-                    reject(languageClientError);
+                    reject(languageClientError)
                 };
             } else {
                 const workerDirectConfig = lccOptions as WorkerConfigOptionsDirect;
@@ -136,15 +136,12 @@ export class LanguageClientWrapper {
             }
         }
 
-        const portOrWorker = this.port ? this.port : this.worker;
+        const portOrWorker = this.port ?? this.worker;
         let messageTransports = this.languageClientConfig.connection.messageTransports;
-        if (messageTransports === undefined) {
-            messageTransports = {
-                reader: new BrowserMessageReader(portOrWorker),
-                writer: new BrowserMessageWriter(portOrWorker)
-            };
-        }
-
+        messageTransports ??= {
+            reader: new BrowserMessageReader(portOrWorker),
+            writer: new BrowserMessageWriter(portOrWorker)
+        };
         await this.performLanguageClientStart(messageTransports, resolve, reject);
     }
 

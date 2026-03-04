@@ -10,8 +10,7 @@
     ],
     "rootDir": ".",
     "noEmit": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true
+    "skipLibCheck": true
   },
   "include": [
     "**/src/**/*.ts"

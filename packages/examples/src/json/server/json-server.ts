@@ -33,9 +33,14 @@ export class JsonServer {
         this.documents.onDidChangeContent(change =>
             this.validate(change.document)
         );
-        this.documents.onDidClose(async event => {
+        this.documents.onDidClose(event => {
             this.cleanPendingValidation(event.document);
-            await this.cleanDiagnostics(event.document);
+            try {
+                // oxlint-disable-next-line typescript/no-floating-promises
+                this.cleanDiagnostics(event.document);
+            } catch (error) {
+                this.connection.console.error(`Error while cleaning diagnostics: ${String(error)}`);
+            }
         });
 
         this.connection.onInitialize(params => {
@@ -205,7 +210,8 @@ export class JsonServer {
             return response.responseText;
         } catch (error: unknown) {
             const err = error as Record<string, unknown>;
-            return Promise.reject(err.responseText !== undefined || requestLight.getErrorStatusDescription(err.status as number) || JSON.stringify(err));
+            const errorMessage = err.responseText ?? (err.status !== undefined ? requestLight.getErrorStatusDescription(err.status as number) : JSON.stringify(err));
+            return Promise.reject(errorMessage);
         }
     }
 

@@ -12,7 +12,6 @@ import { createConverter as createCodeConverter } from 'vscode-languageclient/li
 import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
-// @ts-expect-error: this handled by @codingame/monaco-vscode-rollup-vsix-plugin
 import '../../resources/vsix/github-vscode-theme.vsix';
 
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';

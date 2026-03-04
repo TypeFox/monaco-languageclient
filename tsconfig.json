@@ -19,7 +19,6 @@
     "inlineSources": false,
     "stripInternal": true,
     "strict": true,
-    "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "importHelpers": true,
     "downlevelIteration": false,

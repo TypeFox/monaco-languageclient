@@ -45,11 +45,6 @@ export class EditorApp {
 
     constructor(userAppConfig?: EditorAppConfig) {
         this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
-        if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
-            const modifiedString = JSON.stringify(userAppConfig?.codeResources?.modified);
-            const originalString = JSON.stringify(userAppConfig?.codeResources?.original);
-            throw new Error(`Use diff editor was used without a valid config. code: ${modifiedString} codeOriginal: ${originalString}`);
-        }
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
             useDiffEditor: userAppConfig?.useDiffEditor ?? false,

@@ -15,8 +15,6 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 import langiumGrammarLangium from '../../../../resources/langium/langium-dsl/langium-grammar.langium?raw';
 import langiumTypesLangium from '../../../../resources/langium/langium-dsl/langium-types.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
-// oxlint-disable-next-line import/default
-import workerUrl from '../worker/langium-server?worker&url';
 import langiumLanguageConfig from './langium.configuration.json?raw';
 import langiumTextmateGrammar from './langium.tmLanguage.json?raw';
 
@@ -28,8 +26,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     extensionFilesOrContents.set('/workspace/langium-grammar.json', langiumTextmateGrammar);
 
     const loadLangiumWorker = () => {
-        console.log(`Langium worker URL: ${workerUrl}`);
-        return new Worker(workerUrl, {
+        return new Worker(new URL('../worker/langium-server.ts', import.meta.url), {
             type: 'module',
             name: 'Langium LS',
         });

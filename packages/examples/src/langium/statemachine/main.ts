@@ -7,10 +7,6 @@ import * as vscode from 'vscode';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-// oxlint-disable-next-line import/default
-import workerUrl from './worker/statemachine-server?worker&url';
-// oxlint-disable-next-line import/default
-import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
@@ -131,19 +127,17 @@ export const runStatemachine = async () => {
     }
 };
 
+// Language Server preparation
+
 export const loadStatemachineWorkerRegular = () => {
-    // Language Server preparation
-    console.log(`Langium worker URL: ${workerUrl}`);
-    return new Worker(workerUrl, {
+    return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
         type: 'module',
         name: 'Statemachine Server Regular',
     });
 };
 
 export const loadStatemachinWorkerPort = () => {
-    // Language Server preparation
-    console.log(`Langium worker URL: ${workerPortUrl}`);
-    return new Worker(workerPortUrl, {
+    return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
         type: 'module',
         name: 'Statemachine Server Port',
     });

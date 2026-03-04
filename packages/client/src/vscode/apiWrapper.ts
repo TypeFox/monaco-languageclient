@@ -130,20 +130,18 @@ export class MonacoVscodeApiWrapper {
      * Adding the default workspace config if not provided
      */
     protected configureWorkspaceConfig() {
-        if (this.apiConfig.workspaceConfig === undefined) {
-            this.apiConfig.workspaceConfig = {
-                workspaceProvider: {
-                    trusted: true,
-                    workspace: {
-                        workspaceUri: vscode.Uri.file('/workspace.code-workspace')
-                    },
-                    async open() {
-                        window.open(window.location.href);
-                        return true;
-                    }
+        this.apiConfig.workspaceConfig ??= {
+            workspaceProvider: {
+                trusted: true,
+                workspace: {
+                    workspaceUri: vscode.Uri.file('/workspace.code-workspace')
                 },
-            };
-        }
+                async open() {
+                    window.open(window.location.href);
+                    return true;
+                }
+            },
+        };
     }
 
     /**

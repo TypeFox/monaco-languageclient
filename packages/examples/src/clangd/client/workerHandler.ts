@@ -4,8 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
-// oxlint-disable-next-line import/default
-import clangdWorkerUrl from '../worker/clangd-server?worker&url';
 
 class ClangdInteractionMain implements ComRouter {
 
@@ -23,7 +21,7 @@ export class ClangdWorkerHandler {
     private endpointMain?: ComChannelEndpoint;
 
     async createWorker() {
-        const languageServerWorker = new Worker(clangdWorkerUrl, {
+        const languageServerWorker = new Worker(new URL('../worker/clangd-server.ts', import.meta.url), {
             type: 'module',
             name: 'Clangd Server Worker',
         });

@@ -28,17 +28,15 @@ import '@codingame/monaco-vscode-search-result-default-extension';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
 import '@codingame/monaco-vscode-typescript-language-features-default-extension';
 
-// @ts-expect-error: this handled by @codingame/monaco-vscode-rollup-vsix-plugin
 import '../../resources/vsix/open-collaboration-tools.vsix';
 
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-// oxlint-disable-next-line import/default
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
-// oxlint-disable-next-line import/default
+
+// oxlint-disable-next-line import/default: oxlint-tsgolint checks the TypeScript file, although it is in the ignorePatterns list
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
-// oxlint-disable-next-line import/default
 import helloJsonCode from '../../resources/appPlayground/hello.json?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';
 
