@@ -72,9 +72,6 @@
     "prefer-spread": "error",
 
     // all typescript related rules
-    // currently in oxlint's nursery (=under development)
-    "typescript/dot-notation": "error",
-    "typescript/ban-ts-comment": "error",
     "typescript/adjacent-overload-signatures": "error",
     "typescript/array-type": [
       "error",
@@ -82,22 +79,27 @@
         "default": "array-simple"
       }
     ],
+    "typescript/ban-ts-comment": "error",
+    // currently in oxlint's nursery (=under development)
+    "typescript/dot-notation": "error",
     "typescript/no-empty-object-type": "error",
     "typescript/no-namespace": "off",
-    "typescript/no-non-null-assertion": "off",
-    "typescript/prefer-for-of": "error",
-    "typescript/no-require-imports": "error",
+    // currently in oxlint's nursery (=under development)
+    "typescript/no-unnecessary-condition": "error",
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unsafe-function-type": "error",
     "typescript/no-unused-expressions": "error",
-    "typescript/no-unnecessary-condition": "error",
+    "typescript/no-non-null-assertion": "off",
+    "typescript/no-require-imports": "error",
+    "typescript/no-var-requires": "error",
     "typescript/parameter-properties": "error",
+    "typescript/prefer-for-of": "error",
     "typescript/prefer-namespace-keyword": "error",
     "typescript/prefer-nullish-coalescing": "error",
+    // currently in oxlint's nursery (=under development)
     "typescript/prefer-optional-chain": "error",
     "typescript/strict-boolean-expressions": "error",
     "typescript/triple-slash-reference": "error",
-    "typescript/no-var-requires": "error",
     // all import related rules
     "import/no-duplicates": "error",
     "import/first": "error",

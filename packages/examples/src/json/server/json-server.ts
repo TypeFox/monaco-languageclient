@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { readFile } from 'node:fs';
-import requestLight from 'request-light';
+import requestLight, { type XHRResponse } from 'request-light';
 import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
 import { createConnection, type _Connection, TextDocuments, type DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
@@ -15,6 +15,7 @@ import type { TextDocumentPositionParams, DocumentRangeFormattingParams, Execute
 import { TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, type LanguageService, type JSONDocument } from 'vscode-json-languageservice';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { Deferred } from 'monaco-languageclient/common';
 
 export class JsonServer {
     protected readonly connection: _Connection;
@@ -35,12 +36,9 @@ export class JsonServer {
         );
         this.documents.onDidClose(event => {
             this.cleanPendingValidation(event.document);
-            try {
-                // oxlint-disable-next-line typescript/no-floating-promises
-                this.cleanDiagnostics(event.document);
-            } catch (error) {
+            this.cleanDiagnostics(event.document).catch(error => {
                 this.connection.console.error(`Error while cleaning diagnostics: ${String(error)}`);
-            }
+            });
         });
 
         this.connection.onInitialize(params => {
@@ -205,14 +203,22 @@ export class JsonServer {
                 });
             });
         }
-        try {
-            const response = await requestLight.xhr({ url, followRedirects: 5 });
-            return response.responseText;
-        } catch (error: unknown) {
-            const err = error as Record<string, unknown>;
-            const errorMessage = err.responseText ?? (err.status !== undefined ? requestLight.getErrorStatusDescription(err.status as number) : JSON.stringify(err));
-            return Promise.reject(errorMessage);
-        }
+
+        const deferred = new Deferred<string>();
+        requestLight.xhr({ url, followRedirects: 5 }).then(response => {
+            deferred.resolve(response.responseText);
+        }).catch((error: Error | XHRResponse) => {
+            let errorMessage: string;
+            if (error instanceof Error) {
+                errorMessage = `Schema resolution failed: ${error.message}`;
+            } else {
+                const xhrResponse = error as XHRResponse;
+                errorMessage = `Schema resolution failed: ${requestLight.getErrorStatusDescription(xhrResponse.status)} ocurred: ${xhrResponse.responseText}`;
+            }
+            deferred.reject(errorMessage);
+        });
+
+        return deferred.promise;
     }
 
     protected resolveCompletion(item: CompletionItem): Thenable<CompletionItem> {
