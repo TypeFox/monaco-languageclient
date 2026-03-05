@@ -64,7 +64,7 @@ export async function createStatemachineServices(context: DefaultSharedModuleCon
     );
     shared.ServiceRegistry.register(statemachine);
     registerValidationChecks(statemachine);
-    if (!context.connection) {
+    if (context.connection === undefined) {
         // We don't run inside a language server
         // Therefore, initialize the configuration provider instantly
         await shared.workspace.ConfigurationProvider.initialized({});

@@ -158,7 +158,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const performErrorHandling = (error: Error) => {
         debugLogging(`ERROR: ${error.message}`);
-        if (onError) {
+        if (onError !== undefined) {
             onError(error);
         } else {
             debugLogging(`INTERCEPTED Error: ${error}. Stopping queue...`);
@@ -205,7 +205,9 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         try {
             // it is possible to run without an editorApp, when the ViewsService or WorkbenchService
             if (haveEditorService()) {
-                if (!htmlContainer?.parentElement) {
+
+                // oxlint-disable-next-line typescript/prefer-optional-chain
+                if (htmlContainer === null || htmlContainer.parentElement === null) {
                     debugLogging('INIT EDITOR: Unable to create editor. HTML container or the parent is missing.');
                 } else {
                     if (editorAppRef.current === undefined && !launchingRef.current) {
@@ -251,7 +253,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
 
     const updateEditorModel = async () => {
         try {
-            if (!launchingRef.current && editorAppRef.current) {
+            if (!launchingRef.current && editorAppRef.current !== undefined) {
                 await editorAppRef.current.updateCodeResources(editorAppConfigRef.current?.codeResources);
                 updateModelRelatedRefs();
                 onConfigProcessed?.({ modelUpdated: true, textUpdated: true, editorApp: editorAppRef.current });
@@ -293,7 +295,7 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
         let textUpdated = false;
         try {
             debugLogging('CONFIG PROCESSED: Started');
-            if (!launchingRef.current && editorAppRef.current) {
+            if (!launchingRef.current && editorAppRef.current !== undefined) {
                 if (editorAppConfigRef.current?.codeResources !== undefined) {
                     const newModifiedCodeUri = editorAppConfigRef.current.codeResources.modified?.uri;
                     const newOriginalCodeUri = editorAppConfigRef.current.codeResources.original?.uri;

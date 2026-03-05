@@ -98,7 +98,14 @@
     "typescript/prefer-nullish-coalescing": "error",
     // currently in oxlint's nursery (=under development)
     "typescript/prefer-optional-chain": "error",
-    "typescript/strict-boolean-expressions": "error",
+    "typescript/strict-boolean-expressions": [
+      "error",
+      {
+        "allowString": false,
+        "allowNumber": false,
+        "allowNullableObject": false
+      }
+    ],
     "typescript/triple-slash-reference": "error",
     // all import related rules
     "import/no-duplicates": "error",

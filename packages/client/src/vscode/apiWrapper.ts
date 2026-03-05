@@ -261,7 +261,7 @@ export class MonacoVscodeApiWrapper {
         }
 
         const extensions = this.apiConfig.extensions;
-        if (this.apiConfig.extensions) {
+        if (this.apiConfig.extensions !== undefined && this.apiConfig.extensions.length > 0) {
             const allPromises: Array<Promise<void>> = [];
             const extensionIds: string[] = [];
             getBuiltinExtensions().forEach((ext) => {
@@ -281,7 +281,7 @@ export class MonacoVscodeApiWrapper {
             const manifest = extensionConfig.config as IExtensionManifest;
             const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
             this.extensionRegisterResults.set(manifest.name, extRegResult);
-            if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+            if (extensionConfig.filesOrContents !== undefined && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                 for (const entry of extensionConfig.filesOrContents) {
                     this.disposableStore.add(extRegResult.registerFileUrl(entry[0], encodeStringOrUrlToDataUrl(entry[1])));
                 }

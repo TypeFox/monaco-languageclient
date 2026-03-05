@@ -77,7 +77,7 @@ export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
             config.wss.handleUpgrade(request, socket, head, webSocket => {
                 const socket: IWebSocket = {
                     send: content => webSocket.send(content, error => {
-                        if (error) {
+                        if (error !== undefined) {
                             throw error;
                         }
                     }),

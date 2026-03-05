@@ -109,7 +109,7 @@ export class ClangdInteractionWorker implements ComRouter {
         while (!loadingComplete) {
             const { done, value } = await wasmReader.read();
             loadingComplete = done;
-            if (value) {
+            if (value !== undefined) {
                 chunks.push(value);
             }
         }
@@ -276,7 +276,7 @@ export class ClangdInteractionWorker implements ComRouter {
      * @param readOrWrite Whether to read or write the filesystem
      */
     private syncFS(readOrWrite: boolean) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         this.emscriptenFS.syncfs(readOrWrite, (err) => {
             if (err !== null) {
@@ -287,7 +287,7 @@ export class ClangdInteractionWorker implements ComRouter {
     }
 
     private async updateWorkerFilesystem(requiredResurces: RequiredResources) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         const t0 = performance.now();
         console.log('Updating Worker FS');
@@ -310,7 +310,7 @@ export class ClangdInteractionWorker implements ComRouter {
      * Loads workspace files separately or the compressed workspace from a zip archive
      */
     private async loadWorkspaceFiles() {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         // setup & prepare the filesystem
         this.emscriptenFS.mkdir(WORKSPACE_PATH);
@@ -365,7 +365,7 @@ export class ClangdInteractionWorker implements ComRouter {
     }
 
     private async processInputFiles(files: Record<string, () => Promise<unknown>>, dirReplacer: string) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         const dirsToCreate = new Set<string>();
         const filesToUse: Record<string, () => Promise<unknown>> = {};
@@ -428,8 +428,8 @@ export class ClangdInteractionWorker implements ComRouter {
     }
 
     private async updateRemoteFilesystem() {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
-        if (!this.fsMessagePort) throw new Error('MessagePort is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.fsMessagePort === undefined) throw new Error('MessagePort is not available! Aborting ...');
 
         const t0 = performance.now();
 

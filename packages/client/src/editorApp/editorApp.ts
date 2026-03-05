@@ -138,7 +138,7 @@ export class EditorApp {
             }
 
             const languageDef = this.config.languageDef;
-            if (languageDef) {
+            if (languageDef !== undefined) {
                 // register own language first
                 monaco.languages.register(languageDef.languageExtensionConfig);
 
@@ -151,11 +151,11 @@ export class EditorApp {
                 }
 
                 // apply monarch definitions
-                if (languageDef.monarchLanguage) {
+                if (languageDef.monarchLanguage !== undefined) {
                     monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
                 }
 
-                if (languageDef.theme) {
+                if (languageDef.theme !== undefined) {
                     monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
                     monaco.editor.setTheme(languageDef.theme.name);
                 }
@@ -343,11 +343,11 @@ export class EditorApp {
             disposingResolve = resolve;
         });
 
-        if (this.editor) {
+        if (this.editor !== undefined) {
             this.editor.dispose();
             this.editor = undefined;
         }
-        if (this.diffEditor) {
+        if (this.diffEditor !== undefined) {
             this.diffEditor.dispose();
             this.diffEditor = undefined;
         }

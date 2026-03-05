@@ -112,7 +112,7 @@ export class LanguageClientWrapper {
     }
 
     protected async initMessageTransportWorker(lccOptions: WorkerConfigOptionsDirect | WorkerConfigOptionsParams, resolve: () => void, reject: (reason?: unknown) => void) {
-        if (!this.worker) {
+        if (this.worker === undefined) {
             if (lccOptions.$type === 'WorkerConfig') {
                 const workerConfig = lccOptions as WorkerConfigOptionsParams;
                 this.worker = new Worker(workerConfig.url.href, {

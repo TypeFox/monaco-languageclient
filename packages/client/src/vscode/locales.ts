@@ -120,7 +120,7 @@ export const locales = Object.keys(localeLoader);
 export const initLocaleLoader = async (locale = new URLSearchParams(window.location.search).get('locale'), logger?: ILogger) => {
     if (locale !== null) {
         const loader = localeLoader[locale];
-        if (loader) {
+        if (loader !== undefined) {
             await loader();
         } else {
             logger?.error(`Unknown locale ${locale}`);

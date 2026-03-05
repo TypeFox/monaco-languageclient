@@ -25,7 +25,7 @@ export class StatemachineValidator {
      * @param accept the acceptor to report errors
      */
     checkStateNameStartsWithCapital(state: State, accept: ValidationAcceptor): void {
-        if (state.name) {
+        if (state.name.length > 0) {
             const firstChar = state.name.substring(0, 1);
             if (firstChar.toUpperCase() !== firstChar) {
                 accept('warning', 'State name should start with a capital letter.', { node: state, property: 'name' });

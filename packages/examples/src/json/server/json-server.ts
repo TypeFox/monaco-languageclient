@@ -105,7 +105,7 @@ export class JsonServer {
 
     protected getFoldingRanges(params: FoldingRangeParams): FoldingRange[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         return this.jsonService.getFoldingRanges(document);
@@ -113,7 +113,7 @@ export class JsonServer {
 
     protected findDocumentColors(params: DocumentColorParams): Thenable<ColorInformation[]> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve([]);
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -122,7 +122,7 @@ export class JsonServer {
 
     protected getColorPresentations(params: ColorPresentationParams): ColorPresentation[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -131,7 +131,7 @@ export class JsonServer {
 
     protected codeAction(params: CodeActionParams): Command[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         return [{
@@ -147,12 +147,12 @@ export class JsonServer {
 
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
         const document = this.documents.get(params.textDocument.uri);
-        return document ? this.jsonService.format(document, params.range, params.options) : [];
+        return document === undefined ? [] : this.jsonService.format(document, params.range, params.options);
     }
 
     protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -161,10 +161,10 @@ export class JsonServer {
 
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any
     protected async executeCommand(params: ExecuteCommandParams): Promise<any> {
-        if (params.command === 'json.documentUpper' && params.arguments) {
+        if (params.command === 'json.documentUpper' && params.arguments !== undefined) {
             const versionedTextDocumentIdentifier = params.arguments[0];
             const document = this.documents.get(versionedTextDocumentIdentifier.uri);
-            if (document) {
+            if (document !== undefined) {
                 await this.connection.workspace.applyEdit({
                     documentChanges: [{
                         textDocument: versionedTextDocumentIdentifier,
@@ -183,7 +183,7 @@ export class JsonServer {
 
     protected hover(params: TextDocumentPositionParams): Thenable<Hover | null> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve(null);
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -227,7 +227,7 @@ export class JsonServer {
 
     protected completion(params: TextDocumentPositionParams): Thenable<CompletionList | null> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve(null);
         }
         const jsonDocument = this.getJSONDocument(document);
