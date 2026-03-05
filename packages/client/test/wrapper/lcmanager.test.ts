@@ -15,74 +15,74 @@ import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclien
 import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
-    beforeAll(async () => {
-        const apiConfig: MonacoVscodeApiConfig = {
-            $type: 'extended',
-            viewsConfig: {
-                $type: 'EditorService',
-                htmlContainer: createMonacoEditorDiv()
-            }
-        };
-        const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.start();
+  beforeAll(async () => {
+    const apiConfig: MonacoVscodeApiConfig = {
+      $type: 'extended',
+      viewsConfig: {
+        $type: 'EditorService',
+        htmlContainer: createMonacoEditorDiv()
+      }
+    };
+    const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
+    await apiWrapper.start();
+  });
+
+  test('restart with languageclient', async () => {
+    let error = false;
+    const lcManager = new LanguageClientManager();
+
+    const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
+    const worker = new Worker(workerUrl, {
+      type: 'module',
+      name: 'Langium LS (Regular Test)'
     });
+    expect(worker).toBeDefined();
 
-    test('restart with languageclient', async () => {
-        let error = false;
-        const lcManager = new LanguageClientManager();
+    const reader = new BrowserMessageReader(worker);
+    const writer = new BrowserMessageWriter(worker);
+    const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
 
-        const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
-        const worker = new Worker(workerUrl, {
-            type: 'module',
-            name: 'Langium LS (Regular Test)'
-        });
-        expect(worker).toBeDefined();
+    const lcConfigs = {
+      configs: {
+        langium: languageClientConfig
+      }
+    };
 
-        const reader = new BrowserMessageReader(worker);
-        const writer = new BrowserMessageWriter(worker);
-        const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
+    try {
+      expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+      expect(async () => await lcManager.start()).not.toThrowError();
+      expect(async () => await lcManager.dispose()).not.toThrowError();
 
-        const lcConfigs = {
-            configs: {
-                langium: languageClientConfig
-            }
-        };
+      await delayExecution(1000);
 
-        try {
-            expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
-            expect(async () => await lcManager.start()).not.toThrowError();
-            expect(async () => await lcManager.dispose()).not.toThrowError();
+      expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+      expect(async () => await lcManager.start()).not.toThrowError();
+      expect(async () => await lcManager.dispose()).not.toThrowError();
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      console.error(`Unexpected error occurred: ${message}`);
+      error = true;
+    }
 
-            await delayExecution(1000);
+    expect(error).toBe(false);
+  });
 
-            expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
-            expect(async () => await lcManager.start()).not.toThrowError();
-            expect(async () => await lcManager.dispose()).not.toThrowError();
-        } catch (e: unknown) {
-            const message = e instanceof Error ? e.message : String(e);
-            console.error(`Unexpected error occurred: ${message}`);
-            error = true;
-        }
+  test('set verify log levels are applied', async () => {
+    const lcsManager = new LanguageClientManager();
+    let logLevel = (lcsManager['logger'] as ILogger).getLevel();
+    expect(logLevel).toBe(LogLevel.Info);
+    expect(logLevel).toBe(3);
 
-        expect(error).toBe(false);
-    });
+    lcsManager.setLogLevel(LogLevel.Debug);
+    logLevel = (lcsManager['logger'] as ILogger).getLevel();
+    expect(logLevel).toBe(LogLevel.Debug);
+    expect(logLevel).toBe(2);
+  });
 
-    test('set verify log levels are applied', async () => {
-        const lcsManager = new LanguageClientManager();
-        let logLevel = (lcsManager['logger'] as ILogger).getLevel();
-        expect(logLevel).toBe(LogLevel.Info);
-        expect(logLevel).toBe(3);
-
-        lcsManager.setLogLevel(LogLevel.Debug);
-        logLevel = (lcsManager['logger'] as ILogger).getLevel();
-        expect(logLevel).toBe(LogLevel.Debug);
-        expect(logLevel).toBe(2);
-    });
-
-    test('Check started to be false if nothing is configured', async () => {
-        const lcsManager = new LanguageClientManager();
-        expect(lcsManager.haveLanguageClients()).toBe(false);
-        expect(lcsManager['languageClientWrappers'].size).toBe(0);
-        expect(lcsManager.isStarted()).toBe(false);
-    });
+  test('Check started to be false if nothing is configured', async () => {
+    const lcsManager = new LanguageClientManager();
+    expect(lcsManager.haveLanguageClients()).toBe(false);
+    expect(lcsManager['languageClientWrappers'].size).toBe(0);
+    expect(lcsManager.isStarted()).toBe(false);
+  });
 });

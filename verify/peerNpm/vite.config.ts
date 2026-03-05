@@ -6,10 +6,10 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    preview: {
-        port: 8081
-    },
-    worker: {
-        format: 'es'
-    }
+  preview: {
+    port: 8081
+  },
+  worker: {
+    format: 'es'
+  }
 });

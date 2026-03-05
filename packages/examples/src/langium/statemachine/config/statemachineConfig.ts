@@ -20,96 +20,96 @@ import responseStatemachineTm from '../syntaxes/statemachine.tmLanguage.json?raw
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
 
 export const createLangiumGlobalConfig = (params: {
-    languageServerId: string;
-    codeContent: CodeContent;
-    worker: Worker;
-    messagePort?: MessagePort;
-    messageTransports?: MessageTransports;
-    htmlContainer?: HTMLElement;
+  languageServerId: string;
+  codeContent: CodeContent;
+  worker: Worker;
+  messagePort?: MessagePort;
+  messageTransports?: MessageTransports;
+  htmlContainer?: HTMLElement;
 }): ExampleAppConfig => {
-    const extensionFilesOrContents = new Map<string, string | URL>();
-    extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
-    extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
+  const extensionFilesOrContents = new Map<string, string | URL>();
+  extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-configuration.json`, statemachineLanguageConfig);
+  extensionFilesOrContents.set(`/${params.languageServerId}-statemachine-grammar.json`, responseStatemachineTm);
 
-    const languageClientConfig: LanguageClientConfig = {
-        languageId: 'statemachine',
-        clientOptions: {
-            documentSelector: ['statemachine']
-        },
-        connection: {
-            options: {
-                $type: 'WorkerDirect',
-                worker: params.worker,
-                messagePort: params.messagePort
-            },
-            messageTransports: params.messageTransports
-        },
-        logLevel: LogLevel.Off
-    };
+  const languageClientConfig: LanguageClientConfig = {
+    languageId: 'statemachine',
+    clientOptions: {
+      documentSelector: ['statemachine']
+    },
+    connection: {
+      options: {
+        $type: 'WorkerDirect',
+        worker: params.worker,
+        messagePort: params.messagePort
+      },
+      messageTransports: params.messageTransports
+    },
+    logLevel: LogLevel.Off
+  };
 
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer: params.htmlContainer
+  const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+      $type: 'EditorService',
+      htmlContainer: params.htmlContainer
+    },
+    logLevel: LogLevel.Off,
+    serviceOverrides: {
+      ...getKeybindingsServiceOverride(),
+      ...getLifecycleServiceOverride(),
+      ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory,
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern',
+        'editor.guides.bracketPairsHorizontal': 'active',
+        'editor.wordBasedSuggestions': 'off',
+        'editor.experimental.asyncTokenization': true
+      })
+    },
+    extensions: [
+      {
+        config: {
+          name: 'statemachine-example',
+          publisher: 'TypeFox',
+          version: '1.0.0',
+          engines: {
+            vscode: '*'
+          },
+          contributes: {
+            languages: [
+              {
+                id: 'statemachine',
+                extensions: ['.statemachine'],
+                aliases: ['statemachine', 'Statemachine'],
+                configuration: `./${params.languageServerId}-statemachine-configuration.json`
+              }
+            ],
+            grammars: [
+              {
+                language: 'statemachine',
+                scopeName: 'source.statemachine',
+                path: `./${params.languageServerId}-statemachine-grammar.json`
+              }
+            ]
+          }
         },
-        logLevel: LogLevel.Off,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
-            ...getLifecycleServiceOverride(),
-            ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory,
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        extensions: [
-            {
-                config: {
-                    name: 'statemachine-example',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: {
-                        vscode: '*'
-                    },
-                    contributes: {
-                        languages: [
-                            {
-                                id: 'statemachine',
-                                extensions: ['.statemachine'],
-                                aliases: ['statemachine', 'Statemachine'],
-                                configuration: `./${params.languageServerId}-statemachine-configuration.json`
-                            }
-                        ],
-                        grammars: [
-                            {
-                                language: 'statemachine',
-                                scopeName: 'source.statemachine',
-                                path: `./${params.languageServerId}-statemachine-grammar.json`
-                            }
-                        ]
-                    }
-                },
-                filesOrContents: extensionFilesOrContents
-            }
-        ]
-    };
+        filesOrContents: extensionFilesOrContents
+      }
+    ]
+  };
 
-    const editorAppConfig: EditorAppConfig = {
-        codeResources: {
-            modified: params.codeContent
-        },
-        logLevel: LogLevel.Debug
-    };
+  const editorAppConfig: EditorAppConfig = {
+    codeResources: {
+      modified: params.codeContent
+    },
+    logLevel: LogLevel.Debug
+  };
 
-    return {
-        editorAppConfig,
-        vscodeApiConfig,
-        languageClientConfig
-    };
+  return {
+    editorAppConfig,
+    vscodeApiConfig,
+    languageClientConfig
+  };
 };

@@ -6,9 +6,9 @@
 import type { ExampleLsConfig } from '../common/client/extendedClient.js';
 
 export const eclipseJdtLsConfig: ExampleLsConfig = {
-    port: 30003,
-    path: '/jdtls',
-    basePath: '/home/mlc/packages/examples/resources/eclipse.jdt.ls',
-    languageId: 'java',
-    useExternalWebSocket: false
+  port: 30003,
+  path: '/jdtls',
+  basePath: '/home/mlc/packages/examples/resources/eclipse.jdt.ls',
+  languageId: 'java',
+  useExternalWebSocket: false
 };

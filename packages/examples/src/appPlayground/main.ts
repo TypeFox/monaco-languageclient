@@ -9,13 +9,13 @@ import { disableElement } from '../common/client/utils.js';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 
 export const runApplicationPlayground = async () => {
-    disableElement('button-start', true);
+  disableElement('button-start', true);
 
-    const configResult = await configure(document.body);
+  const configResult = await configure(document.body);
 
-    // perform global init
-    const apiWrapper = new MonacoVscodeApiWrapper(configResult.vscodeApiConfig);
-    await apiWrapper.start();
+  // perform global init
+  const apiWrapper = new MonacoVscodeApiWrapper(configResult.vscodeApiConfig);
+  await apiWrapper.start();
 
-    await configurePostStart(apiWrapper, configResult);
+  await configurePostStart(apiWrapper, configResult);
 };

@@ -7,15 +7,15 @@ import { runLanguageServer } from '../../common/node/language-server-runner.js';
 import { groovyConfig } from '../config.js';
 
 export const runGroovyLanguageServer = () => {
-    runLanguageServer({
-        serverName: 'GROOVY',
-        pathName: groovyConfig.path,
-        serverPort: groovyConfig.port,
-        runCommand: 'java',
-        runCommandArgs: ['-jar', `${groovyConfig.basePath}/lib/groovy-language-server-all.jar`],
-        wsServerOptions: {
-            noServer: true,
-            perMessageDeflate: false
-        }
-    });
+  runLanguageServer({
+    serverName: 'GROOVY',
+    pathName: groovyConfig.path,
+    serverPort: groovyConfig.port,
+    runCommand: 'java',
+    runCommandArgs: ['-jar', `${groovyConfig.basePath}/lib/groovy-language-server-all.jar`],
+    wsServerOptions: {
+      noServer: true,
+      perMessageDeflate: false
+    }
+  });
 };

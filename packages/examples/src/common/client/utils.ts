@@ -8,28 +8,28 @@ import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 export const disableElement = (id: string, disabled: boolean) => {
-    const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;
-    if (button !== null) {
-        button.disabled = disabled;
-    }
+  const button = document.getElementById(id) as HTMLButtonElement | HTMLInputElement | null;
+  if (button !== null) {
+    button.disabled = disabled;
+  }
 };
 
 export const createDefaultWorkspaceContent = (workspacePath: string) => {
-    return JSON.stringify(
+  return JSON.stringify(
+    {
+      folders: [
         {
-            folders: [
-                {
-                    path: workspacePath
-                }
-            ]
-        },
-        null,
-        2
-    );
+          path: workspacePath
+        }
+      ]
+    },
+    null,
+    2
+  );
 };
 
 export type ExampleAppConfig = {
-    vscodeApiConfig: MonacoVscodeApiConfig;
-    languageClientConfig: LanguageClientConfig;
-    editorAppConfig: EditorAppConfig;
+  vscodeApiConfig: MonacoVscodeApiConfig;
+  languageClientConfig: LanguageClientConfig;
+  editorAppConfig: EditorAppConfig;
 };

@@ -10,5 +10,5 @@ import { runExtendedClient } from '../../common/client/extendedClient.js';
 import { groovyConfig } from '../config.js';
 
 export const runGroovyClient = async () => {
-    await runExtendedClient(groovyConfig, helloGroovyCode);
+  await runExtendedClient(groovyConfig, helloGroovyCode);
 };

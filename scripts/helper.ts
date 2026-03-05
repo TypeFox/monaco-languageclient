@@ -10,18 +10,18 @@ import * as url from 'node:url';
  * Solves: __dirname is not defined in ES module scope
  */
 export function getLocalDirectory() {
-    const __filename = url.fileURLToPath(import.meta.url);
-    return path.dirname(__filename);
+  const __filename = url.fileURLToPath(import.meta.url);
+  return path.dirname(__filename);
 }
 
 export function getRootDirectory() {
-    return path.resolve(getLocalDirectory(), '..');
+  return path.resolve(getLocalDirectory(), '..');
 }
 
 export function getPathRelativeToRootDirectory(relativePath: string, pathToDelete?: string) {
-    if (pathToDelete === undefined) {
-        return path.resolve(getRootDirectory(), relativePath);
-    } else {
-        return path.resolve(getRootDirectory(), relativePath, pathToDelete);
-    }
+  if (pathToDelete === undefined) {
+    return path.resolve(getRootDirectory(), relativePath);
+  } else {
+    return path.resolve(getRootDirectory(), relativePath, pathToDelete);
+  }
 }

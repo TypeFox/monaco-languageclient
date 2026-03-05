@@ -10,21 +10,21 @@ import type { ExampleAppConfig } from '../../common/client/utils.js';
 import { setupLangiumClientExtended } from './config/langiumDslConfig.js';
 
 export const runLangiumGrammarDsl = async () => {
-    try {
-        const appConfig: ExampleAppConfig = await setupLangiumClientExtended();
+  try {
+    const appConfig: ExampleAppConfig = await setupLangiumClientExtended();
 
-        // perform global init
-        const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-        await apiWrapper.start();
+    // perform global init
+    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+    await apiWrapper.start();
 
-        // init language client
-        const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
-        await lcWrapper.start();
+    // init language client
+    const lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+    await lcWrapper.start();
 
-        await vscode.workspace.openTextDocument('/workspace/langium-types.langium');
-        await vscode.workspace.openTextDocument('/workspace/langium-grammar.langium');
-        await vscode.window.showTextDocument(vscode.Uri.file('/workspace/langium-grammar.langium'));
-    } catch (e) {
-        console.error(e);
-    }
+    await vscode.workspace.openTextDocument('/workspace/langium-types.langium');
+    await vscode.workspace.openTextDocument('/workspace/langium-grammar.langium');
+    await vscode.window.showTextDocument(vscode.Uri.file('/workspace/langium-grammar.langium'));
+  } catch (e) {
+    console.error(e);
+  }
 };

@@ -9,34 +9,34 @@ import { resolve } from 'node:path';
 import { runLanguageServer } from '../../common/node/language-server-runner.js';
 
 export const runJsonServer = (baseDir: string, relativeDir: string) => {
-    const processRunPath = resolve(baseDir, relativeDir);
-    runLanguageServer({
-        serverName: 'JSON',
-        pathName: '/sampleServer',
-        serverPort: 30000,
-        runCommand: 'node',
-        runCommandArgs: [processRunPath, '--stdio'],
-        wsServerOptions: {
-            noServer: true,
-            perMessageDeflate: false
-        }
-    });
+  const processRunPath = resolve(baseDir, relativeDir);
+  runLanguageServer({
+    serverName: 'JSON',
+    pathName: '/sampleServer',
+    serverPort: 30000,
+    runCommand: 'node',
+    runCommandArgs: [processRunPath, '--stdio'],
+    wsServerOptions: {
+      noServer: true,
+      perMessageDeflate: false
+    }
+  });
 
-    startMockHttpServerForSavingCodeFromEditor();
+  startMockHttpServerForSavingCodeFromEditor();
 };
 
 export const startMockHttpServerForSavingCodeFromEditor = () => {
-    const app = express();
-    app.use(cors());
-    app.use(express.json());
-    app.post('/save-code', (req, res) => {
-        const { code } = req.body;
-        console.log('Received code:', code);
-        res.json({ success: true, message: code });
-    });
+  const app = express();
+  app.use(cors());
+  app.use(express.json());
+  app.post('/save-code', (req, res) => {
+    const { code } = req.body;
+    console.log('Received code:', code);
+    res.json({ success: true, message: code });
+  });
 
-    const PORT = 3003;
-    app.listen(PORT, () => {
-        console.log(`JSON server running on port ${PORT}`);
-    });
+  const PORT = 3003;
+  app.listen(PORT, () => {
+    console.log(`JSON server running on port ${PORT}`);
+  });
 };

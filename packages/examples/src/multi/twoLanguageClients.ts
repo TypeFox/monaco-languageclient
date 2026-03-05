@@ -17,101 +17,101 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import { LanguageClientManager, type LanguageClientConfigs } from 'monaco-languageclient/lcwrapper';
 
 export const runMultipleLanguageClientsExample = async () => {
-    disableElement('button-flip', true);
+  disableElement('button-flip', true);
 
-    const textJson = `{
+  const textJson = `{
     "$schema": "http://json.schemastore.org/coffeelint",
     "line_endings": {"value": "unix"}
 }`;
 
-    const textPython = `from hello2 import print_hello
+  const textPython = `from hello2 import print_hello
 
 print_hello()
 print("Hello Moon!")
 `;
 
-    let currentText = textJson;
-    let currenFileExt = 'json';
+  let currentText = textJson;
+  let currenFileExt = 'json';
 
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer
-        },
-        logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride()
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory
-    };
+  const htmlContainer = document.getElementById('monaco-editor-root')!;
+  const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+      $type: 'EditorService',
+      htmlContainer
+    },
+    logLevel: LogLevel.Debug,
+    serviceOverrides: {
+      ...getKeybindingsServiceOverride()
+    },
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern',
+        'editor.wordBasedSuggestions': 'off',
+        'editor.experimental.asyncTokenization': true
+      })
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory
+  };
 
-    const editorAppConfig: EditorAppConfig = {
-        id: '42',
-        codeResources: {
-            modified: {
-                text: currentText,
-                uri: `/workspace/example.${currenFileExt}`
-            }
-        }
-    };
+  const editorAppConfig: EditorAppConfig = {
+    id: '42',
+    codeResources: {
+      modified: {
+        text: currentText,
+        uri: `/workspace/example.${currenFileExt}`
+      }
+    }
+  };
 
-    // perform global monaco-vscode-api init
-    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.start();
+  // perform global monaco-vscode-api init
+  const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+  await apiWrapper.start();
 
-    const lcManager = new LanguageClientManager();
-    const languageClientConfigs: LanguageClientConfigs = {
-        configs: {
-            json: createJsonLanguageClientConfig(),
-            python: createPythonLanguageClientConfig()
-        }
-    };
+  const lcManager = new LanguageClientManager();
+  const languageClientConfigs: LanguageClientConfigs = {
+    configs: {
+      json: createJsonLanguageClientConfig(),
+      python: createPythonLanguageClientConfig()
+    }
+  };
 
-    const editorApp = new EditorApp(editorAppConfig);
+  const editorApp = new EditorApp(editorAppConfig);
 
-    document.querySelector('#button-start')?.addEventListener('click', async () => {
-        try {
-            disableElement('button-start', true);
-            disableElement('button-flip', false);
+  document.querySelector('#button-start')?.addEventListener('click', async () => {
+    try {
+      disableElement('button-start', true);
+      disableElement('button-flip', false);
 
-            await editorApp.start(htmlContainer);
-            if (editorAppConfig.codeResources?.modified !== undefined) {
-                editorAppConfig.codeResources.modified.text = currentText;
-                editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
-            }
+      await editorApp.start(htmlContainer);
+      if (editorAppConfig.codeResources?.modified !== undefined) {
+        editorAppConfig.codeResources.modified.text = currentText;
+        editorAppConfig.codeResources.modified.uri = `/workspace/example.${currenFileExt}`;
+      }
 
-            // init and start language clients after start
-            lcManager.setConfigs(languageClientConfigs);
-            await lcManager.start();
-        } catch (e) {
-            console.error(e);
-        }
+      // init and start language clients after start
+      lcManager.setConfigs(languageClientConfigs);
+      await lcManager.start();
+    } catch (e) {
+      console.error(e);
+    }
+  });
+  document.querySelector('#button-dispose')?.addEventListener('click', async () => {
+    disableElement('button-flip', true);
+    disableElement('button-dispose', true);
+    disableElement('button-start', false);
+
+    await editorApp.dispose();
+    await lcManager.dispose();
+  });
+  document.querySelector('#button-flip')?.addEventListener('click', async () => {
+    currentText = currentText === textJson ? textPython : textJson;
+    currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
+    await editorApp.updateCodeResources({
+      modified: {
+        text: currentText,
+        uri: `/workspace/example.${currenFileExt}`
+      }
     });
-    document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-        disableElement('button-flip', true);
-        disableElement('button-dispose', true);
-        disableElement('button-start', false);
-
-        await editorApp.dispose();
-        await lcManager.dispose();
-    });
-    document.querySelector('#button-flip')?.addEventListener('click', async () => {
-        currentText = currentText === textJson ? textPython : textJson;
-        currenFileExt = currenFileExt === 'json' ? 'py' : 'json';
-        await editorApp.updateCodeResources({
-            modified: {
-                text: currentText,
-                uri: `/workspace/example.${currenFileExt}`
-            }
-        });
-    });
+  });
 };

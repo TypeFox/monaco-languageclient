@@ -7,12 +7,12 @@ import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests: Different config', () => {
-    test('Start MonacoVscodeApiWrapper with WorkbenchService but no htmlContainer', async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'WorkbenchService');
+  test('Start MonacoVscodeApiWrapper with WorkbenchService but no htmlContainer', async () => {
+    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'WorkbenchService');
 
-        const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await expect(async () => {
-            await apiWrapper.start();
-        }).rejects.toThrowError('View Service Type "WorkbenchService" requires a HTMLElement.');
-    });
+    const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
+    await expect(async () => {
+      await apiWrapper.start();
+    }).rejects.toThrowError('View Service Type "WorkbenchService" requires a HTMLElement.');
+  });
 });

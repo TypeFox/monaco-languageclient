@@ -14,13 +14,13 @@ const messageReader = new BrowserMessageReader(self as DedicatedWorkerGlobalScop
 const messageWriter = new BrowserMessageWriter(self as DedicatedWorkerGlobalScope);
 
 messageReader.listen((message) => {
-    console.log('Received message from main thread:', message);
+  console.log('Received message from main thread:', message);
 });
 
 // Inject the shared services and language-specific services
 const context = {
-    connection: createConnection(messageReader, messageWriter),
-    ...EmptyFileSystem
+  connection: createConnection(messageReader, messageWriter),
+  ...EmptyFileSystem
 } as unknown as DefaultSharedModuleContext;
 const { shared } = createLangiumGrammarServices(context);
 

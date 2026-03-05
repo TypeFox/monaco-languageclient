@@ -4,9 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 
 import {
-    RegisteredFileSystemProvider,
-    RegisteredMemoryFile,
-    registerFileSystemOverlay
+  RegisteredFileSystemProvider,
+  RegisteredMemoryFile,
+  registerFileSystemOverlay
 } from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import * as vscode from 'vscode';
@@ -19,126 +19,126 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
-    const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
-    const fileSystemProvider = new RegisteredFileSystemProvider(false);
-    fileSystemProvider.registerFile(new RegisteredMemoryFile(helloUri, helloCode));
-    registerFileSystemOverlay(1, fileSystemProvider);
+  const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
+  const fileSystemProvider = new RegisteredFileSystemProvider(false);
+  fileSystemProvider.registerFile(new RegisteredMemoryFile(helloUri, helloCode));
+  registerFileSystemOverlay(1, fileSystemProvider);
 
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer
-        },
-        logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride()
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.lightbulb.enabled': 'On',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory
-    };
+  const htmlContainer = document.getElementById('monaco-editor-root')!;
+  const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+      $type: 'EditorService',
+      htmlContainer
+    },
+    logLevel: LogLevel.Debug,
+    serviceOverrides: {
+      ...getKeybindingsServiceOverride()
+    },
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern',
+        'editor.guides.bracketPairsHorizontal': 'active',
+        'editor.lightbulb.enabled': 'On',
+        'editor.wordBasedSuggestions': 'off',
+        'editor.experimental.asyncTokenization': true
+      })
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory
+  };
 
-    const startOptions = {
-        onCall: () => {
-            console.log('Connected to socket.');
-        },
-        reportStatus: true
-    };
-    const stopOptions = {
-        onCall: () => {
-            console.log('Disconnected from socket.');
-        },
-        reportStatus: true
-    };
+  const startOptions = {
+    onCall: () => {
+      console.log('Connected to socket.');
+    },
+    reportStatus: true
+  };
+  const stopOptions = {
+    onCall: () => {
+      console.log('Disconnected from socket.');
+    },
+    reportStatus: true
+  };
 
-    let webSocket: WebSocket | undefined;
-    let connectionConfigOptions: ConnectionConfigOptions;
-    const webSocketUrl = `ws://localhost:${lsConfig.port}${lsConfig.path}`;
-    if (lsConfig.useExternalWebSocket) {
+  let webSocket: WebSocket | undefined;
+  let connectionConfigOptions: ConnectionConfigOptions;
+  const webSocketUrl = `ws://localhost:${lsConfig.port}${lsConfig.path}`;
+  if (lsConfig.useExternalWebSocket) {
+    webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
+    connectionConfigOptions = {
+      $type: 'WebSocketDirect',
+      webSocket,
+      startOptions,
+      stopOptions
+    };
+  } else {
+    connectionConfigOptions = {
+      $type: 'WebSocketUrl',
+      url: webSocketUrl,
+      startOptions,
+      stopOptions
+    };
+  }
+
+  const languageClientConfig: LanguageClientConfig = {
+    languageId: lsConfig.languageId,
+    connection: {
+      options: connectionConfigOptions
+    },
+    clientOptions: {
+      documentSelector: [lsConfig.languageId],
+      workspaceFolder: {
+        index: 0,
+        name: 'workspace',
+        uri: vscode.Uri.parse(`${lsConfig.basePath}/workspace`)
+      }
+    }
+  };
+
+  const editorAppConfig: EditorAppConfig = {
+    codeResources: {
+      modified: {
+        text: helloCode,
+        uri: helloUri.path
+      }
+    }
+  };
+
+  // perform global init
+  const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
+  await apiWrapper.start();
+
+  const lcWrapper = new LanguageClientWrapper(languageClientConfig);
+  const editorApp = new EditorApp(editorAppConfig);
+
+  try {
+    document.querySelector('#button-start')?.addEventListener('click', async () => {
+      if (lsConfig.useExternalWebSocket && webSocket === undefined) {
         webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
-        connectionConfigOptions = {
-            $type: 'WebSocketDirect',
-            webSocket,
-            startOptions,
-            stopOptions
-        };
-    } else {
-        connectionConfigOptions = {
-            $type: 'WebSocketUrl',
-            url: webSocketUrl,
-            startOptions,
-            stopOptions
-        };
-    }
+        (connectionConfigOptions as WebSocketConfigOptionsDirect).webSocket = webSocket;
+      }
+      await editorApp.start(htmlContainer);
+      await lcWrapper.start();
 
-    const languageClientConfig: LanguageClientConfig = {
-        languageId: lsConfig.languageId,
-        connection: {
-            options: connectionConfigOptions
-        },
-        clientOptions: {
-            documentSelector: [lsConfig.languageId],
-            workspaceFolder: {
-                index: 0,
-                name: 'workspace',
-                uri: vscode.Uri.parse(`${lsConfig.basePath}/workspace`)
-            }
-        }
-    };
+      // open files, so the LS can pick it up
+      await vscode.workspace.openTextDocument(helloUri);
+    });
+    document.querySelector('#button-dispose')?.addEventListener('click', async () => {
+      await editorApp.dispose();
+      await lcWrapper.dispose();
 
-    const editorAppConfig: EditorAppConfig = {
-        codeResources: {
-            modified: {
-                text: helloCode,
-                uri: helloUri.path
-            }
-        }
-    };
-
-    // perform global init
-    const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-    await apiWrapper.start();
-
-    const lcWrapper = new LanguageClientWrapper(languageClientConfig);
-    const editorApp = new EditorApp(editorAppConfig);
-
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', async () => {
-            if (lsConfig.useExternalWebSocket && webSocket === undefined) {
-                webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
-                (connectionConfigOptions as WebSocketConfigOptionsDirect).webSocket = webSocket;
-            }
-            await editorApp.start(htmlContainer);
-            await lcWrapper.start();
-
-            // open files, so the LS can pick it up
-            await vscode.workspace.openTextDocument(helloUri);
-        });
-        document.querySelector('#button-dispose')?.addEventListener('click', async () => {
-            await editorApp.dispose();
-            await lcWrapper.dispose();
-
-            webSocket?.close();
-            webSocket = undefined;
-        });
-    } catch (e) {
-        console.error(e);
-    }
+      webSocket?.close();
+      webSocket = undefined;
+    });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export type ExampleLsConfig = {
-    port: number;
-    path: string;
-    basePath: string;
-    languageId: string;
-    useExternalWebSocket: boolean;
+  port: number;
+  path: string;
+  basePath: string;
+  languageId: string;
+  useExternalWebSocket: boolean;
 };

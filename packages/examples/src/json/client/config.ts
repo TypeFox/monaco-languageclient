@@ -6,9 +6,9 @@
 import type { ExampleLsConfig } from '../../common/client/extendedClient.js';
 
 export const jsontLsConfig: ExampleLsConfig = {
-    port: 30000,
-    path: '/sampleServer',
-    basePath: '/home/mlc/packages/examples/resources/json',
-    languageId: 'json',
-    useExternalWebSocket: true
+  port: 30000,
+  path: '/sampleServer',
+  basePath: '/home/mlc/packages/examples/resources/json',
+  languageId: 'json',
+  useExternalWebSocket: true
 };

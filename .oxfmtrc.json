@@ -16,26 +16,13 @@
   "trailingComma": "none",
   "insertFinalNewline": true,
   "sortPackageJson": true,
-  "tabWidth": 4,
+  "tabWidth": 2,
   "printWidth": 140,
   "overrides": [
     {
       "files": ["*.json"],
       "options": {
-        "printWidth": 80,
-        "tabWidth": 2
-      }
-    },
-    {
-      "files": ["*.yml", "*.yaml", "*.md"],
-      "options": {
-        "tabWidth": 2
-      }
-    },
-    {
-      "files": ["*.ts"],
-      "options": {
-        "insertFinalNewline": true
+        "printWidth": 80
       }
     }
   ]

@@ -10,90 +10,90 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 import { MessageTransports } from 'vscode-languageclient/browser.js';
 
 export const createMonacoEditorDiv = () => {
-    const div = document.createElement('div');
-    div.id = 'monaco-editor-root';
-    document.body.insertAdjacentElement('beforeend', div);
-    return div;
+  const div = document.createElement('div');
+  div.id = 'monaco-editor-root';
+  document.body.insertAdjacentElement('beforeend', div);
+  return div;
 };
 
 export const createDefaultLcWorkerConfig = (
-    worker: Worker,
-    languageId: string,
-    messageTransports?: MessageTransports
+  worker: Worker,
+  languageId: string,
+  messageTransports?: MessageTransports
 ): LanguageClientConfig => {
-    return {
-        languageId,
-        clientOptions: {
-            documentSelector: [languageId]
-        },
-        connection: {
-            options: {
-                $type: 'WorkerDirect',
-                worker
-            },
-            messageTransports
-        }
-    };
+  return {
+    languageId,
+    clientOptions: {
+      documentSelector: [languageId]
+    },
+    connection: {
+      options: {
+        $type: 'WorkerDirect',
+        worker
+      },
+      messageTransports
+    }
+  };
 };
 
 export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
-    return {
-        languageId: 'javascript',
-        clientOptions: {
-            documentSelector: ['javascript']
-        },
-        connection: {
-            options: {
-                $type: 'WorkerConfig',
-                url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
-                type: 'module'
-            }
-        }
-    };
+  return {
+    languageId: 'javascript',
+    clientOptions: {
+      documentSelector: ['javascript']
+    },
+    connection: {
+      options: {
+        $type: 'WorkerConfig',
+        url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
+        type: 'module'
+      }
+    }
+  };
 };
 
 export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
-    return {
-        languageId: 'javascript',
-        clientOptions: {
-            documentSelector: ['javascript']
-        },
-        connection: {
-            options: {
-                $type: 'WebSocketUrl',
-                url: `ws://localhost:${port}/rester`
-            }
-        }
-    };
+  return {
+    languageId: 'javascript',
+    clientOptions: {
+      documentSelector: ['javascript']
+    },
+    connection: {
+      options: {
+        $type: 'WebSocketUrl',
+        url: `ws://localhost:${port}/rester`
+      }
+    }
+  };
 };
 
 export const createEditorAppConfig = (codeResources: CodeResources): EditorAppConfig => {
-    return {
-        codeResources,
-        editorOptions: {}
-    };
+  return {
+    codeResources,
+    editorOptions: {}
+  };
 };
 
 export const createDefaultMonacoVscodeApiConfig = (
-    overallConfigType: OverallConfigType,
-    htmlContainer: HTMLElement | undefined,
-    viewsConfigType: ViewsConfigTypes
+  overallConfigType: OverallConfigType,
+  htmlContainer: HTMLElement | undefined,
+  viewsConfigType: ViewsConfigTypes
 ): MonacoVscodeApiConfig => {
-    return {
-        $type: overallConfigType,
-        advanced: {
-            enforceSemanticHighlighting: true,
-            loadThemes: false
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern'
-            })
-        },
-        viewsConfig: {
-            $type: viewsConfigType,
-            htmlContainer
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory
-    };
+  return {
+    $type: overallConfigType,
+    advanced: {
+      enforceSemanticHighlighting: true,
+      loadThemes: false
+    },
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern'
+      })
+    },
+    viewsConfig: {
+      $type: viewsConfigType,
+      htmlContainer
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory
+  };
 };
