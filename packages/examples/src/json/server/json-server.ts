@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 import { readFile } from 'node:fs';
-import requestLight from 'request-light';
+import requestLight, { type XHRResponse } from 'request-light';
 import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
 import { createConnection, type _Connection, TextDocuments, type DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/lib/node/main.js';
@@ -15,6 +15,7 @@ import type { TextDocumentPositionParams, DocumentRangeFormattingParams, Execute
 import { TextDocumentSyncKind } from 'vscode-languageserver-protocol';
 import { getLanguageService, type LanguageService, type JSONDocument } from 'vscode-json-languageservice';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { Deferred } from 'monaco-languageclient/common';
 
 export class JsonServer {
     protected readonly connection: _Connection;
@@ -35,7 +36,9 @@ export class JsonServer {
         );
         this.documents.onDidClose(event => {
             this.cleanPendingValidation(event.document);
-            this.cleanDiagnostics(event.document);
+            this.cleanDiagnostics(event.document).catch(error => {
+                this.connection.console.error(`Error while cleaning diagnostics: ${String(error)}`);
+            });
         });
 
         this.connection.onInitialize(params => {
@@ -102,7 +105,7 @@ export class JsonServer {
 
     protected getFoldingRanges(params: FoldingRangeParams): FoldingRange[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         return this.jsonService.getFoldingRanges(document);
@@ -110,7 +113,7 @@ export class JsonServer {
 
     protected findDocumentColors(params: DocumentColorParams): Thenable<ColorInformation[]> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve([]);
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -119,7 +122,7 @@ export class JsonServer {
 
     protected getColorPresentations(params: ColorPresentationParams): ColorPresentation[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -128,7 +131,7 @@ export class JsonServer {
 
     protected codeAction(params: CodeActionParams): Command[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         return [{
@@ -144,12 +147,12 @@ export class JsonServer {
 
     protected format(params: DocumentRangeFormattingParams): TextEdit[] {
         const document = this.documents.get(params.textDocument.uri);
-        return document ? this.jsonService.format(document, params.range, params.options) : [];
+        return document === undefined ? [] : this.jsonService.format(document, params.range, params.options);
     }
 
     protected findDocumentSymbols(params: DocumentSymbolParams): SymbolInformation[] {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return [];
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -157,12 +160,12 @@ export class JsonServer {
     }
 
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-    protected executeCommand(params: ExecuteCommandParams): any {
-        if (params.command === 'json.documentUpper' && params.arguments) {
+    protected async executeCommand(params: ExecuteCommandParams): Promise<any> {
+        if (params.command === 'json.documentUpper' && params.arguments !== undefined) {
             const versionedTextDocumentIdentifier = params.arguments[0];
             const document = this.documents.get(versionedTextDocumentIdentifier.uri);
-            if (document) {
-                this.connection.workspace.applyEdit({
+            if (document !== undefined) {
+                await this.connection.workspace.applyEdit({
                     documentChanges: [{
                         textDocument: versionedTextDocumentIdentifier,
                         edits: [{
@@ -180,7 +183,7 @@ export class JsonServer {
 
     protected hover(params: TextDocumentPositionParams): Thenable<Hover | null> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve(null);
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -200,13 +203,22 @@ export class JsonServer {
                 });
             });
         }
-        try {
-            const response = await requestLight.xhr({ url, followRedirects: 5 });
-            return response.responseText;
-        } catch (error: unknown) {
-            const err = error as Record<string, unknown>;
-            return Promise.reject(err.responseText !== undefined || requestLight.getErrorStatusDescription(err.status as number) || err.toString());
-        }
+
+        const deferred = new Deferred<string>();
+        requestLight.xhr({ url, followRedirects: 5 }).then(response => {
+            deferred.resolve(response.responseText);
+        }).catch((error: Error | XHRResponse) => {
+            let errorMessage: string;
+            if (error instanceof Error) {
+                errorMessage = `Schema resolution failed: ${error.message}`;
+            } else {
+                const xhrResponse = error as XHRResponse;
+                errorMessage = `Schema resolution failed: ${requestLight.getErrorStatusDescription(xhrResponse.status)} ocurred: ${xhrResponse.responseText}`;
+            }
+            deferred.reject(errorMessage);
+        });
+
+        return deferred.promise;
     }
 
     protected resolveCompletion(item: CompletionItem): Thenable<CompletionItem> {
@@ -215,7 +227,7 @@ export class JsonServer {
 
     protected completion(params: TextDocumentPositionParams): Thenable<CompletionList | null> {
         const document = this.documents.get(params.textDocument.uri);
-        if (!document) {
+        if (document === undefined) {
             return Promise.resolve(null);
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -224,9 +236,9 @@ export class JsonServer {
 
     protected validate(document: TextDocument): void {
         this.cleanPendingValidation(document);
-        this.pendingValidationRequests.set(document.uri, setTimeout(() => {
+        this.pendingValidationRequests.set(document.uri, setTimeout(async () => {
             this.pendingValidationRequests.delete(document.uri);
-            this.doValidate(document);
+            await this.doValidate(document);
         }));
     }
 
@@ -238,9 +250,9 @@ export class JsonServer {
         }
     }
 
-    protected doValidate(document: TextDocument): void {
+    protected async doValidate(document: TextDocument): Promise<void> {
         if (document.getText().length === 0) {
-            this.cleanDiagnostics(document);
+            await this.cleanDiagnostics(document);
             return;
         }
         const jsonDocument = this.getJSONDocument(document);
@@ -249,12 +261,12 @@ export class JsonServer {
         );
     }
 
-    protected cleanDiagnostics(document: TextDocument): void {
-        this.sendDiagnostics(document, []);
+    protected async cleanDiagnostics(document: TextDocument): Promise<void> {
+        await this.sendDiagnostics(document, []);
     }
 
-    protected sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): void {
-        this.connection.sendDiagnostics({
+    protected async sendDiagnostics(document: TextDocument, diagnostics: Diagnostic[]): Promise<void> {
+        await this.connection.sendDiagnostics({
             uri: document.uri, diagnostics
         });
     }

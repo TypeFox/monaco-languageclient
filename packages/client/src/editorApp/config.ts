@@ -58,7 +58,7 @@ export interface EditorAppConfig {
         languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
         monarchLanguage?: monaco.languages.IMonarchLanguage;
         theme?: {
-            name: monaco.editor.BuiltinTheme | string;
+            name: string;
             data: monaco.editor.IStandaloneThemeData;
         }
     }

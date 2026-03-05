@@ -13,15 +13,9 @@ export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
         globalThis.MonacoEnvironment = {};
     }
     const envEnhanced = MonacoEnvironment as MonacoEnvironmentEnhanced;
-    if (envEnhanced.vscodeApiInitialising === undefined) {
-        envEnhanced.vscodeApiInitialising = false;
-    }
-    if (envEnhanced.vscodeApiInitialised === undefined) {
-        envEnhanced.vscodeApiInitialised = false;
-    }
-    if (envEnhanced.viewServiceType === undefined) {
-        envEnhanced.viewServiceType = 'EditorService';
-    }
+    envEnhanced.vscodeApiInitialising ??= false;
+    envEnhanced.vscodeApiInitialised ??= false;
+    envEnhanced.viewServiceType ??= 'EditorService';
 
     return envEnhanced;
 };

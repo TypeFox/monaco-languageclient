@@ -34,6 +34,8 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeAp
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
+
+// oxlint-disable-next-line import/default: oxlint-tsgolint checks the TypeScript file, although it is in the ignorePatterns list
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
 import helloJsonCode from '../../resources/appPlayground/hello.json?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';

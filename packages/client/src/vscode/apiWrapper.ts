@@ -130,20 +130,18 @@ export class MonacoVscodeApiWrapper {
      * Adding the default workspace config if not provided
      */
     protected configureWorkspaceConfig() {
-        if (this.apiConfig.workspaceConfig === undefined) {
-            this.apiConfig.workspaceConfig = {
-                workspaceProvider: {
-                    trusted: true,
-                    workspace: {
-                        workspaceUri: vscode.Uri.file('/workspace.code-workspace')
-                    },
-                    async open() {
-                        window.open(window.location.href);
-                        return true;
-                    }
+        this.apiConfig.workspaceConfig ??= {
+            workspaceProvider: {
+                trusted: true,
+                workspace: {
+                    workspaceUri: vscode.Uri.file('/workspace.code-workspace')
                 },
-            };
-        }
+                async open() {
+                    window.open(window.location.href);
+                    return true;
+                }
+            },
+        };
     }
 
     /**
@@ -263,7 +261,7 @@ export class MonacoVscodeApiWrapper {
         }
 
         const extensions = this.apiConfig.extensions;
-        if (this.apiConfig.extensions) {
+        if (this.apiConfig.extensions !== undefined && this.apiConfig.extensions.length > 0) {
             const allPromises: Array<Promise<void>> = [];
             const extensionIds: string[] = [];
             getBuiltinExtensions().forEach((ext) => {
@@ -283,7 +281,7 @@ export class MonacoVscodeApiWrapper {
             const manifest = extensionConfig.config as IExtensionManifest;
             const extRegResult = registerExtension(manifest, ExtensionHostKind.LocalProcess);
             this.extensionRegisterResults.set(manifest.name, extRegResult);
-            if (extensionConfig.filesOrContents && Object.hasOwn(extRegResult, 'registerFileUrl')) {
+            if (extensionConfig.filesOrContents !== undefined && Object.hasOwn(extRegResult, 'registerFileUrl')) {
                 for (const entry of extensionConfig.filesOrContents) {
                     this.disposableStore.add(extRegResult.registerFileUrl(entry[0], encodeStringOrUrlToDataUrl(entry[1])));
                 }
@@ -330,7 +328,7 @@ export class MonacoVscodeApiWrapper {
                 this.configureDevLogLevel();
                 this.logger.info(`Initializing monaco-vscode api. Caller: ${startInstructions?.caller ?? 'unknown'}`);
 
-                await this.configureMonacoWorkers();
+                this.configureMonacoWorkers();
 
                 // ensure either classic (monarch) or textmate (extended) highlighting is used
                 await this.configureHighlightingServices();

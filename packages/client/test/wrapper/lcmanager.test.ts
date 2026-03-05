@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-/* eslint-disable dot-notation */
+/* oxlint-disable dot-notation */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
@@ -50,17 +50,18 @@ describe('Test LanguageClientWrapper', () => {
         };
 
         try {
-            await expect(async () => await lcManager.setConfigs(lcConfigs)).not.toThrowError();
-            await expect(async () => await lcManager.start()).not.toThrowError();
-            await expect(async () => await lcManager.dispose()).not.toThrowError();
+            expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+            expect(async () => await lcManager.start()).not.toThrowError();
+            expect(async () => await lcManager.dispose()).not.toThrowError();
 
             await delayExecution(1000);
 
-            await expect(async () => await lcManager.setConfigs(lcConfigs)).not.toThrowError();
-            await expect(async () => await lcManager.start()).not.toThrowError();
-            await expect(async () => await lcManager.dispose()).not.toThrowError();
-        } catch (e) {
-            console.error(`Unexpected error occured: ${e}`);
+            expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+            expect(async () => await lcManager.start()).not.toThrowError();
+            expect(async () => await lcManager.dispose()).not.toThrowError();
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : String(e);
+            console.error(`Unexpected error occurred: ${message}`);
             error = true;
         }
 

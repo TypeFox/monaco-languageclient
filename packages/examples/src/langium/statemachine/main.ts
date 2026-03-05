@@ -7,8 +7,6 @@ import * as vscode from 'vscode';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-import workerUrl from './worker/statemachine-server?worker&url';
-import workerPortUrl from './worker/statemachine-server-port?worker&url';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
@@ -72,7 +70,7 @@ const startEditor = async () => {
     // run editorApp
     await editorApp.start(htmlContainer);
 
-    editorApp.updateCodeResources({
+    await editorApp.updateCodeResources({
         modified: {
             text,
             uri: '/workspace/statemachine-mod.statemachine'
@@ -97,7 +95,7 @@ const startEditor = async () => {
 
     await delayExecution(1000);
 
-    editorApp.updateCodeResources({
+    await editorApp.updateCodeResources({
         modified: {
             text: `// modified file\n\n${text}`,
             uri: '/workspace/statemachine-mod2.statemachine'
@@ -109,7 +107,7 @@ const disposeEditor = async () => {
     disableElement('button-start', false);
     disableElement('button-dispose', true);
 
-    lcWrapper.dispose();
+    await lcWrapper.dispose();
 
     editorApp?.reportStatus();
     await editorApp?.dispose();
@@ -129,19 +127,17 @@ export const runStatemachine = async () => {
     }
 };
 
+// Language Server preparation
+
 export const loadStatemachineWorkerRegular = () => {
-    // Language Server preparation
-    console.log(`Langium worker URL: ${workerUrl}`);
-    return new Worker(workerUrl, {
+    return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
         type: 'module',
         name: 'Statemachine Server Regular',
     });
 };
 
 export const loadStatemachinWorkerPort = () => {
-    // Language Server preparation
-    console.log(`Langium worker URL: ${workerPortUrl}`);
-    return new Worker(workerPortUrl, {
+    return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
         type: 'module',
         name: 'Statemachine Server Port',
     });

@@ -26,11 +26,11 @@ export const runPythonWrapper = async () => {
         console.warn('Editor was already started!');
     } else {
         const result = apiWrapper.getExtensionRegisterResult('mlc-python-example') as RegisterLocalProcessExtensionResult;
-        result.setAsDefaultApi();
+        await result.setAsDefaultApi();
 
         const initResult = apiWrapper.getExtensionRegisterResult('debugger-py-client') as RegisterLocalProcessExtensionResult | undefined;
         if (initResult !== undefined) {
-            configureDebugging(await initResult.getApi(), appConfig.configParams);
+            await configureDebugging(await initResult.getApi(), appConfig.configParams);
         }
 
         await lcWrapper.start();

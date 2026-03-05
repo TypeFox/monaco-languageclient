@@ -18,7 +18,7 @@ if (relativePathArg !== '--relativePath') {
     process.exit(0);
 }
 const relativePath = process.argv[3] as string | undefined;
-if (!relativePath) {
+if (relativePath === undefined) {
     printHelp();
     process.exit(0);
 }

@@ -4,10 +4,9 @@
  * ------------------------------------------------------------------------------------------ */
 import { WebSocketServer, type ServerOptions } from 'ws';
 import { IncomingMessage, Server } from 'node:http';
-import { URL } from 'node:url';
 import { Socket } from 'node:net';
 import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import * as cp from 'node:child_process';
 import { type IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { createConnection, createServerProcess, forward } from 'vscode-ws-jsonrpc/server';
@@ -78,7 +77,7 @@ export const upgradeWsServer = (runconfig: LanguageServerRunConfig,
             config.wss.handleUpgrade(request, socket, head, webSocket => {
                 const socket: IWebSocket = {
                     send: content => webSocket.send(content, error => {
-                        if (error) {
+                        if (error !== undefined) {
                             throw error;
                         }
                     }),

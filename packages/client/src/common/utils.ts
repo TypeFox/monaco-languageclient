@@ -7,7 +7,7 @@ import type { WebSocketUrlParams, WebSocketUrlString } from './commonTypes.js';
 
 export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
     let buildUrl = '';
-    if ((config as WebSocketUrlString).url) {
+    if (Object.hasOwn(config, 'url')) {
         const options = config as WebSocketUrlString;
         if (!options.url.startsWith('ws://') && !options.url.startsWith('wss://')) {
             throw new Error(`This is not a proper websocket url: ${options.url}`);
@@ -25,7 +25,7 @@ export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
         if (options.path !== undefined) {
             buildUrl += `/${options.path}`;
         }
-        if (options.extraParams) {
+        if (options.extraParams !== undefined) {
             const url = new URL(buildUrl);
 
             for (const [key, value] of Object.entries(options.extraParams)) {

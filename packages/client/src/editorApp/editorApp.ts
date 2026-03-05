@@ -45,9 +45,6 @@ export class EditorApp {
 
     constructor(userAppConfig?: EditorAppConfig) {
         this.id = userAppConfig?.id ?? Math.floor(Math.random() * 1000001).toString();
-        if ((userAppConfig?.useDiffEditor ?? false) && !userAppConfig?.codeResources?.original) {
-            throw new Error(`Use diff editor was used without a valid config. code: ${userAppConfig?.codeResources?.modified} codeOriginal: ${userAppConfig?.codeResources?.original}`);
-        }
         this.config = {
             codeResources: userAppConfig?.codeResources ?? undefined,
             useDiffEditor: userAppConfig?.useDiffEditor ?? false,
@@ -141,7 +138,7 @@ export class EditorApp {
             }
 
             const languageDef = this.config.languageDef;
-            if (languageDef) {
+            if (languageDef !== undefined) {
                 // register own language first
                 monaco.languages.register(languageDef.languageExtensionConfig);
 
@@ -154,18 +151,18 @@ export class EditorApp {
                 }
 
                 // apply monarch definitions
-                if (languageDef.monarchLanguage) {
+                if (languageDef.monarchLanguage !== undefined) {
                     monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
                 }
 
-                if (languageDef.theme) {
+                if (languageDef.theme !== undefined) {
                     monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
                     monaco.editor.setTheme(languageDef.theme.name);
                 }
             }
 
             if (this.config.editorOptions?.['semanticHighlighting.enabled'] !== undefined) {
-                StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
+                await StandaloneServices.get(IConfigurationService).updateValue('editor.semanticHighlighting.enabled',
                     this.config.editorOptions['semanticHighlighting.enabled'], ConfigurationTarget.USER);
             }
 
@@ -346,11 +343,11 @@ export class EditorApp {
             disposingResolve = resolve;
         });
 
-        if (this.editor) {
+        if (this.editor !== undefined) {
             this.editor.dispose();
             this.editor = undefined;
         }
-        if (this.diffEditor) {
+        if (this.diffEditor !== undefined) {
             this.diffEditor.dispose();
             this.diffEditor = undefined;
         }

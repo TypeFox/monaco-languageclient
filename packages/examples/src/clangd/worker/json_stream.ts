@@ -33,7 +33,7 @@ export class JsonStream {
         }
         this.#rawText.push(charCode);
         if (this.#inString) {
-            if (this.#inEscape) {
+            if (this.#inEscape > 0) {
                 if (charCode === 75) {
                     // \uxxxx
                     this.#inEscape += 4;

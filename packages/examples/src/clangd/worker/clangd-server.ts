@@ -63,7 +63,7 @@ export class ClangdInteractionWorker implements ComRouter {
         this.reader = new BrowserMessageReader(this.lsMessagePort);
         this.writer = new BrowserMessageWriter(this.lsMessagePort);
 
-        this.endpointWorker?.sentAnswer({
+        await this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
                 overrideCmd: 'clangd_init_complete'
             })
@@ -90,7 +90,7 @@ export class ClangdInteractionWorker implements ComRouter {
         (clangd as any).callMain([]);
 
         // send the launch complete message to the client
-        this.endpointWorker?.sentAnswer({
+        await this.endpointWorker?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
                 overrideCmd: 'clangd_launch_complete'
             })
@@ -109,7 +109,7 @@ export class ClangdInteractionWorker implements ComRouter {
         while (!loadingComplete) {
             const { done, value } = await wasmReader.read();
             loadingComplete = done;
-            if (value) {
+            if (value !== undefined) {
                 chunks.push(value);
             }
         }
@@ -161,17 +161,17 @@ export class ClangdInteractionWorker implements ComRouter {
 
         const jsonStream = new JsonStream();
 
-        const stdout = (charCode: number) => {
+        const stdout = async (charCode: number) => {
             const jsonOrNull = jsonStream.insert(charCode);
             if (jsonOrNull !== null) {
                 console.log('%c%s', 'color: green', jsonOrNull);
-                this.writer?.write(JSON.parse(jsonOrNull));
+                await this.writer?.write(JSON.parse(jsonOrNull));
             }
         };
 
         const LF = 10;
         let stderrLine = '';
-        const stderr = (charCode: number) => {
+        const stderr = async (charCode: number) => {
             if (charCode === LF) {
                 console.log('%c%s', 'color: darkorange', stderrLine);
                 stderrLine = '';
@@ -186,10 +186,10 @@ export class ClangdInteractionWorker implements ComRouter {
             }
         };
 
-        const onAbort = () => {
+        const onAbort = async () => {
             this.writer?.end();
 
-            this.endpointWorker?.sentMessage({
+            await this.endpointWorker?.sentMessage({
                 message: WorkerMessage.fromPayload(
                     new RawPayload({
                         type: 'error',
@@ -275,8 +275,8 @@ export class ClangdInteractionWorker implements ComRouter {
      * populate fs = true; persist fs = false
      * @param readOrWrite Whether to read or write the filesystem
      */
-    private async syncFS(readOrWrite: boolean) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+    private syncFS(readOrWrite: boolean) {
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         this.emscriptenFS.syncfs(readOrWrite, (err) => {
             if (err !== null) {
@@ -287,7 +287,7 @@ export class ClangdInteractionWorker implements ComRouter {
     }
 
     private async updateWorkerFilesystem(requiredResurces: RequiredResources) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         const t0 = performance.now();
         console.log('Updating Worker FS');
@@ -310,7 +310,7 @@ export class ClangdInteractionWorker implements ComRouter {
      * Loads workspace files separately or the compressed workspace from a zip archive
      */
     private async loadWorkspaceFiles() {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         // setup & prepare the filesystem
         this.emscriptenFS.mkdir(WORKSPACE_PATH);
@@ -333,7 +333,7 @@ export class ClangdInteractionWorker implements ComRouter {
         }
 
         if (!isWorkspaceLoaded) {
-            let mainFiles: Record<string, () => Promise<string | unknown>> = {};
+            let mainFiles: Record<string, () => Promise<unknown>> = {};
             if (this.useCompressedWorkspace && this.compressedWorkspaceUrl !== undefined) {
 
                 // Fetches a compressed workspace from a given URL (zip file)
@@ -364,11 +364,11 @@ export class ClangdInteractionWorker implements ComRouter {
         await this.persistFS();
     }
 
-    private async processInputFiles(files: Record<string, () => Promise<string | unknown>>, dirReplacer: string) {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
+    private async processInputFiles(files: Record<string, () => Promise<unknown>>, dirReplacer: string) {
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
 
         const dirsToCreate = new Set<string>();
-        const filesToUse: Record<string, () => Promise<string | unknown>> = {};
+        const filesToUse: Record<string, () => Promise<unknown>> = {};
         for (const [sourceFile, content] of Object.entries(files)) {
 
             let shortSourceFile = sourceFile.replace(dirReplacer, '');
@@ -422,14 +422,14 @@ export class ClangdInteractionWorker implements ComRouter {
                 this.emscriptenFS.writeFile(targetFile, contentAsString);
                 console.log(`Wrote file: ${targetFile}`);
             } catch (e) {
-                console.error(`Error writing ${targetFile}: ${e}`);
+                console.error(`Error writing ${targetFile}: ${String(e)}`);
             }
         }
     }
 
     private async updateRemoteFilesystem() {
-        if (!this.emscriptenFS) throw new Error('Emscripten FS is not available! Aborting ...');
-        if (!this.fsMessagePort) throw new Error('MessagePort is not available! Aborting ...');
+        if (this.emscriptenFS === undefined) throw new Error('Emscripten FS is not available! Aborting ...');
+        if (this.fsMessagePort === undefined) throw new Error('MessagePort is not available! Aborting ...');
 
         const t0 = performance.now();
 
@@ -437,7 +437,7 @@ export class ClangdInteractionWorker implements ComRouter {
         const allFilesAndDirectories = fsReadAllFiles(this.emscriptenFS, '/');
 
         this.remoteFs = new WorkerRemoteMessageChannelFs(this.fsMessagePort, this.emscriptenFS);
-        this.remoteFs.init();
+        await this.remoteFs.init();
 
         const allPromises = [];
         for (const filename of allFilesAndDirectories.files) {
@@ -450,14 +450,14 @@ export class ClangdInteractionWorker implements ComRouter {
                 }));
 
             } catch (e) {
-                console.error(`Unexpected error when reading file ${filename}: ${e}`);
+                console.error(`Unexpected error when reading file ${filename}: ${String(e)}`);
             }
         }
 
         await Promise.all(allPromises);
 
         // signal the client everything is ready
-        this.remoteFs.ready();
+        await this.remoteFs.ready();
 
         const t1 = performance.now();
         const msg = `Remote FS: File loading completed in ${t1 - t0}ms.`;
