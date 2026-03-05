@@ -1,7 +1,8 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
   "editor.guides.bracketPairs": true,
   "editor.defaultFormatter": "oxc.oxc-vscode",
+  "oxc.enable": true,
   "oxc.enable.oxlint": true,
   "oxc.typeAware": true,
   "editor.formatOnSave": true,

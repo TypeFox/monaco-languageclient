@@ -15,6 +15,7 @@
   "endOfLine": "lf",
   "trailingComma": "none",
   "insertFinalNewline": true,
+  "sortPackageJson": true,
   "tabWidth": 4,
   "printWidth": 140,
   "overrides": [
