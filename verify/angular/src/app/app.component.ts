@@ -6,7 +6,11 @@
 import { type AfterViewInit, Component } from '@angular/core';
 
 // import { runExtendedClient } from '../../production/mlc-bundle.js';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import {
+    RegisteredFileSystemProvider,
+    RegisteredMemoryFile,
+    registerFileSystemOverlay
+} from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
 import { LogLevel } from '@codingame/monaco-vscode-api';
 
@@ -70,7 +74,7 @@ export const runExtendedClient = async () => {
         connection: {
             options: {
                 $type: 'WebSocketUrl',
-                url: `ws://localhost:${lsConfig.port}${lsConfig.path}`,
+                url: `ws://localhost:${lsConfig.port}${lsConfig.path}`
             }
         },
         clientOptions: {

@@ -48,7 +48,7 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
                             });
                         }, 250);
                     },
-                    reportStatus: true,
+                    reportStatus: true
                 }
             }
         },

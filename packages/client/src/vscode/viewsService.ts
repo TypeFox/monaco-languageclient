@@ -4,25 +4,32 @@
  * ------------------------------------------------------------------------------------------ */
 
 export const defaultViewsInit = async () => {
-    const { Parts, Position, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, onDidChangeSideBarPosition } = await import('@codingame/monaco-vscode-views-service-override');
+    const { Parts, Position, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, onDidChangeSideBarPosition } =
+        await import('@codingame/monaco-vscode-views-service-override');
 
     for (const config of [
         { part: Parts.TITLEBAR_PART, element: '#titleBar' },
         { part: Parts.BANNER_PART, element: '#banner' },
         {
-            part: Parts.SIDEBAR_PART, get element() {
+            part: Parts.SIDEBAR_PART,
+            get element() {
                 return getSideBarPosition() === Position.LEFT ? '#sidebar' : '#sidebar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
+            },
+            onDidElementChange: onDidChangeSideBarPosition
         },
         {
-            part: Parts.ACTIVITYBAR_PART, get element() {
+            part: Parts.ACTIVITYBAR_PART,
+            get element() {
                 return getSideBarPosition() === Position.LEFT ? '#activityBar' : '#activityBar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
+            },
+            onDidElementChange: onDidChangeSideBarPosition
         },
         {
-            part: Parts.AUXILIARYBAR_PART, get element() {
+            part: Parts.AUXILIARYBAR_PART,
+            get element() {
                 return getSideBarPosition() === Position.LEFT ? '#auxiliaryBar' : '#auxiliaryBar-left';
-            }, onDidElementChange: onDidChangeSideBarPosition
+            },
+            onDidElementChange: onDidChangeSideBarPosition
         },
         { part: Parts.EDITOR_PART, element: '#editors' },
         { part: Parts.PANEL_PART, element: '#panel' },
@@ -38,7 +45,7 @@ export const defaultViewsInit = async () => {
             document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
         }
 
-        onPartVisibilityChange(config.part, visible => {
+        onPartVisibilityChange(config.part, (visible) => {
             document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
         });
     }

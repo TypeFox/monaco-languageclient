@@ -34,9 +34,12 @@ const startEditor = async () => {
         console.log('Received message from worker: ' + event.data);
     };
     const channel = new MessageChannel();
-    stateMachineWorkerPort.postMessage({
-        port: channel.port2
-    }, [channel.port2]);
+    stateMachineWorkerPort.postMessage(
+        {
+            port: channel.port2
+        },
+        [channel.port2]
+    );
 
     const reader = new BrowserMessageReader(channel.port1);
     const writer = new BrowserMessageWriter(channel.port1);
@@ -132,13 +135,13 @@ export const runStatemachine = async () => {
 export const loadStatemachineWorkerRegular = () => {
     return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
         type: 'module',
-        name: 'Statemachine Server Regular',
+        name: 'Statemachine Server Regular'
     });
 };
 
 export const loadStatemachinWorkerPort = () => {
     return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
         type: 'module',
-        name: 'Statemachine Server Port',
+        name: 'Statemachine Server Port'
     });
 };

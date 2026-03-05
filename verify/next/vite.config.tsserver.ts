@@ -8,14 +8,15 @@ import { defineConfig } from 'vite';
 
 const config = defineConfig({
     optimizeDeps: {
-        include: [
-            'vscode/localExtensionHost'
-        ]
+        include: ['vscode/localExtensionHost']
     },
     build: {
         assetsInlineLimit: 0, // 1024 * 1024 * 128,
         lib: {
-            entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-typescript-language-features-default-extension/index.js'),
+            entry: path.resolve(
+                __dirname,
+                './node_modules/@codingame/monaco-vscode-typescript-language-features-default-extension/index.js'
+            ),
             name: 'tsserver',
             fileName: () => 'tsserver.js',
             formats: ['es'],
@@ -31,7 +32,6 @@ const config = defineConfig({
         outDir: path.resolve(__dirname, 'bundle/tsserver'),
         emptyOutDir: true
     }
-
 });
 
 export default config;

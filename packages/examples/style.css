@@ -23,7 +23,8 @@ a:visited {
     color: #3794ff;
 }
 
-h2, h3 {
+h2,
+h3 {
     color: rgb(190, 120, 0);
 }
 

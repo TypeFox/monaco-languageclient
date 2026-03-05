@@ -16,8 +16,11 @@ export const createMonacoEditorDiv = () => {
     return div;
 };
 
-export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string,
-    messageTransports?: MessageTransports): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (
+    worker: Worker,
+    languageId: string,
+    messageTransports?: MessageTransports
+): LanguageClientConfig => {
     return {
         languageId,
         clientOptions: {
@@ -59,7 +62,7 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
             options: {
                 $type: 'WebSocketUrl',
                 url: `ws://localhost:${port}/rester`
-            },
+            }
         }
     };
 };
@@ -71,7 +74,11 @@ export const createEditorAppConfig = (codeResources: CodeResources): EditorAppCo
     };
 };
 
-export const createDefaultMonacoVscodeApiConfig = (overallConfigType: OverallConfigType, htmlContainer: HTMLElement | undefined, viewsConfigType: ViewsConfigTypes): MonacoVscodeApiConfig => {
+export const createDefaultMonacoVscodeApiConfig = (
+    overallConfigType: OverallConfigType,
+    htmlContainer: HTMLElement | undefined,
+    viewsConfigType: ViewsConfigTypes
+): MonacoVscodeApiConfig => {
     return {
         $type: overallConfigType,
         advanced: {

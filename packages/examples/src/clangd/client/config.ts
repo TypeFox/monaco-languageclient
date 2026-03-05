@@ -24,14 +24,14 @@ export type ClangdAppConfig = {
     languageClientConfig: LanguageClientConfig;
     vscodeApiConfig: MonacoVscodeApiConfig;
     editorAppConfig: EditorAppConfig;
-}
+};
 
 export const createClangdAppConfig = async (config: {
-    htmlContainer: HTMLElement,
-    workspaceUri: Uri,
-    workspaceFileUri: Uri,
-    clangdWorkerHandler: ClangdWorkerHandler,
-    lsMessageLocalPort: MessagePort
+    htmlContainer: HTMLElement;
+    workspaceUri: Uri;
+    workspaceFileUri: Uri;
+    clangdWorkerHandler: ClangdWorkerHandler;
+    lsMessageLocalPort: MessagePort;
 }): Promise<ClangdAppConfig> => {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
         $type: 'extended',
@@ -68,7 +68,7 @@ export const createClangdAppConfig = async (config: {
                 },
                 workspace: {
                     workspaceUri: config.workspaceFileUri
-                },
+                }
             },
             configurationDefaults: {
                 'window.title': 'mlc-clangd-exampled${separator}${dirty}${activeEditorShort}'
@@ -88,16 +88,18 @@ export const createClangdAppConfig = async (config: {
                 'editor.experimental.asyncTokenization': false
             })
         },
-        extensions: [{
-            config: {
-                name: 'mlc-clangd-example',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'mlc-clangd-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    }
                 }
             }
-        }],
+        ],
         monacoWorkerFactory: configureDefaultWorkerFactory
     };
 

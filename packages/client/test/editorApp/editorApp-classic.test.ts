@@ -12,7 +12,6 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test Test EditorApp (classic)', () => {
-
     const htmlContainer = createMonacoEditorDiv();
     const apiConfig = createDefaultMonacoVscodeApiConfig('classic', htmlContainer, 'EditorService');
 
@@ -55,7 +54,9 @@ describe('Test Test EditorApp (classic)', () => {
         editorAppConfig.id = 'test-semanticHighlighting-false';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toBeFalsy();
+        expect(
+            (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
+        ).toBeFalsy();
     });
 
     test('editorOptions: semanticHighlighting="configuredByTheme"', () => {
@@ -65,11 +66,14 @@ describe('Test Test EditorApp (classic)', () => {
                 uri: `/workspace/${expect.getState().testPath}.js`
             }
         });
-        (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = 'configuredByTheme';
+        (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] =
+            'configuredByTheme';
         editorAppConfig.id = 'test-semanticHighlighting-theme';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toEqual('configuredByTheme');
+        expect(
+            (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
+        ).toEqual('configuredByTheme');
     });
 
     test('editorOptions: semanticHighlighting=true', () => {
@@ -83,7 +87,9 @@ describe('Test Test EditorApp (classic)', () => {
         editorAppConfig.id = 'test-semanticHighlighting-true';
 
         const editorApp = new EditorApp(editorAppConfig);
-        expect((editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toBeTruthy();
+        expect(
+            (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
+        ).toBeTruthy();
     });
 
     test('Check default values', async () => {
@@ -167,7 +173,7 @@ describe('Test Test EditorApp (classic)', () => {
         codeResources.modified = undefined;
         codeResources.original = {
             text: 'original',
-            uri: '/workspace/test-code-resources-original-regular-editor.js',
+            uri: '/workspace/test-code-resources-original-regular-editor.js'
         };
 
         const editorApp = new EditorApp(editorAppConfig);
@@ -192,7 +198,7 @@ describe('Test Test EditorApp (classic)', () => {
         codeResources.modified = undefined;
         codeResources.original = {
             text: 'original',
-            uri: '/workspace/test-code-resources-original-diff-editor.js',
+            uri: '/workspace/test-code-resources-original-diff-editor.js'
         };
         const editorApp = new EditorApp(editorAppConfig);
 
@@ -301,12 +307,14 @@ describe('Test Test EditorApp (classic)', () => {
             expect(textChanges.modified).toEqual('// comment');
         });
 
-        expect(await editorApp.updateCodeResources({
-            modified: {
-                text: '// comment',
-                uri: '/workspace/test.statemachine',
-            }
-        })).toBeTruthy();
+        expect(
+            await editorApp.updateCodeResources({
+                modified: {
+                    text: '// comment',
+                    uri: '/workspace/test.statemachine'
+                }
+            })
+        ).toBeTruthy();
 
         const modelRefsAfter = editorApp['modelRefs'];
         expect(modelRefsAfter?.modified).toBeDefined();
@@ -361,5 +369,4 @@ describe('Test Test EditorApp (classic)', () => {
 
         await editorApp.dispose();
     });
-
 });

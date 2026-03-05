@@ -10,7 +10,7 @@ export type MonacoLanguageClientOptions = {
     id?: string;
     clientOptions: LanguageClientOptions;
     messageTransports: MessageTransports;
-}
+};
 
 export class MonacoLanguageClient extends BaseLanguageClient {
     protected readonly messageTransports: MessageTransports;

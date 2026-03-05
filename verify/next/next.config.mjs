@@ -11,14 +11,12 @@ console.log(`Will load Next.js config from: ${__dirname}`);
  */
 export default {
     typescript: {
-        tsconfigPath: './tsconfig.json',
+        tsconfigPath: './tsconfig.json'
     },
     trailingSlash: true,
     reactStrictMode: true,
     output: 'standalone',
-    serverExternalPackages: [
-        '@codingame/monaco-vscode-typescript-language-features-default-extension',
-    ],
+    serverExternalPackages: ['@codingame/monaco-vscode-typescript-language-features-default-extension'],
     turbopack: {
         root: resolve(__dirname),
         rules: {
@@ -29,13 +27,13 @@ export default {
                     {
                         loader: resolve(__dirname, 'loaders/manipulate.cjs'),
                         options: {
-                            target: 'browser',
-                        },
-                    },
+                            target: 'browser'
+                        }
+                    }
                 ],
                 // "as": "*.js" tells Turbopack to treat the output as a JS module
-                as: '*.js',
-            },
+                as: '*.js'
+            }
         }
     },
     async headers() {

@@ -8,7 +8,7 @@ All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-langu
 
 ## Getting Started
 
-This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions](<https://github.com/TypeFox/monaco-languageclient#getting-started>) to get started with local development.
+This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions](https://github.com/TypeFox/monaco-languageclient#getting-started) to get started with local development.
 
 ## Usage
 
@@ -20,12 +20,12 @@ import { listen } from 'vscode-ws-jsonrpc';
 
 const webSocket = new WebSocket('ws://www.example.com/socketserver');
 listen({
-    webSocket,
-    onConnection: (connection: MessageConnection) => {
-        const notification = new rpc.NotificationType<string, void>('testNotification');
-        connection.listen();
-        connection.sendNotification(notification, 'Hello World');
-    }
+  webSocket,
+  onConnection: (connection: MessageConnection) => {
+    const notification = new rpc.NotificationType<string, void>('testNotification');
+    connection.listen();
+    connection.sendNotification(notification, 'Hello World');
+  }
 });
 ```
 
@@ -56,21 +56,21 @@ import { Message } from 'vscode-languageserver';
 const socket: IWebSocket; // open the web socket
 const reader = new WebSocketMessageReader(socket);
 const writer = new WebSocketMessageWriter(socket);
-const socketConnection = createConnection(reader, writer, () => socket.dispose())
+const socketConnection = createConnection(reader, writer, () => socket.dispose());
 const serverConnection = createServerProcess('Example', 'node', ['example.js']);
-forward(socketConnection, serverConnection, message => {
-    if (Message.isNotification(message)) {
-        if (message.method === 'testNotification') {
-            // handle the test notification
-        }
+forward(socketConnection, serverConnection, (message) => {
+  if (Message.isNotification(message)) {
+    if (message.method === 'testNotification') {
+      // handle the test notification
     }
-    return message;
+  }
+  return message;
 });
 ```
 
 ## Examples
 
-For a detailed list of examples please look at [this section](<https://github.com/TypeFox/monaco-languageclient#examples-overview>) in the main repository.
+For a detailed list of examples please look at [this section](https://github.com/TypeFox/monaco-languageclient#examples-overview) in the main repository.
 
 ## License
 

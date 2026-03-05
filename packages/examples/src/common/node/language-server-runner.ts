@@ -9,10 +9,8 @@ import express from 'express';
 import { getLocalDirectory, type LanguageServerRunConfig, upgradeWsServer } from './server-commons.js';
 
 /** LSP server runner */
-export const runLanguageServer = (
-    languageServerRunConfig: LanguageServerRunConfig
-) => {
-    process.on('uncaughtException', err => {
+export const runLanguageServer = (languageServerRunConfig: LanguageServerRunConfig) => {
+    process.on('uncaughtException', (err) => {
         console.error('Uncaught Exception: ', err.toString());
         if (err.stack !== undefined) {
             console.error(err.stack);

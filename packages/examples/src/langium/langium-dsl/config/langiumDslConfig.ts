@@ -4,7 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
+import {
+    InMemoryFileSystemProvider,
+    registerFileSystemOverlay,
+    type IFileWriteOptions
+} from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
@@ -28,7 +32,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     const loadLangiumWorker = () => {
         return new Worker(new URL('../worker/langium-server.ts', import.meta.url), {
             type: 'module',
-            name: 'Langium LS',
+            name: 'Langium LS'
         });
     };
 
@@ -63,18 +67,17 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     <div id="editors"></div>
 </div>`;
     const viewsInit = async () => {
-        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart, } = await import('@codingame/monaco-vscode-views-service-override');
+        const { Parts, onPartVisibilityChange, isPartVisibile, attachPart } =
+            await import('@codingame/monaco-vscode-views-service-override');
 
-        for (const config of [
-            { part: Parts.EDITOR_PART, element: '#editors' },
-        ]) {
+        for (const config of [{ part: Parts.EDITOR_PART, element: '#editors' }]) {
             attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
 
             if (!isPartVisibile(config.part)) {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
             }
 
-            onPartVisibilityChange(config.part, visible => {
+            onPartVisibilityChange(config.part, (visible) => {
                 document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
             });
         }
@@ -105,30 +108,36 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
             })
         },
         monacoWorkerFactory: configureDefaultWorkerFactory,
-        extensions: [{
-            config: {
-                name: 'langium-example',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'langium-example',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    },
+                    contributes: {
+                        languages: [
+                            {
+                                id: 'langium',
+                                extensions: ['.langium'],
+                                aliases: ['langium', 'LANGIUM'],
+                                configuration: '/workspace/langium-configuration.json'
+                            }
+                        ],
+                        grammars: [
+                            {
+                                language: 'langium',
+                                scopeName: 'source.langium',
+                                path: '/workspace/langium-grammar.json'
+                            }
+                        ]
+                    }
                 },
-                contributes: {
-                    languages: [{
-                        id: 'langium',
-                        extensions: ['.langium'],
-                        aliases: ['langium', 'LANGIUM'],
-                        configuration: '/workspace/langium-configuration.json'
-                    }],
-                    grammars: [{
-                        language: 'langium',
-                        scopeName: 'source.langium',
-                        path: '/workspace/langium-grammar.json'
-                    }]
-                }
-            },
-            filesOrContents: extensionFilesOrContents
-        }]
+                filesOrContents: extensionFilesOrContents
+            }
+        ]
     };
 
     const languageClientConfig: LanguageClientConfig = {

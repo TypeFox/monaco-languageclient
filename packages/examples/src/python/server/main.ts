@@ -14,18 +14,12 @@ export const runPythonServer = (baseDir: string, relativeDir: string) => {
         pathName: '/pyright',
         serverPort: 30001,
         runCommand: 'node',
-        runCommandArgs: [
-            processRunPath,
-            '--stdio'
-        ],
+        runCommandArgs: [processRunPath, '--stdio'],
         wsServerOptions: {
             noServer: true,
             perMessageDeflate: false,
             clientTracking: true,
-            verifyClient: (
-                clientInfo: { origin: string; secure: boolean; req: IncomingMessage },
-                callback
-            ) => {
+            verifyClient: (clientInfo: { origin: string; secure: boolean; req: IncomingMessage }, callback) => {
                 const parsedURL = new URL(`${clientInfo.origin}${clientInfo.req.url ?? ''}`);
                 const authToken = parsedURL.searchParams.get('authorization');
                 if (authToken === 'UserAuth') {

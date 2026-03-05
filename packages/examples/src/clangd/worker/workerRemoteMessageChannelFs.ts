@@ -3,11 +3,21 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { DirectoryListingRequest, DirectoryListingRequestResult, EndpointType, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from 'monaco-languageclient/fs';
+import type {
+    DirectoryListingRequest,
+    DirectoryListingRequestResult,
+    EndpointType,
+    FileReadRequest,
+    FileReadRequestResult,
+    FileSystemEndpoint,
+    FileUpdate,
+    FileUpdateResult,
+    StatsRequest,
+    StatsRequestResult
+} from 'monaco-languageclient/fs';
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 
 class FileHandlerWorker implements ComRouter {
-
     private portClandFsEndpoint: ComChannelEndpoint;
 
     setComChannelEndpoint(comChannelEndpoint: ComChannelEndpoint): void {
@@ -24,7 +34,6 @@ class FileHandlerWorker implements ComRouter {
 }
 
 export class WorkerRemoteMessageChannelFs implements FileSystemEndpoint {
-
     private clangdFsEndpoint?: ComChannelEndpoint;
     private emscriptenFS: typeof FS;
 
@@ -48,9 +57,12 @@ export class WorkerRemoteMessageChannelFs implements FileSystemEndpoint {
 
     async init() {
         await this.clangdFsEndpoint?.sentMessage({
-            message: WorkerMessage.fromPayload(new RawPayload({
-                hello: 'main',
-            }), 'fs_driver_init'),
+            message: WorkerMessage.fromPayload(
+                new RawPayload({
+                    hello: 'main'
+                }),
+                'fs_driver_init'
+            ),
             awaitAnswer: true,
             expectedAnswer: 'fs_driver_init_confirm'
         });
@@ -84,10 +96,13 @@ export class WorkerRemoteMessageChannelFs implements FileSystemEndpoint {
     async syncFile(params: FileUpdate): Promise<FileUpdateResult> {
         const content = this.emscriptenFS.readFile(params.resourceUri, { encoding: 'binary' });
         const result = await this.clangdFsEndpoint?.sentMessage({
-            message: WorkerMessage.fromPayload(new RawPayload({
-                resourceUri: params.resourceUri,
-                content: content
-            }), 'syncFile'),
+            message: WorkerMessage.fromPayload(
+                new RawPayload({
+                    resourceUri: params.resourceUri,
+                    content: content
+                }),
+                'syncFile'
+            ),
             transferables: [content.buffer],
             awaitAnswer: true,
             expectedAnswer: 'syncFile_confirm'
@@ -109,5 +124,4 @@ export class WorkerRemoteMessageChannelFs implements FileSystemEndpoint {
     listFiles(_params: DirectoryListingRequest): Promise<DirectoryListingRequestResult> {
         return Promise.reject('No file listing possible.');
     }
-
 }

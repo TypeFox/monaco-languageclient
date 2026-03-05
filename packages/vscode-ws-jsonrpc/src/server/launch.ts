@@ -12,15 +12,16 @@ import type { IWebSocket, IWebSocketConnection } from '../socket/socket.js';
 import { WebSocketMessageReader } from '../socket/reader.js';
 import { WebSocketMessageWriter } from '../socket/writer.js';
 
-export function createServerProcess(serverName: string, command: string, args?: string[], options?: cp.SpawnOptions): IConnection | undefined {
+export function createServerProcess(
+    serverName: string,
+    command: string,
+    args?: string[],
+    options?: cp.SpawnOptions
+): IConnection | undefined {
     const serverProcess = cp.spawn(command, args ?? [], options ?? {});
-    serverProcess.on('error', error =>
-        console.error(`Launching ${serverName} Server failed: ${error}`)
-    );
+    serverProcess.on('error', (error) => console.error(`Launching ${serverName} Server failed: ${error}`));
     if (serverProcess.stderr !== null) {
-        serverProcess.stderr.on('data', data =>
-            console.error(`${serverName} Server: ${data}`)
-        );
+        serverProcess.stderr.on('data', (data) => console.error(`${serverName} Server: ${data}`));
     }
     return createProcessStreamConnection(serverProcess);
 }
@@ -31,7 +32,11 @@ export function createWebSocketConnection(socket: IWebSocket): IWebSocketConnect
     return createConnection(reader, writer, () => socket.dispose(), { socket });
 }
 
-export function createProcessSocketConnection(process: cp.ChildProcess, outSocket: net.Socket, inSocket: net.Socket = outSocket): IConnection {
+export function createProcessSocketConnection(
+    process: cp.ChildProcess,
+    outSocket: net.Socket,
+    inSocket: net.Socket = outSocket
+): IConnection {
     return createSocketConnection(outSocket, inSocket, () => process.kill());
 }
 

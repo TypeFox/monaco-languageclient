@@ -9,9 +9,7 @@ import type { PluginContext } from 'rolldown';
 
 const config = defineConfig({
     optimizeDeps: {
-        include: [
-            'vscode/localExtensionHost'
-        ]
+        include: ['vscode/localExtensionHost']
     },
     build: {
         assetsInlineLimit: 1024 * 1024 * 128,

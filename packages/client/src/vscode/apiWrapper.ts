@@ -4,7 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { initialize, LogLevel } from '@codingame/monaco-vscode-api';
-import { ExtensionHostKind, getBuiltinExtensions, registerExtension, type IExtensionManifest, type RegisterExtensionResult } from '@codingame/monaco-vscode-api/extensions';
+import {
+    ExtensionHostKind,
+    getBuiltinExtensions,
+    registerExtension,
+    type IExtensionManifest,
+    type RegisterExtensionResult
+} from '@codingame/monaco-vscode-api/extensions';
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
 import * as monaco from '@codingame/monaco-vscode-editor-api';
@@ -29,9 +35,8 @@ export interface StartInstructions {
 }
 
 export class MonacoVscodeApiWrapper {
-
     private logger: ILogger = new ConsoleLogger();
-    private extensionRegisterResults: Map<string, | RegisterExtensionResult> = new Map();
+    private extensionRegisterResults: Map<string, RegisterExtensionResult> = new Map();
     private disposableStore: DisposableStore = new DisposableStore();
     private apiConfig: MonacoVscodeApiConfigRuntime;
 
@@ -39,7 +44,7 @@ export class MonacoVscodeApiWrapper {
         this.apiConfig = {
             ...apiConfig,
             serviceOverrides: apiConfig.serviceOverrides ?? {},
-            logLevel: apiConfig.logLevel ?? LogLevel.Off,
+            logLevel: apiConfig.logLevel ?? LogLevel.Off
         };
         this.logger.setLevel(this.apiConfig.logLevel);
     }
@@ -140,7 +145,7 @@ export class MonacoVscodeApiWrapper {
                     window.open(window.location.href);
                     return true;
                 }
-            },
+            }
         };
     }
 
@@ -158,7 +163,9 @@ export class MonacoVscodeApiWrapper {
             devOptions.logLevel = this.apiConfig.logLevel;
             (this.apiConfig.workspaceConfig!.developmentOptions as Record<string, unknown>) = Object.assign({}, devOptions);
         } else if (devLogLevel !== this.apiConfig.logLevel) {
-            this.performErrorHandling(`You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`);
+            this.performErrorHandling(
+                `You have configured mismatching logLevels: ${this.apiConfig.logLevel} (wrapperConfig) ${devLogLevel} (workspaceConfig.developmentOptions)`
+            );
         } else {
             this.logger.debug('Development log level and api log level are in aligned.');
         }
@@ -170,7 +177,7 @@ export class MonacoVscodeApiWrapper {
     protected configureSemanticHighlighting() {
         if (this.apiConfig.advanced?.enforceSemanticHighlighting === true) {
             const configDefaults: Record<string, unknown> = {
-                ...this.apiConfig.workspaceConfig!.configurationDefaults ?? {}
+                ...(this.apiConfig.workspaceConfig!.configurationDefaults ?? {})
             };
             configDefaults['editor.semanticHighlighting.enabled'] = true;
             (this.apiConfig.workspaceConfig!.configurationDefaults as Record<string, unknown>) = Object.assign({}, configDefaults);
@@ -256,7 +263,10 @@ export class MonacoVscodeApiWrapper {
     }
 
     async initExtensions(): Promise<void> {
-        if (this.apiConfig.$type === 'extended' && (this.apiConfig.advanced?.loadThemes === undefined ? true : this.apiConfig.advanced.loadThemes === true)) {
+        if (
+            this.apiConfig.$type === 'extended' &&
+            (this.apiConfig.advanced?.loadThemes === undefined ? true : this.apiConfig.advanced.loadThemes === true)
+        ) {
             await import('@codingame/monaco-vscode-theme-defaults-default-extension');
         }
 
@@ -317,7 +327,6 @@ export class MonacoVscodeApiWrapper {
             this.logger.warn('Initialization of monaco-vscode api can only performed once!');
         } else {
             if (!(envEnhanced.vscodeApiInitialising === true)) {
-
                 envEnhanced.vscodeApiInitialising = true;
                 this.markGlobalInit();
 

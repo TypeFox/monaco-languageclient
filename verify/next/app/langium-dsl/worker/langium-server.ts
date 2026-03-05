@@ -35,7 +35,7 @@ export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: stri
 
     // Start the language server with the shared services
     startLanguageServer(shared);
-}
+};
 
 // self.onmessage = async (event: MessageEvent) => {
 //     const data = event.data;

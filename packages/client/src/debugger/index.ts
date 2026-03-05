@@ -17,11 +17,11 @@ export type FileDefinition = {
     path: string;
     code: string;
     uri: Uri;
-}
+};
 
 export type InitMessage = {
-    id: 'init',
-    files: Record<string, FileDefinition>
+    id: 'init';
+    files: Record<string, FileDefinition>;
     defaultFile: string;
     debuggerExecCall: string;
 };
@@ -43,7 +43,7 @@ export type ConfigParams = {
     defaultFile: string;
     helpContainerCmd: string;
     debuggerExecCall: string;
-}
+};
 
 export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionConfig => {
     const filesOrContents = new Map<string, string | URL>();
@@ -73,9 +73,7 @@ export const provideDebuggerExtensionConfig = (config: ConfigParams): ExtensionC
                     }
                 ]
             },
-            activationEvents: [
-                'onDebug'
-            ]
+            activationEvents: ['onDebug']
         },
         filesOrContents
     };
@@ -113,8 +111,7 @@ export const configureDebugging = async (api: typeof vscode, config: ConfigParam
 
             await new Promise((resolve, reject) => {
                 websocket.onopen = resolve;
-                websocket.onerror = () =>
-                    reject(new Error(`Unable to connect to debugger server. Run "${config.helpContainerCmd}"`));
+                websocket.onerror = () => reject(new Error(`Unable to connect to debugger server. Run "${config.helpContainerCmd}"`));
             });
 
             const adapter = new WebsocketDebugAdapter(websocket);
@@ -157,7 +154,7 @@ export const createDebugLaunchConfigFile = (workspacePath: string, type: string)
                     {
                         name: 'Debugger: Lauch',
                         type,
-                        request: 'attach',
+                        request: 'attach'
                     }
                 ]
             },

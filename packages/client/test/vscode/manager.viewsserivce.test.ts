@@ -7,7 +7,6 @@ import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests: Different config', () => {
-
     test('Start MonacoVscodeApiWrapper with ViewsService but no htmlContainer', async () => {
         const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'ViewsService');
 
@@ -16,5 +15,4 @@ describe('MonacoVscodeApiWrapper Tests: Different config', () => {
             await apiWrapper.start();
         }).rejects.toThrowError('View Service Type "ViewsService" requires a HTMLElement.');
     });
-
 });

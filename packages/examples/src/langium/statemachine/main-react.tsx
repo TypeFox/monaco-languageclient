@@ -49,17 +49,29 @@ export const runStatemachineReact = async (noControls: boolean) => {
         return (
             <>
                 <div>
-                    <button style={{background: 'purple'}} onClick={() => {
-                        setCodeState(codeState + '\n// comment');
-                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
-                    }}>Change Text</button>
-                    <button style={{background: 'green'}} onClick={() => {
-                        setTriggerReprocessConfig(triggerReprocessConfig + 1);
-                    }}>Reprocess Config</button>
-                    <button style={{background: 'orange'}} onClick={() => setDisposeLcState(!(disposeLcState ?? false))}>Flip Language Client</button>
+                    <button
+                        style={{ background: 'purple' }}
+                        onClick={() => {
+                            setCodeState(codeState + '\n// comment');
+                            setTriggerReprocessConfig(triggerReprocessConfig + 1);
+                        }}
+                    >
+                        Change Text
+                    </button>
+                    <button
+                        style={{ background: 'green' }}
+                        onClick={() => {
+                            setTriggerReprocessConfig(triggerReprocessConfig + 1);
+                        }}
+                    >
+                        Reprocess Config
+                    </button>
+                    <button style={{ background: 'orange' }} onClick={() => setDisposeLcState(!(disposeLcState ?? false))}>
+                        Flip Language Client
+                    </button>
 
                     <MonacoEditorReactComp
-                        style={{ 'height': '50vh' }}
+                        style={{ height: '50vh' }}
                         vscodeApiConfig={appConfig.vscodeApiConfig}
                         editorAppConfig={appConfig.editorAppConfig}
                         languageClientConfig={appConfig.languageClientConfig}
@@ -70,7 +82,9 @@ export const runStatemachineReact = async (noControls: boolean) => {
                         enforceLanguageClientDispose={disposeLcState}
                         onDisposeLanguageClient={() => console.log(' >>> language client disposed <<<')}
                     />
-                    <b>Debug:</b><br />{codeState}
+                    <b>Debug:</b>
+                    <br />
+                    {codeState}
                 </div>
             </>
         );
@@ -80,7 +94,11 @@ export const runStatemachineReact = async (noControls: boolean) => {
         const elem = document.getElementById('checkbox-strictmode');
         const strictMode = elem === null ? false : (elem as HTMLInputElement).checked;
         if (strictMode) {
-            root.render(<StrictMode><App /></StrictMode>);
+            root.render(
+                <StrictMode>
+                    <App />
+                </StrictMode>
+            );
         } else {
             root.render(<App />);
         }

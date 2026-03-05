@@ -7,7 +7,11 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override';
 import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
 import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import {
+    RegisteredFileSystemProvider,
+    RegisteredMemoryFile,
+    registerFileSystemOverlay
+} from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
@@ -22,7 +26,12 @@ import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-servi
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
 import { createUrl } from 'monaco-languageclient/common';
-import { createDebugLaunchConfigFile, provideDebuggerExtensionConfig, type ConfigParams, type FileDefinition } from 'monaco-languageclient/debugger';
+import {
+    createDebugLaunchConfigFile,
+    provideDebuggerExtensionConfig,
+    type ConfigParams,
+    type FileDefinition
+} from 'monaco-languageclient/debugger';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
@@ -81,7 +90,7 @@ export type PythonAppConfig = {
     vscodeApiConfig: MonacoVscodeApiConfig;
     editorAppConfig: EditorAppConfig;
     configParams: ConfigParams;
-}
+};
 
 export const createPythonAppConfig = (): PythonAppConfig => {
     const configParams = createDefaultConfigParams('/home/mlc', document.body);
@@ -192,7 +201,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
                             });
                         }, 250);
                     },
-                    reportStatus: true,
+                    reportStatus: true
                 }
             },
             messageTransports: { reader, writer }
@@ -203,7 +212,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
                 index: 0,
                 name: configParams.workspaceRoot,
                 uri: vscode.Uri.parse(configParams.workspaceRoot)
-            },
+            }
         }
     };
 

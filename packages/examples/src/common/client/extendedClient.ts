@@ -3,7 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import {
+    RegisteredFileSystemProvider,
+    RegisteredMemoryFile,
+    registerFileSystemOverlay
+} from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import * as vscode from 'vscode';
 // this is required syntax highlighting
@@ -29,7 +33,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
         },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
+            ...getKeybindingsServiceOverride()
         },
         userConfiguration: {
             json: JSON.stringify({

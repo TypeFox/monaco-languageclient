@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
-  },
-  "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
+  "scripts": {
+    "verify": "npm install && npm run build && npm run start",
+    "verify:ci": "npm install && npm run build",
+    "clean": "shx rm -fr dist *.tsbuildinfo",
+    "build:msg": "echo Building client-webpack example:",
+    "build": "npm run build:msg && npm run clean && webpack",
+    "start": "http-server ./ --port 8082"
   },
   "dependencies": {
     "monaco-languageclient-examples": "^2026.2.1"
@@ -23,12 +23,12 @@
     "ts-loader": "~9.5.4",
     "webpack-cli": "~6.0.1"
   },
-  "scripts": {
-    "verify": "npm install && npm run build && npm run start",
-    "verify:ci": "npm install && npm run build",
-    "clean": "shx rm -fr dist *.tsbuildinfo",
-    "build:msg": "echo Building client-webpack example:",
-    "build": "npm run build:msg && npm run clean && webpack",
-    "start": "http-server ./ --port 8082"
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "24.13.0",
+    "npm": "11.6.2"
   }
 }

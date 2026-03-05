@@ -4,7 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { type Module, inject } from 'langium';
-import { type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices, createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
+import {
+    type DefaultSharedModuleContext,
+    type LangiumServices,
+    type LangiumSharedServices,
+    type PartialLangiumServices,
+    createDefaultModule,
+    createDefaultSharedModule
+} from 'langium/lsp';
 import { StatemachineGeneratedSharedModule, StatemachineModelGeneratedModule } from './generated/module.js';
 import { StatemachineValidator, registerValidationChecks } from './statemachine-validator.js';
 
@@ -13,15 +20,15 @@ import { StatemachineValidator, registerValidationChecks } from './statemachine-
  */
 export type StatemachineAddedServices = {
     validation: {
-        StatemachineValidator: StatemachineValidator
-    }
-}
+        StatemachineValidator: StatemachineValidator;
+    };
+};
 
 /**
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type StatemachineServices = LangiumServices & StatemachineAddedServices
+export type StatemachineServices = LangiumServices & StatemachineAddedServices;
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
@@ -53,15 +60,8 @@ export async function createStatemachineServices(context: DefaultSharedModuleCon
     shared: LangiumSharedServices;
     statemachine: StatemachineServices;
 }> {
-    const shared = inject(
-        createDefaultSharedModule(context),
-        StatemachineGeneratedSharedModule
-    );
-    const statemachine = inject(
-        createDefaultModule({ shared }),
-        StatemachineModelGeneratedModule,
-        StatemachineModule
-    );
+    const shared = inject(createDefaultSharedModule(context), StatemachineGeneratedSharedModule);
+    const statemachine = inject(createDefaultModule({ shared }), StatemachineModelGeneratedModule, StatemachineModule);
     shared.ServiceRegistry.register(statemachine);
     registerValidationChecks(statemachine);
     if (context.connection === undefined) {

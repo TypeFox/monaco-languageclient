@@ -6,11 +6,10 @@
     "outDir": "lib",
     "declarationDir": "lib"
   },
-  "references": [{
-    "path": "../client/tsconfig.src.json"
-  }],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  "references": [
+    {
+      "path": "../client/tsconfig.src.json"
+    }
+  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

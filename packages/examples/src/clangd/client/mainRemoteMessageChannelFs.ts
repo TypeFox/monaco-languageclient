@@ -11,7 +11,6 @@ import { ComChannelEndpoint, RawPayload, WorkerMessage, type ComRouter } from 'w
  * Answer the file create request
  */
 export class FileHandlerMain implements ComRouter {
-
     private endpointFs?: ComChannelEndpoint;
     private fileSystemProvider: RegisteredFileSystemProvider;
     private readiness: () => void;
@@ -28,16 +27,19 @@ export class FileHandlerMain implements ComRouter {
     async fs_driver_init(message: WorkerMessage) {
         await this.endpointFs?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
-                overrideCmd: 'fs_driver_init_confirm',
+                overrideCmd: 'fs_driver_init_confirm'
             }),
             awaitAnswer: false
         });
 
         // send double confirmation
         await this.endpointFs?.sentMessage({
-            message: WorkerMessage.fromPayload(new RawPayload({
-                hello: 'worker',
-            }), 'fs_follower_init'),
+            message: WorkerMessage.fromPayload(
+                new RawPayload({
+                    hello: 'worker'
+                }),
+                'fs_follower_init'
+            ),
             awaitAnswer: true,
             expectedAnswer: 'fs_follower_init_confirm'
         });
@@ -64,7 +66,7 @@ export class FileHandlerMain implements ComRouter {
 
         await this.endpointFs?.sentAnswer({
             message: WorkerMessage.createFromExisting(message, {
-                overrideCmd: 'fs_driver_ready_confirm',
+                overrideCmd: 'fs_driver_ready_confirm'
             }),
             awaitAnswer: false
         });
@@ -72,7 +74,6 @@ export class FileHandlerMain implements ComRouter {
 }
 
 export class MainRemoteMessageChannelFs {
-
     constructor(fileSystemProvider: RegisteredFileSystemProvider, port: MessagePort, readiness: () => void) {
         const fileHandlerMain = new FileHandlerMain(fileSystemProvider, readiness);
         const endpointFs = new ComChannelEndpoint({

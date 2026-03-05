@@ -63,9 +63,6 @@ export class DAPSocket {
 
     public sendMessage(message: string) {
         console.log(`Client->DAP: ${message}`);
-        this.socket.write(
-            `Content-Length: ${Buffer.byteLength(message, 'utf8')}${TWO_CRLF}${message}`,
-            'utf8'
-        );
+        this.socket.write(`Content-Length: ${Buffer.byteLength(message, 'utf8')}${TWO_CRLF}${message}`, 'utf8');
     }
 }

@@ -4,10 +4,20 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { type ILogger } from '@codingame/monaco-vscode-log-service-override';
-import type { DirectoryListingRequest, DirectoryListingRequestResult, EndpointType, FileReadRequest, FileReadRequestResult, FileSystemEndpoint, FileUpdate, FileUpdateResult, StatsRequest, StatsRequestResult } from '../definitions.js';
+import type {
+    DirectoryListingRequest,
+    DirectoryListingRequestResult,
+    EndpointType,
+    FileReadRequest,
+    FileReadRequestResult,
+    FileSystemEndpoint,
+    FileUpdate,
+    FileUpdateResult,
+    StatsRequest,
+    StatsRequestResult
+} from '../definitions.js';
 
 export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
-
     private endpointType: EndpointType;
     private logger?: ILogger;
 
@@ -15,7 +25,7 @@ export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
         this.endpointType = endpointType;
     }
 
-    init(): void { }
+    init(): void {}
 
     getFileSystemInfo(): string {
         return 'This file system performs no operations.';
@@ -56,5 +66,4 @@ export class EmptyFileSystemEndpoint implements FileSystemEndpoint {
         this.logger?.info(`Listing files for directory: "${params.directoryUri}"`);
         return Promise.reject('No file listing possible.');
     }
-
 }

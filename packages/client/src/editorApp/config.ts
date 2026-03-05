@@ -60,6 +60,6 @@ export interface EditorAppConfig {
         theme?: {
             name: string;
             data: monaco.editor.IStandaloneThemeData;
-        }
-    }
+        };
+    };
 }

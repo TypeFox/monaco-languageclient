@@ -7,7 +7,7 @@
     "**/dist/**/*",
     "**/lib/**/*",
     "**/node_modules/**/*",
-    "**/production/**/*",
+    "**/production/**/*"
     // Exclude this file because `**` can be interpreted as Markdown bold/nesting and cause slow formatting (oxc issue #19929).
     // If formatted as list the problems are gone
     // "packages/examples/resources/clangd/clangd-include.files.md"
@@ -16,7 +16,7 @@
   "trailingComma": "none",
   "insertFinalNewline": true,
   "tabWidth": 4,
-  "printWidth": 160,
+  "printWidth": 140,
   "overrides": [
     {
       "files": ["*.json"],

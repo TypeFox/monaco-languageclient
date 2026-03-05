@@ -9,7 +9,6 @@ import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
-
     test('Start EditorApp with no services', async () => {
         const htmlContainer = createMonacoEditorDiv();
         const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'ViewsService');
@@ -22,5 +21,4 @@ describe('Test EditorApp', () => {
             await editorApp.start(htmlContainer);
         }).rejects.toThrowError('No EditorService configured. monaco-editor will not be started.');
     });
-
 });

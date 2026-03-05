@@ -3,7 +3,14 @@
  * DO NOT EDIT MANUALLY!
  ******************************************************************************/
 
-import type { LangiumSharedCoreServices, LangiumCoreServices, LangiumGeneratedCoreServices, LangiumGeneratedSharedCoreServices, LanguageMetaData, Module } from 'langium';
+import type {
+    LangiumSharedCoreServices,
+    LangiumCoreServices,
+    LangiumGeneratedCoreServices,
+    LangiumGeneratedSharedCoreServices,
+    LanguageMetaData,
+    Module
+} from 'langium';
 import { StatemachineAstReflection } from './ast.js';
 import { StatemachineModelGrammar } from './grammar.js';
 

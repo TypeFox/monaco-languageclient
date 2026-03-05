@@ -15,7 +15,11 @@ export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLe
     };
 };
 
-export const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, messageTransports?: MessageTransports): LanguageClientConfig => {
+export const createDefaultLcWorkerConfig = (
+    worker: Worker,
+    languageId: string,
+    messageTransports?: MessageTransports
+): LanguageClientConfig => {
     return {
         languageId,
         clientOptions: {

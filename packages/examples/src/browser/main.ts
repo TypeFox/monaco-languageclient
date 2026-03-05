@@ -39,7 +39,7 @@ export const runBrowserEditor = async () => {
         },
         logLevel: LogLevel.Debug,
         serviceOverrides: {
-            ...getKeybindingsServiceOverride(),
+            ...getKeybindingsServiceOverride()
         },
         userConfiguration: {
             json: JSON.stringify({
@@ -69,7 +69,12 @@ export const runBrowserEditor = async () => {
     });
 
     const createDocument = (vscodeDocument: vscode.TextDocument) => {
-        return TextDocument.create(vscodeDocument.uri.toString(), vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
+        return TextDocument.create(
+            vscodeDocument.uri.toString(),
+            vscodeDocument.languageId,
+            vscodeDocument.version,
+            vscodeDocument.getText()
+        );
     };
 
     const resolveSchema = (url: string): Promise<string> => {
@@ -97,7 +102,9 @@ export const runBrowserEditor = async () => {
         },
 
         async resolveCompletionItem(item, _token) {
-            return await jsonService.doResolve(codeConverter.asCompletionItem(item)).then(result => protocolConverter.asCompletionItem(result));
+            return await jsonService
+                .doResolve(codeConverter.asCompletionItem(item))
+                .then((result) => protocolConverter.asCompletionItem(result));
         }
     });
 
@@ -130,10 +137,13 @@ export const runBrowserEditor = async () => {
     const validate = () => {
         const document = createDocument(mainVscodeDocument!);
         cleanPendingValidation(document);
-        pendingValidationRequests.set(document.uri, window.setTimeout(() => {
-            pendingValidationRequests.delete(document.uri);
-            doValidate(document);
-        }));
+        pendingValidationRequests.set(
+            document.uri,
+            window.setTimeout(() => {
+                pendingValidationRequests.delete(document.uri);
+                doValidate(document);
+            })
+        );
     };
 
     const cleanPendingValidation = (document: TextDocument) => {

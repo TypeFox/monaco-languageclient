@@ -25,46 +25,25 @@ export const LangiumMonarchContent = {
         'terminal',
         'true',
         'type',
-        'with',
+        'with'
     ],
-    operators: [
-        '->',
-        ',',
-        ';',
-        ':',
-        '!',
-        '?',
-        '?=',
-        '.',
-        '..',
-        '@',
-        '*',
-        '&',
-        '+',
-        '+=',
-        '<',
-        '=',
-        '=>',
-        '>',
-        '|',
-    ],
-    symbols:
-        /->|,|;|:|!|\?|\?=|\.|\.\.|\(|\)|\[|\[\]|\]|\{|\}|@|\*|&|\+|\+=|<|=|=>|>|\|/,
+    operators: ['->', ',', ';', ':', '!', '?', '?=', '.', '..', '@', '*', '&', '+', '+=', '<', '=', '=>', '>', '|'],
+    symbols: /->|,|;|:|!|\?|\?=|\.|\.\.|\(|\)|\[|\[\]|\]|\{|\}|@|\*|&|\+|\+=|<|=|=>|>|\|/,
 
     tokenizer: {
         initial: [
             {
                 regex: /\/(?![*+?])(?:[^\r\n[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+\//,
-                action: { token: 'string' },
+                action: { token: 'string' }
             },
             {
                 regex: /\^?[_a-zA-Z][\w_]*/,
                 action: {
                     cases: {
                         '@keywords': { token: 'keyword' },
-                        '@default': { token: 'ID' },
-                    },
-                },
+                        '@default': { token: 'ID' }
+                    }
+                }
             },
             { regex: /"[^"]*"|'[^']*'/, action: { token: 'string' } },
             { include: '@whitespace' },
@@ -73,20 +52,20 @@ export const LangiumMonarchContent = {
                 action: {
                     cases: {
                         '@operators': { token: 'operator' },
-                        '@default': { token: '' },
-                    },
-                },
-            },
+                        '@default': { token: '' }
+                    }
+                }
+            }
         ],
         whitespace: [
             { regex: /\s+/, action: { token: 'white' } },
             { regex: /\/\*/, action: { token: 'comment', next: '@comment' } },
-            { regex: /\/\/[^\n\r]*/, action: { token: 'comment' } },
+            { regex: /\/\/[^\n\r]*/, action: { token: 'comment' } }
         ],
         comment: [
             { regex: /[^/*]+/, action: { token: 'comment' } },
             { regex: /\*\//, action: { token: 'comment', next: '@pop' } },
-            { regex: /[/*]/, action: { token: 'comment' } },
-        ],
-    },
+            { regex: /[/*]/, action: { token: 'comment' } }
+        ]
+    }
 };

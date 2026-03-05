@@ -1,13 +1,9 @@
- {
+{
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     // esModuleInterop=true sets allowSyntheticDefaultImports=true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -45,11 +41,7 @@
     "**/build/**/*.mts",
     "*.js",
     "*.ts",
-    "*.d.ts",
+    "*.d.ts"
   ],
-  "exclude": [
-    "dist/**/*",
-    "lib/**/*",
-    "node_modules/**/*"
-  ]
+  "exclude": ["dist/**/*", "lib/**/*", "node_modules/**/*"]
 }

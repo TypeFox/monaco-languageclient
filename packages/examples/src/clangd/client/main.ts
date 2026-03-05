@@ -3,7 +3,11 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override';
+import {
+    RegisteredFileSystemProvider,
+    RegisteredMemoryFile,
+    registerFileSystemOverlay
+} from '@codingame/monaco-vscode-files-service-override';
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-cpp-default-extension';

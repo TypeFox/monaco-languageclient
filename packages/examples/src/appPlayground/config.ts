@@ -6,7 +6,11 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import getEnvironmentServiceOverride from '@codingame/monaco-vscode-environment-service-override';
 import getExplorerServiceOverride from '@codingame/monaco-vscode-explorer-service-override';
-import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
+import {
+    InMemoryFileSystemProvider,
+    registerFileSystemOverlay,
+    type IFileWriteOptions
+} from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLifecycleServiceOverride from '@codingame/monaco-vscode-lifecycle-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
@@ -111,18 +115,20 @@ export const configure = async (htmlContainer?: HTMLElement): Promise<ConfigResu
                 'editor.experimental.asyncTokenization': true
             })
         },
-        extensions: [{
-            config: {
-                name: 'mlc-app-playground',
-                publisher: 'TypeFox',
-                version: '1.0.0',
-                engines: {
-                    vscode: '*'
+        extensions: [
+            {
+                config: {
+                    name: 'mlc-app-playground',
+                    publisher: 'TypeFox',
+                    version: '1.0.0',
+                    engines: {
+                        vscode: '*'
+                    }
                 }
             }
-        }],
+        ],
         advanced: {
-            enableExtHostWorker: true,
+            enableExtHostWorker: true
         },
         monacoWorkerFactory: configureDefaultWorkerFactory
     };

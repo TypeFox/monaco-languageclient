@@ -30,7 +30,7 @@ if (!statsWorkingDir.isDirectory()) {
 }
 
 const recursiveArg = process.argv[4] as string | undefined;
-const recursive = (recursiveArg === '--recursive');
+const recursive = recursiveArg === '--recursive';
 const pathsArg = recursive ? process.argv[5] : process.argv[4];
 
 if (pathsArg === '--paths') {

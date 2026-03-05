@@ -11,10 +11,14 @@ import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
-import { createDefaultLcUnreachableUrlConfig, createDefaultLcWorkerConfig, createMonacoEditorDiv, createUnreachableWorkerConfig } from '../support/helper.js';
+import {
+    createDefaultLcUnreachableUrlConfig,
+    createDefaultLcWorkerConfig,
+    createMonacoEditorDiv,
+    createUnreachableWorkerConfig
+} from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {
-
     beforeAll(async () => {
         const apiConfig: MonacoVscodeApiConfig = {
             $type: 'extended',
@@ -65,7 +69,7 @@ describe('Test LanguageClientWrapper', () => {
             await languageClientWrapper.start();
         } catch (_error) {
             // ignore
-        };
+        }
 
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
@@ -122,7 +126,7 @@ describe('Test LanguageClientWrapper', () => {
         } catch (_error) {
             // ignore
             console.error(_error);
-        };
+        }
         expect(languageClientWrapper.getWorker()).toBeTruthy();
 
         // dispose & verify
@@ -135,7 +139,7 @@ describe('Test LanguageClientWrapper', () => {
         } catch (_error) {
             // ignore
             console.error(_error);
-        };
+        }
         expect(languageClientWrapper.getWorker()).toBeTruthy();
     });
 
@@ -152,5 +156,4 @@ describe('Test LanguageClientWrapper', () => {
         expect(logLevel).toBe(LogLevel.Debug);
         expect(logLevel).toBe(2);
     });
-
 });

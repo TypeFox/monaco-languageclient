@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { playwright } from '@vitest/browser-playwright'
+import { playwright } from '@vitest/browser-playwright';
 import { mergeConfig } from 'vite';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
 import externalViteConfig from './vite.config.js';
@@ -29,11 +29,7 @@ export const vitestConfig = {
         coverage: {
             provider: 'v8',
             reporter: ['text', 'html'],
-            include: [
-                'packages/client',
-                'packages/vscode-ws-jsonrpc',
-                'packages/wrapper-react'
-            ],
+            include: ['packages/client', 'packages/vscode-ws-jsonrpc', 'packages/wrapper-react']
         },
         include: [
             // keep also an explicit list of tests to run, so they can be commented in case of problems
@@ -62,14 +58,10 @@ export const vitestConfig = {
             '**/client/test/**/*',
             '**/wrapper-react/test/**/*'
         ],
-        exclude: [
-            '**/support/**/*',
-            '**/__screenshots__/**/*',
-        ]
+        exclude: ['**/support/**/*', '**/__screenshots__/**/*']
     }
 };
 
 const definedVitestConfig = defineVitestConfig(vitestConfig);
 
 export default mergeConfig(definedVitestConfig, externalViteConfig);
-

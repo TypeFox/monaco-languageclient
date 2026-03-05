@@ -8,11 +8,7 @@ import { createWebSocketConnection } from './socket/connection.js';
 import type { IWebSocket } from './socket/socket.js';
 import { ConsoleLogger } from './logger.js';
 
-export function listen(options: {
-    webSocket: WebSocket;
-    logger?: Logger;
-    onConnection: (connection: MessageConnection) => void;
-}) {
+export function listen(options: { webSocket: WebSocket; logger?: Logger; onConnection: (connection: MessageConnection) => void }) {
     const { webSocket, onConnection } = options;
     const logger = options.logger ?? new ConsoleLogger();
     webSocket.onopen = () => {
@@ -24,11 +20,11 @@ export function listen(options: {
 
 export function toSocket(webSocket: WebSocket): IWebSocket {
     return {
-        send: content => webSocket.send(content),
-        onMessage: cb => {
-            webSocket.onmessage = event => cb(event.data);
+        send: (content) => webSocket.send(content),
+        onMessage: (cb) => {
+            webSocket.onmessage = (event) => cb(event.data);
         },
-        onError: cb => {
+        onError: (cb) => {
             // oxlint-disable-next-line @typescript-eslint/no-explicit-any
             webSocket.onerror = (event: any) => {
                 if (Object.hasOwn(event, 'message')) {
@@ -36,8 +32,8 @@ export function toSocket(webSocket: WebSocket): IWebSocket {
                 }
             };
         },
-        onClose: cb => {
-            webSocket.onclose = event => cb(event.code, event.reason);
+        onClose: (cb) => {
+            webSocket.onclose = (event) => cb(event.code, event.reason);
         },
         dispose: () => webSocket.close()
     };

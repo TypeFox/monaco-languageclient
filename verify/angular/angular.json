@@ -18,9 +18,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.json",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "assets": [
               {
                 "glob": "**/*",

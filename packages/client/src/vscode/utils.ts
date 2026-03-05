@@ -26,7 +26,10 @@ export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServ
     }
 };
 
-export const mergeServices = (overrideServices: monaco.editor.IEditorOverrideServices, services?: monaco.editor.IEditorOverrideServices) => {
+export const mergeServices = (
+    overrideServices: monaco.editor.IEditorOverrideServices,
+    services?: monaco.editor.IEditorOverrideServices
+) => {
     if (services !== undefined) {
         for (const [name, service] of Object.entries(services)) {
             overrideServices[name] = service;

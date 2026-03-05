@@ -1,29 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TypeScript Extension Host Worker</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TypeScript Extension Host Worker</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <body>
+        <div class="exampleHeadelineDiv">
+            <b class="exampleHeadeline">TypeScript Extension Host Worker</b> - [<a href="./index.html">Back to Index</a>]
+            <br />
+            <button type="button" id="button-start">Start</button>
+            <button type="button" id="button-swap-code">Swap Code</button>
+            <button type="button" id="button-diff">Show Diff</button>
+            <button type="button" id="button-dispose">Dispose</button>
+        </div>
 
-<body>
-    <div class="exampleHeadelineDiv">
-        <b class="exampleHeadeline">TypeScript Extension Host Worker</b> - [<a href="./index.html">Back to Index</a>]
-        <br>
-        <button type="button" id="button-start">Start</button>
-        <button type="button" id="button-swap-code">Swap Code</button>
-        <button type="button" id="button-diff">Show Diff</button>
-        <button type="button" id="button-dispose">Dispose</button>
-    </div>
+        <div id="monaco-editor-root" style="height: 80vh"></div>
+        <script type="module">
+            import { runTsWrapper } from './src/ts/clientTs.ts';
 
-    <div id="monaco-editor-root" style="height: 80vh;"></div>
-    <script type="module">
-        import { runTsWrapper } from './src/ts/clientTs.ts';
-
-        runTsWrapper();
-    </script>
-</body>
-
+            runTsWrapper();
+        </script>
+    </body>
 </html>

@@ -4,7 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { InMemoryFileSystemProvider, registerFileSystemOverlay, type IFileWriteOptions } from '@codingame/monaco-vscode-files-service-override';
+import {
+    InMemoryFileSystemProvider,
+    registerFileSystemOverlay,
+    type IFileWriteOptions
+} from '@codingame/monaco-vscode-files-service-override';
 import '@codingame/monaco-vscode-javascript-default-extension';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-typescript-basics-default-extension';
@@ -114,7 +118,7 @@ takesNumber(0);`;
                 },
                 original: {
                     text: currentOriginalCode,
-                    uri: currentOriginalCodeUri.path,
+                    uri: currentOriginalCodeUri.path
                 }
             },
             useDiffEditor: useDiffEditor
@@ -198,4 +202,3 @@ takesNumber(0);`;
         console.error(e);
     }
 };
-

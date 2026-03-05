@@ -8,7 +8,6 @@ import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { describe, expect, test } from 'vitest';
 
 describe('Logger', () => {
-
     test('Config: None', () => {
         const logger = new ConsoleLogger();
 
@@ -38,5 +37,4 @@ describe('Logger', () => {
 
         expect(logger.getLevel()).toBe(LogLevel.Debug);
     });
-
 });
