@@ -2,8 +2,8 @@ name: Build Production for GitHub Pages
 
 on:
   push:
-   branches:
-     - "ghp"
+    branches:
+      - 'ghp'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -17,38 +17,38 @@ jobs:
     timeout-minutes: 15
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-    - name: mise-en-place
-      uses: jdx/mise-action@v2
+      - name: mise-en-place
+        uses: jdx/mise-action@v2
 
-    - name: Install
-      shell: bash
-      run: |
-        npm ci
+      - name: Install
+        shell: bash
+        run: |
+          npm ci
 
-    - name: Versions Report
-      shell: bash
-      run: |
-        npm run report:versions
+      - name: Versions Report
+        shell: bash
+        run: |
+          npm run report:versions
 
-    - name: Build
-      run: |
-        npm run build
+      - name: Build
+        run: |
+          npm run build
 
-    - name: Build Production
-      run: |
-        npm run production:build
+      - name: Build Production
+        run: |
+          npm run production:build
 
-    - name: Setup Pages
-      id: pages
-      uses: actions/configure-pages@v5
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: ./packages/examples/production/
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./packages/examples/production/
 
   ghp-deploy:
     needs: ghp-build

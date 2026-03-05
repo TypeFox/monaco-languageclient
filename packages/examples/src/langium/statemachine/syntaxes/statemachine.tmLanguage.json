@@ -1,9 +1,7 @@
 {
   "name": "statemachine",
   "scopeName": "source.statemachine",
-  "fileTypes": [
-    ".statemachine"
-  ],
+  "fileTypes": [".statemachine"],
   "patterns": [
     {
       "include": "#comments"

@@ -17,55 +17,53 @@ import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../su
 import { createModelReference } from '@codingame/monaco-vscode-api/monaco';
 
 describe.sequential('Test WorkerLoaders', () => {
+  let editor: monaco.editor.IStandaloneCodeEditor;
+  const htmlContainer = createMonacoEditorDiv();
 
-    let editor: monaco.editor.IStandaloneCodeEditor;
-    const htmlContainer = createMonacoEditorDiv();
+  beforeAll(async () => {
+    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
+    apiConfig.monacoWorkerFactory = configureClassicWorkerFactory;
+    const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
+    await apiWrapper.start();
 
-    beforeAll(async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
-        apiConfig.monacoWorkerFactory = configureClassicWorkerFactory;
-        const apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
-        await apiWrapper.start();
-
-        editor = monaco.editor.create(htmlContainer, {
-            value: 'const text = "Hello World!";',
-            language: 'javascript'
-        });
+    editor = monaco.editor.create(htmlContainer, {
+      value: 'const text = "Hello World!";',
+      language: 'javascript'
     });
+  });
 
-    test('Test default worker application', async () => {
-        // default, expect editor and ts worker to be loaded
-        createWorkerPromises(['editorWorker', 'tsWorker']);
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
-    });
+  test('Test default worker application', async () => {
+    // default, expect editor and ts worker to be loaded
+    createWorkerPromises(['editorWorker', 'tsWorker']);
+    expect(await awaitWorkerPromises()).toStrictEqual([undefined, undefined]);
+  });
 
-    test('Test TS worker application', async () => {
-        // ts worker, expect no worker to be loaded
-        createWorkerPromises([]);
-        const modelRefTs = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.ts`), '');
-        editor.setModel(modelRefTs.object.textEditorModel);
-        expect(await awaitWorkerPromises()).toStrictEqual([]);
-    });
+  test('Test TS worker application', async () => {
+    // ts worker, expect no worker to be loaded
+    createWorkerPromises([]);
+    const modelRefTs = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.ts`), '');
+    editor.setModel(modelRefTs.object.textEditorModel);
+    expect(await awaitWorkerPromises()).toStrictEqual([]);
+  });
 
-    test('Test CSS worker application', async () => {
-        createWorkerPromises(['cssWorker']);
-        const modelRefCss = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.css`), '');
-        editor.setModel(modelRefCss.object.textEditorModel);
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
-    });
+  test('Test CSS worker application', async () => {
+    createWorkerPromises(['cssWorker']);
+    const modelRefCss = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.css`), '');
+    editor.setModel(modelRefCss.object.textEditorModel);
+    expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+  });
 
-    test('Test JSON worker application', async () => {
-        createWorkerPromises(['jsonWorker']);
-        const modelRefJson = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.json`), '');
-        editor.setModel(modelRefJson.object.textEditorModel);
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
-    });
+  test('Test JSON worker application', async () => {
+    createWorkerPromises(['jsonWorker']);
+    const modelRefJson = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.json`), '');
+    editor.setModel(modelRefJson.object.textEditorModel);
+    expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+  });
 
-    test('Test HTML worker application', async () => {
-        createWorkerPromises(['htmlWorker']);
-        const modelRefHtml = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.html`), '');
-        editor.setModel(modelRefHtml.object.textEditorModel);
-        expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
-    });
-
+  test('Test HTML worker application', async () => {
+    createWorkerPromises(['htmlWorker']);
+    const modelRefHtml = await createModelReference(monaco.Uri.parse(`/workspace/${expect.getState().testPath}.html`), '');
+    editor.setModel(modelRefHtml.object.textEditorModel);
+    expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
+  });
 });

@@ -15,7 +15,8 @@ services:
     working_dir: /workspace
     volumes:
       - ../..:/workspace
-    command: [ "/bin/sh", "-c", "addlicense -v -check -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*"]
+    command:
+      ['/bin/sh', '-c', 'addlicense -v -check -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*']
 
   addlicense-add:
     depends_on:
@@ -25,11 +26,11 @@ services:
     working_dir: /workspace
     volumes:
       - ../..:/workspace
-    command: [ "/bin/sh", "-c", "addlicense -v -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*"]
+    command: ['/bin/sh', '-c', 'addlicense -v -f ./LICENSE.header packages/**/*.ts* packages/**/*.js* verify/**/*.ts* verify/**/*.js*']
 
   addlicense-help:
     image: addlicense-builder
     depends_on:
       - addlicense-builder
     container_name: addlicense-help
-    command: [ "/bin/sh", "-c", "addlicense -h" ]
+    command: ['/bin/sh', '-c', 'addlicense -h']

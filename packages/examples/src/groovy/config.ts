@@ -6,9 +6,9 @@
 import type { ExampleLsConfig } from '../common/client/extendedClient.js';
 
 export const groovyConfig: ExampleLsConfig = {
-    port: 30002,
-    path: '/groovy',
-    basePath: '/home/gradle/mlc/packages/examples/resources/groovy',
-    languageId: 'groovy',
-    useExternalWebSocket: false
+  port: 30002,
+  path: '/groovy',
+  basePath: '/home/gradle/mlc/packages/examples/resources/groovy',
+  languageId: 'groovy',
+  useExternalWebSocket: false
 };

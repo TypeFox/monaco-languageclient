@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "ignorePatterns": [
+    ".chrome/**/*",
+    "**/bundle/**/*",
+    "**/dist/**/*",
+    "**/lib/**/*",
+    "**/node_modules/**/*",
+    "**/production/**/*"
+    // Exclude this file because `**` can be interpreted as Markdown bold/nesting and cause slow formatting (oxc issue #19929).
+    // If formatted as list the problems are gone
+    // "packages/examples/resources/clangd/clangd-include.files.md"
+  ],
+  "endOfLine": "lf",
+  "trailingComma": "none",
+  "insertFinalNewline": true,
+  "sortPackageJson": true,
+  "tabWidth": 2,
+  "printWidth": 140,
+  "overrides": [
+    {
+      "files": ["*.json"],
+      "options": {
+        "printWidth": 80
+      }
+    }
+  ]
+}

@@ -14,28 +14,28 @@ export let messageReader: BrowserMessageReader | undefined;
 export let messageWriter: BrowserMessageWriter | undefined;
 
 export const start = (port: MessagePort | DedicatedWorkerGlobalScope, name: string) => {
-    console.log(`Starting ${name}...`);
-    /* browser specific setup code */
-    messageReader = new BrowserMessageReader(port);
-    messageWriter = new BrowserMessageWriter(port);
+  console.log(`Starting ${name}...`);
+  /* browser specific setup code */
+  messageReader = new BrowserMessageReader(port);
+  messageWriter = new BrowserMessageWriter(port);
 
-    messageReader.listen((message) => {
-        console.log('Received message from main thread:', message);
-    });
+  messageReader.listen((message) => {
+    console.log('Received message from main thread:', message);
+  });
 
-    if (!crossOriginIsolated) {
-        console.error('Cross-origin isolation required');
-    }
+  if (!crossOriginIsolated) {
+    console.error('Cross-origin isolation required');
+  }
 
-    const connection = createConnection(messageReader, messageWriter);
-    // Inject the shared services and language-specific services
-    const { shared } = createLangiumGrammarServices({ connection, ...EmptyFileSystem });
+  const connection = createConnection(messageReader, messageWriter);
+  // Inject the shared services and language-specific services
+  const { shared } = createLangiumGrammarServices({ connection, ...EmptyFileSystem });
 
-    console.log('Starting langium-dsl server...');
+  console.log('Starting langium-dsl server...');
 
-    // Start the language server with the shared services
-    startLanguageServer(shared);
-}
+  // Start the language server with the shared services
+  startLanguageServer(shared);
+};
 
 // self.onmessage = async (event: MessageEvent) => {
 //     const data = event.data;

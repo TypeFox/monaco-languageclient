@@ -10,16 +10,14 @@ import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
 describe('MonacoVscodeApiWrapper Tests: Different config', () => {
+  test('Start MonacoVscodeApiWrapper with EditorService but no htmlContainer', async () => {
+    const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'EditorService');
 
-    test('Start MonacoVscodeApiWrapper with EditorService but no htmlContainer', async () => {
-        const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'EditorService');
+    const apiWrapper = new MonacoVscodeApiWrapper(apiConfig!);
+    const awaited = await apiWrapper.start();
+    expect(awaited).toBeUndefined();
 
-        const apiWrapper = new MonacoVscodeApiWrapper(apiConfig!);
-        const awaited = await apiWrapper.start();
-        expect(awaited).toBeUndefined();
-
-        // oxlint-disable-next-line dot-notation
-        expect((apiWrapper['logger'] as ILogger).getLevel()).toBe(LogLevel.Off);
-    });
-
+    // oxlint-disable-next-line dot-notation
+    expect((apiWrapper['logger'] as ILogger).getLevel()).toBe(LogLevel.Off);
+  });
 });

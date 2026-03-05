@@ -10,42 +10,42 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const config = {
-    entry: resolve(__dirname, 'src', 'client', 'main.ts'),
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
-            {
-                test: /\.ts?$/,
-                use: ['ts-loader']
-            }
-        ]
-    },
-    experiments: {
-        outputModule: true
-    },
-    output: {
-        filename: 'main.js',
-        path: resolve(__dirname, 'dist', 'client'),
-        module: true,
-        workerChunkLoading: 'import',
-        environment: {
-            dynamicImportInWorker: true
-        }
-    },
-    target: 'web',
-    resolve: {
-        extensions: ['.ts', '.js', '.json', '.ttf'],
-        fallback: {
-            fs: false,
-            module: false,
-            vm: false
-        }
-    },
-    mode: 'development',
-    devtool: 'source-map'
+  entry: resolve(__dirname, 'src', 'client', 'main.ts'),
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.ts?$/,
+        use: ['ts-loader']
+      }
+    ]
+  },
+  experiments: {
+    outputModule: true
+  },
+  output: {
+    filename: 'main.js',
+    path: resolve(__dirname, 'dist', 'client'),
+    module: true,
+    workerChunkLoading: 'import',
+    environment: {
+      dynamicImportInWorker: true
+    }
+  },
+  target: 'web',
+  resolve: {
+    extensions: ['.ts', '.js', '.json', '.ttf'],
+    fallback: {
+      fs: false,
+      module: false,
+      vm: false
+    }
+  },
+  mode: 'development',
+  devtool: 'source-map'
 };
 
 export default config;

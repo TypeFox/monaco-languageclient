@@ -10,5 +10,5 @@ import { runExtendedClient } from '../../common/client/extendedClient.js';
 import { eclipseJdtLsConfig } from '../config.js';
 
 export const runEclipseJdtLsClient = async () => {
-    await runExtendedClient(eclipseJdtLsConfig, helloJavaCode);
+  await runExtendedClient(eclipseJdtLsConfig, helloJavaCode);
 };

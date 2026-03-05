@@ -4,7 +4,14 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { type Module, inject } from 'langium';
-import { type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices, createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
+import {
+  type DefaultSharedModuleContext,
+  type LangiumServices,
+  type LangiumSharedServices,
+  type PartialLangiumServices,
+  createDefaultModule,
+  createDefaultSharedModule
+} from 'langium/lsp';
 import { StatemachineGeneratedSharedModule, StatemachineModelGeneratedModule } from './generated/module.js';
 import { StatemachineValidator, registerValidationChecks } from './statemachine-validator.js';
 
@@ -12,16 +19,16 @@ import { StatemachineValidator, registerValidationChecks } from './statemachine-
  * Declaration of custom services - add your own service classes here.
  */
 export type StatemachineAddedServices = {
-    validation: {
-        StatemachineValidator: StatemachineValidator
-    }
-}
+  validation: {
+    StatemachineValidator: StatemachineValidator;
+  };
+};
 
 /**
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type StatemachineServices = LangiumServices & StatemachineAddedServices
+export type StatemachineServices = LangiumServices & StatemachineAddedServices;
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
@@ -29,9 +36,9 @@ export type StatemachineServices = LangiumServices & StatemachineAddedServices
  * selected services, while the custom services must be fully specified.
  */
 export const StatemachineModule: Module<StatemachineServices, PartialLangiumServices & StatemachineAddedServices> = {
-    validation: {
-        StatemachineValidator: () => new StatemachineValidator()
-    }
+  validation: {
+    StatemachineValidator: () => new StatemachineValidator()
+  }
 };
 
 /**
@@ -50,24 +57,17 @@ export const StatemachineModule: Module<StatemachineServices, PartialLangiumServ
  * @returns An object wrapping the shared services and the language-specific services
  */
 export async function createStatemachineServices(context: DefaultSharedModuleContext): Promise<{
-    shared: LangiumSharedServices;
-    statemachine: StatemachineServices;
+  shared: LangiumSharedServices;
+  statemachine: StatemachineServices;
 }> {
-    const shared = inject(
-        createDefaultSharedModule(context),
-        StatemachineGeneratedSharedModule
-    );
-    const statemachine = inject(
-        createDefaultModule({ shared }),
-        StatemachineModelGeneratedModule,
-        StatemachineModule
-    );
-    shared.ServiceRegistry.register(statemachine);
-    registerValidationChecks(statemachine);
-    if (context.connection === undefined) {
-        // We don't run inside a language server
-        // Therefore, initialize the configuration provider instantly
-        await shared.workspace.ConfigurationProvider.initialized({});
-    }
-    return { shared, statemachine };
+  const shared = inject(createDefaultSharedModule(context), StatemachineGeneratedSharedModule);
+  const statemachine = inject(createDefaultModule({ shared }), StatemachineModelGeneratedModule, StatemachineModule);
+  shared.ServiceRegistry.register(statemachine);
+  registerValidationChecks(statemachine);
+  if (context.connection === undefined) {
+    // We don't run inside a language server
+    // Therefore, initialize the configuration provider instantly
+    await shared.workspace.ConfigurationProvider.initialized({});
+  }
+  return { shared, statemachine };
 }

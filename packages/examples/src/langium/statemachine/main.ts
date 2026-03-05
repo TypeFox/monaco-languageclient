@@ -19,126 +19,129 @@ let editorApp2: EditorApp | undefined;
 let lcWrapper: LanguageClientWrapper;
 
 const startEditor = async () => {
-    disableElement('button-start', true);
-    disableElement('button-dispose', false);
+  disableElement('button-start', true);
+  disableElement('button-dispose', false);
 
-    if (editorApp?.isStarted() === true || editorApp2?.isStarted() === true) {
-        alert('Editor was already started!');
-        return;
+  if (editorApp?.isStarted() === true || editorApp2?.isStarted() === true) {
+    alert('Editor was already started!');
+    return;
+  }
+
+  // init worker with port for client and worker
+  const stateMachineWorkerPort = loadStatemachinWorkerPort();
+  // use callback to receive message back from worker independent of the message channel the LSP is using
+  stateMachineWorkerPort.onmessage = (event) => {
+    console.log('Received message from worker: ' + event.data);
+  };
+  const channel = new MessageChannel();
+  stateMachineWorkerPort.postMessage(
+    {
+      port: channel.port2
+    },
+    [channel.port2]
+  );
+
+  const reader = new BrowserMessageReader(channel.port1);
+  const writer = new BrowserMessageWriter(channel.port1);
+  reader.listen((message) => {
+    console.log('Received message from worker:', message);
+  });
+
+  const htmlContainer = document.getElementById('monaco-editor-root')!;
+  // the configuration does not contain any text content
+  const appConfig = createLangiumGlobalConfig({
+    languageServerId: 'first',
+    codeContent: {
+      text,
+      uri: '/workspace/example.statemachine'
+    },
+    worker: stateMachineWorkerPort,
+    messagePort: channel.port1,
+    messageTransports: { reader, writer },
+    htmlContainer
+  });
+  editorApp = new EditorApp(appConfig.editorAppConfig);
+
+  // perform global monaco-vscode-api init
+  const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+  await apiWrapper.start();
+
+  // init language client
+  lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+  await lcWrapper.start();
+
+  // run editorApp
+  await editorApp.start(htmlContainer);
+
+  await editorApp.updateCodeResources({
+    modified: {
+      text,
+      uri: '/workspace/statemachine-mod.statemachine'
     }
+  });
 
-    // init worker with port for client and worker
-    const stateMachineWorkerPort = loadStatemachinWorkerPort();
-    // use callback to receive message back from worker independent of the message channel the LSP is using
-    stateMachineWorkerPort.onmessage = (event) => {
-        console.log('Received message from worker: ' + event.data);
-    };
-    const channel = new MessageChannel();
-    stateMachineWorkerPort.postMessage({
-        port: channel.port2
-    }, [channel.port2]);
+  // start the second editorApp without any languageclient config
+  // => they share the language server and both text contents have different uris
+  const appConfig2 = appConfig;
+  appConfig2.editorAppConfig.codeResources!.modified = {
+    text: textMod,
+    uri: '/workspace/example-mod.statemachine'
+  };
+  editorApp2 = new EditorApp(appConfig2.editorAppConfig);
 
-    const reader = new BrowserMessageReader(channel.port1);
-    const writer = new BrowserMessageWriter(channel.port1);
-    reader.listen((message) => {
-        console.log('Received message from worker:', message);
-    });
+  // run a second editorApp with another dom element
+  await editorApp2.start(document.getElementById('monaco-editor-root2')!);
 
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
-    // the configuration does not contain any text content
-    const appConfig = createLangiumGlobalConfig({
-        languageServerId: 'first',
-        codeContent: {
-            text,
-            uri: '/workspace/example.statemachine'
-        },
-        worker: stateMachineWorkerPort,
-        messagePort: channel.port1,
-        messageTransports: { reader, writer },
-        htmlContainer
-    });
-    editorApp = new EditorApp(appConfig.editorAppConfig);
+  vscode.commands.getCommands().then((x) => {
+    console.log('Currently registered # of vscode commands: ' + x.length);
+  });
 
-    // perform global monaco-vscode-api init
-    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.start();
+  await delayExecution(1000);
 
-    // init language client
-    lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
-    await lcWrapper.start();
-
-    // run editorApp
-    await editorApp.start(htmlContainer);
-
-    await editorApp.updateCodeResources({
-        modified: {
-            text,
-            uri: '/workspace/statemachine-mod.statemachine'
-        }
-    });
-
-    // start the second editorApp without any languageclient config
-    // => they share the language server and both text contents have different uris
-    const appConfig2 = appConfig;
-    appConfig2.editorAppConfig.codeResources!.modified = {
-        text: textMod,
-        uri: '/workspace/example-mod.statemachine'
-    };
-    editorApp2 = new EditorApp(appConfig2.editorAppConfig);
-
-    // run a second editorApp with another dom element
-    await editorApp2.start(document.getElementById('monaco-editor-root2')!);
-
-    vscode.commands.getCommands().then((x) => {
-        console.log('Currently registered # of vscode commands: ' + x.length);
-    });
-
-    await delayExecution(1000);
-
-    await editorApp.updateCodeResources({
-        modified: {
-            text: `// modified file\n\n${text}`,
-            uri: '/workspace/statemachine-mod2.statemachine'
-        }
-    });
+  await editorApp.updateCodeResources({
+    modified: {
+      text: `// modified file\n\n${text}`,
+      uri: '/workspace/statemachine-mod2.statemachine'
+    }
+  });
 };
 
 const disposeEditor = async () => {
-    disableElement('button-start', false);
-    disableElement('button-dispose', true);
+  disableElement('button-start', false);
+  disableElement('button-dispose', true);
 
-    await lcWrapper.dispose();
+  await lcWrapper.dispose();
 
-    editorApp?.reportStatus();
-    await editorApp?.dispose();
-    console.log(editorApp?.reportStatus().join('\n'));
+  editorApp?.reportStatus();
+  await editorApp?.dispose();
+  console.log(editorApp?.reportStatus().join('\n'));
 
-    editorApp2?.reportStatus();
-    await editorApp2?.dispose();
-    console.log(editorApp2?.reportStatus().join('\n'));
+  editorApp2?.reportStatus();
+  await editorApp2?.dispose();
+  console.log(editorApp2?.reportStatus().join('\n'));
 };
 
 export const runStatemachine = async () => {
-    try {
-        document.querySelector('#button-start')?.addEventListener('click', startEditor);
-        document.querySelector('#button-dispose')?.addEventListener('click', disposeEditor);
-    } catch (e) {
-        console.error(e);
-    }
+  try {
+    document.querySelector('#button-start')?.addEventListener('click', startEditor);
+    document.querySelector('#button-dispose')?.addEventListener('click', disposeEditor);
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 // Language Server preparation
 
 export const loadStatemachineWorkerRegular = () => {
-    return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
-        type: 'module',
-        name: 'Statemachine Server Regular',
-    });
+  return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
+    type: 'module',
+    name: 'Statemachine Server Regular'
+  });
 };
 
 export const loadStatemachinWorkerPort = () => {
-    return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
-        type: 'module',
-        name: 'Statemachine Server Port',
-    });
+  return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
+    type: 'module',
+    name: 'Statemachine Server Port'
+  });
 };

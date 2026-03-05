@@ -8,15 +8,13 @@ import { describe, expect, test } from 'vitest';
 import { createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test EditorApp', () => {
+  const htmlContainer = createMonacoEditorDiv();
 
-    const htmlContainer = createMonacoEditorDiv();
-
-    test('Start EditorApp with no services', async () => {
-        const editorAppConfig = createEditorAppConfig({});
-        const editorApp = new EditorApp(editorAppConfig);
-        await expect(async () => {
-            await editorApp.start(htmlContainer);
-        }).rejects.toThrowError('monaco-vscode-api was not initialized. Aborting.');
-    });
-
+  test('Start EditorApp with no services', async () => {
+    const editorAppConfig = createEditorAppConfig({});
+    const editorApp = new EditorApp(editorAppConfig);
+    await expect(async () => {
+      await editorApp.start(htmlContainer);
+    }).rejects.toThrowError('monaco-vscode-api was not initialized. Aborting.');
+  });
 });

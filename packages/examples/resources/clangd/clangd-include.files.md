@@ -2,6 +2,7 @@
 
 ## Files
 
+```shell
 /usr/include/wasm32-wasi-threads/__errno.h
 /usr/include/wasm32-wasi-threads/__errno_values.h
 /usr/include/wasm32-wasi-threads/__fd_set.h
@@ -6394,3 +6395,4 @@
 /usr/include/wasm32-wasip2/netpacket
 /usr/include/wasm32-wasip2/sys
 /usr/include/wasm32-wasip2/wasi
+```

@@ -18,44 +18,44 @@ export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkbenchServ
 // export type HtmlContainerConfig = HTMLElement;
 
 export interface MonacoEnvironmentEnhanced extends monaco.Environment {
-    vscodeApiInitialising?: boolean;
-    vscodeApiInitialised?: boolean;
-    vscodeApiGlobalInitAwait?: Promise<void>;
-    vscodeApiGlobalInitResolve?: ((value: void | PromiseLike<void>) => void);
-    viewServiceType?: ViewsConfigTypes;
+  vscodeApiInitialising?: boolean;
+  vscodeApiInitialised?: boolean;
+  vscodeApiGlobalInitAwait?: Promise<void>;
+  vscodeApiGlobalInitResolve?: (value: void | PromiseLike<void>) => void;
+  viewServiceType?: ViewsConfigTypes;
 }
 
 export interface UserConfiguration {
-    json?: string;
+  json?: string;
 }
 
 export interface ViewsConfig {
-    $type: ViewsConfigTypes;
-    htmlContainer?: HTMLElement;
-    openEditorFunc?: OpenEditor;
-    htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
-    viewsInitFunc?: () => Promise<void>;
+  $type: ViewsConfigTypes;
+  htmlContainer?: HTMLElement;
+  openEditorFunc?: OpenEditor;
+  htmlAugmentationInstructions?: (htmlContainer: HTMLElement | null | undefined) => void;
+  viewsInitFunc?: () => Promise<void>;
 }
 
 export interface ExtensionConfig {
-    config: IExtensionManifest;
-    filesOrContents?: Map<string, string | URL>;
+  config: IExtensionManifest;
+  filesOrContents?: Map<string, string | URL>;
 }
 
 export interface MonacoVscodeApiConfig {
-    $type: OverallConfigType;
-    viewsConfig: ViewsConfig,
-    serviceOverrides?: monaco.editor.IEditorOverrideServices;
-    logLevel?: LogLevel | number;
-    workspaceConfig?: IWorkbenchConstructionOptions;
-    userConfiguration?: UserConfiguration;
-    envOptions?: EnvironmentOverride;
-    extensions?: ExtensionConfig[];
-    monacoWorkerFactory?: (logger?: ILogger) => void;
-    advanced?: {
-        loadExtensionServices?: boolean;
-        enableExtHostWorker?: boolean;
-        loadThemes?: boolean;
-        enforceSemanticHighlighting?: boolean;
-    };
+  $type: OverallConfigType;
+  viewsConfig: ViewsConfig;
+  serviceOverrides?: monaco.editor.IEditorOverrideServices;
+  logLevel?: LogLevel | number;
+  workspaceConfig?: IWorkbenchConstructionOptions;
+  userConfiguration?: UserConfiguration;
+  envOptions?: EnvironmentOverride;
+  extensions?: ExtensionConfig[];
+  monacoWorkerFactory?: (logger?: ILogger) => void;
+  advanced?: {
+    loadExtensionServices?: boolean;
+    enableExtHostWorker?: boolean;
+    loadThemes?: boolean;
+    enforceSemanticHighlighting?: boolean;
+  };
 }

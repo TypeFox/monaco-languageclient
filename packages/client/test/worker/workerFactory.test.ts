@@ -10,34 +10,31 @@ import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
 import { describe, expect, test } from 'vitest';
 
 describe('WorkerFactory Tests', () => {
+  test('useWorkerFactory: Nothing', () => {
+    useWorkerFactory({});
 
-    test('useWorkerFactory: Nothing', () => {
+    const worker = getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
+    expect(worker).toBeUndefined();
+    const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'TextEditorWorker');
+    expect(workerUrl).toBeUndefined();
+  });
 
-        useWorkerFactory({});
+  test('useWorkerFactory: TextEditorWorker', async () => {
+    const logger = new ConsoleLogger(LogLevel.Info);
 
-        const worker = getEnhancedMonacoEnvironment().getWorker?.('test', 'TextEditorWorker');
-        expect(worker).toBeUndefined();
-        const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'TextEditorWorker');
-        expect(workerUrl).toBeUndefined();
+    useWorkerFactory({
+      workerLoaders: {
+        editorWorkerService: () =>
+          new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), {
+            type: 'module'
+          })
+      },
+      logger
     });
 
-    test('useWorkerFactory: TextEditorWorker', async () => {
-        const logger = new ConsoleLogger(LogLevel.Info);
-
-        useWorkerFactory({
-            workerLoaders: {
-                editorWorkerService: () => new Worker(
-                    new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url),
-                    { type: 'module' }
-                )
-            },
-            logger
-        });
-
-        const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'editorWorkerService');
-        expect(workerUrl).contains('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js?worker_file&type=module');
-        const workerOptions = getEnhancedMonacoEnvironment().getWorkerOptions?.('test', 'editorWorkerService');
-        expect(workerOptions).toEqual({ type: 'module' });
-    });
-
+    const workerUrl = getEnhancedMonacoEnvironment().getWorkerUrl?.('test', 'editorWorkerService');
+    expect(workerUrl).contains('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js?worker_file&type=module');
+    const workerOptions = getEnhancedMonacoEnvironment().getWorkerOptions?.('test', 'editorWorkerService');
+    expect(workerOptions).toEqual({ type: 'module' });
+  });
 });

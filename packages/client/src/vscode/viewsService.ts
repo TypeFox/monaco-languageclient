@@ -4,44 +4,51 @@
  * ------------------------------------------------------------------------------------------ */
 
 export const defaultViewsInit = async () => {
-    const { Parts, Position, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, onDidChangeSideBarPosition } = await import('@codingame/monaco-vscode-views-service-override');
+  const { Parts, Position, onPartVisibilityChange, isPartVisibile, attachPart, getSideBarPosition, onDidChangeSideBarPosition } =
+    await import('@codingame/monaco-vscode-views-service-override');
 
-    for (const config of [
-        { part: Parts.TITLEBAR_PART, element: '#titleBar' },
-        { part: Parts.BANNER_PART, element: '#banner' },
-        {
-            part: Parts.SIDEBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#sidebar' : '#sidebar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        {
-            part: Parts.ACTIVITYBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#activityBar' : '#activityBar-right';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        {
-            part: Parts.AUXILIARYBAR_PART, get element() {
-                return getSideBarPosition() === Position.LEFT ? '#auxiliaryBar' : '#auxiliaryBar-left';
-            }, onDidElementChange: onDidChangeSideBarPosition
-        },
-        { part: Parts.EDITOR_PART, element: '#editors' },
-        { part: Parts.PANEL_PART, element: '#panel' },
-        { part: Parts.STATUSBAR_PART, element: '#statusBar' }
-    ]) {
-        attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
+  for (const config of [
+    { part: Parts.TITLEBAR_PART, element: '#titleBar' },
+    { part: Parts.BANNER_PART, element: '#banner' },
+    {
+      part: Parts.SIDEBAR_PART,
+      get element() {
+        return getSideBarPosition() === Position.LEFT ? '#sidebar' : '#sidebar-right';
+      },
+      onDidElementChange: onDidChangeSideBarPosition
+    },
+    {
+      part: Parts.ACTIVITYBAR_PART,
+      get element() {
+        return getSideBarPosition() === Position.LEFT ? '#activityBar' : '#activityBar-right';
+      },
+      onDidElementChange: onDidChangeSideBarPosition
+    },
+    {
+      part: Parts.AUXILIARYBAR_PART,
+      get element() {
+        return getSideBarPosition() === Position.LEFT ? '#auxiliaryBar' : '#auxiliaryBar-left';
+      },
+      onDidElementChange: onDidChangeSideBarPosition
+    },
+    { part: Parts.EDITOR_PART, element: '#editors' },
+    { part: Parts.PANEL_PART, element: '#panel' },
+    { part: Parts.STATUSBAR_PART, element: '#statusBar' }
+  ]) {
+    attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
 
-        config.onDidElementChange?.(() => {
-            attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
-        });
+    config.onDidElementChange?.(() => {
+      attachPart(config.part, document.querySelector<HTMLDivElement>(config.element)!);
+    });
 
-        if (!isPartVisibile(config.part)) {
-            document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
-        }
-
-        onPartVisibilityChange(config.part, visible => {
-            document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
-        });
+    if (!isPartVisibile(config.part)) {
+      document.querySelector<HTMLDivElement>(config.element)!.style.display = 'none';
     }
+
+    onPartVisibilityChange(config.part, (visible) => {
+      document.querySelector<HTMLDivElement>(config.element)!.style.display = visible ? 'block' : 'none';
+    });
+  }
 };
 
 export const defaultViewsHtml = `<div id="workbench-container">
@@ -67,7 +74,7 @@ export const defaultViewsHtml = `<div id="workbench-container">
 </div>`;
 
 export const defaultHtmlAugmentationInstructions = (htmlElement: HTMLElement | null | undefined) => {
-    const htmlContainer = document.createElement('div', { is: 'app' });
-    htmlContainer.innerHTML = defaultViewsHtml;
-    htmlElement?.append(htmlContainer);
+  const htmlContainer = document.createElement('div', { is: 'app' });
+  htmlContainer.innerHTML = defaultViewsHtml;
+  htmlElement?.append(htmlContainer);
 };

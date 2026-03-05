@@ -10,14 +10,14 @@ import { start } from './statemachine-server-start.js';
 declare const self: DedicatedWorkerGlobalScope;
 
 self.onmessage = async (event: MessageEvent) => {
-    const data = event.data;
-    console.log(event.data);
-    if (data.port !== undefined) {
-        await start(data.port, 'statemachine-server-port');
+  const data = event.data;
+  console.log(event.data);
+  if (data.port !== undefined) {
+    await start(data.port, 'statemachine-server-port');
 
-        setTimeout(() => {
-            // test independent communication
-            self.postMessage('started');
-        }, 1000);
-    }
+    setTimeout(() => {
+      // test independent communication
+      self.postMessage('started');
+    }, 1000);
+  }
 };
