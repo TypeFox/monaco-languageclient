@@ -49,10 +49,14 @@
     "build": "npm run clean && npm run compile"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-editor-api": "^27.0.0",
-    "@codingame/monaco-vscode-extension-api": "^27.0.0",
+    "@codingame/monaco-vscode-api": "^27.0.0",
+    "@codingame/monaco-vscode-log-service-override": "^27.0.0",
+    "monaco-languageclient": "~10.7.0",
     "react": ">=18.0.0 || <20.0.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^27.0.0"
+    "vscode-languageclient": "~9.0.1"
+  },
+  "devDependencies": {
+    "monaco-languageclient-examples": "../examples"
   },
   "engines": {
     "node": ">=20.10.0",

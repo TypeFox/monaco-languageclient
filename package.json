@@ -3,7 +3,6 @@
   "workspaces": [
     "packages/vscode-ws-jsonrpc",
     "packages/client",
-    "packages/wrapper",
     "packages/wrapper-react",
     "packages/examples"
   ],
@@ -51,7 +50,8 @@
     "license:add": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-add",
     "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "knip": "knip"
   },
   "devDependencies": {
     "@codingame/monaco-vscode-rollup-vsix-plugin": "^27.0.0",
@@ -59,12 +59,12 @@
     "@types/node": "~24.10.15",
     "@types/react": "~19.2.14",
     "@types/react-dom": "~19.2.3",
-    "@typescript/native-preview": "~7.0.0-dev.20260305.1",
+    "@typescript/native-preview": "~7.0.0-dev.20260308.1",
     "@vitest/browser": "~4.0.18",
     "@vitest/browser-playwright": "~4.0.18",
     "@vitest/coverage-v8": "~4.0.18",
-    "editorconfig": "~3.0.2",
     "esbuild": "~0.27.3",
+    "knip": "^5.86.0",
     "minimatch": "~10.2.4",
     "oxfmt": "~0.36.0",
     "oxlint": "~1.51.0",
@@ -72,14 +72,14 @@
     "shx": "~0.4.0",
     "tsx": "~4.21.0",
     "typescript": "~5.9.3",
-    "vite": "~8.0.0-beta.16",
+    "vite": "~8.0.0-beta.18",
     "vitest": "~4.0.18"
   },
   "overrides": {
     "minimatch": "~10.2.4",
     "react": "~19.2.4",
     "react-dom": "~19.2.4",
-    "vite": "~8.0.0-beta.16"
+    "vite": "~8.0.0-beta.18"
   },
   "engines": {
     "node": ">=20.10.0",

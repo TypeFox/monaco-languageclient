@@ -106,8 +106,8 @@
     "@codingame/monaco-vscode-configuration-service-override": "^27.0.0",
     "@codingame/monaco-vscode-editor-api": "^27.0.0",
     "@codingame/monaco-vscode-editor-service-override": "^27.0.0",
-    "@codingame/monaco-vscode-extension-api": "^27.0.0",
     "@codingame/monaco-vscode-extensions-service-override": "^27.0.0",
+    "@codingame/monaco-vscode-files-service-override": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-cs": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-de": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-es": "^27.0.0",
@@ -142,7 +142,8 @@
     "@codingame/monaco-vscode-standalone-html-language-features": "^27.0.0",
     "@codingame/monaco-vscode-standalone-json-language-features": "^27.0.0",
     "@codingame/monaco-vscode-standalone-languages": "^27.0.0",
-    "@codingame/monaco-vscode-standalone-typescript-language-features": "^27.0.0"
+    "@codingame/monaco-vscode-standalone-typescript-language-features": "^27.0.0",
+    "monaco-languageclient-examples": "../examples"
   },
   "engines": {
     "node": ">=20.10.0",

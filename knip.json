@@ -1,0 +1,65 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/clean.ts", "scripts/helper.ts"]
+    },
+    "packages/vscode-ws-jsonrpc": {
+      "entry": ["src/server/index.ts", "src/socket/index.ts", "src/index.ts"]
+    },
+    "packages/client": {
+      "entry": [
+        "src/vscode/index.ts",
+        "src/worker/index.ts",
+        "src/debugger/index.ts",
+        "src/fs/index.ts",
+        "src/editorApp/index.ts",
+        "src/common/index.ts",
+        "src/wrapper/index.ts",
+        "src/index.ts",
+        "src/vscode/locales.ts"
+      ]
+    },
+    "packages/wrapper-react": {
+      "entry": ["src/index.tsx"]
+    },
+    "packages/examples": {
+      "entry": [
+        "src/index.ts",
+        "src/appPlayground/launcher.ts",
+        "src/appPlayground/main.ts",
+        "src/appPlayground/reactLauncher.ts",
+        "src/appPlayground/reactMain.tsx",
+        "src/browser/main.ts",
+        "src/clangd/client/main.ts",
+        "src/debugger/server/debugServer.ts",
+        "src/eclipse.jdt.ls/client/main.ts",
+        "src/groovy/client/main.ts",
+        "src/json/client/classic.ts",
+        "src/json/client/config.ts",
+        "src/json/client/extended.ts",
+        "src/json/server/json-server.ts",
+        "src/langium/langium-dsl/main.ts",
+        "src/langium/langium-dsl/config/langium.monarch.ts",
+        "src/langium/statemachine/launcher.ts",
+        "src/langium/statemachine/main-react.tsx",
+        "src/langium/statemachine/main.ts",
+        "src/multi/twoLanguageClients.ts",
+        "src/node.ts",
+        "src/python/client/main.ts",
+        "src/python/client/reactPython.tsx",
+        "src/ts/clientTs.ts"
+      ]
+    }
+  },
+  "ignoreFiles": ["verify/**"],
+  "ignoreIssues": {
+    "packages/examples/src/langium/statemachine/ls/generated/**": [
+      "exports",
+      "types"
+    ],
+    "packages/examples/resources/**": ["exports", "types"]
+  },
+  "ignoreBinaries": ["playwright"],
+  "ignoreDependencies": ["pyright", "@types/emscripten"]
+}

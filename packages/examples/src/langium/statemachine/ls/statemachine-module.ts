@@ -35,7 +35,7 @@ export type StatemachineServices = LangiumServices & StatemachineAddedServices;
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
-export const StatemachineModule: Module<StatemachineServices, PartialLangiumServices & StatemachineAddedServices> = {
+const StatemachineModule: Module<StatemachineServices, PartialLangiumServices & StatemachineAddedServices> = {
   validation: {
     StatemachineValidator: () => new StatemachineValidator()
   }

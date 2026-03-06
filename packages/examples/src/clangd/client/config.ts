@@ -20,7 +20,7 @@ import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFacto
 import { Uri } from 'vscode';
 import { ClangdWorkerHandler } from './workerHandler.js';
 
-export type ClangdAppConfig = {
+type ClangdAppConfig = {
   languageClientConfig: LanguageClientConfig;
   vscodeApiConfig: MonacoVscodeApiConfig;
   editorAppConfig: EditorAppConfig;
