@@ -44,7 +44,6 @@
     "no-empty-character-class": "error",
     "no-empty-pattern": "error",
     "no-empty-static-block": "error",
-    "no-explicit-any": "error",
     "no-fallthrough": "error",
     "no-import-assign": "error",
     "no-inner-declarations": "off",
@@ -83,10 +82,12 @@
     // currently in oxlint's nursery (=under development)
     "typescript/dot-notation": "error",
     "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error",
     "typescript/no-namespace": "off",
     // currently in oxlint's nursery (=under development)
     "typescript/no-unnecessary-condition": "error",
     "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unnecessary-type-parameters": "error",
     "typescript/no-unsafe-function-type": "error",
     "typescript/no-unused-expressions": "error",
     "typescript/no-non-null-assertion": "off",

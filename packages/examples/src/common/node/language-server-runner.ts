@@ -10,8 +10,8 @@ import { getLocalDirectory, type LanguageServerRunConfig, upgradeWsServer } from
 
 /** LSP server runner */
 export const runLanguageServer = (languageServerRunConfig: LanguageServerRunConfig) => {
-  process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception: ', err.toString());
+  process.on('uncaughtException', (err: Error) => {
+    console.error(`Uncaught Exception: cause: ${JSON.stringify(err.cause ?? 'unknown')} message: ${err.message}`);
     if (err.stack !== undefined) {
       console.error(err.stack);
     }

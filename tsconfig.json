@@ -16,6 +16,7 @@
     "stripInternal": true,
     "strict": true,
     "strictPropertyInitialization": false,
+    "noImplicitAny": true,
     "importHelpers": true,
     "downlevelIteration": false,
     "noImplicitReturns": true,
