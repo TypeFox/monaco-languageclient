@@ -85,8 +85,8 @@ export const upgradeWsServer = (
       config.wss.handleUpgrade(request, socket, head, (webSocket) => {
         const socket: IWebSocket = {
           send: (content) =>
-            webSocket.send(content, (error) => {
-              if (error !== undefined) {
+            webSocket.send(content, (error: Error | null | undefined) => {
+              if (error !== null && error !== undefined) {
                 throw error;
               }
             }),
