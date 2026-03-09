@@ -23,12 +23,12 @@ export const awaitWorkerPromises = () => {
   return Promise.all([...workerPromises.values()]);
 };
 
-export const pushAndPrintLastWorker = (lastWorker: string) => {
+const pushAndPrintLastWorker = (lastWorker: string) => {
   console.log(`Called: ${lastWorker}`);
   workerResolver.get(lastWorker)?.();
 };
 
-export const defineClassicWorkers: () => Partial<Record<string, WorkerLoader>> = () => {
+const defineClassicWorkers: () => Partial<Record<string, WorkerLoader>> = () => {
   const editorWorkerServiceWorker = () => {
     pushAndPrintLastWorker('editorWorker');
     return new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), {

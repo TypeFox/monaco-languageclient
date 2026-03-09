@@ -10,8 +10,8 @@ import { startLanguageServer } from 'langium/lsp';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
 import { createStatemachineServices } from '../ls/statemachine-module.js';
 
-export let messageReader: BrowserMessageReader | undefined;
-export let messageWriter: BrowserMessageWriter | undefined;
+let messageReader: BrowserMessageReader | undefined;
+let messageWriter: BrowserMessageWriter | undefined;
 
 export const start = async (port: MessagePort | DedicatedWorkerGlobalScope, name: string) => {
   console.log(`Starting ${name}...`);

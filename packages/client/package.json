@@ -26,72 +26,50 @@
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index.d.ts"
-      ],
-      "common": [
-        "lib/common/index"
-      ],
-      "vscodeApiWrapper": [
-        "lib/vscode/index"
-      ],
-      "vscodeApiLocales": [
-        "lib/vscode/locales"
-      ],
-      "fs": [
-        "lib/fs/index"
-      ],
-      "workerFactory": [
-        "lib/worker/index"
-      ],
-      "lcwrapper": [
-        "lib/wrapper/index"
-      ],
-      "editorApp": [
-        "lib/editorApp/index"
-      ],
-      "debugger": [
-        "lib/debugger/index"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
       "default": "./lib/index.js"
     },
     "./common": {
       "types": "./lib/common/index.d.ts",
+      "import": "./lib/common/index.js",
       "default": "./lib/common/index.js"
     },
     "./vscodeApiWrapper": {
       "types": "./lib/vscode/index.d.ts",
+      "import": "./lib/vscode/index.js",
       "default": "./lib/vscode/index.js"
     },
     "./vscodeApiLocales": {
       "types": "./lib/vscode/locales.d.ts",
+      "import": "./lib/vscode/locales.js",
       "default": "./lib/vscode/locales.js"
     },
     "./fs": {
       "types": "./lib/fs/index.d.ts",
+      "import": "./lib/fs/index.js",
       "default": "./lib/fs/index.js"
     },
     "./workerFactory": {
       "types": "./lib/worker/index.d.ts",
+      "import": "./lib/worker/index.js",
       "default": "./lib/worker/index.js"
     },
     "./lcwrapper": {
       "types": "./lib/wrapper/index.d.ts",
+      "import": "./lib/wrapper/index.js",
       "default": "./lib/wrapper/index.js"
     },
     "./editorApp": {
       "types": "./lib/editorApp/index.d.ts",
+      "import": "./lib/editorApp/index.js",
       "default": "./lib/editorApp/index.js"
     },
     "./debugger": {
       "types": "./lib/debugger/index.d.ts",
+      "import": "./lib/debugger/index.js",
       "default": "./lib/debugger/index.js"
     }
   },
@@ -106,8 +84,8 @@
     "@codingame/monaco-vscode-configuration-service-override": "^27.0.0",
     "@codingame/monaco-vscode-editor-api": "^27.0.0",
     "@codingame/monaco-vscode-editor-service-override": "^27.0.0",
-    "@codingame/monaco-vscode-extension-api": "^27.0.0",
     "@codingame/monaco-vscode-extensions-service-override": "^27.0.0",
+    "@codingame/monaco-vscode-files-service-override": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-cs": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-de": "^27.0.0",
     "@codingame/monaco-vscode-language-pack-es": "^27.0.0",
@@ -142,7 +120,8 @@
     "@codingame/monaco-vscode-standalone-html-language-features": "^27.0.0",
     "@codingame/monaco-vscode-standalone-json-language-features": "^27.0.0",
     "@codingame/monaco-vscode-standalone-languages": "^27.0.0",
-    "@codingame/monaco-vscode-standalone-typescript-language-features": "^27.0.0"
+    "@codingame/monaco-vscode-standalone-typescript-language-features": "^27.0.0",
+    "monaco-languageclient-examples": "../examples"
   },
   "engines": {
     "node": ">=20.10.0",

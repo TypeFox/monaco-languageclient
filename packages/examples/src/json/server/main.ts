@@ -25,7 +25,7 @@ export const runJsonServer = (baseDir: string, relativeDir: string) => {
   startMockHttpServerForSavingCodeFromEditor();
 };
 
-export const startMockHttpServerForSavingCodeFromEditor = () => {
+const startMockHttpServerForSavingCodeFromEditor = () => {
   const app = express();
   app.use(cors());
   app.use(express.json());

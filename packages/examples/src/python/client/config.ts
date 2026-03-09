@@ -45,7 +45,7 @@ import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
 
-export const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
+const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
   const files = new Map<string, FileDefinition>();
   const workspaceRoot = `${homeDir}/workspace`;
   const configParams: ConfigParams = {
@@ -85,7 +85,7 @@ export const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLEl
   return configParams;
 };
 
-export type PythonAppConfig = {
+type PythonAppConfig = {
   languageClientConfig: LanguageClientConfig;
   vscodeApiConfig: MonacoVscodeApiConfig;
   editorAppConfig: EditorAppConfig;

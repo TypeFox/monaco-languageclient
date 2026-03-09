@@ -10,7 +10,7 @@ import { ComChannelEndpoint, RawPayload, WorkerMessage, type ComRouter } from 'w
 /**
  * Answer the file create request
  */
-export class FileHandlerMain implements ComRouter {
+class FileHandlerMain implements ComRouter {
   private endpointFs?: ComChannelEndpoint;
   private fileSystemProvider: RegisteredFileSystemProvider;
   private readiness: () => void;
