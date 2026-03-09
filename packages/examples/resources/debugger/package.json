@@ -20,6 +20,7 @@
   "exports": {
     ".": {
       "types": "./dist/debugServer.d.ts",
+      "import": "./dist/debugServer.js",
       "default": "./dist/debugServer.js"
     }
   },

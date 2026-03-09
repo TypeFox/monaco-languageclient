@@ -28,48 +28,35 @@
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "dist/index"
-      ],
-      "node": [
-        "dist/node"
-      ],
-      "json-client": [
-        "dist/json/client/extended"
-      ],
-      "worker/langium": [
-        "dist/langium/langium-dsl/worker/langium-server"
-      ],
-      "worker/statemachine": [
-        "dist/langium/statemachine/worker/statemachine-server"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./node": {
       "types": "./dist/node.d.ts",
+      "import": "./dist/node.js",
       "default": "./dist/node.js"
     },
     "./json-client": {
       "types": "./dist/json/client/extended.d.ts",
+      "import": "./dist/json/client/extended.js",
       "default": "./dist/json/client/extended.js"
     },
     "./python-client": {
       "types": "./dist/python/client/main.d.ts",
+      "import": "./dist/python/client/main.js",
       "default": "./dist/python/client/main.js"
     },
     "./worker/langium": {
       "types": "./dist/langium/langium-dsl/worker/langium-server.d.ts",
+      "import": "./dist/langium/langium-dsl/worker/langium-server.js",
       "default": "./dist/langium/langium-dsl/worker/langium-server.js"
     },
     "./worker/statemachine": {
       "types": "./dist/langium/statemachine/worker/statemachine-server.d.ts",
+      "import": "./dist/langium/statemachine/worker/statemachine-server.js",
       "default": "./dist/langium/statemachine/worker/statemachine-server.js"
     }
   },

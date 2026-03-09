@@ -30,16 +30,10 @@
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
       "default": "./lib/index.js"
     }
   },

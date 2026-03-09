@@ -26,30 +26,20 @@
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index"
-      ],
-      "server": [
-        "lib/server"
-      ],
-      "socket": [
-        "lib/socket"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
       "default": "./lib/index.js"
     },
     "./server": {
       "types": "./lib/server/index.d.ts",
+      "import": "./lib/server/index.js",
       "default": "./lib/server/index.js"
     },
     "./socket": {
       "types": "./lib/socket/index.d.ts",
+      "import": "./lib/socket/index.js",
       "default": "./lib/socket/index.js"
     }
   },
