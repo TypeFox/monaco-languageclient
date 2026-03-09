@@ -44,6 +44,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
       },
       connection: {
         options: {
+          $family: 'Worker',
           $type: 'WorkerDirect',
           worker
         },

@@ -21,7 +21,11 @@ export interface WebSocketCallOptions {
   reportStatus?: boolean;
 }
 
-export interface WebSocketLikeConfig {
+export interface ConnectionOptionsFamily {
+  $family: 'Worker' | 'WebSocket';
+}
+
+export interface WebSocketLikeConfig extends ConnectionOptionsFamily {
   webSocket: WebSocket | Socket;
 }
 
@@ -39,7 +43,7 @@ export interface WebSocketUrlParams {
   extraParams?: Record<string, string | number | Array<string | number>>;
 }
 
-export interface WebSocketConfigOptionsParams extends WebSocketUrlParams {
+export interface WebSocketConfigOptionsParams extends WebSocketUrlParams, ConnectionOptionsFamily {
   $type: 'WebSocketParams';
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
@@ -49,13 +53,13 @@ export interface WebSocketUrlString {
   url: string;
 }
 
-export interface WebSocketConfigOptionsUrl extends WebSocketUrlString {
+export interface WebSocketConfigOptionsUrl extends WebSocketUrlString, ConnectionOptionsFamily {
   $type: 'WebSocketUrl';
   startOptions?: WebSocketCallOptions;
   stopOptions?: WebSocketCallOptions;
 }
 
-export interface WorkerConfigOptionsParams {
+export interface WorkerConfigOptionsParams extends ConnectionOptionsFamily {
   $type: 'WorkerConfig';
   url: URL;
   type: 'classic' | 'module';
@@ -63,7 +67,7 @@ export interface WorkerConfigOptionsParams {
   workerName?: string;
 }
 
-export interface WorkerConfigOptionsDirect {
+export interface WorkerConfigOptionsDirect extends ConnectionOptionsFamily {
   $type: 'WorkerDirect';
   worker: Worker;
   messagePort?: MessagePort;

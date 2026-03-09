@@ -146,6 +146,7 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerDirect',
         worker
       },

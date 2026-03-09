@@ -28,6 +28,7 @@ export const createDefaultLcWorkerConfig = (
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerDirect',
         worker
       },
@@ -44,6 +45,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerConfig',
         url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
         type: 'module'
@@ -60,6 +62,7 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
     },
     connection: {
       options: {
+        $family: 'WebSocket',
         $type: 'WebSocketUrl',
         url: `ws://localhost:${port}/rester`
       }

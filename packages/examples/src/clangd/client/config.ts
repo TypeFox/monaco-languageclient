@@ -107,6 +107,7 @@ export const createClangdAppConfig = async (config: {
     languageId: 'cpp',
     connection: {
       options: {
+        $family: 'WebSocket',
         $type: 'WorkerDirect',
         worker: await config.clangdWorkerHandler.createWorker(),
         messagePort: config.lsMessageLocalPort

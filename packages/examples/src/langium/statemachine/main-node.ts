@@ -32,6 +32,7 @@ export const runStatemachine = async () => {
     },
     connection: {
       options: {
+        $family: 'WebSocket',
         $type: 'SocketIoDirect',
         webSocket: socket
       },

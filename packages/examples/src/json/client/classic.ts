@@ -62,6 +62,7 @@ export const runClient = async () => {
     },
     connection: {
       options: {
+        $family: 'WebSocket',
         $type: 'WebSocketUrl',
         url: 'ws://localhost:30000/sampleServer'
       }

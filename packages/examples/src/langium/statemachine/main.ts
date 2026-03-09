@@ -57,6 +57,7 @@ const startEditor = async () => {
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerDirect',
         worker: stateMachineWorkerPort,
         messagePort: channel.port1

@@ -55,6 +55,7 @@ describe.sequential('socketio', () => {
       },
       connection: {
         options: {
+          $family: 'WebSocket',
           $type: 'SocketIoDirect',
           webSocket: socket
         },

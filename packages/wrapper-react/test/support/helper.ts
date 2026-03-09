@@ -23,6 +23,7 @@ const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, message
     },
     connection: {
       options: {
+        $family: 'Worker',
         $type: 'WorkerDirect',
         worker
       },

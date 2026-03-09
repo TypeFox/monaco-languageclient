@@ -108,7 +108,7 @@ describe('Test LanguageClientWrapper', () => {
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
     await expect(languageClientWrapper.start()).rejects.toEqual({
-      message: 'languageClientWrapper (javascript): Illegal worker configuration detected.',
+      message: 'LcWorker (javascript): Worker reported an error.',
       error: 'No error was provided.'
     });
   });
