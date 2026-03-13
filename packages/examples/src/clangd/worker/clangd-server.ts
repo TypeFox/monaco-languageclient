@@ -5,14 +5,15 @@
 
 /// <reference lib="WebWorker" />
 
+import 'emscripten';
+import JSZip from 'jszip';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js';
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
+import clangdConfig from '../../../resources/clangd/workspace/.clangd?raw';
 import { WORKSPACE_PATH } from '../definitions.js';
 import { JsonStream } from './json_stream.js';
-import { WorkerRemoteMessageChannelFs } from './workerRemoteMessageChannelFs.js';
 import { fsReadAllFiles } from './memfs-tools.js';
-import clangdConfig from '../../../resources/clangd/workspace/.clangd?raw';
-import JSZip from 'jszip';
+import { WorkerRemoteMessageChannelFs } from './workerRemoteMessageChannelFs.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
