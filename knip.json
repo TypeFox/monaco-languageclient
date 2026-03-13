@@ -61,5 +61,5 @@
     "packages/examples/resources/**": ["exports", "types"]
   },
   "ignoreBinaries": ["playwright"],
-  "ignoreDependencies": ["pyright", "@types/emscripten"]
+  "ignoreDependencies": ["pyright"]
 }
