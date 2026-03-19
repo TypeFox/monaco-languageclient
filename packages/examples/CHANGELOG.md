@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [2026.2.2] - unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `28.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `28.3.0`.
 - Updated to `monaco-languageclient@10.8.0` and `@typefox/monaco-editor-react@7.8.0`.
 - Dropped eslint and rely fully on oxlint.
 

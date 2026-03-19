@@ -70,7 +70,7 @@ type QueueEntry = {
 };
 const runQueue: QueueEntry[] = [];
 let runQueueLock = true;
-let intervalId: number | ReturnType<typeof setInterval> | undefined = undefined;
+let intervalId: number | undefined = undefined;
 const queueIntervalMs = 10;
 
 const addQueue = (queueEntry: QueueEntry) => {
