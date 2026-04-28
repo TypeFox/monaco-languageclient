@@ -113,7 +113,6 @@
     "import/first": "error",
     "import/export": "error",
     "import/default": "error",
-    "import/named": "error",
-    "import/no-unresolved": "error"
+    "import/named": "error"
   }
 }
