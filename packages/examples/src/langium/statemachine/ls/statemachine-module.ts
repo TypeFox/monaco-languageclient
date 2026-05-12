@@ -18,7 +18,7 @@ import { StatemachineValidator, registerValidationChecks } from './statemachine-
 /**
  * Declaration of custom services - add your own service classes here.
  */
-export type StatemachineAddedServices = {
+type StatemachineAddedServices = {
   validation: {
     StatemachineValidator: StatemachineValidator;
   };

@@ -39,7 +39,8 @@ import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscod
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import helloTsCode from '../../resources/appPlayground/hello.ts?raw';
 
-// oxlint-disable-next-line import/default: oxlint-tsgolint checks the TypeScript file, although it is in the ignorePatterns list
+// oxlint-tsgolint checks the TypeScript file, although it is in the ignorePatterns list
+// oxlint-disable-next-line import/default
 import testerTsCode from '../../resources/appPlayground/tester.ts?raw';
 import helloJsonCode from '../../resources/appPlayground/hello.json?raw';
 import { createDefaultWorkspaceContent } from '../common/client/utils.js';
