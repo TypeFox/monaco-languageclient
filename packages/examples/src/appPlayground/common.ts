@@ -13,12 +13,12 @@ export const configurePostStart = async (apiWrapper: MonacoVscodeApiWrapper, con
   await result.setAsDefaultApi();
 
   await Promise.all([
-    await vscode.workspace.openTextDocument(configResult.helloTsUri),
-    await vscode.workspace.openTextDocument(configResult.testerTsUri),
-    await vscode.workspace.openTextDocument(configResult.helloJsonUri)
+    vscode.workspace.openTextDocument(configResult.helloTsUri),
+    vscode.workspace.openTextDocument(configResult.testerTsUri),
+    vscode.workspace.openTextDocument(configResult.helloJsonUri)
   ]);
 
-  await Promise.all([await vscode.window.showTextDocument(configResult.helloTsUri)]);
+  await Promise.all([vscode.window.showTextDocument(configResult.helloTsUri)]);
 
   console.log('Application Playground started');
 };

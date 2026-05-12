@@ -12,7 +12,7 @@ import externalViteConfig from './vite.config.js';
 
 export const vitestConfig = {
   test: {
-    testTimeout: 15000,
+    testTimeout: 10000,
     browser: {
       enabled: true,
       headless: true,

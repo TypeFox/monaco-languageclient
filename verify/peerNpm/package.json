@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "monaco-languageclient-examples": "^2026.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^28.3.0"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^31.0.1"
   },
   "devDependencies": {
     "shx": "~0.4.0",
@@ -27,9 +27,5 @@
   "engines": {
     "node": ">=20.10.0",
     "npm": ">=10.2.3"
-  },
-  "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
   }
 }

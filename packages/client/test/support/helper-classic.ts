@@ -24,32 +24,46 @@ export const awaitWorkerPromises = () => {
 };
 
 const pushAndPrintLastWorker = (lastWorker: string) => {
-  console.log(`Called: ${lastWorker}`);
+  console.log(`Called: ${lastWorker}\n`);
   workerResolver.get(lastWorker)?.();
 };
 
 const defineClassicWorkers: () => Partial<Record<string, WorkerLoader>> = () => {
   const editorWorkerServiceWorker = () => {
-    pushAndPrintLastWorker('editorWorker');
-    return new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), {
+    const workerUrl = new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url);
+    const worker = new Worker(workerUrl, {
       type: 'module'
     });
+    pushAndPrintLastWorker('editorWorker');
+    return worker;
   };
+
   const cssWorker = () => {
+    const workerUrl = new URL('@codingame/monaco-vscode-standalone-css-language-features', import.meta.url);
+    const worker = new Worker(workerUrl, { type: 'module' });
     pushAndPrintLastWorker('cssWorker');
-    return new Worker(new URL('@codingame/monaco-vscode-standalone-css-language-features', import.meta.url), { type: 'module' });
+    return worker;
   };
+
   const jsonWorker = () => {
+    const workerUrl = new URL('@codingame/monaco-vscode-standalone-json-language-features', import.meta.url);
+    const worker = new Worker(workerUrl, { type: 'module' });
     pushAndPrintLastWorker('jsonWorker');
-    return new Worker(new URL('@codingame/monaco-vscode-standalone-json-language-features', import.meta.url), { type: 'module' });
+    return worker;
   };
+
   const htmlWorker = () => {
+    const workerUrl = new URL('@codingame/monaco-vscode-standalone-html-language-features', import.meta.url);
+    const worker = new Worker(workerUrl, { type: 'module' });
     pushAndPrintLastWorker('htmlWorker');
-    return new Worker(new URL('@codingame/monaco-vscode-standalone-html-language-features', import.meta.url), { type: 'module' });
+    return worker;
   };
+
   const tsWorker = () => {
+    const workerUrl = new URL('@codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url);
+    const worker = new Worker(workerUrl, { type: 'module' });
     pushAndPrintLastWorker('tsWorker');
-    return new Worker(new URL('@codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url), { type: 'module' });
+    return worker;
   };
 
   return {
