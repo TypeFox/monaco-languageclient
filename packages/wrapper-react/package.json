@@ -43,8 +43,8 @@
     "build": "npm run clean && npm run compile"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-api": "^31.0.1",
-    "@codingame/monaco-vscode-log-service-override": "^31.0.1",
+    "@codingame/monaco-vscode-api": "^33.0.9",
+    "@codingame/monaco-vscode-log-service-override": "^33.0.9",
     "monaco-languageclient": "~10.7.0",
     "react": ">=18.0.0 || <20.0.0",
     "vscode-languageclient": "~9.0.1"
