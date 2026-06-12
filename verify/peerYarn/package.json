@@ -20,7 +20,7 @@
     "@codingame/monaco-vscode-model-service-override": "^33.0.9",
     "monaco-languageclient-examples": "^2026.2.1",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^33.0.9",
-    "vscode-languageclient": "~9.0.1"
+    "vscode-languageclient": "~10.0.0"
   },
   "devDependencies": {
     "typescript": "~5.9.3"

@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [10.8.0] - unreleased
+## [11.0.0-next.0] - unreleased
 
 - Updated all `@codingame/monaco-vscode` packages to `33.0.9`
+- Updated `vscode-languageclient` and `vscode-languageserver` to `10.0.0`, `vscode-languageserver-protocol` to `3.18.0` and `vscode-jsonrpc` to `9.0.0`.
 - Dropped eslint and rely fully on oxlint.
 
 ## [10.7.0] - 2026-02-04

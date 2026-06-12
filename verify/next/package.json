@@ -28,15 +28,15 @@
     "@codingame/monaco-vscode-typescript-basics-default-extension": "^33.0.9",
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "^33.0.9",
     "@codingame/monaco-vscode-views-service-override": "^33.0.9",
-    "@typefox/monaco-editor-react": "~7.7.0",
-    "langium": "~4.2.1",
-    "monaco-languageclient": "~10.7.0",
+    "@typefox/monaco-editor-react": "~8.0.0-next.0",
+    "langium": "~4.3.0-next.a52b426",
+    "monaco-languageclient": "~11.0.0-next.0",
     "next": "~16.1.6",
     "react": "~19.2.7",
     "react-dom": "~19.2.7",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^33.0.9",
-    "vscode-languageclient": "~9.0.1",
-    "vscode-languageserver": "~9.0.1"
+    "vscode-languageclient": "~10.0.0",
+    "vscode-languageserver": "~10.0.0"
   },
   "devDependencies": {
     "@types/react-dom": "~19.2.3",

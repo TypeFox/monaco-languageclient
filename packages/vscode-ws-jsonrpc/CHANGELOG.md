@@ -2,9 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [3.5.1] - unreleased
+## [4.0.0-next.0] - unreleased
 
 - Dropped eslint and rely fully on oxlint.
+- Updatde `vscode-jsonrpc` to `9.0.0`.
 
 ## [3.5.0] - 2025-08-11
 
