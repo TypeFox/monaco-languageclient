@@ -3,25 +3,22 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import '@codingame/monaco-vscode-json-default-extension';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
-import '@codingame/monaco-vscode-json-default-extension';
+import * as vscode from 'vscode';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
-import * as codeConverter from 'vscode-languageclient/$test/common/codeConverter';
-import * as protocolConverter from 'vscode-languageclient/$test/common/protocolConverter';
-import { LogLevel } from '@codingame/monaco-vscode-api';
 
 import '../../resources/vsix/github-vscode-theme.vsix';
 
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 
 export const runBrowserEditor = async () => {
-  const c2p: codeConverter.Converter = codeConverter.createConverter();
-  const p2c: protocolConverter.Converter = protocolConverter.createConverter(undefined, true, true, false);
-
   let mainVscodeDocument: vscode.TextDocument | undefined;
   const languageId = 'json';
   const code = `{
@@ -63,6 +60,25 @@ export const runBrowserEditor = async () => {
   await apiWrapper.start();
 
   const editorApp = new EditorApp(editorAppConfig);
+
+  // create a fake worker and a Language Client instance to get access
+  // to the converters. It became required after update from vscode-languageclient v9 to v10
+  const worker = new Worker(new URL('./fake-worker.ts', import.meta.url), {
+    type: 'module',
+    name: 'Fake LS'
+  });
+  const messageTransports = {
+    reader: new BrowserMessageReader(worker),
+    writer: new BrowserMessageWriter(worker)
+  };
+  const lc = new MonacoLanguageClient({
+    id: 'test',
+    name: 'test',
+    messageTransports,
+    clientOptions: {}
+  });
+  const c2p = lc.code2ProtocolConverter;
+  const p2c = lc.protocol2CodeConverter;
 
   vscode.workspace.onDidOpenTextDocument((_event) => {
     mainVscodeDocument = _event;
