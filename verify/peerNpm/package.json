@@ -16,16 +16,16 @@
     "start": "vite preview"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "^2026.2.1",
+    "monaco-languageclient-examples": "^2026.6.1",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^33.0.9"
   },
   "devDependencies": {
     "shx": "~0.4.0",
-    "typescript": "~5.9.3",
-    "vite": "~8.0.0-beta.14"
+    "typescript": "~6.0.3",
+    "vite": "~8.0.16"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }

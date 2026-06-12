@@ -12,19 +12,19 @@
     "start": "http-server ./ --port 8082"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "^2026.2.1"
+    "monaco-languageclient-examples": "^2026.6.1"
   },
   "devDependencies": {
-    "css-loader": "~7.1.3",
+    "css-loader": "~7.1.4",
     "http-server": "~14.1.1",
     "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
-    "ts-loader": "~9.5.4",
-    "webpack-cli": "~6.0.1"
+    "ts-loader": "~9.6.0",
+    "webpack-cli": "~7.0.3"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }

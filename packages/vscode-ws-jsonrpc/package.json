@@ -36,11 +36,6 @@
       "types": "./lib/server/index.d.ts",
       "import": "./lib/server/index.js",
       "default": "./lib/server/index.js"
-    },
-    "./socket": {
-      "types": "./lib/socket/index.d.ts",
-      "import": "./lib/socket/index.js",
-      "default": "./lib/socket/index.js"
     }
   },
   "scripts": {
@@ -53,7 +48,7 @@
     "vscode-jsonrpc": "~9.0.0"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }

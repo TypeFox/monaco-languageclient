@@ -18,16 +18,16 @@
     "@codingame/monaco-vscode-localization-service-override": "^33.0.9",
     "@codingame/monaco-vscode-log-service-override": "^33.0.9",
     "@codingame/monaco-vscode-model-service-override": "^33.0.9",
-    "monaco-languageclient-examples": "^2026.2.1",
+    "monaco-languageclient-examples": "^2026.6.1",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^33.0.9",
     "vscode-languageclient": "~10.0.0"
   },
   "devDependencies": {
-    "typescript": "~5.9.3"
+    "typescript": "~6.0.3"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3",
-    "yarn": ">=4.6.0"
+    "node": ">=22",
+    "npm": ">=10",
+    "yarn": ">=4"
   }
 }

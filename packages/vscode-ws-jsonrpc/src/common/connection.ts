@@ -3,15 +3,9 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { MessageReader, MessageWriter, Disposable, Message } from 'vscode-jsonrpc';
-import { DisposableCollection } from '../disposable.js';
-
-export interface IConnection extends Disposable {
-  readonly reader: MessageReader;
-  readonly writer: MessageWriter;
-  forward(to: IConnection, map?: (message: Message) => Message): void;
-  onClose(callback: () => void): Disposable;
-}
+import { Disposable, Message, MessageReader, MessageWriter } from 'vscode-jsonrpc';
+import { DisposableCollection } from './disposable.js';
+import type { IConnection } from './types.js';
 
 export function forward(clientConnection: IConnection, serverConnection: IConnection, map?: (message: Message) => Message): void {
   clientConnection.forward(serverConnection, map);

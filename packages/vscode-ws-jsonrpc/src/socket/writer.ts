@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { AbstractMessageWriter, Message, MessageWriter } from 'vscode-jsonrpc';
-import type { IWebSocket } from './socket.js';
+import type { IWebSocket } from 'vscode-ws-jsonrpc';
 
 export class WebSocketMessageWriter extends AbstractMessageWriter implements MessageWriter {
   protected errorCount = 0;

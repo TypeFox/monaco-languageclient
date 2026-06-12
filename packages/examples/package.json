@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient-examples",
-  "version": "2026.2.1",
+  "version": "2026.6.1",
   "description": "Monaco Language client examples",
   "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/README.md",
   "bugs": {
@@ -144,7 +144,7 @@
     "vscode-languageserver-types": "~3.18.0"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }
