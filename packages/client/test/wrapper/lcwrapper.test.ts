@@ -10,7 +10,7 @@ import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import {
   createDefaultLcUnreachableUrlConfig,
   createDefaultLcWorkerConfig,

@@ -7,7 +7,7 @@
 import { EmptyFileSystem } from 'langium';
 import { type DefaultSharedModuleContext, startLanguageServer } from 'langium/lsp';
 import { createLangiumGrammarServices } from 'langium/grammar';
-import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser';
 
 /* browser specific setup code */
 const messageReader = new BrowserMessageReader(self as DedicatedWorkerGlobalScope);

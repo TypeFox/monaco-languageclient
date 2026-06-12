@@ -6,13 +6,7 @@ import { readFile } from 'node:fs';
 import requestLight, { type XHRResponse } from 'request-light';
 import * as URI from 'vscode-uri';
 import 'vscode-ws-jsonrpc';
-import {
-  createConnection,
-  type _Connection,
-  TextDocuments,
-  type DocumentSymbolParams,
-  ProposedFeatures
-} from 'vscode-languageserver/lib/node/main.js';
+import { createConnection, type _Connection, TextDocuments, type DocumentSymbolParams, ProposedFeatures } from 'vscode-languageserver/node';
 import {
   Diagnostic,
   Command,

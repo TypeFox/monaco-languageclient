@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as vscode from 'vscode';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';

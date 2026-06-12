@@ -32,7 +32,7 @@ export default defineConfig(({ command }) => {
         'vscode-jsonrpc',
         'vscode-languageclient',
         'vscode-languageserver',
-        'vscode-languageserver/browser.js',
+        'vscode-languageserver/browser',
         'vscode-languageserver-protocol'
       ]
     },

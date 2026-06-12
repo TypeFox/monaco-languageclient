@@ -5,7 +5,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ConnectionConfigOptions } from 'monaco-languageclient/common';
-import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFeature } from 'vscode-languageclient/browser.js';
+import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFeature } from 'vscode-languageclient/browser';
 
 export interface ConnectionConfig {
   options: ConnectionConfigOptions;

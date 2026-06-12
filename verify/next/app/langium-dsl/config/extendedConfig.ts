@@ -27,7 +27,7 @@ export const setupLangiumClientExtended = async (
   const { InMemoryFileSystemProvider, registerFileSystemOverlay } = await import('@codingame/monaco-vscode-files-service-override');
   const { LogLevel } = await import('@codingame/monaco-vscode-api');
   const { Uri } = await import('vscode');
-  const { BrowserMessageReader, BrowserMessageWriter } = await import('vscode-languageclient/browser.js');
+  const { BrowserMessageReader, BrowserMessageWriter } = await import('vscode-languageclient/browser');
 
   // base configurration
   const overallConfigType: OverallConfigType = 'extended';
