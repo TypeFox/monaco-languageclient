@@ -11,6 +11,7 @@ import * as vscode from 'vscode';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
 
 import '../../resources/vsix/github-vscode-theme.vsix';
+import coffeelintJson from '../../resources/json/coffeelint.json?raw';
 
 import { MonacoLanguageClient } from 'monaco-languageclient';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
@@ -88,19 +89,14 @@ export const runBrowserEditor = async () => {
     return TextDocument.create(vscodeDocument.uri.toString(), vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
   };
 
-  const resolveSchema = (url: string): Promise<string> => {
-    const promise = new Promise<string>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => resolve(xhr.responseText);
-      xhr.onerror = () => reject(xhr.statusText);
-      xhr.open('GET', url, true);
-      xhr.send();
-    });
-    return promise;
-  };
-
+  const jsonSchemaUri = 'http://json.schemastore.org/coffeelint';
   const jsonService = getLanguageService({
-    schemaRequestService: resolveSchema
+    schemaRequestService: async (uri: string): Promise<string> => {
+      if (uri === jsonSchemaUri) {
+        return Promise.resolve(coffeelintJson);
+      }
+      return Promise.reject(`Unable to load schema at: ${uri}`);
+    }
   });
   const pendingValidationRequests = new Map<string, number>();
 
