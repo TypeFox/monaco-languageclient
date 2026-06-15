@@ -7,7 +7,6 @@ import { defineConfig } from 'vite';
 import fs from 'node:fs';
 import * as path from 'node:path';
 import vsixPlugin from '@codingame/monaco-vscode-rollup-vsix-plugin';
-import { fileURLToPath } from 'node:url';
 
 const clangdWasmLocation = 'packages/examples/resources/clangd/wasm/clangd.wasm';
 
