@@ -38,15 +38,11 @@ const config = {
   },
   target: 'web',
   resolve: {
-    extensions: ['.ts', '.js', '.json', '.ttf'],
-    fallback: {
-      'fs/promises': false
-    }
+    extensions: ['.ts', '.js', '.json', '.ttf']
   },
   plugins: [
-    // intercept the "node:" URI scheme and strip it
-    new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
-      resource.request = resource.request.replace(/^node:/, '');
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^node:fs/
     })
   ],
   mode: 'development',
