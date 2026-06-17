@@ -12,7 +12,7 @@
     "start": "http-server ./ --port 8082"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "^2026.6.1"
+    "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {
     "css-loader": "~7.1.4",
@@ -20,7 +20,7 @@
     "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
-    "ts-loader": "~9.6.0",
+    "ts-loader": "~9.6.1",
     "webpack-cli": "~7.0.3"
   },
   "engines": {

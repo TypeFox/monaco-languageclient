@@ -16,8 +16,8 @@
     "start": "vite preview"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "^2026.6.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^33.0.9"
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.0.1"
   },
   "devDependencies": {
     "shx": "~0.4.0",
