@@ -18,12 +18,20 @@
     "@codingame/monaco-vscode-localization-service-override": "^34.0.1",
     "@codingame/monaco-vscode-log-service-override": "^34.0.1",
     "@codingame/monaco-vscode-model-service-override": "^34.0.1",
+    "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.0.1",
-    "vscode-languageclient": "~10.0.0"
+    "vscode-languageclient": "~10.0.0",
+    "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "devDependencies": {
     "typescript": "~6.0.3"
+  },
+  "resolutions": {
+    "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "monaco-languageclient": "../../packages/client",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {
     "node": ">=22",
