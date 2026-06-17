@@ -4,8 +4,8 @@
   "private": "true",
   "type": "module",
   "scripts": {
-    "verify": "npm ci --immutable && npm run start",
-    "verify:ci": "npm install --immutable && npm run build",
+    "verify": "npm ci && npm run start",
+    "verify:ci": "npm ci && npm run build",
     "clean": "shx rm -fr dist *.tsbuildinfo src/assets",
     "clean:production": "shx rm -fr production",
     "build:msg": "echo Building angular-client example:",
