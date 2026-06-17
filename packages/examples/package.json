@@ -1,6 +1,7 @@
 {
   "name": "monaco-languageclient-examples",
   "version": "2026.6.1",
+  "private": "true",
   "description": "Monaco Language client examples",
   "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/examples/README.md",
   "bugs": {

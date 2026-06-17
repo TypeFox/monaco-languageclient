@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import webpack from 'webpack';
 // solve: __dirname is not defined in ES module scope
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -39,11 +40,15 @@ const config = {
   resolve: {
     extensions: ['.ts', '.js', '.json', '.ttf'],
     fallback: {
-      fs: false,
-      module: false,
-      vm: false
+      'fs/promises': false
     }
   },
+  plugins: [
+    // intercept the "node:" URI scheme and strip it
+    new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+      resource.request = resource.request.replace(/^node:/, '');
+    })
+  ],
   mode: 'development',
   devtool: 'source-map'
 };

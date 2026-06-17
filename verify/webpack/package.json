@@ -23,6 +23,12 @@
     "ts-loader": "~9.6.1",
     "webpack-cli": "~7.0.3"
   },
+  "overrides": {
+    "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "monaco-languageclient": "../../packages/client",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
+  },
   "engines": {
     "node": ">=22",
     "npm": ">=10"
