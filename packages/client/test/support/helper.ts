@@ -7,7 +7,7 @@ import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/edito
 import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType, ViewsConfigTypes } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { MessageTransports } from 'vscode-languageclient/browser.js';
+import { MessageTransports } from 'vscode-languageclient/browser';
 
 export const createMonacoEditorDiv = () => {
   const div = document.createElement('div');

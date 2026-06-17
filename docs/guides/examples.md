@@ -254,7 +254,7 @@ async function createMultiLanguageEditor() {
 Running a language server in a Web Worker:
 
 ```typescript
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 
 async function createWebWorkerClient() {
   // Create worker

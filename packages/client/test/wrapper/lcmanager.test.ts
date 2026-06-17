@@ -11,7 +11,7 @@ import { delayExecution } from 'monaco-languageclient/common';
 import { LanguageClientManager } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
 
 describe('Test LanguageClientWrapper', () => {

@@ -7,7 +7,7 @@
 
 import 'emscripten';
 import JSZip from 'jszip';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser';
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
 import clangdConfig from '../../../resources/clangd/workspace/.clangd?raw';
 import { WORKSPACE_PATH } from '../definitions.js';

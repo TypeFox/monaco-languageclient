@@ -3,8 +3,14 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { Disposable } from 'vscode-jsonrpc';
-import type { IConnection } from '../server/connection.js';
+import { Disposable, Message, MessageReader, MessageWriter } from 'vscode-jsonrpc';
+
+export interface IConnection extends Disposable {
+  readonly reader: MessageReader;
+  readonly writer: MessageWriter;
+  forward(to: IConnection, map?: (message: Message) => Message): void;
+  onClose(callback: () => void): Disposable;
+}
 
 export interface IWebSocket extends Disposable {
   send(content: string): void;

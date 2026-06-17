@@ -15,7 +15,7 @@ import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import langiumGrammarLangium from '../../../../resources/langium/langium-dsl/langium-grammar.langium?raw';
 import langiumTypesLangium from '../../../../resources/langium/langium-dsl/langium-types.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';

@@ -103,7 +103,7 @@ const kickQueue = () => {
         await executeQueue();
         stopQueue();
       }
-    }, queueIntervalMs);
+    }, queueIntervalMs) as unknown as number;
   }
 };
 

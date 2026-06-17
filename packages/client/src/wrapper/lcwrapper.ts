@@ -7,8 +7,8 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from 'monaco-languageclient';
 import { createUrl, type WorkerConfigOptionsDirect, type WorkerConfigOptionsParams } from 'monaco-languageclient/common';
-import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser.js';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
+import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
 

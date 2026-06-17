@@ -7,7 +7,7 @@
 
 import { EmptyFileSystem } from 'langium';
 import { startLanguageServer } from 'langium/lsp';
-import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser';
 import { createStatemachineServices } from '../ls/statemachine-module.js';
 
 let messageReader: BrowserMessageReader | undefined;

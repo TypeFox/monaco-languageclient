@@ -8,14 +8,14 @@
     "verify:ci": "pnpm install && pnpm run build"
   },
   "dependencies": {
-    "monaco-languageclient-examples": "~2026.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^31.0.1"
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.0.1"
   },
   "devDependencies": {
-    "typescript": "~5.9.3"
+    "typescript": "~6.0.3"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "pnpm": ">=9.15.0"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }

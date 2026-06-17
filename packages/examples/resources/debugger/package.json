@@ -29,14 +29,14 @@
   },
   "dependencies": {
     "express": "~4.21.2",
-    "monaco-languageclient": "~10.5.0",
+    "monaco-languageclient": "~11.0.0-next.0",
     "ws": "~8.18.0"
   },
   "devDependencies": {
     "tsx": "~4.19.2"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": ">=22",
+    "npm": ">=10"
   }
 }

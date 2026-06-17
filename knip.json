@@ -5,7 +5,7 @@
       "entry": ["scripts/clean.ts", "scripts/helper.ts"]
     },
     "packages/vscode-ws-jsonrpc": {
-      "entry": ["src/server/index.ts", "src/socket/index.ts", "src/index.ts"]
+      "entry": ["src/server/index.ts", "src/index.ts"]
     },
     "packages/client": {
       "entry": [
@@ -32,6 +32,7 @@
         "src/appPlayground/reactMain.tsx",
         "src/browser/main.ts",
         "src/clangd/client/main.ts",
+        "src/clangd/worker/clangd-server.ts",
         "src/debugger/server/debugServer.ts",
         "src/eclipse.jdt.ls/client/main.ts",
         "src/groovy/client/main.ts",
@@ -61,5 +62,5 @@
     "packages/examples/resources/**": ["exports", "types"]
   },
   "ignoreBinaries": ["playwright"],
-  "ignoreDependencies": ["pyright"]
+  "ignoreDependencies": ["pyright", "emscripten"]
 }

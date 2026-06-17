@@ -9,7 +9,7 @@ import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import type { TextContents } from 'monaco-languageclient/editorApp';
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser.js';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';

@@ -3,25 +3,23 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
+import { LogLevel } from '@codingame/monaco-vscode-api';
+import '@codingame/monaco-vscode-json-default-extension';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import '@codingame/monaco-vscode-theme-defaults-default-extension';
-import '@codingame/monaco-vscode-json-default-extension';
+import * as vscode from 'vscode';
 import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
-import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
-import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { LogLevel } from '@codingame/monaco-vscode-api';
 
 import '../../resources/vsix/github-vscode-theme.vsix';
+import coffeelintJson from '../../resources/json/coffeelint.json?raw';
 
+import { MonacoLanguageClient } from 'monaco-languageclient';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 
 export const runBrowserEditor = async () => {
-  const codeConverter = createCodeConverter();
-  const protocolConverter = createProtocolConverter(undefined, true, true);
-
   let mainVscodeDocument: vscode.TextDocument | undefined;
   const languageId = 'json';
   const code = `{
@@ -64,6 +62,25 @@ export const runBrowserEditor = async () => {
 
   const editorApp = new EditorApp(editorAppConfig);
 
+  // create a fake worker and a Language Client instance to get access
+  // to the converters. It became required after update from vscode-languageclient v9 to v10
+  const worker = new Worker(new URL('./fake-worker.ts', import.meta.url), {
+    type: 'module',
+    name: 'Fake LS'
+  });
+  const messageTransports = {
+    reader: new BrowserMessageReader(worker),
+    writer: new BrowserMessageWriter(worker)
+  };
+  const lc = new MonacoLanguageClient({
+    id: 'test',
+    name: 'test',
+    messageTransports,
+    clientOptions: {}
+  });
+  const c2p = lc.code2ProtocolConverter;
+  const p2c = lc.protocol2CodeConverter;
+
   vscode.workspace.onDidOpenTextDocument((_event) => {
     mainVscodeDocument = _event;
   });
@@ -72,19 +89,14 @@ export const runBrowserEditor = async () => {
     return TextDocument.create(vscodeDocument.uri.toString(), vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
   };
 
-  const resolveSchema = (url: string): Promise<string> => {
-    const promise = new Promise<string>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => resolve(xhr.responseText);
-      xhr.onerror = () => reject(xhr.statusText);
-      xhr.open('GET', url, true);
-      xhr.send();
-    });
-    return promise;
-  };
-
+  const jsonSchemaUri = 'http://json.schemastore.org/coffeelint';
   const jsonService = getLanguageService({
-    schemaRequestService: resolveSchema
+    schemaRequestService: async (uri: string): Promise<string> => {
+      if (uri === jsonSchemaUri) {
+        return Promise.resolve(coffeelintJson);
+      }
+      return Promise.reject(`Unable to load schema at: ${uri}`);
+    }
   });
   const pendingValidationRequests = new Map<string, number>();
 
@@ -92,20 +104,20 @@ export const runBrowserEditor = async () => {
     async provideCompletionItems(vscodeDocument, position, _token, _context) {
       const document = createDocument(vscodeDocument);
       const jsonDocument = jsonService.parseJSONDocument(document);
-      const completionList = await jsonService.doComplete(document, codeConverter.asPosition(position), jsonDocument);
-      return protocolConverter.asCompletionResult(completionList);
+      const completionList = await jsonService.doComplete(document, c2p.asPosition(position), jsonDocument);
+      return p2c.asCompletionResult(completionList);
     },
 
     async resolveCompletionItem(item, _token) {
-      return await jsonService.doResolve(codeConverter.asCompletionItem(item)).then((result) => protocolConverter.asCompletionItem(result));
+      return await jsonService.doResolve(c2p.asCompletionItem(item)).then((result) => p2c.asCompletionItem(result));
     }
   });
 
   vscode.languages.registerDocumentRangeFormattingEditProvider(languageId, {
     provideDocumentRangeFormattingEdits(vscodeDocument, range, options, _token) {
       const document = createDocument(vscodeDocument);
-      const edits = jsonService.format(document, codeConverter.asRange(range), codeConverter.asFormattingOptions(options, {}));
-      return protocolConverter.asTextEdits(edits);
+      const edits = jsonService.format(document, c2p.asRange(range), c2p.asFormattingOptions(options, {}));
+      return p2c.asTextEdits(edits);
     }
   });
 
@@ -113,7 +125,7 @@ export const runBrowserEditor = async () => {
     provideDocumentSymbols(vscodeDocument, _token) {
       const document = createDocument(vscodeDocument);
       const jsonDocument = jsonService.parseJSONDocument(document);
-      return protocolConverter.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
+      return p2c.asSymbolInformations(jsonService.findDocumentSymbols(document, jsonDocument));
     }
   });
 
@@ -121,8 +133,8 @@ export const runBrowserEditor = async () => {
     async provideHover(vscodeDocument, position, _token) {
       const document = createDocument(vscodeDocument);
       const jsonDocument = jsonService.parseJSONDocument(document);
-      return await jsonService.doHover(document, codeConverter.asPosition(position), jsonDocument).then((hover) => {
-        return protocolConverter.asHover(hover)!;
+      return await jsonService.doHover(document, c2p.asPosition(position), jsonDocument).then((hover) => {
+        return p2c.asHover(hover)!;
       });
     }
   });
@@ -156,7 +168,7 @@ export const runBrowserEditor = async () => {
     const jsonDocument = jsonService.parseJSONDocument(document);
 
     jsonService.doValidation(document, jsonDocument).then(async (pDiagnostics) => {
-      const diagnostics = await protocolConverter.asDiagnostics(pDiagnostics);
+      const diagnostics = await p2c.asDiagnostics(pDiagnostics);
       diagnosticCollection.set(vscode.Uri.parse(codeUri), diagnostics);
     });
   };

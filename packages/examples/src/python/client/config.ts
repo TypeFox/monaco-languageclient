@@ -38,7 +38,7 @@ import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeAp
 import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
-import type { BaseLanguageClient } from 'vscode-languageclient/browser.js';
+import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';

@@ -8,26 +8,26 @@
     "verify:ci": "yarn install && yarn run build"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-api": "^31.0.1",
-    "@codingame/monaco-vscode-configuration-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-editor-api": "^31.0.1",
-    "@codingame/monaco-vscode-editor-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-extension-api": "^31.0.1",
-    "@codingame/monaco-vscode-extensions-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-languages-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-localization-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-log-service-override": "^31.0.1",
-    "@codingame/monaco-vscode-model-service-override": "^31.0.1",
-    "monaco-languageclient-examples": "^2026.2.1",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^31.0.1",
-    "vscode-languageclient": "~9.0.1"
+    "@codingame/monaco-vscode-api": "^34.0.1",
+    "@codingame/monaco-vscode-configuration-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-editor-api": "^34.0.1",
+    "@codingame/monaco-vscode-editor-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-extension-api": "^34.0.1",
+    "@codingame/monaco-vscode-extensions-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-languages-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-localization-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-log-service-override": "^34.0.1",
+    "@codingame/monaco-vscode-model-service-override": "^34.0.1",
+    "monaco-languageclient-examples": "../../packages/examples",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.0.1",
+    "vscode-languageclient": "~10.0.0"
   },
   "devDependencies": {
-    "typescript": "~5.9.3"
+    "typescript": "~6.0.3"
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3",
-    "yarn": ">=4.6.0"
+    "node": ">=22",
+    "npm": ">=10",
+    "yarn": ">=4"
   }
 }
