@@ -63,7 +63,7 @@
     "@vitest/browser": "~4.1.9",
     "@vitest/browser-playwright": "~4.1.9",
     "@vitest/coverage-v8": "~4.1.9",
-    "knip": "~6.16.1",
+    "knip": "~6.17.1",
     "minimatch": "~10.2.5",
     "oxfmt": "~0.55.0",
     "oxlint": "~1.70.0",

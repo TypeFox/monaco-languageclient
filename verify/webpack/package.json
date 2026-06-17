@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "verify": "npm install && npm run build && npm run start",
-    "verify:ci": "npm install && npm run build",
+    "verify": "npm ci && npm run build && npm run start",
+    "verify:ci": "npm ci && npm run build",
     "clean": "shx rm -fr dist *.tsbuildinfo",
     "build:msg": "echo Building client-webpack example:",
     "build": "npm run build:msg && npm run clean && webpack",
