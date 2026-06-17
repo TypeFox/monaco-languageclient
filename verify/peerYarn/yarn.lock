@@ -708,14 +708,14 @@ __metadata:
 
 "@typefox/monaco-editor-react@file:../../packages/wrapper-react::locator=%40typefox%2Fpeer-check-yarn%40workspace%3A.":
   version: 8.0.0-next.0
-  resolution: "@typefox/monaco-editor-react@file:../../packages/wrapper-react#../../packages/wrapper-react::hash=fea7e9&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
+  resolution: "@typefox/monaco-editor-react@file:../../packages/wrapper-react#../../packages/wrapper-react::hash=af2b85&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
   dependencies:
     "@codingame/monaco-vscode-api": "npm:^34.0.1"
     "@codingame/monaco-vscode-log-service-override": "npm:^34.0.1"
     monaco-languageclient: "npm:~11.0.0-next.0"
     react: "npm:>=18.0.0 || <20.0.0"
     vscode-languageclient: "npm:~10.0.0"
-  checksum: 10c0/fa73fdc544680ab6e4241e31048220bf8d77f37a7fbbed4f50a0c3e5d812b1b760e163be032842c24884ec493d1ae2917c84f5a57daf8541151fb5fc5db6b568
+  checksum: 10c0/34eb945b497bcfad9c39a2c6a37ab17fad30805cc357e333532755126d883460a7b79cbf4107c4cef288cabef43b463fba4873a1fc4c3dcbbc6b982a6c5dad1e
   languageName: node
   linkType: hard
 
@@ -1437,10 +1437,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:^10.0.1":
-  version: 10.1.0
-  resolution: "ip-address@npm:10.1.0"
-  checksum: 10c0/0103516cfa93f6433b3bd7333fa876eb21263912329bfa47010af5e16934eeeff86f3d2ae700a3744a137839ddfad62b900c7a445607884a49b5d1e32a3d7566
+"ip-address@npm:~10.2.0":
+  version: 10.2.0
+  resolution: "ip-address@npm:10.2.0"
+  checksum: 10c0/5a00aada6e922c9c69dfc800ed5d0fa3348675ebdeed0e1575f503f27ca385b5f534363c9af7ad1daf64c1f1409388cdd3cc2e9b9b0fe1c924a431378d55075a
   languageName: node
   linkType: hard
 
@@ -1696,7 +1696,7 @@ __metadata:
 
 "monaco-languageclient-examples@file:../../packages/examples::locator=%40typefox%2Fpeer-check-yarn%40workspace%3A.":
   version: 2026.6.1
-  resolution: "monaco-languageclient-examples@file:../../packages/examples#../../packages/examples::hash=5817cd&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
+  resolution: "monaco-languageclient-examples@file:../../packages/examples#../../packages/examples::hash=6ddbdc&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
   dependencies:
     "@codingame/monaco-vscode-api": "npm:^34.0.1"
     "@codingame/monaco-vscode-cpp-default-extension": "npm:^34.0.1"
@@ -1750,13 +1750,13 @@ __metadata:
     vscode-ws-jsonrpc: "npm:~4.0.0-next.0"
     ws: "npm:~8.21.0"
     wtd-core: "npm:~4.0.1"
-  checksum: 10c0/f4f8ab32a6a72eddfc3ac4030ce3dcba9dbea42814e24ad702e6a9cb988a838d598a70615b01ef015ca0d846eb0b6addfb310ee9f9338e411e622aa6103ed1a5
+  checksum: 10c0/d2e22d76e5ec819df17553736dfdee51769b5b21a848edaa2ab19a9193e495d1539483a99a7597d7e0534d6337ba5cd7eb5588cb6ad803f2c4ecf8ab3a8dba59
   languageName: node
   linkType: hard
 
 "monaco-languageclient@file:../../packages/client::locator=%40typefox%2Fpeer-check-yarn%40workspace%3A.":
   version: 11.0.0-next.0
-  resolution: "monaco-languageclient@file:../../packages/client#../../packages/client::hash=1c2d41&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
+  resolution: "monaco-languageclient@file:../../packages/client#../../packages/client::hash=b6261f&locator=%40typefox%2Fpeer-check-yarn%40workspace%3A."
   dependencies:
     "@codingame/monaco-vscode-api": "npm:^34.0.1"
     "@codingame/monaco-vscode-configuration-service-override": "npm:^34.0.1"
@@ -1792,7 +1792,7 @@ __metadata:
     vscode-languageclient: "npm:~10.0.0"
     vscode-languageserver-protocol: "npm:~3.18.0"
     vscode-ws-jsonrpc: "npm:~4.0.0-next.0"
-  checksum: 10c0/d7593e61a9f8f2bedd1fe943a94175ed4d3b8a06739b95d5f54ceb3b7e216b9ea6e4ba3dd999b8dcec25fb8d95bb984cab28721eb56e18c40a899ba21b193ae9
+  checksum: 10c0/02bac2fb28ca8a216fbf702c779c755bfda1a3d0cffa9b51970b9f96423f7bac6b829bf766e252a745d0ccd1cd1371da97e2f8132b92ffc4a71f14de99ba0e10
   languageName: node
   linkType: hard
 
@@ -1920,10 +1920,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "picomatch@npm:4.0.3"
-  checksum: 10c0/9582c951e95eebee5434f59e426cddd228a7b97a0161a375aed4be244bd3fe8e3a31b846808ea14ef2c8a2527a6eeab7b3946a67d5979e81694654f939473ae2
+"picomatch@npm:~4.0.4":
+  version: 4.0.4
+  resolution: "picomatch@npm:4.0.4"
+  checksum: 10c0/e2c6023372cc7b5764719a5ffb9da0f8e781212fa7ca4bd0562db929df8e117460f00dff3cb7509dacfc06b86de924b247f504d0ce1806a37fac4633081466b0
   languageName: node
   linkType: hard
 
@@ -1976,12 +1976,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.14.0, qs@npm:^6.14.1":
-  version: 6.14.1
-  resolution: "qs@npm:6.14.1"
+"qs@npm:~6.15.2":
+  version: 6.15.2
+  resolution: "qs@npm:6.15.2"
   dependencies:
     side-channel: "npm:^1.1.0"
-  checksum: 10c0/0e3b22dc451f48ce5940cbbc7c7d9068d895074f8c969c0801ac15c1313d1859c4d738e46dc4da2f498f41a9ffd8c201bd9fb12df67799b827db94cc373d2613
+  checksum: 10c0/e6fd5f6f0aab06d480fe9ab15cebfc4ce4235303e2f91dc69a8f7f4df1e668a61c11d1cfbabacf4295cbbeb7b670ed23db45307480726259761f98e5695e93a7
   languageName: node
   linkType: hard
 
