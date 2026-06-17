@@ -15,8 +15,9 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
+import { configureDefaultWorkerFactory, useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
   const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
@@ -25,6 +26,19 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   registerFileSystemOverlay(1, fileSystemProvider);
 
   const htmlContainer = document.getElementById('monaco-editor-root')!;
+
+  let monacoWorkerFactory;
+  if (lsConfig.workerLoaders !== undefined) {
+    monacoWorkerFactory = (logger?: ILogger) => {
+      useWorkerFactory({
+        workerLoaders: lsConfig.workerLoaders?.(),
+        logger
+      });
+    };
+  } else {
+    monacoWorkerFactory = configureDefaultWorkerFactory;
+  }
+
   const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
@@ -44,7 +58,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
         'editor.experimental.asyncTokenization': true
       })
     },
-    monacoWorkerFactory: configureDefaultWorkerFactory
+    monacoWorkerFactory
   };
 
   const startOptions = {
@@ -141,4 +155,5 @@ export type ExampleLsConfig = {
   basePath: string;
   languageId: string;
   useExternalWebSocket: boolean;
+  workerLoaders?: () => Partial<Record<string, WorkerLoader>>;
 };

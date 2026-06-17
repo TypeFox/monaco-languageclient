@@ -15,3 +15,5 @@ export const runJsonWrapper = async () => {
 }`;
   await runExtendedClient(jsontLsConfig, helloJsonCode);
 };
+
+export { jsontLsConfig } from './config.js';

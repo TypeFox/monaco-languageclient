@@ -9,5 +9,5 @@
   "workbench.editor.revealIfOpen": true,
   "terminal.integrated.scrollback": 10000,
   "editor.minimap.enabled": false,
-  "editor.foldingImportsByDefault": true
+  "editor.foldingImportsByDefault": false
 }
