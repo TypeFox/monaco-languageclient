@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "verify": "npm install && npm run build && npm run start",
-    "verify:ci": "npm install && npm run build",
+    "verify": "npm ci && npm run build && npm run start",
+    "verify:ci": "npm ci && npm run build",
     "clean": "shx rm -fr dist",
     "build:msg": "echo Building client-vite example:",
     "build:tsc": "tsc --build tsconfig.json",

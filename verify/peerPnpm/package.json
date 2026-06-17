@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.json",
-    "verify:ci": "pnpm install && pnpm run build"
+    "verify:ci": "pnpm ci && pnpm run build"
   },
   "dependencies": {
     "monaco-languageclient-examples": "../../packages/examples",

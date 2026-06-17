@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.json",
-    "verify:ci": "yarn install && yarn run build"
+    "verify:ci": "yarn install --immutable && yarn run build"
   },
   "dependencies": {
     "@codingame/monaco-vscode-api": "^34.0.1",
@@ -28,9 +28,13 @@
     "typescript": "~6.0.3"
   },
   "resolutions": {
+    "@isaacs/brace-expansion": "~5.0.1",
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "minimatch": "~10.2.3",
     "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
+    "path-to-regexp": "~8.4.2",
+    "tar": "~7.5.16",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {

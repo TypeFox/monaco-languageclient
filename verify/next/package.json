@@ -3,8 +3,8 @@
   "type": "module",
   "scripts": {
     "clean": "shx rm -fr .next dist lib bundle *.tsbuildinfo",
-    "verify": "npm install && npm run dev",
-    "verify:ci": "npm install && npm run build -d",
+    "verify": "npm ci && npm run dev",
+    "verify:ci": "npm ci && npm run build -d",
     "dev:next": "npm run bundle && npm run build:tsc && next dev -p 8083",
     "dev:vite": "npm run bundle && npm run build:tsc && vite --config vite.config.ts",
     "build": "npm run bundle && next build",
@@ -47,6 +47,7 @@
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
     "monaco-languageclient": "../../packages/client",
+    "postcss": "8.5.15",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {
