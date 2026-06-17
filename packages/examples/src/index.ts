@@ -4,3 +4,4 @@
  * ------------------------------------------------------------------------------------------ */
 
 export * from './common/client/utils.js';
+export * from './common/client/extendedClient.js';

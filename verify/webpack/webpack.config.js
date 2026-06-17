@@ -38,7 +38,10 @@ const config = {
   },
   target: 'web',
   resolve: {
-    extensions: ['.ts', '.js', '.json', '.ttf']
+    extensions: ['.ts', '.js', '.json', '.ttf'],
+    alias: {
+      '/assets': resolve(__dirname, 'bundle/assets/')
+    }
   },
   plugins: [
     new webpack.IgnorePlugin({

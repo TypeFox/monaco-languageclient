@@ -6,12 +6,16 @@
   "scripts": {
     "verify": "npm ci && npm run build && npm run start",
     "verify:ci": "npm ci && npm run build",
-    "clean": "shx rm -fr dist *.tsbuildinfo",
+    "clean": "shx rm -fr bundle dist public *.tsbuildinfo",
     "build:msg": "echo Building client-webpack example:",
-    "build": "npm run build:msg && npm run clean && webpack",
-    "start": "http-server ./ --port 8082"
+    "build": "npm run build:msg && npm run clean && npm run bundle && webpack",
+    "start": "http-server ./ --port 8082",
+    "bundle": "npm run bundle:editorWorker && npm run bundle:textmateWorker",
+    "bundle:editorWorker": "vite --config vite.config.editorWorker.ts build",
+    "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build"
   },
   "dependencies": {
+    "@codingame/monaco-vscode-textmate-service-override": "^34.0.1",
     "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {
@@ -21,6 +25,7 @@
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.6.1",
+    "vite": "~8.0.16",
     "webpack-cli": "~7.0.3"
   },
   "overrides": {
