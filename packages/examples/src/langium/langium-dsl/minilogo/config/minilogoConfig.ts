@@ -46,95 +46,95 @@ pen(up)
 `;
 
 export const createMinilogoConfig = (params: { htmlContainer: HTMLElement }): ExampleAppConfig => {
-    const languageId = 'minilogo';
+  const languageId = 'minilogo';
 
-    // create the worker from the langium-minilogo package's pre-built language server bundle
-    const worker = new Worker(new URL('langium-minilogo/ls-web', import.meta.url), {
-        type: 'module',
-        name: 'MiniLogo Language Server'
-    });
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
+  // create the worker from the langium-minilogo package's pre-built language server bundle
+  const worker = new Worker(new URL('langium-minilogo/ls-web', import.meta.url), {
+    type: 'module',
+    name: 'MiniLogo Language Server'
+  });
+  const reader = new BrowserMessageReader(worker);
+  const writer = new BrowserMessageWriter(worker);
 
-    const languageClientConfig: LanguageClientConfig = {
-        languageId,
-        clientOptions: {
-            documentSelector: [languageId]
+  const languageClientConfig: LanguageClientConfig = {
+    languageId,
+    clientOptions: {
+      documentSelector: [languageId]
+    },
+    connection: {
+      options: {
+        $type: 'WorkerDirect',
+        worker
+      },
+      messageTransports: { reader, writer }
+    }
+  };
+
+  const vscodeApiConfig: MonacoVscodeApiConfig = {
+    $type: 'extended',
+    viewsConfig: {
+      $type: 'EditorService',
+      htmlContainer: params.htmlContainer
+    },
+    logLevel: LogLevel.Debug,
+    serviceOverrides: {
+      ...getKeybindingsServiceOverride()
+    },
+    userConfiguration: {
+      json: JSON.stringify({
+        'workbench.colorTheme': 'Default Dark Modern',
+        'editor.guides.bracketPairsHorizontal': 'active',
+        'editor.wordBasedSuggestions': 'off',
+        'editor.experimental.asyncTokenization': true
+      })
+    },
+    monacoWorkerFactory: configureDefaultWorkerFactory,
+    // register the minilogo language with textmate grammar for syntax highlighting
+    extensions: [
+      {
+        config: {
+          name: 'minilogo-language',
+          publisher: 'TypeFox',
+          version: '1.0.0',
+          engines: { vscode: '*' },
+          contributes: {
+            languages: [
+              {
+                id: languageId,
+                extensions: ['.minilogo'],
+                aliases: ['MiniLogo', 'minilogo'],
+                configuration: '/workspace/minilogo-configuration.json'
+              }
+            ],
+            grammars: [
+              {
+                language: languageId,
+                scopeName: 'source.minilogo',
+                path: '/workspace/minilogo-grammar.json'
+              }
+            ]
+          }
         },
-        connection: {
-            options: {
-                $type: 'WorkerDirect',
-                worker
-            },
-            messageTransports: { reader, writer }
-        }
-    };
+        filesOrContents: new Map<string, string | URL>([
+          ['/workspace/minilogo-configuration.json', minilogoLanguageConfig],
+          ['/workspace/minilogo-grammar.json', minilogoTextmateGrammar]
+        ])
+      }
+    ]
+  };
 
-    const vscodeApiConfig: MonacoVscodeApiConfig = {
-        $type: 'extended',
-        viewsConfig: {
-            $type: 'EditorService',
-            htmlContainer: params.htmlContainer
-        },
-        logLevel: LogLevel.Debug,
-        serviceOverrides: {
-            ...getKeybindingsServiceOverride()
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'workbench.colorTheme': 'Default Dark Modern',
-                'editor.guides.bracketPairsHorizontal': 'active',
-                'editor.wordBasedSuggestions': 'off',
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-        monacoWorkerFactory: configureDefaultWorkerFactory,
-        // register the minilogo language with textmate grammar for syntax highlighting
-        extensions: [
-            {
-                config: {
-                    name: 'minilogo-language',
-                    publisher: 'TypeFox',
-                    version: '1.0.0',
-                    engines: { vscode: '*' },
-                    contributes: {
-                        languages: [
-                            {
-                                id: languageId,
-                                extensions: ['.minilogo'],
-                                aliases: ['MiniLogo', 'minilogo'],
-                                configuration: '/workspace/minilogo-configuration.json'
-                            }
-                        ],
-                        grammars: [
-                            {
-                                language: languageId,
-                                scopeName: 'source.minilogo',
-                                path: '/workspace/minilogo-grammar.json'
-                            }
-                        ]
-                    }
-                },
-                filesOrContents: new Map<string, string | URL>([
-                    ['/workspace/minilogo-configuration.json', minilogoLanguageConfig],
-                    ['/workspace/minilogo-grammar.json', minilogoTextmateGrammar]
-                ])
-            }
-        ]
-    };
+  const editorAppConfig: EditorAppConfig = {
+    codeResources: {
+      modified: {
+        text: sampleContent,
+        uri: '/workspace/example.minilogo'
+      }
+    }
+  };
 
-    const editorAppConfig: EditorAppConfig = {
-        codeResources: {
-            modified: {
-                text: sampleContent,
-                uri: '/workspace/example.minilogo'
-            }
-        }
-    };
-
-    return {
-        editorAppConfig,
-        vscodeApiConfig,
-        languageClientConfig
-    };
+  return {
+    editorAppConfig,
+    vscodeApiConfig,
+    languageClientConfig
+  };
 };

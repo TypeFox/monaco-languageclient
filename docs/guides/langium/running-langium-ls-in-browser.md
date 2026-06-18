@@ -31,11 +31,7 @@ Create a file `src/language-server/main-browser.ts` in your Langium project:
 ```ts
 import { EmptyFileSystem } from 'langium';
 import { startLanguageServer } from 'langium/lsp';
-import {
-  BrowserMessageReader,
-  BrowserMessageWriter,
-  createConnection
-} from 'vscode-languageserver/browser';
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser';
 // your services import will differ based on your language
 import { createMyLanguageServices } from './my-language-module.js';
 
@@ -111,10 +107,7 @@ As noted before, we're using `--format=esm` to produce an ES module worker. This
 If our client application uses Vite, we can also consume the LS without needing to pre-bundle it. Vite can bundle the worker inline when we reference it with `import.meta.url`:
 
 ```ts
-const worker = new Worker(
-  new URL('./path/to/main-browser.ts', import.meta.url),
-  { type: 'module', name: 'MyLanguageServer' }
-);
+const worker = new Worker(new URL('./path/to/main-browser.ts', import.meta.url), { type: 'module', name: 'MyLanguageServer' });
 ```
 
 Vite will automatically bundle the worker entry point and its dependencies at build time. This approach is actually used by most of the examples in this repository as well, so there's plenty of reference material here.
@@ -124,10 +117,7 @@ Vite will automatically bundle the worker entry point and its dependencies at bu
 The MiniLogo example in this repository takes a slightly different approach. We consume a **pre-built** language server worker from the [`langium-minilogo`](https://github.com/TypeFox/langium-minilogo) npm package rather than building from source. The package provides a `ls-web` export endpoint that gives us a pre-bundled ESM language server ready to load as a Web Worker:
 
 ```ts
-const worker = new Worker(
-  new URL('langium-minilogo/ls-web', import.meta.url),
-  { type: 'module', name: 'MiniLogo Language Server' }
-);
+const worker = new Worker(new URL('langium-minilogo/ls-web', import.meta.url), { type: 'module', name: 'MiniLogo Language Server' });
 ```
 
 This allows us to depend on the LS as a standalone artifact without needing to bundle it ourselves. However, rest assured the process outlined above is how that bundle is produced. You can check out the [langium-minilogo](https://github.com/TypeFox/langium-minilogo) project to see exactly how it's done, and you can see the working [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository for the complete client-side integration.
@@ -147,10 +137,7 @@ The client setup involves three parts:
 First, we can create the Web Worker by pointing at our bundled language server, wherever that may be:
 
 ```ts
-const worker = new Worker(
-  new URL('./worker/my-language-server-bundle.js', import.meta.url),
-  { type: 'module', name: 'MyLanguageServer' }
-);
+const worker = new Worker(new URL('./worker/my-language-server-bundle.js', import.meta.url), { type: 'module', name: 'MyLanguageServer' });
 ```
 
 In a Vite project, we can reference the source file directly as well, as noted in the prior section.
@@ -184,30 +171,36 @@ extensionFilesOrContents.set('/my-language-grammar.json', textmateGrammar);
 const vscodeApiConfig: MonacoVscodeApiConfig = {
   $type: 'extended',
   // ... other config (see full example below)
-  extensions: [{
-    config: {
-      name: 'my-language-example',
-      publisher: 'my-org',
-      version: '1.0.0',
-      engines: { vscode: '*' },
-      contributes: {
-        languages: [{
-          id: 'my-language',
-          extensions: ['.mylang'],
-          aliases: ['MyLanguage'],
-          // should match the path above
-          configuration: '/my-language-configuration.json'
-        }],
-        grammars: [{
-          language: 'my-language',
-          scopeName: 'source.my-language',
-          // should match the path above
-          path: '/my-language-grammar.json'
-        }]
-      }
-    },
-    filesOrContents: extensionFilesOrContents
-  }]
+  extensions: [
+    {
+      config: {
+        name: 'my-language-example',
+        publisher: 'my-org',
+        version: '1.0.0',
+        engines: { vscode: '*' },
+        contributes: {
+          languages: [
+            {
+              id: 'my-language',
+              extensions: ['.mylang'],
+              aliases: ['MyLanguage'],
+              // should match the path above
+              configuration: '/my-language-configuration.json'
+            }
+          ],
+          grammars: [
+            {
+              language: 'my-language',
+              scopeName: 'source.my-language',
+              // should match the path above
+              path: '/my-language-grammar.json'
+            }
+          ]
+        }
+      },
+      filesOrContents: extensionFilesOrContents
+    }
+  ]
 };
 ```
 
@@ -256,10 +249,7 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import {
-  MonacoVscodeApiWrapper,
-  type MonacoVscodeApiConfig
-} from 'monaco-languageclient/vscodeApiWrapper';
+import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 
@@ -269,10 +259,7 @@ import textmateGrammar from './syntaxes/my-language.tmLanguage.json?raw';
 
 async function startEditor() {
   // 1. create the language server worker
-  const worker = new Worker(
-    new URL('./worker/my-language-server.js', import.meta.url),
-    { type: 'module', name: 'MyLanguageServer' }
-  );
+  const worker = new Worker(new URL('./worker/my-language-server.js', import.meta.url), { type: 'module', name: 'MyLanguageServer' });
   const reader = new BrowserMessageReader(worker);
   const writer = new BrowserMessageWriter(worker);
 
@@ -303,28 +290,34 @@ async function startEditor() {
         'editor.experimental.asyncTokenization': true
       })
     },
-    extensions: [{
-      config: {
-        name: 'my-language-example',
-        publisher: 'my-org',
-        version: '1.0.0',
-        engines: { vscode: '*' },
-        contributes: {
-          languages: [{
-            id: languageId,
-            extensions: ['.mylang'],
-            aliases: ['MyLanguage'],
-            configuration: '/my-language-configuration.json'
-          }],
-          grammars: [{
-            language: languageId,
-            scopeName: 'source.my-language',
-            path: '/my-language-grammar.json'
-          }]
-        }
-      },
-      filesOrContents: extensionFilesOrContents
-    }]
+    extensions: [
+      {
+        config: {
+          name: 'my-language-example',
+          publisher: 'my-org',
+          version: '1.0.0',
+          engines: { vscode: '*' },
+          contributes: {
+            languages: [
+              {
+                id: languageId,
+                extensions: ['.mylang'],
+                aliases: ['MyLanguage'],
+                configuration: '/my-language-configuration.json'
+              }
+            ],
+            grammars: [
+              {
+                language: languageId,
+                scopeName: 'source.my-language',
+                path: '/my-language-grammar.json'
+              }
+            ]
+          }
+        },
+        filesOrContents: extensionFilesOrContents
+      }
+    ]
   };
 
   // 4. configure the language client
@@ -418,7 +411,8 @@ To do that, we can set up a regular HTML page that provides the container elemen
     <meta charset="utf-8" />
     <title>My Language Editor</title>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         width: 100%;

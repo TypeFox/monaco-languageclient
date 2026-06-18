@@ -4,7 +4,7 @@ All notable changes to npm module [@typefox/monaco-editor-react](https://www.npm
 
 ## [8.0.0-next.0] - unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `34.0.1`.
+- Updated all `@codingame/monaco-vscode` packages to `34.1.1`.
 - Updated to `monaco-languageclient@11.0.0-next.0`.
 - Updated `vscode-languageclient` and `vscode-languageserver` to `10.0.0` and `vscode-languageserver-protocol` to `3.18.0`.
 - Dropped eslint and rely fully on oxlint.

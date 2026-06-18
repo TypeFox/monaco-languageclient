@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "monaco-languageclient-examples": "../../packages/examples",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.0.1"
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^34.1.1"
   },
   "devDependencies": {
     "shx": "~0.4.0",
