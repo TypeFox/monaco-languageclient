@@ -7,6 +7,7 @@ This section covers the general concepts and usage patterns for the Monaco Langu
 - **[Getting Started](./getting-started.md)** - Your first Monaco Language Client integration with a minimal working example
 - **[Configuration](./configuration.md)** - Understanding configuration options and how to customize your setup
 - **[Examples](./examples.md)** - Simple, practical examples demonstrating common integration patterns
+- **[Langium Integration Guides](./langium/index.md)** - Guides for integrating & interacting with language servers from Langium-based DSLs
 - **[Troubleshooting](./troubleshooting.md)** - Common issues and how to resolve them
 
 ## Quick Overview
@@ -74,5 +75,6 @@ Generally you should start with Extended Mode unless you have specific constrain
 - **New to the Monaco Language Client?** Start with [Getting Started](./getting-started.md)
 - **Need specific configuration help?** Check [Configuration](./configuration.md)
 - **Jump straight to Practical Usage?** Browse [Examples](./examples.md)
+- **Looking to integrate a Langium DSL?** Read the [Langium Integration Guides](./langium/index.md)
 - **Upgrading from v9?** Follow the [Migration Guide](../migration.md)
 - **Facing issues?** Look into [Troubleshooting](./troubleshooting.md)
