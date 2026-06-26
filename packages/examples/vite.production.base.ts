@@ -15,7 +15,7 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
         input: {
           index: path.resolve(__dirname, 'index.html'),
           langiumExtended: path.resolve(__dirname, 'ghp_langium_extended.html'),
-          minilogo: path.resolve(__dirname, 'minilogo.html'),
+          minilogo: path.resolve(__dirname, 'ghp_minilogo.html'),
           statemachine: path.resolve(__dirname, 'ghp_statemachine.html'),
           clangd: path.resolve(__dirname, 'ghp_clangd.html'),
           appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),
