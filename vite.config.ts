@@ -30,7 +30,8 @@ export const definedViteConfig = defineConfig({
         reactAppPlayground: path.resolve(__dirname, 'packages/examples/react_appPlayground.html'),
         reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
         reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
-        tsExtHost: path.resolve(__dirname, 'packages/examples/tsExtHost.html')
+        tsExtHost: path.resolve(__dirname, 'packages/examples/tsExtHost.html'),
+        minilogo: path.resolve(__dirname, 'packages/examples/minilogo.html')
       }
     }
   },

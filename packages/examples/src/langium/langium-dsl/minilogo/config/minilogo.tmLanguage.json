@@ -1,0 +1,45 @@
+{
+    "name": "minilogo",
+    "scopeName": "source.minilogo",
+    "fileTypes": [".minilogo"],
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "name": "keyword.control.minilogo",
+            "match": "\\b(color|def|down|for|move|pen|to|up)\\b"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.block.minilogo",
+                    "begin": "/\\*",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.minilogo"
+                        }
+                    },
+                    "end": "\\*/",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.minilogo"
+                        }
+                    }
+                },
+                {
+                    "begin": "//",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.whitespace.comment.leading.minilogo"
+                        }
+                    },
+                    "end": "(?=$)",
+                    "name": "comment.line.minilogo"
+                }
+            ]
+        }
+    }
+}
