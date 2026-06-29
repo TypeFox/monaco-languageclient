@@ -30,6 +30,7 @@
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "dompurify": "~3.4.11",
     "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"

@@ -40,6 +40,7 @@
   },
   "overrides": {
     "@babel/core": "~7.29.7",
+    "dompurify": "~3.4.11",
     "esbuild": "~0.28.1",
     "monaco-languageclient": "../../packages/client",
     "path-to-regexp": "~8.4.2",
