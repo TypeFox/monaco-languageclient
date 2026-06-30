@@ -23,7 +23,7 @@
     "dev:debug": "vite --debug --force",
     "report:versions:vite": "echo vite: && vite --version && echo vitest: && vitest --version",
     "report:versions:node": "echo npm: && npm --version && echo node: && node --version",
-    "report:versions:tools": "echo tsgo: && tsgo --version && echo pnpm: && pnpm --version && echo yarn: && yarn --version",
+    "report:versions:tools": "echo tsgo: && tsgo --version",
     "report:versions": "echo Reporting versions: && npm run report:versions:node && npm run report:versions:vite && npm run report:versions:tools",
     "build": "npm run build --workspaces",
     "build:client": "npm run build --workspace packages/client",
