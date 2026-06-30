@@ -25,7 +25,7 @@
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.6.1",
-    "vite": "~8.1.1",
+    "vite": "8.1.0",
     "webpack-cli": "~7.1.0"
   },
   "overrides": {
