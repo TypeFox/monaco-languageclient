@@ -1,5 +1,3 @@
 [tools]
 node = "24"
 npm = "11"
-pnpm = "11"
-yarn = "4"

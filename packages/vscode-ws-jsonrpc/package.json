@@ -45,7 +45,7 @@
     "build": "npm run build:msg && npm run clean && npm run compile"
   },
   "dependencies": {
-    "vscode-jsonrpc": "~9.0.0"
+    "vscode-jsonrpc": "~9.0.1"
   },
   "engines": {
     "node": ">=22",

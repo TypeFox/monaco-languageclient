@@ -12,33 +12,33 @@ let editorApp: EditorApp | undefined;
 let lcWrapper: LanguageClientWrapper | undefined;
 
 const startEditor = async () => {
-    if (editorApp?.isStarted() === true) {
-        console.warn('Editor was already started');
-        return;
-    }
+  if (editorApp?.isStarted() === true) {
+    console.warn('Editor was already started');
+    return;
+  }
 
-    const htmlContainer = document.getElementById('monaco-editor-root')!;
-    const appConfig = createMinilogoConfig({ htmlContainer });
+  const htmlContainer = document.getElementById('monaco-editor-root')!;
+  const appConfig = createMinilogoConfig({ htmlContainer });
 
-    // initialize the monaco-vscode api
-    const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
-    await apiWrapper.start();
+  // initialize the monaco-vscode api
+  const apiWrapper = new MonacoVscodeApiWrapper(appConfig.vscodeApiConfig);
+  await apiWrapper.start();
 
-    // start the language client
-    lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
-    await lcWrapper.start();
+  // start the language client
+  lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
+  await lcWrapper.start();
 
-    // start the editor
-    editorApp = new EditorApp(appConfig.editorAppConfig);
-    await editorApp.start(htmlContainer);
+  // start the editor
+  editorApp = new EditorApp(appConfig.editorAppConfig);
+  await editorApp.start(htmlContainer);
 
-    console.log('MiniLogo editor with language client is ready');
+  console.log('MiniLogo editor with language client is ready');
 };
 
 export const runMinilogo = async () => {
-    try {
-        await startEditor();
-    } catch (e) {
-        console.error(e);
-    }
+  try {
+    await startEditor();
+  } catch (e) {
+    console.error(e);
+  }
 };

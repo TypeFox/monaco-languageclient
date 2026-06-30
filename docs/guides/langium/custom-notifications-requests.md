@@ -42,10 +42,7 @@ In our Langium language server's browser entry point (`main-browser.ts`), we hoo
 
 ```ts
 import { DocumentState, type LangiumDocument } from 'langium';
-import {
-  Diagnostic,
-  NotificationType
-} from 'vscode-languageserver/browser';
+import { Diagnostic, NotificationType } from 'vscode-languageserver/browser';
 
 // define the notification type and its payload shape
 type DocumentChangePayload = {
@@ -53,24 +50,19 @@ type DocumentChangePayload = {
   content: string;
   diagnostics: Diagnostic[];
 };
-const documentChangeNotification = new NotificationType<DocumentChangePayload>(
-  'browser/DocumentChange'
-);
+const documentChangeNotification = new NotificationType<DocumentChangePayload>('browser/DocumentChange');
 
 // listen for documents that have completed validation
-shared.workspace.DocumentBuilder.onBuildPhase(
-  DocumentState.Validated,
-  (documents: LangiumDocument[]) => {
-    for (const document of documents) {
-      // build whatever payload your language needs
-      // can be any json serializable object
-      const payload = buildPayload(document);
+shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, (documents: LangiumDocument[]) => {
+  for (const document of documents) {
+    // build whatever payload your language needs
+    // can be any json serializable object
+    const payload = buildPayload(document);
 
-      // send the notification to the client
-      connection.sendNotification(documentChangeNotification, payload);
-    }
+    // send the notification to the client
+    connection.sendNotification(documentChangeNotification, payload);
   }
-);
+});
 ```
 
 The notification type string (`'browser/DocumentChange'`) is arbitrary, it just needs to match between server and client. The payload can be any JSON-serializable object. Additionally, notifications can be sent in response to anything else we want to respond to, not just a build phase callback.
@@ -113,41 +105,36 @@ type DocumentChangePayload = {
   content: string;
   diagnostics: Diagnostic[];
 };
-const documentChangeNotification = new NotificationType<DocumentChangePayload>(
-  'browser/DocumentChange'
-);
+const documentChangeNotification = new NotificationType<DocumentChangePayload>('browser/DocumentChange');
 
 // MiniLogo is the Langium-generated services object from createMiniLogoServices()
 const jsonSerializer = MiniLogo.serializer.JsonSerializer;
 
-shared.workspace.DocumentBuilder.onBuildPhase(
-  DocumentState.Validated,
-  (documents: LangiumDocument[]) => {
-    for (const document of documents) {
-      const model = document.parseResult.value as Model;
-      let commands: Command[] = [];
+shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, (documents: LangiumDocument[]) => {
+  for (const document of documents) {
+    const model = document.parseResult.value as Model;
+    let commands: Command[] = [];
 
-      // only generate commands when there are no errors
-      const hasErrors = document.diagnostics?.some((d) => d.severity === 1) ?? false;
-      if (!hasErrors) {
-        commands = generateStatements(model.stmts);
-      }
-
-      // attach the generated commands to the model for serialization
-      (model as unknown as { $commands: Command[] }).$commands = commands;
-
-      // send a notification with a model + commands attached
-      connection.sendNotification(documentChangeNotification, {
-        uri: document.uri.toString(),
-        content: jsonSerializer.serialize(model, {
-          sourceText: true,
-          textRegions: true
-        }),
-        diagnostics: document.diagnostics ?? []
-      });
+    // only generate commands when there are no errors
+    const hasErrors = document.diagnostics?.some((d) => d.severity === 1) ?? false;
+    if (!hasErrors) {
+      commands = generateStatements(model.stmts);
     }
+
+    // attach the generated commands to the model for serialization
+    (model as unknown as { $commands: Command[] }).$commands = commands;
+
+    // send a notification with a model + commands attached
+    connection.sendNotification(documentChangeNotification, {
+      uri: document.uri.toString(),
+      content: jsonSerializer.serialize(model, {
+        sourceText: true,
+        textRegions: true
+      }),
+      diagnostics: document.diagnostics ?? []
+    });
   }
-);
+});
 ```
 
 #### Client Side
@@ -312,12 +299,12 @@ This assumes `client` was obtained from `lcWrapper.getLanguageClient()` during s
 
 The following is a quick table to summarize when it makes sense to use notifications or requests, in terms of their tradeoffs.
 
-| | Notifications | Requests |
-|---|---|---|
-| **Direction** | One-way | Round trip |
-| **Response** | None (fire-and-forget) | Awaited response |
-| **Use case** | Continuous, semi-frequent updates | On-demand, as needed |
-| **Example** | Push logs or generated output | Generate output from a program on click |
+|               | Notifications                     | Requests                                |
+| ------------- | --------------------------------- | --------------------------------------- |
+| **Direction** | One-way                           | Round trip                              |
+| **Response**  | None (fire-and-forget)            | Awaited response                        |
+| **Use case**  | Continuous, semi-frequent updates | On-demand, as needed                    |
+| **Example**   | Push logs or generated output     | Generate output from a program on click |
 
 Both patterns can go in either direction, i.e clients can send notifications, and servers can send requests. LSP itself uses both directions heavily (ex. `textDocument/didOpen` is a client-to-server notification, `window/showMessageRequest` is a server-to-client request). Depending on what your're trying to set up, you may want to flip things around.
 

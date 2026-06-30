@@ -5,4 +5,4 @@
 
 import { bootstrapApplication } from '@angular/platform-browser';
 import { MonacoEditorComponent } from './app/app.component';
-bootstrapApplication(MonacoEditorComponent);
+await bootstrapApplication(MonacoEditorComponent);
