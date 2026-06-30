@@ -4,7 +4,7 @@ All notable changes to this npm module are documented in this file.
 
 ## [2026.6.1] - unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `34.1.1`.
+- Updated all `@codingame/monaco-vscode` packages to `34.1.3`.
 - Updated to `monaco-languageclient@11.0.0-next.0` and `@typefox/monaco-editor-react@8.0.0-next.0`.
 - Updated `langium`to `4.3.0`.
 - Updated `vscode-languageclient` and `vscode-languageserver` to `10.0.0`, `vscode-languageserver-protocol` to `3.18.0` and `vscode-jsonrpc` to `9.0.0`.
