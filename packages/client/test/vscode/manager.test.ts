@@ -10,7 +10,7 @@ import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/
 import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe('MonacoVscodeApiWrapper Tests', () => {
+describe.concurrent('MonacoVscodeApiWrapper Tests', { concurrent: false, tags: ['vscode'] }, () => {
   let apiWrapper: MonacoVscodeApiWrapper;
   const htmlContainer = createMonacoEditorDiv();
 
@@ -51,7 +51,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     apiWrapper = new MonacoVscodeApiWrapper(apiConfig);
   });
 
-  test.sequential('test init MonacoVscodeApiWrapper and gloabl state', async () => {
+  test('test init MonacoVscodeApiWrapper and gloabl state', async () => {
     expect(typeof MonacoEnvironment === 'undefined').toBeTruthy();
 
     // call init with api config
@@ -71,7 +71,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Off);
   });
 
-  test.sequential('test configureServices logLevel and developmenet info', () => {
+  test('test configureServices logLevel and developmenet info', () => {
     const apiConfig = apiWrapper.getMonacoVscodeApiConfig();
     apiConfig.logLevel = LogLevel.Info;
     apiConfig.workspaceConfig = {
@@ -85,7 +85,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Info);
   });
 
-  test.sequential('test configureServices logLevel and developmenet debug', () => {
+  test('test configureServices logLevel and developmenet debug', () => {
     const apiConfig = apiWrapper.getMonacoVscodeApiConfig();
     apiConfig.logLevel = LogLevel.Debug;
     apiConfig.workspaceConfig = {
@@ -99,7 +99,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Debug);
   });
 
-  test.sequential('test configureServices logLevel development mismatch', () => {
+  test('test configureServices logLevel development mismatch', () => {
     const apiConfig = apiWrapper.getMonacoVscodeApiConfig();
     apiConfig.logLevel = LogLevel.Trace;
     apiConfig.workspaceConfig = {
@@ -114,7 +114,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     );
   });
 
-  test.sequential('test semanticHighlighting.enabled workaround', async () => {
+  test('test semanticHighlighting.enabled workaround', async () => {
     expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.configurationDefaults?.['editor.semanticHighlighting.enabled']).toEqual(
       true
     );
@@ -127,7 +127,7 @@ describe('MonacoVscodeApiWrapper Tests', () => {
     expect(semHigh).toEqual(true);
   });
 
-  test.sequential('test dispose extensions and re-init', async () => {
+  test('test dispose extensions and re-init', async () => {
     expect(() => apiWrapper.dispose()).not.toThrowError();
     expect(await apiWrapper.initExtensions()).toBeUndefined();
   });

@@ -12,7 +12,7 @@ import React, { StrictMode } from 'react';
 import { describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, createDefaultLanguageClientConfig, hundredMs } from './support/helper.js';
 
-describe.sequential('Test MonacoEditorReactComp StrictMode: Language Client ', () => {
+describe.concurrent('Test MonacoEditorReactComp StrictMode: Language Client ', { concurrent: false, tags: ['main'] }, () => {
   const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {

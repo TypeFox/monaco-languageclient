@@ -13,7 +13,7 @@ import React, { StrictMode, useState } from 'react';
 import { describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
-describe.sequential('Test MonacoEditorReactComp', () => {
+describe.concurrent('Test MonacoEditorReactComp', { concurrent: false, tags: ['main'] }, () => {
   const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {

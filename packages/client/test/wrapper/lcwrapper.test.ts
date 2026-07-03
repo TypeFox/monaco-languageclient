@@ -18,7 +18,7 @@ import {
   createUnreachableWorkerConfig
 } from '../support/helper.js';
 
-describe('Test LanguageClientWrapper', () => {
+describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
   beforeAll(async () => {
     const apiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',

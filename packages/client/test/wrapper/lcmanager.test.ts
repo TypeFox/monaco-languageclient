@@ -14,7 +14,7 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import { createDefaultLcWorkerConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe('Test LanguageClientWrapper', () => {
+describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
   beforeAll(async () => {
     const apiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',

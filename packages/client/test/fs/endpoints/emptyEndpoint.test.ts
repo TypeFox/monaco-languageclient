@@ -6,7 +6,7 @@
 import { EmptyFileSystemEndpoint } from 'monaco-languageclient/fs';
 import { describe, expect, test } from 'vitest';
 
-describe('EmptyFileSystemEndpoint Tests', () => {
+describe('EmptyFileSystemEndpoint Tests', { tags: ['main'] }, () => {
   const endpoint = new EmptyFileSystemEndpoint('EMPTY');
 
   test('readFile', async () => {
