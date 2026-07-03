@@ -63,7 +63,7 @@
     "@vitest/browser": "~4.1.9",
     "@vitest/browser-playwright": "~4.1.9",
     "@vitest/coverage-v8": "~4.1.9",
-    "knip": "~6.23.0",
+    "knip": "~6.24.0",
     "minimatch": "~10.2.5",
     "oxfmt": "~0.57.0",
     "oxlint": "~1.72.0",
@@ -78,8 +78,8 @@
     "dompurify": "~3.4.11",
     "esbuild": "~0.28.1",
     "minimatch": "~10.2.5",
-    "vscode-jsonrpc": "~9.0.1",
-    "vscode-languageserver-protocol": "~3.18.2"
+    "vscode-languageclient": "~10.1.0",
+    "vscode-languageserver": "~10.1.0"
   },
   "engines": {
     "node": ">=22",
