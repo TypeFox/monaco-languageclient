@@ -6,7 +6,7 @@
 import { describe, expect, test } from 'vitest';
 import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
 
-describe('createUrl', () => {
+describe.concurrent('createUrl', { concurrent: false, tags: ['main'] }, () => {
   test('test createUrl: ws', () => {
     const url = createUrl({
       secured: false,

@@ -7,7 +7,7 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { describe, expect, test } from 'vitest';
 
-describe('Logger', () => {
+describe('Logger', { tags: ['main'] }, () => {
   test('Config: None', () => {
     const logger = new ConsoleLogger();
 

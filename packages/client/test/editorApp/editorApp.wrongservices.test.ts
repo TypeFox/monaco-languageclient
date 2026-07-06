@@ -8,7 +8,7 @@ import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe('Test EditorApp', () => {
+describe.concurrent('Test EditorApp', { concurrent: false, tags: ['main'] }, () => {
   test('Start EditorApp with no services', async () => {
     const htmlContainer = createMonacoEditorDiv();
     const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'ViewsService');

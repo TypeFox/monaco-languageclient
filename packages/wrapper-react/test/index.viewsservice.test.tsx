@@ -11,7 +11,7 @@ import React from 'react';
 import { describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
-describe('Test MonacoEditorReactComp', () => {
+describe('Test MonacoEditorReactComp', { concurrent: false, tags: ['main'] }, () => {
   const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
     viewsConfig: {
@@ -19,7 +19,7 @@ describe('Test MonacoEditorReactComp', () => {
     }
   };
 
-  test.sequential('views service: no HTMLElement', async () => {
+  test('views service: no HTMLElement', async () => {
     const editorAppConfig = createDefaultEditorAppConfig({
       modified: {
         text: 'const text = "Hello World!";',
@@ -46,7 +46,7 @@ describe('Test MonacoEditorReactComp', () => {
     await delayExecution(hundredMs);
   });
 
-  test.sequential('views service: HTMLElement', async () => {
+  test('views service: HTMLElement', async () => {
     vscodeApiConfig.viewsConfig.htmlContainer = document.createElement('div');
     const editorAppConfig = createDefaultEditorAppConfig({
       modified: {

@@ -13,7 +13,7 @@ import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig, createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe('Test EditorApp', () => {
+describe.concurrent('Test EditorApp', { concurrent: false, tags: ['main'] }, () => {
   const htmlContainer = createMonacoEditorDiv();
   const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
 

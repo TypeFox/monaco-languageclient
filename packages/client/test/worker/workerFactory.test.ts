@@ -9,7 +9,7 @@ import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWra
 import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
 import { describe, expect, test } from 'vitest';
 
-describe('WorkerFactory Tests', () => {
+describe.concurrent('WorkerFactory Tests', { concurrent: false, tags: ['vscode'] }, () => {
   test('useWorkerFactory: Nothing', () => {
     useWorkerFactory({});
 

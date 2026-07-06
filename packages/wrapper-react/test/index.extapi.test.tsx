@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { cleanHtmlBody, createDefaultEditorAppConfig, hundredMs } from './support/helper.js';
 
-describe.sequential('Test MonacoEditorReactComp: External monaco-vscode-api', () => {
+describe.concurrent('Test MonacoEditorReactComp: External monaco-vscode-api', { concurrent: false, tags: ['main'] }, () => {
   beforeAll(async () => {
     const vscodeApiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',

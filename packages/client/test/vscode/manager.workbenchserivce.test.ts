@@ -6,7 +6,7 @@ import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
-describe('MonacoVscodeApiWrapper Tests: Different config', () => {
+describe.concurrent('MonacoVscodeApiWrapper Tests: Different config', { concurrent: false, tags: ['vscode'] }, () => {
   test('Start MonacoVscodeApiWrapper with WorkbenchService but no htmlContainer', async () => {
     const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'WorkbenchService');
 
