@@ -13,7 +13,7 @@ import {
 } from '@codingame/monaco-vscode-api/extensions';
 import { DisposableStore, setUnexpectedErrorHandler } from '@codingame/monaco-vscode-api/monaco';
 import getConfigurationServiceOverride, { initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import type { editor } from '@codingame/monaco-vscode-editor-api';
 import getLogServiceOverride, { ConsoleLogger, type ILogger } from '@codingame/monaco-vscode-log-service-override';
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override';
 import { encodeStringOrUrlToDataUrl } from 'monaco-languageclient/common';
@@ -24,7 +24,7 @@ import type { ExtensionConfig, MonacoVscodeApiConfig, ViewsConfig } from './conf
 import { getEnhancedMonacoEnvironment, mergeServices, reportServiceLoading, useOpenEditorStub } from './utils.js';
 
 export interface MonacoVscodeApiConfigRuntime extends MonacoVscodeApiConfig {
-  serviceOverrides: monaco.editor.IEditorOverrideServices;
+  serviceOverrides: editor.IEditorOverrideServices;
   logLevel: LogLevel | number;
   viewsConfig: ViewsConfig;
 }

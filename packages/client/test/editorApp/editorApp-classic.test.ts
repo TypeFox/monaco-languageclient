@@ -5,7 +5,7 @@
 
 /* oxlint-disable dot-notation */
 
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import { editor } from '@codingame/monaco-vscode-editor-api';
 import { EditorApp, type TextContents } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
@@ -50,12 +50,12 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
         uri: `/workspace/${expect.getState().testPath}.js`
       }
     });
-    (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = false;
+    (editorAppConfig!.editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = false;
     editorAppConfig.id = 'test-semanticHighlighting-false';
 
     const editorApp = new EditorApp(editorAppConfig);
     expect(
-      (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
+      (editorApp.getConfig().editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
     ).toBeFalsy();
   });
 
@@ -66,14 +66,13 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
         uri: `/workspace/${expect.getState().testPath}.js`
       }
     });
-    (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] =
-      'configuredByTheme';
+    (editorAppConfig!.editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = 'configuredByTheme';
     editorAppConfig.id = 'test-semanticHighlighting-theme';
 
     const editorApp = new EditorApp(editorAppConfig);
-    expect(
-      (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
-    ).toEqual('configuredByTheme');
+    expect((editorApp.getConfig().editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']).toEqual(
+      'configuredByTheme'
+    );
   });
 
   test('editorOptions: semanticHighlighting=true', () => {
@@ -83,12 +82,12 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
         uri: `/workspace/${expect.getState().testPath}.js`
       }
     });
-    (editorAppConfig!.editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = true;
+    (editorAppConfig!.editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled'] = true;
     editorAppConfig.id = 'test-semanticHighlighting-true';
 
     const editorApp = new EditorApp(editorAppConfig);
     expect(
-      (editorApp.getConfig().editorOptions as monaco.editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
+      (editorApp.getConfig().editorOptions as editor.IStandaloneEditorConstructionOptions)['semanticHighlighting.enabled']
     ).toBeTruthy();
   });
 
@@ -334,9 +333,9 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
     expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
     const currentModel = editorApp.getEditor()?.getModel();
-    expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
+    expect(editor.getModels().includes(currentModel!)).toBeTruthy();
     editorApp.getEditor()?.getModel()!.dispose();
-    expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
+    expect(editor.getModels().includes(currentModel!)).toBeFalsy();
 
     await editorApp.dispose();
   });
@@ -353,7 +352,7 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
     expect(await editorApp.start(htmlContainer)).toBeUndefined();
 
     const currentModel = editorApp.getEditor()?.getModel();
-    expect(monaco.editor.getModels().includes(currentModel!)).toBeTruthy();
+    expect(editor.getModels().includes(currentModel!)).toBeTruthy();
 
     editorApp.setModelRefDisposeTimeout(1000);
 
@@ -364,8 +363,8 @@ describe.concurrent('Test Test EditorApp (classic)', { concurrent: false, tags: 
       }
     });
     const currentModelMod = editorApp.getEditor()?.getModel();
-    expect(monaco.editor.getModels().includes(currentModelMod!)).toBeTruthy();
-    expect(monaco.editor.getModels().includes(currentModel!)).toBeFalsy();
+    expect(editor.getModels().includes(currentModelMod!)).toBeTruthy();
+    expect(editor.getModels().includes(currentModel!)).toBeFalsy();
 
     await editorApp.dispose();
   });
