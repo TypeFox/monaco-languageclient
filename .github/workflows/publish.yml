@@ -55,11 +55,18 @@ jobs:
         run: |
           npm run test:ci:tags
 
+      - name: Setup
+        env:
+          NPM_DRY_RUN: ${{ true && github.event.inputs.dryRun }}
+          NPM_TAG: ${{ github.event.inputs.npmTag }}
+        run: |
+          bash ./.github/workflows/scripts/checkStatus.sh
+
       - name: Publish
-        uses: TypeFox/gh-publish-npm@b87a80818bdbc41d52c3aa2eec87b0e8379936f1 # v0.3.1
+        uses: TypeFox/gh-publish-npm@fd8799b805ddfb79d82fbdfed8efdc9a1fad8f25 # v0.3.2
         with:
-          dry-run: ${{ github.event.inputs.dryRun }}
-          npm-tag: ${{ github.event.inputs.npmTag }}
+          dry-run: ${{ env.NPM_DRY_RUN }}
+          npm-tag: ${{ env.NPM_TAG }}
           npm-packages: |
             packages/client
             packages/vscode-ws-jsonrpc
