@@ -4,11 +4,18 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import { useWorkerFactory, Worker, type WorkerLoader } from 'monaco-languageclient/workerFactory';
+import {
+  useWorkerFactory,
+  Worker,
+  type PossibleWorkerLabelsClassic,
+  type PossibleWorkerLabelsExtended,
+  type WorkerLoader
+} from 'monaco-languageclient/workerFactory';
 
-const workerResolver: Map<string, (value: void | PromiseLike<void>) => void> = new Map();
-const workerPromises: Map<string, Promise<void>> = new Map();
-export const createWorkerPromises = (keys: string[]) => {
+const workerResolver: Map<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, (value: void | PromiseLike<void>) => void> =
+  new Map();
+const workerPromises: Map<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, Promise<void>> = new Map();
+export const createWorkerPromises = (keys: Array<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic>) => {
   workerResolver.clear();
   workerPromises.clear();
   for (const key of keys) {
@@ -23,46 +30,46 @@ export const awaitWorkerPromises = () => {
   return Promise.all([...workerPromises.values()]);
 };
 
-const pushAndPrintLastWorker = (lastWorker: string) => {
+const pushAndPrintLastWorker = (lastWorker: PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic) => {
   console.log(`Called: ${lastWorker}\n`);
   workerResolver.get(lastWorker)?.();
 };
 
-const defineClassicWorkers: () => Partial<Record<string, WorkerLoader>> = () => {
+const defineClassicWorkers: () => Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>> = () => {
   const editorWorkerServiceWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url);
     const worker = new Worker(workerUrl, {
       type: 'module'
     });
-    pushAndPrintLastWorker('editorWorker');
+    pushAndPrintLastWorker('editorWorkerService');
     return worker;
   };
 
   const cssWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-standalone-css-language-features', import.meta.url);
     const worker = new Worker(workerUrl, { type: 'module' });
-    pushAndPrintLastWorker('cssWorker');
+    pushAndPrintLastWorker('css');
     return worker;
   };
 
   const jsonWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-standalone-json-language-features', import.meta.url);
     const worker = new Worker(workerUrl, { type: 'module' });
-    pushAndPrintLastWorker('jsonWorker');
+    pushAndPrintLastWorker('json');
     return worker;
   };
 
   const htmlWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-standalone-html-language-features', import.meta.url);
     const worker = new Worker(workerUrl, { type: 'module' });
-    pushAndPrintLastWorker('htmlWorker');
+    pushAndPrintLastWorker('html');
     return worker;
   };
 
   const tsWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-standalone-typescript-language-features', import.meta.url);
     const worker = new Worker(workerUrl, { type: 'module' });
-    pushAndPrintLastWorker('tsWorker');
+    pushAndPrintLastWorker('typescript');
     return worker;
   };
 

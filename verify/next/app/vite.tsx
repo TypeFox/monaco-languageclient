@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import type { WorkerLoader } from 'monaco-languageclient/workerFactory';
+import type { PossibleWorkerLabelsClassic, PossibleWorkerLabelsExtended, WorkerLoader } from 'monaco-languageclient/workerFactory';
 import ReactDOM from 'react-dom/client';
 
 export const createDynamicEditorComponent = async () => {
@@ -13,7 +13,7 @@ export const createDynamicEditorComponent = async () => {
 
   const { workerFactory, setupLangiumClientExtended, openDocument, showDocument } = await import('./langium-dsl/config/extendedConfig.js');
 
-  const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
+  const defineWorkerLoaders: () => Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>> = () => {
     const defaultEditorWorkerService = () =>
       new workerFactory.Worker(new URL('../bundle/editorWorker/editor.worker.js', import.meta.url), { type: 'module' });
     const defaultExtensionHostWorkerMain = () =>

@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "clean": "shx rm -fr .next dist lib bundle *.tsbuildinfo",
-    "verify": "npm ci && npm run dev",
+    "verify": "npm ci && npm run dev:next",
     "verify:ci": "npm ci && npm run build -d",
     "dev:next": "npm run bundle && npm run build:tsc && next dev -p 8083",
     "dev:vite": "npm run bundle && npm run build:tsc && vite --config vite.config.ts",
@@ -49,6 +49,8 @@
     "dompurify": "~3.4.11",
     "monaco-languageclient": "../../packages/client",
     "postcss": "8.5.15",
+    "vscode-languageclient": "~10.1.0",
+    "vscode-languageserver": "~10.1.0",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {

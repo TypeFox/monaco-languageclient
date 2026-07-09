@@ -6,7 +6,7 @@
 'use client';
 
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import type { WorkerLoader } from 'monaco-languageclient/workerFactory';
+import type { PossibleWorkerLabelsExtended, PossibleWorkerLabelsClassic, WorkerLoader } from 'monaco-languageclient/workerFactory';
 import dynamic from 'next/dynamic';
 import './views.editorOnly.css';
 
@@ -25,7 +25,7 @@ export default function Page() {
         name: 'Langium LS'
       });
 
-      const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
+      const defineWorkerLoaders: () => Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>> = () => {
         const defaultEditorWorkerService = () =>
           new mlcWFModule.Worker(new URL('../bundle/editorWorker/editor.worker.js', import.meta.url), { type: 'module' });
         // const defaultExtensionHostWorkerMain = () => new mlcWFModule.Worker(

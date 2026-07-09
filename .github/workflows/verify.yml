@@ -28,6 +28,11 @@ jobs:
         run: |
           npm run report:versions
 
+      - name: Build
+        shell: bash
+        run: |
+          npm run build
+
       - name: Execute verification
         shell: bash
         run: |

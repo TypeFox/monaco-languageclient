@@ -18,26 +18,39 @@ export class Worker {
 
 export type WorkerLoader = (() => Worker) | undefined;
 
+export type PossibleWorkerLabelsExtended =
+  | 'editorWorkerService'
+  | 'extensionHostWorkerMain'
+  | 'TextMateWorker'
+  | 'OutputLinkDetectionWorker'
+  | 'LanguageDetectionWorker'
+  | 'NotebookEditorWorker'
+  | 'LocalFileSearchWorker';
+
+export type PossibleWorkerLabelsClassic = 'editorWorkerService' | 'css' | 'html' | 'json' | 'javascript' | 'typescript';
+
 export interface WorkerFactoryConfig {
-  workerLoaders?: Partial<Record<string, WorkerLoader>>;
+  workerLoaders?: Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>>;
   logger?: ILogger;
 }
 
 export const useWorkerFactory = (config: WorkerFactoryConfig) => {
   const envEnhanced = getEnhancedMonacoEnvironment();
 
-  envEnhanced.getWorkerUrl = (workerId: string, label: string) => {
+  envEnhanced.getWorkerUrl = (workerId: string, label: PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic) => {
     config.logger?.info(`getWorkerUrl: workerId: ${workerId} label: ${label}`);
     return config.workerLoaders?.[label]?.().url.toString();
   };
 
-  envEnhanced.getWorkerOptions = (moduleId: string, label: string) => {
+  envEnhanced.getWorkerOptions = (moduleId: string, label: PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic) => {
     config.logger?.info(`getWorkerOptions: moduleId: ${moduleId} label: ${label}`);
     return config.workerLoaders?.[label]?.().options;
   };
 };
 
-export const defineDefaultWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
+export const defineDefaultWorkerLoaders: () => Partial<
+  Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>
+> = () => {
   const defaultEditorWorkerService = () =>
     new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), { type: 'module' });
   const defaultExtensionHostWorkerMain = () =>
