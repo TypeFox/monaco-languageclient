@@ -68,7 +68,7 @@ jobs:
           NPM_TAG: ${{ github.event.inputs.npmTag }}
         # logs the ENV values and stores them back in GITHUB_ENV with proper defaults for the next step
         run: |
-          bash ./.github/workflows/scripts/checkStatus.sh
+          ./.github/workflows/scripts/checkStatus.sh
 
       - name: Publish
         # dry-run can only be set to false if executed manually
