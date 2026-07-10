@@ -24,10 +24,10 @@ jobs:
     timeout-minutes: 150
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -35,7 +35,7 @@ jobs:
 
       - name: Extract metadata (configure)
         id: meta_configure
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_CONFIGURE }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build & Push (configure)
         id: push_configure
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: ${{ env.PATH_CONTEXT }}
           file: ${{ env.PATH_CONTEXT }}/configure.Dockerfile
@@ -54,7 +54,7 @@ jobs:
           labels: ${{ steps.meta_configure.outputs.labels }}
 
       - name: Attest (configure)
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_CONFIGURE }}
           subject-digest: ${{ steps.push_configure.outputs.digest }}
@@ -62,7 +62,7 @@ jobs:
 
       - name: Extract metadata (build)
         id: meta_build
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_BUILD }}
@@ -72,7 +72,7 @@ jobs:
 
       - name: Build & Push (build)
         id: push_build
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: ${{ env.PATH_CONTEXT }}
           file: ${{ env.PATH_CONTEXT }}/build.Dockerfile
@@ -81,7 +81,7 @@ jobs:
           labels: ${{ steps.meta_build.outputs.labels }}
 
       - name: Attest (build)
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.CONTAINER_NAME_BUILD }}
           subject-digest: ${{ steps.push_build.outputs.digest }}

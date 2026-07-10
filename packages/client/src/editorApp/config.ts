@@ -5,7 +5,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import type { editor, languages, IDisposable } from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
 
 export class ModelRefs {
@@ -14,8 +14,8 @@ export class ModelRefs {
 }
 
 export interface TextModels {
-  modified?: monaco.editor.ITextModel | null;
-  original?: monaco.editor.ITextModel | null;
+  modified?: editor.ITextModel | null;
+  original?: editor.ITextModel | null;
 }
 
 export interface TextContents {
@@ -35,8 +35,8 @@ export interface CodeResources {
 }
 
 export interface CallbackDisposeable {
-  modified?: monaco.IDisposable;
-  original?: monaco.IDisposable;
+  modified?: IDisposable;
+  original?: IDisposable;
 }
 
 export interface DisposableModelRefs {
@@ -52,14 +52,14 @@ export interface EditorAppConfig {
   domReadOnly?: boolean;
   readOnly?: boolean;
   overrideAutomaticLayout?: boolean;
-  editorOptions?: monaco.editor.IStandaloneEditorConstructionOptions;
-  diffEditorOptions?: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+  editorOptions?: editor.IStandaloneEditorConstructionOptions;
+  diffEditorOptions?: editor.IStandaloneDiffEditorConstructionOptions;
   languageDef?: {
-    languageExtensionConfig: monaco.languages.ILanguageExtensionPoint;
-    monarchLanguage?: monaco.languages.IMonarchLanguage;
+    languageExtensionConfig: languages.ILanguageExtensionPoint;
+    monarchLanguage?: languages.IMonarchLanguage;
     theme?: {
       name: string;
-      data: monaco.editor.IStandaloneThemeData;
+      data: editor.IStandaloneThemeData;
     };
   };
 }

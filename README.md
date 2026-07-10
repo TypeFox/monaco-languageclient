@@ -75,7 +75,7 @@ These are the current versions of packages from this repository and their alignm
 - **monaco-languageclient**: `11.0.0-next.0` (release date: unreleased)
 - **@typefox/monaco-editor-react**: `8.0.0-next.0` (release date: unreleased)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `34.1.3`
+  - **@codingame/monaco-vscode-[editor]-api**: `35.0.0`
   - **vscode**: `1.124.0`
   - **monaco-editor**: `0.55.1`
 - **vscode-ws-jsonrpc**: `4.0.0-next.0` (release date: unreleased)
@@ -98,6 +98,8 @@ mise upgrade
 npm i
 # Cleans-up, compiles and builds everything
 npm run build
+# downloads additional files needed for some examples
+npm run init:examples
 ```
 
 ### Vite dev server

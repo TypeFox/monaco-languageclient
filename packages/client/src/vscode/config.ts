@@ -7,7 +7,7 @@ import type { IWorkbenchConstructionOptions } from '@codingame/monaco-vscode-api
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { IExtensionManifest } from '@codingame/monaco-vscode-api/extensions';
 import type { EnvironmentOverride } from '@codingame/monaco-vscode-api/workbench';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import type { editor, Environment } from '@codingame/monaco-vscode-editor-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
@@ -17,7 +17,7 @@ export type ViewsConfigTypes = 'EditorService' | 'ViewsService' | 'WorkbenchServ
 
 // export type HtmlContainerConfig = HTMLElement;
 
-export interface MonacoEnvironmentEnhanced extends monaco.Environment {
+export interface MonacoEnvironmentEnhanced extends Environment {
   vscodeApiInitialising?: boolean;
   vscodeApiInitialised?: boolean;
   vscodeApiGlobalInitAwait?: Promise<void>;
@@ -45,7 +45,7 @@ export interface ExtensionConfig {
 export interface MonacoVscodeApiConfig {
   $type: OverallConfigType;
   viewsConfig: ViewsConfig;
-  serviceOverrides?: monaco.editor.IEditorOverrideServices;
+  serviceOverrides?: editor.IEditorOverrideServices;
   logLevel?: LogLevel | number;
   workspaceConfig?: IWorkbenchConstructionOptions;
   userConfiguration?: UserConfiguration;

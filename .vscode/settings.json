@@ -1,5 +1,4 @@
 {
-  "js/ts.tsdk.path": "node_modules/typescript/lib",
   "editor.guides.bracketPairs": true,
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "oxc.enable": true,
@@ -9,5 +8,7 @@
   "workbench.editor.revealIfOpen": true,
   "terminal.integrated.scrollback": 10000,
   "editor.minimap.enabled": false,
-  "editor.foldingImportsByDefault": false
+  "editor.foldingImportsByDefault": false,
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.tsdk.path": "./node_modules/typescript"
 }

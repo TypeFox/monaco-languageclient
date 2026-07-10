@@ -12,6 +12,17 @@ on:
       - main
       - dev
   workflow_dispatch:
+    inputs:
+      dryRun:
+        description: 'Perform a dry run without publishing to npm'
+        required: true
+        default: true
+        type: boolean
+      npmTag:
+        description: 'Enforce a specific tag for creating a pre-release. If not provided, the tag will be determined automatically based on the version in package.json'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build:
@@ -20,10 +31,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: mise-en-place
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
 
       - name: Install
         shell: bash
@@ -40,12 +51,32 @@ jobs:
         run: |
           npm run build
 
-      - name: Lint
+      - name: Lint & Format
         shell: bash
         run: |
           npm run lint
+          npm run fmt
 
       - name: Test
         shell: bash
         run: |
           npm run test:ci:tags
+
+      - name: Setup
+        env:
+          NPM_DRY_RUN: ${{ github.event.inputs.dryRun }}
+          NPM_TAG: ${{ github.event.inputs.npmTag }}
+        # logs the ENV values and stores them back in GITHUB_ENV with proper defaults for the next step
+        run: |
+          ./.github/workflows/scripts/checkStatus.sh
+
+      - name: Publish
+        # dry-run can only be set to false if executed manually
+        uses: TypeFox/gh-publish-npm@fd8799b805ddfb79d82fbdfed8efdc9a1fad8f25 # v0.3.2
+        with:
+          dry-run: ${{ env.NPM_DRY_RUN }}
+          npm-tag: ${{ env.NPM_TAG }}
+          npm-packages: |
+            packages/client
+            packages/vscode-ws-jsonrpc
+            packages/wrapper-react

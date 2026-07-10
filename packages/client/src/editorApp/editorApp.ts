@@ -5,7 +5,7 @@
 
 import { ConfigurationTarget, IConfigurationService, LogLevel, StandaloneServices } from '@codingame/monaco-vscode-api';
 import { createModelReference, type ITextFileEditorModel } from '@codingame/monaco-vscode-api/monaco';
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import { editor, languages } from '@codingame/monaco-vscode-editor-api';
 import type { IReference } from '@codingame/monaco-vscode-editor-service-override';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
@@ -35,8 +35,8 @@ export class EditorApp {
 
   protected logger: ILogger = new ConsoleLogger();
 
-  private editor: monaco.editor.IStandaloneCodeEditor | undefined;
-  private diffEditor: monaco.editor.IStandaloneDiffEditor | undefined;
+  private editor: editor.IStandaloneCodeEditor | undefined;
+  private diffEditor: editor.IStandaloneDiffEditor | undefined;
 
   private modelRefs: ModelRefs = new ModelRefs();
 
@@ -81,11 +81,11 @@ export class EditorApp {
     return this.config;
   }
 
-  getEditor(): monaco.editor.IStandaloneCodeEditor | undefined {
+  getEditor(): editor.IStandaloneCodeEditor | undefined {
     return this.editor;
   }
 
-  getDiffEditor(): monaco.editor.IStandaloneDiffEditor | undefined {
+  getDiffEditor(): editor.IStandaloneDiffEditor | undefined {
     return this.diffEditor;
   }
 
@@ -147,24 +147,24 @@ export class EditorApp {
       const languageDef = this.config.languageDef;
       if (languageDef !== undefined) {
         // register own language first
-        monaco.languages.register(languageDef.languageExtensionConfig);
+        languages.register(languageDef.languageExtensionConfig);
 
-        const languageRegistered = monaco.languages.getLanguages().filter((x) => x.id === languageDef.languageExtensionConfig.id);
+        const languageRegistered = languages.getLanguages().filter((x) => x.id === languageDef.languageExtensionConfig.id);
         if (languageRegistered.length === 0) {
           // this is only meaningful for languages supported by monaco out of the box
-          monaco.languages.register({
+          languages.register({
             id: languageDef.languageExtensionConfig.id
           });
         }
 
         // apply monarch definitions
         if (languageDef.monarchLanguage !== undefined) {
-          monaco.languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
+          languages.setMonarchTokensProvider(languageDef.languageExtensionConfig.id, languageDef.monarchLanguage);
         }
 
         if (languageDef.theme !== undefined) {
-          monaco.editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
-          monaco.editor.setTheme(languageDef.theme.name);
+          editor.defineTheme(languageDef.theme.name, languageDef.theme.data);
+          editor.setTheme(languageDef.theme.name);
         }
       }
 
@@ -210,7 +210,7 @@ export class EditorApp {
 
     this.logger.info(`Starting monaco-editor (${this.id})`);
     if (this.isDiffEditor()) {
-      this.diffEditor = monaco.editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
+      this.diffEditor = editor.createDiffEditor(htmlContainer, this.config.diffEditorOptions);
       const modified = this.modelRefs.modified.object.textEditorModel ?? undefined;
       const original = this.modelRefs.original?.object.textEditorModel ?? undefined;
       if (modified !== undefined && original !== undefined) {
@@ -225,7 +225,7 @@ export class EditorApp {
       const model = {
         modified: this.modelRefs.modified.object.textEditorModel
       };
-      this.editor = monaco.editor.create(htmlContainer, {
+      this.editor = editor.create(htmlContainer, {
         ...this.config.editorOptions,
         model: model.modified
       });
@@ -392,7 +392,7 @@ export class EditorApp {
   async disposeModelRefs() {
     const disposeRefs = () => {
       if (this.logger.getLevel() === LogLevel.Debug) {
-        const models = monaco.editor.getModels();
+        const models = editor.getModels();
         this.logger.debug('Current model URIs:');
         models.forEach((model, _index) => {
           this.logger.debug(`${model.uri.toString()}`);
@@ -430,7 +430,7 @@ export class EditorApp {
     }
   }
 
-  updateLayout(dimension?: monaco.editor.IDimension, postponeRendering?: boolean) {
+  updateLayout(dimension?: editor.IDimension, postponeRendering?: boolean) {
     if (this.isDiffEditor()) {
       this.diffEditor?.layout(dimension, postponeRendering);
     } else {

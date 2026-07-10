@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as monaco from '@codingame/monaco-vscode-editor-api';
+import type { editor } from '@codingame/monaco-vscode-editor-api';
 import type { OpenEditor } from '@codingame/monaco-vscode-editor-service-override';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import type { MonacoEnvironmentEnhanced } from './config.js';
@@ -20,16 +20,13 @@ export const getEnhancedMonacoEnvironment = (): MonacoEnvironmentEnhanced => {
   return envEnhanced;
 };
 
-export const reportServiceLoading = (services: monaco.editor.IEditorOverrideServices, logger?: ILogger) => {
+export const reportServiceLoading = (services: editor.IEditorOverrideServices, logger?: ILogger) => {
   for (const serviceName of Object.keys(services)) {
     logger?.debug(`Loading service: ${serviceName}`);
   }
 };
 
-export const mergeServices = (
-  overrideServices: monaco.editor.IEditorOverrideServices,
-  services?: monaco.editor.IEditorOverrideServices
-) => {
+export const mergeServices = (overrideServices: editor.IEditorOverrideServices, services?: editor.IEditorOverrideServices) => {
   if (services !== undefined) {
     for (const [name, service] of Object.entries(services)) {
       overrideServices[name] = service;
