@@ -52,7 +52,8 @@
     "license:help": "docker compose -f ./scripts/addlicense/docker-compose.yml run --rm addlicense-help",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "knip": "knip"
+    "knip": "knip",
+    "init:examples": "npm run init --workspace packages/examples"
   },
   "devDependencies": {
     "@codingame/monaco-vscode-rollup-vsix-plugin": "^35.0.0",

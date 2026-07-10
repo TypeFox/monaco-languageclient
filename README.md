@@ -98,6 +98,8 @@ mise upgrade
 npm i
 # Cleans-up, compiles and builds everything
 npm run build
+# downloads additional files needed for some examples
+npm run init:examples
 ```
 
 ### Vite dev server
