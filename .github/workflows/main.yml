@@ -52,10 +52,11 @@ jobs:
 
       - name: Publish Dry-Run
         # dry-run is always performed
-        uses: TypeFox/gh-publish-npm@7f487ef219d953f46274fc1c67dfc835c53fbc11 # v0.3.3 / dev
+        uses: TypeFox/gh-publish-npm@4e114cef5985f2ab293188d9412ff63292bba217 # v0.3.3 / dev
         with:
           dry-run: true
           verbose: true
+          npm-tag: 'next'
           npm-packages: |
             packages/client
             packages/vscode-ws-jsonrpc

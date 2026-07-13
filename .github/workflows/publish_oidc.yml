@@ -16,9 +16,9 @@ on:
         default: true
         type: boolean
       npmTag:
-        description: 'Enforce a specific tag for creating a pre-release. If not provided, the tag will be determined automatically based on the version in package.json'
+        description: 'Enforce a specific tag for version comparisons. If not provided, the default tag "latest" will be used.'
         required: false
-        default: ''
+        default: 'next'
         type: string
       verbose:
         description: 'npm publish with verbose output'
@@ -77,7 +77,7 @@ jobs:
       - name: Publish
         # dry-run can only be set to false if executed manually via workflow_dispatch
         # tagged run only performs a dry-run for now
-        uses: TypeFox/gh-publish-npm@7f487ef219d953f46274fc1c67dfc835c53fbc11 # v0.3.3 / dev
+        uses: TypeFox/gh-publish-npm@4e114cef5985f2ab293188d9412ff63292bba217 # v0.3.3 / dev
         with:
           dry-run: ${{ env.NPM_DRY_RUN }}
           npm-tag: ${{ env.NPM_TAG }}
