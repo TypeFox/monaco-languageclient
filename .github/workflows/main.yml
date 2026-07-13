@@ -51,6 +51,7 @@ jobs:
           npm run test:ci:tags
 
       - name: Publish Dry-Run
+        # dry-run is always performed
         uses: TypeFox/gh-publish-npm@7f487ef219d953f46274fc1c67dfc835c53fbc11 # v0.3.3 / dev
         with:
           dry-run: true

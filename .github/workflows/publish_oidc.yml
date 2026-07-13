@@ -6,8 +6,6 @@ permissions:
 
 on:
   push:
-    branches:
-      - 'fix-publish-permissions'
     tags:
       - '*-*.*.*'
   workflow_dispatch:
@@ -77,10 +75,11 @@ jobs:
           npm run test:ci:tags
 
       - name: Publish
-        # dry-run can only be set to false if executed manually
+        # dry-run can only be set to false if executed manually via workflow_dispatch
+        # tagged run only performs a dry-run for now
         uses: TypeFox/gh-publish-npm@7f487ef219d953f46274fc1c67dfc835c53fbc11 # v0.3.3 / dev
         with:
-          dry-run: false
+          dry-run: ${{ env.NPM_DRY_RUN }}
           npm-tag: ${{ env.NPM_TAG }}
           verbose: ${{ env.NPM_VERBOSE }}
           npm-packages: |
