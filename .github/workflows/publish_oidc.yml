@@ -29,8 +29,9 @@ on:
         type: boolean
 
 jobs:
-  build:
+  publish_oidc:
     runs-on: ubuntu-latest
+    environment: publish
     timeout-minutes: 10
 
     steps:
@@ -87,7 +88,7 @@ jobs:
             packages/vscode-ws-jsonrpc
             packages/wrapper-react
 
-      - name: Checkmnpm logs
+      - name: Check npm logs
         if: always()
         shell: bash
         run: |
