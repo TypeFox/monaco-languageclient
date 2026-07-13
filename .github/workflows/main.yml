@@ -11,18 +11,6 @@ on:
     branches:
       - main
       - dev
-  workflow_dispatch:
-    inputs:
-      dryRun:
-        description: 'Perform a dry run without publishing to npm'
-        required: true
-        default: true
-        type: boolean
-      npmTag:
-        description: 'Enforce a specific tag for creating a pre-release. If not provided, the tag will be determined automatically based on the version in package.json'
-        required: false
-        default: ''
-        type: string
 
 jobs:
   build:
@@ -62,20 +50,13 @@ jobs:
         run: |
           npm run test:ci:tags
 
-      - name: Setup
-        env:
-          NPM_DRY_RUN: ${{ github.event.inputs.dryRun }}
-          NPM_TAG: ${{ github.event.inputs.npmTag }}
-        # logs the ENV values and stores them back in GITHUB_ENV with proper defaults for the next step
-        run: |
-          ./.github/workflows/scripts/checkStatus.sh
-
-      - name: Publish
-        # dry-run can only be set to false if executed manually
-        uses: TypeFox/gh-publish-npm@fd8799b805ddfb79d82fbdfed8efdc9a1fad8f25 # v0.3.2
+      - name: Publish Dry-Run
+        # dry-run is always performed
+        uses: TypeFox/gh-publish-npm@4e114cef5985f2ab293188d9412ff63292bba217 # v0.3.3 / dev
         with:
-          dry-run: ${{ env.NPM_DRY_RUN }}
-          npm-tag: ${{ env.NPM_TAG }}
+          dry-run: true
+          verbose: true
+          npm-tag: 'next'
           npm-packages: |
             packages/client
             packages/vscode-ws-jsonrpc
