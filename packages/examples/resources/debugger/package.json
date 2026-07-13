@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": {
     "name": "TypeFox GmbH",
-    "url": "http://www.typefox.io"
+    "url": "https://www.typefox.io"
   },
   "type": "module",
   "main": "./dist/debugServer.js",

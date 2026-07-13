@@ -6,25 +6,13 @@ permissions:
 
 on:
   push:
+    branches:
+      - 'release'
     tags:
       - '*-*.*.*'
-  workflow_dispatch:
-    inputs:
-      dryRun:
-        description: 'Perform a dry run without publishing to npm'
-        required: true
-        default: true
-        type: boolean
-      npmTag:
-        description: 'Enforce a specific tag for version comparisons. If not provided, the default tag "latest" will be used.'
-        required: false
-        default: 'next'
-        type: string
-      verbose:
-        description: 'npm publish with verbose output'
-        required: true
-        default: false
-        type: boolean
+    paths:
+      - '.github/workflows/**/*'
+      - '**/package.json'
 
 jobs:
   publish_oidc:
@@ -40,23 +28,16 @@ jobs:
         uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
         with:
           cache: false
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install
         shell: bash
         run: |
           npm ci
 
-      - name: Versions Report & Setup
+      - name: Versions Report
         shell: bash
-        env:
-          NPM_DRY_RUN: ${{ github.event.inputs.dryRun }}
-          NPM_TAG: ${{ github.event.inputs.npmTag }}
-          NPM_VERBOSE: ${{ github.event.inputs.verbose }}
-        # logs the ENV values and stores them back in GITHUB_ENV with proper defaults for the next step
         run: |
           npm run report:versions
-          ./.github/workflows/scripts/checkStatus.sh
 
       - name: Build
         shell: bash
@@ -75,20 +56,18 @@ jobs:
           npm run test:ci:tags
 
       - name: Publish
-        # dry-run can only be set to false if executed manually via workflow_dispatch
-        # tagged run only performs a dry-run for now
-        uses: TypeFox/gh-publish-npm@4e114cef5985f2ab293188d9412ff63292bba217 # v0.3.3 / dev
+        uses: TypeFox/gh-publish-npm@0c4ee5a844ccb61c4092fc439f7db21c4a2f0ddb # v0.4.0
         with:
-          dry-run: ${{ env.NPM_DRY_RUN }}
-          npm-tag: ${{ env.NPM_TAG }}
-          verbose: ${{ env.NPM_VERBOSE }}
+          dry-run: false
+          npm-tag: 'next'
+          verbose: true
           npm-packages: |
-            packages/client
             packages/vscode-ws-jsonrpc
+            packages/client
             packages/wrapper-react
 
       - name: Check npm logs
-        if: always()
+        if: success() || failure()
         shell: bash
         run: |
           ./.github/workflows/scripts/checkNpmLogs.sh
