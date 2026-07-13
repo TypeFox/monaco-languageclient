@@ -1,0 +1,85 @@
+name: Publish via OIDC
+
+permissions:
+  contents: read
+  id-token: write
+
+on:
+  push:
+    branches:
+      - 'fix-publish-permissions'
+    tags:
+      - '*-*.*.*'
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: 'Perform a dry run without publishing to npm'
+        required: true
+        default: true
+        type: boolean
+      npmTag:
+        description: 'Enforce a specific tag for creating a pre-release. If not provided, the tag will be determined automatically based on the version in package.json'
+        required: false
+        default: ''
+        type: string
+      verbose:
+        description: 'npm publish with verbose output'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: mise-en-place
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+
+      - name: Install
+        shell: bash
+        run: |
+          npm ci
+
+      - name: Versions Report & Setup
+        shell: bash
+        env:
+          NPM_DRY_RUN: ${{ github.event.inputs.dryRun }}
+          NPM_TAG: ${{ github.event.inputs.npmTag }}
+          NPM_VERBOSE: ${{ github.event.inputs.verbose }}
+        # logs the ENV values and stores them back in GITHUB_ENV with proper defaults for the next step
+        run: |
+          npm run report:versions
+          ./.github/workflows/scripts/checkStatus.sh
+
+      - name: Build
+        shell: bash
+        run: |
+          npm run build
+
+      - name: Lint & Format
+        shell: bash
+        run: |
+          npm run lint
+          npm run fmt
+
+      - name: Test
+        shell: bash
+        run: |
+          npm run test:ci:tags
+
+      - name: Publish
+        # dry-run can only be set to false if executed manually
+        uses: TypeFox/gh-publish-npm@7f487ef219d953f46274fc1c67dfc835c53fbc11 # v0.3.3 / dev
+        with:
+          dry-run: false
+          npm-tag: ${{ env.NPM_TAG }}
+          verbose: ${{ env.NPM_VERBOSE }}
+          npm-packages: |
+            packages/client
+            packages/vscode-ws-jsonrpc
+            packages/wrapper-react
