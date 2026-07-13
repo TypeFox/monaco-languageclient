@@ -9,16 +9,18 @@
     "typescript"
   ],
   "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/wrapper-react/README.md",
-  "bugs": "https://github.com/TypeFox/monaco-languageclient/issues",
+  "bugs": {
+    "url": "https://github.com/TypeFox/monaco-languageclient/issues"
+  },
   "license": "MIT",
   "author": {
-    "name": "TypeFox",
+    "name": "TypeFox GmbH",
     "url": "https://www.typefox.io"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TypeFox/monaco-languageclient.git",
-    "directory": "packages/monaco-editor-react"
+    "directory": "packages/wrapper-react"
   },
   "files": [
     "lib",
