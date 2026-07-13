@@ -86,3 +86,9 @@ jobs:
             packages/client
             packages/vscode-ws-jsonrpc
             packages/wrapper-react
+
+      - name: Checkmnpm logs
+        if: always()
+        shell: bash
+        run: |
+          ./.github/workflows/scripts/checkNpmLogs.sh
