@@ -4,18 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import {
-  useWorkerFactory,
-  Worker,
-  type PossibleWorkerLabelsClassic,
-  type PossibleWorkerLabelsExtended,
-  type WorkerLoader
-} from 'monaco-languageclient/workerFactory';
+import { useWorkerFactory, Worker, type PossibleWorkerLabelsClassic, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 
-const workerResolver: Map<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, (value: void | PromiseLike<void>) => void> =
-  new Map();
-const workerPromises: Map<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, Promise<void>> = new Map();
-export const createWorkerPromises = (keys: Array<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic>) => {
+const workerResolver: Map<PossibleWorkerLabelsClassic, (value: void | PromiseLike<void>) => void> = new Map();
+const workerPromises: Map<PossibleWorkerLabelsClassic, Promise<void>> = new Map();
+export const createWorkerPromises = (keys: PossibleWorkerLabelsClassic[]) => {
   workerResolver.clear();
   workerPromises.clear();
   for (const key of keys) {
@@ -30,12 +23,15 @@ export const awaitWorkerPromises = () => {
   return Promise.all([...workerPromises.values()]);
 };
 
-const pushAndPrintLastWorker = (lastWorker: PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic) => {
+const pushAndPrintLastWorker = (lastWorker: PossibleWorkerLabelsClassic) => {
   console.log(`Called: ${lastWorker}\n`);
   workerResolver.get(lastWorker)?.();
 };
 
-const defineClassicWorkers: () => Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>> = () => {
+const defineClassicWorkers: () => Partial<Record<PossibleWorkerLabelsClassic, WorkerLoader>> = (): Record<
+  PossibleWorkerLabelsClassic,
+  WorkerLoader
+> => {
   const editorWorkerServiceWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url);
     const worker = new Worker(workerUrl, {

@@ -15,7 +15,12 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { configureDefaultWorkerFactory, useWorkerFactory, type WorkerLoader } from 'monaco-languageclient/workerFactory';
+import {
+  configureDefaultWorkerFactory,
+  useWorkerFactory,
+  type PossibleWorkerLabelsExtended,
+  type WorkerLoader
+} from 'monaco-languageclient/workerFactory';
 import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
@@ -155,5 +160,5 @@ export type ExampleLsConfig = {
   basePath: string;
   languageId: string;
   useExternalWebSocket: boolean;
-  workerLoaders?: () => Partial<Record<string, WorkerLoader>>;
+  workerLoaders?: () => Partial<Record<PossibleWorkerLabelsExtended, WorkerLoader>>;
 };
