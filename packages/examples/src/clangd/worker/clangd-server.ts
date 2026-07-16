@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 /// <reference lib="WebWorker" />
+/// <reference types="emscripten" />
 
-import 'emscripten';
 import JSZip from 'jszip';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser';
 import { ComChannelEndpoint, type ComRouter, RawPayload, WorkerMessage } from 'wtd-core';
