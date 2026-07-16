@@ -6,7 +6,7 @@
 import '@codingame/monaco-vscode-json-default-extension';
 import { runExtendedClient } from 'monaco-languageclient-examples';
 import { jsontLsConfig } from 'monaco-languageclient-examples/json-client';
-import { Worker, WorkerLoader } from 'monaco-languageclient/workerFactory';
+import { PossibleWorkerLabelsClassic, PossibleWorkerLabelsExtended, Worker, WorkerLoader } from 'monaco-languageclient/workerFactory';
 
 const runJsonWrapper = async () => {
   const helloJsonCode = `{
@@ -14,7 +14,7 @@ const runJsonWrapper = async () => {
     "line_endings": {"value": "unix"}
 }`;
 
-  const defineWorkerLoaders: () => Partial<Record<string, WorkerLoader>> = () => {
+  const defineWorkerLoaders: () => Partial<Record<PossibleWorkerLabelsExtended | PossibleWorkerLabelsClassic, WorkerLoader>> = () => {
     const defaultEditorWorkerService = () => new Worker(new URL('../../bundle/editor.worker.js', import.meta.url), { type: 'module' });
     const defaultTextMateWorker = () => new Worker(new URL('../../bundle/worker.js', import.meta.url), { type: 'module' });
 

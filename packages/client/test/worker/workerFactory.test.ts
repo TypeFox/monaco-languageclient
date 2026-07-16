@@ -6,7 +6,7 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { getEnhancedMonacoEnvironment } from 'monaco-languageclient/vscodeApiWrapper';
-import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
+import { useWorkerFactory, Worker, type PossibleWorkerLabelsExtended, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 import { describe, expect, test } from 'vitest';
 
 describe.concurrent('WorkerFactory Tests', { concurrent: false, tags: ['vscode'] }, () => {
@@ -28,7 +28,7 @@ describe.concurrent('WorkerFactory Tests', { concurrent: false, tags: ['vscode']
           new Worker(new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url), {
             type: 'module'
           })
-      },
+      } as Record<PossibleWorkerLabelsExtended, WorkerLoader>,
       logger
     });
 

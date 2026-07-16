@@ -38,7 +38,7 @@ describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['vscode'] 
     console.log(`editorWorkerUrl: ${editorWorkerUrl} worker: ${editorWorkerCheck !== undefined}\n`);
 
     // default, expect editor worker to be loaded
-    createWorkerPromises(['editorWorker']);
+    createWorkerPromises(['editorWorkerService']);
     await editorApp.start(htmlContainer);
     expect(await awaitWorkerPromises()).toStrictEqual([undefined]);
     await editorApp.disposeModelRefs();
@@ -54,7 +54,7 @@ describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['vscode'] 
     console.log(`jsonWorkerUrl: ${jsonWorkerUrl} worker: ${jsonWorkerCheck !== undefined}\n`);
 
     // ts worker, expect ts worker and json worker to be loaded
-    createWorkerPromises(['tsWorker', 'jsonWorker']);
+    createWorkerPromises(['typescript', 'json']);
     await editorApp.updateCodeResources({
       modified: {
         text: '',
@@ -69,7 +69,7 @@ describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['vscode'] 
     expect(cssWorkerCheck).toBeUndefined();
     console.log(`cssWorkerUrl: ${cssWorkerUrl} worker: ${cssWorkerCheck !== undefined}\n`);
 
-    createWorkerPromises(['cssWorker']);
+    createWorkerPromises(['css']);
     await editorApp.updateCodeResources({
       modified: {
         text: '',
@@ -84,7 +84,7 @@ describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['vscode'] 
     expect(htmlWorkerCheck).toBeUndefined();
     console.log(`htmlWorkerUrl: ${htmlWorkerUrl} worker: ${htmlWorkerCheck !== undefined}\n`);
 
-    createWorkerPromises(['htmlWorker']);
+    createWorkerPromises(['html']);
     await editorApp.updateCodeResources({
       modified: {
         text: '',
