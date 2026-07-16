@@ -15,7 +15,7 @@
     "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-textmate-service-override": "^35.0.0",
+    "@codingame/monaco-vscode-textmate-service-override": "^35.0.1",
     "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {

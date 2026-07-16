@@ -13,6 +13,12 @@ on:
     paths:
       - '.github/workflows/**/*'
       - '**/package.json'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Dry run'
+        required: true
+        default: 'false'
 
 jobs:
   publish_oidc:
@@ -58,7 +64,7 @@ jobs:
       - name: Publish
         uses: TypeFox/gh-publish-npm@0c4ee5a844ccb61c4092fc439f7db21c4a2f0ddb # v0.4.0
         with:
-          dry-run: false
+          dry-run: ${{ github.event.inputs.dry-run }}
           npm-tag: 'next'
           verbose: true
           npm-packages: |

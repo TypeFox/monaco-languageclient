@@ -72,13 +72,13 @@ Important Project changes and notes about the project's history are found [here]
 
 These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
 
-- **monaco-languageclient**: `11.0.0-next.0` (release date: unreleased)
-- **@typefox/monaco-editor-react**: `8.0.0-next.0` (release date: unreleased)
+- **monaco-languageclient**: `11.0.0-next.1` (release date: unreleased)
+- **@typefox/monaco-editor-react**: `8.0.0-next.1` (release date: unreleased)
 - Aligned with:
-  - **@codingame/monaco-vscode-[editor]-api**: `35.0.0`
-  - **vscode**: `1.124.0`
+  - **@codingame/monaco-vscode-[editor]-api**: `35.0.1`
+  - **vscode**: `1.128.1`
   - **monaco-editor**: `0.55.1`
-- **vscode-ws-jsonrpc**: `4.0.0-next.0` (release date: unreleased)
+- **vscode-ws-jsonrpc**: `4.0.0-next.1` (release date: unreleased)
 
 Check find the [full compatibility table](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) with all previous versions.
 

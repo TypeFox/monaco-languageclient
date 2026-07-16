@@ -2,12 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2026.6.1] - unreleased
+## unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `35.0.0`.
-- Updated to `monaco-languageclient@11.0.0-next.0` and `@typefox/monaco-editor-react@8.0.0-next.0`.
+- Updated all `@codingame/monaco-vscode` packages to `35.0.1`.
+- Updated to `monaco-languageclient@11.0.0-next.1` and `@typefox/monaco-editor-react@8.0.0-next.1`.
 - Updated `langium`to `4.3.0`.
-- Updated `vscode-languageclient` and `vscode-languageserver` to `10.0.0`, `vscode-languageserver-protocol` to `3.18.0` and `vscode-jsonrpc` to `9.0.0`.
+- Updated `vscode-languageclient` and `vscode-languageserver` to `10.2.0`, `vscode-languageserver-protocol` to `3.18.2` and `vscode-jsonrpc` to `9.0.1`.
 - Dropped eslint and rely fully on oxlint.
 
 ## [2026.2.1] - 2026-02-04
