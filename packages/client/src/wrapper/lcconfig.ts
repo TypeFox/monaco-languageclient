@@ -10,13 +10,14 @@ import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFe
 export interface ConnectionConfig {
   options: ConnectionConfigOptions;
   messageTransports?: MessageTransports;
+  timeout?: number;
+  restartOptions?: LanguageClientRestartOptions;
 }
 
 export interface LanguageClientConfig {
   languageId: string;
   connection: ConnectionConfig;
   clientOptions: LanguageClientOptions;
-  restartOptions?: LanguageClientRestartOptions;
   useClientWithProposedFeatures?: boolean;
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   registerFeatures?: Array<StaticFeature | DynamicFeature<any>>;
@@ -25,8 +26,7 @@ export interface LanguageClientConfig {
 }
 
 export interface LanguageClientRestartOptions {
-  retries: number;
-  timeout: number;
+  retries?: number;
   keepWorker?: boolean;
 }
 

@@ -111,12 +111,11 @@ export const createClangdAppConfig = async (config: {
         $type: 'WorkerDirect',
         worker: await config.clangdWorkerHandler.createWorker(),
         messagePort: config.lsMessageLocalPort
+      },
+      restartOptions: {
+        retries: 5,
+        keepWorker: true
       }
-    },
-    restartOptions: {
-      retries: 5,
-      timeout: 1000,
-      keepWorker: true
     },
     clientOptions: {
       documentSelector: ['cpp'],

@@ -49,8 +49,7 @@ export const runStatemachineReact = async (noControls: boolean) => {
           worker
         },
         messageTransports: { reader, writer }
-      },
-      messageTransports: { reader, writer }
+      }
     });
 
     return (

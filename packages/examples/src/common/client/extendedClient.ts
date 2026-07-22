@@ -12,6 +12,8 @@ import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
+import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
+import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -21,8 +23,6 @@ import {
   type PossibleWorkerLabelsExtended,
   type WorkerLoader
 } from 'monaco-languageclient/workerFactory';
-import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
-import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
   const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);

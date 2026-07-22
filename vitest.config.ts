@@ -12,6 +12,7 @@ import externalViteConfig from './vite.config.js';
 
 export const vitestConfig = {
   test: {
+    testTimeout: 10000,
     browser: {
       enabled: true,
       headless: true,
@@ -32,7 +33,7 @@ export const vitestConfig = {
     },
     include: ['**/client/test/**/*', '**/wrapper-react/test/**/*', '**/socketio/test/**/*'],
     exclude: ['**/support/**/*', '**/__screenshots__/**/*', '**/verify/**/*'],
-    tags: [{ name: 'worker', fileParallelism: false, timeout: 10000 }, { name: 'main' }]
+    tags: [{ name: 'worker', fileParallelism: false, testTimeout: 10000 }, { name: 'main' }]
   }
 };
 

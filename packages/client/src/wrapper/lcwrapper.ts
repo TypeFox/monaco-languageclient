@@ -9,11 +9,11 @@ import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from '
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser';
 
 import { Deferred } from '../common/utils.js';
-import type { LanguageClientConnectionRealization } from './con/contract.js';
+import type { LanguageClientConnectionRealization } from './con/lcConnectionRealization.js';
 import { LcSocketIo } from './con/lcSocketIo.js';
-import { LcWebSocket } from './con/lcWebSocket .js';
+import { LcWebSocket } from './con/lcWebSocket.js';
 import { LcWorker } from './con/lcWorker.js';
-import type { LanguageClientConfig, LanguageClientRestartOptions } from './lcconfig.js';
+import type { LanguageClientConfig } from './lcconfig.js';
 
 export interface LanguageClientError {
   message: string;
@@ -69,19 +69,14 @@ export class LanguageClientWrapper {
     const deferred = new Deferred<void>();
 
     if (this.languageClient === undefined || !this.languageClient.isRunning()) {
-      const messageTransports = this.connectionRealization.reinit(
-        this.languageClientConfig.languageId,
-        this.languageClientConfig.connection
-      );
-      this.connectionRealization.connected = async () => {
-        await this.performLanguageClientStart(messageTransports, deferred.reject);
+      this.connectionRealization.connected = async (messageTransports: MessageTransports) => {
+        await this.performLanguageClientStart(messageTransports, deferred);
       };
       this.connectionRealization.disconnected = async () => {
         await this.dispose();
       };
-      this.connectionRealization.configureErrorHandling(deferred.reject);
-      this.connectionRealization.configureConnectionHandling();
-      deferred.resolve();
+
+      this.connectionRealization.init(this.languageClientConfig.languageId, this.languageClientConfig.connection, deferred.reject);
     }
     return deferred.promise;
   }
@@ -102,14 +97,12 @@ export class LanguageClientWrapper {
     return this.start();
   }
 
-  protected async performLanguageClientStart(
-    messageTransports: MessageTransports,
-    errorHandler: (reason?: unknown) => void
-  ): Promise<void> {
+  protected async performLanguageClientStart(messageTransports: MessageTransports, deferred: Deferred<void>): Promise<void> {
     let starting = true;
     // do not perform another start attempt if already running
     if (this.languageClient?.isRunning() ?? false) {
       this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
+      deferred.resolve();
       return;
     }
 
@@ -121,7 +114,7 @@ export class LanguageClientWrapper {
         errorHandler: {
           error: (e: Error) => {
             if (starting) {
-              errorHandler(`Error occurred in language client: ${e}`);
+              deferred.reject(`Error occurred in language client: ${e}`);
               return { action: ErrorAction.Shutdown };
             } else {
               return { action: ErrorAction.Continue };
@@ -136,7 +129,7 @@ export class LanguageClientWrapper {
     };
 
     const conOptions = this.languageClientConfig.connection.options;
-    this.initRestartConfiguration(messageTransports, this.languageClientConfig.restartOptions);
+    this.initRestartConfiguration(messageTransports);
 
     const isWebSocket =
       conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'WebSocketDirect';
@@ -176,18 +169,22 @@ export class LanguageClientWrapper {
         message: `languageClientWrapper (${this.languageClientConfig.languageId}): Start was unsuccessful.`,
         error: Object.hasOwn(e ?? {}, 'cause') ? (e as Error) : 'No error was provided.'
       };
-      errorHandler(languageClientError);
+      deferred.reject(languageClientError);
     }
     this.logger?.info(`languageClientWrapper (${this.languageClientConfig.languageId}): Started successfully.`);
+    deferred.resolve();
     starting = false;
   }
 
-  protected initRestartConfiguration(messageTransports: MessageTransports, restartOptions?: LanguageClientRestartOptions) {
+  protected initRestartConfiguration(messageTransports: MessageTransports) {
+    const restartOptions = this.languageClientConfig.connection.restartOptions;
+    const timeout = this.languageClientConfig.connection.timeout;
     if (restartOptions !== undefined) {
       let retry = 0;
 
-      const readerOnError = messageTransports.reader.onError(() => restartLC);
-      const readerOnClose = messageTransports.reader.onClose(() => restartLC);
+      const readerOnError = messageTransports.reader.onError(() => restartLC());
+      const readerOnClose = messageTransports.reader.onClose(() => restartLC());
+      const retries = restartOptions.retries ?? 0;
 
       const restartLC = async () => {
         if (this.isStarted()) {
@@ -199,12 +196,12 @@ export class LanguageClientWrapper {
             await this.restart(worker, restartOptions.keepWorker);
           } finally {
             retry++;
-            if (retry > restartOptions.retries && !this.isStarted()) {
-              this.logger?.info(`Disabling Language Client. Failed to start clangd after ${restartOptions.retries} retries`);
+            if (retry > retries && !this.isStarted()) {
+              this.logger?.info(`Disabling Language Client. Failed to start clangd after ${retries} retries`);
             } else {
               setTimeout(async () => {
                 await this.restart(worker, restartOptions.keepWorker);
-              }, restartOptions.timeout);
+              }, timeout);
             }
           }
         }

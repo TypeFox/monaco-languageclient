@@ -3,26 +3,20 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { MessageTransports } from 'vscode-languageclient/browser';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import type { WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from '../../common/commonTypes.js';
 import type { ConnectionConfig } from '../lcconfig.js';
-import type { LanguageClientError } from '../lcwrapper.js';
-import type { LanguageClientConnectionRealization, TransportLayerName } from './contract.js';
+import { LanguageClientConnectionRealization, type TransportLayerName } from './lcConnectionRealization.js';
 
-export class LcWorker implements LanguageClientConnectionRealization {
+export class LcWorker extends LanguageClientConnectionRealization {
   private worker?: Worker;
   private port?: MessagePort;
-  private languageId: string = 'unknown';
-
-  connected: () => void;
-  disconnected: () => void;
 
   getTransportLayerName(): TransportLayerName {
     return 'Worker';
   }
 
-  reinit(languageId: string, connectionConfig: ConnectionConfig): MessageTransports {
+  init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
     this.languageId = languageId;
     const options = connectionConfig.options as WorkerConfigOptionsDirect | WorkerConfigOptionsParams;
     if (this.worker === undefined) {
@@ -36,36 +30,21 @@ export class LcWorker implements LanguageClientConnectionRealization {
         const workerDirectConfig = options as WorkerConfigOptionsDirect;
         this.worker = workerDirectConfig.worker;
       }
+      this.worker.onerror = (ev: ErrorEvent) => {
+        this.createError(ev, 'Worker reported an error', errorHandler);
+      };
       if (options.messagePort !== undefined) {
         this.port = options.messagePort;
       }
     }
 
     const portOrWorker = this.port ?? this.worker;
-    let messageTransports = connectionConfig.messageTransports;
-    return (messageTransports ??= {
+    const messageTransports = connectionConfig.messageTransports ?? {
       reader: new BrowserMessageReader(portOrWorker),
       writer: new BrowserMessageWriter(portOrWorker)
-    });
-  }
+    };
 
-  configureConnectionHandling(): void {
-    // just connect the worker, as it is already running
-    if (this.worker !== undefined) {
-      this.connected();
-    }
-  }
-
-  configureErrorHandling(handler: (reason?: unknown) => void): void {
-    if (this.worker !== undefined) {
-      this.worker.onerror = (ev: ErrorEvent) => {
-        const languageClientError: LanguageClientError = {
-          message: `LcWorker (${this.languageId}) created an error.`,
-          error: ev.error ?? 'No error was provided.'
-        };
-        handler(languageClientError);
-      };
-    }
+    this.connected(messageTransports);
   }
 
   updateWorker(worker: Worker): void {

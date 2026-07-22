@@ -18,7 +18,7 @@ import {
   createUnreachableWorkerConfig
 } from '../support/helper.js';
 
-describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
+describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['main'] }, () => {
   beforeAll(async () => {
     const apiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',
@@ -79,17 +79,14 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
   });
 
   test('Start: unreachable url', async () => {
-    const languageClientConfig = createDefaultLcUnreachableUrlConfig(23456);
+    const languageClientConfig = createDefaultLcUnreachableUrlConfig(21999);
+    languageClientConfig.connection.timeout = 2000;
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
-    try {
-      await languageClientWrapper.start();
-    } catch (error) {
-      expect(error).toEqual({
-        message: 'languageClientWrapper (javascript): Websocket connection failed.',
-        error: 'No error was provided.'
-      });
-    }
+    await expect(languageClientWrapper.start()).rejects.toEqual({
+      message: 'WebSocket (javascript): Connection attempt failed.',
+      error: 'Connection timed out after 2000 milliseconds.'
+    });
   });
 
   test('Only unreachable worker url', async () => {
@@ -108,7 +105,7 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
 
     await expect(languageClientWrapper.start()).rejects.toEqual({
-      message: 'LcWorker (javascript): Worker reported an error.',
+      message: 'Worker (javascript): Worker reported an error.',
       error: 'No error was provided.'
     });
   });

@@ -3,29 +3,34 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { MessageTransports } from 'vscode-languageclient/browser';
 import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { WebSocketConfigOptionsDirect, WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from '../../common/commonTypes.js';
 import { createUrl } from '../../common/utils.js';
 import type { ConnectionConfig } from '../lcconfig.js';
-import type { LanguageClientError } from '../lcwrapper.js';
-import type { LanguageClientConnectionRealization, TransportLayerName } from './contract.js';
+import { DEFAULT_CONNECTION_TIMEOUT, LanguageClientConnectionRealization, type TransportLayerName } from './lcConnectionRealization.js';
 
-export class LcWebSocket implements LanguageClientConnectionRealization {
-  private languageId: string = 'unknown';
+export class LcWebSocket extends LanguageClientConnectionRealization {
   private webSocket?: WebSocket;
-
-  connected: () => void;
-  disconnected: () => void;
 
   getTransportLayerName(): TransportLayerName {
     return 'WebSocket';
   }
 
-  reinit(languageId: string, connectionConfig: ConnectionConfig): MessageTransports {
+  init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
     this.languageId = languageId;
     const options = connectionConfig.options as WebSocketConfigOptionsUrl | WebSocketConfigOptionsParams | WebSocketConfigOptionsDirect;
     this.webSocket = options.$type === 'WebSocketDirect' ? (options.webSocket as WebSocket) : new WebSocket(createUrl(options));
+
+    this.clearPendingTimeout();
+    this.createConnectionTimeout(
+      connectionConfig.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
+      this.webSocket.readyState !== WebSocket.OPEN,
+      errorHandler
+    );
+
+    this.webSocket.onerror = (ev: Event) => {
+      this.createError(ev, 'Websocket connection failed', errorHandler);
+    };
 
     let messageTransports = connectionConfig.messageTransports;
     if (messageTransports === undefined) {
@@ -35,37 +40,22 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
         writer: new WebSocketMessageWriter(iWebSocket)
       };
     }
-    return messageTransports;
-  }
 
-  configureConnectionHandling(): void {
-    if (this.webSocket !== undefined) {
-      // if websocket is already open, signal immediately
-      if (this.webSocket.readyState === WebSocket.OPEN) {
-        this.connected();
-      }
-
-      // otherwise start on open
-      this.webSocket.onopen = async () => {
-        this.connected();
-      };
-
-      this.webSocket.onclose = async () => {
-        this.disconnected();
-      };
+    // if websocket is already open, signal immediately
+    if (this.webSocket.readyState === WebSocket.OPEN) {
+      this.clearPendingTimeout();
+      this.connected(messageTransports);
     }
-  }
 
-  configureErrorHandling(handler: (reason?: unknown) => void): void {
-    if (this.webSocket !== undefined) {
-      this.webSocket.onerror = (ev: Event) => {
-        const languageClientError: LanguageClientError = {
-          message: `LcWebSocket (${this.languageId}) created an error.`,
-          error: (ev as ErrorEvent).error ?? 'No error was provided.'
-        };
-        handler(languageClientError);
-      };
-    }
+    // otherwise start on open
+    this.webSocket.onopen = async () => {
+      this.clearPendingTimeout();
+      this.connected(messageTransports);
+    };
+
+    this.webSocket.onclose = async () => {
+      this.disconnected();
+    };
   }
 
   dispose(): void {
