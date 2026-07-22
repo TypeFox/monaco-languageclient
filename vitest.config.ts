@@ -31,8 +31,8 @@ export const vitestConfig = {
       include: ['packages/client', 'packages/vscode-ws-jsonrpc', 'packages/wrapper-react']
     },
     include: ['**/client/test/**/*', '**/wrapper-react/test/**/*'],
-    exclude: ['**/support/**/*', '**/__screenshots__/**/*'],
-    tags: [{ name: 'vscode', timeout: 10000 }, { name: 'main' }]
+    exclude: ['**/support/**/*', '**/__screenshots__/**/*', '**/verify/**/*'],
+    tags: [{ name: 'worker', fileParallelism: false, timeout: 10000 }, { name: 'main' }]
   }
 };
 

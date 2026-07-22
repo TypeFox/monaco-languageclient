@@ -10,7 +10,7 @@ import { IConfigurationService, LogLevel, StandaloneServices } from '@codingame/
 import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe.concurrent('MonacoVscodeApiWrapper Tests', { concurrent: false, tags: ['vscode'] }, () => {
+describe.concurrent('MonacoVscodeApiWrapper Tests', { concurrent: false, tags: ['main'] }, () => {
   let apiWrapper: MonacoVscodeApiWrapper;
   const htmlContainer = createMonacoEditorDiv();
 

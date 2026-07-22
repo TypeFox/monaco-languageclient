@@ -15,7 +15,7 @@ import { getEnhancedMonacoEnvironment, MonacoVscodeApiWrapper } from 'monaco-lan
 import { awaitWorkerPromises, configureClassicWorkerFactory, createWorkerPromises } from '../support/helper-classic.js';
 import { createDefaultMonacoVscodeApiConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['vscode'] }, () => {
+describe.concurrent('Test WorkerLoaders', { concurrent: false, tags: ['worker'] }, () => {
   test('Test default worker application', async () => {
     const htmlContainer = createMonacoEditorDiv();
     const apiConfig = createDefaultMonacoVscodeApiConfig('extended', htmlContainer, 'EditorService');
