@@ -6,7 +6,7 @@ import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
 import { createDefaultMonacoVscodeApiConfig } from '../support/helper.js';
 
-describe.concurrent('MonacoVscodeApiWrapper Tests: Different config', { concurrent: false, tags: ['vscode'] }, () => {
+describe.concurrent('MonacoVscodeApiWrapper Tests: Different config', { concurrent: false, tags: ['main'] }, () => {
   test('Start MonacoVscodeApiWrapper with ViewsService but no htmlContainer', async () => {
     const apiConfig = createDefaultMonacoVscodeApiConfig('extended', undefined, 'ViewsService');
 
