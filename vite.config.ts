@@ -37,6 +37,7 @@ export const definedViteConfig = defineConfig({
   },
   server: {
     port: 20001,
+    host: '0.0.0.0',
     cors: {
       origin: '*'
     },
