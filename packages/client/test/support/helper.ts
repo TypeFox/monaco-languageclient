@@ -4,10 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType, ViewsConfigTypes } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MessageTransports } from 'vscode-languageclient/browser';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 export const createMonacoEditorDiv = () => {
   const div = document.createElement('div');
@@ -29,7 +30,8 @@ export const createDefaultLcWorkerConfig = (
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerDirect',
+        direct: true,
+        realization: () => new LcWorker(),
         worker
       },
       messageTransports
@@ -46,7 +48,8 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerConfig',
+        direct: false,
+        realization: () => new LcWorker(),
         url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
         type: 'module'
       }
@@ -63,7 +66,8 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
     connection: {
       options: {
         $family: 'WebSocket',
-        $type: 'WebSocketUrl',
+        direct: false,
+        realization: () => new LcWebSocket(),
         url: `ws://localhost:${port}/rester`
       }
     }

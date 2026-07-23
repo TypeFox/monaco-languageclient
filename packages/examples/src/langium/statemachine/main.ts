@@ -12,7 +12,7 @@ import textMod from '../../../resources/langium/statemachine/example-mod.statema
 import { disableElement } from '../../common/client/utils.js';
 import { delayExecution } from 'monaco-languageclient/common';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
-import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
 
 let editorApp: EditorApp | undefined;
 let editorApp2: EditorApp | undefined;
@@ -58,7 +58,8 @@ const startEditor = async () => {
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerDirect',
+        direct: true,
+        realization: () => new LcWorker(),
         worker: stateMachineWorkerPort,
         messagePort: channel.port1
       },

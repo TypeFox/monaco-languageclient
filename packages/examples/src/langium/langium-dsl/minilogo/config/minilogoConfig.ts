@@ -6,7 +6,7 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
@@ -64,7 +64,8 @@ export const createMinilogoConfig = (params: { htmlContainer: HTMLElement }): Ex
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerDirect',
+        direct: true,
+        realization: () => new LcWorker(),
         worker
       },
       messageTransports: { reader, writer }

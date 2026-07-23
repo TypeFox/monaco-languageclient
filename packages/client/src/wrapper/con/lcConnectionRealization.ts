@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { MessageTransports } from 'vscode-languageclient/browser';
-import type { ConnectionConfig } from '../lcconfig.js';
 import type { LanguageClientError } from '../index.js';
+import type { ConnectionConfig } from '../lcconfig.js';
 
 export type TransportLayerName = 'Worker' | 'WebSocket' | 'SocketIo';
 
@@ -13,7 +13,7 @@ export const DEFAULT_CONNECTION_TIMEOUT = 5000;
 
 export abstract class LanguageClientConnectionRealization {
   protected languageId: string = 'unknown';
-  protected pendingTimeout: ReturnType<typeof setTimeout> | string | number | undefined = undefined;
+  protected pendingTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
   connected: (messageTransports: MessageTransports) => void;
 

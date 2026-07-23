@@ -14,6 +14,7 @@ import text from '../../../resources/langium/statemachine/example.statemachine?r
 import { disableElement } from '../../common/client/utils.js';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 import { loadStatemachineWorkerRegular } from './main.js';
+import { LcWorker } from 'monaco-languageclient/lcwrapper';
 
 export const runStatemachineReact = async (noControls: boolean) => {
   const worker = loadStatemachineWorkerRegular();
@@ -45,7 +46,8 @@ export const runStatemachineReact = async (noControls: boolean) => {
       connection: {
         options: {
           $family: 'Worker',
-          $type: 'WorkerDirect',
+          direct: true,
+          realization: () => new LcWorker(),
           worker
         },
         messageTransports: { reader, writer }

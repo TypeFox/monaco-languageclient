@@ -32,6 +32,11 @@
       "import": "./lib/index.js",
       "default": "./lib/index.js"
     },
+    "./browser": {
+      "types": "./lib/browser/index.d.ts",
+      "import": "./lib/browser/index.js",
+      "default": "./lib/browser/index.js"
+    },
     "./server": {
       "types": "./lib/server/index.d.ts",
       "import": "./lib/server/index.js",

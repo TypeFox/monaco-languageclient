@@ -20,7 +20,7 @@ export class LcWorker extends LanguageClientConnectionRealization {
     this.languageId = languageId;
     const options = connectionConfig.options as WorkerConfigOptionsDirect | WorkerConfigOptionsParams;
     if (this.worker === undefined) {
-      if (options.$type === 'WorkerConfig') {
+      if (!options.direct) {
         const workerConfig = options as WorkerConfigOptionsParams;
         this.worker = new Worker(workerConfig.url.href, {
           type: workerConfig.type,

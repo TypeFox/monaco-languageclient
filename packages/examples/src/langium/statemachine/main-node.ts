@@ -7,7 +7,7 @@ import { EditorApp } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
-import { SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
+import { LcSocketIo, SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 
@@ -33,7 +33,8 @@ export const runStatemachine = async () => {
     connection: {
       options: {
         $family: 'WebSocket',
-        $type: 'SocketIoDirect',
+        direct: true,
+        realization: () => new LcSocketIo(),
         webSocket: socket
       },
       messageTransports: {

@@ -3,11 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
+import {
+  DEFAULT_CONNECTION_TIMEOUT,
+  type ConnectionConfig,
+  LanguageClientConnectionRealization,
+  type TransportLayerName
+} from 'monaco-languageclient/lcwrapper';
 import type { Socket } from 'socket.io-client';
 import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
-import type { SocketIoConfigOptionsDirect } from '../../common/commonTypes.js';
-import type { ConnectionConfig } from '../lcconfig.js';
-import { DEFAULT_CONNECTION_TIMEOUT, LanguageClientConnectionRealization, type TransportLayerName } from './lcConnectionRealization.js';
 
 export class LcSocketIo extends LanguageClientConnectionRealization {
   private socket?: Socket;
@@ -18,8 +22,8 @@ export class LcSocketIo extends LanguageClientConnectionRealization {
 
   init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
     this.languageId = languageId;
-    const options = connectionConfig.options as SocketIoConfigOptionsDirect;
-    this.socket = options.webSocket as Socket;
+    const options = connectionConfig.options as WebSocketConfigOptionsDirect;
+    this.socket = options.webSocket as unknown as Socket;
 
     this.clearPendingTimeout();
     this.createConnectionTimeout(connectionConfig.timeout ?? DEFAULT_CONNECTION_TIMEOUT, !this.socket.connected, errorHandler);

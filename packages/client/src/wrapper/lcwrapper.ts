@@ -10,8 +10,6 @@ import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-langu
 
 import { Deferred } from '../common/utils.js';
 import type { LanguageClientConnectionRealization } from './con/lcConnectionRealization.js';
-import { LcSocketIo } from './con/lcSocketIo.js';
-import { LcWebSocket } from './con/lcWebSocket.js';
 import { LcWorker } from './con/lcWorker.js';
 import type { LanguageClientConfig } from './lcconfig.js';
 
@@ -29,21 +27,7 @@ export class LanguageClientWrapper {
   constructor(config: LanguageClientConfig) {
     this.languageClientConfig = config;
     this.logger = new ConsoleLogger(this.languageClientConfig.logLevel ?? LogLevel.Off);
-
-    switch (this.languageClientConfig.connection.options.$type) {
-      case 'WebSocketDirect':
-      case 'WebSocketParams':
-      case 'WebSocketUrl':
-        this.connectionRealization = new LcWebSocket();
-        break;
-      case 'SocketIoDirect':
-        this.connectionRealization = new LcSocketIo();
-        break;
-      case 'WorkerDirect':
-      case 'WorkerConfig':
-        this.connectionRealization = new LcWorker();
-        break;
-    }
+    this.connectionRealization = this.languageClientConfig.connection.options.realization();
   }
 
   haveLanguageClient(): boolean {

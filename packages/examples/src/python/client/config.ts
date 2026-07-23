@@ -44,6 +44,7 @@ import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
   const files = new Map<string, FileDefinition>();
@@ -97,7 +98,8 @@ export const createPythonAppConfig = (): PythonAppConfig => {
 
   const url = createUrl({
     $family: 'WebSocket',
-    $type: 'WebSocketParams',
+    direct: false,
+    realization: () => new LcWebSocket(),
     secured: false,
     host: 'localhost',
     port: 30001,
@@ -192,7 +194,8 @@ export const createPythonAppConfig = (): PythonAppConfig => {
     connection: {
       options: {
         $family: 'WebSocket',
-        $type: 'WebSocketDirect',
+        direct: true,
+        realization: () => new LcWebSocket(),
         webSocket: webSocket,
         startOptions: {
           onCall: (languageClient?: BaseLanguageClient) => {

@@ -28,6 +28,7 @@ import {
   type PossibleWorkerLabelsExtended,
   type WorkerLoader
 } from 'monaco-languageclient/workerFactory';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
   const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
@@ -90,13 +91,15 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   if (lsConfig.useExternalWebSocket) {
     const params: WebSocketConfigOptionsUrl = {
       $family: 'WebSocket',
-      $type: 'WebSocketUrl',
+      realization: () => new LcWebSocket(),
+      direct: false,
       url: webSocketUrl
     };
     webSocket = new WebSocket(createUrl(params));
     connectionConfigOptions = {
       $family: 'WebSocket',
-      $type: 'WebSocketDirect',
+      realization: () => new LcWebSocket(),
+      direct: true,
       webSocket,
       startOptions,
       stopOptions
@@ -104,7 +107,8 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   } else {
     connectionConfigOptions = {
       $family: 'WebSocket',
-      $type: 'WebSocketUrl',
+      realization: () => new LcWebSocket(),
+      direct: false,
       url: webSocketUrl,
       startOptions,
       stopOptions
@@ -147,7 +151,8 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
       if (lsConfig.useExternalWebSocket && webSocket === undefined) {
         const params: WebSocketConfigOptionsUrl = {
           $family: 'WebSocket',
-          $type: 'WebSocketUrl',
+          direct: false,
+          realization: () => new LcWebSocket(),
           url: webSocketUrl
         };
         webSocket = new WebSocket(createUrl(params));

@@ -3,11 +3,19 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import {
+  createUrl,
+  type WebSocketConfigOptionsDirect,
+  type WebSocketConfigOptionsParams,
+  type WebSocketConfigOptionsUrl
+} from 'monaco-languageclient/common';
+import {
+  DEFAULT_CONNECTION_TIMEOUT,
+  type ConnectionConfig,
+  LanguageClientConnectionRealization,
+  type TransportLayerName
+} from 'monaco-languageclient/lcwrapper';
 import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import type { WebSocketConfigOptionsDirect, WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from '../../common/commonTypes.js';
-import { createUrl } from '../../common/utils.js';
-import type { ConnectionConfig } from '../lcconfig.js';
-import { DEFAULT_CONNECTION_TIMEOUT, LanguageClientConnectionRealization, type TransportLayerName } from './lcConnectionRealization.js';
 
 export class LcWebSocket extends LanguageClientConnectionRealization {
   private webSocket?: WebSocket;
@@ -18,8 +26,10 @@ export class LcWebSocket extends LanguageClientConnectionRealization {
 
   init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
     this.languageId = languageId;
-    const options = connectionConfig.options as WebSocketConfigOptionsUrl | WebSocketConfigOptionsParams | WebSocketConfigOptionsDirect;
-    this.webSocket = options.$type === 'WebSocketDirect' ? (options.webSocket as WebSocket) : new WebSocket(createUrl(options));
+    const options = connectionConfig.options;
+    this.webSocket = options.direct
+      ? ((options as WebSocketConfigOptionsDirect).webSocket as WebSocket)
+      : new WebSocket(createUrl(options as WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl));
 
     this.clearPendingTimeout();
     this.createConnectionTimeout(

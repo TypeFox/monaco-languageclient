@@ -36,8 +36,8 @@
       "default": "./lib/node/index.js"
     },
     "./browser": {
-      "types": "./lib/browser/client.d.ts",
-      "default": "./lib/browser/client.js"
+      "types": "./lib/browser/index.d.ts",
+      "default": "./lib/browser/index.js"
     }
   },
   "scripts": {
@@ -48,6 +48,7 @@
     "build": "npm run build:msg && npm run clean && npm run compile"
   },
   "dependencies": {
+    "monaco-languageclient": "~11.0.0-next.2",
     "socket.io": "~4.8.3",
     "socket.io-client": "~4.8.3",
     "vscode-jsonrpc": "~9.0.1",

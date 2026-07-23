@@ -1,9 +1,9 @@
 {
   "private": true,
   "workspaces": [
+    "packages/client",
     "packages/vscode-ws-jsonrpc",
     "packages/socketio",
-    "packages/client",
     "packages/wrapper-react",
     "packages/examples"
   ],

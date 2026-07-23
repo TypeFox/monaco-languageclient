@@ -11,7 +11,7 @@ import {
 } from '@codingame/monaco-vscode-files-service-override';
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { type MonacoVscodeApiConfig, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
@@ -147,7 +147,8 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerDirect',
+        direct: true,
+        realization: () => new LcWorker(),
         worker
       },
       messageTransports: { reader, writer }

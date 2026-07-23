@@ -5,7 +5,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MessageTransports } from 'vscode-languageclient';
 
 export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLevel?: LogLevel): EditorAppConfig => {
@@ -24,7 +24,8 @@ const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, message
     connection: {
       options: {
         $family: 'Worker',
-        $type: 'WorkerDirect',
+        direct: true,
+        realization: () => new LcWorker(),
         worker
       },
       messageTransports

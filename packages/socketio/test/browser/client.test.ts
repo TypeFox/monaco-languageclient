@@ -8,7 +8,7 @@ import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languag
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
 import { LogLevel, SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
-import { SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
+import { LcSocketIo, SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
 import type { LsCommandFeedback } from '../support/command-args.js';
 
 export const createMonacoEditorDiv = () => {
@@ -56,7 +56,8 @@ describe.concurrent('socketio', { concurrent: false }, () => {
       connection: {
         options: {
           $family: 'WebSocket',
-          $type: 'SocketIoDirect',
+          direct: true,
+          realization: () => new LcSocketIo(),
           webSocket: socket
         },
         messageTransports: {
