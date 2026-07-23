@@ -131,14 +131,11 @@ export class LanguageClientWrapper {
     const conOptions = this.languageClientConfig.connection.options;
     this.initRestartConfiguration(messageTransports);
 
-    const isWebSocket =
-      conOptions.$type === 'WebSocketParams' || conOptions.$type === 'WebSocketUrl' || conOptions.$type === 'WebSocketDirect';
-
     messageTransports.reader.onClose(async () => {
       await this.languageClient?.stop();
 
-      if (isWebSocket && conOptions.stopOptions !== undefined) {
-        const stopOptions = conOptions.stopOptions;
+      const stopOptions = conOptions.stopOptions;
+      if (stopOptions !== undefined) {
         stopOptions.onCall(this.getLanguageClient());
         if (stopOptions.reportStatus !== undefined) {
           this.logger?.info(this.reportStatus().join('\n'));
@@ -157,8 +154,8 @@ export class LanguageClientWrapper {
 
       await this.languageClient.start();
 
-      if (isWebSocket && conOptions.startOptions !== undefined) {
-        const startOptions = conOptions.startOptions;
+      const startOptions = conOptions.startOptions;
+      if (startOptions !== undefined) {
         startOptions.onCall(this.getLanguageClient());
         if (startOptions.reportStatus !== undefined) {
           this.logger?.info(this.reportStatus().join('\n'));

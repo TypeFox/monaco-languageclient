@@ -28,6 +28,7 @@ export function listen(options: { webSocket: WebSocket; logger?: Logger; onConne
 
 export function toSocket(webSocket: WebSocket): IWebSocket {
   return {
+    $type: 'IWebSocket',
     send: (content) => webSocket.send(content),
     onMessage: (cb) => {
       webSocket.onmessage = (event) => cb(event.data);

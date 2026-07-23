@@ -96,6 +96,8 @@ export const createPythonAppConfig = (): PythonAppConfig => {
   const configParams = createDefaultConfigParams('/home/mlc', document.body);
 
   const url = createUrl({
+    $family: 'WebSocket',
+    $type: 'WebSocketParams',
     secured: false,
     host: 'localhost',
     port: 30001,

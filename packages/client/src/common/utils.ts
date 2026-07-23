@@ -3,18 +3,18 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { WebSocketUrlParams, WebSocketUrlString } from './commonTypes.js';
+import type { WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from './commonTypes.js';
 
-export const createUrl = (config: WebSocketUrlParams | WebSocketUrlString) => {
+export const createUrl = (config: WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl) => {
   let buildUrl = '';
   if (Object.hasOwn(config, 'url')) {
-    const options = config as WebSocketUrlString;
+    const options = config as WebSocketConfigOptionsUrl;
     if (!options.url.startsWith('ws://') && !options.url.startsWith('wss://')) {
       throw new Error(`This is not a proper websocket url: ${options.url}`);
     }
     buildUrl = options.url;
   } else {
-    const options = config as WebSocketUrlParams;
+    const options = config as WebSocketConfigOptionsParams;
     const protocol = options.secured ? 'wss' : 'ws';
     buildUrl = `${protocol}://${options.host}`;
     if (options.port !== undefined) {

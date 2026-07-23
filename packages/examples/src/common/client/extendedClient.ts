@@ -13,7 +13,12 @@ import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import { createUrl, type ConnectionConfigOptions, type WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
+import {
+  createUrl,
+  type ConnectionConfigOptions,
+  type WebSocketConfigOptionsDirect,
+  type WebSocketConfigOptionsUrl
+} from 'monaco-languageclient/common';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -83,7 +88,12 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   let connectionConfigOptions: ConnectionConfigOptions;
   const webSocketUrl = `ws://localhost:${lsConfig.port}${lsConfig.path}`;
   if (lsConfig.useExternalWebSocket) {
-    webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
+    const params: WebSocketConfigOptionsUrl = {
+      $family: 'WebSocket',
+      $type: 'WebSocketUrl',
+      url: webSocketUrl
+    };
+    webSocket = new WebSocket(createUrl(params));
     connectionConfigOptions = {
       $family: 'WebSocket',
       $type: 'WebSocketDirect',
@@ -135,7 +145,12 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
   try {
     document.querySelector('#button-start')?.addEventListener('click', async () => {
       if (lsConfig.useExternalWebSocket && webSocket === undefined) {
-        webSocket = new WebSocket(createUrl({ url: webSocketUrl }));
+        const params: WebSocketConfigOptionsUrl = {
+          $family: 'WebSocket',
+          $type: 'WebSocketUrl',
+          url: webSocketUrl
+        };
+        webSocket = new WebSocket(createUrl(params));
         (connectionConfigOptions as WebSocketConfigOptionsDirect).webSocket = webSocket;
       }
       await editorApp.start(htmlContainer);

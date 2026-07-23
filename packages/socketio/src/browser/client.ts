@@ -5,7 +5,7 @@
 
 import type { Socket } from 'socket.io-client';
 import { Manager } from 'socket.io-client';
-import { ConsoleLogger, LogLevel, type LogLevelValue } from '../logger.js';
+import { ConsoleLogger, LogLevel, type LogLevelValue } from '../common/logger.js';
 
 export type SocketIoClientConfig = {
   url: string;

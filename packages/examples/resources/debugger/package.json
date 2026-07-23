@@ -10,13 +10,6 @@
   "type": "module",
   "main": "./dist/debugServer.js",
   "module": "./dist/debugServer.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "dist/debugServer"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./dist/debugServer.d.ts",

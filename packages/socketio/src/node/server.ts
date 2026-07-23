@@ -1,11 +1,11 @@
 /* --------------------------------------------------------------------------------------------
- * Copyright (c) 2025 TypeFox and others.
+ * Copyright (c) 2026 TypeFox and others.
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
 import { Server, type Socket } from 'socket.io';
 import { SocketIoMessageReader, SocketIoMessageWriter, type MessageTransports } from 'vscode-socketio-jsonrpc';
-import { ConsoleLogger, LogLevel, type LogLevelValue } from '../logger.js';
+import { ConsoleLogger, LogLevel, type LogLevelValue } from '../common/logger.js';
 
 export type SocketIoServerConfig = {
   protocol?: 'http' | 'https';

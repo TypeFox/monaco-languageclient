@@ -26,27 +26,14 @@
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/index.d.ts"
-      ],
-      "node": [
-        "lib/node/server"
-      ],
-      "browser": [
-        "lib/browser/client"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./node": {
-      "types": "./lib/node/server.d.ts",
-      "default": "./lib/node/server.js"
+      "types": "./lib/node/index.d.ts",
+      "default": "./lib/node/index.js"
     },
     "./browser": {
       "types": "./lib/browser/client.d.ts",

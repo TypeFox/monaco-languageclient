@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { WebSocketConfigOptionsDirect, WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from '../../common/commonTypes.js';
 import { createUrl } from '../../common/utils.js';
 import type { ConnectionConfig } from '../lcconfig.js';
@@ -32,14 +32,10 @@ export class LcWebSocket extends LanguageClientConnectionRealization {
       this.createError(ev, 'Websocket connection failed', errorHandler);
     };
 
-    let messageTransports = connectionConfig.messageTransports;
-    if (messageTransports === undefined) {
-      const iWebSocket = toSocket(this.webSocket as WebSocket);
-      messageTransports = {
-        reader: new WebSocketMessageReader(iWebSocket),
-        writer: new WebSocketMessageWriter(iWebSocket)
-      };
-    }
+    const messageTransports = connectionConfig.messageTransports ?? {
+      reader: new WebSocketMessageReader(this.webSocket),
+      writer: new WebSocketMessageWriter(this.webSocket)
+    };
 
     // if websocket is already open, signal immediately
     if (this.webSocket.readyState === WebSocket.OPEN) {

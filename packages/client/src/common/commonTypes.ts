@@ -6,15 +6,17 @@
 import type { Socket } from 'socket.io-client';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 
-export type ConnectionConfigOptions =
-  | WebSocketConfigOptionsDirect
-  | WebSocketConfigOptionsParams
-  | WebSocketConfigOptionsUrl
-  | WorkerConfigOptionsParams
-  | WorkerConfigOptionsDirect
-  | SocketIoConfigOptionsDirect;
+export type ConnectionConfigOptions = StartAndStopOptions &
+  (
+    | WebSocketConfigOptionsDirect
+    | WebSocketConfigOptionsParams
+    | WebSocketConfigOptionsUrl
+    | WorkerConfigOptionsParams
+    | WorkerConfigOptionsDirect
+    | SocketIoConfigOptionsDirect
+  );
 
-export interface WebSocketCallOptions {
+export interface CallOptions {
   /** Adds handle on languageClient */
   onCall: (languageClient?: BaseLanguageClient) => void;
   /** Reports Status Of Language Client */
@@ -25,17 +27,21 @@ export interface ConnectionOptionsFamily {
   $family: 'Worker' | 'WebSocket';
 }
 
+export interface StartAndStopOptions {
+  startOptions?: CallOptions;
+  stopOptions?: CallOptions;
+}
+
 export interface WebSocketLikeConfig extends ConnectionOptionsFamily {
   webSocket: WebSocket | Socket;
 }
 
 export interface WebSocketConfigOptionsDirect extends WebSocketLikeConfig {
   $type: 'WebSocketDirect';
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
 }
 
-export interface WebSocketUrlParams {
+export interface WebSocketConfigOptionsParams extends ConnectionOptionsFamily {
+  $type: 'WebSocketParams';
   secured: boolean;
   host: string;
   port?: number;
@@ -43,20 +49,9 @@ export interface WebSocketUrlParams {
   extraParams?: Record<string, string | number | Array<string | number>>;
 }
 
-export interface WebSocketConfigOptionsParams extends WebSocketUrlParams, ConnectionOptionsFamily {
-  $type: 'WebSocketParams';
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
-}
-
-export interface WebSocketUrlString {
-  url: string;
-}
-
-export interface WebSocketConfigOptionsUrl extends WebSocketUrlString, ConnectionOptionsFamily {
+export interface WebSocketConfigOptionsUrl extends ConnectionOptionsFamily {
   $type: 'WebSocketUrl';
-  startOptions?: WebSocketCallOptions;
-  stopOptions?: WebSocketCallOptions;
+  url: string;
 }
 
 export interface WorkerConfigOptionsParams extends ConnectionOptionsFamily {

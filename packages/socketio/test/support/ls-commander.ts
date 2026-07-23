@@ -4,8 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { Socket } from 'socket.io';
-import { ConsoleLogger, linkMessageTransports, LogLevel } from 'vscode-socketio-jsonrpc';
-import { SocketIoServer } from 'vscode-socketio-jsonrpc/node';
+import { ConsoleLogger, LogLevel } from 'vscode-socketio-jsonrpc';
+import { SocketIoServer, linkMessageTransports } from 'vscode-socketio-jsonrpc/node';
 import type { CommandCallback, CommandStatus, LsCommandArgs } from './command-args.js';
 import { runDummyLanguageServer } from './ls/dummy.js';
 import { getLocalDirectory, runStatemachineLanguageServer } from 'monaco-languageclient-examples/node';
