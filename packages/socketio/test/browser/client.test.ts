@@ -18,8 +18,8 @@ export const createMonacoEditorDiv = () => {
   return div;
 };
 
-describe.sequential('socketio', () => {
-  test('test direct', async () => {
+describe.concurrent('socketio', { concurrent: false }, () => {
+  test('test direct', { tags: ['main'] }, async () => {
     const socketIoClient = new SocketIoClient({
       url: 'ws://localhost:30101'
     });
@@ -32,7 +32,7 @@ describe.sequential('socketio', () => {
     socket.disconnect();
   });
 
-  test('Test LSP connection with LanguageClientWrapper', async () => {
+  test('Test LSP connection with LanguageClientWrapper', { tags: ['main'] }, async () => {
     const apiConfig: MonacoVscodeApiConfig = {
       $type: 'extended',
       viewsConfig: {
@@ -67,13 +67,13 @@ describe.sequential('socketio', () => {
     };
     const languageClientWrapper = new LanguageClientWrapper(lcConfig);
 
-    expect(async () => await languageClientWrapper.start()).not.toThrowError();
+    expect(async () => await languageClientWrapper.start()).not.toThrow();
 
     await languageClientWrapper.dispose();
     socket.disconnect();
   });
 
-  test('Test Commanding Dummy Language Server', async () => {
+  test('Test Commanding Dummy Language Server', { tags: ['main'] }, async () => {
     const socketIoClient = new SocketIoClient({
       url: 'ws://localhost:30200',
       logLevel: LogLevel.Debug
@@ -111,7 +111,7 @@ describe.sequential('socketio', () => {
     socket.disconnect();
   });
 
-  test('Test Commanding Statemachine Language Server', async () => {
+  test('Test Commanding Statemachine Language Server', { tags: ['main'] }, async () => {
     const socketIoClient = new SocketIoClient({
       url: 'ws://localhost:30200',
       logLevel: LogLevel.Debug
@@ -145,6 +145,26 @@ describe.sequential('socketio', () => {
       deferredStop.resolve();
     });
     await deferredStop.promise;
+
+    socket.disconnect();
+  });
+
+  test('Test Commanding Server Shutdown', { tags: ['commander'] }, async () => {
+    const socketIoClient = new SocketIoClient({
+      url: 'ws://localhost:30200',
+      logLevel: LogLevel.Debug
+    });
+    const socket = socketIoClient.start();
+    const commandArgs = {};
+
+    const deferredStart = new Deferred();
+    socket.emit('shutdown', commandArgs, (response: LsCommandFeedback) => {
+      expect(response.status).toBe('OK');
+      expect(response.message).toBe('Shutting down in 100ms.');
+      console.info('shutdown feedback:', response);
+      deferredStart.resolve();
+    });
+    await deferredStart.promise;
 
     socket.disconnect();
   });

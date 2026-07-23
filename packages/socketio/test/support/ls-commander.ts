@@ -99,6 +99,22 @@ const runCommanding = async () => {
         message: message
       });
     });
+
+    socket.on('shutdown', async (_commandArgs: LsCommandArgs, callback: CommandCallback) => {
+      status = 'OK';
+      message = 'Shutting down in 100ms.';
+      await socketIoServerDummyLs.shutdown();
+      await socketIoServerStatemachineLs.shutdown();
+      logger.info(message);
+      callback({
+        status,
+        message: message
+      });
+
+      setTimeout(() => {
+        process.exit(0);
+      }, 100);
+    });
   };
 
   const socketIoServerCommanding = new SocketIoServer({

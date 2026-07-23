@@ -33,7 +33,7 @@ export const vitestConfig = {
     },
     include: ['**/client/test/**/*', '**/wrapper-react/test/**/*', '**/socketio/test/**/*'],
     exclude: ['**/support/**/*', '**/__screenshots__/**/*', '**/verify/**/*'],
-    tags: [{ name: 'worker', fileParallelism: false, testTimeout: 10000 }, { name: 'main' }]
+    tags: [{ name: 'worker', fileParallelism: false, testTimeout: 10000 }, { name: 'main' }, { name: 'commander' }]
   }
 };
 

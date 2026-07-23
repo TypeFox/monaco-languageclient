@@ -5,6 +5,8 @@
 
 export type LsCommands = 'ls:start' | 'ls:stop';
 
+export type OwnCommands = 'shutdown';
+
 export type LsCommandArgs = {
   ls: string;
 };
