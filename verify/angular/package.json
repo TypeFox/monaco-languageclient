@@ -15,10 +15,10 @@
     "reset:repo": "git clean -f -X -d"
   },
   "dependencies": {
-    "@angular/common": "~22.0.5",
-    "@angular/compiler": "~22.0.5",
-    "@angular/core": "~22.0.5",
-    "@angular/platform-browser": "~22.0.5",
+    "@angular/common": "~22.0.8",
+    "@angular/compiler": "~22.0.8",
+    "@angular/core": "~22.0.8",
+    "@angular/platform-browser": "~22.0.8",
     "@codingame/monaco-vscode-api": "^36.0.0",
     "@codingame/monaco-vscode-files-service-override": "^36.0.0",
     "@codingame/monaco-vscode-json-default-extension": "^36.0.0",
@@ -29,22 +29,20 @@
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "~2.6.3",
-    "@angular/build": "~22.0.5",
-    "@angular/cli": "~22.0.5",
-    "@angular/compiler-cli": "~22.0.5",
+    "@angular/build": "~22.0.8",
+    "@angular/cli": "~22.0.8",
+    "@angular/compiler-cli": "~22.0.8",
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.3",
     "@types/node": "~24.10.15",
     "shx": "~0.4.0",
     "typescript": "~6.0.3",
-    "vite": "~8.1.4"
+    "vite": "~8.1.5"
   },
   "overrides": {
-    "@babel/core": "~7.29.7",
-    "dompurify": "~3.4.11",
-    "esbuild": "~0.28.1",
+    "@hono/node-server": "~2.0.11",
+    "dompurify": "~3.4.12",
+    "fast-uri": "~3.1.4",
     "monaco-languageclient": "../../packages/client",
-    "path-to-regexp": "~8.4.2",
-    "vite": "~8.1.4",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "allowScripts": {

@@ -24,13 +24,14 @@
     "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
-    "ts-loader": "~9.6.1",
-    "vite": "~8.1.4",
+    "ts-loader": "~9.6.2",
+    "vite": "~8.1.5",
     "webpack-cli": "~7.2.1"
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
-    "dompurify": "~3.4.11",
+    "dompurify": "~3.4.12",
+    "fast-uri": "~3.1.4",
     "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
