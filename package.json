@@ -63,7 +63,7 @@
     "@vitest/browser": "~4.1.10",
     "@vitest/browser-playwright": "~4.1.10",
     "@vitest/coverage-v8": "~4.1.10",
-    "knip": "~6.27.0",
+    "knip": "~6.29.0",
     "minimatch": "~10.2.5",
     "oxfmt": "~0.60.0",
     "oxlint": "~1.75.0",
@@ -75,6 +75,7 @@
     "vitest": "~4.1.10"
   },
   "overrides": {
+    "brace-expansion": "~5.0.8",
     "dompurify": "~3.4.12",
     "vscode-languageclient": "~10.1.0",
     "vscode-languageserver": "~10.1.0"
