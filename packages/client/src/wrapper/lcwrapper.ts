@@ -178,7 +178,7 @@ export class LanguageClientWrapper {
           } finally {
             retry++;
             if (retry > retries && !this.isStarted()) {
-              this.logger?.info(`Disabling Language Client. Failed to start clangd after ${retries} retries`);
+              this.logger?.info(`Disabling Language Client. Failed to start after ${retries} retries`);
             } else {
               setTimeout(async () => {
                 await this.restart(worker, restartOptions.keepWorker);

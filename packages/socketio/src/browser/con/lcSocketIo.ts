@@ -6,15 +6,27 @@
 import type { WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
 import {
   DEFAULT_CONNECTION_TIMEOUT,
+  type LanguageClientConnectionRealization,
+  LanguageClientConnectionSupport,
   type ConnectionConfig,
-  LanguageClientConnectionRealization,
   type TransportLayerName
 } from 'monaco-languageclient/lcwrapper';
 import type { Socket } from 'socket.io-client';
+import type { MessageTransports } from 'vscode-languageclient';
 import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
 
-export class LcSocketIo extends LanguageClientConnectionRealization {
+export class LcSocketIo implements LanguageClientConnectionRealization {
+  private support: LanguageClientConnectionSupport;
+  private languageId: string = 'unknown';
   private socket?: Socket;
+
+  constructor() {
+    this.support = new LanguageClientConnectionSupport(this);
+  }
+
+  getLanguageId(): string {
+    return this.languageId;
+  }
 
   getTransportLayerName(): TransportLayerName {
     return 'SocketIo';
@@ -25,11 +37,11 @@ export class LcSocketIo extends LanguageClientConnectionRealization {
     const options = connectionConfig.options as WebSocketConfigOptionsDirect;
     this.socket = options.webSocket as unknown as Socket;
 
-    this.clearPendingTimeout();
-    this.createConnectionTimeout(connectionConfig.timeout ?? DEFAULT_CONNECTION_TIMEOUT, !this.socket.connected, errorHandler);
+    this.support.clearPendingTimeout();
+    this.support.createConnectionTimeout(connectionConfig.timeout ?? DEFAULT_CONNECTION_TIMEOUT, !this.socket.connected, errorHandler);
 
     this.socket.on('error', (ev: Event) => {
-      this.createError(ev, 'Socket connection failed', errorHandler);
+      this.support.createError(ev, 'Socket connection failed', errorHandler);
     });
 
     const messageTransports = connectionConfig.messageTransports ?? {
@@ -39,13 +51,13 @@ export class LcSocketIo extends LanguageClientConnectionRealization {
 
     // if already connected, signal immediately
     if (this.socket.connected) {
-      this.clearPendingTimeout();
+      this.support.clearPendingTimeout();
       this.connected(messageTransports);
     }
 
     // otherwise start on connect
     this.socket.on('connect', async () => {
-      this.clearPendingTimeout();
+      this.support.clearPendingTimeout();
       this.connected(messageTransports);
     });
 
@@ -53,6 +65,10 @@ export class LcSocketIo extends LanguageClientConnectionRealization {
       this.disconnected();
     });
   }
+
+  connected: (messageTransports: MessageTransports) => void;
+
+  disconnected: () => void;
 
   dispose(): void {
     this.socket?.disconnect();

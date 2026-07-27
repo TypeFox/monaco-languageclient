@@ -6,11 +6,23 @@
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import type { WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from '../../common/commonTypes.js';
 import type { ConnectionConfig } from '../lcconfig.js';
-import { LanguageClientConnectionRealization, type TransportLayerName } from './lcConnectionRealization.js';
+import type { LanguageClientConnectionRealization, TransportLayerName } from './lcConnectionRealization.js';
+import { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
+import type { MessageTransports } from 'vscode-languageclient';
 
-export class LcWorker extends LanguageClientConnectionRealization {
+export class LcWorker implements LanguageClientConnectionRealization {
+  private support: LanguageClientConnectionSupport;
+  private languageId: string = 'unknown';
   private worker?: Worker;
   private port?: MessagePort;
+
+  constructor() {
+    this.support = new LanguageClientConnectionSupport(this);
+  }
+
+  getLanguageId(): string {
+    return this.languageId;
+  }
 
   getTransportLayerName(): TransportLayerName {
     return 'Worker';
@@ -31,7 +43,7 @@ export class LcWorker extends LanguageClientConnectionRealization {
         this.worker = workerDirectConfig.worker;
       }
       this.worker.onerror = (ev: ErrorEvent) => {
-        this.createError(ev, 'Worker reported an error', errorHandler);
+        this.support.createError(ev, 'Worker reported an error', errorHandler);
       };
       if (options.messagePort !== undefined) {
         this.port = options.messagePort;
@@ -54,6 +66,10 @@ export class LcWorker extends LanguageClientConnectionRealization {
   getWorker(): Worker | undefined {
     return this.worker;
   }
+
+  connected: (messageTransports: MessageTransports) => void;
+
+  disconnected: () => void;
 
   dispose(): void {
     this.worker?.terminate();
