@@ -11,22 +11,18 @@ import {
 } from 'monaco-languageclient/common';
 import {
   DEFAULT_CONNECTION_TIMEOUT,
-  type LanguageClientConnectionRealization,
   LanguageClientConnectionSupport,
   type ConnectionConfig,
+  type LanguageClientConnectionRealization,
   type TransportLayerName
 } from 'monaco-languageclient/lcwrapper';
-import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import type { MessageTransports } from 'vscode-languageclient';
+import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export class LcWebSocket implements LanguageClientConnectionRealization {
-  private support: LanguageClientConnectionSupport;
+  private support?: LanguageClientConnectionSupport;
   private languageId: string = 'unknown';
   private webSocket?: WebSocket;
-
-  constructor() {
-    this.support = new LanguageClientConnectionSupport(this);
-  }
 
   getLanguageId(): string {
     return this.languageId;
@@ -36,8 +32,16 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
     return 'WebSocket';
   }
 
-  init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
+  init(
+    languageId: string,
+    connectionConfig: ConnectionConfig,
+    support: LanguageClientConnectionSupport,
+    errorHandler: (reason?: unknown) => void
+  ): void {
     this.languageId = languageId;
+    this.support = support;
+    this.support.setDisposeResources(connectionConfig.options.disposeResources === true);
+    this.support.setRetryConfig(connectionConfig.retryConfig);
     const options = connectionConfig.options;
     this.webSocket = options.direct
       ? ((options as WebSocketConfigOptionsDirect).webSocket as WebSocket)
@@ -45,13 +49,13 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
 
     this.support.clearPendingTimeout();
     this.support.createConnectionTimeout(
-      connectionConfig.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
+      connectionConfig.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
       this.webSocket.readyState !== WebSocket.OPEN,
       errorHandler
     );
 
     this.webSocket.onerror = (ev: Event) => {
-      this.support.createError(ev, 'Websocket connection failed', errorHandler);
+      this.support?.createError(ev, 'Websocket connection failed', errorHandler);
     };
 
     const messageTransports = connectionConfig.messageTransports ?? {
@@ -67,7 +71,7 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
 
     // otherwise start on open
     this.webSocket.onopen = async () => {
-      this.support.clearPendingTimeout();
+      this.support?.clearPendingTimeout();
       this.connected(messageTransports);
     };
 
@@ -78,9 +82,21 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
 
   connected: (messageTransports: MessageTransports) => void;
 
+  retry: (message: string, timeMs: number, count: number) => void;
+
   disconnected: () => void;
 
+  restart(_count: number): void {
+    if (this.support?.disposeOnRestart() === true) {
+      this.webSocket?.close();
+      this.webSocket = undefined;
+    }
+  }
+
   dispose(): void {
-    this.webSocket?.close();
+    if (this.support?.getDisposeResources() === true) {
+      this.webSocket?.close();
+      this.webSocket = undefined;
+    }
   }
 }

@@ -6,6 +6,12 @@
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 import type { LanguageClientConnectionRealization } from '../wrapper/index.js';
 
+export type ConnectionRetryConfig = {
+  retries?: number;
+  timeout?: number;
+  disposeOnRestart?: boolean;
+};
+
 export type ConnectionConfigOptions =
   | WebSocketConfigOptionsDirect
   | WebSocketConfigOptionsParams
@@ -28,6 +34,7 @@ export interface StartAndStopOptions {
 export interface ConnectionOptionsFamily extends StartAndStopOptions {
   $family: 'Worker' | 'WebSocket';
   direct: boolean;
+  disposeResources?: boolean;
   realization: () => LanguageClientConnectionRealization;
 }
 

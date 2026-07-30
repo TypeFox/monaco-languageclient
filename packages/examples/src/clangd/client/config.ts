@@ -113,9 +113,9 @@ export const createClangdAppConfig = async (config: {
         worker: await config.clangdWorkerHandler.createWorker(),
         messagePort: config.lsMessageLocalPort
       },
-      restartOptions: {
+      retryConfig: {
         retries: 5,
-        keepWorker: true
+        disposeOnRestart: false
       }
     },
     clientOptions: {

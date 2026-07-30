@@ -3,22 +3,18 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import type { MessageTransports } from 'vscode-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import type { WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from '../../common/commonTypes.js';
 import type { ConnectionConfig } from '../lcconfig.js';
 import type { LanguageClientConnectionRealization, TransportLayerName } from './lcConnectionRealization.js';
 import { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
-import type { MessageTransports } from 'vscode-languageclient';
 
 export class LcWorker implements LanguageClientConnectionRealization {
-  private support: LanguageClientConnectionSupport;
+  private support?: LanguageClientConnectionSupport;
   private languageId: string = 'unknown';
   private worker?: Worker;
   private port?: MessagePort;
-
-  constructor() {
-    this.support = new LanguageClientConnectionSupport(this);
-  }
 
   getLanguageId(): string {
     return this.languageId;
@@ -28,8 +24,16 @@ export class LcWorker implements LanguageClientConnectionRealization {
     return 'Worker';
   }
 
-  init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void {
+  init(
+    languageId: string,
+    connectionConfig: ConnectionConfig,
+    support: LanguageClientConnectionSupport,
+    errorHandler: (reason?: unknown) => void
+  ): void {
     this.languageId = languageId;
+    this.support = support;
+    this.support.setDisposeResources(connectionConfig.options.disposeResources === true);
+    this.support.setRetryConfig(connectionConfig.retryConfig);
     const options = connectionConfig.options as WorkerConfigOptionsDirect | WorkerConfigOptionsParams;
     if (this.worker === undefined) {
       if (!options.direct) {
@@ -43,7 +47,7 @@ export class LcWorker implements LanguageClientConnectionRealization {
         this.worker = workerDirectConfig.worker;
       }
       this.worker.onerror = (ev: ErrorEvent) => {
-        this.support.createError(ev, 'Worker reported an error', errorHandler);
+        this.support?.createError(ev, 'Worker reported an error', errorHandler);
       };
       if (options.messagePort !== undefined) {
         this.port = options.messagePort;
@@ -69,10 +73,21 @@ export class LcWorker implements LanguageClientConnectionRealization {
 
   connected: (messageTransports: MessageTransports) => void;
 
+  retry: (message: string, timeMs: number, count: number) => void;
+
   disconnected: () => void;
 
+  restart(_count: number): void {
+    if (this.support?.disposeOnRestart() === true) {
+      this.worker?.terminate();
+      this.worker = undefined;
+    }
+  }
+
   dispose(): void {
-    this.worker?.terminate();
-    this.worker = undefined;
+    if (this.support?.getDisposeResources() === true) {
+      this.worker?.terminate();
+      this.worker = undefined;
+    }
   }
 }

@@ -5,13 +5,28 @@
 
 import type { LanguageClientError } from '../lcwrapper.js';
 import type { LanguageClientConnectionRealization } from './lcConnectionRealization.js';
+import type { ConnectionRetryConfig } from '../../common/commonTypes.js';
 
 export class LanguageClientConnectionSupport {
   private pendingTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
   private languageClientConnectionRealization: LanguageClientConnectionRealization;
+  private retryConfig?: ConnectionRetryConfig;
+  private disposeResources = false;
 
   constructor(languageClientConnectionRealization: LanguageClientConnectionRealization) {
     this.languageClientConnectionRealization = languageClientConnectionRealization;
+  }
+
+  public setRetryConfig(retryConfig?: ConnectionRetryConfig): void {
+    this.retryConfig = retryConfig;
+  }
+
+  public setDisposeResources(disposeResources: boolean): void {
+    this.disposeResources = disposeResources;
+  }
+
+  public getDisposeResources(): boolean {
+    return this.disposeResources;
   }
 
   public createError = (ev: Event, reason: string, errorHandler: (reason?: unknown) => void) => {
@@ -40,5 +55,9 @@ export class LanguageClientConnectionSupport {
       clearTimeout(this.pendingTimeout);
       this.pendingTimeout = undefined;
     }
+  }
+
+  public disposeOnRestart(): boolean {
+    return this.retryConfig?.disposeOnRestart === true && this.disposeResources;
   }
 }

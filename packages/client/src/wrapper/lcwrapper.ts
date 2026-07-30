@@ -10,7 +10,7 @@ import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-langu
 
 import { Deferred } from '../common/utils.js';
 import type { LanguageClientConnectionRealization } from './con/lcConnectionRealization.js';
-import { LcWorker } from './con/lcWorker.js';
+import { LanguageClientConnectionSupport } from './con/lcConnectionSupport.js';
 import type { LanguageClientConfig } from './lcconfig.js';
 
 export interface LanguageClientError {
@@ -38,11 +38,8 @@ export class LanguageClientWrapper {
     return this.languageClient;
   }
 
-  getWorker(): Worker | undefined {
-    if (this.connectionRealization.getTransportLayerName() === 'Worker') {
-      return (this.connectionRealization as LcWorker).getWorker();
-    }
-    return undefined;
+  getConnectionRealization(): LanguageClientConnectionRealization {
+    return this.connectionRealization;
   }
 
   isStarted(): boolean {
@@ -54,13 +51,14 @@ export class LanguageClientWrapper {
 
     if (this.languageClient === undefined || !this.languageClient.isRunning()) {
       this.connectionRealization.connected = async (messageTransports: MessageTransports) => {
-        await this.performLanguageClientStart(messageTransports, deferred);
+        await this.handleConnected(messageTransports, deferred);
       };
       this.connectionRealization.disconnected = async () => {
         await this.dispose();
       };
 
-      this.connectionRealization.init(this.languageClientConfig.languageId, this.languageClientConfig.connection, deferred.reject);
+      const support = new LanguageClientConnectionSupport(this.connectionRealization);
+      this.connectionRealization.init(this.languageClientConfig.languageId, this.languageClientConfig.connection, support, deferred.reject);
     }
     return deferred.promise;
   }
@@ -71,21 +69,18 @@ export class LanguageClientWrapper {
    * @param updatedWorker Set a new worker here that should be used. keepWorker has no effect then, as we want to dispose of the prior workers
    * @param disposeWorker Set to false if worker should not be disposed
    */
-  async restart(updatedWorker?: Worker, forceWorkerDispose?: boolean): Promise<void> {
-    await this.dispose(forceWorkerDispose);
+  async restart(): Promise<void> {
+    await this.dispose();
 
-    if (updatedWorker !== undefined && this.connectionRealization.getTransportLayerName() === 'Worker') {
-      (this.connectionRealization as LcWorker).updateWorker(updatedWorker);
-    }
     this.logger?.info('Re-Starting monaco-languageclient');
     return this.start();
   }
 
-  protected async performLanguageClientStart(messageTransports: MessageTransports, deferred: Deferred<void>): Promise<void> {
+  protected async handleConnected(messageTransports: MessageTransports, deferred: Deferred<void>): Promise<void> {
     let starting = true;
     // do not perform another start attempt if already running
     if (this.languageClient?.isRunning() ?? false) {
-      this.logger?.info('performLanguageClientStart: monaco-languageclient already running!');
+      this.logger?.info('handleConnected: monaco-languageclient already running!');
       deferred.resolve();
       return;
     }
@@ -113,7 +108,6 @@ export class LanguageClientWrapper {
     };
 
     const conOptions = this.languageClientConfig.connection.options;
-    this.initRestartConfiguration(messageTransports);
 
     messageTransports.reader.onClose(async () => {
       await this.languageClient?.stop();
@@ -158,39 +152,35 @@ export class LanguageClientWrapper {
   }
 
   protected initRestartConfiguration(messageTransports: MessageTransports) {
-    const restartOptions = this.languageClientConfig.connection.restartOptions;
-    const timeout = this.languageClientConfig.connection.timeout;
-    if (restartOptions !== undefined) {
-      let retry = 0;
+    let retry = 0;
 
-      const readerOnError = messageTransports.reader.onError(() => restartLC());
-      const readerOnClose = messageTransports.reader.onClose(() => restartLC());
-      const retries = restartOptions.retries ?? 0;
+    const readerOnError = messageTransports.reader.onError(() => restartLC());
+    const readerOnClose = messageTransports.reader.onClose(() => restartLC());
+    const retries = 0;
+    const timeout = 1000;
 
-      const restartLC = async () => {
-        if (this.isStarted()) {
-          const worker = this.getWorker();
-          try {
-            readerOnError.dispose();
-            readerOnClose.dispose();
+    const restartLC = async () => {
+      if (this.isStarted()) {
+        try {
+          readerOnError.dispose();
+          readerOnClose.dispose();
 
-            await this.restart(worker, restartOptions.keepWorker);
-          } finally {
-            retry++;
-            if (retry > retries && !this.isStarted()) {
-              this.logger?.info(`Disabling Language Client. Failed to start after ${retries} retries`);
-            } else {
-              setTimeout(async () => {
-                await this.restart(worker, restartOptions.keepWorker);
-              }, timeout);
-            }
+          await this.restart();
+        } finally {
+          retry++;
+          if (retry > retries && !this.isStarted()) {
+            this.logger?.info(`Disabling Language Client. Failed to start after ${retries} retries`);
+          } else {
+            setTimeout(async () => {
+              await this.restart();
+            }, timeout);
           }
         }
-      };
-    }
+      }
+    };
   }
 
-  async dispose(forceDispose?: boolean): Promise<void> {
+  async dispose(): Promise<void> {
     try {
       if (this.isStarted()) {
         await this.languageClient?.dispose();
@@ -204,10 +194,8 @@ export class LanguageClientWrapper {
       };
       throw new Error(languageClientError.message, { cause: languageClientError.error });
     } finally {
-      // always terminate the worker if desired
-      if (this.languageClientConfig.disposeWorker === true || forceDispose === true) {
-        this.connectionRealization.dispose();
-      }
+      // always terminate realization according their configuration
+      this.connectionRealization.dispose();
     }
   }
 

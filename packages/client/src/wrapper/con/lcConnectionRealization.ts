@@ -5,6 +5,7 @@
 
 import type { MessageTransports } from 'vscode-languageclient/browser';
 import type { ConnectionConfig } from '../lcconfig.js';
+import type { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
 
 export type TransportLayerName = 'Worker' | 'WebSocket' | 'SocketIo';
 
@@ -15,11 +16,20 @@ export interface LanguageClientConnectionRealization {
 
   getTransportLayerName(): TransportLayerName;
 
-  init(languageId: string, connectionConfig: ConnectionConfig, errorHandler: (reason?: unknown) => void): void;
+  init(
+    languageId: string,
+    connectionConfig: ConnectionConfig,
+    support: LanguageClientConnectionSupport,
+    errorHandler: (reason?: unknown) => void
+  ): void;
 
   connected: (messageTransports: MessageTransports) => void;
 
+  retry: (message: string, timeMs: number, count: number) => void;
+
   disconnected: () => void;
+
+  restart(count: number): void;
 
   dispose(): void;
 }
