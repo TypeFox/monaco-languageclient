@@ -10,10 +10,10 @@ import { defineConfig } from 'vite';
 
 export const config = defineConfig({
   build: {
-    outDir: path.resolve(__dirname, 'production'),
+    outDir: path.resolve(import.meta.dirname, 'production'),
     rolldownOptions: {
       input: {
-        index: path.resolve(__dirname, 'index.html')
+        index: path.resolve(import.meta.dirname, 'index.html')
       },
       output: {
         entryFileNames: '[name].js',

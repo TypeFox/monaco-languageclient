@@ -12,7 +12,7 @@ const config = defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'),
       name: 'textmateWorker',
       fileName: () => 'textmateWorker.js',
       formats: ['es'],
@@ -25,7 +25,7 @@ const config = defineConfig({
         codeSplitting: false
       }
     },
-    outDir: path.resolve(__dirname, 'bundle'),
+    outDir: path.resolve(import.meta.dirname, 'bundle'),
     emptyOutDir: false
   }
 });

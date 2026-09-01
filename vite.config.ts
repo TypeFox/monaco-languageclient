@@ -16,22 +16,22 @@ export const definedViteConfig = defineConfig({
   build: {
     rolldownOptions: {
       input: {
-        index: path.resolve(__dirname, 'index.html'),
-        json_classic: path.resolve(__dirname, 'packages/examples/json_classic.html'),
-        json: path.resolve(__dirname, 'packages/examples/json.html'),
-        browser: path.resolve(__dirname, 'packages/examples/browser.html'),
-        langium_extended: path.resolve(__dirname, 'packages/examples/langium_extended.html'),
-        statemachine: path.resolve(__dirname, 'packages/examples/statemachine.html'),
-        python: path.resolve(__dirname, 'packages/examples/python.html'),
-        groovy: path.resolve(__dirname, 'packages/examples/groovy.html'),
-        clangd: path.resolve(__dirname, 'packages/examples/clangd.html'),
-        appPlayground: path.resolve(__dirname, 'packages/examples/appPlayground.html'),
-        twoLangaugeClients: path.resolve(__dirname, 'packages/examples/two_langauge_clients.html'),
-        reactAppPlayground: path.resolve(__dirname, 'packages/examples/react_appPlayground.html'),
-        reactStatemachine: path.resolve(__dirname, 'packages/examples/react_statemachine.html'),
-        reactPython: path.resolve(__dirname, 'packages/examples/react_python.html'),
-        tsExtHost: path.resolve(__dirname, 'packages/examples/tsExtHost.html'),
-        minilogo: path.resolve(__dirname, 'packages/examples/minilogo.html')
+        index: path.resolve(import.meta.dirname, 'index.html'),
+        json_classic: path.resolve(import.meta.dirname, 'packages/examples/json_classic.html'),
+        json: path.resolve(import.meta.dirname, 'packages/examples/json.html'),
+        browser: path.resolve(import.meta.dirname, 'packages/examples/browser.html'),
+        langium_extended: path.resolve(import.meta.dirname, 'packages/examples/langium_extended.html'),
+        statemachine: path.resolve(import.meta.dirname, 'packages/examples/statemachine.html'),
+        python: path.resolve(import.meta.dirname, 'packages/examples/python.html'),
+        groovy: path.resolve(import.meta.dirname, 'packages/examples/groovy.html'),
+        clangd: path.resolve(import.meta.dirname, 'packages/examples/clangd.html'),
+        appPlayground: path.resolve(import.meta.dirname, 'packages/examples/appPlayground.html'),
+        twoLangaugeClients: path.resolve(import.meta.dirname, 'packages/examples/two_langauge_clients.html'),
+        reactAppPlayground: path.resolve(import.meta.dirname, 'packages/examples/react_appPlayground.html'),
+        reactStatemachine: path.resolve(import.meta.dirname, 'packages/examples/react_statemachine.html'),
+        reactPython: path.resolve(import.meta.dirname, 'packages/examples/react_python.html'),
+        tsExtHost: path.resolve(import.meta.dirname, 'packages/examples/tsExtHost.html'),
+        minilogo: path.resolve(import.meta.dirname, 'packages/examples/minilogo.html')
       }
     }
   },
@@ -85,7 +85,7 @@ export const definedViteConfig = defineConfig({
     vsixPlugin()
   ],
   define: {
-    rootDirectory: JSON.stringify(__dirname),
+    rootDirectory: JSON.stringify(import.meta.dirname),
     // Server-provided Content-Length header may be gzipped, get the real size in build time
     __WASM_SIZE__: fs.existsSync(clangdWasmLocation) ? fs.statSync(clangdWasmLocation).size : 0
   },

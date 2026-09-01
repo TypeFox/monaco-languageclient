@@ -15,7 +15,7 @@ const config = defineConfig({
   build: {
     assetsInlineLimit: 0, // 1024 * 1024 * 128,
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-textmate-service-override/worker.js'),
       name: 'textmateWorker',
       fileName: () => 'textmateWorker.js',
       formats: ['es'],
@@ -47,7 +47,7 @@ const config = defineConfig({
         }
       ]
     },
-    outDir: path.resolve(__dirname, 'bundle/textmateWorker'),
+    outDir: path.resolve(import.meta.dirname, 'bundle/textmateWorker'),
     emptyOutDir: true
   }
 });

@@ -10,7 +10,7 @@ const config = defineConfig({
   build: {
     assetsInlineLimit: 1024 * 1024 * 128,
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-api/workers/editor.worker.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-api/workers/editor.worker.js'),
       name: 'editor.worker',
       fileName: () => 'editor.worker.js',
       formats: ['es'],
@@ -23,7 +23,7 @@ const config = defineConfig({
         inlineDynamicImports: true
       }
     },
-    outDir: path.resolve(__dirname, 'bundle/editorWorker'),
+    outDir: path.resolve(import.meta.dirname, 'bundle/editorWorker'),
     emptyOutDir: true
   }
 });

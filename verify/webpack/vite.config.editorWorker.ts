@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 const config = defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-api/workers/editor.worker.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-api/workers/editor.worker.js'),
       name: 'editor.worker',
       fileName: () => 'editor.worker.js',
       formats: ['es'],
@@ -22,7 +22,7 @@ const config = defineConfig({
         codeSplitting: false
       }
     },
-    outDir: path.resolve(__dirname, 'bundle'),
+    outDir: path.resolve(import.meta.dirname, 'bundle'),
     emptyOutDir: false
   }
 });

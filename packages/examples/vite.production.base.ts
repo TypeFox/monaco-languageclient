@@ -13,21 +13,21 @@ export const buildBaseProductionConfig: () => UserConfig = () => {
     build: {
       rollupOptions: {
         input: {
-          index: path.resolve(__dirname, 'index.html'),
-          langiumExtended: path.resolve(__dirname, 'ghp_langium_extended.html'),
-          minilogo: path.resolve(__dirname, 'ghp_minilogo.html'),
-          statemachine: path.resolve(__dirname, 'ghp_statemachine.html'),
-          clangd: path.resolve(__dirname, 'ghp_clangd.html'),
-          appPlayground: path.resolve(__dirname, 'ghp_appPlayground.html'),
-          browser: path.resolve(__dirname, 'ghp_browser.html'),
-          tsExtHost: path.resolve(__dirname, 'ghp_tsExtHost.html'),
-          reactAppPlayground: path.resolve(__dirname, 'ghp_react_appPlayground.html'),
-          reactStatemachine: path.resolve(__dirname, 'ghp_react_statemachine.html')
+          index: path.resolve(import.meta.dirname, 'index.html'),
+          langiumExtended: path.resolve(import.meta.dirname, 'ghp_langium_extended.html'),
+          minilogo: path.resolve(import.meta.dirname, 'ghp_minilogo.html'),
+          statemachine: path.resolve(import.meta.dirname, 'ghp_statemachine.html'),
+          clangd: path.resolve(import.meta.dirname, 'ghp_clangd.html'),
+          appPlayground: path.resolve(import.meta.dirname, 'ghp_appPlayground.html'),
+          browser: path.resolve(import.meta.dirname, 'ghp_browser.html'),
+          tsExtHost: path.resolve(import.meta.dirname, 'ghp_tsExtHost.html'),
+          reactAppPlayground: path.resolve(import.meta.dirname, 'ghp_react_appPlayground.html'),
+          reactStatemachine: path.resolve(import.meta.dirname, 'ghp_react_statemachine.html')
         }
       },
       emptyOutDir: false,
       assetsInlineLimit: 0,
-      outDir: path.resolve(__dirname, 'production')
+      outDir: path.resolve(import.meta.dirname, 'production')
     },
     plugins: [
       vsixPlugin(),
