@@ -15,7 +15,7 @@ const config = defineConfig({
   build: {
     assetsInlineLimit: 1024 * 1024 * 128,
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-api/workers/extensionHost.worker.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-api/workers/extensionHost.worker.js'),
       name: 'extensionHostWorker',
       fileName: () => 'extensionHostWorker.js',
       formats: ['es'],
@@ -49,7 +49,7 @@ const response = await fetch((newURL));`;
         }
       ]
     },
-    outDir: path.resolve(__dirname, 'bundle/extHostWorker'),
+    outDir: path.resolve(import.meta.dirname, 'bundle/extHostWorker'),
     emptyOutDir: true
   }
 });

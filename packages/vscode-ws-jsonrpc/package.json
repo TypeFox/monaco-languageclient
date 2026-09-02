@@ -1,6 +1,6 @@
 {
   "name": "vscode-ws-jsonrpc",
-  "version": "4.0.0-next.2",
+  "version": "4.0.0-next.3",
   "description": "VSCode JSON RPC over WebSocket",
   "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/vscode-ws-jsonrpc/README.md",
   "bugs": {
@@ -45,7 +45,7 @@
     "build": "npm run build:msg && npm run clean && npm run compile"
   },
   "dependencies": {
-    "vscode-jsonrpc": "~9.0.1"
+    "vscode-jsonrpc": "~9.0.2"
   },
   "engines": {
     "node": ">=22",

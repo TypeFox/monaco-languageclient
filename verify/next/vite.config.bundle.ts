@@ -10,7 +10,7 @@ const config = defineConfig({
   build: {
     assetsInlineLimit: 0,
     lib: {
-      entry: path.resolve(__dirname, './app/langium-dsl/config/extendedConfig.ts'),
+      entry: path.resolve(import.meta.dirname, './app/langium-dsl/config/extendedConfig.ts'),
       name: 'extendedConfig',
       fileName: () => 'extendedConfig.js',
       formats: ['es'],
@@ -24,7 +24,7 @@ const config = defineConfig({
         assetFileNames: '[name][extname]'
       }
     },
-    outDir: path.resolve(__dirname, 'bundle/langium-dsl/config'),
+    outDir: path.resolve(import.meta.dirname, 'bundle/langium-dsl/config'),
     emptyOutDir: true
   }
 });

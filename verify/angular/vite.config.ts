@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => {
     build: {
       emptyOutDir: true,
       assetsInlineLimit: 0,
-      outDir: path.resolve(__dirname, 'production')
+      outDir: path.resolve(import.meta.dirname, 'production')
     },
     worker: {
       format: 'es'

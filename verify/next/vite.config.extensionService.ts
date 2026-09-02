@@ -14,7 +14,7 @@ const config = defineConfig({
   build: {
     assetsInlineLimit: 1024 * 1024 * 128,
     lib: {
-      entry: path.resolve(__dirname, './node_modules/@codingame/monaco-vscode-extensions-service-override/index.js'),
+      entry: path.resolve(import.meta.dirname, './node_modules/@codingame/monaco-vscode-extensions-service-override/index.js'),
       name: 'extensionService',
       fileName: () => 'extensionService.js',
       formats: ['es'],
@@ -48,7 +48,7 @@ const config = defineConfig({
         }
       ]
     },
-    outDir: path.resolve(__dirname, 'bundle/extensionService'),
+    outDir: path.resolve(import.meta.dirname, 'bundle/extensionService'),
     emptyOutDir: true
   }
 });
