@@ -11,7 +11,7 @@ import {
 import * as vscode from 'vscode';
 // this is required syntax highlighting
 import '@codingame/monaco-vscode-cpp-default-extension';
-import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
 import { createDefaultWorkspaceContent, disableElement } from '../../common/client/utils.js';
 import { HOME_DIR, WORKSPACE_PATH } from '../definitions.js';
@@ -61,7 +61,12 @@ export const runClangdWrapper = async () => {
   };
 
   const startWrapper = async () => {
-    await clangdWorkerHandler.init(initConfig);
+    lcWrapper.init();
+
+    await clangdWorkerHandler.init({
+      ...initConfig,
+      languageServerWorker: (lcWrapper.getConnectionRealization() as LcWorker).getWorker()!
+    });
     await clangdWorkerHandler.launch();
     await lcWrapper.start();
   };

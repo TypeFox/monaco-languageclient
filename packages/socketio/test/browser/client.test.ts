@@ -7,7 +7,7 @@ import { Deferred } from 'monaco-languageclient/common';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { describe, expect, test } from 'vitest';
-import { LogLevel, SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
+import { LogLevel } from 'vscode-socketio-jsonrpc';
 import { LcSocketIo, SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
 import type { LsCommandFeedback } from '../support/command-args.js';
 
@@ -43,11 +43,6 @@ describe.concurrent('socketio', { concurrent: false }, () => {
     const monacoVscodeApiManager = new MonacoVscodeApiWrapper(apiConfig);
     await monacoVscodeApiManager.start();
 
-    const socketIoClient = new SocketIoClient({
-      url: 'ws://localhost:30102'
-    });
-    const socket = socketIoClient.start();
-
     const lcConfig: LanguageClientConfig = {
       languageId: 'javascript',
       clientOptions: {
@@ -56,13 +51,8 @@ describe.concurrent('socketio', { concurrent: false }, () => {
       connection: {
         options: {
           $family: 'WebSocket',
-          direct: true,
           realization: () => new LcSocketIo(),
-          webSocket: socket
-        },
-        messageTransports: {
-          reader: new SocketIoMessageReader(socket),
-          writer: new SocketIoMessageWriter(socket)
+          webSocketUrl: 'ws://localhost:30102'
         }
       }
     };
@@ -71,7 +61,6 @@ describe.concurrent('socketio', { concurrent: false }, () => {
     expect(async () => await languageClientWrapper.start()).not.toThrow();
 
     await languageClientWrapper.dispose();
-    socket.disconnect();
   });
 
   test('Test Commanding Dummy Language Server', { tags: ['main'] }, async () => {

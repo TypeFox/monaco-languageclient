@@ -63,9 +63,8 @@ export const runClient = async () => {
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: false,
         realization: () => new LcWebSocket(),
-        url: 'ws://localhost:30000/sampleServer'
+        webSocketUrl: 'ws://localhost:30000/sampleServer'
       }
     }
   };

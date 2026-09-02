@@ -15,7 +15,6 @@ import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwra
 import { type MonacoVscodeApiConfig, type OverallConfigType } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import langiumGrammarLangium from '../../../../resources/langium/langium-dsl/langium-grammar.langium?raw';
 import langiumTypesLangium from '../../../../resources/langium/langium-dsl/langium-types.langium?raw';
 import type { ExampleAppConfig } from '../../../common/client/utils.js';
@@ -29,19 +28,9 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
   extensionFilesOrContents.set('/workspace/langium-configuration.json', langiumLanguageConfig);
   extensionFilesOrContents.set('/workspace/langium-grammar.json', langiumTextmateGrammar);
 
-  const loadLangiumWorker = () => {
-    return new Worker(new URL('../worker/langium-server.ts', import.meta.url), {
-      type: 'module',
-      name: 'Langium LS'
-    });
-  };
-
-  const worker = loadLangiumWorker();
-  const reader = new BrowserMessageReader(worker);
-  const writer = new BrowserMessageWriter(worker);
-  reader.listen((message) => {
-    console.log('Received message from worker:', message);
-  });
+  // reader.listen((message) => {
+  //   console.log('Received message from worker:', message);
+  // });
 
   // prepare all resources that should be preloaded
   const workspaceUri = vscode.Uri.file('/workspace');
@@ -147,11 +136,11 @@ export const setupLangiumClientExtended = async (): Promise<ExampleAppConfig> =>
     connection: {
       options: {
         $family: 'Worker',
-        direct: true,
         realization: () => new LcWorker(),
-        worker
-      },
-      messageTransports: { reader, writer }
+        workerUrl: new URL('../worker/langium-server.ts', import.meta.url),
+        type: 'module',
+        workerName: 'Langium LS'
+      }
     }
   };
 

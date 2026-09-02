@@ -5,11 +5,10 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ConnectionConfigOptions, ConnectionRetryConfig } from 'monaco-languageclient/common';
-import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFeature } from 'vscode-languageclient/browser';
+import type { DynamicFeature, LanguageClientOptions, StaticFeature } from 'vscode-languageclient/browser';
 
 export interface ConnectionConfig {
   options: ConnectionConfigOptions;
-  messageTransports?: MessageTransports;
   retryConfig?: ConnectionRetryConfig;
 }
 

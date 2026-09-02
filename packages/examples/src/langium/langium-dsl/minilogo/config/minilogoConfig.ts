@@ -9,7 +9,6 @@ import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import type { ExampleAppConfig } from '../../../../common/client/utils.js';
 import minilogoLanguageConfig from './minilogo.configuration.json?raw';
 import minilogoTextmateGrammar from './minilogo.tmLanguage.json?raw';
@@ -47,15 +46,6 @@ pen(up)
 
 export const createMinilogoConfig = (params: { htmlContainer: HTMLElement }): ExampleAppConfig => {
   const languageId = 'minilogo';
-
-  // create the worker from the langium-minilogo package's pre-built language server bundle
-  const worker = new Worker(new URL('langium-minilogo/ls-web', import.meta.url), {
-    type: 'module',
-    name: 'MiniLogo Language Server'
-  });
-  const reader = new BrowserMessageReader(worker);
-  const writer = new BrowserMessageWriter(worker);
-
   const languageClientConfig: LanguageClientConfig = {
     languageId,
     clientOptions: {
@@ -64,11 +54,11 @@ export const createMinilogoConfig = (params: { htmlContainer: HTMLElement }): Ex
     connection: {
       options: {
         $family: 'Worker',
-        direct: true,
         realization: () => new LcWorker(),
-        worker
-      },
-      messageTransports: { reader, writer }
+        workerUrl: new URL('langium-minilogo/ls-web', import.meta.url),
+        type: 'module',
+        workerName: 'MiniLogo Language Server'
+      }
     }
   };
 

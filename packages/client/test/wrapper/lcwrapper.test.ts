@@ -10,10 +10,9 @@ import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import {
+  createDefaultLanguageClientConfig,
   createDefaultLcUnreachableUrlConfig,
-  createDefaultLcWorkerConfig,
   createMonacoEditorDiv,
   createUnreachableWorkerConfig
 } from '../support/helper.js';
@@ -31,38 +30,18 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
     await monacoVscodeApiManager.start();
   });
 
-  const createWorkerAndConfig = () => {
-    const workerUrl = 'monaco-languageclient-examples/worker/langium';
-    const worker = new Worker(workerUrl, {
-      type: 'module',
-      name: 'Langium LS'
-    });
-
-    const reader = new BrowserMessageReader(worker);
-    const writer = new BrowserMessageWriter(worker);
-    reader.listen((message) => {
-      console.log('Received message from worker:', message);
-    });
-    const languageClientConfig = createDefaultLcWorkerConfig(worker, 'langium', { reader, writer });
-    languageClientConfig.connection.options.disposeResources = true;
-    return {
-      worker,
-      languageClientConfig
-    };
-  };
-
   test('Constructor: no config', () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     expect(languageClientWrapper.haveLanguageClient()).toBeFalsy();
   });
 
   test('Dispose: direct worker is cleaned up afterwards', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(workerAndConfig.worker).toBeDefined();
     expect(realization.getWorker()).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
@@ -112,11 +91,10 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
   });
 
   test('Dispose: start, dispose worker and restart', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    const languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(workerAndConfig.worker).toBeDefined();
     expect(realization.getWorker()).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
@@ -143,14 +121,14 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
   });
 
   test('set verify log levels are applied', async () => {
-    const workerAndConfig = createWorkerAndConfig();
-    let languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    const languageClientConfig = createDefaultLanguageClientConfig();
+    let languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     let logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
     expect(logLevel).toBe(LogLevel.Off);
     expect(logLevel).toBe(0);
 
-    workerAndConfig.languageClientConfig.logLevel = LogLevel.Debug;
-    languageClientWrapper = new LanguageClientWrapper(workerAndConfig.languageClientConfig);
+    languageClientConfig.logLevel = LogLevel.Debug;
+    languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
     logLevel = (languageClientWrapper['logger'] as ILogger).getLevel();
     expect(logLevel).toBe(LogLevel.Debug);
     expect(logLevel).toBe(2);

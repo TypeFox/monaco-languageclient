@@ -16,16 +16,13 @@ export interface LanguageClientConnectionRealization {
 
   getTransportLayerName(): TransportLayerName;
 
-  init(
-    languageId: string,
-    connectionConfig: ConnectionConfig,
-    support: LanguageClientConnectionSupport,
-    errorHandler: (reason?: unknown) => void
-  ): void;
+  getMessageTransports(): MessageTransports | undefined;
 
-  connected: (messageTransports: MessageTransports) => void;
+  init(languageId: string, connectionConfig: ConnectionConfig, support: LanguageClientConnectionSupport): MessageTransports;
 
-  retry: (message: string, timeMs: number, count: number) => void;
+  start(errorHandler: (reason?: unknown) => void): void;
+
+  connected: () => void;
 
   disconnected: () => void;
 

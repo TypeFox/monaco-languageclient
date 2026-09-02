@@ -3,12 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import {
-  createUrl,
-  type WebSocketConfigOptionsDirect,
-  type WebSocketConfigOptionsParams,
-  type WebSocketConfigOptionsUrl
-} from 'monaco-languageclient/common';
+import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
 import {
   DEFAULT_CONNECTION_TIMEOUT,
   LanguageClientConnectionSupport,
@@ -21,8 +16,10 @@ import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrp
 
 export class LcWebSocket implements LanguageClientConnectionRealization {
   private support?: LanguageClientConnectionSupport;
+  private connectionConfig?: ConnectionConfig;
   private languageId: string = 'unknown';
   private webSocket?: WebSocket;
+  private messageTransports?: MessageTransports;
 
   getLanguageId(): string {
     return this.languageId;
@@ -32,57 +29,59 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
     return 'WebSocket';
   }
 
-  init(
-    languageId: string,
-    connectionConfig: ConnectionConfig,
-    support: LanguageClientConnectionSupport,
-    errorHandler: (reason?: unknown) => void
-  ): void {
+  getMessageTransports(): MessageTransports | undefined {
+    return this.messageTransports;
+  }
+
+  init(languageId: string, connectionConfig: ConnectionConfig, support: LanguageClientConnectionSupport): MessageTransports {
     this.languageId = languageId;
+    this.connectionConfig = connectionConfig;
     this.support = support;
     this.support.setDisposeResources(connectionConfig.options.disposeResources === true);
     this.support.setRetryConfig(connectionConfig.retryConfig);
-    const options = connectionConfig.options;
-    this.webSocket = options.direct
-      ? ((options as WebSocketConfigOptionsDirect).webSocket as WebSocket)
-      : new WebSocket(createUrl(options as WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl));
 
-    this.support.clearPendingTimeout();
-    this.support.createConnectionTimeout(
-      connectionConfig.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
-      this.webSocket.readyState !== WebSocket.OPEN,
-      errorHandler
-    );
+    const options = connectionConfig.options as WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl;
+    this.webSocket = new WebSocket(createUrl(options));
 
-    this.webSocket.onerror = (ev: Event) => {
-      this.support?.createError(ev, 'Websocket connection failed', errorHandler);
-    };
-
-    const messageTransports = connectionConfig.messageTransports ?? {
+    this.messageTransports = {
       reader: new WebSocketMessageReader(this.webSocket),
       writer: new WebSocketMessageWriter(this.webSocket)
     };
+    return this.messageTransports;
+  }
+
+  start(errorHandler: (reason?: unknown) => void): void {
+    this.support?.clearPendingTimeout();
+    this.support?.createConnectionTimeout(
+      this.connectionConfig?.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
+      this.webSocket?.readyState !== WebSocket.OPEN,
+      errorHandler
+    );
 
     // if websocket is already open, signal immediately
-    if (this.webSocket.readyState === WebSocket.OPEN) {
-      this.support.clearPendingTimeout();
-      this.connected(messageTransports);
+    if (this.webSocket?.readyState === WebSocket.OPEN) {
+      this.support?.clearPendingTimeout();
+      this.connected();
     }
 
     // otherwise start on open
-    this.webSocket.onopen = async () => {
-      this.support?.clearPendingTimeout();
-      this.connected(messageTransports);
-    };
+    if (this.webSocket !== undefined) {
+      this.webSocket.onerror = (ev: Event) => {
+        this.support?.createError(ev, 'Websocket connection failed', errorHandler);
+      };
 
-    this.webSocket.onclose = async () => {
-      this.disconnected();
-    };
+      this.webSocket.onopen = async () => {
+        this.support?.clearPendingTimeout();
+        this.connected();
+      };
+
+      this.webSocket.onclose = async () => {
+        this.disconnected();
+      };
+    }
   }
 
-  connected: (messageTransports: MessageTransports) => void;
-
-  retry: (message: string, timeMs: number, count: number) => void;
+  connected: () => void;
 
   disconnected: () => void;
 

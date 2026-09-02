@@ -17,7 +17,6 @@ export const createJsonLanguageClientConfig: () => LanguageClientConfig = () => 
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: false,
         realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30000,
@@ -34,7 +33,6 @@ export const createPythonLanguageClientConfig: () => LanguageClientConfig = () =
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: false,
         realization: () => new LcWebSocket(),
         host: 'localhost',
         port: 30001,

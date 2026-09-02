@@ -13,12 +13,7 @@ import * as vscode from 'vscode';
 // this is required syntax highlighting
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import {
-  createUrl,
-  type ConnectionConfigOptions,
-  type WebSocketConfigOptionsDirect,
-  type WebSocketConfigOptionsUrl
-} from 'monaco-languageclient/common';
+import { type ConnectionConfigOptions } from 'monaco-languageclient/common';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -85,35 +80,14 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     reportStatus: true
   };
 
-  let webSocket: WebSocket | undefined;
-  let connectionConfigOptions: ConnectionConfigOptions;
   const webSocketUrl = `ws://localhost:${lsConfig.port}${lsConfig.path}`;
-  if (lsConfig.useExternalWebSocket) {
-    const params: WebSocketConfigOptionsUrl = {
-      $family: 'WebSocket',
-      realization: () => new LcWebSocket(),
-      direct: false,
-      url: webSocketUrl
-    };
-    webSocket = new WebSocket(createUrl(params));
-    connectionConfigOptions = {
-      $family: 'WebSocket',
-      realization: () => new LcWebSocket(),
-      direct: true,
-      webSocket,
-      startOptions,
-      stopOptions
-    };
-  } else {
-    connectionConfigOptions = {
-      $family: 'WebSocket',
-      realization: () => new LcWebSocket(),
-      direct: false,
-      url: webSocketUrl,
-      startOptions,
-      stopOptions
-    };
-  }
+  const connectionConfigOptions: ConnectionConfigOptions = {
+    $family: 'WebSocket',
+    realization: () => new LcWebSocket(),
+    webSocketUrl: webSocketUrl,
+    startOptions,
+    stopOptions
+  };
 
   const languageClientConfig: LanguageClientConfig = {
     languageId: lsConfig.languageId,
@@ -148,16 +122,6 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
 
   try {
     document.querySelector('#button-start')?.addEventListener('click', async () => {
-      if (lsConfig.useExternalWebSocket && webSocket === undefined) {
-        const params: WebSocketConfigOptionsUrl = {
-          $family: 'WebSocket',
-          direct: false,
-          realization: () => new LcWebSocket(),
-          url: webSocketUrl
-        };
-        webSocket = new WebSocket(createUrl(params));
-        (connectionConfigOptions as WebSocketConfigOptionsDirect).webSocket = webSocket;
-      }
       await editorApp.start(htmlContainer);
       await lcWrapper.start();
 
@@ -167,9 +131,6 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     document.querySelector('#button-dispose')?.addEventListener('click', async () => {
       await editorApp.dispose();
       await lcWrapper.dispose();
-
-      webSocket?.close();
-      webSocket = undefined;
     });
   } catch (e) {
     console.error(e);
@@ -181,6 +142,5 @@ export type ExampleLsConfig = {
   path: string;
   basePath: string;
   languageId: string;
-  useExternalWebSocket: boolean;
   workerLoaders?: () => Partial<Record<PossibleWorkerLabelsExtended, WorkerLoader>>;
 };

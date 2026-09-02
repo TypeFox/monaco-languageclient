@@ -3,16 +3,15 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as vscode from 'vscode';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
-import { EditorApp } from 'monaco-languageclient/editorApp';
-import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-import text from '../../../resources/langium/statemachine/example.statemachine?raw';
-import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
-import { disableElement } from '../../common/client/utils.js';
 import { delayExecution } from 'monaco-languageclient/common';
-import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import { EditorApp } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
+import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
+import * as vscode from 'vscode';
+import textMod from '../../../resources/langium/statemachine/example-mod.statemachine?raw';
+import text from '../../../resources/langium/statemachine/example.statemachine?raw';
+import { disableElement } from '../../common/client/utils.js';
+import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 
 let editorApp: EditorApp | undefined;
 let editorApp2: EditorApp | undefined;
@@ -28,24 +27,24 @@ const startEditor = async () => {
   }
 
   // init worker with port for client and worker
-  const stateMachineWorkerPort = loadStatemachinWorkerPort();
-  // use callback to receive message back from worker independent of the message channel the LSP is using
-  stateMachineWorkerPort.onmessage = (event) => {
-    console.log('Received message from worker: ' + event.data);
-  };
+  // const stateMachineWorkerPort = loadStatemachinWorkerPort();
+  // // use callback to receive message back from worker independent of the message channel the LSP is using
+  // stateMachineWorkerPort.onmessage = (event) => {
+  //   console.log('Received message from worker: ' + event.data);
+  // };
   const channel = new MessageChannel();
-  stateMachineWorkerPort.postMessage(
-    {
-      port: channel.port2
-    },
-    [channel.port2]
-  );
+  // stateMachineWorkerPort.postMessage(
+  //   {
+  //     port: channel.port2
+  //   },
+  //   [channel.port2]
+  // );
 
-  const reader = new BrowserMessageReader(channel.port1);
-  const writer = new BrowserMessageWriter(channel.port1);
-  reader.listen((message) => {
-    console.log('Received message from worker:', message);
-  });
+  // const reader = new BrowserMessageReader(channel.port1);
+  // const writer = new BrowserMessageWriter(channel.port1);
+  // reader.listen((message) => {
+  //   console.log('Received message from worker:', message);
+  // });
 
   const htmlContainer = document.getElementById('monaco-editor-root')!;
   // the configuration does not contain any text content
@@ -58,12 +57,12 @@ const startEditor = async () => {
     connection: {
       options: {
         $family: 'Worker',
-        direct: true,
         realization: () => new LcWorker(),
-        worker: stateMachineWorkerPort,
+        workerUrl: new URL('./worker/statemachine-server-port.ts', import.meta.url),
+        type: 'module',
+        workerName: 'Statemachine Server Port',
         messagePort: channel.port1
-      },
-      messageTransports: { reader, writer }
+      }
     },
     htmlContainer
   });
@@ -135,20 +134,4 @@ export const runStatemachine = async () => {
   } catch (e) {
     console.error(e);
   }
-};
-
-// Language Server preparation
-
-export const loadStatemachineWorkerRegular = () => {
-  return new Worker(new URL('./worker/statemachine-server.ts', import.meta.url), {
-    type: 'module',
-    name: 'Statemachine Server Regular'
-  });
-};
-
-export const loadStatemachinWorkerPort = () => {
-  return new Worker(new URL('./worker/statemachine-server-port.ts', import.meta.url), {
-    type: 'module',
-    name: 'Statemachine Server Port'
-  });
 };

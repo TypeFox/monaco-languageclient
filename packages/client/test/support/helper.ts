@@ -7,7 +7,6 @@ import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/edito
 import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType, ViewsConfigTypes } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { MessageTransports } from 'vscode-languageclient/browser';
 import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 export const createMonacoEditorDiv = () => {
@@ -17,24 +16,23 @@ export const createMonacoEditorDiv = () => {
   return div;
 };
 
-export const createDefaultLcWorkerConfig = (
-  worker: Worker,
-  languageId: string,
-  messageTransports?: MessageTransports
-): LanguageClientConfig => {
+export const createDefaultLanguageClientConfig = (): LanguageClientConfig => {
   return {
-    languageId,
+    languageId: 'langium',
     clientOptions: {
-      documentSelector: [languageId]
+      documentSelector: ['langium']
     },
     connection: {
       options: {
         $family: 'Worker',
-        direct: true,
         realization: () => new LcWorker(),
-        worker
-      },
-      messageTransports
+        workerUrl: new URL('monaco-languageclient-examples/worker/langium', import.meta.url),
+        type: 'module',
+        workerName: 'Langium LS (Regular Test)',
+        readerCallback: (message) => {
+          console.log('Reader callback received message:', message);
+        }
+      }
     }
   };
 };
@@ -48,10 +46,10 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
     connection: {
       options: {
         $family: 'Worker',
-        direct: false,
         realization: () => new LcWorker(),
-        url: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
-        type: 'module'
+        workerUrl: new URL(`${import.meta.url.split('@fs')[0]}/unknown.ts`),
+        type: 'module',
+        workerName: 'Unreachable LS'
       }
     }
   };
@@ -66,9 +64,8 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: false,
         realization: () => new LcWebSocket(),
-        url: `ws://localhost:${port}/rester`
+        webSocketUrl: `ws://localhost:${port}/rester`
       }
     }
   };

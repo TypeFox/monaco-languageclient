@@ -81,7 +81,7 @@ describe('createUrl', { tags: ['main'] }, () => {
 
   test('test createUrl: optionsUrl: ws', () => {
     const url = createUrl({
-      url: 'ws://localhost:30000/sampleServer'
+      webSocketUrl: 'ws://localhost:30000/sampleServer'
     } as WebSocketConfigOptionsUrl);
 
     expect(url).toBe('ws://localhost:30000/sampleServer');
@@ -89,7 +89,7 @@ describe('createUrl', { tags: ['main'] }, () => {
 
   test('test createUrl: optionsUrl: wss', () => {
     const url = createUrl({
-      url: 'wss://localhost:30000/sampleServer'
+      webSocketUrl: 'wss://localhost:30000/sampleServer'
     } as WebSocketConfigOptionsUrl);
 
     expect(url).toBe('wss://localhost:30000/sampleServer');
@@ -97,7 +97,7 @@ describe('createUrl', { tags: ['main'] }, () => {
 
   test('test createUrl: optionsUrl, with port, no path', () => {
     const url = createUrl({
-      url: 'wss://localhost:30000'
+      webSocketUrl: 'wss://localhost:30000'
     } as WebSocketConfigOptionsUrl);
 
     expect(url).toBe('wss://localhost:30000');
@@ -105,7 +105,7 @@ describe('createUrl', { tags: ['main'] }, () => {
 
   test('test createUrl: optionsUrl, no port, with path', () => {
     const url = createUrl({
-      url: 'ws://localhost/sampleServer'
+      webSocketUrl: 'ws://localhost/sampleServer'
     } as WebSocketConfigOptionsUrl);
 
     expect(url).toBe('ws://localhost/sampleServer');
@@ -113,7 +113,7 @@ describe('createUrl', { tags: ['main'] }, () => {
 
   test('test createUrl: optionsUrl, no port, no path', () => {
     const url = createUrl({
-      url: 'wss://www.testme.com'
+      webSocketUrl: 'wss://www.testme.com'
     } as WebSocketConfigOptionsUrl);
 
     expect(url).toBe('wss://www.testme.com');
@@ -122,7 +122,7 @@ describe('createUrl', { tags: ['main'] }, () => {
   test('test createUrl: ws, not proper url', () => {
     expect(() =>
       createUrl({
-        url: 'http://www.testme.com:30000/sampleServer'
+        webSocketUrl: 'http://www.testme.com:30000/sampleServer'
       } as WebSocketConfigOptionsUrl)
     ).toThrowError('This is not a proper websocket url: http://www.testme.com:30000/sampleServer');
   });

@@ -25,7 +25,6 @@ import getTestingServiceOverride from '@codingame/monaco-vscode-testing-service-
 import getBannerServiceOverride from '@codingame/monaco-vscode-view-banner-service-override';
 import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override';
 import getTitleBarServiceOverride from '@codingame/monaco-vscode-view-title-bar-service-override';
-import { createUrl } from 'monaco-languageclient/common';
 import {
   createDebugLaunchConfigFile,
   provideDebuggerExtensionConfig,
@@ -39,12 +38,11 @@ import { defaultHtmlAugmentationInstructions, defaultViewsInit, type MonacoVscod
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import * as vscode from 'vscode';
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
-import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 import badPyCode from '../../../resources/python/bad.py?raw';
 import helloPyCode from '../../../resources/python/hello.py?raw';
 import hello2PyCode from '../../../resources/python/hello2.py?raw';
 import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
-import { LcWebSocket } from 'vscode-ws-jsonrpc/browser';
 
 const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
   const files = new Map<string, FileDefinition>();
@@ -95,23 +93,6 @@ type PythonAppConfig = {
 
 export const createPythonAppConfig = (): PythonAppConfig => {
   const configParams = createDefaultConfigParams('/home/mlc', document.body);
-
-  const url = createUrl({
-    $family: 'WebSocket',
-    direct: false,
-    realization: () => new LcWebSocket(),
-    secured: false,
-    host: 'localhost',
-    port: 30001,
-    path: 'pyright',
-    extraParams: {
-      authorization: 'UserAuth'
-    }
-  });
-  const webSocket = new WebSocket(url);
-  const iWebSocket = toSocket(webSocket);
-  const reader = new WebSocketMessageReader(iWebSocket);
-  const writer = new WebSocketMessageWriter(iWebSocket);
 
   const vscodeApiConfig: MonacoVscodeApiConfig = {
     $type: 'extended',
@@ -194,9 +175,14 @@ export const createPythonAppConfig = (): PythonAppConfig => {
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: true,
         realization: () => new LcWebSocket(),
-        webSocket: webSocket,
+        secured: false,
+        host: 'localhost',
+        port: 30001,
+        path: 'pyright',
+        extraParams: {
+          authorization: 'UserAuth'
+        },
         startOptions: {
           onCall: (languageClient?: BaseLanguageClient) => {
             setTimeout(() => {
@@ -209,8 +195,7 @@ export const createPythonAppConfig = (): PythonAppConfig => {
           },
           reportStatus: true
         }
-      },
-      messageTransports: { reader, writer }
+      }
     },
     clientOptions: {
       documentSelector: [configParams.languageId],

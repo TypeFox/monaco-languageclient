@@ -23,11 +23,15 @@ export class LanguageClientWrapper {
   private languageClientConfig: LanguageClientConfig;
   private logger: ILogger | undefined;
   private connectionRealization: LanguageClientConnectionRealization;
+  private connectionSupport: LanguageClientConnectionSupport;
+  private connectionEstablished?: Deferred<boolean>;
 
   constructor(config: LanguageClientConfig) {
     this.languageClientConfig = config;
     this.logger = new ConsoleLogger(this.languageClientConfig.logLevel ?? LogLevel.Off);
     this.connectionRealization = this.languageClientConfig.connection.options.realization();
+    this.connectionSupport = new LanguageClientConnectionSupport(this.connectionRealization);
+    this.connectionEstablished = new Deferred<boolean>();
   }
 
   haveLanguageClient(): boolean {
@@ -46,20 +50,31 @@ export class LanguageClientWrapper {
     return this.languageClient?.isRunning() ?? false;
   }
 
+  init(): void {
+    this.connectionRealization.connected = () => {
+      this.connectionEstablished?.resolve(true);
+    };
+    this.connectionRealization.disconnected = async () => {
+      await this.dispose();
+    };
+
+    this.connectionRealization.init(this.languageClientConfig.languageId, this.languageClientConfig.connection, this.connectionSupport);
+  }
+
   async start(): Promise<void> {
     const deferred = new Deferred<void>();
 
-    if (this.languageClient === undefined || !this.languageClient.isRunning()) {
-      this.connectionRealization.connected = async (messageTransports: MessageTransports) => {
-        await this.handleConnected(messageTransports, deferred);
-      };
-      this.connectionRealization.disconnected = async () => {
-        await this.dispose();
-      };
-
-      const support = new LanguageClientConnectionSupport(this.connectionRealization);
-      this.connectionRealization.init(this.languageClientConfig.languageId, this.languageClientConfig.connection, support, deferred.reject);
+    if (this.connectionRealization.getMessageTransports() === undefined) {
+      this.init();
     }
+
+    this.connectionRealization.start(deferred.reject);
+    if (this.connectionRealization.getMessageTransports() !== undefined) {
+      await this.handleConnected(this.connectionRealization.getMessageTransports()!, deferred);
+    } else {
+      return deferred.reject(new Error('LanguageClientWrapper: No message transports available to start the language client.'));
+    }
+
     return deferred.promise;
   }
 

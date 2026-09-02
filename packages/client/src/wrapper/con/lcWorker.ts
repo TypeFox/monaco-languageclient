@@ -5,16 +5,18 @@
 
 import type { MessageTransports } from 'vscode-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
-import type { WorkerConfigOptionsDirect, WorkerConfigOptionsParams } from '../../common/commonTypes.js';
+import type { WorkerConfigOptionsParams } from '../../common/commonTypes.js';
 import type { ConnectionConfig } from '../lcconfig.js';
 import type { LanguageClientConnectionRealization, TransportLayerName } from './lcConnectionRealization.js';
 import { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
 
 export class LcWorker implements LanguageClientConnectionRealization {
   private support?: LanguageClientConnectionSupport;
+  private connectionConfig?: ConnectionConfig;
   private languageId: string = 'unknown';
   private worker?: Worker;
   private port?: MessagePort;
+  private messageTransports?: MessageTransports;
 
   getLanguageId(): string {
     return this.languageId;
@@ -24,43 +26,45 @@ export class LcWorker implements LanguageClientConnectionRealization {
     return 'Worker';
   }
 
-  init(
-    languageId: string,
-    connectionConfig: ConnectionConfig,
-    support: LanguageClientConnectionSupport,
-    errorHandler: (reason?: unknown) => void
-  ): void {
+  getMessageTransports(): MessageTransports | undefined {
+    return this.messageTransports;
+  }
+
+  init(languageId: string, connectionConfig: ConnectionConfig, support: LanguageClientConnectionSupport): MessageTransports {
     this.languageId = languageId;
+    this.connectionConfig = connectionConfig;
     this.support = support;
     this.support.setDisposeResources(connectionConfig.options.disposeResources === true);
     this.support.setRetryConfig(connectionConfig.retryConfig);
-    const options = connectionConfig.options as WorkerConfigOptionsDirect | WorkerConfigOptionsParams;
+
+    const options = this.connectionConfig.options as WorkerConfigOptionsParams;
     if (this.worker === undefined) {
-      if (!options.direct) {
-        const workerConfig = options as WorkerConfigOptionsParams;
-        this.worker = new Worker(workerConfig.url.href, {
-          type: workerConfig.type,
-          name: workerConfig.workerName
-        });
-      } else {
-        const workerDirectConfig = options as WorkerConfigOptionsDirect;
-        this.worker = workerDirectConfig.worker;
-      }
-      this.worker.onerror = (ev: ErrorEvent) => {
-        this.support?.createError(ev, 'Worker reported an error', errorHandler);
-      };
+      const workerConfig = options;
+      this.worker = new Worker(workerConfig.workerUrl.href, {
+        type: workerConfig.type,
+        name: workerConfig.workerName
+      });
       if (options.messagePort !== undefined) {
         this.port = options.messagePort;
       }
     }
 
     const portOrWorker = this.port ?? this.worker;
-    const messageTransports = connectionConfig.messageTransports ?? {
+    this.messageTransports = {
       reader: new BrowserMessageReader(portOrWorker),
       writer: new BrowserMessageWriter(portOrWorker)
     };
 
-    this.connected(messageTransports);
+    this.connected();
+    return this.messageTransports;
+  }
+
+  start(errorHandler: (reason?: unknown) => void): void {
+    if (this.worker !== undefined) {
+      this.worker.onerror = (ev: ErrorEvent) => {
+        this.support?.createError(ev, 'Worker reported an error', errorHandler);
+      };
+    }
   }
 
   updateWorker(worker: Worker): void {
@@ -71,9 +75,7 @@ export class LcWorker implements LanguageClientConnectionRealization {
     return this.worker;
   }
 
-  connected: (messageTransports: MessageTransports) => void;
-
-  retry: (message: string, timeMs: number, count: number) => void;
+  connected: () => void;
 
   disconnected: () => void;
 

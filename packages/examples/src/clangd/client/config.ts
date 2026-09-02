@@ -107,10 +107,11 @@ export const createClangdAppConfig = async (config: {
     languageId: 'cpp',
     connection: {
       options: {
-        $family: 'WebSocket',
-        direct: true,
+        $family: 'Worker',
         realization: () => new LcWorker(),
-        worker: await config.clangdWorkerHandler.createWorker(),
+        workerUrl: new URL('../worker/clangd-server.ts', import.meta.url),
+        type: 'module',
+        workerName: 'Clangd Server Worker',
         messagePort: config.lsMessageLocalPort
       },
       retryConfig: {

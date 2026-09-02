@@ -6,7 +6,6 @@
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import { MessageTransports } from 'vscode-languageclient';
 
 export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLevel?: LogLevel): EditorAppConfig => {
   return {
@@ -15,31 +14,25 @@ export const createDefaultEditorAppConfig = (codeResources: CodeResources, logLe
   };
 };
 
-const createDefaultLcWorkerConfig = (worker: Worker, languageId: string, messageTransports?: MessageTransports): LanguageClientConfig => {
+export const createDefaultLanguageClientConfig = (): LanguageClientConfig => {
   return {
-    languageId,
+    languageId: 'langium',
     clientOptions: {
-      documentSelector: [languageId]
+      documentSelector: ['langium']
     },
     connection: {
       options: {
         $family: 'Worker',
-        direct: true,
         realization: () => new LcWorker(),
-        worker
-      },
-      messageTransports
+        workerUrl: new URL('monaco-languageclient-examples/worker/langium', import.meta.url),
+        type: 'module',
+        workerName: 'Langium LS (React Test)',
+        readerCallback: (message) => {
+          console.log('Reader callback received message:', message);
+        }
+      }
     }
   };
-};
-
-export const createDefaultLanguageClientConfig = (): LanguageClientConfig => {
-  const workerUrl = new URL('monaco-languageclient-examples/worker/langium', import.meta.url);
-  const worker = new Worker(workerUrl, {
-    type: 'module',
-    name: 'Langium LS (React Test)'
-  });
-  return createDefaultLcWorkerConfig(worker, 'langium');
 };
 
 export const hundredMs = 100;

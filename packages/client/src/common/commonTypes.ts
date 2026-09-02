@@ -5,6 +5,7 @@
 
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
 import type { LanguageClientConnectionRealization } from '../wrapper/index.js';
+import type { DataCallback } from 'vscode-languageserver-protocol';
 
 export type ConnectionRetryConfig = {
   retries?: number;
@@ -12,12 +13,7 @@ export type ConnectionRetryConfig = {
   disposeOnRestart?: boolean;
 };
 
-export type ConnectionConfigOptions =
-  | WebSocketConfigOptionsDirect
-  | WebSocketConfigOptionsParams
-  | WebSocketConfigOptionsUrl
-  | WorkerConfigOptionsParams
-  | WorkerConfigOptionsDirect;
+export type ConnectionConfigOptions = WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl | WorkerConfigOptionsParams;
 
 export interface CallOptions {
   /** Adds handle on languageClient */
@@ -26,20 +22,13 @@ export interface CallOptions {
   reportStatus?: boolean;
 }
 
-export interface StartAndStopOptions {
-  startOptions?: CallOptions;
-  stopOptions?: CallOptions;
-}
-
-export interface ConnectionOptionsFamily extends StartAndStopOptions {
+export interface ConnectionOptionsFamily {
   $family: 'Worker' | 'WebSocket';
-  direct: boolean;
   disposeResources?: boolean;
   realization: () => LanguageClientConnectionRealization;
-}
-
-export interface WebSocketConfigOptionsDirect extends ConnectionOptionsFamily {
-  webSocket: unknown;
+  startOptions?: CallOptions;
+  stopOptions?: CallOptions;
+  readerCallback?: DataCallback;
 }
 
 export interface WebSocketConfigOptionsParams extends ConnectionOptionsFamily {
@@ -51,17 +40,12 @@ export interface WebSocketConfigOptionsParams extends ConnectionOptionsFamily {
 }
 
 export interface WebSocketConfigOptionsUrl extends ConnectionOptionsFamily {
-  url: string;
+  webSocketUrl: string;
 }
 
 export interface WorkerConfigOptionsParams extends ConnectionOptionsFamily {
-  url: URL;
+  workerUrl: URL;
   type: 'classic' | 'module';
   messagePort?: MessagePort;
   workerName?: string;
-}
-
-export interface WorkerConfigOptionsDirect extends ConnectionOptionsFamily {
-  worker: Worker;
-  messagePort?: MessagePort;
 }

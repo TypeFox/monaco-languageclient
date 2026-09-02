@@ -6,21 +6,16 @@
 import { EditorApp } from 'monaco-languageclient/editorApp';
 import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper } from 'monaco-languageclient/vscodeApiWrapper';
-import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
-import { LcSocketIo, SocketIoClient } from 'vscode-socketio-jsonrpc/browser';
+import { LcSocketIo } from 'vscode-socketio-jsonrpc/browser';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
 
 export const runStatemachine = async () => {
-  const socketIoClient = new SocketIoClient({
-    url: 'ws://localhost:30003'
-  });
-  const socket = socketIoClient.start();
-  const reader = new SocketIoMessageReader(socket);
-  const writer = new SocketIoMessageWriter(socket);
-  reader.listen((message) => {
-    console.log('Received message from worker:', message);
-  });
+  // const reader = new SocketIoMessageReader(socket);
+  // const writer = new SocketIoMessageWriter(socket);
+  // reader.listen((message) => {
+  //   console.log('Received message from worker:', message);
+  // });
 
   const htmlContainer = document.getElementById('monaco-editor-root')!;
   // the configuration does not contain any text content
@@ -33,13 +28,8 @@ export const runStatemachine = async () => {
     connection: {
       options: {
         $family: 'WebSocket',
-        direct: true,
         realization: () => new LcSocketIo(),
-        webSocket: socket
-      },
-      messageTransports: {
-        reader,
-        writer
+        webSocketUrl: 'ws://localhost:30003'
       }
     },
     htmlContainer

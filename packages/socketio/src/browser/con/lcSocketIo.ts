@@ -3,7 +3,6 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import type { WebSocketConfigOptionsDirect } from 'monaco-languageclient/common';
 import {
   DEFAULT_CONNECTION_TIMEOUT,
   LanguageClientConnectionSupport,
@@ -14,11 +13,15 @@ import {
 import type { Socket } from 'socket.io-client';
 import type { MessageTransports } from 'vscode-languageclient';
 import { SocketIoMessageReader, SocketIoMessageWriter } from 'vscode-socketio-jsonrpc';
+import { SocketIoClient } from '../index.js';
+import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
 
 export class LcSocketIo implements LanguageClientConnectionRealization {
   private support?: LanguageClientConnectionSupport;
+  private connectionConfig?: ConnectionConfig;
   private languageId: string = 'unknown';
   private socket?: Socket;
+  private messageTransports?: MessageTransports;
 
   getLanguageId(): string {
     return this.languageId;
@@ -28,55 +31,62 @@ export class LcSocketIo implements LanguageClientConnectionRealization {
     return 'SocketIo';
   }
 
-  init(
-    languageId: string,
-    connectionConfig: ConnectionConfig,
-    support: LanguageClientConnectionSupport,
-    errorHandler: (reason?: unknown) => void
-  ): void {
+  getMessageTransports(): MessageTransports | undefined {
+    return this.messageTransports;
+  }
+
+  init(languageId: string, connectionConfig: ConnectionConfig, support: LanguageClientConnectionSupport): MessageTransports {
     this.languageId = languageId;
+    this.connectionConfig = connectionConfig;
     this.support = support;
     this.support.setDisposeResources(connectionConfig.options.disposeResources === true);
     this.support.setRetryConfig(connectionConfig.retryConfig);
-    const options = connectionConfig.options as WebSocketConfigOptionsDirect;
-    this.socket = options.webSocket as unknown as Socket;
 
-    this.support.clearPendingTimeout();
-    this.support.createConnectionTimeout(
-      connectionConfig.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
-      !this.socket.connected,
-      errorHandler
-    );
-
-    this.socket.on('error', (ev: Event) => {
-      this.support?.createError(ev, 'Socket connection failed', errorHandler);
+    const options = connectionConfig.options as WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl;
+    const socketIoClient = new SocketIoClient({
+      url: createUrl(options)
     });
+    this.socket = socketIoClient.start();
 
-    const messageTransports = connectionConfig.messageTransports ?? {
+    this.messageTransports = {
       reader: new SocketIoMessageReader(this.socket!),
       writer: new SocketIoMessageWriter(this.socket!)
     };
-
-    // if already connected, signal immediately
-    if (this.socket.connected) {
-      this.support.clearPendingTimeout();
-      this.connected(messageTransports);
-    }
-
-    // otherwise start on connect
-    this.socket.on('connect', async () => {
-      this.support?.clearPendingTimeout();
-      this.connected(messageTransports);
-    });
-
-    this.socket.on('disconnect', async () => {
-      this.disconnected();
-    });
+    return this.messageTransports;
   }
 
-  connected: (messageTransports: MessageTransports) => void;
+  start(errorHandler: (reason?: unknown) => void): void {
+    this.support?.clearPendingTimeout();
+    this.support?.createConnectionTimeout(
+      this.connectionConfig?.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
+      this.socket?.connected !== true,
+      errorHandler
+    );
 
-  retry: (message: string, timeMs: number, count: number) => void;
+    // if already connected, signal immediately
+    if (this.socket?.connected === true) {
+      this.support?.clearPendingTimeout();
+      this.connected();
+    }
+
+    if (this.socket !== undefined) {
+      this.socket.on('error', (ev: Event) => {
+        this.support?.createError(ev, 'Socket connection failed', errorHandler);
+      });
+
+      // otherwise start on connect
+      this.socket.on('connect', async () => {
+        this.support?.clearPendingTimeout();
+        this.connected();
+      });
+
+      this.socket.on('disconnect', async () => {
+        this.disconnected();
+      });
+    }
+  }
+
+  connected: () => void;
 
   disconnected: () => void;
 

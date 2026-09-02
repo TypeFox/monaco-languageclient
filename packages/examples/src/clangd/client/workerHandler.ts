@@ -17,32 +17,25 @@ export class ClangdWorkerHandler {
   private interactionMain: ClangdInteractionMain = new ClangdInteractionMain();
   private endpointMain?: ComChannelEndpoint;
 
-  async createWorker() {
-    const languageServerWorker = new Worker(new URL('../worker/clangd-server.ts', import.meta.url), {
-      type: 'module',
-      name: 'Clangd Server Worker'
-    });
-    this.endpointMain = new ComChannelEndpoint({
-      endpointId: 1,
-      endpointConfig: {
-        $type: 'DirectImplConfig',
-        impl: languageServerWorker
-      },
-      verbose: true,
-      endpointName: 'main_worker'
-    });
-    this.endpointMain.connect(this.interactionMain);
-
-    return languageServerWorker;
-  }
-
   async init(config: {
+    languageServerWorker: Worker;
     lsMessagePort: MessagePort;
     fsMessagePort: MessagePort;
     clearIndexedDb: boolean;
     useCompressedWorkspace: boolean;
     compressedWorkspaceUrl?: string;
   }) {
+    this.endpointMain = new ComChannelEndpoint({
+      endpointId: 1,
+      endpointConfig: {
+        $type: 'DirectImplConfig',
+        impl: config.languageServerWorker
+      },
+      verbose: true,
+      endpointName: 'main_worker'
+    });
+    this.endpointMain.connect(this.interactionMain);
+
     await this.endpointMain?.sentMessage({
       message: WorkerMessage.fromPayload(
         new RawPayload({

@@ -7,12 +7,12 @@ import type { WebSocketConfigOptionsParams, WebSocketConfigOptionsUrl } from './
 
 export const createUrl = (config: WebSocketConfigOptionsParams | WebSocketConfigOptionsUrl) => {
   let buildUrl = '';
-  if (Object.hasOwn(config, 'url')) {
+  if (Object.hasOwn(config, 'webSocketUrl')) {
     const options = config as WebSocketConfigOptionsUrl;
-    if (!options.url.startsWith('ws://') && !options.url.startsWith('wss://')) {
-      throw new Error(`This is not a proper websocket url: ${options.url}`);
+    if (!options.webSocketUrl.startsWith('ws://') && !options.webSocketUrl.startsWith('wss://')) {
+      throw new Error(`This is not a proper websocket url: ${options.webSocketUrl}`);
     }
-    buildUrl = options.url;
+    buildUrl = options.webSocketUrl;
   } else {
     const options = config as WebSocketConfigOptionsParams;
     const protocol = options.secured ? 'wss' : 'ws';
