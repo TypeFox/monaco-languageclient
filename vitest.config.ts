@@ -12,13 +12,13 @@ import externalViteConfig from './vite.config.js';
 
 export const vitestConfig = {
   test: {
+    api: {
+      port: 20101
+    },
     browser: {
       enabled: true,
       headless: true,
       provider: playwright(),
-      api: {
-        port: 20101
-      },
       instances: [
         {
           browser: 'chromium'
