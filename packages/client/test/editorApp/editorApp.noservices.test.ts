@@ -7,7 +7,7 @@ import { EditorApp } from 'monaco-languageclient/editorApp';
 import { describe, expect, test } from 'vitest';
 import { createEditorAppConfig, createMonacoEditorDiv } from '../support/helper.js';
 
-describe.concurrent('Test EditorApp', { concurrent: false, tags: ['main'] }, () => {
+describe('Test EditorApp', { concurrent: false, tags: ['main'] }, () => {
   const htmlContainer = createMonacoEditorDiv();
 
   test('Start EditorApp with no services', async () => {

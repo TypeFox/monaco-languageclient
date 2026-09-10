@@ -8,7 +8,7 @@
     },
     {
       "name": "keyword.control.statemachine",
-      "match": "\\b(actions|commands|end|events|initialState|state|statemachine)\\b"
+      "match": "\\b(initialState|statemachine|commands|actions|events|state|end)\\b"
     }
   ],
   "repository": {
