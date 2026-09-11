@@ -61,9 +61,19 @@ export const runClangdWrapper = async () => {
   };
 
   const startWrapper = async () => {
-    await clangdWorkerHandler.init(initConfig);
-    await clangdWorkerHandler.launch();
-    await lcWrapper.start();
+    await lcWrapper.init();
+
+    const languageServerWorker = lcWrapper.getWorker();
+    if (languageServerWorker !== undefined) {
+      await clangdWorkerHandler.init({
+        ...initConfig,
+        languageServerWorker
+      });
+      await clangdWorkerHandler.launch();
+      await lcWrapper.start();
+    } else {
+      return Promise.reject(new Error('Language server worker is not available.'));
+    }
   };
 
   try {

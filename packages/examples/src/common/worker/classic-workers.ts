@@ -6,7 +6,7 @@
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
 import { useWorkerFactory, Worker, type PossibleWorkerLabelsClassic, type WorkerLoader } from 'monaco-languageclient/workerFactory';
 
-export const defineClassicWorkers: () => Record<PossibleWorkerLabelsClassic, WorkerLoader> = () => {
+const defineClassicWorkers: () => Record<PossibleWorkerLabelsClassic, WorkerLoader> = () => {
   const editorWorkerServiceWorker = () => {
     const workerUrl = new URL('@codingame/monaco-vscode-editor-api/esm/vs/editor/editor.worker.js', import.meta.url);
     return new Worker(workerUrl, { type: 'module' });
