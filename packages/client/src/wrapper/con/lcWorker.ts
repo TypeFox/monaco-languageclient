@@ -10,6 +10,8 @@ import type { ConnectionConfig } from '../lcconfig.js';
 import { type LanguageClientConnectionRealization } from './lcConnectionRealization.js';
 import { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
 
+export const TransportLayerName = 'Worker';
+
 export class LcWorker implements LanguageClientConnectionRealization {
   private support?: LanguageClientConnectionSupport;
   private connectionConfig?: ConnectionConfig;
@@ -23,7 +25,7 @@ export class LcWorker implements LanguageClientConnectionRealization {
   }
 
   getTransportLayerName(): string {
-    return 'Worker';
+    return TransportLayerName;
   }
 
   getMessageTransports(): MessageTransports | undefined {

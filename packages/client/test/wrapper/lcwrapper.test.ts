@@ -7,7 +7,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import type { ILogger } from '@codingame/monaco-vscode-log-service-override';
-import { LanguageClientWrapper, LcWorker } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { beforeAll, describe, expect, test } from 'vitest';
 import {
@@ -40,9 +40,9 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
   test('Dispose: direct worker is cleaned up afterwards', async () => {
     const languageClientConfig = createDefaultLanguageClientConfig();
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
-    const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(realization.getWorker()).toBeUndefined();
+    let worker = languageClientWrapper.getWorker();
+    expect(worker).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
     try {
@@ -51,11 +51,14 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
       // ignore
     }
 
-    expect(realization.getWorker()).toBeTruthy();
+    worker = languageClientWrapper.getWorker();
+    expect(worker).toBeTruthy();
 
     // dispose & verify
     await languageClientWrapper.dispose();
-    expect(realization.getWorker()).toBeUndefined();
+
+    worker = languageClientWrapper.getWorker();
+    expect(worker).toBeUndefined();
   });
 
   test('Start: unreachable url', async () => {
@@ -92,9 +95,9 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
   test('Dispose: start, dispose worker and restart', async () => {
     const languageClientConfig = createDefaultLanguageClientConfig();
     const languageClientWrapper = new LanguageClientWrapper(languageClientConfig);
-    const realization = languageClientWrapper.getConnectionRealization() as LcWorker;
 
-    expect(realization.getWorker()).toBeUndefined();
+    let worker = languageClientWrapper.getWorker();
+    expect(worker).toBeUndefined();
 
     // WA: language client in fails due to vitest (reason not clear, yet)
     try {
@@ -103,11 +106,16 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
       // ignore
       console.error(_error);
     }
-    expect(realization.getWorker()).toBeTruthy();
+
+    worker = languageClientWrapper.getWorker();
+    expect(worker).toBeTruthy();
 
     // dispose & verify
     await languageClientWrapper.dispose();
-    expect(realization.getWorker()).toBeUndefined();
+
+    worker = languageClientWrapper.getWorker();
+    worker = languageClientWrapper.getWorker();
+    expect(worker).toBeUndefined();
 
     // restart & verify
     try {
@@ -116,7 +124,9 @@ describe.concurrent('Test LanguageClientWrapper', { concurrent: false, tags: ['m
       // ignore
       console.error(_error);
     }
-    expect(realization.getWorker()).toBeTruthy();
+
+    worker = languageClientWrapper.getWorker();
+    expect(worker).toBeTruthy();
   });
 
   test('set verify log levels are applied', async () => {

@@ -11,6 +11,7 @@ import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-langu
 import { Deferred } from '../common/utils.js';
 import type { LanguageClientConnectionRealization } from './con/lcConnectionRealization.js';
 import { LanguageClientConnectionSupport } from './con/lcConnectionSupport.js';
+import { LcWorker, TransportLayerName } from './con/lcWorker.js';
 import type { LanguageClientConfig } from './lcconfig.js';
 
 export interface LanguageClientError {
@@ -42,8 +43,10 @@ export class LanguageClientWrapper {
     return this.languageClient;
   }
 
-  getConnectionRealization(): LanguageClientConnectionRealization {
-    return this.connectionRealization;
+  getWorker(): Worker | undefined {
+    return this.connectionRealization.getTransportLayerName() === TransportLayerName
+      ? (this.connectionRealization as LcWorker).getWorker()
+      : undefined;
   }
 
   isStarted(): boolean {

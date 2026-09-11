@@ -61,7 +61,7 @@ const startEditor = async () => {
   // init language client
   lcWrapper = new LanguageClientWrapper(appConfig.languageClientConfig);
   await lcWrapper.init();
-  const stateMachineWorkerPort = (lcWrapper.getConnectionRealization() as LcWorker).getWorker();
+  const stateMachineWorkerPort = lcWrapper.getWorker();
   // use callback to receive message back from worker independent of the message channel the LSP is using
   if (stateMachineWorkerPort !== undefined) {
     stateMachineWorkerPort.onmessage = (event) => {
