@@ -7,6 +7,10 @@ import { AbstractMessageReader, type DataCallback, Disposable, MessageReader } f
 import type { IWebSocket } from 'vscode-ws-jsonrpc';
 import { toSocket } from './connection.js';
 
+const isIWebSocket = (webSocket: WebSocket | IWebSocket): webSocket is IWebSocket => {
+  return Object.hasOwn(webSocket, '$type');
+};
+
 export class WebSocketMessageReader extends AbstractMessageReader implements MessageReader {
   protected readonly socket: IWebSocket;
   protected state: 'initial' | 'listening' | 'closed' = 'initial';
@@ -16,7 +20,7 @@ export class WebSocketMessageReader extends AbstractMessageReader implements Mes
 
   constructor(webSocket: WebSocket | IWebSocket) {
     super();
-    this.socket = Object.hasOwn(webSocket, '$type') ? (webSocket as IWebSocket) : toSocket(webSocket as WebSocket);
+    this.socket = isIWebSocket(webSocket) ? webSocket : toSocket(webSocket);
     this.socket.onMessage((message) => this.readMessage(message));
     this.socket.onError((error) => this.fireError(error));
     this.socket.onClose((code, reason) => {

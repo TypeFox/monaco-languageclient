@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
+import { createUrl, Deferred, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
 import type { MessageTransports } from 'vscode-languageclient';
 import { WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 import { DEFAULT_CONNECTION_TIMEOUT, type LanguageClientConnectionRealization } from './lcConnectionRealization.js';
@@ -46,39 +46,42 @@ export class LcWebSocket implements LanguageClientConnectionRealization {
     return this.messageTransports;
   }
 
-  start(errorHandler: (reason?: unknown) => void): void {
+  start(): Promise<void> {
+    const connectionEstablished: Deferred<void> = new Deferred<void>();
+
     this.support?.clearPendingTimeout();
     this.support?.createConnectionTimeout(
       this.connectionConfig?.retryConfig?.timeout ?? DEFAULT_CONNECTION_TIMEOUT,
       this.webSocket?.readyState !== WebSocket.OPEN,
-      errorHandler
+      connectionEstablished.reject
     );
 
     // if websocket is already open, signal immediately
     if (this.webSocket?.readyState === WebSocket.OPEN) {
       this.support?.clearPendingTimeout();
-      this.connected();
+      connectionEstablished.resolve();
     }
 
     // otherwise start on open
     if (this.webSocket !== undefined) {
       this.webSocket.onerror = (ev: Event) => {
         const error = this.support?.createError('Websocket connection failed', ev);
-        errorHandler(error);
+        connectionEstablished.reject(error);
+        this.disconnected();
       };
 
       this.webSocket.onopen = async () => {
         this.support?.clearPendingTimeout();
-        this.connected();
+        connectionEstablished.resolve();
       };
 
       this.webSocket.onclose = async () => {
         this.disconnected();
       };
     }
-  }
 
-  connected: () => void;
+    return connectionEstablished.promise;
+  }
 
   disconnected: () => void;
 

@@ -7,6 +7,7 @@ import type { MessageTransports } from 'vscode-languageclient';
 import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser';
 import type { WorkerConfigOptionsParams } from '../../common/commonTypes.js';
 import type { ConnectionConfig } from '../lcconfig.js';
+import type { LanguageClientError } from '../lcwrapper.js';
 import { type LanguageClientConnectionRealization } from './lcConnectionRealization.js';
 import { LanguageClientConnectionSupport } from './lcConnectionSupport.js';
 
@@ -56,7 +57,7 @@ export class LcWorker implements LanguageClientConnectionRealization {
       });
       this.worker.onerror = (ev: ErrorEvent) => {
         const lceError = support.createError('Worker reported an error', ev);
-        return Promise.reject(lceError);
+        this.disconnected(lceError);
       };
       this.port = options.messagePort;
     }
@@ -73,8 +74,8 @@ export class LcWorker implements LanguageClientConnectionRealization {
     return this.messageTransports;
   }
 
-  start(_errorHandler?: (reason?: unknown) => void): void {
-    this.connected();
+  start(): Promise<void> {
+    return Promise.resolve();
   }
 
   updateWorker(worker: Worker): void {
@@ -85,9 +86,7 @@ export class LcWorker implements LanguageClientConnectionRealization {
     return this.worker;
   }
 
-  connected: () => void;
-
-  disconnected: () => void;
+  disconnected: (error?: LanguageClientError) => void;
 
   restart(_count: number): void {
     if (this.support?.disposeOnRestart() === true) {

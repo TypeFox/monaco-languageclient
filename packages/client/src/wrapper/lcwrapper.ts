@@ -25,7 +25,6 @@ export class LanguageClientWrapper {
   private logger: ILogger | undefined;
   private connectionRealization: LanguageClientConnectionRealization;
   private connectionSupport: LanguageClientConnectionSupport;
-  private connectionEstablished: Deferred<boolean> = new Deferred<boolean>();
   private messageTransports?: MessageTransports;
 
   constructor(config: LanguageClientConfig) {
@@ -58,11 +57,8 @@ export class LanguageClientWrapper {
    * This allows for example to get access to MessageTransports or the Worker before starting the language client.
    */
   async init(): Promise<void> {
-    this.connectionRealization.connected = () => {
-      this.connectionEstablished.resolve(true);
-    };
-    this.connectionRealization.disconnected = async () => {
-      await this.dispose();
+    this.connectionRealization.disconnected = async (error?: LanguageClientError) => {
+      await this.dispose(error);
     };
 
     this.messageTransports = await this.connectionRealization.init(
@@ -78,9 +74,8 @@ export class LanguageClientWrapper {
       await this.init();
     }
 
-    this.connectionRealization.start(this.connectionEstablished.reject);
+    await this.connectionRealization.start();
     if (this.messageTransports !== undefined) {
-      await this.connectionEstablished.promise;
       await this.handleConnected(this.messageTransports, deferred);
     } else {
       return deferred.reject(new Error('LanguageClientWrapper: No message transports available to start the language client.'));
@@ -206,7 +201,7 @@ export class LanguageClientWrapper {
     };
   }
 
-  async dispose(): Promise<void> {
+  async dispose(error?: LanguageClientError): Promise<void> {
     try {
       if (this.isStarted()) {
         await this.languageClient?.dispose();
@@ -220,10 +215,14 @@ export class LanguageClientWrapper {
       };
       throw new Error(languageClientError.message, { cause: languageClientError.error });
     } finally {
-      // always terminate realization according their configuration
       this.messageTransports = undefined;
+      // always terminate realization according their configuration
       this.connectionRealization.dispose();
-      this.connectionEstablished = new Deferred<boolean>();
+    }
+
+    // convey disconnection error if provided
+    if (error !== undefined) {
+      throw new Error(error.message, { cause: error.error });
     }
   }
 
