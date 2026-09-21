@@ -15,7 +15,7 @@
     "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-textmate-service-override": "^36.2.7",
+    "@codingame/monaco-vscode-textmate-service-override": "^37.1.0",
     "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {
@@ -25,15 +25,18 @@
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.6.2",
-    "vite": "~8.2.2",
+    "vite": "~8.3.0",
     "webpack-cli": "~7.2.3"
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "baseline-browser-mapping": "~2.11.25",
+    "browserslist": "~4.29.0",
     "dompurify": "~3.4.14",
     "fast-uri": "~3.1.6",
     "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
+    "qs": "~6.16.0",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {
