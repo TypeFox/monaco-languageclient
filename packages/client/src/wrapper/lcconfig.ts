@@ -4,30 +4,22 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
-import { type ConnectionConfigOptions } from 'monaco-languageclient/common';
-import type { DynamicFeature, LanguageClientOptions, MessageTransports, StaticFeature } from 'vscode-languageclient/browser';
+import type { ConnectionConfigOptions, ConnectionRetryConfig } from 'monaco-languageclient/common';
+import type { DynamicFeature, LanguageClientOptions, StaticFeature } from 'vscode-languageclient/browser';
 
 export interface ConnectionConfig {
   options: ConnectionConfigOptions;
-  messageTransports?: MessageTransports;
+  retryConfig?: ConnectionRetryConfig;
 }
 
 export interface LanguageClientConfig {
   languageId: string;
   connection: ConnectionConfig;
   clientOptions: LanguageClientOptions;
-  restartOptions?: LanguageClientRestartOptions;
   useClientWithProposedFeatures?: boolean;
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   registerFeatures?: Array<StaticFeature | DynamicFeature<any>>;
-  disposeWorker?: boolean;
   logLevel?: LogLevel | number;
-}
-
-export interface LanguageClientRestartOptions {
-  retries: number;
-  timeout: number;
-  keepWorker?: boolean;
 }
 
 export interface LanguageClientConfigs {

@@ -82,6 +82,21 @@ export const definedViteConfig = defineConfig({
         });
       }
     },
+    {
+      name: 'bypass-spa-fallback',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          // Do not resolve a specific url back to index.html
+          if (req.url?.includes('packages/client/test/support/unreachableFile.ts') === true) {
+            res.statusCode = 404;
+            res.end('Not Found');
+            return;
+          }
+
+          next();
+        });
+      }
+    },
     vsixPlugin()
   ],
   define: {

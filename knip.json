@@ -42,6 +42,9 @@
         "src/json/server/json-server.ts",
         "src/langium/langium-dsl/main.ts",
         "src/langium/langium-dsl/config/langium.monarch.ts",
+        "src/langium/langium-dsl/minilogo/config/minilogoConfig.ts",
+        "src/langium/langium-dsl/minilogo/launcher.ts",
+        "src/langium/langium-dsl/minilogo/main.ts",
         "src/langium/statemachine/launcher.ts",
         "src/langium/statemachine/main-react.tsx",
         "src/langium/statemachine/main.ts",
@@ -62,5 +65,5 @@
     "packages/examples/resources/**": ["exports", "types"]
   },
   "ignoreBinaries": ["playwright"],
-  "ignoreDependencies": ["pyright", "emscripten"]
+  "ignoreDependencies": ["pyright"]
 }

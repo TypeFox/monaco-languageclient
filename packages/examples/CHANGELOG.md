@@ -6,7 +6,7 @@ All notable changes to this npm module are documented in this file.
 
 - Updated all `@codingame/monaco-vscode` packages to `36.2.7`.
 - Updated to `monaco-languageclient@11.0.0-next.3` and `@typefox/monaco-editor-react@8.0.0-next.3`.
-- Updated `langium`to `4.3.0`.
+- Updated `langium`to `4.4.0`.
 - Updated `vscode-languageclient` and `vscode-languageserver` to `10.2.0`, `vscode-languageserver-protocol` to `3.18.2` and `vscode-jsonrpc` to `9.0.1`.
 - Dropped eslint and rely fully on oxlint.
 
@@ -15,6 +15,7 @@ All notable changes to this npm module are documented in this file.
 - New monaco-vscode-api / vite 8 beta 12 + esbuild-import-meta-url-plugin removal [#1017](https://github.com/TypeFox/monaco-languageclient/pull/1017)
   - Updated all `@codingame/monaco-vscode` packages to `25.1.2`.
 - Updated to `monaco-languageclient@10.7.0` and `@typefox/monaco-editor-react@7.7.0`.
+- Make further examples openly available
 
 ## [2026.1.1] - 2026-01-14
 

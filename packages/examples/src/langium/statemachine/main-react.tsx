@@ -7,22 +7,15 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { ConsoleLogger } from '@codingame/monaco-vscode-log-service-override';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import type { TextContents } from 'monaco-languageclient/editorApp';
+import { LcWorker } from 'monaco-languageclient/lcwrapper';
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
 import text from '../../../resources/langium/statemachine/example.statemachine?raw';
 import { disableElement } from '../../common/client/utils.js';
 import { createLangiumGlobalConfig } from './config/statemachineConfig.js';
-import { loadStatemachineWorkerRegular } from './main.js';
 
 export const runStatemachineReact = async (noControls: boolean) => {
-  const worker = loadStatemachineWorkerRegular();
-  const reader = new BrowserMessageReader(worker);
-  const writer = new BrowserMessageWriter(worker);
   const logger = new ConsoleLogger(LogLevel.Off);
-  reader.listen((message) => {
-    logger.info('Received message from worker:', message);
-  });
 
   const root = ReactDOM.createRoot(document.getElementById('react-root')!);
   const App = () => {
@@ -42,8 +35,18 @@ export const runStatemachineReact = async (noControls: boolean) => {
         text: codeState,
         uri: '/workspace/example.statemachine'
       },
-      worker,
-      messageTransports: { reader, writer }
+      connection: {
+        options: {
+          $family: 'Worker',
+          realization: () => new LcWorker(),
+          workerUrl: new URL('./worker/statemachine-server.ts', import.meta.url),
+          type: 'module',
+          workerName: 'Statemachine Server Regular',
+          readerCallback: (message) => {
+            logger.info('Received message from worker:', message);
+          }
+        }
+      }
     });
 
     return (

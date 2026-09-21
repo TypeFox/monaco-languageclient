@@ -5,7 +5,7 @@
 
 import { LogLevel } from '@codingame/monaco-vscode-api';
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper, LcWebSocket, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 import { configureClassicWorkerFactory } from '../../common/worker/classic-workers.js';
 
@@ -61,8 +61,9 @@ export const runClient = async () => {
     },
     connection: {
       options: {
-        $type: 'WebSocketUrl',
-        url: 'ws://localhost:30000/sampleServer'
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
+        webSocketUrl: 'ws://localhost:30000/sampleServer'
       }
     }
   };

@@ -13,6 +13,7 @@ export interface IConnection extends Disposable {
 }
 
 export interface IWebSocket extends Disposable {
+  $type: 'IWebSocket';
   send(content: string): void;
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   onMessage(cb: (data: any) => void): void;
