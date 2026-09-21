@@ -29,23 +29,24 @@
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "^36.2.7",
     "@codingame/monaco-vscode-views-service-override": "^36.2.7",
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
-    "langium": "~4.3.1",
+    "langium": "~4.4.0",
     "monaco-languageclient": "../../packages/client",
-    "next": "~16.3.4",
-    "react": "~19.2.8",
-    "react-dom": "~19.2.8",
+    "next": "~16.3.5",
+    "react": "~19.3.0",
+    "react-dom": "~19.3.0",
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^36.2.7",
     "vscode-languageclient": "~10.1.1",
     "vscode-languageserver": "~10.1.1"
   },
   "devDependencies": {
-    "@types/react-dom": "~19.2.5",
+    "@types/react-dom": "~19.3.0",
     "shx": "~0.4.0",
     "typescript": "~7.0.2",
-    "vite": "~8.2.2"
+    "vite": "~8.3.0"
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
+    "baseline-browser-mapping": "~2.11.25",
     "dompurify": "~3.4.14",
     "monaco-languageclient": "../../packages/client",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
