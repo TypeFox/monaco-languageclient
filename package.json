@@ -54,7 +54,7 @@
     "init:examples": "npm run init --workspace packages/examples"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "^36.2.7",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "^37.1.0",
     "@testing-library/react": "~16.3.3",
     "@types/node": "~24.10.15",
     "@types/react": "~19.3.0",
