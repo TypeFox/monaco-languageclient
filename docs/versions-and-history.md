@@ -6,7 +6,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 | monaco-languageclient | vscode-ws-jsonrpc | monaco-editor-wrapper | monaco-editor-react | monaco-vscode-api / editor-api | vscode  | monaco-editor | release date | comment                                               |
 | :-------------------- | :---------------- | :-------------------- | :------------------ | :----------------------------- | :------ | :------------ | :----------- | :---------------------------------------------------- |
-| 11.0.0-next.2         | 4.0.0-next.2      |                       | 8.0.0-next.2        | 37.1.0                         | 1.138.0 | 0.56.0        | unreleased   |                                                       |
+| 11.0.0                | 4.0.0             |                       | 8.0.0               | 37.1.0                         | 1.138.0 | 0.56.0        | unreleased   |                                                       |
 | 10.7.0                | 3.5.0             |                       | 7.7.0               | 25.1.2                         | 1.108.2 | 0.55.1        | 2026-02-04   |                                                       |
 | 10.6.0                | 3.5.0             |                       | 7.6.0               | 25.0.0                         | 1.108.0 | 0.55.1        | 2026-01-14   |                                                       |
 | 10.5.0                | 3.5.0             |                       | 7.5.0               | 24.2.0                         | 1.107.1 | 0.55.1        | 2025-12-23   |                                                       |
@@ -94,7 +94,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 ### September 2025 (v10.0.0)
 
-- Dropped `monaco-editor-wrapper`. All required funcitonality was moved back to `monaco-languageclient` and made available as sub exports.
+- Dropped `monaco-editor-wrapper`. All required functionality was moved back to `monaco-languageclient` and made available as sub exports.
 - `@typefox/monaco-editor-react` lifecycle and robustness improvements.
 
 ### December 2025 (v9.0.0)
@@ -107,7 +107,7 @@ The following table describes which version of **monaco-languageclient** and **@
 
 ### October 2023 (v7.0.0)
 
-Revised the `treemending` approach. The postinstall step is removed. `monaco-languageclient` no longer patches and existing `monaco-editor` instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib have to enforce the correct editor by overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
+Revised the `treemending` approach. The postinstall step is removed. `monaco-languageclient` no longer patches an existing `monaco-editor`; instead the package `@codingame/monaco-editor-treemended` is used. This requires that projects using this lib have to enforce the correct editor by overrides (npm/pnpm) or resolutions (yarn) in the `package.json`.
 
 ### September 2023 (v6.5.0)
 
@@ -130,11 +130,11 @@ The `monaco-converter` has been removed.
 
 [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) was created by [CGNonofr](https://github.com/CGNonofr) and this library is now based on it and the old [implementation was removed](https://github.com/CodinGame/monaco-vscode-api#history).
 
-We added the independent **[vscode-ws-jsonrpc](./packages/vscode-ws-jsonrpc)** as sub-package into this repository.
+We added the independent **[vscode-ws-jsonrpc](../packages/vscode-ws-jsonrpc)** as sub-package into this repository.
 
 ### May 2022 (v1.0.0)
 
-From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to [./packages](./packages) directory.
+From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to the [packages](../packages) directory.
 
 As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](../README.md#verification-examples) for the web client example using webpack.
 

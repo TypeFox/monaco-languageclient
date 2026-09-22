@@ -19,5 +19,5 @@ We've split up the documentation into sections that cover a variety of topics, s
   - [Configuration](./guides/configuration.md): Basic configuration options.
   - [Examples](./guides/examples.md): Simple examples to illustrate common use cases.
   - [Troubleshooting](./guides/troubleshooting.md): Common issues and solutions.
-- [Migration](./migration.md): Migration between versions. Staring from version 9 to 10.
+- [Migration](./migration.md): Migration between major versions, including version 10 to 11 and version 9/6 to 10/7.
 - [Versions and History](./versions-and-history.md): Information on version compatibility and historical changes.

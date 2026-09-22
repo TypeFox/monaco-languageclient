@@ -62,7 +62,7 @@ jobs:
           npm run test:ci:tags
 
       - name: Publish
-        uses: TypeFox/gh-publish-npm@0c4ee5a844ccb61c4092fc439f7db21c4a2f0ddb # v0.4.0
+        uses: TypeFox/gh-publish-npm@7183224bef010236e419a2367208633ff284337a # v0.5.0
         with:
           dry-run: ${{ github.event.inputs.dry-run }}
           npm-tag: 'next'

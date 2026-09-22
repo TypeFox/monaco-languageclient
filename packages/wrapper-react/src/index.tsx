@@ -174,7 +174,14 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
     const envEnhanced = getEnhancedMonacoEnvironment();
 
     if (vscodeApiConfig === undefined && envEnhanced.vscodeApiInitialised !== true) {
-      throw new Error('vscodeApiConfig is not provided, but the monaco-vscode-api is not initialized! Aborting...');
+      performErrorHandling(new Error('vscodeApiConfig is not provided, but the monaco-vscode-api is not initialized! Aborting...'));
+      return;
+    }
+
+    if (envEnhanced.vscodeApiInitialised === true) {
+      if (runQueueLock && intervalId !== undefined) {
+        runQueueLock = false;
+      }
     }
 
     // init will only performed once
@@ -193,10 +200,6 @@ export const MonacoEditorReactComp: React.FC<MonacoEditorProps> = (props) => {
       };
       // oxlint-disable-next-line typescript/no-floating-promises
       globalInitFunc();
-    } else if (envEnhanced.vscodeApiInitialised === true) {
-      if (runQueueLock && intervalId !== undefined) {
-        runQueueLock = false;
-      }
     }
   };
 

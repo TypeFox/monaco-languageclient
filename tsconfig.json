@@ -41,5 +41,5 @@
     "*.ts",
     "*.d.ts"
   ],
-  "exclude": ["dist/**/*", "lib/**/*", "node_modules/**/*"]
+  "exclude": ["**/dist/**/*", "**/lib/**/*", "**/node_modules/**/*"]
 }

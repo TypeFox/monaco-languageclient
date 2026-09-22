@@ -2,11 +2,16 @@
 
 All notable changes to npm module [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) are documented in this file.
 
-## [8.0.0-next.2] - unreleased
+## [8.0.0] - unreleased
 
+- **BREAKING**: Updated to the `monaco-languageclient@11.0.0` configuration model. `languageClientConfig` values must use the new connection realization based options.
 - Updated all `@codingame/monaco-vscode` packages to `37.1.0`.
-- Updated to `monaco-languageclient@11.0.0-next.2`.
-- Updated `vscode-languageclient` and `vscode-languageserver` to `10.1.0` and `vscode-languageserver-protocol` to `3.18.2`.
+- Updated to `monaco-languageclient@11.0.0`.
+- Removed the direct `vscode-languageclient` dependency.
+- Updated package metadata and corrected the repository directory.
+- Updated the required runtime engines to Node.js `>=22` and npm `>=10`.
+- Switched package compilation from `tsgo` to `tsc` version `7`.
+- Fixed timer typing for the internal start queue with the newer TypeScript/DOM typings.
 - Dropped eslint and rely fully on oxlint.
 
 ## [7.7.0] - 2026-02-04

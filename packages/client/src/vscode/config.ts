@@ -22,6 +22,7 @@ export interface MonacoEnvironmentEnhanced extends Environment {
   vscodeApiInitialised?: boolean;
   vscodeApiGlobalInitAwait?: Promise<void>;
   vscodeApiGlobalInitResolve?: (value: void | PromiseLike<void>) => void;
+  vscodeApiGlobalInitReject?: (reason?: unknown) => void;
   viewServiceType?: ViewsConfigTypes;
 }
 

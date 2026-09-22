@@ -124,87 +124,13 @@ This allows us to depend on the LS as a standalone artifact without needing to b
 
 ## 3. Monaco Client Configuration
 
-Alright, now that we have our LS ready, we can start setting up the Monaco editor side. We'll set up the `monaco-languageclient` in **Extended Mode**, which provides us with full VS Code-like functionality including TextMate grammars, keybindings, and service overrides, as outlined in [prior tutorials](../configuration.md).
+Once the language server can run in a browser worker, the Monaco side follows the same three-part structure described in the [Configuration](../configuration.md) guide:
 
-The client setup involves three parts:
+1. **`MonacoVscodeApiConfig`** registers services, theme, workers and the language extension contribution.
+2. **`LanguageClientConfig`** connects `LanguageClientWrapper` to the worker with `LcWorker`.
+3. **`EditorAppConfig`** defines the initial editor content.
 
-1. **`MonacoVscodeApiConfig`**: configures the VS Code API layer, theme, extensions, and editor workers
-2. **`LanguageClientConfig`**: connects to the language server worker
-3. **`EditorAppConfig`**: defines the initial code content to display
-
-### Loading the Worker
-
-First, we can create the Web Worker by pointing at our bundled language server, wherever that may be:
-
-```ts
-const worker = new Worker(new URL('./worker/my-language-server-bundle.js', import.meta.url), { type: 'module', name: 'MyLanguageServer' });
-```
-
-In a Vite project, we can reference the source file directly as well, as noted in the prior section.
-
-Then we need to set up our message readers/writers for the language client to use. This matches with the transport layer we've built into our browser-based language server bundle.
-
-```ts
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
-
-const reader = new BrowserMessageReader(worker);
-const writer = new BrowserMessageWriter(worker);
-```
-
-### Syntax Highlighting with TextMate
-
-In Extended Mode (which we're using here), we use TextMate grammars for syntax highlighting (note that Monarch grammars are only supported in Classic Mode). We can register a TextMate grammar and language configuration like so:
-
-```ts
-import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-
-// load grammar and configuration
-// in this case as raw strings, but they can be added in literally as well
-import languageConfig from './config/language-configuration.json?raw';
-import textmateGrammar from './syntaxes/my-language.tmLanguage.json?raw';
-
-// register the paths for config & textmate grammar
-const extensionFilesOrContents = new Map<string, string | URL>();
-extensionFilesOrContents.set('/my-language-configuration.json', languageConfig);
-extensionFilesOrContents.set('/my-language-grammar.json', textmateGrammar);
-
-const vscodeApiConfig: MonacoVscodeApiConfig = {
-  $type: 'extended',
-  // ... other config (see full example below)
-  extensions: [
-    {
-      config: {
-        name: 'my-language-example',
-        publisher: 'my-org',
-        version: '1.0.0',
-        engines: { vscode: '*' },
-        contributes: {
-          languages: [
-            {
-              id: 'my-language',
-              extensions: ['.mylang'],
-              aliases: ['MyLanguage'],
-              // should match the path above
-              configuration: '/my-language-configuration.json'
-            }
-          ],
-          grammars: [
-            {
-              language: 'my-language',
-              scopeName: 'source.my-language',
-              // should match the path above
-              path: '/my-language-grammar.json'
-            }
-          ]
-        }
-      },
-      filesOrContents: extensionFilesOrContents
-    }
-  ]
-};
-```
-
-In case we don't have one, Langium can generate a TextMate grammar for us. We just need to add the following to our `langium-config.json`, and run `npm run langium:generate` to get a default textmate grammar for our language.
+Use Extended Mode if you want TextMate syntax highlighting. If you do not already have a TextMate grammar, Langium can generate one by adding this to `langium-config.json` and running `npm run langium:generate`:
 
 ```json
 {
@@ -216,12 +142,18 @@ In case we don't have one, Langium can generate a TextMate grammar for us. We ju
 
 Then run `npm run langium:generate` to produce a textmate grammar file. The generated grammar covers basic token types, and we can customize it further for improved highlighting.
 
+For the concrete extension registration, language configuration and TextMate grammar wiring, see the canonical MiniLogo config:
+
+- [minilogoConfig.ts](../../../packages/examples/src/langium/langium-dsl/minilogo/config/minilogoConfig.ts)
+- [minilogo.configuration.json](../../../packages/examples/src/langium/langium-dsl/minilogo/config/minilogo.configuration.json)
+- [minilogo.tmLanguage.json](../../../packages/examples/src/langium/langium-dsl/minilogo/config/minilogo.tmLanguage.json)
+
 ### Language Client Configuration
 
-Next, connect the language client to the worker using the `WorkerDirect` mode:
+Connect the language client to the worker with the built-in `LcWorker` connection realization:
 
 ```ts
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWorker, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
 const languageClientConfig: LanguageClientConfig = {
   languageId: 'my-language',
@@ -230,138 +162,24 @@ const languageClientConfig: LanguageClientConfig = {
   },
   connection: {
     options: {
-      $type: 'WorkerDirect',
-      worker
-    },
-    messageTransports: { reader, writer }
+      $family: 'Worker',
+      realization: () => new LcWorker(),
+      workerUrl: new URL('./worker/my-language-server.js', import.meta.url),
+      type: 'module',
+      workerName: 'MyLanguageServer'
+    }
   }
 };
 ```
 
-The `languageId` needs to match the language `id` we registered in the extension configuration above. At this point it can be helpful to pull it out into a constant to avoid mismatches.
+The `languageId` must match the language `id` registered in the extension configuration.
 
-### Full Client Example
+For a complete client implementation, use these canonical examples:
 
-And now we've got everything we need for the client. Here's the complete setup bringing all the pieces together. This follows the same patterns used by the statemachine and langium-dsl examples as well:
-
-```ts
-import { LogLevel } from '@codingame/monaco-vscode-api';
-import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
-import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageclient/browser';
-
-// load grammar and configuration as raw strings (vite ?raw import)
-import languageConfig from './config/language-configuration.json?raw';
-import textmateGrammar from './syntaxes/my-language.tmLanguage.json?raw';
-
-async function startEditor() {
-  // 1. create the language server worker
-  const worker = new Worker(new URL('./worker/my-language-server.js', import.meta.url), { type: 'module', name: 'MyLanguageServer' });
-  const reader = new BrowserMessageReader(worker);
-  const writer = new BrowserMessageWriter(worker);
-
-  // 2. register TextMate grammar as a virtual extension
-  const extensionFilesOrContents = new Map<string, string | URL>();
-  extensionFilesOrContents.set('/my-language-configuration.json', languageConfig);
-  extensionFilesOrContents.set('/my-language-grammar.json', textmateGrammar);
-
-  const languageId = 'my-language';
-
-  // 3. configure the VS Code API layer
-  const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-      $type: 'EditorService',
-      htmlContainer: document.getElementById('monaco-editor-root')!
-    },
-    logLevel: LogLevel.Debug,
-    serviceOverrides: {
-      ...getKeybindingsServiceOverride()
-    },
-    monacoWorkerFactory: configureDefaultWorkerFactory,
-    userConfiguration: {
-      json: JSON.stringify({
-        'workbench.colorTheme': 'Default Dark Modern',
-        'editor.guides.bracketPairsHorizontal': 'active',
-        'editor.wordBasedSuggestions': 'off',
-        'editor.experimental.asyncTokenization': true
-      })
-    },
-    extensions: [
-      {
-        config: {
-          name: 'my-language-example',
-          publisher: 'my-org',
-          version: '1.0.0',
-          engines: { vscode: '*' },
-          contributes: {
-            languages: [
-              {
-                id: languageId,
-                extensions: ['.mylang'],
-                aliases: ['MyLanguage'],
-                configuration: '/my-language-configuration.json'
-              }
-            ],
-            grammars: [
-              {
-                language: languageId,
-                scopeName: 'source.my-language',
-                path: '/my-language-grammar.json'
-              }
-            ]
-          }
-        },
-        filesOrContents: extensionFilesOrContents
-      }
-    ]
-  };
-
-  // 4. configure the language client
-  const languageClientConfig: LanguageClientConfig = {
-    languageId,
-    clientOptions: {
-      documentSelector: [languageId]
-    },
-    connection: {
-      options: {
-        $type: 'WorkerDirect',
-        worker
-      },
-      messageTransports: { reader, writer }
-    }
-  };
-
-  // 5. configure the editor content
-  const editorAppConfig: EditorAppConfig = {
-    codeResources: {
-      modified: {
-        text: `// your default code here`,
-        uri: '/workspace/example.mylang'
-      }
-    }
-  };
-
-  // 6. start everything in order: API wrapper -> language client -> editor
-  const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
-  await apiWrapper.start();
-
-  const lcWrapper = new LanguageClientWrapper(languageClientConfig);
-  await lcWrapper.start();
-
-  const editorApp = new EditorApp(editorAppConfig);
-  await editorApp.start(document.getElementById('monaco-editor-root')!);
-
-  console.log('Editor with language server is ready!');
-}
-
-startEditor().catch(console.error);
-```
-
-You'll likely have additional logic between steps, or organized in a structurally distinct fashion, but the setup order is important.
+- [MiniLogo config](../../../packages/examples/src/langium/langium-dsl/minilogo/config/minilogoConfig.ts)
+- [MiniLogo entry point](../../../packages/examples/src/langium/langium-dsl/minilogo/main.ts)
+- [Statemachine example](../../../packages/examples/src/langium/statemachine/main.ts)
+- [Langium grammar DSL example](../../../packages/examples/src/langium/langium-dsl/main.ts)
 
 ### A note on the setup order:
 
@@ -372,32 +190,6 @@ The order in which we initialize the wrapper, client, and editor app itself is i
 3. **`EditorApp.start()`**: this creates the Monaco editor instance and loads the initial content. The editor is the last part because it relies on the API layer and language services being ready.
 
 We _can_ start up the editor app without the aforementioned steps, we'll just be missing the language support & other VS Code related functionality.
-
-### MiniLogo Client
-
-The MiniLogo client follows this pattern outlined above. The main differences are language-specific: the language ID is `minilogo`, the file extension is `.minilogo`, the TextMate grammar is generated from the MiniLogo Langium grammar, and the default editor content is a MiniLogo program:
-
-```ts
-const editorAppConfig: EditorAppConfig = {
-  codeResources: {
-    modified: {
-      text: `def test() {
-    move(100, 0)
-    pen(down)
-    move(100, 100)
-    move(-100, 100)
-    move(-100, -100)
-    move(100, -100)
-    pen(up)
-}
-color(white)
-test()
-`,
-      uri: '/workspace/example.minilogo'
-    }
-  }
-};
-```
 
 ## 4. HTML Setup
 

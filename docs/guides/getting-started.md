@@ -47,42 +47,24 @@ If you're following along using Vite with the React TS template, you can add thi
 
 We can rely on an extension package that provides JSON language client support for the Monaco VSCode API, and giving us syntax highlighting as well. You can install it via npm.
 
-Note the version 23, which is intended for use with monaco-languageclient v10.4.x. If your project is using a different version of monaco-languageclient, be sure to match all `@codinggame/...` extensions accordingly. See the [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for which versions to use.
+Use the `@codingame/monaco-vscode-*` package version that matches your `monaco-languageclient` version. For `monaco-languageclient`version `11.0.0`, use `@codingame/monaco-vscode-*` packages from major version `37`. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for which versions to use.
 
 ```shell
-npm install @codingame/monaco-vscode-json-default-extension@23
+npm install @codingame/monaco-vscode-json-default-extension@^37.1.0
 ```
 
 ### Updating Vite Config (if using Vite)
 
-Be sure to update your `vite.config.ts` to include the `importMetaUrlPlugin`, which is required for the Monaco Language Client to function properly in dev mode when loading up vsix extensions. For more details, see the [Troubleshooting Guide on Vite](./troubleshooting.md#if-you-use-vite).
-
-You may also need to install the plugin if you haven't already.
-
-```shell
-npm install @codingame/esbuild-import-meta-url-plugin
-```
-
-Then update your `vite.config.ts` as follows:
+If your dependency tree contains multiple references to `vscode`, add a `dedupe` entry:
 
 ```typescript
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
+import { defineConfig } from 'vite';
 
-export default {
-  // ... other vite config options
-  plugins: [
-    importMetaUrlPlugin
-    // ... other plugins
-  ],
-  worker: {
-    format: 'es'
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      plugins: [importMetaUrlPlugin]
-    }
+export default defineConfig({
+  resolve: {
+    dedupe: ['vscode']
   }
-};
+});
 ```
 
 ### Monaco Editor & Language Client Setup
@@ -98,7 +80,7 @@ Once you have that installed, you can setup your `main.ts` file as follows to se
 import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LanguageClientWrapper, LcWebSocket, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
 // VSCode API for file system operations
 import * as vscode from 'vscode';
@@ -154,8 +136,9 @@ async function createJsonEditor() {
     languageId,
     connection: {
       options: {
-        $type: 'WebSocketUrl',
-        url: 'ws://localhost:30000/sampleServer'
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
+        webSocketUrl: 'ws://localhost:30000/sampleServer'
       }
     },
     clientOptions: {
@@ -186,9 +169,9 @@ async function createJsonEditor() {
   const lcWrapper = new LanguageClientWrapper(languageClientConfig);
   const editorApp = new EditorApp(editorAppConfig);
 
-  // start editor app first, then language client
-  await editorApp.start(document.getElementById('monaco-editor-root')!);
+  // start language client first, then editor app
   await lcWrapper.start();
+  await editorApp.start(document.getElementById('monaco-editor-root')!);
 
   console.log('JSON editor with language client is ready!');
 }
@@ -250,8 +233,9 @@ Creates an in-memory file system so the editor has a "file" to work with. This i
 ```typescript
 connection: {
     options: {
-        $type: 'WebSocketUrl',
-        url: 'ws://localhost:30000/sampleServer'
+        $family: 'WebSocket',
+        realization: () => new LcWebSocket(),
+        webSocketUrl: 'ws://localhost:30000/sampleServer'
     }
 }
 ```
@@ -269,7 +253,7 @@ Congratulations! If everything worked as expected, then you've created your firs
 
 **Editor doesn't load**: Check browser console for errors. Ensure all dependencies are installed. Also if the language server is offline, this will block the editor & client from starting up.
 
-Also ensure that you have compatible versions of `monaco-languageclient` and any `@codingame/...` extensions you are using. If there's a discrepancy here your editor or language client integration likely won't work, and you may not see any errors in the console. See the [version compatibility table](versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for reference.
+Also ensure that you have compatible versions of `monaco-languageclient` and any `@codingame/...` extensions you are using. If there's a discrepancy here your editor or language client integration likely won't work, and you may not see any errors in the console. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for reference.
 
 **No language features**: Verify the language server is running and the WebSocket connection is successful.
 

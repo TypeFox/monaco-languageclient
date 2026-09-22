@@ -2,10 +2,19 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [11.0.0-next.2] - unrelease
+## [11.0.0] - unreleased
 
-- Updated all `@codingame/monaco-vscode` packages to `37.1.0`
-- Updated `vscode-languageclient` and `vscode-languageserver` to `10.1.0`, `vscode-languageserver-protocol` to `3.18.2` and `vscode-jsonrpc` to `9.0.1`.
+- **BREAKING**: Refactored `LanguageClientWrapper` connection handling around transport-specific connection realizations. Worker and WebSocket setup is now delegated to `LcWorker` and `LcWebSocket`.
+- **BREAKING**: Replaced the old `$type` based connection options (`WebSocketUrl`, `WebSocketParams`, `WebSocketDirect`, `WorkerConfig` and `WorkerDirect`) with `$family` based options that provide a `realization` factory.
+- **BREAKING**: Removed `LanguageClientRestartOptions` and `disposeWorker` from `LanguageClientConfig`. Use `connection.retryConfig` and `connection.options.disposeResources` instead.
+- **BREAKING**: `createUrl` now expects WebSocket URL configs to use `webSocketUrl` instead of `url`.
+- Added `LanguageClientWrapper#init`, allowing transports and workers to be initialized before the language client is started.
+- Added `ConnectionRetryConfig`, `LanguageClientConnectionRealization`, `LanguageClientConnectionSupport`, `LcWorker` and `LcWebSocket`.
+- Updated all `@codingame/monaco-vscode` packages to `37.1.0`.
+- Updated `vscode-languageclient` to `10.1.1` and `vscode-languageserver-protocol` to `3.18.3`.
+- Updated `vscode-ws-jsonrpc` to `4.0.0`.
+- Updated the required runtime engines to Node.js `>=22` and npm `>=10`.
+- Switched package compilation from `tsgo` to `tsc` version `7`.
 - Dropped eslint and rely fully on oxlint.
 
 ## [10.7.0] - 2026-02-04

@@ -59,6 +59,7 @@ describe('MonacoVscodeApiWrapper Tests', { concurrent: false, tags: ['main'] }, 
     let envEnhanced = getEnhancedMonacoEnvironment();
     expect(envEnhanced.vscodeApiGlobalInitAwait).toBeDefined();
     expect(envEnhanced.vscodeApiGlobalInitResolve).toBeDefined();
+    expect(envEnhanced.vscodeApiGlobalInitReject).toBeDefined();
     expect(envEnhanced.vscodeApiInitialised).toBeFalsy();
 
     // wait for the initial promise to complete and expect that api init was completed and is no longer ongoing
@@ -66,6 +67,8 @@ describe('MonacoVscodeApiWrapper Tests', { concurrent: false, tags: ['main'] }, 
     envEnhanced = getEnhancedMonacoEnvironment();
     expect(envEnhanced.vscodeApiGlobalInitAwait).toBeUndefined();
     expect(envEnhanced.vscodeApiGlobalInitResolve).toBeUndefined();
+    expect(envEnhanced.vscodeApiGlobalInitReject).toBeUndefined();
+    expect(envEnhanced.vscodeApiInitialising).toBeFalsy();
     expect(envEnhanced.vscodeApiInitialised).toBeTruthy();
     expect(envEnhanced.viewServiceType).toBe('EditorService');
     expect(apiWrapper.getMonacoVscodeApiConfig().workspaceConfig?.developmentOptions?.logLevel).toBe(LogLevel.Off);

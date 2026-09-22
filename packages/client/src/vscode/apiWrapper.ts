@@ -40,11 +40,21 @@ export class MonacoVscodeApiWrapper {
   private disposableStore: DisposableStore = new DisposableStore();
   private apiConfig: MonacoVscodeApiConfigRuntime;
 
-  constructor(apiConfig: MonacoVscodeApiConfig) {
+  constructor(apiConfig?: MonacoVscodeApiConfig) {
+    // ensure proper initialization of the API configuration even if provided apiConfig is undefined
     this.apiConfig = {
-      ...apiConfig,
-      serviceOverrides: apiConfig.serviceOverrides ?? {},
-      logLevel: apiConfig.logLevel ?? LogLevel.Off
+      $type: apiConfig?.$type ?? 'extended',
+      serviceOverrides: apiConfig?.serviceOverrides ?? {},
+      logLevel: apiConfig?.logLevel ?? LogLevel.Off,
+      viewsConfig: apiConfig?.viewsConfig ?? {
+        $type: 'EditorService'
+      },
+      workspaceConfig: apiConfig?.workspaceConfig,
+      userConfiguration: apiConfig?.userConfiguration,
+      envOptions: apiConfig?.envOptions,
+      extensions: apiConfig?.extensions,
+      monacoWorkerFactory: apiConfig?.monacoWorkerFactory,
+      advanced: apiConfig?.advanced
     };
     this.logger.setLevel(this.apiConfig.logLevel);
   }
@@ -68,8 +78,9 @@ export class MonacoVscodeApiWrapper {
   }
 
   private performErrorHandling = (message: string) => {
-    getEnhancedMonacoEnvironment().vscodeApiInitialising = false;
-    throw new Error(message);
+    const error = new Error(message);
+    this.markGlobalInitFailed(error);
+    throw error;
   };
 
   protected async configureHighlightingServices() {
@@ -306,19 +317,34 @@ export class MonacoVscodeApiWrapper {
     this.logger.debug('markGlobalInit');
 
     const envEnhanced = getEnhancedMonacoEnvironment();
-    envEnhanced.vscodeApiGlobalInitAwait = new Promise<void>((resolve) => {
+    envEnhanced.vscodeApiGlobalInitAwait = new Promise<void>((resolve, reject) => {
       envEnhanced.vscodeApiGlobalInitResolve = resolve;
+      envEnhanced.vscodeApiGlobalInitReject = reject;
     });
+    void envEnhanced.vscodeApiGlobalInitAwait.catch(() => undefined);
   }
 
   protected markGlobalInitDone() {
     const envEnhanced = getEnhancedMonacoEnvironment();
     envEnhanced.vscodeApiGlobalInitResolve?.();
 
+    envEnhanced.vscodeApiInitialising = false;
     envEnhanced.vscodeApiInitialised = true;
     envEnhanced.vscodeApiGlobalInitAwait = undefined;
     envEnhanced.vscodeApiGlobalInitResolve = undefined;
+    envEnhanced.vscodeApiGlobalInitReject = undefined;
     this.logger.debug('markGlobalInitDone');
+  }
+
+  protected markGlobalInitFailed(reason: unknown) {
+    const envEnhanced = getEnhancedMonacoEnvironment();
+    envEnhanced.vscodeApiGlobalInitReject?.(reason);
+
+    envEnhanced.vscodeApiInitialising = false;
+    envEnhanced.vscodeApiGlobalInitAwait = undefined;
+    envEnhanced.vscodeApiGlobalInitResolve = undefined;
+    envEnhanced.vscodeApiGlobalInitReject = undefined;
+    this.logger.debug('markGlobalInitFailed');
   }
 
   async start(startInstructions?: StartInstructions): Promise<void> {
@@ -330,36 +356,42 @@ export class MonacoVscodeApiWrapper {
         envEnhanced.vscodeApiInitialising = true;
         this.markGlobalInit();
 
-        // ensures "vscodeApiConfig.workspaceConfig" is available
-        this.configureWorkspaceConfig();
+        try {
+          // ensures "vscodeApiConfig.workspaceConfig" is available
+          this.configureWorkspaceConfig();
 
-        // ensure logging and development logging options are in-line
-        this.configureDevLogLevel();
-        this.logger.info(`Initializing monaco-vscode api. Caller: ${startInstructions?.caller ?? 'unknown'}`);
+          // ensure logging and development logging options are in-line
+          this.configureDevLogLevel();
+          this.logger.info(`Initializing monaco-vscode api. Caller: ${startInstructions?.caller ?? 'unknown'}`);
 
-        this.configureMonacoWorkers();
+          this.configureMonacoWorkers();
 
-        // ensure either classic (monarch) or textmate (extended) highlighting is used
-        await this.configureHighlightingServices();
+          // ensure either classic (monarch) or textmate (extended) highlighting is used
+          await this.configureHighlightingServices();
 
-        // ensure one of the three potential view services are configured
-        await this.configureViewsServices();
+          // ensure one of the three potential view services are configured
+          await this.configureViewsServices();
 
-        // enforce semantic highlighting if configured
-        this.configureSemanticHighlighting();
+          // enforce semantic highlighting if configured
+          this.configureSemanticHighlighting();
 
-        await this.initUserConfiguration();
+          await this.initUserConfiguration();
 
-        await this.initAllServices(startInstructions?.performServiceConsistencyChecks);
+          await this.initAllServices(startInstructions?.performServiceConsistencyChecks);
 
-        await this.applyViewsPostConfig();
+          await this.applyViewsPostConfig();
 
-        await this.initExtensions();
+          await this.initExtensions();
 
-        this.markGlobalInitDone();
-        this.logger.debug('Initialization of monaco-vscode api completed successfully.');
+          this.markGlobalInitDone();
+          this.logger.debug('Initialization of monaco-vscode api completed successfully.');
+        } catch (e) {
+          this.markGlobalInitFailed(e);
+          throw e;
+        }
       } else {
         this.logger.debug('Initialization of monaco-vscode api is already ongoing.');
+        await envEnhanced.vscodeApiGlobalInitAwait;
       }
     }
   }
