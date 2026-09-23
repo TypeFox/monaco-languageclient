@@ -1,6 +1,6 @@
 {
   "name": "@typefox/monaco-editor-react",
-  "version": "8.0.0-next.2",
+  "version": "8.0.0",
   "description": "React component for Monaco-Editor and Monaco Languageclient",
   "keywords": [
     "monaco-editor",
@@ -47,7 +47,7 @@
   "dependencies": {
     "@codingame/monaco-vscode-api": "^37.1.0",
     "@codingame/monaco-vscode-log-service-override": "^37.1.0",
-    "monaco-languageclient": "~11.0.0-next.2",
+    "monaco-languageclient": "~11.0.0",
     "react": ">=18.0.0 || <20.0.0"
   },
   "devDependencies": {
