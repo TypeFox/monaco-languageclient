@@ -2,13 +2,13 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2026.6.1] - unreleased
+## [2026.9.1] - 2026-09-23
 
-- **BREAKING**: Updated all examples to the `monaco-languageclient@11.0.0` connection realization based configuration model.
+- **BREAKING**: Updated all examples to the `monaco-languageclient@11.0.1` connection realization based configuration model.
 - Updated all `@codingame/monaco-vscode` packages to `37.1.0`.
-- Updated to `monaco-languageclient@11.0.0` and `@typefox/monaco-editor-react@8.0.0`.
+- Updated to `monaco-languageclient@11.0.1`, `vscode-ws-jsonrpc@4.0.1` and `@typefox/monaco-editor-react@8.0.1`.
 - Updated `langium` to `4.4.0` and added the MiniLogo Langium example.
-- Updated `vscode-languageclient` and `vscode-languageserver` to `10.1.1`, `vscode-languageserver-protocol` to `3.18.3` and `vscode-ws-jsonrpc` to `4.0.0`.
+- Updated `vscode-languageclient` and `vscode-languageserver` to `10.1.1`, `vscode-languageserver-protocol` to `3.18.3`.
 - Added the classic worker factory helpers used by examples that need classic workers.
 - Made the examples package private and split resource initialization into the separate `init` script.
 - Added the `start:server:statemachine` script.

@@ -1,6 +1,6 @@
 {
   "name": "monaco-languageclient",
-  "version": "11.0.0",
+  "version": "11.0.1",
   "description": "Monaco Language client implementation",
   "homepage": "https://github.com/TypeFox/monaco-languageclient/blob/main/packages/client/README.md",
   "bugs": {
@@ -113,7 +113,7 @@
     "vscode": "npm:@codingame/monaco-vscode-extension-api@^37.1.0",
     "vscode-languageclient": "~10.1.1",
     "vscode-languageserver-protocol": "~3.18.3",
-    "vscode-ws-jsonrpc": "~4.0.0"
+    "vscode-ws-jsonrpc": "~4.0.1"
   },
   "devDependencies": {
     "@codingame/monaco-vscode-standalone-css-language-features": "^37.1.0",
