@@ -12,7 +12,7 @@ The Monaco Language Client uses a layered configuration approach:
 
 ## Monaco VSCode API Config
 
-Independent of the type of configuration (`classic` or `extendend`), you have to configure and start the `MonacoVscodeApiWrapper` first. The most minimal comnfiguration you can apply is this:
+Independent of the type of configuration (`classic` or `extended`), you have to configure and start the `MonacoVscodeApiWrapper` first. The most minimal configuration you can apply is this:
 
 ```typescript
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
@@ -40,21 +40,21 @@ import { LogLevel } from '@codingame/monaco-vscode-api';
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'EditorService'
-    }
-    logLevel: LogLevel.Info,
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'EditorService'
+  },
+  logLevel: LogLevel.Info,
 
-    // User settings (like VSCode settings.json)
-    userConfiguration: {
-        json: JSON.stringify({
-            'workbench.colorTheme': 'Default Dark Modern'
-        })
-    },
+  // User settings (like VSCode settings.json)
+  userConfiguration: {
+    json: JSON.stringify({
+      'workbench.colorTheme': 'Default Dark Modern'
+    })
+  },
 
-    // specific features handled by web workers
-    monacoWorkerFactory: configureDefaultWorkerFactory
+  // specific features handled by web workers
+  monacoWorkerFactory: configureDefaultWorkerFactory
 };
 
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -72,16 +72,16 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'EditorService'
-    }
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'EditorService'
+  },
 
-    // Override specific services
-    serviceOverrides: {
-        ...getKeybindingsServiceOverride(),
-        ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
-    }
+  // Override specific services
+  serviceOverrides: {
+    ...getKeybindingsServiceOverride(),
+    ...getLocalizationServiceOverride(createDefaultLocaleConfiguration())
+  }
 };
 
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -93,39 +93,41 @@ await apiWrapper.start();
 You can also configure how the editor connects to language servers by setting connection & client options:
 
 ```typescript
-import { type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
+import { LcWebSocket, type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 const languageClientConfig: LanguageClientConfig = {
-    connection: {
-        options: {
-            // WebSocket connection to external server
-            $type: 'WebSocketUrl',
-            url: 'ws://localhost:3000/languageserver',
-            startOptions: {
-                onCall: (languageClient?: BaseLanguageClient) => {
-                  console.log(`Language running: ${languageClient?.isRunning()}`):
-                }
-                reportStatus: true
-            }
-        }
+  languageId: 'python',
+  connection: {
+    options: {
+      // WebSocket connection to external server
+      $family: 'WebSocket',
+      realization: () => new LcWebSocket(),
+      webSocketUrl: 'ws://localhost:3000/languageserver',
+      startOptions: {
+        onCall: (languageClient?: BaseLanguageClient) => {
+          console.log(`Language running: ${languageClient?.isRunning()}`);
+        },
+        reportStatus: true
+      }
+    }
+  },
+
+  clientOptions: {
+    // Which file extensions this language server handles
+    documentSelector: ['python'],
+
+    // Workspace configuration
+    workspaceFolder: {
+      index: 0,
+      name: 'my-project',
+      uri: vscode.Uri.file('/workspace')
     },
 
-    clientOptions: {
-        // Which file extensions this language server handles
-        documentSelector: ['python'],
-
-        // Workspace configuration
-        workspaceFolder: {
-            index: 0,
-            name: 'my-project',
-            uri: vscode.Uri.file('/workspace')
-        },
-
-        // Custom initialization options for the language server
-        initializationOptions: {
-            mySpecificLSOption: 'foo'
-        }
+    // Custom initialization options for the language server
+    initializationOptions: {
+      mySpecificLSOption: 'foo'
     }
+  }
 };
 
 const lcWrapper = new LanguageClientWrapper(languageClientConfig);
@@ -214,10 +216,11 @@ Different ways to connect to language servers:
 
 ```typescript
 connection: {
-    options: {
-        $type: 'WebSocketUrl',
-        url: 'ws://localhost:3000/languageserver'
-    }
+  options: {
+    $family: 'WebSocket',
+    realization: () => new LcWebSocket(),
+    webSocketUrl: 'ws://localhost:3000/languageserver'
+  }
 }
 ```
 
@@ -225,26 +228,29 @@ connection: {
 
 ```typescript
 connection: {
-    options: {
-        $type: 'WorkerConfig',
-        url: new URL('./language-server-worker.js', window.location.href),
-        // we suggest to use esm workers (=module)
-        type: 'module',
-        workerName: 'LanguageServerWorker'
-    }
+  options: {
+    $family: 'Worker',
+    realization: () => new LcWorker(),
+    workerUrl: new URL('./language-server-worker.js', window.location.href),
+    // we suggest to use esm workers (=module)
+    type: 'module',
+    workerName: 'LanguageServerWorker'
+  }
 }
 ```
 
-#### Direct Web Worker Connection
+#### Web Worker Customization
+
+Since `v11` it is no longer possible to pass a previously created Worker to the `LanguageClientWrapper`. But, it is possible to initialize the wrapper, get the worker, do something with it and then start the wrapper:
 
 ```typescript
-connection: {
-    options: {
-        $type: 'WorkerDirect',
-        // we suggest to use esm workers (=module)
-        worker: new Worker('./language-server.js', { type: 'module' })
-    }
-}
+const lcWrapper = new LanguageClientWrapper(config);
+await lcWrapper.init();
+const languageServerWorker = lcWrapper.getWorker();
+
+// do something
+
+await lcWrapper.start();
 ```
 
 ## Environment-Specific Configuration
@@ -271,10 +277,12 @@ You can configure multiple language clients for different file types:
 ```typescript
 // Eclipse JDT language client
 const javaConfig = {
+  languageId: 'java',
   connection: {
     options: {
-      $type: 'WebSocketUrl',
-      url: 'ws://localhost:3001/jdtls'
+      $family: 'WebSocket',
+      realization: () => new LcWebSocket(),
+      webSocketUrl: 'ws://localhost:3001/jdtls'
     }
   },
   clientOptions: {
@@ -284,10 +292,12 @@ const javaConfig = {
 
 // JSON language client
 const jsonConfig = {
+  languageId: 'json',
   connection: {
     options: {
-      $type: 'WebSocketUrl',
-      url: 'ws://localhost:3001/json'
+      $family: 'WebSocket',
+      realization: () => new LcWebSocket(),
+      webSocketUrl: 'ws://localhost:3001/json'
     }
   },
   clientOptions: {
@@ -295,8 +305,11 @@ const jsonConfig = {
   }
 };
 
+const lcWrapperJava = new LanguageClientWrapper(javaConfig);
+const lcWrapperJson = new LanguageClientWrapper(jsonConfig);
+
 // Initialize both
-await Promise.all([new LanguageClientWrapper().init(javaConfig), new LanguageClientWrapper().init(jsonConfig)]);
+await Promise.all([lcWrapperJava.start(), lcWrapperJson.start()]);
 ```
 
 ## Configuration Validation

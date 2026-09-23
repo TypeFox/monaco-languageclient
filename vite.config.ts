@@ -50,23 +50,7 @@ export const definedViteConfig = defineConfig({
     }
   },
   optimizeDeps: {
-    include: [
-      '@codingame/monaco-vscode-standalone-languages',
-      '@codingame/monaco-vscode-standalone-css-language-features',
-      '@codingame/monaco-vscode-standalone-html-language-features',
-      '@codingame/monaco-vscode-standalone-json-language-features',
-      '@codingame/monaco-vscode-standalone-typescript-language-features',
-      '@codingame/monaco-vscode-files-service-override',
-      '@testing-library/react',
-      'langium',
-      'langium/lsp',
-      'langium/grammar',
-      'vscode/localExtensionHost',
-      'vscode-jsonrpc',
-      'vscode-languageclient/browser',
-      'vscode-languageserver-protocol/browser',
-      'vscode-languageserver/browser'
-    ]
+    include: ['langium', 'langium/lsp', 'langium/grammar', 'vscode-languageserver/browser']
   },
   plugins: [
     {

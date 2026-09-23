@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { AbstractMessageReader, type DataCallback, Disposable, MessageReader } from 'vscode-jsonrpc';
-import type { IWebSocket } from 'vscode-ws-jsonrpc';
+import type { IWebSocket } from '../common/types.js';
 import { toSocket } from './connection.js';
 
 const isIWebSocket = (webSocket: WebSocket | IWebSocket): webSocket is IWebSocket => {

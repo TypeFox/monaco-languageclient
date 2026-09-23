@@ -8,9 +8,14 @@ import * as net from 'node:net';
 import * as stream from 'node:stream';
 import { Disposable, Message, MessageReader, MessageWriter } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter, StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import { type IWebSocket, type IWebSocketConnection, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
-import { DisposableCollection } from '../common/disposable.js';
-import type { IConnection } from '../common/types.js';
+import {
+  type IConnection,
+  type IWebSocket,
+  type IWebSocketConnection,
+  DisposableCollection,
+  WebSocketMessageReader,
+  WebSocketMessageWriter
+} from 'vscode-ws-jsonrpc';
 
 export function createServerProcess(
   serverName: string,

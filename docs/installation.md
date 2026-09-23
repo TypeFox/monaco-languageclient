@@ -6,14 +6,14 @@ This guide will help you get `monaco-languageclient` set up in your project.
 
 Before installing Monaco Language Client, ensure you have:
 
-- **Node.js 20.10.0 or higher**
-- **npm 10.2.3 or higher**
+- **Node.js 22 or higher**
+- **npm 10 or higher**
 - A web bundler (Vite, Webpack, etc.) that supports ES modules
 
 We recommend using a Node.js version manager such as [nvm](https://github.com/nvm-sh/nvm) or [mise](https://mise.jdx.dev/).
 
 > [!NOTE]
-> Previously we have recommended using Volta to manage your Node.js versions, but as of late it is currently [unmaintained](https://github.com/volta-cli/volta). We now recommend to use [mise-en-place](https://mise.jdx.dev/). We will phase out volta instructions in the `monaco-languageclient` in the future.
+> Previously we recommended using Volta to manage your Node.js versions, but it is currently [unmaintained](https://github.com/volta-cli/volta). We now recommend [mise-en-place](https://mise.jdx.dev/).
 
 You'll also need a project that you can use to install the `monaco-languageclient`. If you don't have one yet, you can get [started quickly by creating a new Vite project](https://vite.dev/guide/#scaffolding-your-first-vite-project) with React:
 
@@ -133,6 +133,9 @@ cd monaco-languageclient
 
 # Install dependencies
 npm install
+
+# Download additional files needed by some examples
+npm run init:examples
 
 # Run examples
 npm run dev

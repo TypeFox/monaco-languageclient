@@ -38,15 +38,15 @@ describe('Test LanguageClientWrapper', { tags: ['main'] }, () => {
     };
 
     try {
-      expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
-      expect(async () => await lcManager.start()).not.toThrowError();
-      expect(async () => await lcManager.dispose()).not.toThrowError();
+      expect(() => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+      await expect(lcManager.start()).resolves.toBeDefined();
+      await expect(lcManager.dispose()).resolves.toBeUndefined();
 
       await delayExecution(1000);
 
-      expect(async () => lcManager.setConfigs(lcConfigs)).not.toThrowError();
-      expect(async () => await lcManager.start()).not.toThrowError();
-      expect(async () => await lcManager.dispose()).not.toThrowError();
+      expect(() => lcManager.setConfigs(lcConfigs)).not.toThrowError();
+      await expect(lcManager.start()).resolves.toBeDefined();
+      await expect(lcManager.dispose()).resolves.toBeUndefined();
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
       console.error(`Unexpected error occurred: ${message}`);

@@ -18,7 +18,7 @@ If you use pnpm or yarn, you have to add `vscode` / `@codingame/monaco-vscode-ap
 
 To ensure all Monaco-related packages use a single, compatible version, you must add an override (for npm/pnpm) or resolution (for Yarn) to your `package.json`.
 
-**npm/pnpm (`package.json`):**s
+**npm/pnpm (`package.json`):**
 
 ```json
 {
@@ -50,13 +50,13 @@ Additionally, if you see a message in the browser console starting with `Another
 
 ### @codingame/monaco-vscode-editor-api / monaco-editor usage
 
-When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^37.1.0"` in you `package.json`. You can directly use it like so:
+When you use the libraries from this project you are no longer required to proxy `monaco-editor` like `"monaco-editor": "npm:@codingame/monaco-vscode-editor-api@^37.1.0"` in your `package.json`. You can directly use it like so:
 
 ```js
 import * as monaco from '@codingame/monaco-vscode-editor-api';
 ```
 
-If your dependency stack already contains a reference `monaco-editor` you must enforce the correct reference to `@codingame/monaco-vscode-editor-api` or you will have problems with mismatching code. Use`overrides` (npm/pnpm) or `resolutions` (yarn) to do so:
+If your dependency stack already contains a reference to `monaco-editor` you must enforce the correct reference to `@codingame/monaco-vscode-editor-api` or you will have problems with mismatching code. Use `overrides` (npm/pnpm) or `resolutions` (yarn) to do so:
 
 ```json
 "overrides": {
@@ -66,7 +66,7 @@ If your dependency stack already contains a reference `monaco-editor` you must e
 
 ### mise-en-place
 
-We use [mise-en-place](https://mise.jdx.dev/) for tool management. In the past we used Volta, but unfourtunately is has become unmaintained. We will phase out volta instructions in the future. In the repository root you find [mise.toml](../../mise.toml) which specifies all tools required with the correct versions. Use `mise upgrade` to install the required tools.
+We use [mise-en-place](https://mise.jdx.dev/) for tool management. In the past we used Volta, but unfortunately it has become unmaintained. In the repository root you find [mise.toml](../../mise.toml) which specifies all tools required with the correct versions. Use `mise upgrade` to install the required tools.
 
 ### Bad Polyfills
 
@@ -106,7 +106,7 @@ If the editor loads but language features (like IntelliSense, diagnostics, or ho
 
 ### Errors in Browser Console
 
-- **"Another version of monaco-vscode-api has already been loaded"**: This indicates a version mismatch between Monaco-related packages. See the [Dependency Issues](#dependency-issues) section for a solution.
+- **"Another version of monaco-vscode-api has already been loaded"**: This indicates a version mismatch between Monaco-related packages. See the [Dependency Version Mismatches](#dependency-version-mismatches) section for a solution.
 - **"Uncaught Error: Unexpected non-whitespace character after JSON at position 2"**: This is often caused by an outdated `buffer` polyfill. See the [Bad Polyfills](#bad-polyfills) section.
 
 ### Connection Issues
@@ -116,7 +116,7 @@ If the editor loads but language features (like IntelliSense, diagnostics, or ho
 If the client cannot connect to your WebSocket-based language server:
 
 1. **Server Status**: Verify the language server process is running and listening on the correct port and path.
-2. **URL Mismatch**: Double-check the `url` in your `WebSocketUrl` configuration.
+2. **URL Mismatch**: Double-check the `webSocketUrl` in your WebSocket connection configuration.
 3. **CORS**: Ensure your server's Cross-Origin Resource Sharing (CORS) policy allows connections from the origin your web application is served from.
 4. **Firewall/Proxy**: Check that no firewalls or network proxies are blocking the WebSocket connection.
 
@@ -151,7 +151,7 @@ export default defineConfig({
 
 ### Monaco-Editor and React
 
-We recommend you now use `typefox/monaco-editor-react`.
+We recommend you now use `@typefox/monaco-editor-react`.
 
 But if you need to use `@monaco-editor/react`, then add the `monaco-editor` import at the top of your editor component file [source](https://github.com/suren-atoyan/monaco-react#use-monaco-editor-as-an-npm-package):
 

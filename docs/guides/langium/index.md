@@ -6,5 +6,5 @@ These guides assume you have already read the [Getting Started](../getting-start
 
 For a concrete, runnable example of all the concepts covered in these guides, see the [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository. It demonstrates a complete Langium DSL running in the browser with Monaco, using the [`langium-minilogo`](https://github.com/TypeFox/langium-minilogo) package.
 
-- [Running a Langium DSL in the Browser](/docs/guides/langium/running-langium-ls-in-browser.md) goes over how to get a Langium-based DSL working in the web with the monaco-languageclient. Effectively this goes over how to prepare & bundle a Langium-based DSL's language server, so it can be run in a web worker & connected to.
+- [Running a Langium DSL in the Browser](./running-langium-ls-in-browser.md) goes over how to get a Langium-based DSL working in the web with the monaco-languageclient. Effectively this goes over how to prepare & bundle a Langium-based DSL's language server, so it can be run in a web worker & connected to.
 - [Custom Notifications and Requests with Langium Language Servers](./custom-notifications-requests.md) goes over how to interface with your language server to handle and send custom notifications & requests. This is useful for doing things like generation in the web.

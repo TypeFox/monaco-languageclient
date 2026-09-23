@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import { createMessageConnection, type Logger, type MessageConnection } from 'vscode-jsonrpc';
-import { ConsoleLogger, type IWebSocket } from 'vscode-ws-jsonrpc';
+import type { IWebSocket } from '../common/types.js';
+import { ConsoleLogger } from '../common/logger.js';
 import { WebSocketMessageReader } from './reader.js';
 import { WebSocketMessageWriter } from './writer.js';
 
@@ -19,11 +20,16 @@ export function createWebSocketConnection(socket: IWebSocket, logger: Logger): M
 export function listen(options: { webSocket: WebSocket; logger?: Logger; onConnection: (connection: MessageConnection) => void }) {
   const { webSocket, onConnection } = options;
   const logger = options.logger ?? new ConsoleLogger();
-  webSocket.onopen = () => {
+  const createConnection = () => {
     const socket = toSocket(webSocket);
     const connection = createWebSocketConnection(socket, logger);
     onConnection(connection);
   };
+  if (webSocket.readyState === WebSocket.OPEN) {
+    createConnection();
+  } else {
+    webSocket.onopen = createConnection;
+  }
 }
 
 export function toSocket(webSocket: WebSocket): IWebSocket {
@@ -34,10 +40,11 @@ export function toSocket(webSocket: WebSocket): IWebSocket {
       webSocket.onmessage = (event) => cb(event.data);
     },
     onError: (cb) => {
-      // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-      webSocket.onerror = (event: any) => {
-        if (Object.hasOwn(event, 'message')) {
-          cb(event.message);
+      webSocket.onerror = (event) => {
+        if (event instanceof ErrorEvent) {
+          cb(event.error ?? event.message);
+        } else {
+          cb(event);
         }
       };
     },

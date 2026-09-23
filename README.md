@@ -1,7 +1,7 @@
 # Monaco Language Client, VSCode WebSocket Json RPC, Monaco Editor React and examples
 
 [![Github Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://typefox.github.io/monaco-languageclient)
-[![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/actions.yml)
+[![monaco-languageclient](https://github.com/TypeFox/monaco-languageclient/actions/workflows/main.yml/badge.svg)](https://github.com/TypeFox/monaco-languageclient/actions/workflows/main.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/TypeFox/monaco-languageclient/labels/help%20wanted)
 <br>
 [![monaco-languageclient Version](https://img.shields.io/npm/v/monaco-languageclient?logo=npm&label=monaco-languageclient)](https://www.npmjs.com/package/monaco-languageclient)
@@ -11,12 +11,12 @@
 [![monaco-editor-react Version](https://img.shields.io/npm/v/@typefox/monaco-editor-react?logo=npm&label=@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 [![monaco-editor-react Downloads](https://img.shields.io/npm/dt/@typefox/monaco-editor-react)](https://www.npmjs.com/package/@typefox/monaco-editor-react)
 
-This repository now host multiple npm packages under one roof:
+This repository hosts multiple packages under one roof:
 
 - [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) to connect [Monaco editor](https://microsoft.github.io/monaco-editor/) with [language servers](https://microsoft.github.io/language-server-protocol/).
 - [vscode-ws-jsonrpc](https://www.npmjs.com/package/vscode-ws-jsonrpc) which implements communication between a jsonrpc client and server over WebSocket.
-- [monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) makes editor and languageclient available within a react component.
-- [monaco-languageclient-examples](https://www.npmjs.com/package/monaco-languageclient-examples) provides the examples which allows to use them externally.
+- [@typefox/monaco-editor-react](https://www.npmjs.com/package/@typefox/monaco-editor-react) makes editor and language client available within a React component.
+- [monaco-languageclient-examples](./packages/examples) provides the examples used in this repository and by the verification projects.
 
 The examples not requiring a backend are now available [via GitHub Pages](https://typefox.github.io/monaco-languageclient).<br>
 
@@ -36,6 +36,7 @@ The examples not requiring a backend are now available [via GitHub Pages](https:
       - [Cpp / Clangd (Location)](#cpp--clangd-location)
       - [Application Playground (Location)](#application-playground-location)
       - [Langium grammar DSL (Location)](#langium-grammar-dsl-location)
+      - [Langium MiniLogo DSL (Location)](#langium-minilogo-dsl-location)
       - [Statemachine DSL (created with Langium) (Location)](#statemachine-dsl-created-with-langium-location)
       - [Browser example (Location)](#browser-example-location)
       - [Purely monaco-editor related examples](#purely-monaco-editor-related-examples)
@@ -57,7 +58,7 @@ Since `monaco-languageclient` version 10 we started to build an [official docume
 
 ### Migration Guide
 
-We added a [migration guide](./docs/migration.md) with the release of `monaco-languageclient` version `10`.
+We maintain a [migration guide](./docs/migration.md) for major version upgrades.
 
 ## Changelogs, current versions and compatibility table
 
@@ -72,19 +73,20 @@ Important Project changes and notes about the project's history are found [here]
 
 These are the current versions of packages from this repository and their alignment with **@codingame/monaco-vscode-api** **monaco-editor** and **vscode**:
 
-- **monaco-languageclient**: `11.0.0-next.2` (release date: unreleased)
-- **@typefox/monaco-editor-react**: `8.0.0-next.2` (release date: unreleased)
+- **monaco-languageclient**: `11.0.0` (release date: unreleased)
+- **@typefox/monaco-editor-react**: `8.0.0` (release date: unreleased)
+- **monaco-languageclient-examples**: private package
 - Aligned with:
   - **@codingame/monaco-vscode-[editor]-api**: `37.1.0`
   - **vscode**: `1.138.0`
   - **monaco-editor**: `0.56.0`
-- **vscode-ws-jsonrpc**: `4.0.0-next.2` (release date: unreleased)
+- **vscode-ws-jsonrpc**: `4.0.0` (release date: unreleased)
 
-Check find the [full compatibility table](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) with all previous versions.
+Find the [full compatibility table](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) with all previous versions.
 
 ## Getting started
 
-We recommend [mise-en-place](https://mise.jdx.dev/) to setup corrects version of required tools like `node` and `npm` (described [here](./docs/guides/troubleshooting.md#mise-en-place)). If you have `mise` installed use the optional isntruction below.
+We recommend [mise-en-place](https://mise.jdx.dev/) to set up correct versions of required tools like `node` and `npm` (described [here](./docs/guides/troubleshooting.md#mise-en-place)). If you have `mise` installed, use the optional instruction below.
 
 On your local machine you can prepare your dev environment as follows. At first it is advised to build everything. Locally, from a terminal do:
 
@@ -112,9 +114,9 @@ npm run dev
 npm run dev:debug
 ```
 
-As this is a npm workspace the main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the childe packages like `npm run build:examples`.
+As this is a npm workspace, the main [package.json](./package.json) contains script entries applicable to the whole workspace like `watch`, `build` and `lint`, but it also contains shortcuts for launching scripts from the child packages like `npm run build:examples`.
 
-If you want to change the libries and see this reflected directly, then you need to run the watch command that compiles all TypeScript files form both libraries and the examples:
+If you want to change the libraries and see this reflected directly, run the watch command that compiles all TypeScript files from the libraries and the examples:
 
 ```shell
 npm run watch
@@ -130,10 +132,10 @@ Please look at the respective section in the packages:
 
 ## Examples Overview
 
-The examples demonstrate mutliple things:
+The examples demonstrate multiple things:
 
-- How `monaco-languageclient` is use by `monaco-edtior-wrapper` or `@typefox/monaco-editor-react` to have an editor that is connected to a language server either running in the browser in a web worker or `vscode-ws-jsonrpc`. is used to an external process via web-socket.
-- How different language servers can be intergrated in a common way, so they can communicate via web-socket to the front-end running in the browser.
+- How `monaco-languageclient` and `@typefox/monaco-editor-react` can provide an editor connected to a language server that runs either in a browser worker or in an external process via WebSocket and `vscode-ws-jsonrpc`.
+- How different language servers can be integrated in a common way, so they can communicate via WebSocket with the front-end running in the browser.
 
 ### Main Examples
 
@@ -159,11 +161,11 @@ The **groovy-client** contains the [editor app](./packages/examples/src/groovy/c
 The **java-server** runs an external [Java app](./packages/examples/src/eclipse.jdt.ls/server/main.ts) where web sockets are used to enable communication between the language server process and the client web application ([Java Language Server](#java-language-server)).
 The **java-client** contains the [editor app](./packages/examples/src/eclipse.jdt.ls/client/main.ts) which connects to the language server and therefore requires the node server app to be run in parallel.
 
-Langium examples (here client and server communicate via `vscode-languageserver-protocol/browser` instead of a web socket used in the three examples above
+Langium examples communicate via `vscode-languageserver-protocol/browser` instead of the WebSocket setup used in the server-backed examples above.
 
 #### Cpp / Clangd ([Location](./packages/examples/src/clangd))
 
-It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [langauge server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser. <b>Heads up:</b> This is a prototype and still evolving.
+It contains both the [language client](./packages/examples/src/clangd/client/main.ts) and the [language server (web worker)](./packages/examples/src/clangd/worker/clangd-server.ts). The clangd language server is compiled to wasm so it can be executed in the browser. <b>Heads up:</b> This is a prototype and still evolving.
 
 #### Application Playground ([Location](./packages/examples/src/appPlayground))
 
@@ -171,11 +173,15 @@ This [example](./packages/examples/src/appPlayground/launcher.ts) uses the view 
 
 #### Langium grammar DSL ([Location](./packages/examples/src/langium/langium-dsl))
 
-It contains both the [language client](./packages/examples/src/langium/langium-dsl/wrapperLangium.ts) and the [langauge server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts). Here you can chose beforehand if the wrapper should be started in classic or extended mode.
+It contains both the [language client](./packages/examples/src/langium/langium-dsl/main.ts) and the [language server (web worker)](./packages/examples/src/langium/langium-dsl/worker/langium-server.ts).
+
+#### Langium MiniLogo DSL ([Location](./packages/examples/src/langium/langium-dsl/minilogo))
+
+It contains both the [language client](./packages/examples/src/langium/langium-dsl/minilogo/main.ts) and a worker-based MiniLogo language server from `langium-minilogo`.
 
 #### Statemachine DSL (created with Langium) ([Location](./packages/examples/src/langium/statemachine))
 
-It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [langauge server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
+It contains both the [language client](./packages/examples/src/langium/statemachine/main.ts) and the [language server (web worker)](./packages/examples/src/langium/statemachine/worker/statemachine-server.ts).
 It is also possible to use a [@typefox/monaco-editor-react app](./packages/examples/src/langium/statemachine/main-react.tsx) to connect to the server.
 
 #### Browser example ([Location](./packages/examples/src/browser))
@@ -220,15 +226,13 @@ For the **java-client** example you need to ensure the **java-server** example i
 
 ### Verification Examples & Usage
 
-None of the verification examples is part of the npm workspace. Some bring substantial amount of npm dependencies that pollute the main node_modules dependencies and therefore these examples need to be build and started independently. All verifaction examples re-uses the code form the json client example and therefore require the json server to be started.
-
-- [vite verification example](./verify/vite) demonstrates how bundling can be achieved with vite. There is no configuration required Please do: `cd verify/vite && npm run verify`. It serves the client here: <http://localhost:8081>.
+None of the verification examples is part of the npm workspace. Some bring a substantial amount of npm dependencies that would pollute the main `node_modules` dependencies and therefore these examples need to be built and started independently.
 
 - [webpack verification example](./verify/webpack) demonstrates how bundling can be achieved with webpack. You find the configuration here: [webpack.config.js](./verify/webpack/webpack.config.js). Please do: `cd verify/webpack && npm run verify`. It serves the client here: <http://localhost:8082>.
 
 - [Next.js verification example](./verify/next): demonstrates how to use `@typefox/monaco-editor-react` with Next.js, Please do: `cd verify/next && npm run verify`. It serves the client here: <http://localhost:8083>.
 
-- [Angular verification example](./verify/angular): If you want to test it, Please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:8084>. **Important**: `monaco-languageclient` currently does not support the angular build as it breaks the development and produstion build. We therefore use `@analogjs/vite-plugin-angular` which relies on vite.
+- [Angular verification example](./verify/angular): If you want to test it, please do: `cd verify/angular && npm run verify`. It serves the client here: <http://localhost:8084>. **Important**: `monaco-languageclient` currently does not support the Angular build as it breaks the development and production build. We therefore use `@analogjs/vite-plugin-angular` which relies on Vite.
 
 ### VSCode integration
 
@@ -238,7 +242,6 @@ You can as well run [vscode tasks](./.vscode/launch.json) to start and debug the
 
 - JSONA Editor: [Showcase](https://jsona.github.io/editor/schema) ([GitHub](https://github.com/jsona/editor))
 - Clangd in Browser: [Showcase](https://clangd.guyutongxue.site/) ([GitHub](https://github.com/Guyutongxue/clangd-in-browser))
-- Langium minilogo using monaco-editor-wrapper: [Showcase](https://langium.org/showcase/minilogo/) ([GitHub](https://github.com/TypeFox/monaco-components))
 
 ## Troubleshooting
 

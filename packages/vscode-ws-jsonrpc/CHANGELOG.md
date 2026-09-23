@@ -2,10 +2,16 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [4.0.0-next.2] - unreleased
+## [4.0.0] - unreleased
 
+- **BREAKING**: Removed the `socket` sub-export and moved socket exports to the main package export. The only remaining sub-export is `server`.
+- **BREAKING**: Reworked the internal file layout. `disposable` and `logger` moved to `common`, and shared connection/socket interfaces are now exported directly via the index.
+- Consolidated server-side helpers in the `server` export, including process, socket, stream and WebSocket connection helpers.
+- Added browser socket helpers `listen` and `toSocket`.
+- Updated `vscode-jsonrpc` to `9.0.2`.
+- Updated the required runtime engines to Node.js `>=22` and npm `>=10`.
+- Switched package compilation from `tsgo` to `tsc` version `7`.
 - Dropped eslint and rely fully on oxlint.
-- Updatde `vscode-jsonrpc` to `9.0.2`.
 
 ## [3.5.0] - 2025-08-11
 
