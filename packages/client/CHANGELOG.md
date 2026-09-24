@@ -2,7 +2,17 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [11.0.0] - unreleased
+## [11.0.2] - 2026-09-24
+
+- Corrected code snippets in README.md and fixed typos.
+- Updated to `vscode-ws-jsonrpc@4.0.2`.
+
+## [11.0.1] - 2026-09-23
+
+- Fixed publishing
+- Updated to `vscode-ws-jsonrpc@4.0.1`.
+
+## [11.0.0] - 2026-09-23
 
 - **BREAKING**: Refactored `LanguageClientWrapper` connection handling around transport-specific connection realizations. Worker and WebSocket setup is now delegated to `LcWorker` and `LcWebSocket`.
 - **BREAKING**: Replaced the old `$type` based connection options (`WebSocketUrl`, `WebSocketParams`, `WebSocketDirect`, `WorkerConfig` and `WorkerDirect`) with `$family` based options that provide a `realization` factory.

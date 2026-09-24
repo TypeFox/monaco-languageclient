@@ -2,7 +2,15 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [4.0.0] - unreleased
+## [4.0.2] - 2026-09-24
+
+- Corrected code snippets in README.md and fixed typos.
+
+## [4.0.1] - 2026-09-23
+
+- Fixed publishing
+
+## [4.0.0] - 2026-09-23
 
 - **BREAKING**: Removed the `socket` sub-export and moved socket exports to the main package export. The only remaining sub-export is `server`.
 - **BREAKING**: Reworked the internal file layout. `disposable` and `logger` moved to `common`, and shared connection/socket interfaces are now exported directly via the index.

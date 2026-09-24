@@ -13,7 +13,7 @@ All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-langu
 
 ## Official documentation, quick start and examples
 
-This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient).
+This npm package is part of the [monaco-languageclient monorepo](https://github.com/TypeFox/monaco-languageclient).
 
 You find detailed information in the [official documentation](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/index.md).
 
@@ -21,11 +21,11 @@ If interested, check [quick start for local development](https://github.com/Type
 
 A detailed list of examples is contained in the GitHub repository, please see [this listing](https://github.com/TypeFox/monaco-languageclient#examples-overview).
 
-## Version 10: A toolbox for language client applications
+## A toolbox for language client applications
 
-Since Version 2 this library relied on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the VSCode API (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)). `monaco-vscode-api` has evolved substantially since then and thesedays provides 100+ packages with additional services, default extensions and language packs allowing you to create VSCode Web compatible applications.
+Since Version 2 this library relied on [@codingame/monaco-vscode-api](https://github.com/CodinGame/monaco-vscode-api) to supply the VSCode API (see [Important Project Changes](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/versions-and-history.md#important-project-changes)). `monaco-vscode-api` has evolved substantially since then and these days provides 100+ packages with additional services, default extensions and language packs allowing you to create VSCode Web compatible applications.
 
-Since `monaco-langaugeclient` version `10` all building blocks for complete web applications are contained in this package. The biggest deviation from the previous major versions is that the handling of monaco-vscode-api, the handling of language clients and the single editor app functionality are now very clearly separated. Instead of supplying an independent npm module (monaco-editor-wrapper), almost all useful pieces of code were moved here and the different functionalities are exposed via domain specific sub-exports:
+Since `monaco-languageclient` version `10`, all building blocks for complete web applications have been contained in this package. The biggest deviation from the previous major versions is that the handling of monaco-vscode-api, the handling of language clients and the single editor app functionality are now very clearly separated. Instead of supplying an independent npm module (monaco-editor-wrapper), almost all useful pieces of code were moved here and the different functionalities are exposed via domain-specific sub-exports:
 
 - **vscodeApiWrapper**: Contains MonacoVscodeApiWrapper used to handle everything regarding monaco-vscode-api
 - **lcwrapper**: LanguageClientWrapper & LanguageClientsManager help to control one or multiple language clients
@@ -33,7 +33,7 @@ Since `monaco-langaugeclient` version `10` all building blocks for complete web 
 
 ### Usage
 
-The `monaco-vscode-api` initialization and start-up can only and must been only done once within an applications' lifecycle. Everything else cab be repeated. If you use TypeScript all configuration is fully typed.
+The `monaco-vscode-api` initialization and start-up can and must be done only once within an application's lifecycle. Everything else can be repeated. If you use TypeScript, all configuration is fully typed.
 
 ```typescript
 import * as vscode from 'vscode';
@@ -68,14 +68,15 @@ async function createEditorAndLanguageClient() {
     languageId: languageId,
     connection: {
       options: {
-        $type: 'WebSocketUrl',
+        family: 'WebSocket'
+        realization: () => new LcWebSocket(),
         // at this url the language server for myLang must be reachable
         url: 'ws://localhost:30000/myLangLS'
       }
     },
     clientOptions: {
       documentSelector: [languageId],
-      orkspaceFolder: {
+      workspaceFolder: {
         index: 0,
         name: 'workspace',
         uri: vscode.Uri.file('/workspace')
@@ -86,7 +87,7 @@ async function createEditorAndLanguageClient() {
   // editor app / monaco-editor configuration
   const editorAppConfig: EditorAppConfig = {
     codeResources: {
-      main: {
+      modified: {
         text: code,
         uri: codeUri
       }

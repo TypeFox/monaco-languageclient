@@ -69,6 +69,7 @@ You can also override VSCode services to customize their behavior. For example, 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
@@ -93,6 +94,8 @@ await apiWrapper.start();
 You can also configure how the editor connects to language servers by setting connection & client options:
 
 ```typescript
+import * as vscode from 'vscode';
+import { BaseLanguageClient } from 'vscode-languageclient/browser';
 import { LcWebSocket, type LanguageClientConfig, LanguageClientWrapper } from 'monaco-languageclient/lcwrapper';
 
 const languageClientConfig: LanguageClientConfig = {
@@ -139,6 +142,7 @@ await lcWrapper.start();
 Classic Mode uses the standard Monaco Editor with language client features added in:
 
 ```typescript
+import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
@@ -194,6 +198,7 @@ userConfiguration: {
 In most cases you'll need to setup an in-memory or remote file system for the editor to work with.
 
 ```typescript
+import * as vscode from 'vscode';
 import {
   RegisteredFileSystemProvider,
   RegisteredMemoryFile,
@@ -215,6 +220,8 @@ Different ways to connect to language servers:
 #### WebSocket Connection
 
 ```typescript
+import { LcWebSocket } from 'monaco-languageclient/lcwrapper';
+
 connection: {
   options: {
     $family: 'WebSocket',
@@ -227,6 +234,8 @@ connection: {
 #### Worker Config
 
 ```typescript
+import { LcWorker } from 'monaco-languageclient/lcwrapper';
+
 connection: {
   options: {
     $family: 'Worker',

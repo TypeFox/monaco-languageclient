@@ -5,20 +5,18 @@ permissions:
   id-token: write
 
 on:
-  push:
-    branches:
-      - 'release'
-    tags:
-      - '*-*.*.*'
-    paths:
-      - '.github/workflows/**/*'
-      - '**/package.json'
   workflow_dispatch:
     inputs:
       dry-run:
         description: 'Dry run'
         required: true
-        default: 'false'
+        default: false
+        type: boolean
+      npm-tag:
+        description: 'Tag override for npm publish'
+        required: true
+        default: 'latest'
+        type: string
 
 jobs:
   publish_oidc:
@@ -65,7 +63,7 @@ jobs:
         uses: TypeFox/gh-publish-npm@7183224bef010236e419a2367208633ff284337a # v0.5.0
         with:
           dry-run: ${{ github.event.inputs.dry-run }}
-          npm-tag: 'next'
+          npm-tag: ${{ github.event.inputs.npm-tag }}
           verbose: true
           npm-packages: |
             packages/vscode-ws-jsonrpc

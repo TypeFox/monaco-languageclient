@@ -8,7 +8,7 @@ All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-langu
 
 ## Getting Started
 
-This is npm package is part of the <https://github.com/TypeFox/monaco-languageclient> mono repo. Please follow the main repositories [instructions](https://github.com/TypeFox/monaco-languageclient#getting-started) to get started with local development.
+This npm package is part of the <https://github.com/TypeFox/monaco-languageclient> monorepo. Please follow the main repository's [instructions](https://github.com/TypeFox/monaco-languageclient#getting-started) to get started with local development.
 
 ## Usage
 
@@ -22,7 +22,7 @@ const webSocket = new WebSocket('ws://www.example.com/socketserver');
 listen({
   webSocket,
   onConnection: (connection: MessageConnection) => {
-    const notification = new rpc.NotificationType<string, void>('testNotification');
+    const notification = new NotificationType<string, void>('testNotification');
     connection.listen();
     connection.sendNotification(notification, 'Hello World');
   }
