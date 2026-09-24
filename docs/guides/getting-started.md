@@ -47,7 +47,7 @@ If you're following along using Vite with the React TS template, you can add thi
 
 We can rely on an extension package that provides JSON language client support for the Monaco VSCode API, and giving us syntax highlighting as well. You can install it via npm.
 
-Use the `@codingame/monaco-vscode-*` package version that matches your `monaco-languageclient` version. For `monaco-languageclient` version `11.0.1`, use `@codingame/monaco-vscode-*` packages from major version `37`. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for which versions to use.
+Use the `@codingame/monaco-vscode-*` package version that matches your `monaco-languageclient` version. For `monaco-languageclient` version `11.0.2`, use `@codingame/monaco-vscode-*` packages from major version `37`. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for which versions to use.
 
 ```shell
 npm install @codingame/monaco-vscode-json-default-extension@^37.1.0

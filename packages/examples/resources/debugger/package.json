@@ -1,6 +1,6 @@
 {
   "name": "graalpy-debugger",
-  "version": "2026.9.1",
+  "version": "2026.9.2",
   "description": "Monaco Language client Graalpy Debugger",
   "license": "MIT",
   "author": {
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "express": "~5.2.1",
-    "monaco-languageclient": "~11.0.1",
+    "monaco-languageclient": "~11.0.2",
     "ws": "~8.21.0"
   },
   "devDependencies": {

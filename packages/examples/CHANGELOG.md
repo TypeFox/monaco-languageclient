@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [2026.9.2] - 2026-09-24
+
+- Updated to `monaco-languageclient@11.0.2`, `vscode-ws-jsonrpc@4.0.2` and `@typefox/monaco-editor-react@8.0.2`.
+
 ## [2026.9.1] - 2026-09-23
 
 - **BREAKING**: Updated all examples to the `monaco-languageclient@11.0.1` connection realization based configuration model.

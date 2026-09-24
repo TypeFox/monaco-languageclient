@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [4.0.2] - 2026-09-24
+
+- Corrected code snippets in README.md and fixed typos.
+
 ## [4.0.1] - 2026-09-23
 
 - Fixed publishing
