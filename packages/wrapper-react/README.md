@@ -1,6 +1,6 @@
 # React component for Monaco-Editor and Monaco Languageclient
 
-This packages provides a React component that wraps the functionality of [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) and all its tools.
+This package provides a React component that wraps the functionality of [monaco-languageclient](https://www.npmjs.com/package/monaco-languageclient) and all its tools.
 
 ## CHANGELOG
 
@@ -8,7 +8,7 @@ All changes are noted in the [CHANGELOG](https://github.com/TypeFox/monaco-langu
 
 ## Official documentation, quick start and examples
 
-This is npm package is part of the [monaco-languageclient mono repo](https://github.com/TypeFox/monaco-languageclient).
+This npm package is part of the [monaco-languageclient monorepo](https://github.com/TypeFox/monaco-languageclient).
 
 You find detailed information in the [official documentation](https://github.com/TypeFox/monaco-languageclient/blob/main/docs/index.md).
 
@@ -18,16 +18,16 @@ A detailed list of examples is contained in the GitHub repository, please see [t
 
 ## Usage
 
-You can import the monaco react component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The react component uses the same configuration objects you using `monaco-languageclient` directly with TypeScript/JavaScript.
+You can import the Monaco React component for easy use in an existing React project. Below you can see a quick example of a fully functional implementation in TypeScript. The React component uses the same configuration objects as `monaco-languageclient` directly with TypeScript/JavaScript.
 
-The language client on start can connect to a language server either via jsonrpc over a websocket to an exernal server process, or directly in the browser where the language server runs in a web worker. In both cases they use the Language Server Protocol to communicate. The react component is limited to one language client per component.
+On start, the language client can connect to a language server either via JSON-RPC over a WebSocket to an external server process, or directly in the browser where the language server runs in a web worker. In both cases, they use the Language Server Protocol to communicate. The React component is limited to one language client per component.
 
 ```tsx
 import * as vscode from 'vscode';
 // Import Monaco Language Client components
 import { configureDefaultWorkerFactory } from 'monaco-languageclient/workerFactory';
 import type { MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import type { LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
+import { LcWebSocket, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 import type { EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import React from 'react';
@@ -58,14 +58,15 @@ export const createEditorAndLanguageClient = async () => {
     languageId,
     connection: {
       options: {
-        $type: 'WebSocketUrl',
+        family: 'WebSocket'
+        realization: () => new LcWebSocket(),
         // at this url the language server for myLang must be reachable
         url: 'ws://localhost:30000/myLangLS'
       }
     },
     clientOptions: {
       documentSelector: [languageId],
-      orkspaceFolder: {
+      workspaceFolder: {
         index: 0,
         name: 'workspace',
         uri: vscode.Uri.file('/workspace')
@@ -76,7 +77,7 @@ export const createEditorAndLanguageClient = async () => {
   // editor app / monaco-editor configuration
   const editorAppConfig: EditorAppConfig = {
     codeResources: {
-      main: {
+      modified: {
         text: code,
         uri: codeUri
       }

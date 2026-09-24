@@ -25,7 +25,7 @@ Version `10` used `$type` to describe the transport:
 - `WorkerConfig`
 - `WorkerDirect`
 
-Version `11` uses `$family` and a connection realization factory instead. The built-in realizations are `LcWebSocket` and `LcWorker`, exported from `monaco-languageclient/lcwrapper`. With `v11` both direct connection transports (`WebSocketDirect` and `WorkerDirect`) were dropped, beacuse pre-configured worker or web socket prevent configuration changes regarding message readers and message writers.
+Version `11` uses `$family` and a connection realization factory instead. The built-in realizations are `LcWebSocket` and `LcWorker`, exported from `monaco-languageclient/lcwrapper`. With `v11` both direct connection transports (`WebSocketDirect` and `WorkerDirect`) were dropped, because pre-configured workers or WebSockets prevent configuration changes regarding message readers and message writers.
 The `LanguageClientConnectionRealization` interface was extracted to allow other connection realizations in the future.
 
 #### WebSocket URL connections
@@ -154,7 +154,11 @@ As mentioned before, `WorkerDirect` was removed. If you previously supplied an a
 
 ### Resource disposal and restart behavior
 
-Version `10` configured restart and worker disposal on `LanguageClientConfig`:
+Version `10` configured restart and worker disposal on `LanguageClientConfig` and version `11` moves those concerns into the connection configuration:
+
+<table>
+<tr><th>v10</th><th>v11</th></tr>
+<tr><td>
 
 ```ts
 const languageClientConfig: LanguageClientConfig = {
@@ -168,7 +172,7 @@ const languageClientConfig: LanguageClientConfig = {
 };
 ```
 
-Version `11` moves those concerns into the connection configuration:
+</td><td>
 
 ```ts
 const languageClientConfig: LanguageClientConfig = {
@@ -181,15 +185,14 @@ const languageClientConfig: LanguageClientConfig = {
       disposeOnRestart: false
     },
     options: {
-      $family: 'Worker',
-      realization: () => new LcWorker(),
-      workerUrl: new URL('./worker/my-language-server.ts', import.meta.url),
-      type: 'module',
-      disposeResources: true
+      ...
     }
   }
 };
 ```
+
+</td></tr>
+</table>
 
 Use `disposeResources` to control whether the connection realization owns and disposes the underlying worker or WebSocket resource. The restart behaviour implementation itself was not changed.
 
@@ -280,18 +283,18 @@ import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-langu
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-languageclient/lcwrapper';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
-    $type: 'extended',
-    viewsConfig: {
-        $type: 'EditorService'
-    }.
-    // ...
+  $type: 'extended',
+  viewsConfig: {
+    $type: 'EditorService'
+  }
+  // ...
 };
 const languageClientConfig: LanguageClientConfig = {
-    languageId: myLang,
-    // ...
+  languageId: myLang
+  // ...
 };
 const editorAppConfig: EditorAppConfig = {
-    // ...
+  // ...
 };
 
 const apiWrapper = new MonacoVscodeApiWrapper(vscodeApiConfig);
@@ -308,11 +311,11 @@ await editorApp.start(htmlContainer);
 </td></tr>
 </table>
 
-The content and scope configuration objects `MonacoVscodeApiConfig`, `LanguageClientConfig` and `EditorAppConfig` changed sligthly compared to their counter parts in the previous version. The differences are explained in the following chapters.
+The content and scope configuration objects `MonacoVscodeApiConfig`, `LanguageClientConfig` and `EditorAppConfig` changed slightly compared to their counterparts in the previous version. The differences are explained in the following chapters.
 
 ## MonacoVscodeApiConfig
 
-`MonacoVscodeApiConfig` containes all things that were previously part of `vscodeApiConfig` of the `WrapperConfig`. The `viewsConfig` config in addition to the `$type` is now mandatory. But, `serviceOverrides` is now optional.
+`MonacoVscodeApiConfig` contains all things that were previously part of `vscodeApiConfig` of the `WrapperConfig`. The `viewsConfig` configuration, in addition to the `$type`, is now mandatory. `serviceOverrides` is now optional.
 
 <table>
 <tr><th>v9/v6</th><th>v10</th></tr>
@@ -322,7 +325,7 @@ The content and scope configuration objects `MonacoVscodeApiConfig`, `LanguageCl
 $type: 'extended',
 const wrapperConfig: WrapperConfig = {
     $type: 'extended',
-    htmlContainer: document.getElementById('monaco-editor-root')!
+    htmlContainer: document.getElementById('monaco-editor-root')!,
     vscodeApiConfig: {
         serviceOverrides: {
         },
@@ -433,7 +436,7 @@ await lcManager.start();
 
 ## EditorAppConfig
 
-`EditorAppConfig` can is a one to one translation in the new version.
+`EditorAppConfig` is a one-to-one translation in the new version.
 
 <table>
 <tr><th>v9/v6</th><th>v10</th></tr>
@@ -448,7 +451,7 @@ const wrapperConfig: WrapperConfig = {
             modified: {
                 text: code,
                 uri: codeUri
-            }
+            },
         },
         // ...
     }
@@ -460,7 +463,7 @@ const wrapperConfig: WrapperConfig = {
 ```ts
 const editorAppConfig: EditorAppConfig = {
   codeResources: {
-    main: {
+    modified: {
       text: code,
       uri: codeUri
     }
