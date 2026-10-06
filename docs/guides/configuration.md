@@ -69,7 +69,6 @@ You can also override VSCode services to customize their behavior. For example, 
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
 import getLocalizationServiceOverride from '@codingame/monaco-vscode-localization-service-override';
 import { MonacoVscodeApiWrapper, type MonacoVscodeApiConfig } from 'monaco-languageclient/vscodeApiWrapper';
-import { EditorApp, type EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { createDefaultLocaleConfiguration } from 'monaco-languageclient/vscodeApiLocales';
 
 const vscodeApiConfig: MonacoVscodeApiConfig = {
@@ -285,7 +284,7 @@ You can configure multiple language clients for different file types:
 
 ```typescript
 // Eclipse JDT language client
-const javaConfig = {
+const javaConfig: LanguageClientConfig = {
   languageId: 'java',
   connection: {
     options: {
@@ -300,7 +299,7 @@ const javaConfig = {
 };
 
 // JSON language client
-const jsonConfig = {
+const jsonConfig: LanguageClientConfig = {
   languageId: 'json',
   connection: {
     options: {

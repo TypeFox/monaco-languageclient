@@ -12,7 +12,7 @@ This section covers the general concepts and usage patterns for the Monaco Langu
 
 ## Quick Overview
 
-`monaco-languageclient` provides two different integration approaches for `monaco-editor`. Theses are the `classic` mode and the `extended` mode. The former allows to use `monaco-editor` with monarch and its internal languages api. The latter automatically makes use of Textmate for theming and allows to configure all possible services from `@codingame/monaco-vscode-api`.
+`monaco-languageclient` provides two different integration approaches for `monaco-editor`. These are the `classic` mode and the `extended` mode. The former allows to use `monaco-editor` with monarch and its internal languages api. The latter automatically makes use of Textmate for theming and allows to configure all possible services from `@codingame/monaco-vscode-api`.
 
 ### Extended Mode (Recommended)
 
@@ -26,7 +26,7 @@ const vscodeApiConfig: MonacoVscodeApiConfig = {
   // both $type and viewsConfig are mandatory
   $type: 'extended',
   viewsConfig: {
-    $type: 'ViewsService'
+    $type: 'EditorService'
   }
   // further configuration
 };

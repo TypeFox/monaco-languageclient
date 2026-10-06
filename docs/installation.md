@@ -100,7 +100,8 @@ If using pnpm, you have to add more transitive dependencies that npm or yarn aut
 
 ### VSCode API inclusion
 
-Additionally, you need to add the `vscode` alias required by some packages, allowing `import * as vscode from 'vscode'` to work correctly.
+Additionally, you _may_ need to add the `vscode` alias required by some packages, allowing `import * as vscode from 'vscode'` to work correctly.
+With npm, you generally don't have to do this.
 
 ## Bundler Configuration
 
