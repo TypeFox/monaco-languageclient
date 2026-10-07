@@ -94,6 +94,13 @@ The following table describes which version of **monaco-languageclient** and **@
 
 [This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
 
+### September 2026 (v11.0.0)
+
+- Language client connections are configured with `$family` and a connection realization factory (`LcWebSocket`, `LcWorker`) instead of `$type`. `WebSocketDirect` and `WorkerDirect` were dropped.
+- Added `LanguageClientWrapper#init` to initialize transports and workers before start.
+- Updated to `@codingame/monaco-vscode-api` `37.1.0`. This also requires Node.js `>=22`.
+- See the [migration guide](./migration.md#migrating-from-v10-to-v11).
+
 ### September 2025 (v10.0.0)
 
 - Dropped `monaco-editor-wrapper`. All required functionality was moved back to `monaco-languageclient` and made available as sub exports.
