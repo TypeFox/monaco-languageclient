@@ -26,7 +26,7 @@ export const definedViteConfig = defineConfig({
         groovy: path.resolve(import.meta.dirname, 'packages/examples/groovy.html'),
         clangd: path.resolve(import.meta.dirname, 'packages/examples/clangd.html'),
         appPlayground: path.resolve(import.meta.dirname, 'packages/examples/appPlayground.html'),
-        twoLangaugeClients: path.resolve(import.meta.dirname, 'packages/examples/two_langauge_clients.html'),
+        twoLanguageClients: path.resolve(import.meta.dirname, 'packages/examples/two_language_clients.html'),
         reactAppPlayground: path.resolve(import.meta.dirname, 'packages/examples/react_appPlayground.html'),
         reactStatemachine: path.resolve(import.meta.dirname, 'packages/examples/react_statemachine.html'),
         reactPython: path.resolve(import.meta.dirname, 'packages/examples/react_python.html'),
