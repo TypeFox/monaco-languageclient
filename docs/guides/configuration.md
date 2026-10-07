@@ -166,7 +166,7 @@ await editorApp.start(htmlContainer);
 
 You can further configure VSCode related settings through the user configuration object:
 
-```typescript
+```json
 userConfiguration: {
   json: JSON.stringify({
     // Editor appearance
@@ -188,7 +188,7 @@ userConfiguration: {
     // Advanced features
     'editor.experimental.asyncTokenization': true,
     'editor.guides.bracketPairsHorizontal': 'active'
-  });
+  })
 }
 ```
 
