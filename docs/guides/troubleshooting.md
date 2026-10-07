@@ -318,14 +318,15 @@ const vscodeApiConfig = {
 
 ### Trace LSP Messages
 
-To inspect the raw Language Server Protocol messages being sent and received, you can enable tracing on the connection. This is highly effective for debugging language server behavior.
+To inspect the raw Language Server Protocol messages being sent and received, you can enable tracing on the language client. This is highly effective for debugging language server behavior, and it's the same for classic & extended mode.
 
-```typescript
-// In Classic Mode
-const connection = createConnection(webSocket);
-connection.trace = 2; // 2 for verbose
+```ts
+import { Trace } from 'vscode-languageclient/browser';
 
-// In Extended Mode, this requires custom connection handling
+// ...
+await lcWrapper.start();
+// Trace.Verbose logs params & results
+await lcWrapper.getLanguageClient()?.setTrace(Trace.Verbose);
 ```
 
 ## Reporting Issues
