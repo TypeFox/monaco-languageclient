@@ -21,8 +21,8 @@ export const runJsonServer = (baseDir: string, relativeDir: string) => {
       perMessageDeflate: false
     }
   });
-
   startMockHttpServerForSavingCodeFromEditor();
+  console.log(`JSON LS server running on port 30000`);
 };
 
 const startMockHttpServerForSavingCodeFromEditor = () => {
@@ -37,6 +37,6 @@ const startMockHttpServerForSavingCodeFromEditor = () => {
 
   const PORT = 3003;
   app.listen(PORT, () => {
-    console.log(`JSON server running on port ${PORT}`);
+    console.log(`Express server running on port ${PORT}`);
   });
 };

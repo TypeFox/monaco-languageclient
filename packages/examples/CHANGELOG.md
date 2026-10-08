@@ -15,7 +15,6 @@ All notable changes to this npm module are documented in this file.
 - Updated `vscode-languageclient` and `vscode-languageserver` to `10.1.1`, `vscode-languageserver-protocol` to `3.18.3`.
 - Added the classic worker factory helpers used by examples that need classic workers.
 - Made the examples package private and split resource initialization into the separate `init` script.
-- Added the `start:server:statemachine` script.
 - Updated the browser JSON example for the `vscode-languageclient` v10 converter API.
 - Updated the required runtime engines to Node.js `>=22` and npm `>=10`.
 - Switched package compilation from `tsgo` to `tsc` version `7`.

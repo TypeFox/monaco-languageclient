@@ -94,12 +94,24 @@ The following table describes which version of **monaco-languageclient** and **@
 
 [This article](https://www.typefox.io/blog/teaching-the-language-server-protocol-to-microsofts-monaco-editor/) describes the initial motivation for starting monaco-languageclient.
 
+### September 2026 (v11.0.0)
+
+- Language client connections are configured with `$family` and a connection realization factory (`LcWebSocket`, `LcWorker`) instead of `$type`. `WebSocketDirect` and `WorkerDirect` were dropped.
+- Added `LanguageClientWrapper#init` to initialize transports and workers before start.
+- Updated to `@codingame/monaco-vscode-api` `37.1.0`. This also requires Node.js `>=22`.
+- See the [migration guide](./migration.md#migrating-from-v10-to-v11).
+
 ### September 2025 (v10.0.0)
 
 - Dropped `monaco-editor-wrapper`. All required functionality was moved back to `monaco-languageclient` and made available as sub exports.
 - `@typefox/monaco-editor-react` lifecycle and robustness improvements.
 
-### December 2025 (v9.0.0)
+### December 2024 (v9.0.0)
+
+- Language clients run independent of the wrapper lifecycle.
+- All `@codingame/monaco-vscode` packages are `peerDependencies`; only required ones are non-optional.
+- Updated to `@codingame/monaco-vscode-api` `11.1.2` and eslint 9.
+- `createUrl` moved from `monaco-editor-wrapper` to `monaco-languageclient/tools`.
 
 ### March 2024 (v8.0.0)
 
@@ -138,6 +150,6 @@ We added the independent **[vscode-ws-jsonrpc](../packages/vscode-ws-jsonrpc)** 
 
 From release 1.0.0 onward the project switched to npm workspaces. We no longer require yarn, lerna and webpack. Mostly therefore the list of `devDependencies` is substantially shorter. All code has been moved to the [packages](../packages) directory.
 
-As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](../README.md#verification-examples) for the web client example using webpack.
+As before the library code is just compiled with the TypeScript compiler and the library is now packaged with npm. The need for bundling does no longer exist for the example. The compiled code is either executed by node or the web/client related code/pages are served with [vite.js](https://vitejs.dev/). We added a [verification examples](../README.md#verification-examples--usage) for the web client example using webpack.
 
 The default and protected branch is now `main`.

@@ -194,7 +194,9 @@ const languageClientConfig: LanguageClientConfig = {
 </td></tr>
 </table>
 
-Use `disposeResources` to control whether the connection realization owns and disposes the underlying worker or WebSocket resource. The restart behaviour implementation itself was not changed.
+Use `disposeResources` to control whether the connection realization owns and disposes the underlying worker or WebSocket resource. The restart behavior implementation itself was not changed.
+
+Set disposeResources on `connection.options` to control whether the realization disposes the underlying worker or WebSocket. It defaults to `true` for `LcWorker` and `false` for `LcWebSocket`. Also, `retryConfig.disposeOnRestart` only takes effect when disposeResources is true.
 
 ### Initializing before start
 
@@ -322,7 +324,6 @@ The content and scope configuration objects `MonacoVscodeApiConfig`, `LanguageCl
 <tr><td>
 
 ```ts
-$type: 'extended',
 const wrapperConfig: WrapperConfig = {
     $type: 'extended',
     htmlContainer: document.getElementById('monaco-editor-root')!,
@@ -358,7 +359,6 @@ The previous `languageClientConfigs` can now be expressed as single `LanguageCli
 <tr><td>
 
 ```ts
-$type: 'extended',
 const wrapperConfig: WrapperConfig = {
     // ...
     languageClientConfigs: {
@@ -443,7 +443,6 @@ await lcManager.start();
 <tr><td>
 
 ```ts
-$type: 'extended',
 const wrapperConfig: WrapperConfig = {
     // ...
     editorAppConfig: {
@@ -530,13 +529,13 @@ If you used `initServices` to directly initialize services, you have to change y
 
 ```ts
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override';
-import { initServices } from "monaco-languageclient/vscode/services";
+import { initServices } from 'monaco-languageclient/vscode/services';
 
 initServices({
-    serviceOverrides: {
-        ...getKeybindingsServiceOverride()
-    }
-};
+  serviceOverrides: {
+    ...getKeybindingsServiceOverride()
+  }
+});
 ```
 
 </td><td>

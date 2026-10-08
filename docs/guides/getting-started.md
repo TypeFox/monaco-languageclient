@@ -37,11 +37,14 @@ Start by creating a basic HTML file to give a place for monaco to setup:
 
 If you already have one setup, just be sure to add the root element for the Monaco Editor to attach to.
 
-If you're following along using Vite with the React TS template, you can add this to your main component (App.tsx):
+If you're following along using Vite with the React TS template, go ahead and add this to `index.html`, next to the existing `<div id="root">`:
 
-```tsx
-<div id="monaco-editor-root" style={{ height: '600px', width: '600px', textAlign: 'left' }}></div>
+```html
+<div id="monaco-editor-root" style="height: 600px; width: 600px; text-align: left;"></div>
+<div id="root"></div>
 ```
+
+If you instead add this into an existing React component, `App.tsx`, the editor code may run before the element exists, causing issues.
 
 ### Add Required Dependencies
 
@@ -69,7 +72,7 @@ export default defineConfig({
 
 ### Monaco Editor & Language Client Setup
 
-Create your main TypeScript file (`main.ts`). If you already have a TypeScript setup, you can integrate the following code into your existing project.
+Create your main TypeScript file (`main.ts`, or something similar like `mlc.ts` if that name is also used by `main.tsx`). If you already have a TypeScript setup, make sure to import that file and the following code into your existing project, so it shows up in the build.
 
 Note that we'll still need a running language server for JSON language support, the client just provides the means to connect to it. We'll cover that in the next step after this one.
 
@@ -169,9 +172,10 @@ async function createJsonEditor() {
   const lcWrapper = new LanguageClientWrapper(languageClientConfig);
   const editorApp = new EditorApp(editorAppConfig);
 
-  // start language client first, then editor app
-  await lcWrapper.start();
+  // start editor app first, then language client
+  // to avoid blocking editor startup when the LS isn't yet online
   await editorApp.start(document.getElementById('monaco-editor-root')!);
+  await lcWrapper.start();
 
   console.log('JSON editor with language client is ready!');
 }
@@ -179,6 +183,7 @@ createJsonEditor().catch(console.error);
 ```
 
 After this you can run `npm run build` to verify things & `npm run dev` (or an equivalent for your stack) to start a development server. You should see a Monaco Editor instance load up in your browser, with code, but no language support or highlighting yet (we'll cover that next).
+If you don't see anything, try `npx vite preview` instead, as sometimes the vite dev server does a little too much optimization work, breaking some of the workers we should be able to load.
 
 ### Language Server Setup
 
@@ -189,6 +194,9 @@ The easiest way to test this is to use the example from this repository:
 ```shell
 # In the monaco-languageclient repository
 npm install
+# build libs
+npm run build
+# start up the example JSON LS
 npm run start:example:server:json
 ```
 
@@ -196,7 +204,8 @@ This starts a JSON language server that our client is expecting to connect to.
 
 ### Run Your Example
 
-Go back to your development server and reload the page. You should see the same Monaco Editor instance but with language support.
+Go back to your development server and reload the page. You may need to stop & restart the server, and don't forget to try `npx vite preview` if `dev` doesn't show up correctly!
+You should see the same Monaco Editor instance, but with language support.
 
 In addition to the basic editor functionality, you should also see:
 
@@ -251,7 +260,7 @@ Congratulations! If everything worked as expected, then you've created your firs
 
 ## Troubleshooting
 
-**Editor doesn't load**: Check browser console for errors. Ensure all dependencies are installed. Also if the language server is offline, this will block the editor & client from starting up.
+**Editor doesn't load**: Check browser console for errors. Ensure all dependencies are installed. Also if the language server is offline, that can block the client from starting up, which can block the editor if that's a subsequent step.
 
 Also ensure that you have compatible versions of `monaco-languageclient` and any `@codingame/...` extensions you are using. If there's a discrepancy here your editor or language client integration likely won't work, and you may not see any errors in the console. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for reference.
 

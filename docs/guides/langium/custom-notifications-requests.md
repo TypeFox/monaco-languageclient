@@ -20,7 +20,9 @@ Before starting this guide, make sure you have:
 - Completed the [Running a Langium Language Server in the Browser](./running-langium-ls-in-browser.md) guide — you should have a working Langium LS running as a Web Worker, connected to Monaco in Extended Mode
 - A Langium project with working generation or other output you want to consume on the client
 
-We'll continue using [MiniLogo](https://github.com/TypeFox/langium-minilogo) as the running example. MiniLogo is already set up with a generator that produces drawing commands from validated programs, and a request handler that can invoke generation on a given MiniLogo program on demand. You can see the working [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository for the complete client-side integration.
+We'll continue using [MiniLogo](https://github.com/TypeFox/langium-minilogo) as the running example. MiniLogo is already set up with a generator that produces drawing commands from validated programs, and the prebuilt language server sends them to the client as a notification. Do keep in mind that the request handler shown later is an illustrative examples, and it's not part of the prebuilt server.
+
+You can see the working [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository for the complete client-side integration.
 
 ## Notifications (Server to Client)
 
@@ -242,6 +244,9 @@ The command name and arguments need to match what the server expects, same as fo
 
 ### MiniLogo Version
 
+> [!NOTE]
+> The prebuilt `langium-minilogo/ls-web` worker only sends the `browser/DocumentChange` notification. It does not register `minilogo/generateCommands`, so this request returns `null` against it. The snippets below show the pattern you could implement in your own language server's `main-browser.ts`.
+
 #### Server Side
 
 On the MiniLogo side, it registers a command handler that accepts a MiniLogo program as input, parses, validates it, and then returns the generated drawing commands:
@@ -310,7 +315,7 @@ Both patterns can go in either direction, i.e clients can send notifications, an
 
 ## Next Steps
 
-- See the working [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository, which uses the [`langium-minilogo`](https://github.com/TypeFox/langium-minilogo) package for a pre-built language server with notification and request support
+- See the working [MiniLogo example](../../../packages/examples/src/langium/langium-dsl/minilogo/) in this repository, which uses the [`langium-minilogo`](https://github.com/TypeFox/langium-minilogo) package for a pre-built language server with notification support
 - See the [statemachine example](../../../packages/examples/src/langium/statemachine/) for another complete implementation
 - Explore the [vscode-languageclient API](https://github.com/microsoft/vscode-languageserver-node) for the full set of notification and request methods available on `MonacoLanguageClient`
 - Check the [Configuration Guide](../configuration.md) for more on connection types and language client options

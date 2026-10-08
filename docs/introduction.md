@@ -2,7 +2,7 @@
 
 ## What is the Monaco Language Client?
 
-The Monaco Language Client is a TypeScript library that allows you to use the Language Server Protocol (LSP) directly with the monaco-editor. This lets you utilize language servers to extend the monoaco-editor's existing language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more; directly in the browser.
+The Monaco Language Client is a TypeScript library that allows you to use the Language Server Protocol (LSP) directly with the monaco-editor. This lets you utilize language servers to extend the monaco-editor's existing language support. Web applications can then provide rich language features such as code completion, diagnostics, Go To Definition support, and more; directly in the browser.
 
 ## Key Concepts
 
@@ -120,4 +120,4 @@ Overall, the Monaco Language Client is ideal when you need to:
 
 ## What's Next?
 
-Ready to get started? Check out our [Installation Guide](./installation.md) to set up the `monaco-languageclient` in your project, or jump to [Basic Usage](./guides/getting-started.md) to start learning how to get started with simple examples.
+Ready to get started? Check out our [Installation Guide](./installation.md) to set up the `monaco-languageclient` in your project, or jump to [Getting Started](./guides/getting-started.md) to start learning how to get started with simple examples.

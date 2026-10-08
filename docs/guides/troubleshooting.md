@@ -164,7 +164,7 @@ loader.config({ monaco });
 
 ### Webpack Worker Issues
 
-Webpack can have trouble with the unbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of issue #853 [here](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822). To fix this, you need to pre-bundle the workers.
+Webpack can have trouble with the unbundled workers from `@codingame/monaco-vscode-api`. [jhk-mjolner](https://github.com/jhk-mjolner) provided a solution in the context of [issue #853](https://github.com/TypeFox/monaco-languageclient/issues/853#issuecomment-2709959822). To fix this, you need to pre-bundle the workers.
 
 1. **Install `webpack-cli`**: `npm install --save-dev webpack-cli`
 2. **Create a bundling script** (`bundle-monaco-workers.js`) with the following content:
@@ -184,7 +184,8 @@ export default {
   output: {
     filename: '[name].js',
     path: resolve(__dirname, './src/assets/monaco-workers')
-    // if this is true (default), webpack will produce code trying to access global `document` variable for the textmate worker, which will fail at runtime due to being a worker
+    // if this is true (default), webpack will produce code trying to access global `document` variable for the textmate worker
+    // which will fail at runtime due to being a worker
   },
   mode: 'production',
   performance: {
@@ -195,11 +196,24 @@ export default {
 
 3. **Add a script to `package.json`**: `"bundle:workers": "webpack --config bundle-monaco-workers.js"`
 4. **Run the script**: `npm run bundle:workers`
-5. **Configure the worker factory** in your application to point to these pre-bundled workers, by adjusting the `workerLoaders` parameter in the `useWorkerFactory` to point to the pre-bundled workers:
+5. **Configure the worker factory** in your application to point to these pre-bundled workers. Pass a function as the value for `monacoWorkerFactory` when constructing the monaco VSCode api config, and call `useWorkerFactory` with your own `workerLoaders` setup:
 
-```js
-'TextEditorWorker': () => new Worker('/assets/monaco-workers/editor.js', {type: 'module'}),
-'TextMateWorker': () => new Worker('/assets/monaco-workers/textmate.js', {type: 'module'}),
+```ts
+import { useWorkerFactory, Worker } from 'monaco-languageclient/workerFactory';
+
+const configureWebpackWorkerFactory = () => {
+  useWorkerFactory({
+    workerLoaders: {
+      editorWorkerService: () => new Worker('/assets/monaco-workers/editor.js', { type: 'module' }),
+      TextMateWorker: () => new Worker('/assets/monaco-workers/textmate.js', { type: 'module' })
+    }
+  });
+};
+
+const vscodeApiConfig: MonacoVscodeApiConfig = {
+  // ...
+  monacoWorkerFactory: configureWebpackWorkerFactory
+};
 ```
 
 Additionally, if you haven't already, consider enabling async tokenization in your editor config:
@@ -304,14 +318,15 @@ const vscodeApiConfig = {
 
 ### Trace LSP Messages
 
-To inspect the raw Language Server Protocol messages being sent and received, you can enable tracing on the connection. This is highly effective for debugging language server behavior.
+To inspect the raw Language Server Protocol messages being sent and received, you can enable tracing on the language client. This is highly effective for debugging language server behavior, and it's the same for classic & extended mode.
 
-```typescript
-// In Classic Mode
-const connection = createConnection(webSocket);
-connection.trace = 2; // 2 for verbose
+```ts
+import { Trace } from 'vscode-languageclient/browser';
 
-// In Extended Mode, this requires custom connection handling
+// ...
+await lcWrapper.start();
+// Trace.Verbose logs params & results
+await lcWrapper.getLanguageClient()?.setTrace(Trace.Verbose);
 ```
 
 ## Reporting Issues
