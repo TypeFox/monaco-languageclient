@@ -6,7 +6,7 @@
   "scripts": {
     "verify": "npm ci && npm run build && npm run start",
     "verify:ci": "npm ci && npm run build",
-    "clean": "shx rm -fr bundle dist public *.tsbuildinfo",
+    "clean": "tsx ../../scripts/remove.ts bundle dist public *.tsbuildinfo",
     "build:msg": "echo Building client-webpack example:",
     "build": "npm run build:msg && npm run clean && npm run bundle && webpack",
     "start": "http-server ./ --port 8082",
@@ -15,28 +15,28 @@
     "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-textmate-service-override": "^37.1.0",
+    "@codingame/monaco-vscode-textmate-service-override": "^37.3.8",
     "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {
     "css-loader": "~7.1.5",
     "http-server": "~14.1.1",
-    "shx": "~0.4.0",
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.6.2",
-    "vite": "~8.3.0",
+    "vite": "~8.3.3",
     "webpack-cli": "~7.2.3"
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
     "baseline-browser-mapping": "~2.11.25",
     "browserslist": "~4.29.0",
-    "dompurify": "~3.4.14",
-    "fast-uri": "~3.1.6",
+    "dompurify": "~3.4.16",
+    "fast-uri": "~3.1.8",
     "monaco-languageclient": "../../packages/client",
     "monaco-languageclient-examples": "../../packages/examples",
-    "qs": "~6.16.0",
+    "postcss-selector-parser": "~7.1.6",
+    "source-map-js": "~1.2.2",
     "vscode-ws-jsonrpc": "../../packages/vscode-ws-jsonrpc"
   },
   "engines": {

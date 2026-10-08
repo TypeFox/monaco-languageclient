@@ -35,7 +35,7 @@
     "start:example:server:python": "npm run start:server:python --workspace packages/examples",
     "verify": "npm run build && npm run lint && npm run fmt && npm run test:tags",
     "release:prepare": "npm run reset:repo && npm ci && npm run build && npm run lint && npm run fmt && npm run test:ci:tags",
-    "reset:chrome": "shx rm -fr ./.chrome",
+    "reset:chrome": "tsx scripts/remove.ts ./.chrome",
     "reset:repo": "git clean -f -d -x --exclude=.chrome",
     "test": "vitest --config vitest.config.ts run",
     "test:watch": "vitest --config vitest.config.ts",
@@ -55,27 +55,28 @@
     "init:examples": "npm run init --workspace packages/examples"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "^37.1.0",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "^37.3.8",
     "@testing-library/react": "~16.3.3",
     "@types/node": "~24.10.15",
     "@types/react": "~19.3.0",
     "@types/react-dom": "~19.3.0",
-    "@vitest/browser": "~5.0.1",
-    "@vitest/browser-playwright": "~5.0.1",
-    "@vitest/coverage-v8": "~5.0.1",
-    "knip": "~6.38.0",
+    "@vitest/browser": "~5.0.3",
+    "@vitest/browser-playwright": "~5.0.3",
+    "@vitest/coverage-v8": "~5.0.3",
+    "knip": "~6.40.0",
     "minimatch": "~10.2.6",
-    "oxfmt": "~0.70.0",
-    "oxlint": "~1.85.0",
-    "oxlint-tsgolint": "~7.0.2002",
-    "shx": "~0.4.0",
+    "oxfmt": "~0.72.0",
+    "oxlint": "~1.87.0",
+    "oxlint-tsgolint": "~7.0.2003",
     "tsx": "~4.23.15",
     "typescript": "~7.0.2",
-    "vite": "~8.3.0",
-    "vitest": "~5.0.1"
+    "vite": "~8.3.3",
+    "vitest": "~5.0.3"
   },
   "overrides": {
-    "dompurify": "~3.4.14"
+    "chokidar": "~5.0.0",
+    "dompurify": "~3.4.16",
+    "katex": "~0.19.0"
   },
   "engines": {
     "node": ">=22",

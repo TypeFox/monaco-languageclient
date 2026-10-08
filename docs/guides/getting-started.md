@@ -53,7 +53,7 @@ We can rely on an extension package that provides JSON language client support f
 Use the `@codingame/monaco-vscode-*` package version that matches your `monaco-languageclient` version. For `monaco-languageclient` version `11.0.2`, use `@codingame/monaco-vscode-*` packages from major version `37`. See the [version compatibility table](../versions-and-history.md#monaco-editor--codingamemonaco-vscode-api-compatibility-table) for which versions to use.
 
 ```shell
-npm install @codingame/monaco-vscode-json-default-extension@^37.1.0
+npm install @codingame/monaco-vscode-json-default-extension@^37.3.8
 ```
 
 ### Updating Vite Config (if using Vite)

@@ -12,7 +12,7 @@ Version `11` updates the runtime and language tooling stack and changes how lang
 ### Runtime and dependency requirements
 
 - Use Node.js `>=22` and npm `>=10`.
-- Align `@codingame/monaco-vscode-*` packages with version `37.1.0`.
+- Align `@codingame/monaco-vscode-*` packages with version `37.3.8`.
 - Align LSP dependencies with `vscode-languageclient@10.1.1`, `vscode-languageserver-protocol@3.18.3` and `vscode-ws-jsonrpc@4.0.0`.
 
 ### Language client connection configuration
