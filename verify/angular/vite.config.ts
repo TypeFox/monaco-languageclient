@@ -4,7 +4,6 @@
  */
 
 import angular from '@analogjs/vite-plugin-angular';
-import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin';
 import path from 'path';
 import { defineConfig } from 'vite';
 
@@ -24,9 +23,6 @@ export default defineConfig(({ command }) => {
     },
     plugins: [angular()],
     optimizeDeps: {
-      esbuildOptions: {
-        plugins: [importMetaUrlPlugin]
-      },
       include: [
         'vscode/localExtensionHost',
         'vscode-jsonrpc',

@@ -2,6 +2,10 @@
 
 All notable changes to this npm module are documented in this file.
 
+## [4.0.3-next.0] - unreleased
+
+- Updated `vscode-jsonrpc` to `9.0.3`.
+
 ## [4.0.2] - 2026-09-24
 
 - Corrected code snippets in README.md and fixed typos.
