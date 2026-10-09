@@ -1,0 +1,38 @@
+FROM ubuntu:26.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y curl && \
+    apt autoremove -y && \
+    apt autoclean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+USER ubuntu
+
+COPY --chown=ubuntu:ubuntu ./packages/examples/resources/eclipse.jdt.ls/mise.toml /home/ubuntu/.config/mise/mise.toml
+
+# install mise and configure it
+RUN curl https://mise.jdx.dev/install.sh | sh && \
+    /home/ubuntu/.local/bin/mise upgrade && \
+    echo 'eval "$(~/.local/bin/mise activate bash)"' > /home/ubuntu/.bashrc
+
+# copy repo content
+COPY --chown=ubuntu:ubuntu ./ /home/ubuntu/mlc
+
+# prepare build in the mlc directory
+RUN cd /home/ubuntu/mlc && \
+    /home/ubuntu/.local/bin/mise trust && \
+    /home/ubuntu/.local/bin/mise exec -- npm i && \
+    /home/ubuntu/.local/bin/mise exec -- npm run build && \
+    # download and extract Eclipse JDT LS in target folder
+    cd /home/ubuntu/mlc/packages/examples/resources/eclipse.jdt.ls && \
+    mkdir ls && \
+    curl -L -o eclipse.jdt.ls.tar.gz https://download.eclipse.org/jdtls/milestones/1.61.0/jdt-language-server-1.61.0-202609031315.tar.gz && \
+    tar -xzf eclipse.jdt.ls.tar.gz && \
+    rm eclipse.jdt.ls.tar.gz
+
+WORKDIR /home/ubuntu/mlc
+
+CMD ["/bin/bash", "-c", "/home/ubuntu/.local/bin/mise exec -- npm run start:example:server:jdtls"]

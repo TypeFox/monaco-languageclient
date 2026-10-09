@@ -1,6 +1,6 @@
 [tools]
 node = "24"
 npm = "11"
+java = "temurin-21"
 
 [env]
-VERSION_CONTAINER_IMAGES = "latest"
