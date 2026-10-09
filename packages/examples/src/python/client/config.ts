@@ -46,6 +46,7 @@ import { createDefaultWorkspaceContent } from '../../common/client/utils.js';
 const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement): ConfigParams => {
   const files = new Map<string, FileDefinition>();
   const workspaceRoot = `${homeDir}/workspace`;
+  const hostname = import.meta.env.VITE_HOSTNAME_LS_CONTAINER;
   const configParams: ConfigParams = {
     extensionName: 'debugger-py-client',
     publisher: 'TypeFox',
@@ -57,7 +58,7 @@ const createDefaultConfigParams = (homeDir: string, htmlContainer: HTMLElement):
     workspaceFile: vscode.Uri.file(`${homeDir}/.vscode/workspace.code-workspace`),
     htmlContainer,
     protocol: 'ws',
-    hostname: 'localhost',
+    hostname,
     port: 55555,
     files,
     defaultFile: `${workspaceRoot}/hello2.py`,

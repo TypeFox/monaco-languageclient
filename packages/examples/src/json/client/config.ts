@@ -6,8 +6,9 @@
 import type { ExampleLsConfig } from '../../common/client/extendedClient.js';
 
 export const jsontLsConfig: ExampleLsConfig = {
+  hostname: import.meta.env.VITE_HOSTNAME_LS,
   port: 30000,
   path: '/sampleServer',
-  basePath: '/home/mlc/packages/examples/resources/json',
+  basePathClient: '/home/mlc/packages/examples/resources/json',
   languageId: 'json'
 };

@@ -1,3 +1,10 @@
 [tools]
 node = "24"
 npm = "11"
+
+[env]
+VERSION_CONTAINER_IMAGES = "latest"
+
+# everything starting with VITE_ is passed to import.meta.env
+VITE_HOSTNAME_LS = "localhost"
+VITE_HOSTNAME_LS_CONTAINER = "host.containers.internal"

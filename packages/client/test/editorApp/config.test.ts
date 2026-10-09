@@ -3,112 +3,116 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/// <reference types="vite/client" />
+
 import { describe, expect, test } from 'vitest';
 import { createUrl, type WebSocketConfigOptionsParams, type WebSocketConfigOptionsUrl } from 'monaco-languageclient/common';
+
+const hostname = import.meta.env.VITE_HOSTNAME_LS;
 
 describe('createUrl', { concurrent: true, tags: ['main'] }, () => {
   test('test createUrl: ws', () => {
     const url = createUrl({
       secured: false,
-      host: 'localhost',
+      host: `${hostname}`,
       port: 30000,
       path: 'sampleServer'
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('ws://localhost:30000/sampleServer');
+    expect(url).toBe(`ws://${hostname}:30000/sampleServer`);
   });
 
   test('test createUrl: wss', () => {
     const url = createUrl({
       secured: true,
-      host: 'localhost',
+      host: `${hostname}`,
       port: 30000,
       path: 'sampleServer'
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('wss://localhost:30000/sampleServer');
+    expect(url).toBe(`wss://${hostname}:30000/sampleServer`);
   });
 
   test('test createUrl: wss, no port, with path', () => {
     const url = createUrl({
       secured: true,
-      host: 'localhost',
+      host: `${hostname}`,
       path: 'sampleServer'
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('wss://localhost/sampleServer');
+    expect(url).toBe(`wss://${hostname}/sampleServer`);
   });
 
   test('test createUrl: wss, with port, no path', () => {
     const url = createUrl({
       secured: true,
-      host: 'localhost',
+      host: `${hostname}`,
       port: 30000
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('wss://localhost:30000');
+    expect(url).toBe(`wss://${hostname}:30000`);
   });
 
   test('test createUrl: wss, no port, no path', () => {
     const url = createUrl({
       secured: true,
-      host: 'localhost'
+      host: `${hostname}`
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('wss://localhost');
+    expect(url).toBe(`wss://${hostname}`);
   });
 
   test('test createUrl: ws, normalize port 80', () => {
     const url = createUrl({
       secured: false,
-      host: 'localhost',
+      host: `${hostname}`,
       port: 80
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('ws://localhost');
+    expect(url).toBe(`ws://${hostname}`);
   });
 
   test('test createUrl: ws, normalize port 80, with path', () => {
     const url = createUrl({
       secured: false,
-      host: 'localhost',
+      host: `${hostname}`,
       port: 80,
       path: 'sampleServer'
     } as WebSocketConfigOptionsParams);
 
-    expect(url).toBe('ws://localhost/sampleServer');
+    expect(url).toBe(`ws://${hostname}/sampleServer`);
   });
 
   test('test createUrl: optionsUrl: ws', () => {
     const url = createUrl({
-      webSocketUrl: 'ws://localhost:30000/sampleServer'
+      webSocketUrl: `ws://${hostname}:30000/sampleServer`
     } as WebSocketConfigOptionsUrl);
 
-    expect(url).toBe('ws://localhost:30000/sampleServer');
+    expect(url).toBe(`ws://${hostname}:30000/sampleServer`);
   });
 
   test('test createUrl: optionsUrl: wss', () => {
     const url = createUrl({
-      webSocketUrl: 'wss://localhost:30000/sampleServer'
+      webSocketUrl: `wss://${hostname}:30000/sampleServer`
     } as WebSocketConfigOptionsUrl);
 
-    expect(url).toBe('wss://localhost:30000/sampleServer');
+    expect(url).toBe(`wss://${hostname}:30000/sampleServer`);
   });
 
   test('test createUrl: optionsUrl, with port, no path', () => {
     const url = createUrl({
-      webSocketUrl: 'wss://localhost:30000'
+      webSocketUrl: `wss://${hostname}:30000`
     } as WebSocketConfigOptionsUrl);
 
-    expect(url).toBe('wss://localhost:30000');
+    expect(url).toBe(`wss://${hostname}:30000`);
   });
 
   test('test createUrl: optionsUrl, no port, with path', () => {
     const url = createUrl({
-      webSocketUrl: 'ws://localhost/sampleServer'
+      webSocketUrl: `ws://${hostname}/sampleServer`
     } as WebSocketConfigOptionsUrl);
 
-    expect(url).toBe('ws://localhost/sampleServer');
+    expect(url).toBe(`ws://${hostname}/sampleServer`);
   });
 
   test('test createUrl: optionsUrl, no port, no path', () => {

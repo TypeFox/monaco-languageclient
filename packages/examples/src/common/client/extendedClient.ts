@@ -25,7 +25,7 @@ import {
 } from 'monaco-languageclient/workerFactory';
 
 export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: string) => {
-  const helloUri = vscode.Uri.file(`${lsConfig.basePath}/workspace/hello.${lsConfig.languageId}`);
+  const helloUri = vscode.Uri.file(`${lsConfig.basePathClient}/workspace/hello.${lsConfig.languageId}`);
   const fileSystemProvider = new RegisteredFileSystemProvider(false);
   fileSystemProvider.registerFile(new RegisteredMemoryFile(helloUri, helloCode));
   registerFileSystemOverlay(1, fileSystemProvider);
@@ -79,7 +79,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
     reportStatus: true
   };
 
-  const webSocketUrl = `ws://localhost:${lsConfig.port}${lsConfig.path}`;
+  const webSocketUrl = `ws://${lsConfig.hostname}:${lsConfig.port}${lsConfig.path}`;
   const connectionConfigOptions: ConnectionConfigOptions = {
     $family: 'WebSocket',
     realization: () => new LcWebSocket(),
@@ -98,7 +98,7 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
       workspaceFolder: {
         index: 0,
         name: 'workspace',
-        uri: vscode.Uri.parse(`${lsConfig.basePath}/workspace`)
+        uri: vscode.Uri.parse(`${lsConfig.basePathClient}/workspace`)
       }
     }
   };
@@ -137,9 +137,11 @@ export const runExtendedClient = async (lsConfig: ExampleLsConfig, helloCode: st
 };
 
 export type ExampleLsConfig = {
+  hostname: string;
   port: number;
   path: string;
-  basePath: string;
+  basePathClient?: string;
+  basePathServer?: string;
   languageId: string;
   workerLoaders?: () => Partial<Record<PossibleWorkerLabelsExtended, WorkerLoader>>;
 };

@@ -54,6 +54,7 @@ export const runClient = async () => {
   const editorApp = new EditorApp(editorAppConfig);
   await editorApp.start(htmlContainer);
 
+  const hostname = import.meta.env.VITE_HOSTNAME_LS;
   const languageClientConfig: LanguageClientConfig = {
     languageId,
     clientOptions: {
@@ -63,7 +64,7 @@ export const runClient = async () => {
       options: {
         $family: 'WebSocket',
         realization: () => new LcWebSocket(),
-        webSocketUrl: 'ws://localhost:30000/sampleServer'
+        webSocketUrl: `ws://${hostname}:30000/sampleServer`
       }
     }
   };

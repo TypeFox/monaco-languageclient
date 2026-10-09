@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/// <reference types="vite/client" />
+
 import { type AfterViewInit, Component } from '@angular/core';
 
 // import { runExtendedClient } from '../../production/mlc-bundle.js';
@@ -69,12 +71,13 @@ export const runExtendedClient = async () => {
     monacoWorkerFactory: configureDefaultWorkerFactory
   };
 
+  const hostname = import.meta.env.VITE_HOSTNAME_LS;
   const languageClientConfig: LanguageClientConfig = {
     languageId: lsConfig.languageId,
     connection: {
       options: {
         $type: 'WebSocketUrl',
-        url: `ws://localhost:${lsConfig.port}${lsConfig.path}`
+        url: `ws://${hostname}:${lsConfig.port}${lsConfig.path}`
       }
     },
     clientOptions: {

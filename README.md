@@ -222,7 +222,7 @@ For the **groovy-client** example you need to ensure the **groovy-server** examp
 
 ##### Java Language Server
 
-For the **java-client** example you need to ensure the **java-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Eclipse JDT LS). From the project root run `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/docker-compose.yml down` to stop it.
+For the **java-client** example you need to ensure the **java-server** example is running. You require **docker-compose** which does not require any manual setup (OpenJDK / Eclipse JDT LS). From the project root run `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/compose.yml up -d`. First start up will take longer as the container is downloaded from GitHub's container registry. Use `docker-compose -f ./packages/examples/resources/eclipse.jdt.ls/compose.yml down` to stop it.
 
 ### Verification Examples & Usage
 

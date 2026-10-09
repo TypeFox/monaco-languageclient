@@ -6,8 +6,9 @@
 import type { ExampleLsConfig } from '../common/client/extendedClient.js';
 
 export const groovyConfig: ExampleLsConfig = {
+  hostname: import.meta.env.VITE_HOSTNAME_LS_CONTAINER,
   port: 30002,
   path: '/groovy',
-  basePath: '/home/gradle/mlc/packages/examples/resources/groovy',
+  basePathServer: '/home/gradle/mlc/packages/examples/resources/groovy',
   languageId: 'groovy'
 };

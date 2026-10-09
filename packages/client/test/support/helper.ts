@@ -3,6 +3,8 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+/// <reference types="vite/client" />
+
 import type { CodeResources, EditorAppConfig } from 'monaco-languageclient/editorApp';
 import { LcWorker, type LanguageClientConfig, LcWebSocket } from 'monaco-languageclient/lcwrapper';
 import type { MonacoVscodeApiConfig, OverallConfigType, ViewsConfigTypes } from 'monaco-languageclient/vscodeApiWrapper';
@@ -56,6 +58,7 @@ export const createUnreachableWorkerConfig = (): LanguageClientConfig => {
 };
 
 export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClientConfig => {
+  const hostname = import.meta.env.VITE_HOSTNAME_LS;
   return {
     languageId: 'javascript',
     clientOptions: {
@@ -65,7 +68,7 @@ export const createDefaultLcUnreachableUrlConfig = (port: number): LanguageClien
       options: {
         $family: 'WebSocket',
         realization: () => new LcWebSocket(),
-        webSocketUrl: `ws://localhost:${port}/rester`
+        webSocketUrl: `ws://${hostname}:${port}/rester`
       }
     }
   };
