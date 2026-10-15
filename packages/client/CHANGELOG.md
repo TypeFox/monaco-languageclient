@@ -2,10 +2,12 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [11.0.3-next.0] - unreleased
+## [11.0.3] - 2026-10-15
 
-- Updated all `@codingame/monaco-vscode` packages to `37.3.8`.
-- Updated to `vscode-ws-jsonrpc@4.0.3-next.0`.
+- Windows compatibility concern: reserved directory name 'con' [#1067](https://github.com/TypeFox/monaco-languageclient/issues/1067)
+- Doc Updates & Corrections [#1065](https://github.com/TypeFox/monaco-languageclient/pull/1065)
+- Updated all `@codingame/monaco-vscode` packages to `37.6.0`.
+- Updated to `vscode-ws-jsonrpc@4.0.3`.
 
 ## [11.0.2] - 2026-09-24
 

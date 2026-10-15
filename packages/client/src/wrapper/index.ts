@@ -3,10 +3,10 @@
  * Licensed under the MIT License. See LICENSE in the package root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-export * from './con/lcConnectionSupport.js';
-export * from './con/lcConnectionRealization.js';
-export * from './con/lcWorker.js';
-export * from './con/lcWebSocket.js';
+export * from './lcc/lcConnectionSupport.js';
+export * from './lcc/lcConnectionRealization.js';
+export * from './lcc/lcWorker.js';
+export * from './lcc/lcWebSocket.js';
 export * from './lcconfig.js';
 export * from './lcmanager.js';
 export * from './lcwrapper.js';

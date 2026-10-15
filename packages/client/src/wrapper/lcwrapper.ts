@@ -9,9 +9,9 @@ import { MonacoLanguageClient, MonacoLanguageClientWithProposedFeatures } from '
 import { CloseAction, ErrorAction, MessageTransports, State } from 'vscode-languageclient/browser';
 
 import { Deferred } from '../common/utils.js';
-import type { LanguageClientConnectionRealization } from './con/lcConnectionRealization.js';
-import { LanguageClientConnectionSupport } from './con/lcConnectionSupport.js';
-import { LcWorker, TransportLayerName } from './con/lcWorker.js';
+import type { LanguageClientConnectionRealization } from './lcc/lcConnectionRealization.js';
+import { LanguageClientConnectionSupport } from './lcc/lcConnectionSupport.js';
+import { LcWorker, TransportLayerName } from './lcc/lcWorker.js';
 import type { LanguageClientConfig } from './lcconfig.js';
 
 export interface LanguageClientError {
