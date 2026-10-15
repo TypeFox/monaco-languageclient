@@ -2,8 +2,9 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [4.0.3-next.0] - unreleased
+## [4.0.3] - 2026-10-15
 
+- Doc Updates & Corrections [#1065](https://github.com/TypeFox/monaco-languageclient/pull/1065)
 - Updated `vscode-jsonrpc` to `9.0.3`.
 
 ## [4.0.2] - 2026-09-24

@@ -20,28 +20,28 @@
     "start": "next start"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-api": "^37.3.8",
-    "@codingame/monaco-vscode-editor-api": "^37.3.8",
-    "@codingame/monaco-vscode-extensions-service-override": "^37.3.8",
-    "@codingame/monaco-vscode-keybindings-service-override": "^37.3.8",
-    "@codingame/monaco-vscode-textmate-service-override": "^37.3.8",
-    "@codingame/monaco-vscode-typescript-basics-default-extension": "^37.3.8",
-    "@codingame/monaco-vscode-typescript-language-features-default-extension": "^37.3.8",
-    "@codingame/monaco-vscode-views-service-override": "^37.3.8",
+    "@codingame/monaco-vscode-api": "^37.6.0",
+    "@codingame/monaco-vscode-editor-api": "^37.6.0",
+    "@codingame/monaco-vscode-extensions-service-override": "^37.6.0",
+    "@codingame/monaco-vscode-keybindings-service-override": "^37.6.0",
+    "@codingame/monaco-vscode-textmate-service-override": "^37.6.0",
+    "@codingame/monaco-vscode-typescript-basics-default-extension": "^37.6.0",
+    "@codingame/monaco-vscode-typescript-language-features-default-extension": "^37.6.0",
+    "@codingame/monaco-vscode-views-service-override": "^37.6.0",
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",
     "langium": "~4.4.0",
     "monaco-languageclient": "../../packages/client",
-    "next": "~16.4.0",
-    "react": "~19.3.0",
-    "react-dom": "~19.3.0",
-    "vscode": "npm:@codingame/monaco-vscode-extension-api@^37.3.8",
+    "next": "~16.4.1",
+    "react": "~19.3.1",
+    "react-dom": "~19.3.1",
+    "vscode": "npm:@codingame/monaco-vscode-extension-api@^37.6.0",
     "vscode-languageclient": "~10.1.2",
     "vscode-languageserver": "~10.1.2"
   },
   "devDependencies": {
     "@types/react-dom": "~19.3.0",
     "typescript": "~7.0.2",
-    "vite": "~8.3.3"
+    "vite": "~8.3.4"
   },
   "overrides": {
     "@typefox/monaco-editor-react": "../../packages/wrapper-react",

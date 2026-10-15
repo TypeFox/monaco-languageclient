@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import type { BaseLanguageClient } from 'vscode-languageclient/browser';
-import type { LanguageClientConnectionRealization } from '../wrapper/index.js';
+import type { LanguageClientConnectionRealization } from '../wrapper/lcc/lcConnectionRealization.js';
 import type { DataCallback } from 'vscode-languageserver-protocol';
 
 export type ConnectionRetryConfig = {

@@ -55,28 +55,34 @@
     "init:examples": "npm run init --workspace packages/examples"
   },
   "devDependencies": {
-    "@codingame/monaco-vscode-rollup-vsix-plugin": "^37.3.8",
+    "@codingame/monaco-vscode-rollup-vsix-plugin": "^37.6.0",
     "@testing-library/react": "~16.3.3",
     "@types/node": "~24.10.15",
     "@types/react": "~19.3.0",
     "@types/react-dom": "~19.3.0",
-    "@vitest/browser": "~5.0.3",
-    "@vitest/browser-playwright": "~5.0.3",
-    "@vitest/coverage-v8": "~5.0.3",
-    "knip": "~6.40.0",
+    "@vitest/browser": "~5.0.4",
+    "@vitest/browser-playwright": "~5.0.4",
+    "@vitest/coverage-v8": "~5.0.4",
+    "knip": "~6.41.0",
     "minimatch": "~10.2.6",
-    "oxfmt": "~0.72.0",
-    "oxlint": "~1.87.0",
-    "oxlint-tsgolint": "~7.0.2003",
+    "oxfmt": "~0.73.0",
+    "oxlint": "~1.88.0",
+    "oxlint-tsgolint": "~7.0.2004",
     "tsx": "~4.23.15",
     "typescript": "~7.0.2",
-    "vite": "~8.3.3",
-    "vitest": "~5.0.3"
+    "vite": "~8.3.4",
+    "vitest": "~5.0.4"
   },
   "overrides": {
     "chokidar": "~5.0.0",
     "dompurify": "~3.4.16",
-    "katex": "~0.19.0"
+    "katex": "~0.19.0",
+    "langium": "~4.4.0",
+    "vscode-languageclient": "~10.1.2",
+    "vscode-languageserver": "~10.1.2",
+    "vscode-languageserver-protocol": "~3.18.4",
+    "vscode-languageserver-textdocument": "~1.0.15",
+    "vscode-languageserver-types": "~3.18.4"
   },
   "engines": {
     "node": ">=22",

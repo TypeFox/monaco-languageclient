@@ -15,7 +15,7 @@
     "bundle:textmateWorker": "vite --config vite.config.textmateWorker.ts build"
   },
   "dependencies": {
-    "@codingame/monaco-vscode-textmate-service-override": "^37.3.8",
+    "@codingame/monaco-vscode-textmate-service-override": "^37.6.0",
     "monaco-languageclient-examples": "../../packages/examples"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "source-map-loader": "~5.0.0",
     "style-loader": "~4.0.0",
     "ts-loader": "~9.6.2",
-    "vite": "~8.3.3",
+    "vite": "~8.3.4",
     "webpack-cli": "~7.2.3"
   },
   "overrides": {

@@ -2,10 +2,11 @@
 
 All notable changes to this npm module are documented in this file.
 
-## [2026.10.1] - unreleased
+## [2026.10.1] - 2026-10-15
 
-- Updated all `@codingame/monaco-vscode` packages to `37.3.8`.
-- Updated to `monaco-languageclient@11.0.3-next.0`, `vscode-ws-jsonrpc@4.0.3-next.0` and `@typefox/monaco-editor-react@8.0.3-next.0`.
+- Doc Updates & Corrections [#1065](https://github.com/TypeFox/monaco-languageclient/pull/1065)
+- Updated all `@codingame/monaco-vscode` packages to `37.6.0`.
+- Updated to `monaco-languageclient@11.0.3`, `vscode-ws-jsonrpc@4.0.3` and `@typefox/monaco-editor-react@8.0.3`.
 
 ## [2026.9.2] - 2026-09-24
 
